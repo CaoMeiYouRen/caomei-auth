@@ -66,22 +66,22 @@
 
 ## 目录结构
 
-```
-caomei-auth/
-├── app/                # Nuxt 应用主目录
-│   ├── pages/          # 页面
-│   ├── components/     # 组件
-│   ├── assets/         # 静态资源（SCSS、图片等）
-│   ├── server/         # API 路由、服务端逻辑
-│   └── ...
-├── docker/
-│   └── Dockerfile
-├── vercel.json         # Vercel 配置
-├── wrangler.toml       # Cloudflare Workers 配置
-├── pnpm-lock.yaml      # pnpm 锁定文件
-├── README.md
-└── ...
-```
+-   `components/`: Vue 组件目录。
+-   `pages/`: Nuxt 页面目录。
+-   `styles/`: 样式文件目录。
+-   `public/`: 公共静态资源目录（如图片、字体等）。
+-   `plugins/`: Nuxt 插件目录。
+-   `store/`: 状态管理目录。
+-   `utils/`: 工具函数目录。
+-   `server`: 服务器端代码目录（如 API 路由等）。
+    -   `server/api/`: API 路由目录。
+    -   `server/middleware/`: 服务器中间件目录。
+    -   `server/config/`: 服务器配置目录。
+    -   `server/utils/`: 服务器端工具函数目录。
+    -   `server/database/`: 数据库相关代码目录。
+-   `middleware/`: 中间件目录。
+-   `tests/`: 测试代码目录。
+-   `config/`: 配置文件目录。
 
 ## 部署方式
 

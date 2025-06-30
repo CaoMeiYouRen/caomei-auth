@@ -269,6 +269,8 @@ function loginWithGoogle() {
 </script>
 
 <style scoped lang="scss">
+@import '@/styles/theme';
+
 .login-container {
     display: flex;
     //   min-height: 100vh;
@@ -280,7 +282,7 @@ function loginWithGoogle() {
 }
 
 .login-left {
-    color: white;
+    color: $background-light;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -288,7 +290,7 @@ function loginWithGoogle() {
     text-align: center;
     min-height: 20vh;
 
-    //   background: linear-gradient(135deg, #e63946 0%, #a52834 100%);
+    //   background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
     .login-logo img {
         width: 80%;
         max-width: 160px;
@@ -319,7 +321,7 @@ function loginWithGoogle() {
 }
 
 .login-card {
-    background-color: #fff;
+    background-color: $background-light;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     padding: 2rem;
@@ -328,14 +330,14 @@ function loginWithGoogle() {
 }
 
 .login-title {
+    color: $secondary;
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 1rem;
-    color: #2d3748;
 }
 
 .login-subtitle {
-    color: #718096;
+    color: $secondary-light;
     margin-bottom: 2rem;
 }
 
@@ -350,19 +352,18 @@ function loginWithGoogle() {
 }
 
 .form-input {
+    border: 1px solid $secondary-bg;
+    background-color: $background-light;
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
     border-radius: 8px;
-    background-color: #fff;
     transition: border-color 0.2s, box-shadow 0.2s;
     font-size: 1rem;
 }
 
 .form-input:focus {
-    outline: none;
-    border-color: #e63946;
-    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2); // 可考虑用rgba($primary, 0.2)如有mixin
 }
 
 .login-btn {
@@ -378,16 +379,16 @@ function loginWithGoogle() {
 }
 
 .separator {
+    color: $secondary-light;
     display: flex;
     align-items: center;
     margin: 2rem 0;
-    color: #718096;
 
     &::before,
     &::after {
         content: '';
         flex: 1;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid $secondary-bg;
     }
 
     &::before {
@@ -400,17 +401,15 @@ function loginWithGoogle() {
 }
 
 .social-login {
-    margin-top: 2rem;
-
     .social-btn {
+        border: 1px solid $secondary-bg;
+        background-color: $background-light;
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
         margin-bottom: 1rem;
         border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        background-color: #fff;
         cursor: pointer;
         transition: background-color 0.2s;
         font-size: 1rem;
@@ -432,11 +431,11 @@ function loginWithGoogle() {
 .toggle-login {
     margin-top: 1.5rem;
     text-align: center;
-    color: #718096;
+    color: $secondary-light;
 }
 
 .toggle-link {
-    color: #e63946;
+    color: $primary;
     text-decoration: none;
     font-weight: 500;
 
@@ -450,7 +449,7 @@ function loginWithGoogle() {
     align-items: center;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    color: #718096;
+    color: $secondary-light;
 
     label {
         margin-left: 0.5rem;
@@ -468,8 +467,8 @@ function loginWithGoogle() {
 }
 
 .btn-primary {
-    background-color: #e63946 !important;
-    color: #fff !important;
+    background-color: $primary !important;
+    color: $background-light !important;
     border: none !important;
     width: 100%;
     min-height: 44px;
@@ -478,7 +477,7 @@ function loginWithGoogle() {
 }
 
 .btn-primary:hover {
-    background-color: #a52834 !important;
+    background-color: $primary-dark !important;
 }
 
 .p-password {
