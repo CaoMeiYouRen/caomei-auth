@@ -19,29 +19,28 @@
                 <p class="login-subtitle">
                     请使用您的账号信息登录
                 </p>
-                <div class="login-btn mb-4" style="display: flex; gap: 1rem;">
-                    <div class="btn-group">
-                        <Button
-                            :class="{active: activeTab === 'username'}"
-                            severity="secondary"
-                            @click="activeTab = 'username'"
-                        >
-                            用户名登录
-                        </Button>
-                        <Button
-                            :class="{active: activeTab === 'email'}"
-                            severity="secondary"
-                            @click="activeTab = 'email'"
-                        >
-                            邮箱登录
-                        </Button>
-                        <Button
-                            :class="{active: activeTab === 'phone'}"
-                            severity="secondary"
-                            @click="activeTab = 'phone'"
-                        >
-                            手机号登录
-                        </Button>
+                <div class="login-btn mb-4">
+                    <div class="card flex justify-center">
+                        <ButtonGroup>
+                            <Button
+                                label="用户名"
+                                icon="mdi mdi-account"
+                                :class="{'p-button-outlined': activeTab !== 'username'}"
+                                @click="activeTab = 'username'"
+                            />
+                            <Button
+                                label="邮箱"
+                                icon="mdi mdi-email"
+                                :class="{'p-button-outlined': activeTab !== 'email'}"
+                                @click="activeTab = 'email'"
+                            />
+                            <Button
+                                label="手机号"
+                                icon="mdi mdi-phone"
+                                :class="{'p-button-outlined': activeTab !== 'phone'}"
+                                @click="activeTab = 'phone'"
+                            />
+                        </ButtonGroup>
                     </div>
                 </div>
                 <!-- 邮箱登录表单 -->
@@ -63,8 +62,9 @@
                         <Password
                             id="emailPassword"
                             v-model="emailPassword"
-                            class="form-input"
+                            class="form-input password-input"
                             placeholder="请输入密码"
+                            :feedback="false"
                             toggle-mask
                         />
                         <div v-if="errors.emailPassword" class="error-message">
@@ -91,8 +91,9 @@
                         <Password
                             id="usernamePassword"
                             v-model="usernamePassword"
-                            class="form-input"
+                            class="form-input password-input"
                             placeholder="请输入密码"
+                            :feedback="false"
                             toggle-mask
                         />
                         <div v-if="errors.usernamePassword" class="error-message">
@@ -119,8 +120,9 @@
                         <Password
                             id="phonePassword"
                             v-model="phonePassword"
-                            class="form-input"
+                            class="form-input password-input"
                             placeholder="请输入密码"
+                            :feedback="false"
                             toggle-mask
                         />
                         <div v-if="errors.phonePassword" class="error-message">
@@ -174,6 +176,7 @@ import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Checkbox from 'primevue/checkbox'
 import { useToast } from 'primevue/usetoast'
+import ButtonGroup from 'primevue/buttongroup'
 
 const activeTab = ref<'username' | 'email' | 'phone'>('username')
 const email = ref('')
@@ -345,41 +348,16 @@ function loginWithGoogle() {
 }
 .login-btn {
   display: flex;
-}
-.btn-group {
-  display: flex;
-  border: 1px solid #e63946;
-  border-radius: 8px;
-  overflow: hidden;
   width: 100%;
-  .p-button {
-    border: none;
-    background: #fff;
-    color: #e63946;
-    border-radius: 0;
-    box-shadow: none;
-    transition: background 0.2s, color 0.2s;
-    &.active,
-    &:focus.active {
-      background: #e63946;
-      color: #fff;
-    }
-    &:not(:last-child) {
-      border-right: 1px solid #e63946;
-    }
-  }
+  margin-bottom: 1em;
 }
-.error-message {
-  color: #e63946;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-}
-.remember-me {
+.card {
+   width: 100%;
   display: flex;
-  align-items: center;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-  gap: 0.5rem;
+  justify-content: center;
+}
+.p-button {
+//   flex: 1;
 }
 .separator {
   display: flex;
