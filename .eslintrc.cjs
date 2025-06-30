@@ -8,5 +8,6 @@ module.exports = {
         'implicit-arrow-linebreak': [1],
         'vue/require-name-property': [0],
         '@typescript-eslint/ban-types': [1],
+        'vue/multi-word-component-names': [0],
     },
 }
