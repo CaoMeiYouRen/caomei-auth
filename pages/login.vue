@@ -352,7 +352,7 @@ function loginWithGoogle() {
 
 .login-container {
     display: flex;
-    //   min-height: 100vh;
+    min-height: 100vh;
     flex-direction: column-reverse;
 
     @media (min-width: 768px) {
@@ -369,7 +369,6 @@ function loginWithGoogle() {
     text-align: center;
     min-height: 20vh;
 
-    //   background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
     .login-logo img {
         width: 80%;
         max-width: 160px;

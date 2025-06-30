@@ -1,94 +1,261 @@
 <template>
-    <div class="demo-container">
-        <h1 class="title">
-            草梅 Auth 统一登录平台
-        </h1>
-        <p class="subtitle">
-            PrimeVue 风格演示页
-        </p>
-        <div class="demo-grid">
-            <Card class="demo-card">
-                <template #title>
-                    登录演示
-                </template>
-                <template #content>
+    <div class="index-container">
+        <div class="index-left">
+            <h1 class="index-title">
+                草梅 Auth 统一登录平台
+            </h1>
+            <p class="index-subtitle">
+                基于 Nuxt 3 的现代化统一登录平台，支持多种登录注册方式，安全、便捷、可扩展。
+            </p>
+            <div class="index-links">
+                <a
+                    href="https://github.com/CaoMeiYouRen/caomei-auth"
+                    target="_blank"
+                    class="project-link"
+                >
+                    <i class="mdi mdi-github" /> GitHub 项目地址
+                </a>
+            </div>
+            <div class="index-logo">
+                <img src="/logo.png" alt="logo">
+            </div>
+        </div>
+        <div class="index-right">
+            <div class="index-card">
+                <h2 class="index-card-title">
+                    演示入口
+                </h2>
+                <div class="button-group">
                     <Button
                         label="前往登录页"
                         icon="mdi mdi-login"
-                        class="p-mt-2"
+                        class="btn btn-primary"
                         @click="toLogin"
                     />
-                </template>
-            </Card>
+                    <Button
+                        label="前往注册页"
+                        icon="mdi mdi-account-plus"
+                        class="btn btn-primary"
+                        @click="toRegister"
+                    />
+                    <Button
+                        label="前往忘记密码页"
+                        icon="mdi mdi-lock-reset"
+                        class="btn btn-primary"
+                        @click="toForgotPassword"
+                    />
+                </div>
+                <div class="separator">
+                    GitHub源码
+                </div>
+                <div class="index-links-mobile">
+                    <a
+                        href="https://github.com/CaoMeiYouRen/caomei-auth"
+                        target="_blank"
+                        class="project-link"
+                    >
+                        <i class="mdi mdi-github" /> GitHub 项目地址
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import Button from 'primevue/button'
 
 function toLogin() {
-     navigateTo('/login')
+    navigateTo('/login')
 }
 
-onMounted(() => {
-    // setTimeout(() => {
-    //     navigateTo('/login')
-    // }, 500)
-})
+function toRegister() {
+    navigateTo('/register')
+}
 
+function toForgotPassword() {
+    navigateTo('/forgot-password')
+}
 </script>
 
 <style scoped lang="scss">
-.demo-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-}
+@import '@/styles/theme';
+@import '@/styles/form';
 
-.title {
-    text-align: center;
-    font-size: 2.2rem;
-    margin-bottom: 0.5rem;
-}
-
-.subtitle {
-    text-align: center;
-    color: #888;
-    margin-bottom: 2rem;
-}
-
-.demo-grid {
+.index-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
-}
+    flex-direction: column-reverse;
+    min-height: 100vh;
+    background: $background;
 
-.demo-card {
-    min-width: 280px;
-    max-width: 320px;
-    flex: 1 1 300px;
-}
-
-.form-group {
-    margin-bottom: 1.2rem;
-
-    label {
-        display: block;
-        margin-bottom: 0.4rem;
-        color: #666;
+    @media (min-width: 768px) {
+        flex-direction: row;
     }
-    // input{
-    //     width: 100%;
-    //     border: 1px solid #ccc;
-    //     border-radius: 4px;
-    // }
+}
+
+.index-left {
+    color: $background-light;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+    min-height: 20vh;
+
+    .index-logo img {
+        width: 80%;
+        max-width: 160px;
+    }
+
+    @media (min-width: 768px) {
+        width: 50%;
+        min-height: 100vh;
+        .index-logo img {
+            width: 25%;
+            max-width: none;
+        }
+    }
+}
+
+.index-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+    color: $secondary;
+    letter-spacing: 1px;
+}
+
+.index-subtitle {
+    color: $secondary-light;
+    margin-bottom: 2rem;
+    font-size: 1.15rem;
+    opacity: 0.92;
+}
+
+.index-links {
+    margin-top: 1.2rem;
+    .project-link {
+        color: $secondary-light;
+        font-weight: 500;
+        text-decoration: none;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.2s;
+        border-bottom: 1px dashed rgba($background-light, 0.3);
+        padding-bottom: 2px;
+        &:hover {
+            color: $primary-light;
+            text-decoration: underline;
+        }
+        i {
+            font-size: 1.3rem;
+        }
+    }
+    @media (max-width: 767px) {
+        display: none;
+    }
+}
+
+.index-links-mobile {
+    display: none;
+    @media (max-width: 767px) {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+        .project-link {
+            color: $secondary;
+            // border-bottom: 1px dashed $secondary-bg;
+            background: none;
+        }
+    }
+}
+
+.index-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    min-height: 60vh;
+    background: $background;
+    @media (min-width: 768px) {
+        width: 50%;
+        min-height: 100vh;
+    }
+}
+
+.index-card {
+    background-color: $background-light;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+    padding: 2.5rem 2rem 2rem 2rem;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.index-card-title {
+    color: $secondary;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    letter-spacing: 0.5px;
 }
 
 .button-group {
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
+    gap: 1.2rem;
+    width: 100%;
+}
+
+.btn {
+    width: 100%;
+    padding: 0.75rem 0;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: $primary !important;
+    color: $background-light !important;
+    border: none !important;
+    min-height: 44px;
+    box-shadow: none;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: $primary-dark !important;
+}
+
+.separator {
+    color: $secondary-light;
+    display: flex;
+    align-items: center;
+    margin: 2rem 0 1rem 0;
+    width: 100%;
+    font-size: 0.98rem;
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid $secondary-bg;
+    }
+    &::before {
+        margin-right: 1rem;
+    }
+    &::after {
+        margin-left: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        display: none;
+    }
 }
 </style>
