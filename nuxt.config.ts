@@ -55,7 +55,6 @@ export default defineNuxtConfig({
             theme: {
                 preset: AppPreset,
             },
-
         },
     },
     experimental: {
