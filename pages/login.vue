@@ -131,7 +131,11 @@
                     </div>
                 </div>
                 <div class="remember-me">
-                    <Checkbox v-model="rememberMe" input-id="remember" />
+                    <Checkbox
+                        v-model="rememberMe"
+                        input-id="remember"
+                        binary
+                    />
                     <label for="remember">记住我</label>
                 </div>
                 <Button
