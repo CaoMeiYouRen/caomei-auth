@@ -271,7 +271,7 @@ function loginWithGoogle() {
 <style scoped lang="scss">
 .login-container {
   display: flex;
-  min-height: 100vh;
+//   min-height: 100vh;
   flex-direction: column-reverse;
   @media (min-width: 768px) {
     flex-direction: row;

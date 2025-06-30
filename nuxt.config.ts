@@ -44,7 +44,10 @@ export default defineNuxtConfig({
     modules: [
         '@primevue/nuxt-module',
     ],
-    css: ['@mdi/font/css/materialdesignicons.min.css'],
+    css: [
+        '@mdi/font/css/materialdesignicons.min.css',
+        'normalize.css/normalize.css',
+    ],
     primevue: {
         autoImport: true,
         // components: [],
