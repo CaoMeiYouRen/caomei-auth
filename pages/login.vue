@@ -419,4 +419,35 @@ function loginWithGoogle() {
     text-decoration: underline;
   }
 }
+.remember-me{
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: #718096;
+    label {
+        margin-left: 0.5rem;
+        cursor: pointer;
+    }
+}
+.btn {
+  width: 100%;
+  padding: 0.75rem 0;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  text-align: center;
+}
+.btn-primary {
+  background-color: #e63946 !important;
+  color: #fff !important;
+  border: none !important;
+  width: 100%;
+  min-height: 44px;
+  box-shadow: none;
+  transition: background 0.2s;
+}
+.btn-primary:hover {
+  background-color: #a52834 !important;
+}
 </style>
