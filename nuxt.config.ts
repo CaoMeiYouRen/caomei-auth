@@ -1,21 +1,19 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import Aura from '@primeuix/themes/aura'
-import Material from '@primeuix/themes/material'
 import Lara from '@primeuix/themes/lara'
-import Nora from '@primeuix/themes/nora'
 
 export default defineNuxtConfig({
     compatibilityDate: '2025-06-30',
-    devtools: { enabled: true },
+    devtools: { enabled: false },
     modules: [
         '@primevue/nuxt-module',
     ],
+    css: ['@mdi/font/css/materialdesignicons.min.css'],
     primevue: {
         autoImport: true,
         // components: [],
         options: {
             theme: {
-                preset: Aura,
+                preset: Lara,
             },
         },
     },
