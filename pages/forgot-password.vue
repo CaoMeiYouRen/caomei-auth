@@ -150,6 +150,8 @@ import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import ButtonGroup from 'primevue/buttongroup'
 import { useToast } from 'primevue/usetoast'
+import { validateEmail, validatePhone } from '@/utils/validate'
+import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 
 const mode = ref<'email' | 'phone'>('email')
 const email = ref('')
@@ -180,35 +182,9 @@ onMounted(() => {
     }
 })
 
-function validateEmail(emailValue: string) {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    return re.test(emailValue)
-}
-function validatePhone(phoneValue: string) {
-    return /^\d{11}$/.test(phoneValue)
-}
-function sendEmailCode() {
-    if (!validateEmail(email.value)) {
-        errors.value.email = '请输入有效的邮箱地址'
-        return
-    }
-    emailCodeSending.value = true
-    toast.add({ severity: 'info', summary: '验证码已发送', detail: '请查收您的邮箱', life: 2000 })
-    setTimeout(() => {
-        emailCodeSending.value = false
-    }, 60000)
-}
-function sendPhoneCode() {
-    if (!validatePhone(phone.value)) {
-        errors.value.phone = '请输入有效的手机号'
-        return
-    }
-    phoneCodeSending.value = true
-    toast.add({ severity: 'info', summary: '验证码已发送', detail: '请查收您的短信', life: 2000 })
-    setTimeout(() => {
-        phoneCodeSending.value = false
-    }, 60000)
-}
+const sendEmailCode = useSendEmailCode(email, validateEmail, errors, emailCodeSending)
+const sendPhoneCode = useSendPhoneCode(phone, validatePhone, errors, phoneCodeSending)
+
 function resetPassword() {
     errors.value = {}
     let isValid = true
@@ -259,6 +235,7 @@ function resetPassword() {
 
 <style scoped lang="scss">
 @import '@/styles/theme';
+@import '@/styles/form';
 
 .forgot-container {
     display: flex;

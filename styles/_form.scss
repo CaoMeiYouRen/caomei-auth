@@ -1,0 +1,60 @@
+// 通用表单样式
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-input {
+    border: 1px solid $secondary-bg;
+    background-color: $background-light;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 1rem;
+}
+
+.form-input:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+}
+
+.code-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.code-btn {
+    min-width: 110px;
+    padding: 0.75rem 0.75rem;
+    font-size: 0.95rem;
+}
+
+.btn {
+    width: 100%;
+    padding: 0.75rem 0;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: $primary !important;
+    color: $background-light !important;
+    border: none !important;
+    width: 100%;
+    min-height: 44px;
+    box-shadow: none;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: $primary-dark !important;
+}

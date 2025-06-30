@@ -125,6 +125,8 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import { useToast } from 'primevue/usetoast'
+import { validateEmail, validatePhone } from '@/utils/validate'
+import { useSendPhoneCode } from '@/utils/code'
 
 const username = ref('')
 const email = ref('')
@@ -137,29 +139,8 @@ const errors = ref<Record<string, string>>({})
 const toast = useToast()
 const router = useRouter()
 
-function validateEmail(emailValue: string) {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    return re.test(emailValue)
-}
-function validatePhone(phoneValue: string) {
-    return /^\d{11}$/.test(phoneValue)
-}
-function sendPhoneCode() {
-    if (!validatePhone(phone.value)) {
-        errors.value.phone = '请输入有效的手机号'
-        return
-    }
-    phoneCodeSending.value = true
-    toast.add({
-        severity: 'info',
-        summary: '验证码已发送',
-        detail: '请查收您的短信',
-        life: 2000,
-    })
-    setTimeout(() => {
-        phoneCodeSending.value = false
-    }, 60000)
-}
+const sendPhoneCode = useSendPhoneCode(phone, validatePhone, errors, phoneCodeSending)
+
 function register() {
     errors.value = {}
     let isValid = true
@@ -214,6 +195,7 @@ function register() {
 
 <style scoped lang="scss">
 @import '@/styles/theme';
+@import '@/styles/form';
 
 .register-container {
     display: flex;
