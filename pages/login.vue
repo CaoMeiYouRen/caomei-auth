@@ -226,6 +226,10 @@
                     还没有账号？ <NuxtLink to="/register" class="toggle-link">
                         立即注册
                     </NuxtLink>
+                    <span class="divider">|</span>
+                    <NuxtLink :to="'/forgot-password?mode=' + activeTab" class="toggle-link">
+                        忘记密码？
+                    </NuxtLink>
                 </div>
             </div>
         </div>
