@@ -1,0 +1,9 @@
+pull_request_rules:
+  - name: automatic merge for Dependabot pull requests
+    conditions:
+      - check-success=Test
+      - author~=^dependabot(|-preview)\[bot\]$
+      - label=dependencies
+    actions:
+      merge:
+        method: rebase

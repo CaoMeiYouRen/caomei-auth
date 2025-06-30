@@ -1,0 +1,40 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+# 仅针对当前工作流正在进行的作业或运行
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false # Release 作业不取消，因为要确保版本发布成功
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      packages: write
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "latest"
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "pnpm"
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run build
+      # - env:
+      #     # GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     # NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      #   run: pnpm run release

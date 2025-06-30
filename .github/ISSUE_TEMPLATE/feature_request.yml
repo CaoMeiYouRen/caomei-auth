@@ -1,0 +1,41 @@
+name: Feature Request
+description: 新功能请求
+title: "[feature] "
+labels: ["enhancement"]
+# assignees: []
+body:
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: Problem Description
+      description: 请提供对问题的清晰简洁的描述。例如，当 [...]
+      placeholder: 例如，当我尝试 [...] 时，我总是感到沮丧。
+    validations:
+      required: false
+
+  - type: textarea
+    id: solution-description
+    attributes:
+      label: Solution Description
+      description: 请描述您想要的解决方案。
+      placeholder: 例如，我希望有一个功能可以 [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternative-solutions
+    attributes:
+      label: Alternative Solutions
+      description: 请描述您考虑过的任何替代解决方案或功能。
+      placeholder: 例如，我考虑过使用 [...] 作为替代方案。
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: 如果适用，在此处添加有关功能请求的上下文信息或屏幕截图链接。
+      placeholder: 例如，https://example.com/screenshot.png
+    validations:
+      required: false

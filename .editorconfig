@@ -1,0 +1,27 @@
+# http://editorconfig.org
+#启用编辑器配置
+root = true
+# 对所有文件生效
+[*]
+#编码方式
+charset = utf-8
+#缩进格式
+indent_style = space
+indent_size = 4
+#换行符
+end_of_line = lf
+#插入最终换行符
+insert_final_newline = true
+#修剪尾随空格
+trim_trailing_whitespace = true
+# 对后缀名为 md 的文件生效
+[*.md]
+trim_trailing_whitespace = false
+[*.sh]
+#换行符
+end_of_line = lf
+[package.json]
+indent_size = 2
+insert_final_newline = false
+[*.yml]
+indent_size = 2

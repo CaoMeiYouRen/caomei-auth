@@ -1,0 +1,130 @@
+{
+  "name": "caomei-auth",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint:css": "stylelint src/**/*.{html,css,scss,sass,vue} --fix --custom-syntax postcss-html",
+    "lint": "cross-env NODE_ENV=production eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix",
+    "release": "semantic-release",
+    "build": "nuxt build",
+    "dev": "nuxt dev -o",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "commit": "cz",
+    "prepare": "husky install",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.4.0",
+    "animate.css": "^4.1.1",
+    "dayjs": "^1.11.13",
+    "fs-extra": "^11.3.0",
+    "lodash-es": "^4.17.21",
+    "normalize.css": "^8.0.1",
+    "nuxt": "^3.17.5",
+    "p-queue": "^8.1.0",
+    "vue": "^3.5.17",
+    "vue-router": "^4.5.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "esbuild"
+    ],
+    "overrides": {
+      "vite": "^6.2.6",
+      "parse-git-config": "^3.0.0",
+      "esbuild": "^0.25.0"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.6.1",
+    "@commitlint/config-conventional": "^18.6.3",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/fs-extra": "^11.0.4",
+    "@types/lodash-es": "^4.17.12",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "commitizen": "^4.2.3",
+    "conventional-changelog-cmyr-config": "^2.1.2",
+    "cross-env": "^7.0.3",
+    "cz-conventional-changelog-cmyr": "^1.1.1",
+    "eslint": "^8.57.1",
+    "eslint-config-cmyr": "^1.1.33",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-vue": "^9.33.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "postcss-html": "^1.5.0",
+    "sass": "^1.89.2",
+    "semantic-release": "21.0.1",
+    "stylelint": "^14.16.1",
+    "stylelint-config-cmyr": "^0.2.1",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-standard": "^29.0.0",
+    "stylelint-order": "^6.0.1",
+    "stylelint-scss": "^4.3.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.0.1",
+    "vitest": "^2.1.6"
+  },
+  "author": "CaoMeiYouRen",
+  "description": "草梅 Auth 是一个基于 Nuxt 全栈框架的统一登录平台。支持 OAuth2.0 协议，集成邮箱、用户名、手机号、验证码、社交媒体等多种登录注册方式。",
+  "keywords": [
+    "oauth2.0",
+    "-unified-login",
+    "-nuxt",
+    "-vue-3",
+    "-ssr",
+    "-better-auth",
+    "-nodemailer",
+    "-email-verification",
+    "-sms-verification",
+    "-social-login",
+    "-git-hub",
+    "-google",
+    "-scss",
+    "-@mdi/font",
+    "-pnpm",
+    "-docker",
+    "-vercel",
+    "-cloudflare-workers",
+    "-multi-factor-authentication",
+    "-user-management",
+    "-api",
+    "-sso",
+    "vue",
+    "vue3",
+    "nuxt"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "homepage": "https://github.com/CaoMeiYouRen/caomei-auth#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CaoMeiYouRen/caomei-auth.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CaoMeiYouRen/caomei-auth/issues"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog-cmyr"
+    }
+  },
+  "changelog": {
+    "language": "zh"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "npm run lint",
+      "git add"
+    ]
+  }
+}

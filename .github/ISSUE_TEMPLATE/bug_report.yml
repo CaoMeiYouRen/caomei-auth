@@ -1,0 +1,91 @@
+name: Bug Report
+description: 反馈 Bug
+title: "[bug] "
+labels: ["bug"]
+# assignees: []
+body:
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: 请提供对 bug 的清晰简洁的描述。
+      placeholder: 例如，当我点击按钮时，应用程序崩溃了。
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Reproduction Steps
+      description: 请提供再现 bug 的步骤。
+      placeholder: 1. 打开应用程序。2. 点击按钮。3. 观察到应用程序崩溃。
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: 请描述你期望发生的行为。
+      placeholder: 例如，点击按钮后，应用程序应该正常运行。
+    validations:
+      required: true
+
+  - type: input
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: 如果适用，请添加屏幕截图以帮助解释您的问题。
+      placeholder: 例如，https://example.com/screenshot.png
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        **Desktop (please complete the following information):/系统信息（请填写以下信息）：**
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: 请提供操作系统信息。
+      placeholder: 例如，Windows 10, macOS 11.2, Ubuntu 20.04, Docker 21.1.3
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: 请提供浏览器信息。
+      placeholder: 例如，Chrome 91, Firefox 89
+    validations:
+      required: false
+
+  - type: input
+    id: nodejs-version
+    attributes:
+      label: NodeJS Version
+      description: 请提供 NodeJS 版本信息。
+      placeholder: 例如，20.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: project-version
+    attributes:
+      label: Project Version
+      description: 请提供项目版本信息。如果没有版本号，则提交对应的 commit hash。
+      placeholder: 例如，1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: 在此处添加有关该问题的任何其他上下文。
+      placeholder: 例如，我使用的是最新版本的应用程序。
+    validations:
+      required: false

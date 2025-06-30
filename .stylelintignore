@@ -1,0 +1,6 @@
+/dist/
+/test/
+*.min.css
+*.js
+*.ts
+_*

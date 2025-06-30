@@ -1,0 +1,21 @@
+name: Run TODO to Issue
+on:
+  push:
+    branches:
+      - master
+# 仅取消针对当前工作流正在进行的作业或运行
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    permissions:
+      issues: write
+      contents: read
+    timeout-minutes: 10
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v4"
+      - name: "TODO to Issue"
+        uses: "alstr/todo-to-issue-action@v4"
