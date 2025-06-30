@@ -48,6 +48,17 @@ export default defineNuxtConfig({
         '@mdi/font/css/materialdesignicons.min.css',
         'normalize.css/normalize.css',
     ],
+    app: {
+        head: {
+            title: '草梅 Auth 统一登录平台',
+            htmlAttrs: {
+                lang: 'zh-CN',
+            },
+            link: [
+                { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+            ],
+        },
+    },
     primevue: {
         autoImport: true,
         // components: [],

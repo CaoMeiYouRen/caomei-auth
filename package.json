@@ -98,7 +98,6 @@
   "keywords": [
     "oauth2.0",
     "unified-login",
-    "nuxt",
     "ssr",
     "better-auth",
     "nodemailer",
