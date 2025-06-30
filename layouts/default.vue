@@ -78,7 +78,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        max-width: 1100px;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 0 1.2rem;
         flex-wrap: wrap;
@@ -109,7 +109,7 @@
         }
     }
     .layout-default__footer-bottom {
-        max-width: 1100px;
+        max-width: 1200px;
         margin: 0.7rem auto 0 auto;
         padding: 0 1.2rem;
         display: flex;

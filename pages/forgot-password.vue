@@ -240,7 +240,7 @@ function resetPassword() {
 .forgot-container {
     display: flex;
     flex-direction: column-reverse;
-
+    background: $background;
     @media (min-width: 768px) {
         flex-direction: row;
     }
