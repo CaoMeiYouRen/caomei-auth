@@ -58,18 +58,48 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="emailPassword">密码</label>
-                        <Password
-                            id="emailPassword"
-                            v-model="emailPassword"
-                            class="form-input password-input"
-                            placeholder="请输入密码"
-                            :feedback="false"
-                            toggle-mask
+                        <template v-if="!emailUseCode">
+                            <label class="form-label" for="emailPassword">密码</label>
+                            <Password
+                                id="emailPassword"
+                                v-model="emailPassword"
+                                class="form-input password-input"
+                                placeholder="请输入密码"
+                                :feedback="false"
+                                toggle-mask
+                            />
+                            <div v-if="errors.emailPassword" class="error-message">
+                                {{ errors.emailPassword }}
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="form-label-group">
+                                <label class="form-label" for="emailCode">验证码</label>
+                                <div class="code-row">
+                                    <InputText
+                                        id="emailCode"
+                                        v-model="emailCode"
+                                        class="form-input"
+                                        placeholder="请输入邮箱验证码"
+                                    />
+                                    <Button
+                                        class="code-btn"
+                                        label="获取验证码"
+                                        :disabled="emailCodeSending || !validateEmail(email)"
+                                        @click="sendEmailCode"
+                                    />
+                                </div>
+                            </div>
+                            <div v-if="errors.emailCode" class="error-message">
+                                {{ errors.emailCode }}
+                            </div>
+                        </template>
+                        <Button
+                            class="switch-btn"
+                            text
+                            :label="emailUseCode ? '使用密码登录' : '使用验证码登录'"
+                            @click="emailUseCode = !emailUseCode"
                         />
-                        <div v-if="errors.emailPassword" class="error-message">
-                            {{ errors.emailPassword }}
-                        </div>
                     </div>
                 </div>
                 <!-- 用户名登录表单 -->
@@ -116,18 +146,48 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="phonePassword">密码</label>
-                        <Password
-                            id="phonePassword"
-                            v-model="phonePassword"
-                            class="form-input password-input"
-                            placeholder="请输入密码"
-                            :feedback="false"
-                            toggle-mask
+                        <template v-if="!phoneUseCode">
+                            <label class="form-label" for="phonePassword">密码</label>
+                            <Password
+                                id="phonePassword"
+                                v-model="phonePassword"
+                                class="form-input password-input"
+                                placeholder="请输入密码"
+                                :feedback="false"
+                                toggle-mask
+                            />
+                            <div v-if="errors.phonePassword" class="error-message">
+                                {{ errors.phonePassword }}
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="form-label-group">
+                                <label class="form-label" for="phoneCode">验证码</label>
+                                <div class="code-row">
+                                    <InputText
+                                        id="phoneCode"
+                                        v-model="phoneCode"
+                                        class="form-input"
+                                        placeholder="请输入短信验证码"
+                                    />
+                                    <Button
+                                        class="code-btn"
+                                        label="获取验证码"
+                                        :disabled="phoneCodeSending || !validatePhone(phone)"
+                                        @click="sendPhoneCode"
+                                    />
+                                </div>
+                            </div>
+                            <div v-if="errors.phoneCode" class="error-message">
+                                {{ errors.phoneCode }}
+                            </div>
+                        </template>
+                        <Button
+                            class="switch-btn"
+                            text
+                            :label="phoneUseCode ? '使用密码登录' : '使用验证码登录'"
+                            @click="phoneUseCode = !phoneUseCode"
                         />
-                        <div v-if="errors.phonePassword" class="error-message">
-                            {{ errors.phonePassword }}
-                        </div>
                     </div>
                 </div>
                 <div class="remember-me">
@@ -193,6 +253,12 @@ const rememberMe = ref(false)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
 const router = useRouter()
+const emailUseCode = ref(false)
+const emailCode = ref('')
+const emailCodeSending = ref(false)
+const phoneUseCode = ref(false)
+const phoneCode = ref('')
+const phoneCodeSending = ref(false)
 
 function validateEmail(emailValue: string) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -200,6 +266,38 @@ function validateEmail(emailValue: string) {
 }
 function validatePhone(phoneValue: string) {
     return /^\d{11}$/.test(phoneValue)
+}
+function sendEmailCode() {
+    if (!validateEmail(email.value)) {
+        errors.value.email = '请输入有效的邮箱地址'
+        return
+    }
+    emailCodeSending.value = true
+    toast.add({
+        severity: 'info',
+        summary: '验证码已发送',
+        detail: '请查收您的邮箱',
+        life: 2000,
+    })
+    setTimeout(() => {
+        emailCodeSending.value = false
+    }, 60000)
+}
+function sendPhoneCode() {
+    if (!validatePhone(phone.value)) {
+        errors.value.phone = '请输入有效的手机号'
+        return
+    }
+    phoneCodeSending.value = true
+    toast.add({
+        severity: 'info',
+        summary: '验证码已发送',
+        detail: '请查收您的短信',
+        life: 2000,
+    })
+    setTimeout(() => {
+        phoneCodeSending.value = false
+    }, 60000)
 }
 function login() {
     errors.value = {}
@@ -212,10 +310,15 @@ function login() {
             errors.value.email = '请输入有效的邮箱地址'
             isValid = false
         }
-        if (!emailPassword.value) {
-            errors.value.emailPassword = '请输入密码'
-            isValid = false
-        }
+        if (emailUseCode.value) {
+            if (!emailCode.value) {
+                errors.value.emailCode = '请输入验证码'
+                isValid = false
+            }
+        } else if (!emailPassword.value) {
+                errors.value.emailPassword = '请输入密码'
+                isValid = false
+            }
     } else if (activeTab.value === 'username') {
         if (!username.value) {
             errors.value.username = '请输入用户名'
@@ -233,10 +336,15 @@ function login() {
             errors.value.phone = '请输入有效的手机号'
             isValid = false
         }
-        if (!phonePassword.value) {
-            errors.value.phonePassword = '请输入密码'
-            isValid = false
-        }
+        if (phoneUseCode.value) {
+            if (!phoneCode.value) {
+                errors.value.phoneCode = '请输入验证码'
+                isValid = false
+            }
+        } else if (!phonePassword.value) {
+                errors.value.phonePassword = '请输入密码'
+                isValid = false
+            }
     }
     if (isValid) {
         toast.add({
@@ -482,6 +590,21 @@ function loginWithGoogle() {
 
 .p-password {
     padding: 0 0 0 0;
+    width: 100%;
+}
+
+.code-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.code-btn {
+    min-width: 110px;
+    padding: 0.75rem 0.75rem;
+    font-size: 0.95rem;
+}
+.switch-btn {
+    margin-top: 0.5rem;
     width: 100%;
 }
 </style>
