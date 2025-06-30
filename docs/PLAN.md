@@ -20,6 +20,24 @@
 -   邮件服务基于 nodemailer
 -   前端采用 Nuxt（Vue 3.x）全栈框架，响应式设计，用户体验友好
 -   UI 采用 @mdi/font 图标库，样式使用 SCSS
+-   主题色设计：
+    -   主色（Primary）：#e63946
+    -   主色浅（Primary Light）：#ff6b6b
+    -   主色深（Primary Dark）：#a52834
+    -   主色调色板（PrimeVue 设计令牌 primary 50~950）：
+        -   50: #ffe5e9
+        -   100: #ffccd3
+        -   200: #ffb3bd
+        -   300: #ff8a9e
+        -   400: #ff6b6b
+        -   500: #e63946
+        -   600: #d12f3a
+        -   700: #a52834
+        -   800: #7c1d28
+        -   900: #5a151d
+        -   950: #3a0c12
+    -   辅助色：#2d3748, #718096, #e2e8f0
+    -   背景色：#f8fafc, #ffffff
 -   后端支持多种部署方式：Node.js、Docker、Vercel、Cloudflare Workers
 -   安全性设计：支持多因子认证、验证码、登录日志等
 
@@ -34,7 +52,7 @@
     -   nodemailer（邮件服务）
     -   第三方短信服务（如阿里云、腾讯云等）
 -   样式与图标：
-    -   SCSS
+    -   SCSS，主题色主打红色（#e63946）及其变体，风格现代明快
     -   @mdi/font（Material Design Icons）
 -   数据库：
     -   PostgreSQL/MySQL/SQLite（可选）
@@ -84,6 +102,29 @@ caomei-auth/
 ### 4. Cloudflare Workers 部署
 
 -   参考 `wrangler.toml` 配置，使用 `wrangler publish` 部署
+
+## 样式与主题色规范
+
+-   主题色主打红色，强调安全与活力，具体色值如下：
+    -   主色（Primary）：#e63946
+    -   主色浅（Primary Light）：#ff6b6b
+    -   主色深（Primary Dark）：#a52834
+    -   主色调色板（PrimeVue 设计令牌 primary 50~950）：
+        -   50: #ffe5e9
+        -   100: #ffccd3
+        -   200: #ffb3bd
+        -   300: #ff8a9e
+        -   400: #ff6b6b
+        -   500: #e63946
+        -   600: #d12f3a
+        -   700: #a52834
+        -   800: #7c1d28
+        -   900: #5a151d
+        -   950: #3a0c12
+    -   辅助色：#2d3748, #718096, #e2e8f0
+    -   背景色：#f8fafc, #ffffff
+-   PrimeVue 主题已在 `nuxt.config.ts` 中自定义，保持与设计稿一致，采用完整主色调色板，便于主题切换和风格统一。
+-   所有 SCSS 变量建议统一维护，便于主题切换和风格统一
 
 ## 未来规划
 

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>草梅Auth统一登录平台</title>
+    <link rel=icon href="favicon.png">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://unpkg.com/vuetify@3.8.11/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/vuetify@3.8.11/dist/vuetify.min.js"></script>
+    <link href="https://unpkg.com/@mdi/font@7.4.47/css/materialdesignicons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --primary-light: #ff6b6b;
+            --primary-dark: #a52834;
+            --text-color: #2d3748;
+            --text-secondary: #718096;
+            --background: #f8fafc;
+            --border: #e2e8f0;
+            --input-bg: #ffffff;
+            --card-bg: #ffffff;
+            --social-github: #24292e;
+            --social-google: #4285f4;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column-reverse;
+            /* 手机端登录框优先显示 */
+        }
+
+        @media (min-width: 768px) {
+            .login-container {
+                flex-direction: row;
+            }
+        }
+
+        .login-left {
+            /* background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+            text-align: center;
+            min-height: 20vh;
+            /* 手机端缩小高度 */
+        }
+
+        .login-logo img {
+            width: 80%;
+            /* 手机端logo缩小 */
+            max-width: 160px;
+        }
+
+        @media (min-width: 768px) {
+            .login-left {
+                width: 50%;
+                min-height: 100vh;
+            }
+
+            .login-logo img {
+                width: 25%;
+                max-width: none;
+            }
+        }
+
+        .login-right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            min-height: 60vh;
+            /* 手机端登录区高度适中 */
+        }
+
+        @media (min-width: 768px) {
+            .login-right {
+                width: 50%;
+                min-height: 100vh;
+            }
+        }
+
+
+
+        .login-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+        }
+
+        .login-btn {
+            display: flex;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 0.75rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 0.5rem 0.75rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(230, 57, 70, 0.05);
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon span {
+            margin-left: 0.5rem;
+        }
+
+        .social-login {
+            margin-top: 2rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 1rem;
+        }
+
+        .social-btn:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        .social-btn i {
+            margin-right: 0.75rem;
+        }
+
+        .social-github {
+            color: var(--social-github);
+        }
+
+        .social-google {
+            color: var(--social-google);
+        }
+
+        .separator {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+            color: var(--text-secondary);
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .separator::before {
+            margin-right: 1rem;
+        }
+
+        .separator::after {
+            margin-left: 1rem;
+        }
+
+        .toggle-login {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .toggle-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--primary-color);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .remember-me input {
+            margin-right: 0.5rem;
+        }
+
+        .svg-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.75rem;
+        }
+
+        .btn-group {
+            display: flex;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .btn-group .btn {
+            border: none;
+            background: #fff;
+            color: var(--primary-color);
+            border-radius: 0;
+            box-shadow: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-group .btn.active,
+        .btn-group .btn:focus.active {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        .btn-group .btn:not(:last-child) {
+            border-right: 1px solid var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="login-container">
+            <div class="login-left">
+                <h1 class="login-title">草梅Auth统一登录平台</h1>
+                <p class="login-subtitle">安全、便捷的一站式登录体验</p>
+                <div class="login-logo">
+                    <img src="logo.png">
+                </div>
+            </div>
+            <div class="login-right">
+                <div class="login-card">
+                    <h2 class="login-title">欢迎回来</h2>
+                    <p class="login-subtitle">请使用您的账号信息登录</p>
+
+                    <!-- 登录方式切换 -->
+                    <div class="mb-4 login-btn" style="display: flex; gap: 1rem;">
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" :class="{ active: activeTab === 'username' }"
+                                @click="activeTab = 'username'">用户名登录</button>
+                            <button class="btn btn-secondary" :class="{ active: activeTab === 'email' }"
+                                @click="activeTab = 'email'">邮箱登录</button>
+
+                            <button class="btn btn-secondary" :class="{ active: activeTab === 'phone' }"
+                                @click="activeTab = 'phone'">手机号登录</button>
+                        </div>
+                    </div>
+
+                    <!-- 邮箱登录表单 -->
+                    <div v-show="activeTab === 'email'">
+                        <div class="form-group">
+                            <label class="form-label" for="email">邮箱</label>
+                            <input type="email" id="email" class="form-input" v-model="email"
+                                placeholder="example@mail.com">
+                            <div class="error-message" v-if="errors.email">{{ errors.email }}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="emailPassword">密码</label>
+                            <input type="password" id="emailPassword" class="form-input" v-model="emailPassword"
+                                placeholder="请输入密码">
+                            <div class="error-message" v-if="errors.emailPassword">{{ errors.emailPassword }}</div>
+                        </div>
+                    </div>
+
+                    <!-- 用户名登录表单 -->
+                    <div v-show="activeTab === 'username'">
+                        <div class="form-group">
+                            <label class="form-label" for="username">用户名</label>
+                            <input type="text" id="username" class="form-input" v-model="username" placeholder="请输入用户名">
+                            <div class="error-message" v-if="errors.username">{{ errors.username }}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="usernamePassword">密码</label>
+                            <input type="password" id="usernamePassword" class="form-input" v-model="usernamePassword"
+                                placeholder="请输入密码">
+                            <div class="error-message" v-if="errors.usernamePassword">{{ errors.usernamePassword }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 手机号登录表单 -->
+                    <div v-show="activeTab === 'phone'">
+                        <div class="form-group">
+                            <label class="form-label" for="phone">手机号</label>
+                            <input type="tel" id="phone" class="form-input" v-model="phone" placeholder="请输入手机号">
+                            <div class="error-message" v-if="errors.phone">{{ errors.phone }}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="phonePassword">密码</label>
+                            <input type="password" id="phonePassword" class="form-input" v-model="phonePassword"
+                                placeholder="请输入密码">
+                            <div class="error-message" v-if="errors.phonePassword">{{ errors.phonePassword }}</div>
+                        </div>
+                    </div>
+
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" v-model="rememberMe">
+                        <label for="remember">记住我</label>
+                    </div>
+
+                    <button class="btn btn-primary" @click="login">登录</button>
+
+                    <div class="separator">或者使用以下方式登录</div>
+
+                    <div class="social-login">
+                        <button class="social-btn social-github" @click="loginWithGitHub">
+                            <i class="mdi mdi-github"></i>
+                            <span>使用 GitHub 账号登录</span>
+                        </button>
+                        <button class="social-btn social-google" @click="loginWithGoogle">
+                            <i class="mdi mdi-google"></i>
+                            <span>使用 Google 账号登录</span>
+                        </button>
+                    </div>
+
+                    <div class="toggle-login">
+                        还没有账号？ <a href="#" class="toggle-link" @click="register">立即注册</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    activeTab: 'username',
+                    email: '',
+                    emailPassword: '',
+                    username: '',
+                    usernamePassword: '',
+                    phone: '',
+                    phonePassword: '',
+                    rememberMe: false,
+                    errors: {}
+                }
+            },
+            methods: {
+                login() {
+                    this.errors = {}
+                    let isValid = true
+
+                    if (this.activeTab === 'email') {
+                        if (!this.email) {
+                            this.errors.email = '请输入邮箱'
+                            isValid = false
+                        } else if (!this.validateEmail(this.email)) {
+                            this.errors.email = '请输入有效的邮箱地址'
+                            isValid = false
+                        }
+
+                        if (!this.emailPassword) {
+                            this.errors.emailPassword = '请输入密码'
+                            isValid = false
+                        }
+                    } else if (this.activeTab === 'username') {
+                        if (!this.username) {
+                            this.errors.username = '请输入用户名'
+                            isValid = false
+                        }
+
+                        if (!this.usernamePassword) {
+                            this.errors.usernamePassword = '请输入密码'
+                            isValid = false
+                        }
+                    } else if (this.activeTab === 'phone') {
+                        if (!this.phone) {
+                            this.errors.phone = '请输入手机号'
+                            isValid = false
+                        } else if (!this.validatePhone(this.phone)) {
+                            this.errors.phone = '请输入有效的手机号'
+                            isValid = false
+                        }
+
+                        if (!this.phonePassword) {
+                            this.errors.phonePassword = '请输入密码'
+                            isValid = false
+                        }
+                    }
+
+                    if (isValid) {
+                        // 登录成功，模拟跳转到首页
+                        alert('登录成功！即将跳转到首页')
+                        //window.location.href = '/dashboard'
+                    }
+                },
+                loginWithGitHub() {
+                    // 模拟 GitHub OAuth2 登录
+                    alert('即将跳转到 GitHub 登录页面')
+                    // 实际应用中应该跳转到 GitHub 的授权页面
+                    // window.location.href = 'https://github.com/login/oauth/authorize?client_id=YOUR_CLIENT_ID'
+                },
+                loginWithGoogle() {
+                    // 模拟 Google OAuth2 登录
+                    alert('即将跳转到 Google 登录页面')
+                    // 实际应用中应该跳转到 Google 的授权页面
+                    // window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_CLIENT_ID&scope=email profile'
+                },
+                register() {
+                    // 模拟跳转到注册页面
+                    alert('即将跳转到注册页面')
+                    window.location.href = '/register'
+                },
+                validateEmail(email) {
+                    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                    return re.test(email)
+                },
+                validatePhone(phone) {
+                    // 简化的手机号验证，仅验证是否为11位数字
+                    const re = /^\d{11}$/
+                    return re.test(phone)
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
