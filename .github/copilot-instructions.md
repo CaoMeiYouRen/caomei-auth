@@ -1,5 +1,9 @@
 # Copilot Instructions
 
+## 项目规划
+
+参考 [PLAN.md](../docs/PLAN.md)
+
 ## 项目技术栈
 
 -   **框架**: 使用 [Vue 3](https://vuejs.org/) 和 [Nuxt 3](https://nuxt.com/) 构建。
