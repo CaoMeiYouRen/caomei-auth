@@ -195,259 +195,302 @@ const toast = useToast()
 const router = useRouter()
 
 function validateEmail(emailValue: string) {
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  return re.test(emailValue)
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return re.test(emailValue)
 }
 function validatePhone(phoneValue: string) {
-  return /^\d{11}$/.test(phoneValue)
+    return /^\d{11}$/.test(phoneValue)
 }
 function login() {
-  errors.value = {}
-  let isValid = true
-  if (activeTab.value === 'email') {
-    if (!email.value) {
-      errors.value.email = '请输入邮箱'
-      isValid = false
-    } else if (!validateEmail(email.value)) {
-      errors.value.email = '请输入有效的邮箱地址'
-      isValid = false
+    errors.value = {}
+    let isValid = true
+    if (activeTab.value === 'email') {
+        if (!email.value) {
+            errors.value.email = '请输入邮箱'
+            isValid = false
+        } else if (!validateEmail(email.value)) {
+            errors.value.email = '请输入有效的邮箱地址'
+            isValid = false
+        }
+        if (!emailPassword.value) {
+            errors.value.emailPassword = '请输入密码'
+            isValid = false
+        }
+    } else if (activeTab.value === 'username') {
+        if (!username.value) {
+            errors.value.username = '请输入用户名'
+            isValid = false
+        }
+        if (!usernamePassword.value) {
+            errors.value.usernamePassword = '请输入密码'
+            isValid = false
+        }
+    } else if (activeTab.value === 'phone') {
+        if (!phone.value) {
+            errors.value.phone = '请输入手机号'
+            isValid = false
+        } else if (!validatePhone(phone.value)) {
+            errors.value.phone = '请输入有效的手机号'
+            isValid = false
+        }
+        if (!phonePassword.value) {
+            errors.value.phonePassword = '请输入密码'
+            isValid = false
+        }
     }
-    if (!emailPassword.value) {
-      errors.value.emailPassword = '请输入密码'
-      isValid = false
+    if (isValid) {
+        toast.add({
+            severity: 'success',
+            summary: '登录成功',
+            detail: '即将跳转到首页',
+            life: 2000,
+        })
+        setTimeout(() => {
+            router.push('/')
+        }, 1200)
     }
-  } else if (activeTab.value === 'username') {
-    if (!username.value) {
-      errors.value.username = '请输入用户名'
-      isValid = false
-    }
-    if (!usernamePassword.value) {
-      errors.value.usernamePassword = '请输入密码'
-      isValid = false
-    }
-  } else if (activeTab.value === 'phone') {
-    if (!phone.value) {
-      errors.value.phone = '请输入手机号'
-      isValid = false
-    } else if (!validatePhone(phone.value)) {
-      errors.value.phone = '请输入有效的手机号'
-      isValid = false
-    }
-    if (!phonePassword.value) {
-      errors.value.phonePassword = '请输入密码'
-      isValid = false
-    }
-  }
-  if (isValid) {
-    toast.add({
-      severity: 'success',
-      summary: '登录成功',
-      detail: '即将跳转到首页',
-      life: 2000,
-    })
-    setTimeout(() => {
-      router.push('/')
-    }, 1200)
-  }
 }
 function loginWithGitHub() {
-  toast.add({
-    severity: 'info',
-    summary: 'GitHub 登录',
-    detail: '即将跳转到 GitHub 登录页面',
-    life: 2000,
-  })
+    toast.add({
+        severity: 'info',
+        summary: 'GitHub 登录',
+        detail: '即将跳转到 GitHub 登录页面',
+        life: 2000,
+    })
 }
 function loginWithGoogle() {
-  toast.add({
-    severity: 'info',
-    summary: 'Google 登录',
-    detail: '即将跳转到 Google 登录页面',
-    life: 2000,
-  })
+    toast.add({
+        severity: 'info',
+        summary: 'Google 登录',
+        detail: '即将跳转到 Google 登录页面',
+        life: 2000,
+    })
 }
 </script>
 
 <style scoped lang="scss">
 .login-container {
-  display: flex;
-//   min-height: 100vh;
-  flex-direction: column-reverse;
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
-}
-.login-left {
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1rem;
-  text-align: center;
-  min-height: 20vh;
-//   background: linear-gradient(135deg, #e63946 0%, #a52834 100%);
-  .login-logo img {
-    width: 80%;
-    max-width: 160px;
-  }
-  @media (min-width: 768px) {
-    width: 50%;
-    min-height: 100vh;
-    .login-logo img {
-      width: 25%;
-      max-width: none;
+    display: flex;
+    //   min-height: 100vh;
+    flex-direction: column-reverse;
+
+    @media (min-width: 768px) {
+        flex-direction: row;
     }
-  }
 }
+
+.login-left {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+    min-height: 20vh;
+
+    //   background: linear-gradient(135deg, #e63946 0%, #a52834 100%);
+    .login-logo img {
+        width: 80%;
+        max-width: 160px;
+    }
+
+    @media (min-width: 768px) {
+        width: 50%;
+        min-height: 100vh;
+
+        .login-logo img {
+            width: 25%;
+            max-width: none;
+        }
+    }
+}
+
 .login-right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  min-height: 60vh;
-  @media (min-width: 768px) {
-    width: 50%;
-    min-height: 100vh;
-  }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    min-height: 60vh;
+
+    @media (min-width: 768px) {
+        width: 50%;
+        min-height: 100vh;
+    }
 }
+
 .login-card {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  padding: 2rem;
-  width: 100%;
-  max-width: 450px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    width: 100%;
+    max-width: 450px;
 }
+
 .login-title {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #2d3748;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #2d3748;
 }
+
 .login-subtitle {
-  color: #718096;
-  margin-bottom: 2rem;
+    color: #718096;
+    margin-bottom: 2rem;
 }
+
 .form-group {
-  margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 }
+
 .form-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
 }
+
 .form-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background-color: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  font-size: 1rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 1rem;
 }
+
 .form-input:focus {
-  outline: none;
-  border-color: #e63946;
-  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+    outline: none;
+    border-color: #e63946;
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
 }
+
 .login-btn {
-  display: flex;
-  width: 100%;
-  margin-bottom: 1em;
+    display: flex;
+    width: 100%;
+    margin-bottom: 1em;
 }
+
 .card {
-   width: 100%;
-  display: flex;
-  justify-content: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
-.p-button {
-//   flex: 1;
-}
+
 .separator {
-  display: flex;
-  align-items: center;
-  margin: 2rem 0;
-  color: #718096;
-  &::before,
-  &::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  &::before {
-    margin-right: 1rem;
-  }
-  &::after {
-    margin-left: 1rem;
-  }
-}
-.social-login {
-  margin-top: 2rem;
-  .social-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    background-color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-size: 1rem;
-    &.social-github {
-      color: #24292e;
+    margin: 2rem 0;
+    color: #718096;
+
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #e2e8f0;
     }
-    &.social-google {
-      color: #4285f4;
+
+    &::before {
+        margin-right: 1rem;
     }
-    .p-button-icon {
-      margin-right: 0.75rem;
+
+    &::after {
+        margin-left: 1rem;
     }
-  }
 }
+
+.social-login {
+    margin-top: 2rem;
+
+    .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background-color: #fff;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-size: 1rem;
+
+        &.social-github {
+            color: #24292e;
+        }
+
+        &.social-google {
+            color: #4285f4;
+        }
+
+        .p-button-icon {
+            margin-right: 0.75rem;
+        }
+    }
+}
+
 .toggle-login {
-  margin-top: 1.5rem;
-  text-align: center;
-  color: #718096;
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #718096;
 }
+
 .toggle-link {
-  color: #e63946;
-  text-decoration: none;
-  font-weight: 500;
-  &:hover {
-    text-decoration: underline;
-  }
+    color: #e63946;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
-.remember-me{
+
+.remember-me {
     display: flex;
     align-items: center;
     margin-top: 1rem;
     margin-bottom: 1rem;
     color: #718096;
+
     label {
         margin-left: 0.5rem;
         cursor: pointer;
     }
 }
+
 .btn {
-  width: 100%;
-  padding: 0.75rem 0;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 1rem;
-  text-align: center;
+    width: 100%;
+    padding: 0.75rem 0;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    text-align: center;
 }
+
 .btn-primary {
-  background-color: #e63946 !important;
-  color: #fff !important;
-  border: none !important;
-  width: 100%;
-  min-height: 44px;
-  box-shadow: none;
-  transition: background 0.2s;
+    background-color: #e63946 !important;
+    color: #fff !important;
+    border: none !important;
+    width: 100%;
+    min-height: 44px;
+    box-shadow: none;
+    transition: background 0.2s;
 }
+
 .btn-primary:hover {
-  background-color: #a52834 !important;
+    background-color: #a52834 !important;
+}
+
+.p-password {
+    padding: 0 0 0 0;
+    width: 100%;
+}
+</style>
+
+<style lang="scss">
+.password-input {
+    .p-password-input {
+        width: 100%;
+    }
 }
 </style>
