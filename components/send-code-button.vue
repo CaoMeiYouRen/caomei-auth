@@ -27,7 +27,7 @@ const hasStarted = ref(false)
 
 const btnLabel = computed(() => {
     if (hasStarted.value && remaining.value > 0) {
-        return `${props.resendText}（${remaining.value}s）`
+        return `${props.resendText}(${remaining.value}s)`
     }
     return props.text
 })
@@ -51,16 +51,20 @@ onMounted(() => {
     hasStarted.value = false // 确保初始状态未开始
 })
 
+onUnmounted(() => {
+    reset(0) // 组件卸载时重置倒计时
+    hasStarted.value = false // 重置开始状态
+})
+
 defineExpose({ start, reset })
 </script>
 
 <style scoped lang="scss">
 @import '@/styles/theme';
-@import '@/styles/form';
 
 .code-btn {
-    // min-width: 110px;
-    padding: 0.75rem 0.75rem;
+    max-width: 135px;
+    padding: 0.75rem 0.5rem;
     font-size: 0.95rem;
 }
 </style>

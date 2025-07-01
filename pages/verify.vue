@@ -18,25 +18,24 @@
                 </p>
                 <div class="form-group">
                     <label class="form-label" for="otp">验证码</label>
-                    <InputOtp
-                        v-model="code"
-                        :length="6"
-                        input-class="form-input"
-                        :disabled="verifying"
-                    />
+                    <div class="code-row">
+                        <InputOtp
+                            v-model="code"
+                            :length="6"
+                            input-class="form-input"
+                            :disabled="verifying"
+                        />
+                        <SendCodeButton
+                            class="code-btn"
+                            :on-send="handleResend"
+                            :duration="60"
+                            :disabled="sending || countdown > 0"
+                            :loading="sending"
+                            text="发送验证码"
+                            resend-text="重新发送"
+                        />
+                    </div>
                     <span v-if="errors.code" class="error-message">{{ errors.code }}</span>
-                </div>
-                <div class="code-row">
-                    <SendCodeButton
-                        class="code-btn"
-                        :on-send="handleResend"
-                        :duration="60"
-                        :disabled="sending || countdown > 0"
-                        :loading="sending"
-                        text="发送验证码"
-                        resend-text="重新发送"
-                    />
-                    <span v-if="countdown > 0" class="countdown">{{ countdown }}s后可重发</span>
                 </div>
                 <Button
                     label="提交"
@@ -184,7 +183,7 @@ function handleVerify() {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     padding: 2rem;
     width: 100%;
-    max-width: 420px;
+    max-width: 480px;
 }
 
 .verify-title {
@@ -209,12 +208,22 @@ function handleVerify() {
     gap: 0.5rem;
     align-items: center;
     margin-bottom: 1.5rem;
+
+    @media (max-width: 480px) {
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
 }
 
 .code-btn {
     min-width: 110px;
     padding: 0.75rem 0.75rem;
     font-size: 0.95rem;
+    @media (max-width: 480px) {
+        max-width: 100%;
+    }
 }
 
 .countdown {

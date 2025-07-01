@@ -353,12 +353,6 @@ function resetPassword() {
     align-items: center;
 }
 
-.code-btn {
-    min-width: 110px;
-    padding: 0.75rem 0.75rem;
-    font-size: 0.95rem;
-}
-
 .btn {
     width: 100%;
     padding: 0.75rem 0;
