@@ -27,11 +27,14 @@
                     <span v-if="errors.code" class="error-message">{{ errors.code }}</span>
                 </div>
                 <div class="code-row">
-                    <Button
-                        :label="sendBtnText"
-                        class="btn btn-primary code-btn"
+                    <SendCodeButton
+                        class="code-btn"
+                        :on-send="handleResend"
+                        :duration="60"
                         :disabled="sending || countdown > 0"
-                        @click="handleResend"
+                        :loading="sending"
+                        text="发送验证码"
+                        resend-text="重新发送"
                     />
                     <span v-if="countdown > 0" class="countdown">{{ countdown }}s后可重发</span>
                 </div>
@@ -57,6 +60,7 @@ import { useRoute, useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import InputOtp from 'primevue/inputotp'
 import { useToast } from 'primevue/usetoast'
+import SendCodeButton from '@/components/send-code-button.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -71,16 +75,6 @@ const sending = ref(false)
 const verifying = ref(false)
 const countdown = ref(0)
 let timer: any = null
-
-const sendBtnText = computed(() => {
-    if (countdown.value > 0) {
-        return '重新发送'
-    }
-    if (mode.value === 'email') {
-        return '发送邮箱验证码'
-    }
-    return '发送短信验证码'
-})
 
 onMounted(() => {
     if (route.query.mode === 'phone') {

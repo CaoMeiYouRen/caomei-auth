@@ -53,11 +53,13 @@
                                 class="form-input"
                                 placeholder="请输入邮箱验证码"
                             />
-                            <Button
-                                class="code-btn"
-                                label="获取验证码"
+                            <SendCodeButton
+                                :on-send="sendEmailCode"
+                                :duration="60"
                                 :disabled="emailCodeSending || !validateEmail(email)"
-                                @click="sendEmailCode"
+                                :loading="emailCodeSending"
+                                text="获取验证码"
+                                resend-text="重新发送"
                             />
                         </div>
                         <div v-if="errors.emailCode" class="error-message">
@@ -87,11 +89,13 @@
                                 class="form-input"
                                 placeholder="请输入短信验证码"
                             />
-                            <Button
-                                class="code-btn"
-                                label="获取验证码"
+                            <SendCodeButton
+                                :on-send="sendPhoneCode"
+                                :duration="60"
                                 :disabled="phoneCodeSending || !validatePhone(phone)"
-                                @click="sendPhoneCode"
+                                :loading="phoneCodeSending"
+                                text="获取验证码"
+                                resend-text="重新发送"
                             />
                         </div>
                         <div v-if="errors.phoneCode" class="error-message">
@@ -150,6 +154,7 @@ import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import ButtonGroup from 'primevue/buttongroup'
 import { useToast } from 'primevue/usetoast'
+import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 

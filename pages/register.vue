@@ -92,11 +92,13 @@
                             class="form-input"
                             placeholder="请输入短信验证码"
                         />
-                        <Button
-                            class="code-btn"
-                            label="获取验证码"
+                        <SendCodeButton
+                            :on-send="sendPhoneCode"
+                            :duration="60"
                             :disabled="phoneCodeSending || !validatePhone(phone)"
-                            @click="sendPhoneCode"
+                            :loading="phoneCodeSending"
+                            text="获取验证码"
+                            resend-text="重新发送"
                         />
                     </div>
                     <div v-if="errors.phoneCode" class="error-message">
@@ -127,6 +129,7 @@ import Password from 'primevue/password'
 import { useToast } from 'primevue/usetoast'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
+import SendCodeButton from '@/components/send-code-button.vue'
 
 const username = ref('')
 const email = ref('')
