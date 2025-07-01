@@ -24,3 +24,94 @@ $background-light: #ffffff;
 
 // 错误色
 $error: #e53e3e;
+
+// PrimeVue Toast 主题自定义
+:root {
+    // Toast 通用
+    --p-toast-width: 360px;
+    --p-toast-border-radius: 8px;
+    --p-toast-border-width: 1px;
+    --p-toast-transition-duration: 0.25s;
+    --p-toast-blur: 0;
+    --p-toast-icon-size: 1.5rem;
+    --p-toast-content-padding: 1rem 1.25rem;
+    --p-toast-content-gap: 0.75rem;
+    --p-toast-text-gap: 0.25rem;
+    --p-toast-summary-font-weight: 600;
+    --p-toast-summary-font-size: 1.08rem;
+    --p-toast-detail-font-weight: 400;
+    --p-toast-detail-font-size: 0.98rem;
+    --p-toast-close-button-width: 2rem;
+    --p-toast-close-button-height: 2rem;
+    --p-toast-close-button-border-radius: 50%;
+    --p-toast-close-icon-size: 1.1rem;
+
+    // info
+    --p-toast-info-background: #e2e8f0;
+    --p-toast-info-border-color: #718096;
+    --p-toast-info-color: #2d3748;
+    --p-toast-info-detail-color: #2d3748;
+    --p-toast-info-shadow: 0 2px 12px 0 rgba(44, 62, 80, 0.08);
+
+    // success
+    --p-toast-success-background: #e6fffa;
+    --p-toast-success-border-color: #38b2ac;
+    --p-toast-success-color: #22543d;
+    --p-toast-success-detail-color: #22543d;
+    --p-toast-success-shadow: 0 2px 12px 0 rgba(56, 178, 172, 0.08);
+
+    // warn
+    --p-toast-warn-background: #fffbea;
+    --p-toast-warn-border-color: #ecc94b;
+    --p-toast-warn-color: #7b341e;
+    --p-toast-warn-detail-color: #7b341e;
+    --p-toast-warn-shadow: 0 2px 12px 0 rgba(236, 201, 75, 0.08);
+
+    // error
+    --p-toast-error-background: #ffe5e9;
+    --p-toast-error-border-color: #e63946;
+    --p-toast-error-color: #a52834;
+    --p-toast-error-detail-color: #a52834;
+    --p-toast-error-shadow: 0 2px 12px 0 rgba(230, 57, 70, 0.1);
+
+    // secondary
+    --p-toast-secondary-background: #2d3748;
+    --p-toast-secondary-border-color: #718096;
+    --p-toast-secondary-color: #fff;
+    --p-toast-secondary-detail-color: #e2e8f0;
+    --p-toast-secondary-shadow: 0 2px 12px 0 rgba(45, 55, 72, 0.1);
+
+    // contrast
+    --p-toast-contrast-background: #fff;
+    --p-toast-contrast-border-color: #e63946;
+    --p-toast-contrast-color: #e63946;
+    --p-toast-contrast-detail-color: #a52834;
+    --p-toast-contrast-shadow: 0 2px 12px 0 rgba(230, 57, 70, 0.1);
+}
+
+.p-toast {
+    font-family: inherit;
+    box-shadow: var(--p-toast-info-shadow);
+
+    .p-toast-message {
+        border-radius: var(--p-toast-border-radius);
+        border-width: var(--p-toast-border-width);
+        border-style: solid;
+        margin-bottom: 0.75rem;
+    }
+
+    .p-toast-message-content {
+        padding: var(--p-toast-content-padding);
+        gap: var(--p-toast-content-gap);
+    }
+
+    .p-toast-summary {
+        font-weight: var(--p-toast-summary-font-weight);
+        font-size: var(--p-toast-summary-font-size);
+    }
+
+    .p-toast-detail {
+        font-size: var(--p-toast-detail-font-size);
+        color: var(--p-toast-info-detail-color);
+    }
+}

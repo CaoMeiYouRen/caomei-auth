@@ -47,6 +47,7 @@ export default defineNuxtConfig({
     css: [
         'normalize.css/normalize.css',
         '@mdi/font/css/materialdesignicons.min.css',
+        '@/styles/_theme.scss',
     ],
     app: {
         head: {
