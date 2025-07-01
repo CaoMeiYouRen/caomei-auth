@@ -1,13 +1,14 @@
 <template>
-    <div class="index-container">
-        <div class="index-left">
-            <h1 class="index-title">
+    <div class="auth-container">
+        <div class="auth-left">
+            <h1 class="auth-title">
                 草梅 Auth 统一登录平台
             </h1>
-            <p class="index-subtitle">
-                基于 Nuxt 3 的现代化统一登录平台，支持多种登录注册方式，安全、便捷、可扩展。
+            <p class="auth-subtitle">
+                基于 Nuxt 3
+                的现代化统一登录平台，支持多种登录注册方式，安全、便捷、可扩展。
             </p>
-            <div class="index-links">
+            <div class="auth-links">
                 <a
                     href="https://github.com/CaoMeiYouRen/caomei-auth"
                     target="_blank"
@@ -16,13 +17,13 @@
                     <i class="mdi mdi-github" /> GitHub 项目地址
                 </a>
             </div>
-            <div class="index-logo">
+            <div class="auth-logo">
                 <img src="/logo.png" alt="logo">
             </div>
         </div>
-        <div class="index-right">
-            <div class="index-card">
-                <h2 class="index-card-title">
+        <div class="auth-right">
+            <div class="auth-card">
+                <h2 class="auth-title">
                     演示入口
                 </h2>
                 <div class="button-group">
@@ -48,7 +49,7 @@
                 <div class="separator">
                     GitHub源码
                 </div>
-                <div class="index-links-mobile">
+                <div class="auth-links-mobile">
                     <a
                         href="https://github.com/CaoMeiYouRen/caomei-auth"
                         target="_blank"
@@ -79,10 +80,11 @@ function toForgotPassword() {
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/theme';
-@import '@/styles/form';
+@import "@/styles/theme";
+@import "@/styles/form";
+@import "@/styles/common";
 
-.index-container {
+.auth-container {
     display: flex;
     flex-direction: column-reverse;
     min-height: 100vh;
@@ -93,7 +95,7 @@ function toForgotPassword() {
     }
 }
 
-.index-left {
+.auth-left {
     color: $background-light;
     display: flex;
     flex-direction: column;
@@ -102,7 +104,7 @@ function toForgotPassword() {
     text-align: center;
     min-height: 20vh;
 
-    .index-logo img {
+    .auth-logo img {
         width: 80%;
         max-width: 160px;
     }
@@ -110,14 +112,14 @@ function toForgotPassword() {
     @media (min-width: 768px) {
         width: 50%;
         min-height: 100vh;
-        .index-logo img {
+        .auth-logo img {
             width: 25%;
             max-width: none;
         }
     }
 }
 
-.index-title {
+.auth-title {
     font-size: 2.3rem;
     font-weight: 700;
     margin-bottom: 0.7rem;
@@ -125,14 +127,14 @@ function toForgotPassword() {
     letter-spacing: 1px;
 }
 
-.index-subtitle {
+.auth-subtitle {
     color: $secondary-light;
     margin-bottom: 2rem;
     font-size: 1.15rem;
     opacity: 0.92;
 }
 
-.index-links {
+.auth-links {
     margin-top: 1.2rem;
     .project-link {
         color: $secondary-light;
@@ -158,7 +160,7 @@ function toForgotPassword() {
     }
 }
 
-.index-links-mobile {
+.auth-links-mobile {
     display: none;
     @media (max-width: 767px) {
         display: flex;
@@ -172,7 +174,7 @@ function toForgotPassword() {
     }
 }
 
-.index-right {
+.auth-right {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -185,7 +187,7 @@ function toForgotPassword() {
     }
 }
 
-.index-card {
+.auth-card {
     background-color: $background-light;
     border-radius: 14px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
@@ -197,7 +199,7 @@ function toForgotPassword() {
     align-items: center;
 }
 
-.index-card-title {
+.auth-title {
     color: $secondary;
     font-size: 1.5rem;
     font-weight: 600;
@@ -243,7 +245,7 @@ function toForgotPassword() {
     font-size: 0.98rem;
     &::before,
     &::after {
-        content: '';
+        content: "";
         flex: 1;
         border-bottom: 1px solid $secondary-bg;
     }

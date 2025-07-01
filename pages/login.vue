@@ -1,22 +1,22 @@
 <template>
-    <div class="login-container">
-        <div class="login-left">
-            <h1 class="login-title">
+    <div class="auth-container">
+        <div class="auth-left">
+            <h1 class="auth-title">
                 草梅Auth统一登录平台
             </h1>
-            <p class="login-subtitle">
+            <p class="auth-subtitle">
                 安全、便捷的一站式登录体验
             </p>
-            <div class="login-logo">
+            <div class="auth-logo">
                 <img src="/logo.png" alt="logo">
             </div>
         </div>
-        <div class="login-right">
-            <div class="login-card">
-                <h2 class="login-title">
+        <div class="auth-right">
+            <div class="auth-card">
+                <h2 class="auth-title">
                     欢迎回来
                 </h2>
-                <p class="login-subtitle">
+                <p class="auth-subtitle">
                     请使用您的账号信息登录
                 </p>
                 <div class="login-btn mb-4">
@@ -354,8 +354,15 @@ function loginWithGoogle() {
 <style scoped lang="scss">
 @import '@/styles/theme';
 @import '@/styles/form';
+@import '@/styles/common';
 
-.login-container {
+.login-btn {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.auth-container {
     display: flex;
     min-height: 100vh;
     flex-direction: column-reverse;
@@ -365,7 +372,7 @@ function loginWithGoogle() {
     }
 }
 
-.login-left {
+.auth-left {
     color: $background-light;
     display: flex;
     flex-direction: column;
@@ -374,7 +381,7 @@ function loginWithGoogle() {
     text-align: center;
     min-height: 20vh;
 
-    .login-logo img {
+    .auth-logo img {
         width: 80%;
         max-width: 160px;
     }
@@ -383,14 +390,14 @@ function loginWithGoogle() {
         width: 50%;
         min-height: 100vh;
 
-        .login-logo img {
+        .auth-logo img {
             width: 25%;
             max-width: none;
         }
     }
 }
 
-.login-right {
+.auth-right {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -403,7 +410,7 @@ function loginWithGoogle() {
     }
 }
 
-.login-card {
+.auth-card {
     background-color: $background-light;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
@@ -412,14 +419,14 @@ function loginWithGoogle() {
     max-width: 450px;
 }
 
-.login-title {
+.auth-title {
     color: $secondary;
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 1rem;
 }
 
-.login-subtitle {
+.auth-subtitle {
     color: $secondary-light;
     margin-bottom: 2rem;
 }
@@ -447,18 +454,6 @@ function loginWithGoogle() {
 .form-input:focus {
     border-color: $primary;
     box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2); // 可考虑用rgba($primary, 0.2)如有mixin
-}
-
-.login-btn {
-    display: flex;
-    width: 100%;
-    margin-bottom: 1em;
-}
-
-.card {
-    width: 100%;
-    display: flex;
-    justify-content: center;
 }
 
 .separator {

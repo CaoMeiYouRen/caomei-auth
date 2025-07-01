@@ -1,18 +1,24 @@
 <template>
-    <div class="forgot-container">
-        <div class="forgot-left">
-            <h1 class="forgot-title">
+    <div class="auth-container">
+        <div class="auth-left">
+            <h1 class="auth-title">
                 找回密码
             </h1>
-            <p class="forgot-subtitle">
+            <p class="auth-subtitle">
                 请输入相关信息以重置密码
             </p>
-            <div class="forgot-logo">
+            <div class="auth-logo">
                 <img src="/logo.png" alt="logo">
             </div>
         </div>
-        <div class="forgot-right">
-            <div class="forgot-card">
+        <div class="auth-right">
+            <div class="auth-card">
+                <h2 class="auth-title">
+                    找回密码
+                </h2>
+                <p class="auth-subtitle">
+                    请输入相关信息以重置密码
+                </p>
                 <div class="forgot-btn mb-4">
                     <div class="card flex justify-center">
                         <ButtonGroup>
@@ -241,17 +247,19 @@ function resetPassword() {
 <style scoped lang="scss">
 @import '@/styles/theme';
 @import '@/styles/form';
+@import '@/styles/common';
 
-.forgot-container {
+.auth-container {
     display: flex;
     flex-direction: column-reverse;
     background: $background;
+
     @media (min-width: 768px) {
         flex-direction: row;
     }
 }
 
-.forgot-left {
+.auth-left {
     color: $background-light;
     display: flex;
     flex-direction: column;
@@ -260,7 +268,7 @@ function resetPassword() {
     text-align: center;
     min-height: 20vh;
 
-    .forgot-logo img {
+    .auth-logo img {
         width: 80%;
         max-width: 160px;
     }
@@ -269,14 +277,14 @@ function resetPassword() {
         width: 50%;
         min-height: 100vh;
 
-        .forgot-logo img {
+        .auth-logo img {
             width: 25%;
             max-width: none;
         }
     }
 }
 
-.forgot-right {
+.auth-right {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -289,7 +297,7 @@ function resetPassword() {
     }
 }
 
-.forgot-card {
+.auth-card {
     background-color: $background-light;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
@@ -298,14 +306,14 @@ function resetPassword() {
     max-width: 450px;
 }
 
-.forgot-title {
+.auth-title {
     color: $secondary;
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 1rem;
 }
 
-.forgot-subtitle {
+.auth-subtitle {
     color: $secondary-light;
     margin-bottom: 2rem;
 }

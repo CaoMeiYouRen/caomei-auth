@@ -1,16 +1,16 @@
 <template>
-    <div class="verify-container">
-        <div class="verify-left">
-            <div class="verify-logo">
+    <div class="auth-container">
+        <div class="auth-left">
+            <div class="auth-logo">
                 <img src="/logo.png" alt="logo">
             </div>
         </div>
-        <div class="verify-right">
-            <div class="verify-card">
-                <h2 class="verify-title">
+        <div class="auth-right">
+            <div class="auth-card">
+                <h2 class="auth-title">
                     验证码验证
                 </h2>
-                <p class="verify-subtitle">
+                <p class="auth-subtitle">
                     请输入发送到
                     <span v-if="mode === 'email'">邮箱 <b>{{ email }}</b></span>
                     <span v-else>手机号 <b>{{ phone }}</b></span>
@@ -128,80 +128,7 @@ function handleVerify() {
 <style scoped lang="scss">
 @import '@/styles/theme';
 @import '@/styles/form';
-
-.verify-container {
-    display: flex;
-    flex-direction: column-reverse;
-    min-height: 100vh;
-    background: $background;
-
-    @media (min-width: 768px) {
-        flex-direction: row;
-    }
-}
-
-.verify-left {
-    color: $background-light;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1rem;
-    text-align: center;
-    min-height: 20vh;
-
-    .verify-logo img {
-        width: 80%;
-        max-width: 160px;
-    }
-
-    @media (min-width: 768px) {
-        width: 50%;
-        min-height: 100vh;
-
-        .verify-logo img {
-            max-width: 220px;
-        }
-    }
-}
-
-.verify-right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    min-height: 60vh;
-
-    @media (min-width: 768px) {
-        width: 50%;
-        min-height: 100vh;
-    }
-}
-
-.verify-card {
-    background-color: $background-light;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
-    width: 100%;
-    max-width: 480px;
-}
-
-.verify-title {
-    color: $secondary;
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.verify-subtitle {
-    color: $secondary-light;
-    margin-bottom: 2rem;
-    font-size: 1.08rem;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
+@import '@/styles/common';
 
 .code-row {
     display: flex;
@@ -221,9 +148,14 @@ function handleVerify() {
     min-width: 110px;
     padding: 0.75rem 0.75rem;
     font-size: 0.95rem;
+
     @media (max-width: 480px) {
         max-width: 100%;
     }
+}
+
+.auth-card {
+    max-width: 480px;
 }
 
 .countdown {
@@ -232,6 +164,7 @@ function handleVerify() {
 }
 
 .verify-btn {
+    width: 100%;
     margin-bottom: 1.2em;
 }
 

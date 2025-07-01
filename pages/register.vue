@@ -1,22 +1,22 @@
 <template>
-    <div class="register-container">
-        <div class="register-left">
-            <h1 class="register-title">
+    <div class="auth-container">
+        <div class="auth-left">
+            <h1 class="auth-title">
                 草梅Auth统一登录平台
             </h1>
-            <p class="register-subtitle">
+            <p class="auth-subtitle">
                 安全、便捷的一站式注册体验
             </p>
-            <div class="register-logo">
+            <div class="auth-logo">
                 <img src="/logo.png" alt="logo">
             </div>
         </div>
-        <div class="register-right">
-            <div class="register-card">
-                <h2 class="register-title">
+        <div class="auth-right">
+            <div class="auth-card">
+                <h2 class="auth-title">
                     创建新账号
                 </h2>
-                <p class="register-subtitle">
+                <p class="auth-subtitle">
                     请填写以下信息完成注册
                 </p>
                 <div class="form-group">
@@ -199,17 +199,19 @@ function register() {
 <style scoped lang="scss">
 @import '@/styles/theme';
 @import '@/styles/form';
+@import '@/styles/common';
 
-.register-container {
+.auth-container {
     display: flex;
     flex-direction: column-reverse;
     background: $background;
+
     @media (min-width: 768px) {
         flex-direction: row;
     }
 }
 
-.register-left {
+.auth-left {
     color: $background-light;
     display: flex;
     flex-direction: column;
@@ -218,7 +220,7 @@ function register() {
     text-align: center;
     min-height: 20vh;
 
-    .register-logo img {
+    .auth-logo img {
         width: 80%;
         max-width: 160px;
     }
@@ -227,14 +229,14 @@ function register() {
         width: 50%;
         min-height: 100vh;
 
-        .register-logo img {
+        .auth-logo img {
             width: 25%;
             max-width: none;
         }
     }
 }
 
-.register-right {
+.auth-right {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -247,7 +249,7 @@ function register() {
     }
 }
 
-.register-card {
+.auth-card {
     background-color: $background-light;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
@@ -256,14 +258,14 @@ function register() {
     max-width: 450px;
 }
 
-.register-title {
+.auth-title {
     color: $secondary;
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 1rem;
 }
 
-.register-subtitle {
+.auth-subtitle {
     color: $secondary-light;
     margin-bottom: 2rem;
 }
@@ -378,7 +380,8 @@ function register() {
     padding: 0.75rem 0.75rem;
     font-size: 0.95rem;
 }
-.toggle-login{
+
+.toggle-login {
     margin-top: 1em;
 }
 </style>
