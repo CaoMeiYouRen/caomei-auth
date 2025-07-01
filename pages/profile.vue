@@ -1,10 +1,9 @@
 <template>
     <div class="auth-container">
-        <div class="auth-left">
-            <div class="auth-logo">
-                <img src="/logo.png" alt="logo">
-            </div>
-        </div>
+        <AuthLeft
+            title="个人中心"
+            subtitle="管理您的账号信息。"
+        />
         <div class="auth-right">
             <div class="auth-card profile-card">
                 <h2 class="auth-title">
@@ -235,6 +234,7 @@ import { useToast } from 'primevue/usetoast'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
+import AuthLeft from '@/components/auth-left.vue'
 
 const toast = useToast()
 

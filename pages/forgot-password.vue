@@ -1,16 +1,9 @@
 <template>
     <div class="auth-container">
-        <div class="auth-left">
-            <h1 class="auth-title">
-                找回密码
-            </h1>
-            <p class="auth-subtitle">
-                请输入相关信息以重置密码
-            </p>
-            <div class="auth-logo">
-                <img src="/logo.png" alt="logo">
-            </div>
-        </div>
+        <AuthLeft
+            title="找回密码"
+            subtitle="通过邮箱或手机号重置密码。"
+        />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -163,6 +156,7 @@ import { useToast } from 'primevue/usetoast'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
+import AuthLeft from '@/components/auth-left.vue'
 
 const mode = ref<'email' | 'phone'>('email')
 const email = ref('')

@@ -1,16 +1,9 @@
 <template>
     <div class="auth-container">
-        <div class="auth-left">
-            <h1 class="auth-title">
-                草梅Auth统一登录平台
-            </h1>
-            <p class="auth-subtitle">
-                安全、便捷的一站式注册体验
-            </p>
-            <div class="auth-logo">
-                <img src="/logo.png" alt="logo">
-            </div>
-        </div>
+        <AuthLeft
+            title="注册新账号"
+            subtitle="欢迎加入草梅 Auth，支持邮箱、手机号注册。"
+        />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -130,6 +123,7 @@ import { useToast } from 'primevue/usetoast'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
+import AuthLeft from '@/components/auth-left.vue'
 
 const username = ref('')
 const email = ref('')

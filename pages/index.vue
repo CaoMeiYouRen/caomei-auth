@@ -1,26 +1,21 @@
 <template>
     <div class="auth-container">
-        <div class="auth-left">
-            <h1 class="auth-title">
-                草梅 Auth 统一登录平台
-            </h1>
-            <p class="auth-subtitle">
-                基于 Nuxt 3
-                的现代化统一登录平台，支持多种登录注册方式，安全、便捷、可扩展。
-            </p>
-            <div class="auth-links">
-                <a
-                    href="https://github.com/CaoMeiYouRen/caomei-auth"
-                    target="_blank"
-                    class="project-link"
-                >
-                    <i class="mdi mdi-github" /> GitHub 项目地址
-                </a>
-            </div>
-            <div class="auth-logo">
-                <img src="/logo.png" alt="logo">
-            </div>
-        </div>
+        <AuthLeft
+            title="草梅 Auth 统一登录平台"
+            subtitle="基于 Nuxt 3 的现代化统一登录平台，支持多种登录注册方式，安全、便捷、可扩展。"
+        >
+            <template #content>
+                <div class="auth-links">
+                    <a
+                        href="https://github.com/CaoMeiYouRen/caomei-auth"
+                        target="_blank"
+                        class="project-link"
+                    >
+                        <i class="mdi mdi-github" /> GitHub 项目地址
+                    </a>
+                </div>
+            </template>
+        </AuthLeft>
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -65,6 +60,7 @@
 
 <script lang="ts" setup>
 import Button from 'primevue/button'
+import AuthLeft from '@/components/auth-left.vue'
 
 function toLogin() {
     navigateTo('/login')
@@ -93,45 +89,6 @@ function toForgotPassword() {
     @media (min-width: 768px) {
         flex-direction: row;
     }
-}
-
-.auth-left {
-    color: $background-light;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1rem;
-    text-align: center;
-    min-height: 20vh;
-
-    .auth-logo img {
-        width: 80%;
-        max-width: 160px;
-    }
-
-    @media (min-width: 768px) {
-        width: 50%;
-        min-height: 100vh;
-        .auth-logo img {
-            width: 25%;
-            max-width: none;
-        }
-    }
-}
-
-.auth-title {
-    font-size: 2.3rem;
-    font-weight: 700;
-    margin-bottom: 0.7rem;
-    color: $secondary;
-    letter-spacing: 1px;
-}
-
-.auth-subtitle {
-    color: $secondary-light;
-    margin-bottom: 2rem;
-    font-size: 1.15rem;
-    opacity: 0.92;
 }
 
 .auth-links {

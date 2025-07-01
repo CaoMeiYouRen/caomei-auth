@@ -4,17 +4,10 @@
         role="main"
         aria-label="错误页面"
     >
-        <div class="auth-left">
-            <h1 class="auth-title">
-                草梅Auth统一登录平台
-            </h1>
-            <p class="auth-subtitle">
-                安全、便捷的一站式登录体验
-            </p>
-            <div class="auth-logo">
-                <img src="/logo.png" alt="logo">
-            </div>
-        </div>
+        <AuthLeft
+            title="草梅Auth统一登录平台"
+            subtitle="安全、便捷的一站式登录体验"
+        />
         <div class="auth-right">
             <div class="auth-card error-card">
                 <h1 class="error-code">
@@ -60,6 +53,7 @@ import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import Button from 'primevue/button'
 import type { NuxtError } from '#app'
+import AuthLeft from '@/components/auth-left.vue'
 
 const props = defineProps({
     error: {

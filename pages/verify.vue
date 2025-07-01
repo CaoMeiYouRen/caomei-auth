@@ -1,10 +1,9 @@
 <template>
     <div class="auth-container">
-        <div class="auth-left">
-            <div class="auth-logo">
-                <img src="/logo.png" alt="logo">
-            </div>
-        </div>
+        <AuthLeft
+            title="验证码验证"
+            subtitle="请输入收到的验证码完成验证。"
+        />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -60,6 +59,7 @@ import Button from 'primevue/button'
 import InputOtp from 'primevue/inputotp'
 import { useToast } from 'primevue/usetoast'
 import SendCodeButton from '@/components/send-code-button.vue'
+import AuthLeft from '@/components/auth-left.vue'
 
 const route = useRoute()
 const router = useRouter()

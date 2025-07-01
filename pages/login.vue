@@ -1,16 +1,9 @@
 <template>
     <div class="auth-container">
-        <div class="auth-left">
-            <h1 class="auth-title">
-                草梅Auth统一登录平台
-            </h1>
-            <p class="auth-subtitle">
-                安全、便捷的一站式登录体验
-            </p>
-            <div class="auth-logo">
-                <img src="/logo.png" alt="logo">
-            </div>
-        </div>
+        <AuthLeft
+            title="登录到草梅 Auth"
+            subtitle="多方式登录，安全便捷。"
+        />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -252,6 +245,7 @@ import ButtonGroup from 'primevue/buttongroup'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
+import AuthLeft from '@/components/auth-left.vue'
 
 const activeTab = ref<'username' | 'email' | 'phone'>('username')
 const email = ref('')
@@ -329,7 +323,7 @@ function login() {
             life: 2000,
         })
         setTimeout(() => {
-            router.push('/')
+            router.push('/profile')
         }, 1200)
     }
 }
