@@ -6,6 +6,14 @@
         />
         <div class="auth-right">
             <div class="auth-card security-card">
+                <div class="security-header-actions">
+                    <Button
+                        label="返回个人中心"
+                        class="btn btn-link"
+                        icon="mdi mdi-account-circle-outline"
+                        @click="goProfile"
+                    />
+                </div>
                 <h2 class="auth-title">
                     账号安全设置
                 </h2>
@@ -118,6 +126,10 @@ const devices = ref([
 
 function removeDevice(id: number) {
     devices.value = devices.value.filter((d) => d.id !== id)
+}
+
+function goProfile() {
+    window.location.href = '/profile'
 }
 </script>
 
@@ -259,6 +271,11 @@ function removeDevice(id: number) {
             justify-content: flex-end;
         }
     }
+}
+.security-header-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
 }
 @media (max-width: 600px) {
     .auth-container {

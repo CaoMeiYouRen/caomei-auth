@@ -6,9 +6,19 @@
         />
         <div class="auth-right">
             <div class="auth-card profile-card">
-                <h2 class="auth-title">
-                    个人中心
-                </h2>
+                <div class="profile-header">
+                    <h2 class="auth-title">
+                        个人中心
+                    </h2>
+                    <div class="profile-header-actions">
+                        <Button
+                            label="账号安全设置"
+                            class="btn btn-link"
+                            icon="mdi mdi-shield-account-outline"
+                            @click="goSecurity"
+                        />
+                    </div>
+                </div>
                 <p class="auth-subtitle">
                     管理您的账号信息
                 </p>
@@ -329,6 +339,9 @@ function goChangePassword() {
     // 跳转到修改密码页面，可根据实际路由调整
     window.location.href = '/forgot-password'
 }
+function goSecurity() {
+    window.location.href = '/security'
+}
 </script>
 
 <style scoped lang="scss">
@@ -338,6 +351,17 @@ function goChangePassword() {
 
 .profile-card {
     max-width: 480px;
+}
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.profile-header-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
 }
 .profile-section {
     margin-bottom: 2rem;
