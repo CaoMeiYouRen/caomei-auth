@@ -20,9 +20,14 @@
                         class="form-input"
                         placeholder="请输入用户名"
                     />
-                    <div v-if="errors.username" class="error-message">
+                    <Message
+                        v-if="errors.username"
+                        severity="error"
+                        size="small"
+                        variant="simple"
+                    >
                         {{ errors.username }}
-                    </div>
+                    </Message>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="email">邮箱 <span style="color: #e63946">*</span></label>
@@ -32,9 +37,15 @@
                         class="form-input"
                         placeholder="example@mail.com"
                     />
-                    <div v-if="errors.email" class="error-message">
+                    <!-- 替换为 Message 组件 -->
+                    <Message
+                        v-if="errors.email"
+                        severity="error"
+                        size="small"
+                        variant="simple"
+                    >
                         {{ errors.email }}
-                    </div>
+                    </Message>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password">密码 <span style="color: #e63946">*</span></label>
@@ -46,9 +57,15 @@
                         :feedback="false"
                         toggle-mask
                     />
-                    <div v-if="errors.password" class="error-message">
+                    <!-- 替换为 Message 组件 -->
+                    <Message
+                        v-if="errors.password"
+                        severity="error"
+                        size="small"
+                        variant="simple"
+                    >
                         {{ errors.password }}
-                    </div>
+                    </Message>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="confirmPassword">确认密码 <span style="color: #e63946">*</span></label>
@@ -60,9 +77,15 @@
                         :feedback="false"
                         toggle-mask
                     />
-                    <div v-if="errors.confirmPassword" class="error-message">
+                    <!-- 替换为 Message 组件 -->
+                    <Message
+                        v-if="errors.confirmPassword"
+                        severity="error"
+                        size="small"
+                        variant="simple"
+                    >
                         {{ errors.confirmPassword }}
-                    </div>
+                    </Message>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="phone">手机号（选填）</label>
@@ -72,9 +95,15 @@
                         class="form-input"
                         placeholder="请输入手机号"
                     />
-                    <div v-if="errors.phone" class="error-message">
+                    <!-- 替换为 Message 组件 -->
+                    <Message
+                        v-if="errors.phone"
+                        severity="error"
+                        size="small"
+                        variant="simple"
+                    >
                         {{ errors.phone }}
-                    </div>
+                    </Message>
                 </div>
                 <div v-if="phone" class="form-group">
                     <label class="form-label" for="phoneCode">短信验证码</label>
@@ -94,9 +123,15 @@
                             resend-text="重新发送"
                         />
                     </div>
-                    <div v-if="errors.phoneCode" class="error-message">
+                    <!-- 替换为 Message 组件 -->
+                    <Message
+                        v-if="errors.phoneCode"
+                        severity="error"
+                        size="small"
+                        variant="simple"
+                    >
                         {{ errors.phoneCode }}
-                    </div>
+                    </Message>
                 </div>
                 <Button
                     class="btn btn-primary mt-2"
@@ -342,6 +377,7 @@ async function register() {
     background-color: $background-light;
     width: 100%;
     padding: 0.75rem 1rem;
+    margin-bottom: 0.25rem;
     border-radius: 8px;
     transition: border-color 0.2s, box-shadow 0.2s;
     font-size: 1rem;
@@ -443,10 +479,3 @@ async function register() {
 }
 </style>
 
-<!-- <style lang="scss">
-.password-input {
-    .p-password-input {
-        width: 100%;
-    }
-}
-</style> -->

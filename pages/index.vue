@@ -125,7 +125,6 @@ function toForgotPassword() {
         margin-top: 1rem;
         .project-link {
             color: $secondary;
-            // border-bottom: 1px dashed $secondary-bg;
             background: none;
         }
     }

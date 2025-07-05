@@ -592,6 +592,7 @@ function loginWithGoogle() {
 .password-input {
     .p-password-input {
         width: 100%;
+        border: none;
     }
 }
 </style>
