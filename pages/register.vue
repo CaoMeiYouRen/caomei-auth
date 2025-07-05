@@ -115,7 +115,6 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -124,6 +123,7 @@ import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
+import { authClient } from '@/lib/auth-client'
 
 const username = ref('')
 const email = ref('')
@@ -134,11 +134,10 @@ const phoneCode = ref('')
 const phoneCodeSending = ref(false)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
-const router = useRouter()
 
 const sendPhoneCode = useSendPhoneCode(phone, validatePhone, errors, phoneCodeSending)
 
-function register() {
+async function register() {
     errors.value = {}
     let isValid = true
     if (!username.value) {
@@ -176,7 +175,32 @@ function register() {
     if (!isValid) {
         return
     }
-    if (isValid) {
+
+    try {
+        // 使用邮箱和用户名注册
+        const { data, error } = await authClient.signUp.email({
+            email: email.value,
+            password: password.value,
+            name: username.value,
+            username: username.value,
+        })
+
+        if (error) {
+            throw new Error(error.message || '注册失败')
+        }
+
+        if (phone.value) {
+            // 验证手机号码
+            const isVerified = await authClient.phoneNumber.verify({
+                phoneNumber: phone.value,
+                code: phoneCode.value,
+            })
+
+            if (!isVerified) {
+                throw new Error('手机号码验证失败')
+            }
+        }
+
         toast.add({
             severity: 'success',
             summary: '注册成功',
@@ -184,8 +208,16 @@ function register() {
             life: 2500,
         })
         setTimeout(() => {
-            router.push('/login')
+            navigateTo('/verify?mode=email') // 跳转到验证页面
         }, 1500)
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '注册过程中发生未知错误'
+        toast.add({
+            severity: 'error',
+            summary: '注册失败',
+            detail: errorMessage,
+            life: 2500,
+        })
     }
 }
 </script>
