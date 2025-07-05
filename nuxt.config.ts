@@ -44,6 +44,9 @@ export default defineNuxtConfig({
     modules: [
         '@primevue/nuxt-module',
     ],
+    build: {
+        transpile: ['sqlite3'],
+    },
     css: [
         'normalize.css/normalize.css',
         '@mdi/font/css/materialdesignicons.min.css',

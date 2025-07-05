@@ -1,10 +1,11 @@
 import { Column, Entity } from 'typeorm'
+import { getDateType } from '../database/type'
 import { BaseEntity } from './base-entity'
 
 @Entity('session')
 export class Session extends BaseEntity {
 
-    @Column('timestamp with time zone', { nullable: false })
+    @Column(getDateType(), { nullable: false })
     expiresAt: Date
 
     @Column('text', { nullable: false })

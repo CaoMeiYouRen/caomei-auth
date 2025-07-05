@@ -1,4 +1,5 @@
 import { Column, Entity } from 'typeorm'
+import { getDateType } from '../database/type'
 import { BaseEntity } from './base-entity'
 
 @Entity('account')
@@ -22,10 +23,10 @@ export class Account extends BaseEntity {
     @Column('text', { nullable: true })
     idToken: string
 
-    @Column('timestamp with time zone', { nullable: true })
+    @Column(getDateType(), { nullable: true })
     accessTokenExpiresAt: Date
 
-    @Column('timestamp with time zone', { nullable: true })
+    @Column(getDateType(), { nullable: true })
     refreshTokenExpiresAt: Date
 
     @Column('text', { nullable: true })

@@ -46,7 +46,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
-      "esbuild"
+      "esbuild",
+      "sqlite3"
     ],
     "overrides": {
       "vite": "^6.2.6",

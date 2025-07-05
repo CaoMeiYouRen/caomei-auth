@@ -32,7 +32,7 @@ export const initializeDB = async () => {
         switch (dbType) {
             case 'sqlite':
                 options = {
-                    type: dbType,
+                    type: 'sqlite',
                     database: process.env.DATABASE_PATH || 'database/caomei-auth.sqlite', // 默认 SQLite 数据库路径
                 }
                 break
@@ -67,8 +67,6 @@ export const initializeDB = async () => {
         // 创建数据源
         AppDataSource = new DataSource({
             ...options,
-            type: dbType as any,
-            database: process.env.DATABASE_URL,
             entities: [...entities],
             synchronize: process.env.NODE_ENV !== 'production',
             logging: process.env.NODE_ENV === 'development',
@@ -92,4 +90,5 @@ export const initializeDB = async () => {
     }
     return AppDataSource
 }
+
 export const dataSource = await initializeDB()

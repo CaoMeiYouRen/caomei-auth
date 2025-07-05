@@ -1,5 +1,6 @@
 import { PrimaryColumn, CreateDateColumn, UpdateDateColumn, BeforeInsert } from 'typeorm'
 import { snowflake } from '../utils/snowflake'
+import { getDateType } from '../database/type'
 
 /**
  * 基础实体类
@@ -16,10 +17,10 @@ export abstract class BaseEntity {
     @PrimaryColumn('varchar', { length: 36 })
     id: string
 
-    @CreateDateColumn({ type: 'timestamp with time zone' })
+    @CreateDateColumn({ type: getDateType() })
     createdAt: Date
 
-    @UpdateDateColumn({ type: 'timestamp with time zone' })
+    @UpdateDateColumn({ type: getDateType() })
     updatedAt: Date
 
     @BeforeInsert()
