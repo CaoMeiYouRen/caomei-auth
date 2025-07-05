@@ -13,7 +13,7 @@ import { typeormAdapter } from '@/server/database/typeorm-adapter'
 import { sendEmail } from '@/server/utils/email'
 import { snowflake } from '@/server/utils/snowflake'
 import { dataSource } from '@/server/database'
-import { usernameValidator, isPhone } from '@/utils/validate'
+import { usernameValidator, validatePhone } from '@/utils/validate'
 import { sendPhoneOtp } from '@/server/utils/phone'
 import { secondaryStorage } from '@/server/database/storage'
 
@@ -122,6 +122,8 @@ export const auth = betterAuth({
             disableSignUp: false, // 当用户未注册时是否阻止自动注册
             otpLength: 6, // OTP 验证码长度
             expiresIn: 300, // OTP 验证码有效期（秒）
+            allowedAttempts: 3, // 允许的 OTP 验证尝试次数
+            sendVerificationOnSignUp: false, // 用户注册时是否发送 OTP。因为已经发送验证邮件，所以不需要再发送 OTP。
             // 支持电子邮件 OTP 登录
             async sendVerificationOTP({ email, otp, type }) {
                 if (type === 'sign-in') {
@@ -170,7 +172,7 @@ export const auth = betterAuth({
                 // 实现手机号码验证后的回调
             },
             // 验证手机号码格式
-            phoneNumberValidator: (phoneNumber) => isPhone(phoneNumber),
+            phoneNumberValidator: (phoneNumber) => validatePhone(phoneNumber),
             signUpOnVerification: {
                 // 使用雪花算法生成临时电子邮件地址
                 // 生成的电子邮件地址格式为：<snowflake_id>@example.com

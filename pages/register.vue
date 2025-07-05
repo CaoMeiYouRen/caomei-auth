@@ -208,7 +208,7 @@ async function register() {
             life: 2500,
         })
         setTimeout(() => {
-            navigateTo('/verify?mode=email') // 跳转到验证页面
+            navigateTo('/login')
         }, 1500)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '注册过程中发生未知错误'
