@@ -15,32 +15,11 @@ import { snowflake } from '@/server/utils/snowflake'
 import { dataSource } from '@/server/database'
 import { usernameValidator, isPhone } from '@/utils/validate'
 import { sendPhoneOtp } from '@/server/utils/phone'
-
-// Redis 二级存储配置（仅当有配置时启用）
-let secondaryStorage: SecondaryStorage | null = null
-if (process.env.REDIS_URL) {
-    const redis = new Redis(process.env.REDIS_URL)
-    secondaryStorage = {
-        get: async (key: string) => {
-            const value = await redis.get(key)
-            return value ?? null
-        },
-        set: async (key: string, value: string, ttl?: number) => {
-            if (ttl) {
-                await redis.set(key, value, 'EX', ttl)
-            } else {
-                await redis.set(key, value)
-            }
-        },
-        delete: async (key: string) => {
-            await redis.del(key)
-        },
-    }
-}
+import { secondaryStorage } from '@/server/database/storage'
 
 export const auth = betterAuth({
     // 数据库适配器
-    // 使用 TypeORM 适配器连接到 PostgreSQL 数据库
+    // 使用 TypeORM 适配器
     database: typeormAdapter(dataSource),
     advanced: {
         database: {

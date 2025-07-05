@@ -11,6 +11,6 @@ module.exports = {
         'vue/multi-word-component-names': [0],
         'vue/no-v-model-arguments': [0],
         'vue/no-v-model-argument': [0],
-        'no-console': [1],
+        'no-console': [0],
     },
 }
