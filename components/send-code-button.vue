@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, defineExpose } from 'vue'
+import { ref, computed } from 'vue'
 import { useCountdown } from '@vueuse/core'
 import Button from 'primevue/button'
 
