@@ -70,7 +70,7 @@ export const initializeDB = async () => {
             entities: [...entities],
             synchronize: process.env.NODE_ENV !== 'production',
             logging: process.env.NODE_ENV === 'development',
-            entityPrefix: process.env.ENTITY_PREFIX || 'caomei_auth_',   // 所有表（或集合）加的前缀
+            entityPrefix: process.env.DATABASE_ENTITY_PREFIX || 'caomei_auth_',   // 所有表（或集合）加的前缀
             namingStrategy: new SnakeCaseNamingStrategy(),            // 表、字段命名策略，改为 snake_case
             cache: false,            // 是否启用实体结果缓存
             maxQueryExecutionTime: 3000, // 记录耗时长的查询
