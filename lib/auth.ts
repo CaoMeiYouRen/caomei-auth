@@ -107,6 +107,8 @@ export const auth = betterAuth({
             },
         }),
         magicLink({
+            expiresIn: 300, // 链接有效期（秒）
+            disableSignUp: false, // 当用户未注册时是否阻止自动注册
             // 支持一次性链接登录
             sendMagicLink: async ({ email, token, url }, request) => {
                 await sendEmail({
@@ -117,8 +119,38 @@ export const auth = betterAuth({
             },
         }),
         emailOTP({
+            disableSignUp: false, // 当用户未注册时是否阻止自动注册
+            otpLength: 6, // OTP 验证码长度
+            expiresIn: 300, // OTP 验证码有效期（秒）
             // 支持电子邮件 OTP 登录
             async sendVerificationOTP({ email, otp, type }) {
+                if (type === 'sign-in') {
+                    // 发送登录用的OTP
+                    await sendEmail({
+                        to: email,
+                        subject: '您的登录验证码',
+                        text: `您的验证码是：${otp}`,
+                    })
+                    return
+                }
+                if (type === 'email-verification') {
+                    // 发送电子邮件验证用的OTP
+                    await sendEmail({
+                        to: email,
+                        subject: '验证您的电子邮件地址',
+                        text: `您的验证码是：${otp}`,
+                    })
+                    return
+                }
+                if (type === 'forget-password') {
+                    // 发送密码重置用的OTP
+                    await sendEmail({
+                        to: email,
+                        subject: '重置您的密码',
+                        text: `您的验证码是：${otp}`,
+                    })
+                    return
+                }
                 await sendEmail({
                     to: email,
                     subject: '您的一次性验证码',
@@ -130,7 +162,7 @@ export const auth = betterAuth({
             otpLength: 6, // OTP 验证码长度
             expiresIn: 300, // OTP 验证码有效期（秒）
             allowedAttempts: 3, // 允许的 OTP 验证尝试次数
-            // requireVerification: true, // 是否要求手机号码验证，启用后，用户在验证手机号码之前无法使用手机号码登录。
+            requireVerification: true, // 是否要求手机号码验证，启用后，用户在验证手机号码之前无法使用手机号码登录。
             sendOTP: async ({ phoneNumber, code }, request) => {
                 await sendPhoneOtp(phoneNumber, code)
             },
