@@ -356,6 +356,21 @@ function loginWithGoogle() {
     margin-bottom: 1em;
 }
 
+// 添加媒体查询优化小屏幕显示
+@media (max-width: 375px) {
+    .login-btn .p-button {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.875rem !important;
+    }
+}
+
+@media (max-width: 320px) {
+    .login-btn .p-button {
+        padding: 0.5rem 0.5rem !important;
+        font-size: 0.75rem !important;
+    }
+}
+
 .auth-container {
     display: flex;
     min-height: 100vh;
