@@ -119,11 +119,12 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import { useToast } from 'primevue/usetoast'
-import { validateEmail, validatePhone } from '@/utils/validate'
+import { validateEmail, validatePhone, usernameValidator } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
+import { navigateTo } from '#app'
 
 const username = ref('')
 const email = ref('')
@@ -137,41 +138,71 @@ const toast = useToast()
 
 const sendPhoneCode = useSendPhoneCode(phone, validatePhone, errors, phoneCodeSending)
 
+// 表单验证函数
+const resolver = (values: {
+    username: string
+    email: string
+    password: string
+    confirmPassword: string
+    phone?: string
+    phoneCode?: string
+}) => {
+    const newErrors: Record<string, string> = {}
+
+    if (!values.username) {
+        newErrors.username = '请输入用户名'
+    } else if (!usernameValidator(values.username)) {
+        newErrors.username = '用户名只能包含字母、数字、下划线和连字符，长度在2到36个字符之间，且不能为邮箱或手机号格式'
+    }
+
+    if (!values.email) {
+        newErrors.email = '请输入邮箱'
+    } else if (!validateEmail(values.email)) {
+        newErrors.email = '请输入有效的邮箱地址'
+    }
+
+    if (!values.password) {
+        newErrors.password = '请输入密码'
+    } else if (values.password.length < 6) {
+        newErrors.password = '密码长度不能少于6个字符'
+    } else if (values.password.length > 64) {
+        newErrors.password = '密码长度不能超过64个字符'
+    }
+
+    if (!values.confirmPassword) {
+        newErrors.confirmPassword = '请确认密码'
+    } else if (values.password !== values.confirmPassword) {
+        newErrors.confirmPassword = '两次输入的密码不一致'
+    }
+
+    if (values.phone) {
+        if (!validatePhone(values.phone)) {
+            newErrors.phone = '请输入有效的手机号'
+        }
+        if (!values.phoneCode) {
+            newErrors.phoneCode = '请输入短信验证码'
+        }
+    }
+
+    return newErrors
+}
+
 async function register() {
-    errors.value = {}
-    let isValid = true
-    if (!username.value) {
-        errors.value.username = '请输入用户名'
-        isValid = false
+    const values = {
+        username: username.value,
+        email: email.value,
+        password: password.value,
+        confirmPassword: confirmPassword.value,
+        phone: phone.value,
+        phoneCode: phoneCode.value,
     }
-    if (!email.value) {
-        errors.value.email = '请输入邮箱'
-        isValid = false
-    } else if (!validateEmail(email.value)) {
-        errors.value.email = '请输入有效的邮箱地址'
-        isValid = false
-    }
-    if (!password.value) {
-        errors.value.password = '请输入密码'
-        isValid = false
-    }
-    if (!confirmPassword.value) {
-        errors.value.confirmPassword = '请确认密码'
-        isValid = false
-    } else if (password.value !== confirmPassword.value) {
-        errors.value.confirmPassword = '两次输入的密码不一致'
-        isValid = false
-    }
-    if (phone.value) {
-        if (!validatePhone(phone.value)) {
-            errors.value.phone = '请输入有效的手机号'
-            isValid = false
-        }
-        if (!phoneCode.value) {
-            errors.value.phoneCode = '请输入短信验证码'
-            isValid = false
-        }
-    }
+
+    // 执行验证
+    errors.value = resolver(values)
+
+    // 检查是否有错误
+    const isValid = Object.keys(errors.value).length === 0
+
     if (!isValid) {
         return
     }
