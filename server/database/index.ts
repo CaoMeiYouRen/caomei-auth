@@ -7,7 +7,6 @@ import { Verification } from '../entities/verification'
 import { SnakeCaseNamingStrategy } from './naming-strategy'
 
 const entities = [Account, Session, User, Verification]
-
 // 支持的数据库类型
 const SUPPORTED_DATABASE_TYPES = ['sqlite', 'mysql', 'postgres']
 

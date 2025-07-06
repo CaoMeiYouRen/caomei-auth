@@ -1,0 +1,12 @@
+{
+  "type": "sqlite",
+  "database": "database/caomei-auth.sqlite",
+  "synchronize": false,
+  "logging": false,
+  "entities": ["server/entities/**/*.ts"],
+  "migrations": ["server/migrations/**/*.ts"],
+  "cli": {
+    "entitiesDir": "server/entities",
+    "migrationsDir": "server/migrations"
+  }
+}
