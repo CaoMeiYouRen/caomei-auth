@@ -280,6 +280,8 @@ onMounted(async () => {
         user.emailVerified = session.value.data.user.emailVerified || false
         user.phone = session.value.data.user.phoneNumber || ''
         user.phoneVerified = session.value.data.user.phoneNumberVerified || false
+        // user.githubLinked = session.value.data.user.githubLinked || false
+        // user.googleLinked = session.value.data.user.googleLinked || false
         return
     }
     toast.add({
@@ -288,32 +290,55 @@ onMounted(async () => {
         detail: '请重新登录',
         life: 2000,
     })
-
 })
 
-function bindEmail() {
+async function bindEmail() {
     if (!validateEmail(emailForm.email) || !emailForm.code) {
         toast.add({ severity: 'warn', summary: '请填写完整', life: 2000 })
         return
     }
     bindingEmail.value = true
-    setTimeout(() => {
+    try {
+        const result = await authClient.emailOtp.verifyEmail({
+            email: emailForm.email,
+            otp: emailForm.code,
+        })
+        if (result.error) {
+            throw new Error(result.error.message || '邮箱验证失败')
+        }
         user.email = emailForm.email
         user.emailVerified = true
         showEmailModal.value = false
         toast.add({ severity: 'success', summary: '邮箱修改成功', life: 2000 })
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '邮箱修改时发生未知错误'
+        toast.add({
+            severity: 'error',
+            summary: '邮箱修改失败',
+            detail: errorMessage,
+            life: 2000,
+        })
+    } finally {
         bindingEmail.value = false
         emailForm.email = ''
         emailForm.code = ''
-    }, 1200)
+    }
 }
-function bindPhone() {
+
+async function bindPhone() {
     if (!validatePhone(phoneForm.phone) || !phoneForm.code) {
         toast.add({ severity: 'warn', summary: '请填写完整', life: 2000 })
         return
     }
     bindingPhone.value = true
-    setTimeout(() => {
+    try {
+        const result = await authClient.phoneNumber.verify({
+            phoneNumber: phoneForm.phone,
+            code: phoneForm.code,
+        })
+        if (result.error) {
+            throw new Error(result.error.message || '手机号验证失败')
+        }
         user.phone = phoneForm.phone
         user.phoneVerified = true
         showPhoneModal.value = false
@@ -322,32 +347,77 @@ function bindPhone() {
             summary: '手机号修改成功',
             life: 2000,
         })
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '手机号修改时发生未知错误'
+        toast.add({
+            severity: 'error',
+            summary: '手机号修改失败',
+            detail: errorMessage,
+            life: 2000,
+        })
+    } finally {
         bindingPhone.value = false
         phoneForm.phone = ''
         phoneForm.code = ''
-    }, 1200)
+    }
 }
-function toggleSocial(type: 'github' | 'google') {
-    user[`${type}Linked`] = !user[`${type}Linked`]
-    toast.add({
-        severity: 'success',
-        summary: user[`${type}Linked`] ? `已绑定${type}` : `已解绑${type}`,
-        life: 2000,
-    })
+// TODO 处理第三方账号关联
+async function toggleSocial(type: 'github' | 'google') {
+    try {
+        const result = await authClient.linkSocial({
+            provider: type,
+        })
+        if (result.error) {
+            throw new Error(result.error.message || `${type} 绑定/解绑失败`)
+        }
+        user[`${type}Linked`] = !user[`${type}Linked`]
+        toast.add({
+            severity: 'success',
+            summary: user[`${type}Linked`] ? `已绑定${type}` : `已解绑${type}`,
+            life: 2000,
+        })
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : `${type} 绑定时发生未知错误`
+        toast.add({
+            severity: 'error',
+            summary: `${type} 绑定/解绑失败`,
+            detail: errorMessage,
+            life: 2000,
+        })
+    }
 }
-function saveProfile() {
+
+async function saveProfile() {
     saving.value = true
-    setTimeout(() => {
+    try {
+        const result = await authClient.updateUser({
+            image: user.avatar,
+            displayUsername: user.nickname,
+        })
+        if (result.error) {
+            throw new Error(result.error.message || '资料保存失败')
+        }
         toast.add({ severity: 'success', summary: '资料已保存', life: 2000 })
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '资料保存时发生未知错误'
+        toast.add({
+            severity: 'error',
+            summary: '资料保存失败',
+            detail: errorMessage,
+            life: 2000,
+        })
+    } finally {
         saving.value = false
-    }, 1200)
+    }
 }
+
 function goChangePassword() {
-    // 跳转到修改密码页面，可根据实际路由调整
-    window.location.href = '/forgot-password'
+    // 跳转到修改密码页面
+    navigateTo('/forgot-password')
 }
+
 function goSecurity() {
-    window.location.href = '/security'
+    navigateTo('/security')
 }
 </script>
 
