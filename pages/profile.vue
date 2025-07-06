@@ -1,9 +1,6 @@
 <template>
     <div class="auth-container">
-        <AuthLeft
-            title="个人中心"
-            subtitle="管理您的账号信息。"
-        />
+        <AuthLeft title="个人中心" subtitle="管理您的账号信息。" />
         <div class="auth-right">
             <div class="auth-card profile-card">
                 <div class="profile-header">
@@ -39,10 +36,7 @@
                     </div>
                     <div class="info-block">
                         <div class="form-group">
-                            <label
-                                class="form-label"
-                                for="username"
-                            >用户名</label>
+                            <label class="form-label" for="username">用户名</label>
                             <InputText
                                 id="username"
                                 v-model="user.username"
@@ -51,10 +45,7 @@
                             />
                         </div>
                         <div class="form-group">
-                            <label
-                                class="form-label"
-                                for="nickname"
-                            >昵称</label>
+                            <label class="form-label" for="nickname">昵称</label>
                             <InputText
                                 id="nickname"
                                 v-model="user.nickname"
@@ -81,10 +72,7 @@
                                     class="ml-2"
                                     @click="showEmailModal = true"
                                 />
-                                <span
-                                    v-if="user.emailVerified"
-                                    class="verified"
-                                >已验证</span>
+                                <span v-if="user.emailVerified" class="verified">已验证</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -107,10 +95,7 @@
                                     class="ml-2"
                                     @click="showPhoneModal = true"
                                 />
-                                <span
-                                    v-if="user.phoneVerified"
-                                    class="verified"
-                                >已验证</span>
+                                <span v-if="user.phoneVerified" class="verified">已验证</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -174,8 +159,7 @@
                 <SendCodeButton
                     :on-send="sendEmailCode"
                     :duration="60"
-                    :disabled="
-                        emailCodeSending || !validateEmail(emailForm.email)
+                    :disabled="emailCodeSending || !validateEmail(emailForm.email)
                     "
                     :loading="emailCodeSending"
                     text="发送验证码"
@@ -215,8 +199,7 @@
                 <SendCodeButton
                     :on-send="sendPhoneCode"
                     :duration="60"
-                    :disabled="
-                        phoneCodeSending || !validatePhone(phoneForm.phone)
+                    :disabled="phoneCodeSending || !validatePhone(phoneForm.phone)
                     "
                     :loading="phoneCodeSending"
                     text="发送验证码"
@@ -236,7 +219,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Dialog from 'primevue/dialog'
@@ -245,14 +228,14 @@ import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
+import { authClient } from '@/lib/auth-client'
 
 const toast = useToast()
-
 const user = reactive({
-    username: 'caomei',
-    nickname: '草莓',
+    username: '',
+    nickname: '',
     avatar: '',
-    email: 'caomei@example.com',
+    email: '',
     emailVerified: false,
     phone: '',
     phoneVerified: false,
@@ -285,6 +268,28 @@ const sendPhoneCode = useSendPhoneCode(
     ref({}),
     phoneCodeSending,
 )
+
+onMounted(async () => {
+    const session = authClient.useSession()
+
+    if (session && session.value.data?.user) {
+        user.username = session.value.data.user.username || ''
+        user.nickname = session.value.data.user.displayUsername || ''
+        user.avatar = session.value.data.user.image || ''
+        user.email = session.value.data.user.email || ''
+        user.emailVerified = session.value.data.user.emailVerified || false
+        user.phone = session.value.data.user.phoneNumber || ''
+        user.phoneVerified = session.value.data.user.phoneNumberVerified || false
+        return
+    }
+    toast.add({
+        severity: 'error',
+        summary: '获取用户信息失败',
+        detail: '请重新登录',
+        life: 2000,
+    })
+
+})
 
 function bindEmail() {
     if (!validateEmail(emailForm.email) || !emailForm.code) {
@@ -354,25 +359,30 @@ function goSecurity() {
 .profile-card {
     max-width: 480px;
 }
+
 .profile-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
 }
+
 .profile-header-actions {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 0.5rem;
 }
+
 .profile-section {
     margin-bottom: 2rem;
 }
+
 .avatar-block {
     display: flex;
     align-items: center;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
+
     .avatar {
         width: 64px;
         height: 64px;
@@ -381,38 +391,46 @@ function goSecurity() {
         border: 2px solid $primary;
     }
 }
+
 .info-block {
     width: 100%;
 }
+
 .profile-row {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
+
 .social-list {
     display: flex;
     gap: 1rem;
+
     .linked {
         background: $primary;
         color: #fff;
     }
 }
+
 .verified {
     color: $primary;
     margin-left: 0.5em;
     font-size: 0.98em;
 }
+
 .profile-actions {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
+
 .section-title {
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 1rem;
     color: $secondary;
 }
+
 .flex-row {
     display: flex;
     align-items: center;
@@ -446,5 +464,4 @@ function goSecurity() {
         }
     }
 }
-
 </style>

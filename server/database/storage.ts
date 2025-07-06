@@ -35,25 +35,12 @@ export const initializeStorage = (): SecondaryStorage => {
     })
 
     storage = {
-        get: async (key: string) => {
-            if (secondaryStorage) {
-                return secondaryStorage.get(key)
-            }
-            return memoryStorage.get(key) ?? null
-        },
+        get: async (key: string) => memoryStorage.get(key) ?? null,
         set: async (key: string, value: string, ttl?: number) => {
-            if (secondaryStorage) {
-                await secondaryStorage.set(key, value, ttl)
-            } else {
-                memoryStorage.set(key, value, { ttl })
-            }
+             memoryStorage.set(key, value, { ttl })
         },
         delete: async (key: string) => {
-            if (secondaryStorage) {
-                await secondaryStorage.delete(key)
-            } else {
-                memoryStorage.delete(key)
-            }
+             memoryStorage.delete(key)
         },
     }
     return storage
