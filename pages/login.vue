@@ -235,7 +235,6 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -258,7 +257,6 @@ const phonePassword = ref('')
 const rememberMe = ref(true)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
-const router = useRouter()
 const emailUseCode = ref(false)
 const emailCode = ref('')
 const emailCodeSending = ref(false)
@@ -315,7 +313,7 @@ async function login() {
                 life: 2000,
             })
             setTimeout(() => {
-                router.push('/profile')
+                navigateTo('/profile')
             }, 1200)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
@@ -356,7 +354,7 @@ async function login() {
                 life: 2000,
             })
             setTimeout(() => {
-                router.push('/profile')
+                navigateTo('/profile')
             }, 1200)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
@@ -416,7 +414,7 @@ async function login() {
                 life: 2000,
             })
             setTimeout(() => {
-                router.push('/profile')
+                navigateTo('/profile')
             }, 1200)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
@@ -429,21 +427,60 @@ async function login() {
         }
     }
 }
-function loginWithGitHub() {
-    toast.add({
-        severity: 'info',
-        summary: 'GitHub 登录',
-        detail: '即将跳转到 GitHub 登录页面',
-        life: 2000,
-    })
+async function loginWithGitHub() {
+    try {
+        const result = await authClient.signIn.social({
+            provider: 'github',
+        })
+        if (result.error) {
+            throw new Error(result.error.message || 'GitHub 登录失败')
+        }
+        toast.add({
+            severity: 'success',
+            summary: 'GitHub 登录成功',
+            detail: '即将跳转到首页',
+            life: 2000,
+        })
+        setTimeout(() => {
+            navigateTo('/profile')
+        }, 1200)
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'GitHub 登录时发生未知错误'
+        toast.add({
+            severity: 'error',
+            summary: 'GitHub 登录失败',
+            detail: errorMessage,
+            life: 2000,
+        })
+    }
 }
-function loginWithGoogle() {
-    toast.add({
-        severity: 'info',
-        summary: 'Google 登录',
-        detail: '即将跳转到 Google 登录页面',
-        life: 2000,
-    })
+
+async function loginWithGoogle() {
+    try {
+        const result = await authClient.signIn.social({
+            provider: 'google',
+        })
+        if (result.error) {
+            throw new Error(result.error.message || 'Google 登录失败')
+        }
+        toast.add({
+            severity: 'success',
+            summary: 'Google 登录成功',
+            detail: '即将跳转到首页',
+            life: 2000,
+        })
+        setTimeout(() => {
+            navigateTo('/profile')
+        }, 1200)
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Google 登录时发生未知错误'
+        toast.add({
+            severity: 'error',
+            summary: 'Google 登录失败',
+            detail: errorMessage,
+            life: 2000,
+        })
+    }
 }
 </script>
 

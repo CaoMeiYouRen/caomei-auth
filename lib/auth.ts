@@ -90,6 +90,16 @@ export const auth = betterAuth({
             },
         },
     },
+    socialProviders: {
+        github: { // 支持 GitHub 登录
+            clientId: process.env.GITHUB_CLIENT_ID as string,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+        },
+        google: { // 支持 Google 登录
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        },
+    },
     plugins: [
         username({
             minUsernameLength: 2, // 最小用户名长度
