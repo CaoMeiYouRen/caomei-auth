@@ -246,6 +246,7 @@ import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
+import { authClient } from '@/lib/auth-client'
 
 const activeTab = ref<'username' | 'email' | 'phone'>('username')
 const email = ref('')
@@ -254,7 +255,7 @@ const username = ref('')
 const usernamePassword = ref('')
 const phone = ref('')
 const phonePassword = ref('')
-const rememberMe = ref(false)
+const rememberMe = ref(true)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
 const router = useRouter()
@@ -268,63 +269,164 @@ const phoneCodeSending = ref(false)
 const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 
-function login() {
+async function login() {
     errors.value = {}
-    let isValid = true
+
     if (activeTab.value === 'email') {
         if (!email.value) {
             errors.value.email = '请输入邮箱'
-            isValid = false
-        } else if (!validateEmail(email.value)) {
-            errors.value.email = '请输入有效的邮箱地址'
-            isValid = false
+            return
         }
+        if (!validateEmail(email.value)) {
+            errors.value.email = '请输入有效的邮箱地址'
+            return
+        }
+
         if (emailUseCode.value) {
             if (!emailCode.value) {
                 errors.value.emailCode = '请输入验证码'
-                isValid = false
+                return
             }
         } else if (!emailPassword.value) {
                 errors.value.emailPassword = '请输入密码'
-                isValid = false
+                return
             }
-    } else if (activeTab.value === 'username') {
+
+        try {
+            const result = emailUseCode.value
+                ? await authClient.signIn.emailOtp({
+                    email: email.value,
+                    otp: emailCode.value,
+                })
+                : await authClient.signIn.email({
+                    email: email.value,
+                    password: emailPassword.value,
+                    rememberMe: rememberMe.value,
+                })
+
+            if (result.error) {
+                throw new Error(result.error.message || '登录失败')
+            }
+
+            toast.add({
+                severity: 'success',
+                summary: '登录成功',
+                detail: '即将跳转到首页',
+                life: 2000,
+            })
+            setTimeout(() => {
+                router.push('/profile')
+            }, 1200)
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
+            toast.add({
+                severity: 'error',
+                summary: '登录失败',
+                detail: errorMessage,
+                life: 2000,
+            })
+        }
+        return
+    }
+
+    if (activeTab.value === 'username') {
         if (!username.value) {
             errors.value.username = '请输入用户名'
-            isValid = false
+            return
         }
         if (!usernamePassword.value) {
             errors.value.usernamePassword = '请输入密码'
-            isValid = false
+            return
         }
-    } else if (activeTab.value === 'phone') {
+
+        try {
+            const result = await authClient.signIn.username({
+                username: username.value,
+                password: usernamePassword.value,
+            })
+
+            if (result.error) {
+                throw new Error(result.error.message || '登录失败')
+            }
+
+            toast.add({
+                severity: 'success',
+                summary: '登录成功',
+                detail: '即将跳转到首页',
+                life: 2000,
+            })
+            setTimeout(() => {
+                router.push('/profile')
+            }, 1200)
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
+            toast.add({
+                severity: 'error',
+                summary: '登录失败',
+                detail: errorMessage,
+                life: 2000,
+            })
+        }
+        return
+    }
+
+    if (activeTab.value === 'phone') {
         if (!phone.value) {
             errors.value.phone = '请输入手机号'
-            isValid = false
-        } else if (!validatePhone(phone.value)) {
-            errors.value.phone = '请输入有效的手机号'
-            isValid = false
+            return
         }
+        if (!validatePhone(phone.value)) {
+            errors.value.phone = '请输入有效的手机号'
+            return
+        }
+
         if (phoneUseCode.value) {
             if (!phoneCode.value) {
                 errors.value.phoneCode = '请输入验证码'
-                isValid = false
+                return
             }
         } else if (!phonePassword.value) {
                 errors.value.phonePassword = '请输入密码'
-                isValid = false
+                return
             }
-    }
-    if (isValid) {
-        toast.add({
-            severity: 'success',
-            summary: '登录成功',
-            detail: '即将跳转到首页',
-            life: 2000,
-        })
-        setTimeout(() => {
-            router.push('/profile')
-        }, 1200)
+
+        try {
+            let result
+            if (phoneUseCode.value) {
+                result = await authClient.phoneNumber.verify({
+                    phoneNumber: phone.value,
+                    code: phoneCode.value,
+                })
+            } else {
+                result = await authClient.signIn.phoneNumber({
+                    phoneNumber: phone.value,
+                    password: phonePassword.value,
+                    rememberMe: rememberMe.value,
+                })
+            }
+
+            if (result.error) {
+                throw new Error(result.error.message || '登录失败')
+            }
+
+            toast.add({
+                severity: 'success',
+                summary: '登录成功',
+                detail: '即将跳转到首页',
+                life: 2000,
+            })
+            setTimeout(() => {
+                router.push('/profile')
+            }, 1200)
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
+            toast.add({
+                severity: 'error',
+                summary: '登录失败',
+                detail: errorMessage,
+                life: 2000,
+            })
+        }
     }
 }
 function loginWithGitHub() {
