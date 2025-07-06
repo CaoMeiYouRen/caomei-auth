@@ -269,28 +269,29 @@ const sendPhoneCode = useSendPhoneCode(
     phoneCodeSending,
 )
 
-onMounted(async () => {
-    const session = authClient.useSession()
+const session = authClient.useSession()
 
-    if (session && session.value.data?.user) {
-        user.username = session.value.data.user.username || ''
-        user.nickname = session.value.data.user.displayUsername || ''
-        user.avatar = session.value.data.user.image || ''
-        user.email = session.value.data.user.email || ''
-        user.emailVerified = session.value.data.user.emailVerified || false
-        user.phone = session.value.data.user.phoneNumber || ''
-        user.phoneVerified = session.value.data.user.phoneNumberVerified || false
-        // user.githubLinked = session.value.data.user.githubLinked || false
-        // user.googleLinked = session.value.data.user.googleLinked || false
-        return
-    }
-    toast.add({
-        severity: 'error',
-        summary: '获取用户信息失败',
-        detail: '请重新登录',
-        life: 2000,
-    })
-})
+watch(
+    () => session.value.isPending || session.value.isRefetching,
+    (status) => {
+        if (status) { // 如果 session 正在加载中，则不执行后续逻辑
+            return
+        }
+        const newUser = session.value.data?.user
+        if (newUser) {
+            user.username = newUser.username || ''
+            user.nickname = newUser.displayUsername || ''
+            user.avatar = newUser.image || ''
+            user.email = newUser.email || ''
+            user.emailVerified = newUser.emailVerified || false
+            user.phone = newUser.phoneNumber || ''
+            user.phoneVerified = newUser.phoneNumberVerified || false
+            // user.githubLinked = newUser.githubLinked || false
+            // user.googleLinked = newUser.googleLinked || false
+        }
+    },
+    { immediate: true },
+)
 
 async function bindEmail() {
     if (!validateEmail(emailForm.email) || !emailForm.code) {
