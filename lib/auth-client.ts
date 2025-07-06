@@ -4,7 +4,7 @@ import type { auth } from './auth'
 
 export const authClient = createAuthClient({
     /** 服务器的基础 URL（如果您使用相同域名，则可选） */
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    baseURL: import.meta.env.VITE_AUTH_BASE_URL || window.location.origin,
     plugins: [
         inferAdditionalFields<typeof auth>(),
         usernameClient(),
