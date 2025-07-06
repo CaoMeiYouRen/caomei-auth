@@ -273,12 +273,14 @@ const bindingPhone = ref(false)
 
 const sendEmailCode = useSendEmailCode(
     ref(emailForm.email),
+    'email-verification',
     validateEmail,
     ref({}),
     emailCodeSending,
 )
 const sendPhoneCode = useSendPhoneCode(
     ref(phoneForm.phone),
+    'phone-verification',
     validatePhone,
     ref({}),
     phoneCodeSending,

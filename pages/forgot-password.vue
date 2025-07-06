@@ -130,11 +130,20 @@
                         {{ errors.confirmPassword }}
                     </div>
                 </div>
-                <Button
-                    class="btn btn-primary mt-2"
-                    label="重置密码"
-                    @click="resetPassword"
-                />
+                <div v-if="mode === 'email'" class="form-group">
+                    <Button
+                        class="btn btn-primary mt-2"
+                        label="重置密码"
+                        @click="resetPassword"
+                    />
+                </div>
+                <div v-if="mode === 'phone'" class="form-group">
+                    <Button
+                        class="btn btn-primary mt-2"
+                        label="重置密码"
+                        @click="resetPhonePassword"
+                    />
+                </div>
                 <div class="toggle-login">
                     已有账号？ <NuxtLink to="/login" class="toggle-link">
                         立即登录
@@ -147,7 +156,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -157,6 +166,7 @@ import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
+import { authClient } from '@/lib/auth-client'
 
 const mode = ref<'email' | 'phone'>('email')
 const email = ref('')
@@ -169,7 +179,6 @@ const emailCodeSending = ref(false)
 const phoneCodeSending = ref(false)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
-const router = useRouter()
 const route = useRoute()
 
 onMounted(() => {
@@ -187,53 +196,87 @@ onMounted(() => {
     }
 })
 
-const sendEmailCode = useSendEmailCode(email, validateEmail, errors, emailCodeSending)
-const sendPhoneCode = useSendPhoneCode(phone, validatePhone, errors, phoneCodeSending)
+const sendEmailCode = useSendEmailCode(email, 'forget-password', validateEmail, errors, emailCodeSending)
+const sendPhoneCode = useSendPhoneCode(phone, 'forget-password', validatePhone, errors, phoneCodeSending)
 
-function resetPassword() {
-    errors.value = {}
-    let isValid = true
-    if (mode.value === 'email') {
-        if (!email.value) {
-            errors.value.email = '请输入邮箱'
-            isValid = false
-        } else if (!validateEmail(email.value)) {
-            errors.value.email = '请输入有效的邮箱地址'
-            isValid = false
-        }
-        if (!emailCode.value) {
-            errors.value.emailCode = '请输入邮箱验证码'
-            isValid = false
-        }
-    } else if (mode.value === 'phone') {
-        if (!phone.value) {
-            errors.value.phone = '请输入手机号'
-            isValid = false
-        } else if (!validatePhone(phone.value)) {
-            errors.value.phone = '请输入有效的手机号'
-            isValid = false
-        }
-        if (!phoneCode.value) {
-            errors.value.phoneCode = '请输入短信验证码'
-            isValid = false
-        }
+async function resetPassword() {
+    if (!email.value) {
+        errors.value.email = '请输入邮箱'
+        return
+    }
+    if (!validateEmail(email.value)) {
+        errors.value.email = '请输入有效的邮箱地址'
+        return
+    }
+    if (!emailCode.value) {
+        errors.value.emailCode = '请输入邮箱验证码'
+        return
     }
     if (!newPassword.value) {
         errors.value.newPassword = '请输入新密码'
-        isValid = false
+        return
     }
     if (!confirmPassword.value) {
         errors.value.confirmPassword = '请确认新密码'
-        isValid = false
-    } else if (newPassword.value !== confirmPassword.value) {
-        errors.value.confirmPassword = '两次输入的密码不一致'
-        isValid = false
+        return
     }
-    if (isValid) {
+    if (newPassword.value !== confirmPassword.value) {
+        errors.value.confirmPassword = '两次输入的密码不一致'
+        return
+    }
+    try {
+        const { data, error } = await authClient.emailOtp.resetPassword({
+            email: email.value,
+            otp: emailCode.value,
+            password: newPassword.value,
+        })
+        if (error) {
+            throw new Error(error.message || '密码重置失败')
+        }
         toast.add({ severity: 'success', summary: '密码重置成功', detail: '请使用新密码登录', life: 2500 })
         setTimeout(() => {
-            router.push('/login')
+            navigateTo('/login')
         }, 1500)
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '密码重置时发生未知错误'
+        toast.add({ severity: 'error', summary: '重置失败', detail: errorMessage, life: 2500 })
+    }
+}
+
+async function resetPhonePassword() {
+    if (!phoneCode.value) {
+        errors.value.phoneCode = '请输入短信验证码'
+        return
+    }
+    if (!newPassword.value) {
+        errors.value.newPassword = '请输入新密码'
+        return
+    }
+    if (!confirmPassword.value) {
+        errors.value.confirmPassword = '请确认新密码'
+        return
+    }
+    if (newPassword.value !== confirmPassword.value) {
+        errors.value.confirmPassword = '两次输入的密码不一致'
+        return
+    }
+    try {
+        const isVerified = await authClient.phoneNumber.resetPassword({
+            otp: phoneCode.value,
+            phoneNumber: phone.value,
+            newPassword: newPassword.value,
+        })
+        if (isVerified) {
+            toast.add({ severity: 'success', summary: '密码重置成功', detail: '请使用新密码登录', life: 2500 })
+            setTimeout(() => {
+                navigateTo('/login')
+            }, 1500)
+        } else {
+            throw new Error('密码重置失败')
+        }
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '密码重置时发生未知错误'
+        toast.add({ severity: 'error', summary: '重置失败', detail: errorMessage, life: 2500 })
     }
 }
 </script>

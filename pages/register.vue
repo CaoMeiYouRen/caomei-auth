@@ -171,7 +171,7 @@ const phoneCodeSending = ref(false)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
 
-const sendPhoneCode = useSendPhoneCode(phone, validatePhone, errors, phoneCodeSending)
+const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 
 // 表单验证函数
 const resolver = (values: {

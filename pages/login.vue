@@ -265,8 +265,8 @@ const phoneUseCode = ref(false)
 const phoneCode = ref('')
 const phoneCodeSending = ref(false)
 
-const sendEmailCode = useSendEmailCode(email, validateEmail, errors, emailCodeSending)
-const sendPhoneCode = useSendPhoneCode(phone, validatePhone, errors, phoneCodeSending)
+const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
+const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 
 function login() {
     errors.value = {}
