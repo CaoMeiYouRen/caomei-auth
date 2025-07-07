@@ -37,7 +37,6 @@
                         class="form-input"
                         placeholder="example@mail.com"
                     />
-                    <!-- 替换为 Message 组件 -->
                     <Message
                         v-if="errors.email"
                         severity="error"
@@ -77,7 +76,6 @@
                         :feedback="false"
                         toggle-mask
                     />
-                    <!-- 替换为 Message 组件 -->
                     <Message
                         v-if="errors.confirmPassword"
                         severity="error"
@@ -95,7 +93,6 @@
                         class="form-input"
                         placeholder="请输入手机号"
                     />
-                    <!-- 替换为 Message 组件 -->
                     <Message
                         v-if="errors.phone"
                         severity="error"
@@ -123,7 +120,6 @@
                             resend-text="重新发送"
                         />
                     </div>
-                    <!-- 替换为 Message 组件 -->
                     <Message
                         v-if="errors.phoneCode"
                         severity="error"

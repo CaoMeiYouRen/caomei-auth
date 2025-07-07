@@ -40,7 +40,7 @@ export function validateUsername(str: string): boolean {
 
 // 用户名验证函数
 // 返回 true 表示用户名符合规范，false 表示不符合规范
-// 规范：只能包含字母、数字、下划线和连字符，长度在 3 到 36 个字符之间
+// 规范：只能包含字母、数字、下划线和连字符，长度在 2 到 36 个字符之间
 // 禁止使用邮箱格式和手机号格式
 export function usernameValidator(name: string): boolean {
     if (!validateUsername(name)) {
