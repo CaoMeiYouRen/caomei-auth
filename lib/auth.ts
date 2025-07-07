@@ -7,6 +7,7 @@ import {
     openAPI,
     phoneNumber as $phoneNumber,
     admin,
+    captcha,
 } from 'better-auth/plugins'
 import Redis from 'ioredis'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
@@ -16,6 +17,8 @@ import { dataSource } from '@/server/database'
 import { usernameValidator, validatePhone } from '@/utils/validate'
 import { sendPhoneOtp } from '@/server/utils/phone'
 import { secondaryStorage } from '@/server/database/storage'
+
+// TODO 增加注册验证码
 
 export const auth = betterAuth({
     // 数据库适配器
@@ -32,9 +35,8 @@ export const auth = betterAuth({
         window: 60, // time window in seconds
         max: 100, // max requests in the window
         storage: secondaryStorage ? 'secondary-storage' : 'memory', // 如果配置了 Redis，则使用二级存储；否则使用内存存储
-        customRules: { // TODO 优化邮箱和短信验证码的全局限流
+        customRules: {
             // 合并 /sign-in/* 路径，除 /sign-in/username 外
-            '/sign-in/username': { window: 60, max: 5 },
             '/sign-in/*': (req) => {
                 // username 已单独处理
                 if (req.url?.endsWith('/sign-in/username')) {

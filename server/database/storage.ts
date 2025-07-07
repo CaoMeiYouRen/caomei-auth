@@ -2,15 +2,32 @@ import { SecondaryStorage } from 'better-auth'
 import { Redis } from 'ioredis'
 import { LRUCache } from 'lru-cache'
 
-let storage: SecondaryStorage = null as any
+// 定义基础存储接口，包含 increment 方法
+interface BaseStorage {
+    get: (key: string) => Promise<string | null> | string | null
+    /**
+     *
+     * @param key
+     * @param value
+     * @param ttl 秒数
+     * @returns
+     */
+    set: (key: string, value: string, ttl?: number) => Promise<void | null | string> | void
+    delete: (key: string) => Promise<void | null | string> | void
+    /**
+     *
+     * @param key
+     * @param ttl 秒数
+     * @returns
+     */
+    increment: (key: string, ttl: number) => Promise<number>
+}
 
-export const initializeStorage = (): SecondaryStorage => {
-    if (storage) {
-        return storage
-    }
+// 初始化基础存储
+const createBaseStorage = (): BaseStorage => {
     if (process.env.REDIS_URL) {
         const redis = new Redis(process.env.REDIS_URL)
-        storage = {
+        return {
             get: async (key: string) => {
                 const value = await redis.get(key)
                 return value ?? null
@@ -25,25 +42,47 @@ export const initializeStorage = (): SecondaryStorage => {
             delete: async (key: string) => {
                 await redis.del(key)
             },
+            increment: async (key: string, ttl: number) => {
+                const current = await redis.incr(key)
+                if (current === 1) {
+                    await redis.expire(key, ttl)
+                }
+                return current
+            },
         }
-        return storage
     }
-    // 使用 LRU 缓存作为内存存储
-    const memoryStorage = new LRUCache<string, string>({
-        max: 1000, // 最大缓存条目数
-        ttl: 1000 * 60 * 60, // 默认 TTL 为 1 小时
+    const memoryStorage = new LRUCache<string, number>({
+        max: 1000,
+        ttl: 1000 * 60 * 60,
     })
-
-    storage = {
-        get: async (key: string) => memoryStorage.get(key) ?? null,
+    return {
+        get: async (key: string) => String(memoryStorage.get(key) ?? null),
         set: async (key: string, value: string, ttl?: number) => {
-             memoryStorage.set(key, value, { ttl })
+            memoryStorage.set(key, parseInt(value), { ttl })
         },
         delete: async (key: string) => {
-             memoryStorage.delete(key)
+            memoryStorage.delete(key)
+        },
+        increment: async (key: string, ttl: number) => {
+            const current = (memoryStorage.get(key) || 0) + 1
+            memoryStorage.set(key, current, { ttl: ttl * 1000 })
+            return current
         },
     }
-    return storage
 }
+
+// 创建基础存储实例
+const baseStorage = createBaseStorage()
+
+// 实现 SecondaryStorage 接口
+const secondaryStorageImplementation: SecondaryStorage = {
+    get: baseStorage.get,
+    set: baseStorage.set,
+    delete: baseStorage.delete,
+}
+
 // 二级存储
-export const secondaryStorage = initializeStorage()
+export const secondaryStorage = secondaryStorageImplementation
+
+// 限流存储
+export const limiterStorage = baseStorage
