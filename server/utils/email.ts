@@ -4,6 +4,8 @@ import { limiterStorage } from '@/server/database/storage'
 
 // 定义邮箱验证码的每日发送上限
 const EMAIL_DAILY_LIMIT = Number(process.env.EMAIL_DAILY_LIMIT || 100)
+// 单个邮箱每日验证码发送上限
+const EMAIL_SINGLE_USER_DAILY_LIMIT = Number(process.env.EMAIL_SINGLE_USER_DAILY_LIMIT || 5)
 
 const EMAIL_LIMIT_KEY = 'email_global_limit'
 
@@ -46,14 +48,25 @@ export async function sendEmail(options: EmailOptions) {
     if (!await transporter.verify()) {
         throw new Error('Email transporter configuration is invalid')
     }
-    // 检查限流
-    const count = await limiterStorage.increment(
+    // 检查全局限流
+    const globalCount = await limiterStorage.increment(
         EMAIL_LIMIT_KEY,
         ms('1d') / 1000,
     )
-    if (count > EMAIL_DAILY_LIMIT) {
-        throw new Error('今日邮箱验证码发送次数已达上限')
+    if (globalCount > EMAIL_DAILY_LIMIT) {
+        throw new Error('今日邮箱发送次数已达全局上限')
     }
+
+    // 检查单个邮箱限流
+    const singleUserLimitKey = `email_single_user_limit:${options.to}`
+    const singleUserCount = await limiterStorage.increment(
+        singleUserLimitKey,
+        ms('1d') / 1000,
+    )
+    if (singleUserCount > EMAIL_SINGLE_USER_DAILY_LIMIT) {
+        throw new Error('您的邮箱今日发送次数已达上限')
+    }
+
     return transporter.sendMail({
         from: options.from || process.env.EMAIL_FROM, // 发件人
         to: options.to,
