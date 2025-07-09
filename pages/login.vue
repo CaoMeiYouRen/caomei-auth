@@ -18,26 +18,26 @@
                             <Button
                                 label="用户名"
                                 icon="mdi mdi-account"
-                                :class="{'p-button-outlined': activeTab !== 'username'}"
-                                @click="activeTab = 'username'"
+                                :class="{'p-button-outlined': params.mode !== 'username'}"
+                                @click="changeMode('username')"
                             />
                             <Button
                                 label="邮箱"
                                 icon="mdi mdi-email"
-                                :class="{'p-button-outlined': activeTab !== 'email'}"
-                                @click="activeTab = 'email'"
+                                :class="{'p-button-outlined': params.mode !== 'email'}"
+                                @click="changeMode('email')"
                             />
                             <Button
                                 label="手机号"
                                 icon="mdi mdi-phone"
-                                :class="{'p-button-outlined': activeTab !== 'phone'}"
-                                @click="activeTab = 'phone'"
+                                :class="{'p-button-outlined': params.mode !== 'phone'}"
+                                @click="changeMode('phone')"
                             />
                         </ButtonGroup>
                     </div>
                 </div>
                 <!-- 邮箱登录表单 -->
-                <div v-show="activeTab === 'email'">
+                <div v-show="params.mode === 'email'">
                     <div class="form-group">
                         <label class="form-label" for="email">邮箱</label>
                         <InputText
@@ -98,7 +98,7 @@
                     </div>
                 </div>
                 <!-- 用户名登录表单 -->
-                <div v-show="activeTab === 'username'">
+                <div v-show="params.mode === 'username'">
                     <div class="form-group">
                         <label class="form-label" for="username">用户名</label>
                         <InputText
@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 <!-- 手机号登录表单 -->
-                <div v-show="activeTab === 'phone'">
+                <div v-show="params.mode === 'phone'">
                     <div class="form-group">
                         <label class="form-label" for="phone">手机号</label>
                         <InputText
@@ -220,11 +220,11 @@
                     />
                 </div>
                 <div class="toggle-login">
-                    还没有账号？ <NuxtLink :to="'/register?mode=' + activeTab" class="toggle-link">
+                    还没有账号？ <NuxtLink :to="`/register?mode=${params.mode}`" class="toggle-link">
                         立即注册
                     </NuxtLink>
                     <span class="divider">|</span>
-                    <NuxtLink :to="'/forgot-password?mode=' + activeTab" class="toggle-link">
+                    <NuxtLink :to="`/forgot-password?mode=${params.mode}`" class="toggle-link">
                         忘记密码？
                     </NuxtLink>
                 </div>
@@ -234,7 +234,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useUrlSearchParams } from '@vueuse/core'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -267,10 +268,25 @@ const phoneCodeSending = ref(false)
 const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 
+// 使用 useUrlSearchParams 获取 URL 参数
+const params = useUrlSearchParams('history')
+
+onMounted(() => {
+    // 确保默认值
+    if (!['username', 'email', 'phone'].includes(params.mode as string)) {
+        params.mode = 'username'
+    }
+})
+
+// 切换登录模式并更新 URL
+const changeMode = (mode: 'username' | 'email' | 'phone') => {
+    params.mode = mode
+}
+
 async function login() {
     errors.value = {}
 
-    if (activeTab.value === 'email') {
+    if (params.mode === 'email') {
         if (!email.value) {
             errors.value.email = '请输入邮箱'
             return
