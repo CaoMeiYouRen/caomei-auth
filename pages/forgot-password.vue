@@ -15,19 +15,19 @@
                             <Button
                                 label="邮箱"
                                 icon="mdi mdi-email"
-                                :class="{'p-button-outlined': mode !== 'email'}"
-                                @click="mode = 'email'"
+                                :class="{'p-button-outlined': params.mode !== 'email'}"
+                                @click="changeMode('email')"
                             />
                             <Button
                                 label="手机号"
                                 icon="mdi mdi-phone"
-                                :class="{'p-button-outlined': mode !== 'phone'}"
-                                @click="mode = 'phone'"
+                                :class="{'p-button-outlined': params.mode !== 'phone'}"
+                                @click="changeMode('phone')"
                             />
                         </ButtonGroup>
                     </div>
                 </div>
-                <div v-if="mode === 'email'">
+                <div v-if="params.mode === 'email'">
                     <div class="form-group">
                         <label class="form-label" for="email">邮箱</label>
                         <InputText
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="mode === 'phone'">
+                <div v-if="params.mode === 'phone'">
                     <div class="form-group">
                         <label class="form-label" for="phone">手机号</label>
                         <InputText
@@ -127,14 +127,14 @@
                         {{ errors.confirmPassword }}
                     </div>
                 </div>
-                <div v-if="mode === 'email'" class="form-group">
+                <div v-if="params.mode === 'email'" class="form-group">
                     <Button
                         class="btn btn-primary mt-2"
                         label="重置密码"
                         @click="resetPassword"
                     />
                 </div>
-                <div v-if="mode === 'phone'" class="form-group">
+                <div v-if="params.mode === 'phone'" class="form-group">
                     <Button
                         class="btn btn-primary mt-2"
                         label="重置密码"
@@ -153,6 +153,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
+import { useUrlSearchParams } from '@vueuse/core'
 import { useRoute } from 'vue-router'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
@@ -165,7 +166,6 @@ import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 
-const mode = ref<'email' | 'phone'>('email')
 const email = ref('')
 const phone = ref('')
 const emailCode = ref('')
@@ -178,12 +178,15 @@ const errors = ref<Record<string, string>>({})
 const toast = useToast()
 const route = useRoute()
 
+// 使用 useUrlSearchParams 获取 URL 参数
+const params = useUrlSearchParams('history')
+
 onMounted(() => {
-    // 支持通过 query 传递初始tab
+    // 支持通过 query 传递初始 tab
     if (route.query.mode === 'phone') {
-        mode.value = 'phone'
+        params.mode = 'phone'
     } else {
-        mode.value = 'email'
+        params.mode = 'email'
     }
     if (route.query.email) {
         email.value = String(route.query.email)
@@ -195,6 +198,11 @@ onMounted(() => {
 
 const sendEmailCode = useSendEmailCode(email, 'forget-password', validateEmail, errors, emailCodeSending)
 const sendPhoneCode = useSendPhoneCode(phone, 'forget-password', validatePhone, errors, phoneCodeSending)
+
+// 切换找回密码模式并更新 URL
+const changeMode = (mode: 'email' | 'phone') => {
+    params.mode = mode
+}
 
 async function resetPassword() {
     if (!email.value) {
