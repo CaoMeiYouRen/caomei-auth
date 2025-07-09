@@ -14,19 +14,20 @@
                         <Button
                             label="邮箱"
                             icon="mdi mdi-email"
-                            :class="{'p-button-outlined': registerMode !== 'email'}"
-                            @click="registerMode = 'email'"
+                            :class="{'p-button-outlined': params.mode !== 'email'}"
+                            @click="changeMode('email')"
                         />
                         <Button
                             label="手机号"
                             icon="mdi mdi-phone"
-                            :class="{'p-button-outlined': registerMode !== 'phone'}"
-                            @click="registerMode = 'phone'"
+                            :class="{'p-button-outlined': params.mode !== 'phone'}"
+                            @click="changeMode('phone')"
                         />
                     </ButtonGroup>
                 </div>
 
-                <div v-if="registerMode === 'email'">
+                <!-- 邮箱注册表单 -->
+                <div v-if="params.mode === 'email'">
                     <div class="form-group">
                         <label class="form-label" for="username">用户名 <span style="color: #e63946">*</span></label>
                         <InputText
@@ -81,9 +82,7 @@
                         </Message>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="confirmPassword">确认密码 <span
-                            style="color: #e63946"
-                        >*</span></label>
+                        <label class="form-label" for="confirmPassword">确认密码 <span style="color: #e63946">*</span></label>
                         <Password
                             id="confirmPassword"
                             v-model="confirmPassword"
@@ -104,7 +103,7 @@
                 </div>
 
                 <!-- 手机号注册表单 -->
-                <div v-if="registerMode === 'phone'">
+                <div v-if="params.mode === 'phone'">
                     <div class="form-group">
                         <label class="form-label" for="username">用户名 <span style="color: #e63946">*</span></label>
                         <InputText
@@ -184,7 +183,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useUrlSearchParams } from '@vueuse/core'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -195,9 +195,7 @@ import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
-import { navigateTo } from '#app'
 
-const registerMode = ref<'email' | 'phone'>('email')
 const username = ref('')
 const email = ref('')
 const phone = ref('')
@@ -207,18 +205,23 @@ const password = ref('')
 const confirmPassword = ref('')
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
-const route = useRoute()
+
+// 使用 useUrlSearchParams 获取 URL 参数
+const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history')
 
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 
 onMounted(() => {
-    // 支持通过 query 传递初始tab
-    if (route.query.mode === 'phone') {
-        registerMode.value = 'phone'
-    } else {
-        registerMode.value = 'email'
+    // 确保默认值
+    if (!['email', 'phone'].includes(params.mode as string)) {
+        params.mode = 'email'
     }
 })
+
+// 切换注册模式并更新 URL
+const changeMode = (mode: 'email' | 'phone') => {
+    params.mode = mode
+}
 
 // 表单验证函数
 const resolver = (values: {
@@ -237,7 +240,7 @@ const resolver = (values: {
         newErrors.username = '用户名只能包含字母、数字、下划线和连字符，长度在2到36个字符之间，且不能为邮箱或手机号格式'
     }
 
-    if (registerMode.value === 'email') {
+    if (params.mode === 'email') {
         if (!values.email) {
             newErrors.email = '请输入邮箱'
         } else if (!validateEmail(values.email)) {
@@ -255,9 +258,7 @@ const resolver = (values: {
         } else if (values.password !== values.confirmPassword) {
             newErrors.confirmPassword = '两次输入的密码不一致'
         }
-        return newErrors
-    }
-    if (registerMode.value === 'phone') {
+    } else if (params.mode === 'phone') {
         if (!values.phone) {
             newErrors.phone = '请输入手机号'
         } else if (!validatePhone(values.phone)) {
@@ -266,8 +267,8 @@ const resolver = (values: {
         if (!values.phoneCode) {
             newErrors.phoneCode = '请输入短信验证码'
         }
-        return newErrors
     }
+
     return newErrors
 }
 
@@ -292,7 +293,7 @@ async function register() {
     }
 
     try {
-        if (registerMode.value === 'email') {
+        if (params.mode === 'email') {
             // 使用邮箱和用户名注册
             const { data, error } = await authClient.signUp.email({
                 email: email.value,
@@ -304,12 +305,14 @@ async function register() {
             if (error) {
                 throw new Error(error.message || '注册失败')
             }
-        } else if (registerMode.value === 'phone') {
+        } else if (params.mode === 'phone') {
+
             // 验证手机号码
             const isVerified = await authClient.phoneNumber.verify({
                 phoneNumber: phone.value,
                 code: phoneCode.value,
             })
+
             if (!isVerified.data?.status) {
                 throw new Error('手机号码验证失败')
             }
@@ -326,7 +329,7 @@ async function register() {
         toast.add({
             severity: 'success',
             summary: '注册成功',
-            detail: registerMode.value === 'email' ? '验证邮件已发送，请前往邮箱激活账号' : '注册成功，请登录',
+            detail: params.mode === 'email' ? '验证邮件已发送，请前往邮箱激活账号' : '注册成功，请登录',
             life: 2500,
         })
         setTimeout(() => {
