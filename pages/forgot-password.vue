@@ -142,7 +142,7 @@
                     />
                 </div>
                 <div class="toggle-login">
-                    已有账号？ <NuxtLink to="/login" class="toggle-link">
+                    已有账号？ <NuxtLink :to="'/login?mode=' + params.mode" class="toggle-link">
                         立即登录
                     </NuxtLink>
                 </div>
@@ -240,7 +240,7 @@ async function resetPassword() {
         }
         toast.add({ severity: 'success', summary: '密码重置成功', detail: '请使用新密码登录', life: 2500 })
         setTimeout(() => {
-            navigateTo('/login')
+            navigateTo(`/login?mode=${params.mode}`)
         }, 1500)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '密码重置时发生未知错误'

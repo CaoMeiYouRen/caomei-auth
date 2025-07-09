@@ -173,7 +173,7 @@
                     @click="register"
                 />
                 <div class="toggle-login">
-                    已有账号？ <NuxtLink to="/login" class="toggle-link">
+                    已有账号？ <NuxtLink :to="'/login?mode=' + params.mode" class="toggle-link">
                         立即登录
                     </NuxtLink>
                 </div>
@@ -333,7 +333,7 @@ async function register() {
             life: 2500,
         })
         setTimeout(() => {
-            navigateTo('/login')
+            navigateTo(`/login?mode=${params.mode}`)
         }, 1500)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '注册过程中发生未知错误'

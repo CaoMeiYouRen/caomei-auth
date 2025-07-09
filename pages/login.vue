@@ -220,7 +220,7 @@
                     />
                 </div>
                 <div class="toggle-login">
-                    还没有账号？ <NuxtLink to="/register" class="toggle-link">
+                    还没有账号？ <NuxtLink :to="'/register?mode=' + activeTab" class="toggle-link">
                         立即注册
                     </NuxtLink>
                     <span class="divider">|</span>
