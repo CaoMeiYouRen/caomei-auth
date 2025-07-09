@@ -1,9 +1,6 @@
 <template>
     <div class="auth-container">
-        <AuthLeft
-            title="注册新账号"
-            subtitle="欢迎加入草梅 Auth，支持邮箱、手机号注册。"
-        />
+        <AuthLeft title="注册新账号" subtitle="欢迎加入草梅 Auth，支持邮箱、手机号注册。" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -13,122 +10,164 @@
                     请填写以下信息完成注册
                 </p>
                 <div class="form-group">
-                    <label class="form-label" for="username">用户名 <span style="color: #e63946">*</span></label>
-                    <InputText
-                        id="username"
-                        v-model="username"
-                        class="form-input"
-                        placeholder="请输入用户名"
-                    />
-                    <Message
-                        v-if="errors.username"
-                        severity="error"
-                        size="small"
-                        variant="simple"
-                    >
-                        {{ errors.username }}
-                    </Message>
+                    <ButtonGroup>
+                        <Button
+                            label="邮箱"
+                            icon="mdi mdi-email"
+                            :class="{'p-button-outlined': registerMode !== 'email'}"
+                            @click="registerMode = 'email'"
+                        />
+                        <Button
+                            label="手机号"
+                            icon="mdi mdi-phone"
+                            :class="{'p-button-outlined': registerMode !== 'phone'}"
+                            @click="registerMode = 'phone'"
+                        />
+                    </ButtonGroup>
                 </div>
-                <div class="form-group">
-                    <label class="form-label" for="email">邮箱 <span style="color: #e63946">*</span></label>
-                    <InputText
-                        id="email"
-                        v-model="email"
-                        class="form-input"
-                        placeholder="example@mail.com"
-                    />
-                    <Message
-                        v-if="errors.email"
-                        severity="error"
-                        size="small"
-                        variant="simple"
-                    >
-                        {{ errors.email }}
-                    </Message>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="password">密码 <span style="color: #e63946">*</span></label>
-                    <Password
-                        id="password"
-                        v-model="password"
-                        class="form-input password-input"
-                        placeholder="请输入密码"
-                        :feedback="false"
-                        toggle-mask
-                    />
-                    <!-- 替换为 Message 组件 -->
-                    <Message
-                        v-if="errors.password"
-                        severity="error"
-                        size="small"
-                        variant="simple"
-                    >
-                        {{ errors.password }}
-                    </Message>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="confirmPassword">确认密码 <span style="color: #e63946">*</span></label>
-                    <Password
-                        id="confirmPassword"
-                        v-model="confirmPassword"
-                        class="form-input password-input"
-                        placeholder="请再次输入密码"
-                        :feedback="false"
-                        toggle-mask
-                    />
-                    <Message
-                        v-if="errors.confirmPassword"
-                        severity="error"
-                        size="small"
-                        variant="simple"
-                    >
-                        {{ errors.confirmPassword }}
-                    </Message>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="phone">手机号（选填）</label>
-                    <InputText
-                        id="phone"
-                        v-model="phone"
-                        class="form-input"
-                        placeholder="请输入手机号"
-                    />
-                    <Message
-                        v-if="errors.phone"
-                        severity="error"
-                        size="small"
-                        variant="simple"
-                    >
-                        {{ errors.phone }}
-                    </Message>
-                </div>
-                <div v-if="phone" class="form-group">
-                    <label class="form-label" for="phoneCode">短信验证码</label>
-                    <div class="code-row">
+
+                <div v-if="registerMode === 'email'">
+                    <div class="form-group">
+                        <label class="form-label" for="username">用户名 <span style="color: #e63946">*</span></label>
                         <InputText
-                            id="phoneCode"
-                            v-model="phoneCode"
+                            id="username"
+                            v-model="username"
                             class="form-input"
-                            placeholder="请输入短信验证码"
+                            placeholder="请输入用户名"
                         />
-                        <SendCodeButton
-                            :on-send="sendPhoneCode"
-                            :duration="60"
-                            :disabled="phoneCodeSending || !validatePhone(phone)"
-                            :loading="phoneCodeSending"
-                            text="获取验证码"
-                            resend-text="重新发送"
-                        />
+                        <Message
+                            v-if="errors.username"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ errors.username }}
+                        </Message>
                     </div>
-                    <Message
-                        v-if="errors.phoneCode"
-                        severity="error"
-                        size="small"
-                        variant="simple"
-                    >
-                        {{ errors.phoneCode }}
-                    </Message>
+                    <div class="form-group">
+                        <label class="form-label" for="email">邮箱 <span style="color: #e63946">*</span></label>
+                        <InputText
+                            id="email"
+                            v-model="email"
+                            class="form-input"
+                            placeholder="example@mail.com"
+                        />
+                        <Message
+                            v-if="errors.email"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ errors.email }}
+                        </Message>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="password">密码 <span style="color: #e63946">*</span></label>
+                        <Password
+                            id="password"
+                            v-model="password"
+                            class="form-input password-input"
+                            placeholder="请输入密码"
+                            :feedback="false"
+                            toggle-mask
+                        />
+                        <Message
+                            v-if="errors.password"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ errors.password }}
+                        </Message>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">确认密码 <span
+                            style="color: #e63946"
+                        >*</span></label>
+                        <Password
+                            id="confirmPassword"
+                            v-model="confirmPassword"
+                            class="form-input password-input"
+                            placeholder="请再次输入密码"
+                            :feedback="false"
+                            toggle-mask
+                        />
+                        <Message
+                            v-if="errors.confirmPassword"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ errors.confirmPassword }}
+                        </Message>
+                    </div>
                 </div>
+
+                <!-- 手机号注册表单 -->
+                <div v-if="registerMode === 'phone'">
+                    <div class="form-group">
+                        <label class="form-label" for="username">用户名 <span style="color: #e63946">*</span></label>
+                        <InputText
+                            id="username"
+                            v-model="username"
+                            class="form-input"
+                            placeholder="请输入用户名"
+                        />
+                        <Message
+                            v-if="errors.username"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ errors.username }}
+                        </Message>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone">手机号 <span style="color: #e63946">*</span></label>
+                        <InputText
+                            id="phone"
+                            v-model="phone"
+                            class="form-input"
+                            placeholder="请输入手机号"
+                        />
+                        <Message
+                            v-if="errors.phone"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ errors.phone }}
+                        </Message>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phoneCode">短信验证码 <span style="color: #e63946">*</span></label>
+                        <div class="code-row">
+                            <InputText
+                                id="phoneCode"
+                                v-model="phoneCode"
+                                class="form-input"
+                                placeholder="请输入短信验证码"
+                            />
+                            <SendCodeButton
+                                :on-send="sendPhoneCode"
+                                :duration="60"
+                                :disabled="phoneCodeSending || !validatePhone(phone)"
+                                :loading="phoneCodeSending"
+                                text="获取验证码"
+                                resend-text="重新发送"
+                            />
+                        </div>
+                        <Message
+                            v-if="errors.phoneCode"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ errors.phoneCode }}
+                        </Message>
+                    </div>
+                </div>
+
                 <Button
                     class="btn btn-primary mt-2"
                     label="注册"
@@ -150,6 +189,7 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import { useToast } from 'primevue/usetoast'
+import ButtonGroup from 'primevue/buttongroup'
 import { validateEmail, validatePhone, usernameValidator } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
@@ -157,26 +197,37 @@ import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import { navigateTo } from '#app'
 
+const registerMode = ref<'email' | 'phone'>('email')
 const username = ref('')
 const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
 const phone = ref('')
 const phoneCode = ref('')
 const phoneCodeSending = ref(false)
+const password = ref('')
+const confirmPassword = ref('')
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
+const route = useRoute()
 
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
+
+onMounted(() => {
+    // 支持通过 query 传递初始tab
+    if (route.query.mode === 'phone') {
+        registerMode.value = 'phone'
+    } else {
+        registerMode.value = 'email'
+    }
+})
 
 // 表单验证函数
 const resolver = (values: {
     username: string
-    email: string
-    password: string
-    confirmPassword: string
+    email?: string
     phone?: string
     phoneCode?: string
+    password?: string
+    confirmPassword?: string
 }) => {
     const newErrors: Record<string, string> = {}
 
@@ -186,35 +237,37 @@ const resolver = (values: {
         newErrors.username = '用户名只能包含字母、数字、下划线和连字符，长度在2到36个字符之间，且不能为邮箱或手机号格式'
     }
 
-    if (!values.email) {
-        newErrors.email = '请输入邮箱'
-    } else if (!validateEmail(values.email)) {
-        newErrors.email = '请输入有效的邮箱地址'
+    if (registerMode.value === 'email') {
+        if (!values.email) {
+            newErrors.email = '请输入邮箱'
+        } else if (!validateEmail(values.email)) {
+            newErrors.email = '请输入有效的邮箱地址'
+        }
+        if (!values.password) {
+            newErrors.password = '请输入密码'
+        } else if (values.password.length < 6) {
+            newErrors.password = '密码长度不能少于6个字符'
+        } else if (values.password.length > 64) {
+            newErrors.password = '密码长度不能超过64个字符'
+        }
+        if (!values.confirmPassword) {
+            newErrors.confirmPassword = '请确认密码'
+        } else if (values.password !== values.confirmPassword) {
+            newErrors.confirmPassword = '两次输入的密码不一致'
+        }
+        return newErrors
     }
-
-    if (!values.password) {
-        newErrors.password = '请输入密码'
-    } else if (values.password.length < 6) {
-        newErrors.password = '密码长度不能少于6个字符'
-    } else if (values.password.length > 64) {
-        newErrors.password = '密码长度不能超过64个字符'
-    }
-
-    if (!values.confirmPassword) {
-        newErrors.confirmPassword = '请确认密码'
-    } else if (values.password !== values.confirmPassword) {
-        newErrors.confirmPassword = '两次输入的密码不一致'
-    }
-
-    if (values.phone) {
-        if (!validatePhone(values.phone)) {
+    if (registerMode.value === 'phone') {
+        if (!values.phone) {
+            newErrors.phone = '请输入手机号'
+        } else if (!validatePhone(values.phone)) {
             newErrors.phone = '请输入有效的手机号'
         }
         if (!values.phoneCode) {
             newErrors.phoneCode = '请输入短信验证码'
         }
+        return newErrors
     }
-
     return newErrors
 }
 
@@ -222,10 +275,10 @@ async function register() {
     const values = {
         username: username.value,
         email: email.value,
-        password: password.value,
-        confirmPassword: confirmPassword.value,
         phone: phone.value,
         phoneCode: phoneCode.value,
+        password: password.value,
+        confirmPassword: confirmPassword.value,
     }
 
     // 执行验证
@@ -239,34 +292,41 @@ async function register() {
     }
 
     try {
-        // 使用邮箱和用户名注册
-        const { data, error } = await authClient.signUp.email({
-            email: email.value,
-            password: password.value,
-            name: username.value,
-            username: username.value,
-        })
+        if (registerMode.value === 'email') {
+            // 使用邮箱和用户名注册
+            const { data, error } = await authClient.signUp.email({
+                email: email.value,
+                password: password.value,
+                name: username.value,
+                username: username.value,
+            })
 
-        if (error) {
-            throw new Error(error.message || '注册失败')
-        }
-
-        if (phone.value) {
+            if (error) {
+                throw new Error(error.message || '注册失败')
+            }
+        } else if (registerMode.value === 'phone') {
             // 验证手机号码
             const isVerified = await authClient.phoneNumber.verify({
                 phoneNumber: phone.value,
                 code: phoneCode.value,
             })
-
-            if (!isVerified) {
+            if (!isVerified.data?.status) {
                 throw new Error('手机号码验证失败')
+            }
+            // 验证手机号之后就自动注册了，所以这里更新用户名
+            const { data, error } = await authClient.updateUser({
+                name: username.value,
+                username: username.value,
+            })
+            if (error) {
+                throw new Error(error.message || '更新用户信息失败')
             }
         }
 
         toast.add({
             severity: 'success',
             summary: '注册成功',
-            detail: '验证邮件已发送，请前往邮箱激活账号',
+            detail: registerMode.value === 'email' ? '验证邮件已发送，请前往邮箱激活账号' : '注册成功，请登录',
             life: 2500,
         })
         setTimeout(() => {
@@ -474,4 +534,3 @@ async function register() {
     margin-top: 1em;
 }
 </style>
-

@@ -1,9 +1,6 @@
 <template>
     <div class="auth-container">
-        <AuthLeft
-            title="找回密码"
-            subtitle="通过邮箱或手机号重置密码。"
-        />
+        <AuthLeft title="找回密码" subtitle="通过邮箱或手机号重置密码。" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -266,14 +263,15 @@ async function resetPhonePassword() {
             phoneNumber: phone.value,
             newPassword: newPassword.value,
         })
-        if (isVerified) {
+        if (isVerified.data?.status) {
             toast.add({ severity: 'success', summary: '密码重置成功', detail: '请使用新密码登录', life: 2500 })
             setTimeout(() => {
                 navigateTo('/login')
             }, 1500)
-        } else {
-            throw new Error('密码重置失败')
+            return
         }
+        throw new Error('密码重置失败')
+
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '密码重置时发生未知错误'
         toast.add({ severity: 'error', summary: '重置失败', detail: errorMessage, life: 2500 })
