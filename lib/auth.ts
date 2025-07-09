@@ -102,6 +102,12 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         },
     },
+    session: {
+        cookieCache: {
+          enabled: true,
+          maxAge: 5 * 60, // 缓存持续时间（秒）
+        },
+      },
     plugins: [
         username({
             minUsernameLength: 2, // 最小用户名长度

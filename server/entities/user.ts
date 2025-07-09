@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, Index } from 'typeorm'
 import { BaseEntity } from './base-entity'
 
 @Entity('user')
@@ -12,7 +12,8 @@ export class User extends BaseEntity {
 
     /**
      * 用户邮箱地址
-    */
+     */
+    @Index()
     @Column('varchar', { length: 255, nullable: false })
     email: string
 
@@ -31,6 +32,7 @@ export class User extends BaseEntity {
     /**
      * 用户名
      */
+    @Index()
     @Column('varchar', { length: 128, nullable: true })
     username: string
 
@@ -49,6 +51,7 @@ export class User extends BaseEntity {
     /**
      * 用户手机号
      */
+    @Index()
     @Column('varchar', { length: 64, nullable: true })
     phoneNumber: string
 

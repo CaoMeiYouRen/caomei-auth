@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, Index } from 'typeorm'
 import { getDateType } from '../database/type'
 import { BaseEntity } from './base-entity'
 
@@ -8,6 +8,7 @@ export class Session extends BaseEntity {
     @Column(getDateType(), { nullable: false })
     expiresAt: Date
 
+    @Index()
     @Column('text', { nullable: false })
     token: string
 
@@ -17,6 +18,7 @@ export class Session extends BaseEntity {
     @Column('text', { nullable: true })
     userAgent: string
 
+    @Index()
     @Column('varchar', { length: 36, nullable: false })
     userId: string
 

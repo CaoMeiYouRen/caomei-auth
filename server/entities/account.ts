@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, Index } from 'typeorm'
 import { getDateType } from '../database/type'
 import { BaseEntity } from './base-entity'
 
@@ -11,6 +11,7 @@ export class Account extends BaseEntity {
     @Column('text', { nullable: false })
     providerId: string
 
+    @Index()
     @Column('varchar', { length: 36, nullable: false })
     userId: string
 
