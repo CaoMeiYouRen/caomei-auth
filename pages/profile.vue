@@ -145,21 +145,21 @@
         >
             <div class="form-group">
                 <InputText
-                    v-model="emailForm.email"
+                    v-model="email"
                     class="form-input"
                     placeholder="请输入新邮箱"
                 />
             </div>
             <div class="flex-row form-group">
                 <InputText
-                    v-model="emailForm.code"
+                    v-model="emailCode"
                     class="form-input"
                     placeholder="验证码"
                 />
                 <SendCodeButton
                     :on-send="sendEmailCode"
                     :duration="60"
-                    :disabled="emailCodeSending || !validateEmail(emailForm.email)
+                    :disabled="emailCodeSending || !validateEmail(email)
                     "
                     :loading="emailCodeSending"
                     text="发送验证码"
@@ -185,21 +185,21 @@
         >
             <div class="form-group">
                 <InputText
-                    v-model="phoneForm.phone"
+                    v-model="phone"
                     class="form-input"
                     placeholder="请输入新手机号"
                 />
             </div>
             <div class="flex-row form-group">
                 <InputText
-                    v-model="phoneForm.code"
+                    v-model="phoneCode"
                     class="form-input"
                     placeholder="验证码"
                 />
                 <SendCodeButton
                     :on-send="sendPhoneCode"
                     :duration="60"
-                    :disabled="phoneCodeSending || !validatePhone(phoneForm.phone)"
+                    :disabled="phoneCodeSending || !validatePhone(phone)"
                     :loading="phoneCodeSending"
                     text="发送验证码"
                     resend-text="重新发送"
@@ -246,25 +246,28 @@ const saving = ref(false)
 const showEmailModal = ref(false)
 const showPhoneModal = ref(false)
 
-const emailForm = reactive({ email: '', code: '' })
-const phoneForm = reactive({ phone: '', code: '' })
+const email = ref('')
+const phone = ref('')
+const emailCode = ref('')
+const phoneCode = ref('')
+const errors = ref<Record<string, string>>({})
 const emailCodeSending = ref(false)
 const phoneCodeSending = ref(false)
 const bindingEmail = ref(false)
 const bindingPhone = ref(false)
 
 const sendEmailCode = useSendEmailCode(
-    ref(emailForm.email),
+    email,
     'email-verification',
     validateEmail,
-    ref({}),
+    errors,
     emailCodeSending,
 )
 const sendPhoneCode = useSendPhoneCode(
-    ref(phoneForm.phone),
+    phone,
     'phone-verification',
     validatePhone,
-    ref({}),
+    errors,
     phoneCodeSending,
 )
 
@@ -276,7 +279,7 @@ watch(
         if (status) { // 如果 session 正在加载中，则不执行后续逻辑
             return
         }
-        const newUser = session.value.data?.user
+        const newUser = session.value?.data?.user
         if (newUser) {
             user.username = newUser.username || ''
             user.nickname = newUser.name || ''
@@ -293,20 +296,20 @@ watch(
 )
 
 async function bindEmail() {
-    if (!validateEmail(emailForm.email) || !emailForm.code) {
+    if (!validateEmail(email.value) || !emailCode.value) {
         toast.add({ severity: 'warn', summary: '请填写完整', life: 2000 })
         return
     }
     bindingEmail.value = true
     try {
         const result = await authClient.emailOtp.verifyEmail({
-            email: emailForm.email,
-            otp: emailForm.code,
+            email: email.value,
+            otp: emailCode.value,
         })
         if (result.error) {
             throw new Error(result.error.message || '邮箱验证失败')
         }
-        user.email = emailForm.email
+        user.email = email.value
         user.emailVerified = true
         showEmailModal.value = false
         toast.add({ severity: 'success', summary: '邮箱修改成功', life: 2000 })
@@ -320,26 +323,26 @@ async function bindEmail() {
         })
     } finally {
         bindingEmail.value = false
-        emailForm.email = ''
-        emailForm.code = ''
+        email.value = ''
+        emailCode.value = ''
     }
 }
 
 async function bindPhone() {
-    if (!validatePhone(phoneForm.phone) || !phoneForm.code) {
+    if (!validatePhone(phone.value) || !phoneCode.value) {
         toast.add({ severity: 'warn', summary: '请填写完整', life: 2000 })
         return
     }
     bindingPhone.value = true
     try {
         const result = await authClient.phoneNumber.verify({
-            phoneNumber: phoneForm.phone,
-            code: phoneForm.code,
+            phoneNumber: phone.value,
+            code: phoneCode.value,
         })
         if (result.error) {
             throw new Error(result.error.message || '手机号验证失败')
         }
-        user.phone = phoneForm.phone
+        user.phone = phone.value
         user.phoneVerified = true
         showPhoneModal.value = false
         toast.add({
@@ -357,8 +360,8 @@ async function bindPhone() {
         })
     } finally {
         bindingPhone.value = false
-        phoneForm.phone = ''
-        phoneForm.code = ''
+        phone.value = ''
+        phoneCode.value = ''
     }
 }
 // TODO 处理第三方账号关联
