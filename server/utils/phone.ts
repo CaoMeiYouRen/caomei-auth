@@ -47,13 +47,13 @@ export async function sendPhoneOtp(phoneNumber: string, code: string) {
     }
     switch (PHONE_CHANNEL) {
         case 'spug': {
-            // 目前 spug 平台只支持中国大陆手机号
+            // 目前 Spug 平台只支持中国大陆手机号
             if (!validatePhone(phoneNumber, 'zh-CN')) {
                 throw new Error('不支持的国家或地区手机号格式')
             }
-            // spug 平台不用国家或地区代码，所以去除开头的 +86
+            // Spug 平台不用国家或地区代码，所以去除开头的 +86
             phoneNumber = phoneNumber.replace(/^\+86/, '')
-            // 请在 spud 平台中选择下文的短信模板
+            // 请在 Spug 平台中选择下文的短信模板
             // ${key1}欢迎您，您的验证码为${key2}，${key3}分钟内有效，如非本人操作请忽略。
             const body = JSON.stringify({
                 key1: PHONE_SENDER_NAME, // 短信发件人名称
@@ -68,7 +68,8 @@ export async function sendPhoneOtp(phoneNumber: string, code: string) {
                 },
                 body,
             })
-            return resp.json() // {"code": 200, "msg": "请求成功"}
+            // {"code": 200, "msg": "请求成功"}
+            return resp.json() as Promise<{ code: number, msg: string }>
         }
         default:
             throw new Error(
