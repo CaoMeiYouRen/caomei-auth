@@ -1,39 +1,38 @@
-import { Column, Entity, Index } from 'typeorm'
-import { getDateType } from '../database/type'
+import { Entity, Index } from 'typeorm'
+import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 
 @Entity('account')
 export class Account extends BaseEntity {
 
-    @Column('text', { nullable: false })
+    @CustomColumn({ type: 'text', nullable: false })
     accountId: string
 
-    @Column('text', { nullable: false })
+    @CustomColumn({ type: 'text', nullable: false })
     providerId: string
 
-    @Index()
-    @Column('varchar', { length: 36, nullable: false })
+    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: false })
     userId: string
 
-    @Column('text', { nullable: true })
+    @CustomColumn({ type: 'text', nullable: true })
     accessToken: string
 
-    @Column('text', { nullable: true })
+    @CustomColumn({ type: 'text', nullable: true })
     refreshToken: string
 
-    @Column('text', { nullable: true })
+    @CustomColumn({ type: 'text', nullable: true })
     idToken: string
 
-    @Column(getDateType(), { nullable: true })
+    @CustomColumn({ type: 'datetime', nullable: true })
     accessTokenExpiresAt: Date
 
-    @Column(getDateType(), { nullable: true })
+    @CustomColumn({ type: 'datetime', nullable: true })
     refreshTokenExpiresAt: Date
 
-    @Column('text', { nullable: true })
+    @CustomColumn({ type: 'text', nullable: true })
     scope: string
 
-    @Column('text', { nullable: true })
+    @CustomColumn({ type: 'text', nullable: true })
     password: string
 
 }

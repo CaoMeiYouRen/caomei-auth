@@ -1,17 +1,18 @@
-import { Column, Entity, Index } from 'typeorm'
+import { Entity, Index } from 'typeorm'
 import { getDateType } from '../database/type'
+import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 
 @Entity('verification')
 export class Verification extends BaseEntity {
 
     @Index()
-    @Column('text', { nullable: false })
+    @CustomColumn({ type: 'text', nullable: false })
     identifier: string
 
-    @Column('text', { nullable: false })
+    @CustomColumn({ type: 'text', nullable: false })
     value: string
 
-    @Column(getDateType(), { nullable: false })
+    @CustomColumn({ type: 'datetime', nullable: false })
     expiresAt: Date
 }

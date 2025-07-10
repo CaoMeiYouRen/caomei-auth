@@ -1,4 +1,5 @@
-import { Column, Entity, Index } from 'typeorm'
+import { Entity, Index } from 'typeorm'
+import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 
 @Entity('user')
@@ -7,82 +8,79 @@ export class User extends BaseEntity {
     /**
      * 用户选择的显示名称
      */
-    @Column('text', { nullable: false })
+    @CustomColumn({ type: 'text', nullable: false })
     name: string
 
     /**
-     * 用户邮箱地址
+     * 用户邮箱地址，唯一
      */
-    @Index()
-    @Column('varchar', { length: 255, nullable: false })
+    @CustomColumn({ type: 'varchar', index: true, unique: true, length: 255, nullable: false })
     email: string
 
     /**
      * 用户邮箱是否已验证
      */
-    @Column('boolean', { default: false })
+    @CustomColumn({ type: 'boolean', default: false })
     emailVerified: boolean
 
     /**
      * 用户头像
      */
-    @Column('text', { nullable: true })
+    @CustomColumn({ type: 'text', nullable: true })
     image: string
 
     /**
-     * 用户名
+     * 用户名（全小写字母），唯一
      */
-    @Index()
-    @Column('varchar', { length: 128, nullable: true })
+    @CustomColumn({ type: 'varchar', index: true, unique: true, length: 128, nullable: true })
     username: string
 
     /**
      * 非规范化用户名
      */
-    @Column('varchar', { length: 128, nullable: true })
+    @CustomColumn({ type: 'varchar', length: 128, nullable: true })
     displayUsername: string
 
     /**
      * 是否为匿名用户
      */
-    @Column('boolean', { default: false })
+    @CustomColumn({ type: 'boolean', default: false })
     isAnonymous: boolean
 
     /**
-     * 用户手机号
+     * 用户手机号，唯一
      */
-    @Index()
-    @Column('varchar', { length: 64, nullable: true })
+    @CustomColumn({ type: 'varchar', index: true, unique: true, length: 64, nullable: true })
     phoneNumber: string
 
     /**
      * 用户手机号是否已验证
      */
-    @Column('boolean', { default: false })
+    @CustomColumn({ type: 'boolean', default: false })
     phoneNumberVerified: boolean
 
     /**
      * 用户的角色。默认为 user。管理员为 admin。
      */
-    @Column('varchar', { length: 32, nullable: true, default: 'user' })
+    @CustomColumn({ type: 'varchar', length: 32, nullable: true, default: 'user' })
     role: string
 
     /**
      * 是否被禁止
      */
-    @Column('boolean', { default: false })
+    @CustomColumn({ type: 'boolean', default: false })
     banned: boolean
 
     /**
      * 被禁止的原因
      */
-    @Column('text', { nullable: true })
+    @CustomColumn({ type: 'text', nullable: true })
     banReason: string
 
     /**
      * 禁止过期时间（Unix 时间戳，秒）
      */
-    @Column('integer', { nullable: true })
+    @CustomColumn({ type: 'integer', nullable: true })
     banExpires: number
 
 }

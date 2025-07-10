@@ -58,6 +58,8 @@ export function CustomColumn(options: ColumnOptions & { index?: boolean }) {
         // postgres 的 bigserial 类型的 id 在插入时返回的是 string 类型，存在 bug，所以设置为 integer
         if (options.type === 'bigint') {
             options.type = 'integer'
+        } else if (options.type === Date || options.type === 'datetime') { // 处理 datetime 类型
+            options.type = 'timestamp with time zone'
         }
         // postgres 索引最大不超过 8191 字节，在 utf8 编码下不超过 2730 字符
         if (options.index && length > 2730) {

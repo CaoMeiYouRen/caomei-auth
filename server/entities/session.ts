@@ -1,30 +1,29 @@
-import { Column, Entity, Index } from 'typeorm'
+import { Entity, Index } from 'typeorm'
 import { getDateType } from '../database/type'
+import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 
 @Entity('session')
 export class Session extends BaseEntity {
 
-    @Column(getDateType(), { nullable: false })
+    @CustomColumn({ type: 'datetime', nullable: false })
     expiresAt: Date
 
-    @Index()
-    @Column('text', { nullable: false })
+    @CustomColumn({ type: 'text', index: true, nullable: false })
     token: string
 
-    @Column('text', { nullable: true })
+    @CustomColumn({ type: 'text', nullable: true })
     ipAddress: string
 
-    @Column('text', { nullable: true })
+    @CustomColumn({ type: 'text', nullable: true })
     userAgent: string
 
-    @Index()
-    @Column('varchar', { length: 36, nullable: false })
+    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: false })
     userId: string
 
     /**
      * 正在模拟此会话的管理员的ID
      */
-    @Column('varchar', { length: 36, nullable: true })
+    @CustomColumn({ type: 'varchar', length: 36, nullable: true })
     impersonatedBy: string
 }
