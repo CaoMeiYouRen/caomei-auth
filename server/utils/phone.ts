@@ -1,5 +1,6 @@
 import ms from 'ms'
 import { limiterStorage } from '@/server/database/storage'
+import { validatePhone } from '@/utils/validate'
 
 // 定义短信验证码的每日发送上限
 const PHONE_DAILY_LIMIT = Number(process.env.PHONE_DAILY_LIMIT || 100)
@@ -8,8 +9,14 @@ const PHONE_SINGLE_USER_DAILY_LIMIT = Number(process.env.PHONE_SINGLE_USER_DAILY
 
 const PHONE_LIMIT_KEY = 'phone_global_limit'
 
+const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
+
+const PHONE_SPUG_TEMPLATE_ID = process.env.PHONE_SPUG_TEMPLATE_ID || ''
+
+const PHONE_SENDER_NAME = process.env.PHONE_SENDER_NAME || '草梅Auth'
+
 /**
- *  TODO：实现通过短信发送OTP验证码
+ *  TODO：支持更多短信渠道
  *  发送短信验证码
  *
  * @author CaoMeiYouRen
@@ -38,8 +45,35 @@ export async function sendPhoneOtp(phoneNumber: string, code: string) {
     if (singleUserCount > PHONE_SINGLE_USER_DAILY_LIMIT) {
         throw new Error('您的手机号今日验证码发送次数已达上限')
     }
+    switch (PHONE_CHANNEL) {
+        case 'spug': {
+            // 目前 spug 平台只支持中国大陆手机号
+            if (!validatePhone(phoneNumber, 'zh-CN')) {
+                throw new Error('不支持的国家或地区手机号格式')
+            }
+            // spug 平台不用国家或地区代码，所以去除开头的 +86
+            phoneNumber = phoneNumber.replace(/^\+86/, '')
+            // 请在 spud 平台中选择下文的短信模板
+            // ${key1}欢迎您，您的验证码为${key2}，${key3}分钟内有效，如非本人操作请忽略。
+            const body = JSON.stringify({
+                key1: PHONE_SENDER_NAME, // 短信发件人名称
+                key2: code, // 验证码
+                key3: 5, // 验证码有效时间
+                targets: phoneNumber,
+            })
+            const resp = await fetch(`https://push.spug.cc/send/${PHONE_SPUG_TEMPLATE_ID}`, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body,
+            })
+            return resp.json() // {"code": 200, "msg": "请求成功"}
+        }
+        default:
+            throw new Error(
+                '未匹配到短信发送渠道，请切换到其他登录方式或实现短信发送功能',
+            )
+    }
 
-    throw new Error(
-        '未实现短信发送功能，请切换到其他登录方式或实现短信发送功能',
-    )
 }

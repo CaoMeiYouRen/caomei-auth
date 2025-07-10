@@ -150,32 +150,15 @@
                     placeholder="请输入新邮箱"
                 />
             </div>
-            <div class="flex-row form-group">
-                <InputText
-                    v-model="emailCode"
-                    class="form-input"
-                    placeholder="验证码"
-                />
-                <SendCodeButton
-                    :on-send="sendEmailCode"
-                    :duration="60"
-                    :disabled="emailCodeSending || !validateEmail(email)
-                    "
-                    :loading="emailCodeSending"
-                    text="发送验证码"
-                    resend-text="重新发送"
-                />
-            </div>
             <div class="form-group">
                 <Button
-                    label="确认修改"
+                    label="发送验证链接"
                     class="btn btn-primary w-full"
-                    :loading="bindingEmail"
+                    :loading="sendingVerificationLink"
                     @click="bindEmail"
                 />
             </div>
         </Dialog>
-        <!-- 手机号弹窗 -->
         <Dialog
             v-model:visible="showPhoneModal"
             modal
@@ -189,6 +172,14 @@
                     class="form-input"
                     placeholder="请输入新手机号"
                 />
+                <Message
+                    v-if="errors.phone"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ errors.phone }}
+                </Message>
             </div>
             <div class="flex-row form-group">
                 <InputText
@@ -255,14 +246,8 @@ const emailCodeSending = ref(false)
 const phoneCodeSending = ref(false)
 const bindingEmail = ref(false)
 const bindingPhone = ref(false)
+const sendingVerificationLink = ref(false)
 
-const sendEmailCode = useSendEmailCode(
-    email,
-    'email-verification',
-    validateEmail,
-    errors,
-    emailCodeSending,
-)
 const sendPhoneCode = useSendPhoneCode(
     phone,
     'phone-verification',
@@ -296,35 +281,35 @@ watch(
 )
 
 async function bindEmail() {
-    if (!validateEmail(email.value) || !emailCode.value) {
-        toast.add({ severity: 'warn', summary: '请填写完整', life: 2000 })
+    if (!validateEmail(email.value)) {
+        toast.add({ severity: 'warn', summary: '请输入有效的邮箱地址', life: 2000 })
         return
     }
-    bindingEmail.value = true
+    sendingVerificationLink.value = true
     try {
-        const result = await authClient.emailOtp.verifyEmail({
-            email: email.value,
-            otp: emailCode.value,
+        await authClient.changeEmail({
+            newEmail: email.value,
+            callbackURL: '/profile', // 验证后重定向
         })
-        if (result.error) {
-            throw new Error(result.error.message || '邮箱验证失败')
+        if (user.emailVerified) {
+            toast.add({ severity: 'info', summary: '验证链接已发送到当前邮箱，请查收', life: 2000 })
+            return
         }
         user.email = email.value
-        user.emailVerified = true
+        user.emailVerified = false
         showEmailModal.value = false
-        toast.add({ severity: 'success', summary: '邮箱修改成功', life: 2000 })
+        toast.add({ severity: 'success', summary: '邮箱已更新', life: 2000 })
+
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '邮箱修改时发生未知错误'
+        const errorMessage = error instanceof Error ? error.message : '发送验证链接时发生未知错误'
         toast.add({
             severity: 'error',
-            summary: '邮箱修改失败',
+            summary: '发送验证链接失败',
             detail: errorMessage,
             life: 2000,
         })
     } finally {
-        bindingEmail.value = false
-        email.value = ''
-        emailCode.value = ''
+        sendingVerificationLink.value = false
     }
 }
 
@@ -338,6 +323,7 @@ async function bindPhone() {
         const result = await authClient.phoneNumber.verify({
             phoneNumber: phone.value,
             code: phoneCode.value,
+            updatePhoneNumber: true, // 更新手机号，否则就注册新号了
         })
         if (result.error) {
             throw new Error(result.error.message || '手机号验证失败')

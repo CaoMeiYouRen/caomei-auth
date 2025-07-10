@@ -17,8 +17,8 @@ export function validateEmail(email: string): boolean {
 // 这里使用 'any' 作为语言选项，允许所有国家的手机号格式
 // 如果需要特定国家的手机号格式，可以替换 'any' 为具体的国家
 // 例如 'zh-CN' 表示中国手机号格式
-export function validatePhone(phone: string): boolean {
-    return isMobilePhone(phone, 'any', {
+export function validatePhone(phone: string, locale: 'any' | validator.MobilePhoneLocale | validator.MobilePhoneLocale[] = 'any'): boolean {
+    return isMobilePhone(phone, locale, {
         strictMode: false, // 不使用严格模式
     })
 }

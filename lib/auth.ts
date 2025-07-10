@@ -87,7 +87,7 @@ export const auth = betterAuth({
                 await sendEmail({
                     to: user.email, // 验证邮件必须发送到当前用户邮箱以批准更改
                     subject: '批准邮箱更改',
-                    text: `点击链接以批准更改：${url}`,
+                    text: `您即将修改为新邮箱地址是 ${newEmail}，请点击链接以批准更改：${url}`,
                 })
             },
         },
