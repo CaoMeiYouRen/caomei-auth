@@ -199,8 +199,7 @@
                 <SendCodeButton
                     :on-send="sendPhoneCode"
                     :duration="60"
-                    :disabled="phoneCodeSending || !validatePhone(phoneForm.phone)
-                    "
+                    :disabled="phoneCodeSending || !validatePhone(phoneForm.phone)"
                     :loading="phoneCodeSending"
                     text="发送验证码"
                     resend-text="重新发送"
@@ -280,7 +279,7 @@ watch(
         const newUser = session.value.data?.user
         if (newUser) {
             user.username = newUser.username || ''
-            user.nickname = newUser.displayUsername || ''
+            user.nickname = newUser.name || ''
             user.avatar = newUser.image || ''
             user.email = newUser.email || ''
             user.emailVerified = newUser.emailVerified || false
@@ -393,7 +392,8 @@ async function saveProfile() {
     try {
         const result = await authClient.updateUser({
             image: user.avatar,
-            displayUsername: user.nickname,
+            name: user.nickname,
+            // username: user.username,
         })
         if (result.error) {
             throw new Error(result.error.message || '资料保存失败')

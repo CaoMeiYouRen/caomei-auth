@@ -4,9 +4,8 @@
  *
  * Useful to build new decorators (or a decorator factory) encapsulating multiple decorators related with the same feature
  *
- * @param decorators one or more decorators (e.g., `ApplyGuard(...)`)
+ * @param decorators one or more decorators
  *
- * @publicApi
  */
 export function applyDecorators(
     ...decorators: Array<ClassDecorator | MethodDecorator | PropertyDecorator>
