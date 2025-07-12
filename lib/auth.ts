@@ -9,7 +9,6 @@ import {
     admin,
     captcha,
 } from 'better-auth/plugins'
-import Redis from 'ioredis'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
 import { sendEmail } from '@/server/utils/email'
 import { snowflake } from '@/server/utils/snowflake'
@@ -33,26 +32,27 @@ export const auth = betterAuth({
     },
     rateLimit: {
         window: 60, // time window in seconds
-        max: 100, // max requests in the window
+        max: 50, // max requests in the window
         storage: secondaryStorage ? 'secondary-storage' : 'memory', // 如果配置了 Redis，则使用二级存储；否则使用内存存储
         customRules: {
-            // 合并 /sign-in/* 路径，除 /sign-in/username 外
-            '/sign-in/*': (req) => {
-                // username 已单独处理
-                if (req.url?.endsWith('/sign-in/username')) {
-                    return { window: 60, max: 5 }
-                }
-                return { window: 60, max: 3 }
-            },
-            // 合并 /email-otp/* 路径
+            '/sign-in/*': { window: 60, max: 3 },
             '/email-otp/*': { window: 60, max: 3 },
-            '/sign-up/email': { window: 60, max: 3 },
+            '/phone-number/*': { window: 60, max: 3 },
+            '/sign-up/*': { window: 60, max: 3 },
+            '/sign-out': { window: 60, max: 3 },
+            '/magic-link': { window: 60, max: 3 },
             '/forget-password': { window: 60, max: 3 },
+            '/forget-password/*': { window: 60, max: 3 },
             '/request-password-reset': { window: 60, max: 3 },
             '/reset-password': { window: 60, max: 3 },
             '/send-verification-email': { window: 60, max: 3 },
             '/change-email': { window: 60, max: 3 },
             '/delete-user': { window: 60, max: 2 },
+            '/get-session': { window: 60, max: 10 },
+            '/admin/*': { window: 60, max: 10 },
+            // '/*': (req) => { // 基础限流
+            //     return { window: 60, max: 10 }
+            // },
         },
     },
     emailAndPassword: {
