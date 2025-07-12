@@ -101,6 +101,13 @@ export const auth = betterAuth({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         },
+        microsoft: { // 支持 Microsoft 登录
+            clientId: process.env.MICROSOFT_CLIENT_ID as string,
+            clientSecret: process.env.MICROSOFT_CLIENT_SECRET as string,
+            // 可选配置
+            tenantId: 'common',
+            requireSelectAccount: true,
+        },
     },
     session: {
         cookieCache: {

@@ -78,7 +78,7 @@
                         <div class="form-group">
                             <label class="form-label">手机号</label>
                             <div class="profile-row">
-                                <span>{{ user.phone || "未绑定" }}</span>
+                                <span>{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
                                 <Button
                                     v-if="user.phone"
                                     label="修改"
@@ -219,6 +219,7 @@ import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
+import { formatPhoneNumberInternational } from '@/utils/phone'
 
 const toast = useToast()
 const user = reactive({
