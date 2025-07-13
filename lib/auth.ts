@@ -220,7 +220,7 @@ export const auth = betterAuth({
         }),
         admin({
             defaultRole: 'user', // 默认角色为用户
-            adminRoles: ['admin', 'root'], // 管理员角色列表
+            adminRoles: ['admin'], // 管理员角色列表 'root'
             adminUserIds: ADMIN_USER_IDS, // 管理员用户 ID 列表
         }), // 支持管理员插件
         openAPI({

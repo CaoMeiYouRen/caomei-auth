@@ -180,6 +180,7 @@ const route = useRoute()
 
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams('history')
+params.mode = 'email'
 
 onMounted(() => {
     // 支持通过 query 传递初始 tab
