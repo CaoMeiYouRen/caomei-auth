@@ -235,7 +235,7 @@ import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
-import { authClient } from '@/lib/auth-client'
+import { authClient, VITE_AUTH_BASE_URL } from '@/lib/auth-client'
 
 const activeTab = ref<'username' | 'email' | 'phone'>('username')
 const email = ref('')
@@ -438,6 +438,7 @@ async function loginWithGitHub() {
     try {
         const result = await authClient.signIn.social({
             provider: 'github',
+            callbackURL: `${VITE_AUTH_BASE_URL}/profile`, // 回调到资料页
         })
         if (result.error) {
             throw new Error(result.error.message || 'GitHub 登录失败')
@@ -466,6 +467,7 @@ async function loginWithGoogle() {
     try {
         const result = await authClient.signIn.social({
             provider: 'google',
+            callbackURL: `${VITE_AUTH_BASE_URL}/profile`, // 回调到资料页
         })
         if (result.error) {
             throw new Error(result.error.message || 'Google 登录失败')

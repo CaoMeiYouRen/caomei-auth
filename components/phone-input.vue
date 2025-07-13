@@ -41,6 +41,10 @@ const props = defineProps({
         type: String,
         default: '请输入手机号',
     },
+    defaultRegion: {
+        type: String,
+        default: 'CN',
+    },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -50,7 +54,7 @@ const options = supportedRegions.map((e) => ({
     label: `${e.region} +${e.countryCode}`,
     value: e.region,
 }))
-const selectedRegion = ref(options.find((region) => region.value === 'CN'))
+const selectedRegion = ref(options.find((region) => region.value === props.defaultRegion))
 const phoneNumber = ref('')
 const formattedPhoneNumber = ref('')
 
@@ -88,12 +92,12 @@ watch(() => props.modelValue, (newValue) => {
             phoneNumber.value = phoneUtil.format(phoneNumberObj, PhoneNumberFormat.NATIONAL)
             formattedPhoneNumber.value = newValue
         } catch (error) {
-            selectedRegion.value = options.find((region) => region.value === 'CN')
+            selectedRegion.value = options.find((region) => region.value === props.defaultRegion)
             phoneNumber.value = ''
             formattedPhoneNumber.value = ''
         }
     } else {
-        selectedRegion.value = options.find((region) => region.value === 'CN')
+        selectedRegion.value = options.find((region) => region.value === props.defaultRegion)
         phoneNumber.value = ''
         formattedPhoneNumber.value = ''
     }

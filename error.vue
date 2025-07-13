@@ -110,10 +110,10 @@ const description = computed(() => {
 })
 
 function goHome() {
-    router.push('/')
+    navigateTo('/')
 }
 function goBack() {
-    window.history.length > 1 ? router.back() : router.push('/')
+    window.history.length > 1 ? router.back() : navigateTo('/')
 }
 </script>
 
