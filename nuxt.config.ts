@@ -45,7 +45,8 @@ export default defineNuxtConfig({
         '@primevue/nuxt-module',
     ],
     build: {
-        transpile: ['sqlite3'],
+        // 使用 Babel 转译不兼容的包
+        transpile: ['sqlite3', 'google-libphonenumber'],
     },
     css: [
         'normalize.css/normalize.css',
