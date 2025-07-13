@@ -47,9 +47,9 @@ const emit = defineEmits(['update:modelValue'])
 
 const supportedRegions = SUPPORTED_REGIONS
 const options = supportedRegions.map((e) => ({
-        label: `${e.region} +${e.countryCode}`,
-        value: e.region,
-    }))
+    label: `${e.region} +${e.countryCode}`,
+    value: e.region,
+}))
 const selectedRegion = ref(options.find((region) => region.value === 'CN'))
 const phoneNumber = ref('')
 const formattedPhoneNumber = ref('')
@@ -116,6 +116,7 @@ watch(() => props.modelValue, (newValue) => {
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
             border-right: 0;
+            border-color: $secondary-bg;
         }
 
     }
