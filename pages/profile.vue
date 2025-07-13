@@ -105,10 +105,11 @@
                                 <Button
                                     v-for="account in userAccounts"
                                     :key="account.provider"
+                                    v-tooltip.top="`已绑定账号 ID: ${account.accountId}。\n点击可解绑第三方账号。`"
                                     :class="['social-btn', `social-${account.provider}`]"
                                     :icon="`mdi mdi-${account.provider}`"
                                     :label="account.provider === 'github' ? 'GitHub' : 'Google'"
-                                    @click="unlinkSocialAccount(account.provider)"
+                                    @click="confirmUnlink(account.provider, account.accountId)"
                                 />
                                 <!-- 提供绑定新账号的按钮 -->
                                 <Button
@@ -211,6 +212,29 @@
                 />
             </div>
         </Dialog>
+
+        <!-- 解绑确认对话框 -->
+        <Dialog
+            v-model:visible="showUnlinkConfirm"
+            modal
+            header="确认解绑"
+            :closable="true"
+            :style="{width: '400px'}"
+        >
+            <p>确定要解绑 {{ selectedProvider }} 平台，ID 为 {{ selectedAccountId }} 的账号吗？</p>
+            <template #footer>
+                <Button
+                    label="取消"
+                    class="btn btn-secondary"
+                    @click="showUnlinkConfirm = false"
+                />
+                <Button
+                    label="确认"
+                    class="btn btn-primary"
+                    @click="unlinkSelectedAccount"
+                />
+            </template>
+        </Dialog>
     </div>
 </template>
 
@@ -254,6 +278,12 @@ const phoneCodeSending = ref(false)
 const bindingEmail = ref(false)
 const bindingPhone = ref(false)
 const sendingVerificationLink = ref(false)
+// 解绑确认对话框显示状态
+const showUnlinkConfirm = ref(false)
+// 选中要解绑的提供商
+const selectedProvider = ref('')
+// 选中要解绑的账号 ID
+const selectedAccountId = ref('')
 
 const sendPhoneCode = useSendPhoneCode(
     phone,
@@ -267,7 +297,7 @@ const session = authClient.useSession()
 
 watch(
     () => session.value.isPending || session.value.isRefetching,
-    (status) => {
+    async (status) => {
         if (status) { // 如果 session 正在加载中，则不执行后续逻辑
             return
         }
@@ -280,12 +310,15 @@ watch(
             user.emailVerified = newUser.emailVerified || false
             user.phone = newUser.phoneNumber || ''
             user.phoneVerified = newUser.phoneNumberVerified || false
-            // user.githubLinked = newUser.githubLinked || false
-            // user.googleLinked = newUser.googleLinked || false
         }
+        // await fetchUserAccounts()
     },
     { immediate: true },
 )
+
+onMounted(async () => {
+    await fetchUserAccounts()
+})
 
 async function bindEmail() {
     if (!validateEmail(email.value)) {
@@ -357,7 +390,7 @@ async function bindPhone() {
         phoneCode.value = ''
     }
 }
-// TODO 处理第三方账号关联
+
 const userAccounts = ref<{
     id: string
     provider: string
@@ -383,30 +416,6 @@ const fetchUserAccounts = async () => {
         })
     }
 }
-
-// 监听 session 变化，重新获取账号信息
-watch(
-    () => session.value.isPending || session.value.isRefetching,
-    async (status) => {
-        if (status) {
-            return
-        }
-        const newUser = session.value?.data?.user
-        if (newUser) {
-            user.username = newUser.username || ''
-            user.nickname = newUser.name || ''
-            user.avatar = newUser.image || ''
-            user.email = newUser.email || ''
-            user.emailVerified = newUser.emailVerified || false
-            user.phone = newUser.phoneNumber || ''
-            user.phoneVerified = newUser.phoneNumberVerified || false
-            // user.githubLinked = newUser.githubLinked || false
-            // user.googleLinked = newUser.googleLinked || false
-        }
-        await fetchUserAccounts()
-    },
-    { immediate: true },
-)
 
 // 绑定新的第三方账号
 async function linkSocialAccount(type: 'github' | 'google') {
@@ -435,34 +444,39 @@ async function linkSocialAccount(type: 'github' | 'google') {
     }
 }
 
+// 确认解绑提示
+function confirmUnlink(provider: string, accountId: string) {
+    selectedProvider.value = provider
+    selectedAccountId.value = accountId
+    showUnlinkConfirm.value = true
+}
+
 // 取消关联第三方账号
-async function unlinkSocialAccount(type: 'github' | 'google' | string) {
+async function unlinkSelectedAccount() {
     try {
-        const account = userAccounts.value.find((a) => a.provider === type)
-        if (!account) {
-            throw new Error(`${type} 账户未关联`)
-        }
         const result = await authClient.unlinkAccount({
-            providerId: type,
-            accountId: account.accountId,
+            providerId: selectedProvider.value,
+            accountId: selectedAccountId.value,
         })
         if (result.error) {
-            throw new Error(result.error.message || `${type} 解绑失败`)
+            throw new Error(result.error.message || `${selectedProvider.value} 解绑失败`)
         }
         await fetchUserAccounts()
         toast.add({
             severity: 'success',
-            summary: `已解绑${type}`,
+            summary: `已解绑${selectedProvider.value}`,
             life: 2000,
         })
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : `${type} 解绑时发生未知错误`
+        const errorMessage = error instanceof Error ? error.message : `${selectedProvider.value} 解绑时发生未知错误`
         toast.add({
             severity: 'error',
-            summary: `${type} 解绑失败`,
+            summary: `${selectedProvider.value} 解绑失败`,
             detail: errorMessage,
             life: 2000,
         })
+    } finally {
+        showUnlinkConfirm.value = false
     }
 }
 
