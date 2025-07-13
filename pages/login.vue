@@ -130,12 +130,7 @@
                 <div v-show="activeTab === 'phone'">
                     <div class="form-group">
                         <label class="form-label" for="phone">手机号</label>
-                        <InputText
-                            id="phone"
-                            v-model="phone"
-                            class="form-input"
-                            placeholder="请输入手机号"
-                        />
+                        <PhoneInput v-model="phone" />
                         <div v-if="errors.phone" class="error-message">
                             {{ errors.phone }}
                         </div>

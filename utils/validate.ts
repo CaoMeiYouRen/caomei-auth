@@ -19,7 +19,7 @@ export function validateEmail(email: string): boolean {
 // 例如 'zh-CN' 表示中国手机号格式
 export function validatePhone(phone: string, locale: 'any' | validator.MobilePhoneLocale | validator.MobilePhoneLocale[] = 'any'): boolean {
     return isMobilePhone(phone, locale, {
-        strictMode: false, // 不使用严格模式
+        strictMode: true, // 使用严格模式。开头必须有 + 号
     })
 }
 

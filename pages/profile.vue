@@ -167,11 +167,7 @@
             :style="{width: '400px'}"
         >
             <div class="form-group">
-                <InputText
-                    v-model="phone"
-                    class="form-input"
-                    placeholder="请输入新手机号"
-                />
+                <PhoneInput v-model="phone" placeholder="请输入新手机号" />
                 <Message
                     v-if="errors.phone"
                     severity="error"

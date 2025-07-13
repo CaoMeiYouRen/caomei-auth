@@ -123,12 +123,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="phone">手机号 <span style="color: #e63946">*</span></label>
-                        <InputText
-                            id="phone"
-                            v-model="phone"
-                            class="form-input"
-                            placeholder="请输入手机号"
-                        />
+                        <PhoneInput v-model="phone" />
                         <Message
                             v-if="errors.phone"
                             severity="error"
