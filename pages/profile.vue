@@ -101,19 +101,29 @@
                         <div class="form-group">
                             <label class="form-label">第三方账号</label>
                             <div class="social-list">
+                                <!-- 动态渲染第三方账号按钮 -->
                                 <Button
+                                    v-for="account in userAccounts"
+                                    :key="account.provider"
+                                    :class="['social-btn', `social-${account.provider}`]"
+                                    :icon="`mdi mdi-${account.provider}`"
+                                    :label="account.provider === 'github' ? 'GitHub' : 'Google'"
+                                    @click="unlinkSocialAccount(account.provider)"
+                                />
+                                <!-- 提供绑定新账号的按钮 -->
+                                <Button
+                                    v-if="!userAccounts.some(account => account.provider === 'github')"
                                     class="social-btn social-github"
                                     icon="mdi mdi-github"
-                                    label="GitHub"
-                                    :class="{linked: user.githubLinked}"
-                                    @click="toggleSocial('github')"
+                                    label="绑定 GitHub"
+                                    @click="linkSocialAccount('github')"
                                 />
                                 <Button
+                                    v-if="!userAccounts.some(account => account.provider === 'google')"
                                     class="social-btn social-google"
                                     icon="mdi mdi-google"
-                                    label="Google"
-                                    :class="{linked: user.googleLinked}"
-                                    @click="toggleSocial('google')"
+                                    label="绑定 Google"
+                                    @click="linkSocialAccount('google')"
                                 />
                             </div>
                         </div>
@@ -348,25 +358,108 @@ async function bindPhone() {
     }
 }
 // TODO 处理第三方账号关联
-async function toggleSocial(type: 'github' | 'google') {
+const userAccounts = ref<{
+    id: string
+    provider: string
+    createdAt: Date
+    updatedAt: Date
+    accountId: string
+    scopes: string[]
+}[]>([])
+
+// 获取用户关联的第三方账号
+const fetchUserAccounts = async () => {
+    try {
+        const accounts = await authClient.listAccounts()
+        // 过滤掉邮箱登录的账户
+        userAccounts.value = accounts.data?.filter((account) => account.provider !== 'credential') || []
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '获取第三方账号信息失败'
+        toast.add({
+            severity: 'error',
+            summary: '获取第三方账号失败',
+            detail: errorMessage,
+            life: 2000,
+        })
+    }
+}
+
+// 监听 session 变化，重新获取账号信息
+watch(
+    () => session.value.isPending || session.value.isRefetching,
+    async (status) => {
+        if (status) {
+            return
+        }
+        const newUser = session.value?.data?.user
+        if (newUser) {
+            user.username = newUser.username || ''
+            user.nickname = newUser.name || ''
+            user.avatar = newUser.image || ''
+            user.email = newUser.email || ''
+            user.emailVerified = newUser.emailVerified || false
+            user.phone = newUser.phoneNumber || ''
+            user.phoneVerified = newUser.phoneNumberVerified || false
+            // user.githubLinked = newUser.githubLinked || false
+            // user.googleLinked = newUser.googleLinked || false
+        }
+        await fetchUserAccounts()
+    },
+    { immediate: true },
+)
+
+// 绑定新的第三方账号
+async function linkSocialAccount(type: 'github' | 'google') {
     try {
         const result = await authClient.linkSocial({
             provider: type,
+            callbackURL: '/profile',
         })
         if (result.error) {
-            throw new Error(result.error.message || `${type} 绑定/解绑失败`)
+            throw new Error(result.error.message || `${type} 绑定失败`)
         }
-        user[`${type}Linked`] = !user[`${type}Linked`]
+        await fetchUserAccounts()
         toast.add({
             severity: 'success',
-            summary: user[`${type}Linked`] ? `已绑定${type}` : `已解绑${type}`,
+            summary: `已绑定${type}`,
             life: 2000,
         })
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : `${type} 绑定时发生未知错误`
         toast.add({
             severity: 'error',
-            summary: `${type} 绑定/解绑失败`,
+            summary: `${type} 绑定失败`,
+            detail: errorMessage,
+            life: 2000,
+        })
+    }
+}
+
+// 取消关联第三方账号
+async function unlinkSocialAccount(type: 'github' | 'google' | string) {
+    try {
+        const account = userAccounts.value.find((a) => a.provider === type)
+        if (!account) {
+            throw new Error(`${type} 账户未关联`)
+        }
+        const result = await authClient.unlinkAccount({
+            providerId: type,
+            accountId: account.accountId,
+        })
+        if (result.error) {
+            throw new Error(result.error.message || `${type} 解绑失败`)
+        }
+        await fetchUserAccounts()
+        toast.add({
+            severity: 'success',
+            summary: `已解绑${type}`,
+            life: 2000,
+        })
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : `${type} 解绑时发生未知错误`
+        toast.add({
+            severity: 'error',
+            summary: `${type} 解绑失败`,
             detail: errorMessage,
             life: 2000,
         })

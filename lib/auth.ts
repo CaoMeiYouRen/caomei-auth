@@ -103,6 +103,12 @@ export const auth = betterAuth({
             },
         },
     },
+    account: {
+        accountLinking: {
+            enabled: true, // 启用账户关联
+            allowDifferentEmails: true, // 允许用户绑定不同邮箱地址的账号；允许不返回邮箱地址的第三方登录（微博、抖音等）
+        },
+    },
     socialProviders: {
         github: { // 支持 GitHub 登录
             clientId: process.env.GITHUB_CLIENT_ID as string,
