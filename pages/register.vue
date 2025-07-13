@@ -208,7 +208,7 @@ const toast = useToast()
 
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
-const activeTab = ref<'email' | 'phone'>(params.mode || 'email')
+const activeTab = ref<'email' | 'phone'>('email')
 
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 

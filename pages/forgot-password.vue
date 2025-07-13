@@ -15,19 +15,20 @@
                             <Button
                                 label="邮箱"
                                 icon="mdi mdi-email"
-                                :class="{'p-button-outlined': params.mode !== 'email'}"
+                                :class="{'p-button-outlined': activeTab!== 'email'}"
                                 @click="changeMode('email')"
                             />
                             <Button
                                 label="手机号"
                                 icon="mdi mdi-phone"
-                                :class="{'p-button-outlined': params.mode !== 'phone'}"
+                                :class="{'p-button-outlined': activeTab!== 'phone'}"
                                 @click="changeMode('phone')"
                             />
                         </ButtonGroup>
                     </div>
                 </div>
-                <div v-if="params.mode === 'email'">
+                <!-- 邮箱找回密码表单 -->
+                <div v-show="activeTab === 'email'">
                     <div class="form-group">
                         <label class="form-label" for="email">邮箱</label>
                         <InputText
@@ -63,7 +64,8 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="params.mode === 'phone'">
+                <!-- 手机号找回密码表单 -->
+                <div v-show="activeTab === 'phone'">
                     <div class="form-group">
                         <label class="form-label" for="phone">手机号</label>
                         <InputText
@@ -127,22 +129,15 @@
                         {{ errors.confirmPassword }}
                     </div>
                 </div>
-                <div v-if="params.mode === 'email'" class="form-group">
+                <div class="form-group">
                     <Button
                         class="btn btn-primary mt-2"
                         label="重置密码"
                         @click="resetPassword"
                     />
                 </div>
-                <div v-if="params.mode === 'phone'" class="form-group">
-                    <Button
-                        class="btn btn-primary mt-2"
-                        label="重置密码"
-                        @click="resetPhonePassword"
-                    />
-                </div>
                 <div class="toggle-login">
-                    已有账号？ <NuxtLink :to="'/login?mode=' + params.mode" class="toggle-link">
+                    已有账号？ <NuxtLink :to="`/login?mode=${activeTab}`" class="toggle-link">
                         立即登录
                     </NuxtLink>
                 </div>
@@ -179,22 +174,17 @@ const toast = useToast()
 const route = useRoute()
 
 // 使用 useUrlSearchParams 获取 URL 参数
-const params = useUrlSearchParams('history')
-params.mode = 'email'
+const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
+const activeTab = ref<'email' | 'phone'>('email')
 
 onMounted(() => {
     // 支持通过 query 传递初始 tab
-    if (route.query.mode === 'phone') {
-        params.mode = 'phone'
+    if (params.mode === 'phone') {
+        activeTab.value = 'phone'
     } else {
-        params.mode = 'email'
+        activeTab.value = 'email'
     }
-    if (route.query.email) {
-        email.value = String(route.query.email)
-    }
-    if (route.query.phone) {
-        phone.value = String(route.query.phone)
-    }
+    params.mode = activeTab.value
 })
 
 const sendEmailCode = useSendEmailCode(email, 'forget-password', validateEmail, errors, emailCodeSending)
@@ -202,21 +192,37 @@ const sendPhoneCode = useSendPhoneCode(phone, 'forget-password', validatePhone, 
 
 // 切换找回密码模式并更新 URL
 const changeMode = (mode: 'email' | 'phone') => {
+    activeTab.value = mode
     params.mode = mode
 }
 
 async function resetPassword() {
-    if (!email.value) {
-        errors.value.email = '请输入邮箱'
-        return
-    }
-    if (!validateEmail(email.value)) {
-        errors.value.email = '请输入有效的邮箱地址'
-        return
-    }
-    if (!emailCode.value) {
-        errors.value.emailCode = '请输入邮箱验证码'
-        return
+    if (activeTab.value === 'email') {
+        if (!email.value) {
+            errors.value.email = '请输入邮箱'
+            return
+        }
+        if (!validateEmail(email.value)) {
+            errors.value.email = '请输入有效的邮箱地址'
+            return
+        }
+        if (!emailCode.value) {
+            errors.value.emailCode = '请输入邮箱验证码'
+            return
+        }
+    } else if (activeTab.value === 'phone') {
+        if (!phone.value) {
+            errors.value.phone = '请输入手机号'
+            return
+        }
+        if (!validatePhone(phone.value)) {
+            errors.value.phone = '请输入有效的手机号'
+            return
+        }
+        if (!phoneCode.value) {
+            errors.value.phoneCode = '请输入短信验证码'
+            return
+        }
     }
     if (!newPassword.value) {
         errors.value.newPassword = '请输入新密码'
@@ -231,56 +237,29 @@ async function resetPassword() {
         return
     }
     try {
-        const { data, error } = await authClient.emailOtp.resetPassword({
-            email: email.value,
-            otp: emailCode.value,
-            password: newPassword.value,
-        })
-        if (error) {
-            throw new Error(error.message || '密码重置失败')
+        if (activeTab.value === 'email') {
+            const { data, error } = await authClient.emailOtp.resetPassword({
+                email: email.value,
+                otp: emailCode.value,
+                password: newPassword.value,
+            })
+            if (error) {
+                throw new Error(error.message || '密码重置失败')
+            }
+        } else if (activeTab.value === 'phone') {
+            const isVerified = await authClient.phoneNumber.resetPassword({
+                otp: phoneCode.value,
+                phoneNumber: phone.value,
+                newPassword: newPassword.value,
+            })
+            if (!isVerified.data?.status) {
+                throw new Error('密码重置失败')
+            }
         }
         toast.add({ severity: 'success', summary: '密码重置成功', detail: '请使用新密码登录', life: 2500 })
         setTimeout(() => {
-            navigateTo(`/login?mode=${params.mode}`)
+            window.location.href = `/login?mode=${activeTab.value}`
         }, 1500)
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '密码重置时发生未知错误'
-        toast.add({ severity: 'error', summary: '重置失败', detail: errorMessage, life: 2500 })
-    }
-}
-
-async function resetPhonePassword() {
-    if (!phoneCode.value) {
-        errors.value.phoneCode = '请输入短信验证码'
-        return
-    }
-    if (!newPassword.value) {
-        errors.value.newPassword = '请输入新密码'
-        return
-    }
-    if (!confirmPassword.value) {
-        errors.value.confirmPassword = '请确认新密码'
-        return
-    }
-    if (newPassword.value !== confirmPassword.value) {
-        errors.value.confirmPassword = '两次输入的密码不一致'
-        return
-    }
-    try {
-        const isVerified = await authClient.phoneNumber.resetPassword({
-            otp: phoneCode.value,
-            phoneNumber: phone.value,
-            newPassword: newPassword.value,
-        })
-        if (isVerified.data?.status) {
-            toast.add({ severity: 'success', summary: '密码重置成功', detail: '请使用新密码登录', life: 2500 })
-            setTimeout(() => {
-                navigateTo('/login')
-            }, 1500)
-            return
-        }
-        throw new Error('密码重置失败')
-
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '密码重置时发生未知错误'
         toast.add({ severity: 'error', summary: '重置失败', detail: errorMessage, life: 2500 })
