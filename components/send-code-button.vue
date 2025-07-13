@@ -66,5 +66,6 @@ defineExpose({ start, reset })
     max-width: 135px;
     padding: 0.75rem 0.5rem;
     font-size: 0.95rem;
+    margin-top: -2px;
 }
 </style>
