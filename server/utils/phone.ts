@@ -8,12 +8,16 @@ const PHONE_DAILY_LIMIT = Number(process.env.PHONE_DAILY_LIMIT || 100)
 const PHONE_SINGLE_USER_DAILY_LIMIT = Number(process.env.PHONE_SINGLE_USER_DAILY_LIMIT || 3)
 
 const PHONE_LIMIT_KEY = 'phone_global_limit'
+// 限流窗口，单位秒，默认 1 天(86400秒)
+const PHONE_LIMIT_WINDOW = Number(process.env.PHONE_LIMIT_WINDOW || ms('1d') / 1000)
 
 const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
 
 const PHONE_SPUG_TEMPLATE_ID = process.env.PHONE_SPUG_TEMPLATE_ID || ''
 
 const PHONE_SENDER_NAME = process.env.PHONE_SENDER_NAME || '草梅Auth'
+
+const PHONE_EXPIRES_IN = Number(process.env.PHONE_EXPIRES_IN || 300)
 
 /**
  *  TODO：支持更多短信渠道
@@ -26,11 +30,11 @@ const PHONE_SENDER_NAME = process.env.PHONE_SENDER_NAME || '草梅Auth'
  * @param code
  */
 export async function sendPhoneOtp(phoneNumber: string, code: string) {
-    console.info(`Sending OTP ${code} to phone number ${phoneNumber}`)
+    // console.info(`Sending OTP ${code} to phone number ${phoneNumber}`)
     // 检查全局限流
     const globalCount = await limiterStorage.increment(
         PHONE_LIMIT_KEY,
-        ms('1d') / 1000,
+        PHONE_LIMIT_WINDOW,
     )
     if (globalCount > PHONE_DAILY_LIMIT) {
         throw new Error('今日短信验证码发送次数已达全局上限')
@@ -40,7 +44,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string) {
     const singleUserLimitKey = `phone_single_user_limit:${phoneNumber}`
     const singleUserCount = await limiterStorage.increment(
         singleUserLimitKey,
-        ms('1d') / 1000,
+        PHONE_LIMIT_WINDOW,
     )
     if (singleUserCount > PHONE_SINGLE_USER_DAILY_LIMIT) {
         throw new Error('您的手机号今日验证码发送次数已达上限')
@@ -58,7 +62,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string) {
             const body = JSON.stringify({
                 key1: PHONE_SENDER_NAME, // 短信发件人名称
                 key2: code, // 验证码
-                key3: 5, // 验证码有效时间
+                key3: Math.floor(PHONE_EXPIRES_IN / 60), // 验证码有效时间(分钟)
                 targets: phoneNumber,
             })
             const resp = await fetch(`https://push.spug.cc/send/${PHONE_SPUG_TEMPLATE_ID}`, {

@@ -8,6 +8,8 @@ const EMAIL_DAILY_LIMIT = Number(process.env.EMAIL_DAILY_LIMIT || 100)
 const EMAIL_SINGLE_USER_DAILY_LIMIT = Number(process.env.EMAIL_SINGLE_USER_DAILY_LIMIT || 5)
 
 const EMAIL_LIMIT_KEY = 'email_global_limit'
+// 限流窗口，单位秒，默认 1 天(86400秒)
+const EMAIL_LIMIT_WINDOW = Number(process.env.EMAIL_LIMIT_WINDOW || ms('1d') / 1000)
 
 export interface EmailOptions {
     /**
@@ -51,7 +53,7 @@ export async function sendEmail(options: EmailOptions) {
     // 检查全局限流
     const globalCount = await limiterStorage.increment(
         EMAIL_LIMIT_KEY,
-        ms('1d') / 1000,
+        EMAIL_LIMIT_WINDOW,
     )
     if (globalCount > EMAIL_DAILY_LIMIT) {
         throw new Error('今日邮箱发送次数已达全局上限')
@@ -61,7 +63,7 @@ export async function sendEmail(options: EmailOptions) {
     const singleUserLimitKey = `email_single_user_limit:${options.to}`
     const singleUserCount = await limiterStorage.increment(
         singleUserLimitKey,
-        ms('1d') / 1000,
+        EMAIL_LIMIT_WINDOW,
     )
     if (singleUserCount > EMAIL_SINGLE_USER_DAILY_LIMIT) {
         throw new Error('您的邮箱今日发送次数已达上限')

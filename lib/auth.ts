@@ -9,6 +9,7 @@ import {
     admin,
     captcha,
 } from 'better-auth/plugins'
+import ms from 'ms'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
 import { sendEmail } from '@/server/utils/email'
 import { snowflake } from '@/server/utils/snowflake'
@@ -16,6 +17,16 @@ import { dataSource } from '@/server/database'
 import { usernameValidator, validatePhone } from '@/utils/validate'
 import { sendPhoneOtp } from '@/server/utils/phone'
 import { secondaryStorage } from '@/server/database/storage'
+
+const EMAIL_EXPIRES_IN = Number(process.env.EMAIL_EXPIRES_IN || 300)
+
+const PHONE_EXPIRES_IN = Number(process.env.PHONE_EXPIRES_IN || 300)
+
+const ANONYMOUS_EMAIL_DOMAIN_NAME = process.env.ANONYMOUS_EMAIL_DOMAIN_NAME || 'anonymous@example.com'
+
+const TEMP_EMAIL_DOMAIN_NAME = process.env.TEMP_EMAIL_DOMAIN_NAME || 'example.com'
+
+const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS || '').split(',').map((id) => id.trim()).filter(Boolean)
 
 // TODO 增加注册验证码
 
@@ -110,11 +121,14 @@ export const auth = betterAuth({
         },
     },
     session: {
+        expiresIn: ms('30d') / 1000, // 30 天
+        updateAge: ms('1d') / 1000, // 1 天（每 1 天更新会话过期时间）
+        freshAge: ms('1d') / 1000, // 会话新鲜度
         cookieCache: {
-          enabled: true,
-          maxAge: 5 * 60, // 缓存持续时间（秒）
+            enabled: true,
+            maxAge: 300, // 缓存持续时间（秒）
         },
-      },
+    },
     plugins: [
         username({
             minUsernameLength: 2, // 最小用户名长度
@@ -123,8 +137,7 @@ export const auth = betterAuth({
         }), // 支持用户名登录
         anonymous({
             // 支持匿名登录
-            emailDomainName:
-                process.env.ANONYMOUS_EMAIL_DOMAIN_NAME || 'anonymous.com', // 匿名用户的默认电子邮件域名
+            emailDomainName: ANONYMOUS_EMAIL_DOMAIN_NAME, // 匿名用户的默认电子邮件域名
             onLinkAccount: async ({ anonymousUser, newUser }) => {
                 // 执行操作，如将购物车项目从匿名用户移动到新用户
                 // console.log('Linking anonymous user to new user:', anonymousUser, newUser)
@@ -132,7 +145,7 @@ export const auth = betterAuth({
             },
         }),
         magicLink({
-            expiresIn: 300, // 链接有效期（秒）
+            expiresIn: EMAIL_EXPIRES_IN, // 链接有效期（秒）
             disableSignUp: false, // 当用户未注册时是否阻止自动注册
             // 支持一次性链接登录
             sendMagicLink: async ({ email, token, url }, request) => {
@@ -146,7 +159,7 @@ export const auth = betterAuth({
         emailOTP({
             disableSignUp: false, // 当用户未注册时是否阻止自动注册
             otpLength: 6, // OTP 验证码长度
-            expiresIn: 300, // OTP 验证码有效期（秒）
+            expiresIn: EMAIL_EXPIRES_IN, // OTP 验证码有效期（秒）
             allowedAttempts: 3, // 允许的 OTP 验证尝试次数
             sendVerificationOnSignUp: false, // 用户注册时是否发送 OTP。因为已经发送验证邮件，所以不需要再发送 OTP。
             // 支持电子邮件 OTP 登录
@@ -187,7 +200,7 @@ export const auth = betterAuth({
         }),
         $phoneNumber({
             otpLength: 6, // OTP 验证码长度
-            expiresIn: 300, // OTP 验证码有效期（秒）
+            expiresIn: PHONE_EXPIRES_IN, // OTP 验证码有效期（秒）
             allowedAttempts: 3, // 允许的 OTP 验证尝试次数
             requireVerification: true, // 是否要求手机号码验证，启用后，用户在验证手机号码之前无法使用手机号码登录。
             sendOTP: async ({ phoneNumber, code }, request) => {
@@ -201,14 +214,14 @@ export const auth = betterAuth({
             signUpOnVerification: {
                 // 使用雪花算法生成临时电子邮件地址
                 // 生成的电子邮件地址格式为：<snowflake_id>@example.com
-                getTempEmail: (phoneNumber) => `${snowflake.generateId()}@${process.env.TEMP_EMAIL_DOMAIN_NAME || 'example.com'}`,
+                getTempEmail: (phoneNumber) => `${snowflake.generateId()}@${TEMP_EMAIL_DOMAIN_NAME}`,
                 getTempName: (phoneNumber) => `user-${snowflake.generateId()}`, // 使用雪花算法生成临时用户名
             },
         }),
         admin({
             defaultRole: 'user', // 默认角色为用户
             adminRoles: ['admin', 'root'], // 管理员角色列表
-            adminUserIds: (process.env.ADMIN_USER_IDS || '').split(',').map((id) => id.trim()).filter(Boolean), // 管理员用户 ID 列表
+            adminUserIds: ADMIN_USER_IDS, // 管理员用户 ID 列表
         }), // 支持管理员插件
         openAPI({
             disableDefaultReference: process.env.NODE_ENV !== 'development', // 开发环境启用 OpenAPI 插件
@@ -216,3 +229,4 @@ export const auth = betterAuth({
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},
 })
+
