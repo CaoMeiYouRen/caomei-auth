@@ -14,20 +14,20 @@
                         <Button
                             label="邮箱"
                             icon="mdi mdi-email"
-                            :class="{'p-button-outlined': params.mode !== 'email'}"
+                            :class="{'p-button-outlined': activeTab !== 'email'}"
                             @click="changeMode('email')"
                         />
                         <Button
                             label="手机号"
                             icon="mdi mdi-phone"
-                            :class="{'p-button-outlined': params.mode !== 'phone'}"
+                            :class="{'p-button-outlined': activeTab!== 'phone'}"
                             @click="changeMode('phone')"
                         />
                     </ButtonGroup>
                 </div>
 
                 <!-- 邮箱注册表单 -->
-                <div v-if="params.mode === 'email'">
+                <div v-show="activeTab === 'email'">
                     <div class="form-group">
                         <label class="form-label" for="username">用户名 <span style="color: #e63946">*</span></label>
                         <InputText
@@ -103,7 +103,7 @@
                 </div>
 
                 <!-- 手机号注册表单 -->
-                <div v-if="params.mode === 'phone'">
+                <div v-show="activeTab === 'phone'">
                     <div class="form-group">
                         <label class="form-label" for="username">用户名 <span style="color: #e63946">*</span></label>
                         <InputText
@@ -173,7 +173,7 @@
                     @click="register"
                 />
                 <div class="toggle-login">
-                    已有账号？ <NuxtLink :to="'/login?mode=' + params.mode" class="toggle-link">
+                    已有账号？ <NuxtLink :to="`/login?mode=${activeTab}`" class="toggle-link">
                         立即登录
                     </NuxtLink>
                 </div>
@@ -207,8 +207,8 @@ const errors = ref<Record<string, string>>({})
 const toast = useToast()
 
 // 使用 useUrlSearchParams 获取 URL 参数
-const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history')
-params.mode = 'email'
+const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
+const activeTab = ref<'email' | 'phone'>(params.mode || 'email')
 
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 
@@ -217,11 +217,13 @@ onMounted(() => {
     if (!['email', 'phone'].includes(params.mode as string)) {
         params.mode = 'email'
     }
+    activeTab.value = params.mode
 })
 
 // 切换注册模式并更新 URL
 const changeMode = (mode: 'email' | 'phone') => {
     params.mode = mode
+    activeTab.value = mode
 }
 
 // 表单验证函数
