@@ -11,6 +11,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (publicPaths.some((path) => to.path === path)) {
         return true
     }
+    if (to.path.startsWith('/api/auth') && !to.path.startsWith('/api/auth/admin')) {
+        return true
+    }
     const { data: session } = await authClient.useSession(useFetch)
     // 检查用户是否登录
     if (!session.value) {
