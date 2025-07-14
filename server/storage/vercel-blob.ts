@@ -12,11 +12,10 @@ export type VercelEnv = {
  * Vercel Blob 存储
  * 需要设置 VERCEL_BLOB_TOKEN 或 BLOB_READ_WRITE_TOKEN
  */
-export class VercelBlobStorage extends Storage {
+export class VercelBlobStorage implements Storage {
     private env: VercelEnv
 
     constructor(env: VercelEnv) {
-        super()
         this.env = env
     }
 

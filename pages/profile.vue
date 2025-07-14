@@ -81,6 +81,7 @@
                             size="small"
                             rounded
                             aria-label="Camera"
+                            name="file"
                             @click="onSelectAvatar"
                         />
                     </div>
@@ -342,7 +343,9 @@ import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
 
-const MAX_AVATAR_SIZE = Number(parse(import.meta.env.VITE_MAX_UPLOAD_SIZE || '4.5MiB'))
+const VITE_MAX_UPLOAD_SIZE = import.meta.env.VITE_MAX_UPLOAD_SIZE || '4.5MiB'
+
+const MAX_AVATAR_SIZE = Number(parse(VITE_MAX_UPLOAD_SIZE))
 
 const toast = useToast()
 const user = reactive({
@@ -665,7 +668,7 @@ async function setUsername() {
 }
 
 function goChangePassword() {
-   // 跳转到修改密码页面
+    // 跳转到修改密码页面
     navigateTo('/change-password')
 }
 
@@ -704,14 +707,20 @@ const showAvatar = computed(() => tempAvatar.value || user.avatar || '/logo.png'
 
 // 处理文件选择事件
 async function onFileSelect(event: FileUploadSelectEvent) {
-    const file = event.files[0]
+    const file = event.files[0] as File
     if (!file) {
         return
     }
 
     // 检查文件类型
     if (!file?.type?.startsWith('image/')) {
-        toast.add({ severity: 'error', summary: '请选择图片文件', life: 2000 })
+        toast.add({ severity: 'error', summary: '请选择图片文件', life: 5000 })
+        return
+    }
+
+    // 检查文件大小
+    if (file?.size > MAX_AVATAR_SIZE) {
+        toast.add({ severity: 'error', summary: `文件大小不能超过 ${VITE_MAX_UPLOAD_SIZE}`, life: 5000 })
         return
     }
 
@@ -724,12 +733,23 @@ async function onFileSelect(event: FileUploadSelectEvent) {
             // 模拟上传到服务器，实际使用时替换为真实 API 调用
             // const response = await authClient.uploadAvatar(file);
             // user.avatar = response.url;
+            const form = new FormData()
+            form.append('file', file)
+
+        const { data, error } = await useFetch('/api/file/upload', {
+                method: 'POST',
+                body: form,
+            })
+            if (error.value) {
+                throw new Error(error.value.message || '头像上传失败')
+            }
+            user.avatar = data.value?.url || ''
             toast.add({ severity: 'success', summary: '头像上传成功', life: 2000 })
 
-            // // 上传成功后，刷新用户信息
-            // await fetchUserAccounts()
-            // // 清理临时头像
-            // tempAvatar.value = ''
+            // 上传成功后，刷新用户信息
+            await fetchUserAccounts()
+            // 清理临时头像
+            tempAvatar.value = ''
 
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '头像上传失败'

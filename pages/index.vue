@@ -22,6 +22,14 @@
                     演示入口
                 </h2>
                 <div class="button-group">
+                    <!-- 如果session 存在，则显示跳转资料页-->
+                    <Button
+                        v-if="session?.data?.user"
+                        label="前往个人中心"
+                        icon="mdi mdi-account"
+                        class="btn btn-primary"
+                        @click="toProfile"
+                    />
                     <Button
                         label="前往登录页"
                         icon="mdi mdi-login"
@@ -61,6 +69,9 @@
 <script lang="ts" setup>
 import Button from 'primevue/button'
 import AuthLeft from '@/components/auth-left.vue'
+import { authClient } from '@/lib/auth-client'
+
+const session = authClient.useSession()
 
 function toLogin() {
     navigateTo('/login')
@@ -73,6 +84,11 @@ function toRegister() {
 function toForgotPassword() {
     navigateTo('/forgot-password')
 }
+
+function toProfile() {
+    navigateTo('/profile')
+}
+
 </script>
 
 <style scoped lang="scss">

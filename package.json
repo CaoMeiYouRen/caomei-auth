@@ -27,6 +27,7 @@
     "better-auth": "^1.2.12",
     "better-bytes": "^1.2.4",
     "dayjs": "^1.11.13",
+    "file-type": "^21.0.0",
     "fs-extra": "^11.3.0",
     "google-libphonenumber": "^3.2.42",
     "ioredis": "^5.6.1",
