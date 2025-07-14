@@ -49,6 +49,14 @@
                                 class="form-input"
                                 disabled
                             />
+                            <Button
+                                v-if="!user.username"
+                                label="设置用户名"
+                                text
+                                size="small"
+                                class="ml-2"
+                                @click="openSetUsernameDialog"
+                            />
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="nickname">昵称</label>
@@ -238,6 +246,39 @@
                 />
             </template>
         </Dialog>
+
+        <!-- 设置用户名弹窗 -->
+        <Dialog
+            v-model:visible="showSetUsernameDialog"
+            modal
+            header="设置用户名"
+            :closable="true"
+            :style="{width: '400px'}"
+        >
+            <div class="form-group">
+                <InputText
+                    v-model="newUsername"
+                    class="form-input"
+                    placeholder="请输入新用户名"
+                />
+                <Message
+                    v-if="usernameError"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ usernameError }}
+                </Message>
+            </div>
+            <div class="form-group">
+                <Button
+                    label="确认设置"
+                    class="btn btn-primary w-full"
+                    :loading="isSettingUsername"
+                    @click="setUsername"
+                />
+            </div>
+        </Dialog>
     </div>
 </template>
 
@@ -285,6 +326,11 @@ const selectedProvider = ref('')
 // 选中要解绑的账号 ID
 const selectedAccountId = ref('')
 
+const showSetUsernameDialog = ref(false) // 设置用户名弹窗显示状态
+const newUsername = ref('') // 新用户名
+const usernameError = ref('') // 用户名错误信息
+const isSettingUsername = ref(false) // 设置用户名加载状态
+
 const config = useRuntimeConfig().public
 const socialProviders = ref(config.socialProviders as { name: string, provider: string }[])
 
@@ -301,7 +347,7 @@ const sendPhoneCode = useSendPhoneCode(
     errors,
     phoneCodeSending,
 )
-// TODO 解决第三方登录没有用户名的问题
+
 const session = authClient.useSession()
 
 watch(
@@ -511,6 +557,47 @@ async function saveProfile() {
         })
     } finally {
         saving.value = false
+    }
+}
+
+function openSetUsernameDialog() {
+    showSetUsernameDialog.value = true
+    newUsername.value = user.username || user.nickname
+}
+
+// 设置用户名
+async function setUsername() {
+    usernameError.value = ''
+    if (!validateUsername(newUsername.value)) {
+        usernameError.value = '用户名只能包含字母、数字、下划线和连字符，长度在 2 到 36 个字符之间。'
+        return
+    }
+    isSettingUsername.value = true
+    try {
+        const result = await authClient.updateUser({
+            username: newUsername.value,
+        })
+        if (result.error) {
+            throw new Error(result.error.message || '设置用户名失败')
+        }
+        user.username = newUsername.value
+        showSetUsernameDialog.value = false
+        toast.add({
+            severity: 'success',
+            summary: '用户名设置成功',
+            life: 2000,
+        })
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '设置用户名时发生未知错误'
+        toast.add({
+            severity: 'error',
+            summary: '设置用户名失败',
+            detail: errorMessage,
+            life: 2000,
+        })
+    } finally {
+        isSettingUsername.value = false
+        newUsername.value = ''
     }
 }
 
