@@ -1,3 +1,4 @@
+import { isStrongPassword } from 'validator'
 import isEmail from 'validator/es/lib/isEmail'
 import isMobilePhone from 'validator/es/lib/isMobilePhone'
 
@@ -56,4 +57,22 @@ export function usernameValidator(name: string): boolean {
         return false
     }
     return true
+}
+
+/**
+ * 验证密码强度
+ *
+ * @author CaoMeiYouRen
+ * @date 2025-07-14
+ * @export
+ * @param password
+ */
+export function passwordValidator(password: string): boolean {
+    return isStrongPassword(password, {
+        minLength: 8, // 密码最小长度
+        minLowercase: 1, // 密码必须包含小写字母
+        minUppercase: 1, // 密码必须包含大写字母
+        minNumbers: 1, // 密码必须包含数字
+        minSymbols: 1, // 密码必须包含特殊字符
+    })
 }

@@ -156,7 +156,7 @@ import Password from 'primevue/password'
 import ButtonGroup from 'primevue/buttongroup'
 import { useToast } from 'primevue/usetoast'
 import SendCodeButton from '@/components/send-code-button.vue'
-import { validateEmail, validatePhone } from '@/utils/validate'
+import { validateEmail, validatePhone, passwordValidator } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
@@ -226,6 +226,9 @@ async function resetPassword() {
     }
     if (!newPassword.value) {
         errors.value.newPassword = '请输入新密码'
+        return
+    } if (!passwordValidator(newPassword.value)) {
+        errors.value.newPassword = '密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'
         return
     }
     if (!confirmPassword.value) {

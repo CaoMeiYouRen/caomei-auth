@@ -250,6 +250,8 @@ const resolver = (values: {
             newErrors.password = '密码长度不能少于6个字符'
         } else if (values.password.length > 64) {
             newErrors.password = '密码长度不能超过64个字符'
+        } else if (!passwordValidator(values.password)) {
+            newErrors.password = '密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'
         }
         if (!values.confirmPassword) {
             newErrors.confirmPassword = '请确认密码'
@@ -535,3 +537,5 @@ async function register() {
     margin-top: 1em;
 }
 </style>
+
+import { passwordValidator } from '@/utils/validate'
