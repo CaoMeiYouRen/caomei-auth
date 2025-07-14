@@ -68,6 +68,7 @@
                             severity="secondary"
                             class="p-button-outlined"
                             accept="image/*"
+                            :max-file-size="MAX_AVATAR_SIZE"
                             @select="onFileSelect"
                         />
                         <Button
@@ -332,17 +333,16 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import Dialog from 'primevue/dialog'
-import { useToast } from 'primevue/usetoast'
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload'
+import { format, parse } from 'better-bytes'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
+
+const MAX_AVATAR_SIZE = Number(parse(import.meta.env.VITE_MAX_UPLOAD_SIZE || '4.5MiB'))
 
 const toast = useToast()
 const user = reactive({
