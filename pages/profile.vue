@@ -14,6 +14,12 @@
                             icon="mdi mdi-shield-account-outline"
                             @click="goSecurity"
                         />
+                        <Button
+                            label="登出"
+                            class="btn btn-link ml-3"
+                            icon="mdi mdi-logout"
+                            @click="logout"
+                        />
                     </div>
                 </div>
                 <p class="auth-subtitle">
@@ -516,6 +522,23 @@ function goChangePassword() {
 function goSecurity() {
     navigateTo('/security')
 }
+
+// 新增登出函数
+async function logout() {
+    try {
+        await authClient.signOut({})
+        toast.add({ severity: 'success', summary: '登出成功', life: 2000 })
+        navigateTo('/login') // 重定向到登录页面
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '登出时发生未知错误'
+        toast.add({
+            severity: 'error',
+            summary: '登出失败',
+            detail: errorMessage,
+            life: 2000,
+        })
+    }
+}
 </script>
 
 <style scoped lang="scss">
@@ -538,6 +561,11 @@ function goSecurity() {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 0.5rem;
+.btn-link{
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: 0.6rem;
+}
 }
 
 .profile-section {

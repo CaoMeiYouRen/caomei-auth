@@ -444,8 +444,8 @@ async function loginWithSocial(provider: string, name: string) {
         }
         toast.add({
             severity: 'success',
-            summary: `${name} 登录成功`,
-            detail: '即将跳转到首页',
+            summary: `正在通过 ${name} 登录`,
+            detail: '即将跳转到登录页',
             life: 2000,
         })
         setTimeout(() => {
