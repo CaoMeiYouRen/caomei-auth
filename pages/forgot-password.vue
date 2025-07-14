@@ -149,12 +149,6 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
-import { useRoute } from 'vue-router'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import Password from 'primevue/password'
-import ButtonGroup from 'primevue/buttongroup'
-import { useToast } from 'primevue/usetoast'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone, passwordValidator } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'

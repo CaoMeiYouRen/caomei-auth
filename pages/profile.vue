@@ -665,8 +665,8 @@ async function setUsername() {
 }
 
 function goChangePassword() {
-    // 跳转到修改密码页面
-    navigateTo('/forgot-password')
+   // 跳转到修改密码页面
+    navigateTo('/change-password')
 }
 
 function goSecurity() {

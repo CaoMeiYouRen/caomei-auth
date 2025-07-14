@@ -130,6 +130,7 @@ export const auth = betterAuth({
         expiresIn: ms('30d') / 1000, // 30 天
         updateAge: ms('1d') / 1000, // 1 天（每 1 天更新会话过期时间）
         freshAge: ms('1d') / 1000, // 会话新鲜度
+        // 当 cookie 的值太大时，会使缓存报错，故暂时禁用
         // cookieCache: {
         //     enabled: true,
         //     maxAge: 300, // 缓存持续时间（秒）
