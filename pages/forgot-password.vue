@@ -265,7 +265,12 @@ async function resetPassword() {
         }, 1500)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '密码重置时发生未知错误'
-        toast.add({ severity: 'error', summary: '重置失败', detail: errorMessage, life: 2500 })
+        toast.add({
+            severity: 'error',
+            summary: '重置失败',
+            detail: errorMessage,
+            life: 5000,
+        })
     }
 }
 </script>

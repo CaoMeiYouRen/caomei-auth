@@ -341,7 +341,7 @@ async function register() {
             severity: 'error',
             summary: '注册失败',
             detail: errorMessage,
-            life: 2500,
+            life: 5000,
         })
     }
 }

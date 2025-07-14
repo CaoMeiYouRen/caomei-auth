@@ -326,7 +326,7 @@ async function login() {
                 severity: 'error',
                 summary: '登录失败',
                 detail: errorMessage,
-                life: 2000,
+                life: 5000,
             })
         }
         return
@@ -457,7 +457,7 @@ async function loginWithSocial(provider: string, name: string) {
             severity: 'error',
             summary: `${name} 登录失败`,
             detail: errorMessage,
-            life: 2000,
+            life: 5000,
         })
     }
 }
