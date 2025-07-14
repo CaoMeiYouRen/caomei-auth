@@ -111,10 +111,10 @@
                                 <Button
                                     v-for="account in userAccounts"
                                     :key="account.provider"
-                                    v-tooltip.top="`点击可解绑 ${getProviderName(account.provider)} 账号`"
+                                    v-tooltip.top="`点击可解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
                                     :class="['social-btn', `social-${account.provider}`]"
                                     :icon="`mdi mdi-${account.provider}`"
-                                    :label="`${getProviderName(account.provider)}(ID: ${account.accountId})`"
+                                    :label="`${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 8)}${account.accountId.length > 8 ? '...' : ''})`"
                                     @click="confirmUnlink(account.provider, account.accountId)"
                                 />
 
@@ -301,7 +301,7 @@ const sendPhoneCode = useSendPhoneCode(
     errors,
     phoneCodeSending,
 )
-
+// TODO 解决第三方登录没有用户名的问题
 const session = authClient.useSession()
 
 watch(
