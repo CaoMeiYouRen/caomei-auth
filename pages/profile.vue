@@ -43,7 +43,7 @@
                             </template>
                             <template #image>
                                 <Avatar
-                                    :image="user.avatar || '/logo.png'"
+                                    :image="showAvatar"
                                     alt="avatar"
                                     preview
                                     size="xlarge"
@@ -52,13 +52,24 @@
                             </template>
                             <template #preview="slotProps">
                                 <img
-                                    :src="user.avatar || '/logo.png'"
+                                    :src="showAvatar"
                                     alt="preview"
                                     :style="slotProps.style"
                                     @click="slotProps.previewCallback"
                                 >
                             </template>
                         </Image>
+                        <FileUpload
+                            v-show="false"
+                            ref="fileupload"
+                            mode="basic"
+                            custom-upload
+                            auto
+                            severity="secondary"
+                            class="p-button-outlined"
+                            accept="image/*"
+                            @select="onFileSelect"
+                        />
                         <Button
                             v-tooltip.top="'点击上传头像'"
                             label=""
@@ -69,6 +80,7 @@
                             size="small"
                             rounded
                             aria-label="Camera"
+                            @click="onSelectAvatar"
                         />
                     </div>
                     <div class="info-block">
@@ -324,6 +336,7 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Dialog from 'primevue/dialog'
 import { useToast } from 'primevue/usetoast'
+import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
@@ -660,7 +673,7 @@ function goSecurity() {
     navigateTo('/security')
 }
 
-// 新增登出函数
+// 登出
 async function logout() {
     try {
         await authClient.signOut({})
@@ -675,6 +688,55 @@ async function logout() {
             life: 5000,
         })
     }
+}
+
+// 获取 FileUpload 组件
+const fileupload = ref<any>()
+
+function onSelectAvatar() {
+    fileupload.value?.choose() // 选择文件
+}
+
+// 用于临时显示上传的头像
+const tempAvatar = ref<string>()
+
+const showAvatar = computed(() => tempAvatar.value || user.avatar || '/logo.png')
+
+// 处理文件选择事件
+async function onFileSelect(event: FileUploadSelectEvent) {
+    const file = event.files[0]
+    if (!file) {
+        return
+    }
+
+    // 检查文件类型
+    if (!file?.type?.startsWith('image/')) {
+        toast.add({ severity: 'error', summary: '请选择图片文件', life: 2000 })
+        return
+    }
+
+    const reader = new FileReader()
+    reader.onload = async (e) => {
+        try {
+            tempAvatar.value = e.target?.result as string
+
+            // TODO 实现图片上传
+            // 模拟上传到服务器，实际使用时替换为真实 API 调用
+            // const response = await authClient.uploadAvatar(file);
+            // user.avatar = response.url;
+            toast.add({ severity: 'success', summary: '头像上传成功', life: 2000 })
+
+            // // 上传成功后，刷新用户信息
+            // await fetchUserAccounts()
+            // // 清理临时头像
+            // tempAvatar.value = ''
+
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : '头像上传失败'
+            toast.add({ severity: 'error', summary: errorMessage, life: 2000 })
+        }
+    }
+    reader.readAsDataURL(file)
 }
 </script>
 
