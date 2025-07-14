@@ -200,18 +200,13 @@
                 </div>
                 <div class="social-login">
                     <Button
-                        class="social-btn social-github"
-                        icon="mdi mdi-github"
-                        label="使用 GitHub 账号登录"
+                        v-for="provider in socialProviders"
+                        :key="provider.provider"
+                        :class="['social-btn', `social-${provider.provider}`]"
+                        :icon="`mdi mdi-${provider.provider}`"
+                        :label="`使用 ${provider.name} 账号登录`"
                         outlined
-                        @click="loginWithGitHub"
-                    />
-                    <Button
-                        class="social-btn social-google"
-                        icon="mdi mdi-google"
-                        label="使用 Google 账号登录"
-                        outlined
-                        @click="loginWithGoogle"
+                        @click="loginWithSocial(provider.provider,provider.name)"
                     />
                 </div>
                 <div class="toggle-login">
@@ -253,6 +248,9 @@ const emailCodeSending = ref(false)
 const phoneUseCode = ref(false)
 const phoneCode = ref('')
 const phoneCodeSending = ref(false)
+
+const config = useRuntimeConfig().public
+const socialProviders = ref(config.socialProviders as { name: string, provider: string }[])
 
 const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
@@ -434,18 +432,19 @@ async function login() {
         }
     }
 }
-async function loginWithGitHub() {
+
+async function loginWithSocial(provider: string, name: string) {
     try {
         const result = await authClient.signIn.social({
-            provider: 'github',
+            provider,
             callbackURL: `${VITE_AUTH_BASE_URL}/profile`, // 回调到资料页
         })
         if (result.error) {
-            throw new Error(result.error.message || 'GitHub 登录失败')
+            throw new Error(result.error.message || `${name} 登录失败`)
         }
         toast.add({
             severity: 'success',
-            summary: 'GitHub 登录成功',
+            summary: `${name} 登录成功`,
             detail: '即将跳转到首页',
             life: 2000,
         })
@@ -453,44 +452,16 @@ async function loginWithGitHub() {
             navigateTo('/profile')
         }, 1200)
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'GitHub 登录时发生未知错误'
+        const errorMessage = error instanceof Error ? error.message : `${name} 登录时发生未知错误`
         toast.add({
             severity: 'error',
-            summary: 'GitHub 登录失败',
+            summary: `${name} 登录失败`,
             detail: errorMessage,
             life: 2000,
         })
     }
 }
 
-async function loginWithGoogle() {
-    try {
-        const result = await authClient.signIn.social({
-            provider: 'google',
-            callbackURL: `${VITE_AUTH_BASE_URL}/profile`, // 回调到资料页
-        })
-        if (result.error) {
-            throw new Error(result.error.message || 'Google 登录失败')
-        }
-        toast.add({
-            severity: 'success',
-            summary: 'Google 登录成功',
-            detail: '即将跳转到首页',
-            life: 2000,
-        })
-        setTimeout(() => {
-            navigateTo('/profile')
-        }, 1200)
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Google 登录时发生未知错误'
-        toast.add({
-            severity: 'error',
-            summary: 'Google 登录失败',
-            detail: errorMessage,
-            life: 2000,
-        })
-    }
-}
 </script>
 
 <style scoped lang="scss">
@@ -655,6 +626,10 @@ async function loginWithGoogle() {
 
         &.social-google {
             color: #4285f4;
+        }
+
+        &.social-microsoft {
+            color: #0078d4;
         }
 
         .p-button-icon {

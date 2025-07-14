@@ -64,6 +64,24 @@ export default defineNuxtConfig({
             ],
         },
     },
+    runtimeConfig: {
+        public: {
+            socialProviders: ([
+                process.env.GITHUB_CLIENT_ID && {
+                    name: 'Github',
+                    provider: 'github',
+                },
+                process.env.GOOGLE_CLIENT_ID && {
+                    name: 'Google',
+                    provider: 'google',
+                },
+                process.env.MICROSOFT_CLIENT_ID && {
+                    name: 'Microsoft',
+                    provider: 'microsoft',
+                },
+            ].filter(Boolean)) as { name: string, provider: string }[],
+        },
+    },
     primevue: {
         autoImport: true,
         // components: [],
