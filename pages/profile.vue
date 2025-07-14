@@ -27,17 +27,48 @@
                 </p>
                 <div class="profile-section">
                     <div class="avatar-block">
-                        <img
-                            :src="user.avatar || '/logo.png'"
-                            class="avatar"
-                            alt="avatar"
+                        <Image
+                            alt="Image"
+                            preview
+                            :pt="{
+                                previewMask: {
+                                    style: {
+                                        borderRadius: '50%'
+                                    }
+                                }
+                            }"
                         >
+                            <template #previewicon>
+                                <i class="mdi mdi-magnify" />
+                            </template>
+                            <template #image>
+                                <Avatar
+                                    :image="user.avatar || '/logo.png'"
+                                    alt="avatar"
+                                    preview
+                                    size="xlarge"
+                                    shape="circle"
+                                />
+                            </template>
+                            <template #preview="slotProps">
+                                <img
+                                    :src="user.avatar || '/logo.png'"
+                                    alt="preview"
+                                    :style="slotProps.style"
+                                    @click="slotProps.previewCallback"
+                                >
+                            </template>
+                        </Image>
                         <Button
-                            label="更换头像"
-                            text
-                            size="small"
+                            v-tooltip.top="'点击上传头像'"
+                            label=""
+                            class="avatar-btn"
                             icon="mdi mdi-camera"
-                            disabled
+                            severity="contrast"
+                            variant="text"
+                            size="small"
+                            rounded
+                            aria-label="Camera"
                         />
                     </div>
                     <div class="info-block">
@@ -490,7 +521,7 @@ async function linkSocialAccount(type: string) {
         await fetchUserAccounts()
         toast.add({
             severity: 'success',
-            summary: `已绑定${type}`,
+            summary: `正在绑定 ${type} 中`,
             life: 2000,
         })
     } catch (error) {
@@ -684,13 +715,12 @@ async function logout() {
     align-items: center;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
+    position: relative;
 
-    .avatar {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid $primary;
+    .avatar-btn {
+        position: absolute;
+        bottom: -13px;
+        left: 38px;
     }
 }
 
