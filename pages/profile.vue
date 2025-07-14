@@ -406,7 +406,7 @@ async function bindEmail() {
             severity: 'error',
             summary: '发送验证链接失败',
             detail: errorMessage,
-            life: 2000,
+            life: 5000,
         })
     } finally {
         bindingEmail.value = false
@@ -442,7 +442,7 @@ async function bindPhone() {
             severity: 'error',
             summary: '手机号修改失败',
             detail: errorMessage,
-            life: 2000,
+            life: 5000,
         })
     } finally {
         bindingPhone.value = false
@@ -472,7 +472,7 @@ const fetchUserAccounts = async () => {
             severity: 'error',
             summary: '获取第三方账号失败',
             detail: errorMessage,
-            life: 2000,
+            life: 5000,
         })
     }
 }
@@ -499,7 +499,7 @@ async function linkSocialAccount(type: string) {
             severity: 'error',
             summary: `${type} 绑定失败`,
             detail: errorMessage,
-            life: 2000,
+            life: 5000,
         })
     }
 }
@@ -533,7 +533,7 @@ async function unlinkSelectedAccount() {
             severity: 'error',
             summary: `${selectedProvider.value} 解绑失败`,
             detail: errorMessage,
-            life: 2000,
+            life: 5000,
         })
     } finally {
         showUnlinkConfirm.value = false
@@ -612,7 +612,7 @@ async function setUsername() {
             severity: 'error',
             summary: '设置用户名失败',
             detail: errorMessage,
-            life: 2000,
+            life: 5000,
         })
     } finally {
         isSettingUsername.value = false
@@ -641,7 +641,7 @@ async function logout() {
             severity: 'error',
             summary: '登出失败',
             detail: errorMessage,
-            life: 2000,
+            life: 5000,
         })
     }
 }
@@ -667,11 +667,12 @@ async function logout() {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 0.5rem;
-.btn-link{
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    margin-left: 0.6rem;
-}
+
+    .btn-link {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        margin-left: 0.6rem;
+    }
 }
 
 .profile-section {
