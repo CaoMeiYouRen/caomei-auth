@@ -101,31 +101,28 @@
                         <div class="form-group">
                             <label class="form-label">第三方账号</label>
                             <div class="social-list">
-                                <!-- 动态渲染第三方账号按钮 -->
+                                <!-- 已绑定的第三方账号 -->
                                 <Button
                                     v-for="account in userAccounts"
                                     :key="account.provider"
-                                    v-tooltip.top="`已绑定账号 ID: ${account.accountId}。\n点击可解绑第三方账号。`"
+                                    v-tooltip.top="`点击可解绑 ${getProviderName(account.provider)} 账号`"
                                     :class="['social-btn', `social-${account.provider}`]"
                                     :icon="`mdi mdi-${account.provider}`"
-                                    :label="account.provider === 'github' ? 'GitHub' : 'Google'"
+                                    :label="`${getProviderName(account.provider)}(ID: ${account.accountId})`"
                                     @click="confirmUnlink(account.provider, account.accountId)"
                                 />
-                                <!-- 提供绑定新账号的按钮 -->
-                                <Button
-                                    v-if="!userAccounts.some(account => account.provider === 'github')"
-                                    class="social-btn social-github"
-                                    icon="mdi mdi-github"
-                                    label="绑定 GitHub"
-                                    @click="linkSocialAccount('github')"
-                                />
-                                <Button
-                                    v-if="!userAccounts.some(account => account.provider === 'google')"
-                                    class="social-btn social-google"
-                                    icon="mdi mdi-google"
-                                    label="绑定 Google"
-                                    @click="linkSocialAccount('google')"
-                                />
+
+                                <!-- 绑定新账号   -->
+                                <template v-for="provider in socialProviders">
+                                    <Button
+                                        v-if="!userAccounts.some(account => account.provider === provider.provider)"
+                                        :key="provider.provider"
+                                        :class="['social-btn', `social-${provider.provider}`]"
+                                        :icon="`mdi mdi-${provider.provider}`"
+                                        :label="`绑定 ${provider.name}`"
+                                        @click="linkSocialAccount(provider.provider)"
+                                    />
+                                </template>
                             </div>
                         </div>
                         <div class="form-group profile-actions">
@@ -165,7 +162,7 @@
                 <Button
                     label="发送验证链接"
                     class="btn btn-primary w-full"
-                    :loading="sendingVerificationLink"
+                    :loading="bindingEmail"
                     @click="bindEmail"
                 />
             </div>
@@ -221,7 +218,7 @@
             :closable="true"
             :style="{width: '400px'}"
         >
-            <p>确定要解绑 {{ selectedProvider }} 平台，ID 为 {{ selectedAccountId }} 的账号吗？</p>
+            <p>确定要解绑 {{ getProviderName(selectedProvider) }} 平台，ID 为 {{ selectedAccountId }} 的账号吗？</p>
             <template #footer>
                 <Button
                     label="取消"
@@ -270,20 +267,26 @@ const showPhoneModal = ref(false)
 
 const email = ref('')
 const phone = ref('')
-const emailCode = ref('')
 const phoneCode = ref('')
 const errors = ref<Record<string, string>>({})
-const emailCodeSending = ref(false)
 const phoneCodeSending = ref(false)
 const bindingEmail = ref(false)
 const bindingPhone = ref(false)
-const sendingVerificationLink = ref(false)
 // 解绑确认对话框显示状态
 const showUnlinkConfirm = ref(false)
 // 选中要解绑的提供商
 const selectedProvider = ref('')
 // 选中要解绑的账号 ID
 const selectedAccountId = ref('')
+
+const config = useRuntimeConfig().public
+const socialProviders = ref(config.socialProviders as { name: string, provider: string }[])
+
+// 根据 provider 获取对应的名称
+const getProviderName = (provider: string) => {
+    const providerObj = socialProviders.value.find((p) => p.provider === provider)
+    return `${providerObj ? providerObj.name : provider}`
+}
 
 const sendPhoneCode = useSendPhoneCode(
     phone,
@@ -325,7 +328,7 @@ async function bindEmail() {
         toast.add({ severity: 'warn', summary: '请输入有效的邮箱地址', life: 2000 })
         return
     }
-    sendingVerificationLink.value = true
+    bindingEmail.value = true
     try {
         await authClient.changeEmail({
             newEmail: email.value,
@@ -349,7 +352,7 @@ async function bindEmail() {
             life: 2000,
         })
     } finally {
-        sendingVerificationLink.value = false
+        bindingEmail.value = false
     }
 }
 
@@ -418,7 +421,7 @@ const fetchUserAccounts = async () => {
 }
 
 // 绑定新的第三方账号
-async function linkSocialAccount(type: 'github' | 'google') {
+async function linkSocialAccount(type: string) {
     try {
         const result = await authClient.linkSocial({
             provider: type,
@@ -568,11 +571,42 @@ function goSecurity() {
 
 .social-list {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 
     .linked {
         background: $primary;
         color: #fff;
+    }
+
+    .social-btn {
+        border: 1px solid $secondary-bg;
+        background-color: $background-light;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        // margin-bottom: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-size: 1rem;
+
+        &.social-github {
+            color: #24292e;
+        }
+
+        &.social-google {
+            color: #4285f4;
+        }
+
+        &.social-microsoft {
+            color: #0078d4;
+        }
+
+        .p-button-icon {
+            margin-right: 0.75rem;
+        }
     }
 }
 
@@ -599,33 +633,5 @@ function goSecurity() {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-}
-
-.social-list {
-    .social-btn {
-        border: 1px solid $secondary-bg;
-        background-color: $background-light;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin-bottom: 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        font-size: 1rem;
-
-        &.social-github {
-            color: #24292e;
-        }
-
-        &.social-google {
-            color: #4285f4;
-        }
-
-        .p-button-icon {
-            margin-right: 0.75rem;
-        }
-    }
 }
 </style>
