@@ -44,19 +44,24 @@
                         <div class="form-group">
                             <label class="form-label" for="username">用户名</label>
                             <InputText
+                                v-if="user.username"
                                 id="username"
                                 v-model="user.username"
                                 class="form-input"
                                 disabled
                             />
-                            <Button
-                                v-if="!user.username"
-                                label="设置用户名"
-                                text
-                                size="small"
-                                class="ml-2"
-                                @click="openSetUsernameDialog"
-                            />
+                            <template v-if="!user.username">
+                                <Message severity="warn">
+                                    您当前未设置用户名，无法通过用户名密码登录
+                                </Message>
+                                <Button
+                                    label="设置用户名"
+                                    text
+                                    size="small"
+                                    class="ml-2"
+                                    @click="openSetUsernameDialog"
+                                />
+                            </template>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="nickname">昵称</label>
