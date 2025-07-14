@@ -1,6 +1,6 @@
-import { isStrongPassword } from 'validator'
 import isEmail from 'validator/es/lib/isEmail'
 import isMobilePhone from 'validator/es/lib/isMobilePhone'
+import isStrongPassword from 'validator/es/lib/isStrongPassword'
 
 // 判断是否为邮箱。
 export function validateEmail(email: string): boolean {
