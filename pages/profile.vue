@@ -363,7 +363,7 @@ watch(
         }
         const newUser = session.value?.data?.user
         if (newUser) {
-            user.username = newUser.username || ''
+            user.username = newUser.displayUsername || ''
             user.nickname = newUser.name || ''
             user.avatar = newUser.image || ''
             user.email = newUser.email || ''
