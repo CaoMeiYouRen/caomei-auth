@@ -540,7 +540,21 @@ async function unlinkSelectedAccount() {
     }
 }
 
+// 验证昵称
+function validateNickname() {
+    if (!nicknameValidator(user.nickname)) {
+        errors.value.nickname = '昵称长度需在 2 - 36 个字符之间，仅允许中英文、数字和常见标点符号。'
+    } else {
+        errors.value.nickname = ''
+    }
+}
+
 async function saveProfile() {
+    validateNickname() // 保存前验证昵称
+    if (errors.value.nickname) {
+        toast.add({ severity: 'warn', summary: '昵称格式有误', detail: errors.value.nickname, life: 5000 })
+        return
+    }
     saving.value = true
     try {
         const result = await authClient.updateUser({
@@ -558,7 +572,7 @@ async function saveProfile() {
             severity: 'error',
             summary: '资料保存失败',
             detail: errorMessage,
-            life: 2000,
+            life: 5000,
         })
     } finally {
         saving.value = false

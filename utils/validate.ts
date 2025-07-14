@@ -76,3 +76,24 @@ export function passwordValidator(password: string): boolean {
         minSymbols: 1, // 密码必须包含特殊字符
     })
 }
+
+// 昵称验证函数
+// 长度 2-36 个字符，仅对特殊字符做限制
+// 限制的特殊字符有：零宽字符、字符方向控制符、有可能引起页面排版错误的字符、有可能引起数据库存储错误的字符
+export function nicknameValidator(nickname: string): boolean {
+    /**
+    * 正则表达式解释：
+    * ^ ：匹配字符串的开始位置。
+    * [^\u0000-\u001F\u0020\u007F-\u009F\u00A0-\u00FF] ：
+    *     这是一个否定字符类，表示匹配不在指定范围内的任意字符。
+    *     \u0000-\u001F ：控制字符范围，包含 ASCII 码 0 - 31 的字符，如换行符、制表符等。
+    *     \u0020 ：空格字符，ASCII 码为 32。
+    *     \u007F-\u009F ：包含删除字符（ASCII 码 127）以及一些控制字符。
+    *     \u00A0-\u00FF ：包含非断行空格（ASCII 码 160）以及一些拉丁字母扩展字符。
+    * {2,36} ：限定前面字符类匹配的次数，最少 2 次，最多 36 次。
+    * $ ：匹配字符串的结束位置。
+    * 综合起来，该正则表达式要求字符串长度在 2 到 36 个字符之间，且不包含指定的特殊字符。
+    */
+    // eslint-disable-next-line no-control-regex
+    return /^[^\u0000-\u001F\u0020\u007F-\u009F\u00A0-\u00FF]{2,36}$/.test(nickname)
+}
