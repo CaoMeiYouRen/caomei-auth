@@ -34,6 +34,10 @@ export const auth = betterAuth({
     // 数据库适配器
     // 使用 TypeORM 适配器
     database: typeormAdapter(dataSource),
+    // 可信来源列表。
+    trustedOrigins: [process.env.VITE_AUTH_BASE_URL as string],
+    // 用于加密、签名和哈希的秘密。
+    secret: process.env.AUTH_SECRET || process.env.BETTER_AUTH_SECRET || '',
     advanced: {
         database: {
             // 自定义 ID 生成逻辑
