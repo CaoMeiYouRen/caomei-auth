@@ -30,7 +30,7 @@ export class S3Storage implements Storage {
         this.env.S3_ENDPOINT = env.S3_ENDPOINT || `https://${env.S3_BUCKET_NAME}.s3.${env.S3_REGION}.amazonaws.com`
         this.s3Client = new S3Client({
             region: env.S3_REGION,
-            endpoint: env.S3_ENDPOINT,
+            endpoint: this.env.S3_ENDPOINT,
             credentials: {
                 accessKeyId: env.S3_ACCESS_KEY_ID,
                 secretAccessKey: env.S3_SECRET_ACCESS_KEY,
