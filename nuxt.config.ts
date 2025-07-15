@@ -74,14 +74,23 @@ export default defineNuxtConfig({
                 process.env.GITHUB_CLIENT_ID && {
                     name: 'Github',
                     provider: 'github',
+                    social: true, // 使用内置的第三方社交登录
                 },
                 process.env.GOOGLE_CLIENT_ID && {
                     name: 'Google',
                     provider: 'google',
+                    social: true,
                 },
                 process.env.MICROSOFT_CLIENT_ID && {
                     name: 'Microsoft',
                     provider: 'microsoft',
+                    social: true,
+                },
+                process.env.WEIBO_CLIENT_ID && {
+                    name: '微博',
+                    provider: 'weibo',
+                    icon: 'mdi mdi-weibo',
+                    oauth2: true, // 使用自定义第三方 OAuth2 登录
                 },
             ].filter(Boolean)) as { name: string, provider: string }[],
         },

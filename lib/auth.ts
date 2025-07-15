@@ -8,6 +8,7 @@ import {
     phoneNumber as $phoneNumber,
     admin,
     captcha,
+    genericOAuth,
 } from 'better-auth/plugins'
 import ms from 'ms'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
@@ -238,6 +239,53 @@ export const auth = betterAuth({
         }), // 支持管理员插件
         openAPI({
             disableDefaultReference: process.env.NODE_ENV !== 'development', // 开发环境启用 OpenAPI 插件
+        }),
+        genericOAuth({
+            config: [
+                {
+                    providerId: 'weibo',
+                    clientId: process.env.WEIBO_CLIENT_ID as string,
+                    clientSecret: process.env.WEIBO_CLIENT_SECRET as string,
+                    authorizationUrl: 'https://api.weibo.com/oauth2/authorize',
+                    tokenUrl: 'https://api.weibo.com/oauth2/access_token',
+                    userInfoUrl: 'https://api.weibo.com/2/users/show.json',
+                    // 由于微博获取邮箱的接口需要单独申请，故此处不默认申请 email
+                    scopes: ['follow_app_official_microblog', ...(process.env.WEIBO_SCOPES || '').split(',')].filter(Boolean),
+                    pkce: false,
+                    // 自定义获取用户信息逻辑
+                    getUserInfo: async (tokens) => {
+                        // 先获取用户 UID
+                        const uidResponse = await fetch(`https://api.weibo.com/2/account/get_uid.json?access_token=${tokens.accessToken}`, {
+                            method: 'GET',
+                        })
+                        const uidData = await uidResponse.json()
+                        const uid = uidData.uid
+
+                        if (!uid) {
+                            throw new Error('Failed to get user UID from Weibo')
+                        }
+
+                        const response = await fetch(`https://api.weibo.com/2/users/show.json?access_token=${tokens.accessToken}&uid=${uid}`, {
+                            method: 'GET',
+                        })
+                        const userInfo = await response.json()
+                        return {
+                            id: userInfo.idstr,
+                            // 微博接口未返回 email，默认设为空字符串
+                            email: userInfo.email || '',
+                            name: userInfo.screen_name,
+                            // 由于微博接口未返回邮箱验证状态，默认设为 false，若有 email 则假设已验证
+                            emailVerified: !!userInfo.email,
+                            // 使用用户注册时间作为 createdAt
+                            createdAt: new Date(userInfo.created_at),
+                            // 由于微博接口未提供用户更新时间，设为当前时间
+                            updatedAt: new Date(),
+                            // 使用大图头像地址
+                            image: userInfo.avatar_large || null,
+                        }
+                    },
+                },
+            ],
         }),
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},

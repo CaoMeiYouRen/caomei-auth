@@ -1,9 +1,6 @@
 <template>
     <div class="auth-container">
-        <AuthLeft
-            title="登录到草梅 Auth"
-            subtitle="多方式登录，安全便捷。"
-        />
+        <AuthLeft title="登录到草梅 Auth" subtitle="多方式登录，安全便捷。" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -30,7 +27,7 @@
                             <Button
                                 label="手机号"
                                 icon="mdi mdi-phone"
-                                :class="{'p-button-outlined': activeTab!== 'phone'}"
+                                :class="{'p-button-outlined': activeTab !== 'phone'}"
                                 @click="changeMode('phone')"
                             />
                         </ButtonGroup>
@@ -203,10 +200,10 @@
                         v-for="provider in socialProviders"
                         :key="provider.provider"
                         :class="['social-btn', `social-${provider.provider}`]"
-                        :icon="`mdi mdi-${provider.provider}`"
+                        :icon="provider.icon || `mdi mdi-${provider.provider}`"
                         :label="`使用 ${provider.name} 账号登录`"
                         outlined
-                        @click="loginWithSocial(provider.provider,provider.name)"
+                        @click="loginWithSocial(provider)"
                     />
                 </div>
                 <div class="toggle-login">
@@ -231,6 +228,7 @@ import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient, AUTH_BASE_URL } from '@/lib/auth-client'
+import type { SocialProvider } from '@/types/social'
 
 const activeTab = ref<'username' | 'email' | 'phone'>('username')
 const email = ref('')
@@ -250,7 +248,8 @@ const phoneCode = ref('')
 const phoneCodeSending = ref(false)
 
 const config = useRuntimeConfig().public
-const socialProviders = ref(config.socialProviders as { name: string, provider: string }[])
+
+const socialProviders = ref(config.socialProviders as SocialProvider[])
 
 const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
@@ -291,9 +290,9 @@ async function login() {
                 return
             }
         } else if (!emailPassword.value) {
-                errors.value.emailPassword = '请输入密码'
-                return
-            }
+            errors.value.emailPassword = '请输入密码'
+            return
+        }
 
         try {
             const result = emailUseCode.value
@@ -389,9 +388,9 @@ async function login() {
                 return
             }
         } else if (!phonePassword.value) {
-                errors.value.phonePassword = '请输入密码'
-                return
-            }
+            errors.value.phonePassword = '请输入密码'
+            return
+        }
 
         try {
             let result
@@ -433,14 +432,23 @@ async function login() {
     }
 }
 
-async function loginWithSocial(provider: string, name: string) {
+async function loginWithSocial(socialProvider: SocialProvider) {
+    const { provider, name, social, oauth2 } = socialProvider
     try {
-        const result = await authClient.signIn.social({
-            provider,
-            callbackURL: `${AUTH_BASE_URL}/profile`, // 回调到资料页
-        })
-        if (result.error) {
-            throw new Error(result.error.message || `${name} 登录失败`)
+        let result: any
+        if (social) {
+            result = await authClient.signIn.social({
+                provider,
+                callbackURL: `${AUTH_BASE_URL}/profile`, // 回调到资料页
+            })
+        } else if (oauth2) {
+            result = await authClient.signIn.oauth2({
+                providerId: provider,
+                callbackURL: `${AUTH_BASE_URL}/profile`, // 回调到资料页
+            })
+        }
+        if (!result || result.error) {
+            throw new Error(result?.error?.message || `${name} 登录失败`)
         }
         toast.add({
             severity: 'success',
@@ -495,6 +503,7 @@ async function loginWithSocial(provider: string, name: string) {
     min-height: 100vh;
     flex-direction: column-reverse;
     background: $background;
+
     @media (min-width: 768px) {
         flex-direction: row;
     }
@@ -606,38 +615,6 @@ async function loginWithSocial(provider: string, name: string) {
     }
 }
 
-.social-login {
-    .social-btn {
-        border: 1px solid $secondary-bg;
-        background-color: $background-light;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin-bottom: 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        font-size: 1rem;
-
-        &.social-github {
-            color: #24292e;
-        }
-
-        &.social-google {
-            color: #4285f4;
-        }
-
-        &.social-microsoft {
-            color: #0078d4;
-        }
-
-        .p-button-icon {
-            margin-right: 0.75rem;
-        }
-    }
-}
-
 .toggle-login {
     margin-top: 1.5rem;
     text-align: center;
@@ -700,11 +677,13 @@ async function loginWithSocial(provider: string, name: string) {
     gap: 0.5rem;
     align-items: center;
 }
+
 .code-btn {
     min-width: 110px;
     padding: 0.75rem 0.75rem;
     font-size: 0.95rem;
 }
+
 .switch-btn {
     margin-top: 0.5rem;
     width: 100%;

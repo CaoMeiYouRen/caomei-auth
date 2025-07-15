@@ -173,6 +173,7 @@
                                     :class="['social-btn', `social-${account.provider}`]"
                                     :icon="`mdi mdi-${account.provider}`"
                                     :label="`${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 8)}${account.accountId.length > 8 ? '...' : ''})`"
+                                    outlined
                                     @click="confirmUnlink(account.provider, account.accountId)"
                                 />
 
@@ -184,6 +185,7 @@
                                         :class="['social-btn', `social-${provider.provider}`]"
                                         :icon="`mdi mdi-${provider.provider}`"
                                         :label="`绑定 ${provider.name}`"
+                                        outlined
                                         @click="linkSocialAccount(provider.provider)"
                                     />
                                 </template>
@@ -815,33 +817,7 @@ async function onFileSelect(event: FileUploadSelectEvent) {
     }
 
     .social-btn {
-        border: 1px solid $secondary-bg;
-        background-color: $background-light;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        // margin-bottom: 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        font-size: 1rem;
-
-        &.social-github {
-            color: #24292e;
-        }
-
-        &.social-google {
-            color: #4285f4;
-        }
-
-        &.social-microsoft {
-            color: #0078d4;
-        }
-
-        .p-button-icon {
-            margin-right: 0.75rem;
-        }
+        margin-bottom: 0.2rem;
     }
 }
 
