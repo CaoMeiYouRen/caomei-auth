@@ -68,7 +68,7 @@
                         关于我们
                     </NuxtLink>
                     <NuxtLink
-                        to="mailto:support@cmyr.dev"
+                        :to="contactEmail"
                         external
                         class="layout-default__footer-bottom-link"
                     >
@@ -85,6 +85,8 @@
 const config = useRuntimeConfig().public
 
 const homeUrl = config.authBaseUrl || window?.location?.origin
+const contactEmail = `mailto:${config.contactEmail}`
+
 // 读取环境变量
 const icpBeianNumber = config.icpBeianNumber
 const publicSecurityBeianNumber = config.publicSecurityBeianNumber

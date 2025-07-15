@@ -67,6 +67,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             authBaseUrl: process.env.NUXT_PUBLIC_AUTH_BASE_URL,
+            contactEmail: process.env.NUXT_PUBLIC_CONTACT_EMAIL,
             maxUploadSize: process.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE,
             icpBeianNumber: process.env.NUXT_PUBLIC_ICP_BEIAN_NUMBER,
             publicSecurityBeianNumber: process.env.NUXT_PUBLIC_PUBLIC_SECURITY_BEIAN_NUMBER,
