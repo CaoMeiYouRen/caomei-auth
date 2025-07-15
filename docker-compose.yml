@@ -11,8 +11,12 @@ services:
       NODE_ENV: production
       PORT: 3000
       TZ: "Asia/Shanghai"
-
+      # Better Auth 的基础 URL
       VITE_AUTH_BASE_URL: "http://localhost:3000"
+
+      # 用于加密、签名和哈希的密钥。
+      # 在生产环境中，如果未设置，将抛出错误。
+      AUTH_SECRET: ""
       # Redis 配置
       REDIS_URL: "redis://localhost:6379"
       # 数据库配置
@@ -20,8 +24,8 @@ services:
       # SQLite数据库路径 (仅SQLite使用)
       DATABASE_PATH: database/caomei-auth.sqlite
       # 数据库连接URL (MySQL和PostgreSQL使用)
-      # DATABASE_URL=mysql://user:password@localhost:3306/caomei_auth
-      # DATABASE_URL=postgresql://user:password@localhost:5432/caomei_auth
+      # DATABASE_URL: mysql://user:password@localhost:3306/caomei_auth
+      # DATABASE_URL: postgresql://user:password@localhost:5432/caomei_auth
       # 数据库表前缀
       DATABASE_ENTITY_PREFIX: caomei_auth_
 

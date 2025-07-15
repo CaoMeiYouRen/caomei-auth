@@ -135,6 +135,8 @@ export const auth = betterAuth({
         //     enabled: true,
         //     maxAge: 300, // 缓存持续时间（秒）
         // },
+        storeSessionInDatabase: true, // 当提供辅助存储时，是否在数据库中存储会话
+        preserveSessionInDatabase: false, // 当从辅助存储中删除时，是否保留数据库中的会话记录
     },
     plugins: [
         username({
