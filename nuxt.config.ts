@@ -66,6 +66,10 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
+            authBaseUrl: process.env.VITE_AUTH_BASE_URL,
+            maxUploadSize: process.env.VITE_MAX_UPLOAD_SIZE,
+            icpBeianNumber: process.env.VITE_ICP_BEIAN_NUMBER,
+            publicSecurityBeianNumber: process.env.VITE_PUBLIC_SECURITY_BEIAN_NUMBER,
             socialProviders: ([
                 process.env.GITHUB_CLIENT_ID && {
                     name: 'Github',

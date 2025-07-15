@@ -19,7 +19,7 @@
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
-                    演示入口
+                    页面入口
                 </h2>
                 <div class="button-group">
                     <!-- 如果session 存在，则显示跳转资料页-->

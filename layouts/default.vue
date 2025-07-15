@@ -82,12 +82,12 @@
 
 <script setup lang="ts">
 // 默认布局无需特殊逻辑
-import { AUTH_BASE_URL } from '@/lib/auth-client'
+const config = useRuntimeConfig().public
 
-const homeUrl = AUTH_BASE_URL || window?.location?.origin
+const homeUrl = config.authBaseUrl || window?.location?.origin
 // 读取环境变量
-const icpBeianNumber = import.meta.env.VITE_ICP_BEIAN_NUMBER
-const publicSecurityBeianNumber = import.meta.env.VITE_PUBLIC_SECURITY_BEIAN_NUMBER
+const icpBeianNumber = config.icpBeianNumber
+const publicSecurityBeianNumber = config.publicSecurityBeianNumber
 </script>
 
 <style scoped lang="scss">
