@@ -15,6 +15,8 @@ const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
 const UPLOAD_LIMIT_WINDOW = Number(process.env.UPLOAD_LIMIT_WINDOW || ms('1d') / 1000)
 // 文件上传每日限制
 const UPLOAD_DAILY_LIMIT = Number(process.env.UPLOAD_DAILY_LIMIT || '100')
+// 单个用户每日上传文件限制
+const UPLOAD_SINGLE_USER_DAILY_LIMIT = Number(process.env.UPLOAD_SINGLE_USER_DAILY_LIMIT || '5')
 
 export default defineEventHandler(async (event): Promise<{
     status: number
@@ -36,12 +38,21 @@ export default defineEventHandler(async (event): Promise<{
     }
 
     const globalCount = await limiterStorage.increment(
-        'user_upload_limit',
+        'upload_global_limit',
         UPLOAD_LIMIT_WINDOW,
     )
 
     if (globalCount > UPLOAD_DAILY_LIMIT) {
-        throw new Error('上传次数超出限制')
+        throw new Error('今日上传次数超出限制')
+    }
+
+    const userCount = await limiterStorage.increment(
+        `user_upload_limit:${session.user.id}`,
+        UPLOAD_LIMIT_WINDOW,
+    )
+
+    if (userCount > UPLOAD_SINGLE_USER_DAILY_LIMIT) {
+        throw new Error('您今日上传次数超出限制')
     }
 
     try {
