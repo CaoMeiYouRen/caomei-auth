@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  server:
+    container_name: "caomei-auth"
+    image: ${DOCKER_IMAGE:-caomeiyouren/caomei-auth}
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      TZ: "Asia/Shanghai"
+
+      VITE_AUTH_BASE_URL: "http://localhost:3000"
+      # Redis 配置
+      REDIS_URL: "redis://localhost:6379"
+      # 数据库配置
+      DATABASE_TYPE: sqlite
+      # SQLite数据库路径 (仅SQLite使用)
+      DATABASE_PATH: database/caomei-auth.sqlite
+      # 数据库连接URL (MySQL和PostgreSQL使用)
+      # DATABASE_URL=mysql://user:password@localhost:3306/caomei_auth
+      # DATABASE_URL=postgresql://user:password@localhost:5432/caomei_auth
+      # 数据库表前缀
+      DATABASE_ENTITY_PREFIX: caomei_auth_
+
+    volumes:
+      - ./logs:/app/logs
+      - ./database:/app/database
