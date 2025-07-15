@@ -4,12 +4,12 @@
 interface ViteTypeOptions {
 
     // strictImportMetaEnv: unknown
-  }
+}
 
-  interface ImportMetaEnv {
-    readonly VITE_AUTH_BASE_URL: string
-  }
+interface ImportMetaEnv {
+    readonly AUTH_BASE_URL: string
+}
 
-  interface ImportMeta {
+interface ImportMeta {
     readonly env: ImportMetaEnv
-  }
+}

@@ -1,12 +1,16 @@
 import { createAuthClient } from 'better-auth/vue'
 import { usernameClient, magicLinkClient, emailOTPClient, inferAdditionalFields, anonymousClient, phoneNumberClient, adminClient } from 'better-auth/client/plugins'
+import { parse } from 'better-bytes'
 import type { auth } from './auth'
 
-export const VITE_AUTH_BASE_URL = import.meta.env.VITE_AUTH_BASE_URL || window.location.origin
+export const AUTH_BASE_URL = useRuntimeConfig().public.AUTH_BASE_URL as string || window.location.origin
+
+export const MAX_UPLOAD_SIZE_TEXT = useRuntimeConfig().public.MAX_UPLOAD_SIZE as string || '4.5MiB'
+export const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
 
 export const authClient = createAuthClient({
     /** 服务器的基础 URL（如果您使用相同域名，则可选） */
-    baseURL: VITE_AUTH_BASE_URL,
+    baseURL: AUTH_BASE_URL,
     plugins: [
         inferAdditionalFields<typeof auth>(),
         usernameClient(),

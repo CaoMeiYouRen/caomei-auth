@@ -22,7 +22,7 @@
                         <i class="mdi mdi-github text-xl" />
                     </a>
                     <a
-                        :href="VITE_AUTH_BASE_URL"
+                        :href="AUTH_BASE_URL"
                         target="_blank"
                         class="layout-default__footer-link"
                         aria-label="主页"
@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 // 默认布局无需特殊逻辑
-import { VITE_AUTH_BASE_URL } from '@/lib/auth-client'
+import { AUTH_BASE_URL } from '@/lib/auth-client'
 </script>
 
 <style scoped lang="scss">

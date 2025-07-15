@@ -66,6 +66,8 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
+            AUTH_BASE_URL: process.env.AUTH_BASE_URL,
+            MAX_UPLOAD_SIZE: process.env.MAX_UPLOAD_SIZE,
             socialProviders: ([
                 process.env.GITHUB_CLIENT_ID && {
                     name: 'Github',

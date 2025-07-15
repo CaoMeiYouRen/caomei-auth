@@ -3,18 +3,18 @@ import { defineEventHandler, readMultipartFormData } from 'h3'
 import { parse } from 'better-bytes'
 import dayjs from 'dayjs'
 import ms from 'ms'
-import { getFileStorage } from '@/server/storage/factory'
+import { FileStorageEnv, getFileStorage } from '@/server/storage/factory'
 import { getFileExtension, getFileType } from '@/server/utils/file'
 import { auth } from '@/lib/auth'
 import { limiterStorage } from '@/server/database/storage'
 
-const VITE_MAX_UPLOAD_SIZE = process.env.VITE_MAX_UPLOAD_SIZE || '4.5MiB'
-const MAX_UPLOAD_SIZE = Number(parse(VITE_MAX_UPLOAD_SIZE))
+const MAX_UPLOAD_SIZE_TEXT = process.env.MAX_UPLOAD_SIZE || '4.5MiB'
+const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
 
 // 上传次数限制窗口
 const UPLOAD_LIMIT_WINDOW = Number(process.env.UPLOAD_LIMIT_WINDOW || ms('1d') / 1000)
 // 文件上传每日限制
-const UPLOAD_DAILY_LIMIT = Number(process.env.UPLOAD_DAILY_LIMIT || '1000')
+const UPLOAD_DAILY_LIMIT = Number(process.env.UPLOAD_DAILY_LIMIT || '100')
 
 export default defineEventHandler(async (event): Promise<{
     status: number
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event): Promise<{
     }
 
     const globalCount = await limiterStorage.increment(
-        `user_${session.user.id}_upload_limit`,
+        'user_upload_limit',
         UPLOAD_LIMIT_WINDOW,
     )
 
@@ -47,22 +47,11 @@ export default defineEventHandler(async (event): Promise<{
     try {
 
         // 获取运行时配置
-        const config = useRuntimeConfig()
-        const storageType = config.STORAGE_TYPE
-        const bucketPrefix = config.BUCKET_PREFIX || ''
-        const env = {
-            S3_BASE_URL: config.S3_BASE_URL,
-            S3_REGION: config.S3_REGION,
-            S3_BUCKET_NAME: config.S3_BUCKET_NAME,
-            S3_ACCESS_KEY_ID: config.S3_ACCESS_KEY_ID,
-            S3_SECRET_ACCESS_KEY: config.S3_SECRET_ACCESS_KEY,
-            S3_ENDPOINT: config.S3_ENDPOINT,
-            VERCEL_BLOB_TOKEN: config.VERCEL_BLOB_TOKEN,
-            BLOB_READ_WRITE_TOKEN: config.BLOB_READ_WRITE_TOKEN,
-        }
+        const storageType = process.env.STORAGE_TYPE || ''
+        const bucketPrefix = process.env.BUCKET_PREFIX || ''
 
         // 获取存储实例
-        const storage = getFileStorage(storageType, env)
+        const storage = getFileStorage(storageType, process.env as FileStorageEnv)
 
         // 读取表单数据
         const parts = await readMultipartFormData(event)
@@ -87,7 +76,7 @@ export default defineEventHandler(async (event): Promise<{
             return {
                 status: 400,
                 success: false,
-                message: `文件大小超出 ${VITE_MAX_UPLOAD_SIZE} 限制`,
+                message: `文件大小超出 ${MAX_UPLOAD_SIZE_TEXT} 限制`,
             }
         }
         // 上传文件

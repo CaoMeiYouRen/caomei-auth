@@ -2,7 +2,7 @@ import { S3Env, S3Storage } from './s3'
 import { VercelBlobStorage, VercelEnv } from './vercel-blob'
 import { Storage } from './type'
 
-export type Bindings = S3Env & VercelEnv
+export type FileStorageEnv = S3Env & VercelEnv
 
 /**
  * 获取文件存储实例。支持 s3 和 vercel-blob
@@ -13,7 +13,7 @@ export type Bindings = S3Env & VercelEnv
  * @param type
  * @param env
  */
-export function getFileStorage(type: string, env: Bindings): Storage {
+export function getFileStorage(type: string, env: FileStorageEnv): Storage {
     switch (type) {
         case 's3':
             return new S3Storage(env)

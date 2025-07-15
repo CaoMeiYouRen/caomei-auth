@@ -335,17 +335,14 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload'
-import { format, parse } from 'better-bytes'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
-import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
+import { useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
-import { authClient } from '@/lib/auth-client'
+import { authClient, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
 
-const VITE_MAX_UPLOAD_SIZE = import.meta.env.VITE_MAX_UPLOAD_SIZE || '4.5MiB'
-
-const MAX_AVATAR_SIZE = Number(parse(VITE_MAX_UPLOAD_SIZE))
+const MAX_AVATAR_SIZE = MAX_UPLOAD_SIZE
 
 const toast = useToast()
 const user = reactive({
@@ -720,7 +717,7 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 
     // 检查文件大小
     if (file?.size > MAX_AVATAR_SIZE) {
-        toast.add({ severity: 'error', summary: `文件大小不能超过 ${VITE_MAX_UPLOAD_SIZE}`, life: 5000 })
+        toast.add({ severity: 'error', summary: `文件大小不能超过 ${MAX_UPLOAD_SIZE_TEXT}`, life: 5000 })
         return
     }
 
@@ -729,14 +726,10 @@ async function onFileSelect(event: FileUploadSelectEvent) {
         try {
             tempAvatar.value = e.target?.result as string
 
-            // TODO 实现图片上传
-            // 模拟上传到服务器，实际使用时替换为真实 API 调用
-            // const response = await authClient.uploadAvatar(file);
-            // user.avatar = response.url;
             const form = new FormData()
             form.append('file', file)
 
-        const { data, error } = await useFetch('/api/file/upload', {
+            const { data, error } = await useFetch('/api/file/upload', {
                 method: 'POST',
                 body: form,
             })
