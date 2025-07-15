@@ -13,39 +13,67 @@
                     <span class="font-medium text-gray-700 text-sm">草梅 Auth © 2025</span>
                 </div>
                 <div class="layout-default__footer-links">
-                    <a
-                        href="https://github.com/CaoMeiYouRen/caomei-auth"
+                    <NuxtLink
+                        to="https://github.com/CaoMeiYouRen/caomei-auth"
                         target="_blank"
+                        external
                         class="layout-default__footer-link"
                         aria-label="GitHub"
                     >
                         <i class="mdi mdi-github text-xl" />
-                    </a>
-                    <a
-                        :href="homeUrl"
+                    </NuxtLink>
+                    <NuxtLink
+                        :to="homeUrl"
                         target="_blank"
+                        external
                         class="layout-default__footer-link"
                         aria-label="主页"
                     >
                         <i class="mdi mdi-web text-xl" />
-                    </a>
+                    </NuxtLink>
                 </div>
             </div>
             <div class="layout-default__footer-bottom">
                 <div class="text-gray-500 text-sm">
                     统一登录平台 | 安全、便捷、可扩展
                 </div>
+
                 <div class="layout-default__footer-bottom-links">
+                    <!-- ICP 备案号 -->
+                    <div v-if="icpBeianNumber" class="text-sm">
+                        <NuxtLink
+                            to="https://beian.miit.gov.cn/"
+                            target="_blank"
+                            external
+                            class="layout-default__footer-bottom-link"
+                        >
+                            {{ icpBeianNumber }}
+                        </NuxtLink>
+                    </div>
+                    <!-- 公安备案号 -->
+                    <div v-if="publicSecurityBeianNumber" class="text-gray-500 text-sm">
+                        <NuxtLink
+                            to="https://beian.mps.gov.cn/"
+                            target="_blank"
+                            external
+                            class="layout-default__footer-bottom-link"
+                        >
+                            {{ publicSecurityBeianNumber }}
+                        </NuxtLink>
+                    </div>
                     <NuxtLink
                         to="/about"
                         class="layout-default__footer-bottom-link"
                     >
                         关于我们
                     </NuxtLink>
-                    <a
-                        href="mailto:support@cmyr.dev"
+                    <NuxtLink
+                        to="mailto:support@cmyr.dev"
+                        external
                         class="layout-default__footer-bottom-link"
-                    >联系我们</a>
+                    >
+                        联系我们
+                    </NuxtLink>
                 </div>
             </div>
         </footer>
@@ -57,7 +85,9 @@
 import { AUTH_BASE_URL } from '@/lib/auth-client'
 
 const homeUrl = AUTH_BASE_URL || window?.location?.origin
-
+// 读取环境变量
+const icpBeianNumber = import.meta.env.VITE_ICP_BEIAN_NUMBER
+const publicSecurityBeianNumber = import.meta.env.VITE_PUBLIC_SECURITY_BEIAN_NUMBER
 </script>
 
 <style scoped lang="scss">
@@ -120,17 +150,18 @@ const homeUrl = AUTH_BASE_URL || window?.location?.origin
         flex-direction: column;
         gap: 0.5rem;
         .text-gray-500 {
-            color: $secondary-light;
+            color: $secondary;
         }
         .layout-default__footer-bottom-links {
             display: flex;
             gap: 1.2rem;
             margin-top: 0.2rem;
             .layout-default__footer-bottom-link {
-                color: $primary;
+                color: $secondary-light;
                 text-decoration: none;
-                font-weight: 500;
+                // font-weight: 500;
                 &:hover {
+                     color: $primary;
                     text-decoration: underline;
                 }
             }
