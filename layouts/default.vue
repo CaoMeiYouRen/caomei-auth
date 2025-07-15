@@ -22,7 +22,7 @@
                         <i class="mdi mdi-github text-xl" />
                     </a>
                     <a
-                        :href="AUTH_BASE_URL"
+                        :href="homeUrl"
                         target="_blank"
                         class="layout-default__footer-link"
                         aria-label="主页"
@@ -55,6 +55,9 @@
 <script setup lang="ts">
 // 默认布局无需特殊逻辑
 import { AUTH_BASE_URL } from '@/lib/auth-client'
+
+const homeUrl = AUTH_BASE_URL || window?.location?.origin
+
 </script>
 
 <style scoped lang="scss">

@@ -195,7 +195,7 @@
                     label="登录"
                     @click="login"
                 />
-                <div class="separator">
+                <div v-if="socialProviders.length" class="separator">
                     或者使用以下方式登录
                 </div>
                 <div class="social-login">
