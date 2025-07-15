@@ -8,7 +8,7 @@ import { getFileExtension, getFileType } from '@/server/utils/file'
 import { auth } from '@/lib/auth'
 import { limiterStorage } from '@/server/database/storage'
 
-const MAX_UPLOAD_SIZE_TEXT = process.env.MAX_UPLOAD_SIZE || '4.5MiB'
+const MAX_UPLOAD_SIZE_TEXT = process.env.MAX_UPLOAD_SIZE || process.env.VITE_MAX_UPLOAD_SIZE || '4.5MiB'
 const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
 
 // 上传次数限制窗口
@@ -88,9 +88,17 @@ export default defineEventHandler(async (event): Promise<{
         const extension = getFileExtension(contentType) || path.extname(filePart.filename)
         const timestamp = dayjs().format('YYYYMMDDHHmmssSSS') // 时间戳
         const random = Math.random().toString(36).slice(2, 9) // 随机字符串，避免文件名冲突
-        const key = `${bucketPrefix}${timestamp}-${random}.${extension}` // 文件名
+        const key = `${bucketPrefix}${timestamp}-${random}${extension}` // 文件名
 
         const { url } = await storage.upload(fileBuffer, key, contentType)
+
+        // 更新用户头像
+        await auth.api.updateUser({
+            headers: event.headers,
+            body: {
+                image: url,
+            },
+        })
 
         return {
             status: 200,

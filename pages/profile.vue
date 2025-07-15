@@ -353,8 +353,6 @@ const user = reactive({
     emailVerified: false,
     phone: '',
     phoneVerified: false,
-    githubLinked: false,
-    googleLinked: false,
 })
 
 const saving = ref(false)

@@ -7,7 +7,8 @@ interface ViteTypeOptions {
 }
 
 interface ImportMetaEnv {
-    readonly AUTH_BASE_URL: string
+    readonly VITE_AUTH_BASE_URL: string
+    readonly VITE_MAX_UPLOAD_SIZE: string
 }
 
 interface ImportMeta {
