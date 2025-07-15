@@ -275,14 +275,61 @@ export const auth = betterAuth({
                             // 微博接口未返回 email，默认设为空字符串
                             email: userInfo.email || '',
                             name: userInfo.screen_name,
+                            // 使用大图头像地址
+                            image: userInfo.avatar_large || null,
                             // 由于微博接口未返回邮箱验证状态，默认设为 false，若有 email 则假设已验证
                             emailVerified: !!userInfo.email,
                             // 使用用户注册时间作为 createdAt
                             createdAt: new Date(userInfo.created_at),
                             // 由于微博接口未提供用户更新时间，设为当前时间
                             updatedAt: new Date(),
-                            // 使用大图头像地址
-                            image: userInfo.avatar_large || null,
+
+                        }
+                    },
+                },
+                {
+                    providerId: 'qq',
+                    clientId: process.env.QQ_CLIENT_ID || '',
+                    clientSecret: process.env.QQ_CLIENT_SECRET || '',
+                    authorizationUrl: 'https://graph.qq.com/oauth2.0/authorize',
+                    tokenUrl: 'https://graph.qq.com/oauth2.0/token',
+                    userInfoUrl: 'https://graph.qq.com/user/get_user_info',
+                    scopes: ['get_user_info'],
+                    redirectURI: process.env.QQ_REDIRECT_URI || '',
+                    responseType: 'code',
+                    pkce: false,
+                    getUserInfo: async (tokens) => {
+                        // 获取 openid
+                        const openidResponse = await fetch(
+                            `https://graph.qq.com/oauth2.0/me?access_token=${tokens.accessToken}`,
+                        )
+                        const openidText = await openidResponse.text()
+                        const openidMatch = openidText.match(/"openid":"([^"]+)"/)
+                        const openid = openidMatch ? openidMatch[1] : null
+
+                        if (!openid) {
+                            throw new Error('Failed to get openid')
+                        }
+
+                        // 获取用户信息
+                        const userInfoResponse = await fetch(
+                            `https://graph.qq.com/user/get_user_info?access_token=${tokens.accessToken}&oauth_consumer_key=${process.env.QQ_CLIENT_ID}&openid=${openid}`,
+                        )
+                        const userInfo = await userInfoResponse.json()
+
+                        return {
+                            id: openid,
+                            email: userInfo.email || '',
+                            // 用户在QQ空间的昵称。
+                            name: userInfo.nickname,
+                            // 大小为100×100像素的QQ头像URL 或 大小为40×40像素的QQ头像URL
+                            image: userInfo.figureurl_qq_2 || userInfo.figureurl_qq_1,
+                            // 由于 QQ 接口未返回邮箱验证状态，默认设为 false，若有 email 则假设已验证
+                            emailVerified: !!userInfo.email,
+                            // 由于 QQ 接口未提供用户注册时间，设为当前时间
+                            createdAt: new Date(),
+                            // 由于 QQ 接口未提供用户更新时间，设为当前时间
+                            updatedAt: new Date(),
                         }
                     },
                 },

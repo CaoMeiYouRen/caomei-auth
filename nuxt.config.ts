@@ -93,6 +93,12 @@ export default defineNuxtConfig({
                     icon: 'mdi mdi-sina-weibo',
                     oauth2: true, // 使用自定义第三方 OAuth2 登录
                 },
+                process.env.QQ_CLIENT_ID && {
+                    name: 'QQ',
+                    provider: 'qq',
+                    icon: 'mdi mdi-qqchat',
+                    oauth2: true, // 使用自定义第三方 OAuth2 登录
+                },
             ].filter(Boolean)) as { name: string, provider: string }[],
         },
     },
