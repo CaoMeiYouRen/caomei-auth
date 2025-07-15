@@ -24,7 +24,7 @@
                 <div class="button-group">
                     <!-- 如果session 存在，则显示跳转资料页-->
                     <Button
-                        v-if="session?.data?.user"
+                        v-if="session?.user"
                         label="前往个人中心"
                         icon="mdi mdi-account"
                         class="btn btn-primary"
@@ -71,7 +71,8 @@ import Button from 'primevue/button'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 
-const session = authClient.useSession()
+// 使用 SSR 渲染，解决界面刷新时的 UI 重渲染问题
+const { data: session } = await authClient.useSession(useFetch)
 
 function toLogin() {
     navigateTo('/login')

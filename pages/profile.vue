@@ -395,15 +395,13 @@ const sendPhoneCode = useSendPhoneCode(
     phoneCodeSending,
 )
 
-const session = authClient.useSession()
+// 通过 SSR 渲染
+const { data: session } = await authClient.useSession(useFetch)
 
 watch(
-    () => session.value.isPending || session.value.isRefetching,
-    async (status) => {
-        if (status) { // 如果 session 正在加载中，则不执行后续逻辑
-            return
-        }
-        const newUser = session.value?.data?.user
+    () => session.value?.session,
+    async () => {
+        const newUser = session.value?.user
         if (newUser) {
             user.username = newUser.displayUsername || ''
             user.nickname = newUser.name || ''
@@ -413,14 +411,9 @@ watch(
             user.phone = newUser.phoneNumber || ''
             user.phoneVerified = newUser.phoneNumberVerified || false
         }
-        // await fetchUserAccounts()
     },
-    { immediate: true },
+    { immediate: true }, // 立即执行
 )
-
-onMounted(async () => {
-    await fetchUserAccounts()
-})
 
 async function bindEmail() {
     if (!validateEmail(email.value)) {
@@ -493,6 +486,10 @@ async function bindPhone() {
     }
 }
 
+onMounted(async () => {
+    await fetchUserAccounts()
+})
+
 const userAccounts = ref<{
     id: string
     provider: string
@@ -505,7 +502,7 @@ const userAccounts = ref<{
 // 获取用户关联的第三方账号
 const fetchUserAccounts = async () => {
     try {
-        const accounts = await authClient.listAccounts()
+        const accounts = await authClient.listAccounts({})
         // 过滤掉邮箱登录的账户
         userAccounts.value = accounts.data?.filter((account) => account.provider !== 'credential') || []
     } catch (error) {
