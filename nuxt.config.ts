@@ -89,7 +89,7 @@ export default defineNuxtConfig({
                 process.env.WEIBO_CLIENT_ID && {
                     name: '微博',
                     provider: 'weibo',
-                    icon: 'mdi mdi-weibo',
+                    icon: 'mdi mdi-sina-weibo',
                     oauth2: true, // 使用自定义第三方 OAuth2 登录
                 },
             ].filter(Boolean)) as { name: string, provider: string }[],

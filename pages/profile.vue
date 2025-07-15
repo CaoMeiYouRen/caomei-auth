@@ -171,7 +171,7 @@
                                     :key="account.provider"
                                     v-tooltip.top="`点击可解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
                                     :class="['social-btn', `social-${account.provider}`]"
-                                    :icon="`mdi mdi-${account.provider}`"
+                                    :icon="getProviderIcon(account.provider)"
                                     :label="`${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 8)}${account.accountId.length > 8 ? '...' : ''})`"
                                     outlined
                                     @click="confirmUnlink(account.provider, account.accountId)"
@@ -183,10 +183,10 @@
                                         v-if="!userAccounts.some(account => account.provider === provider.provider)"
                                         :key="provider.provider"
                                         :class="['social-btn', `social-${provider.provider}`]"
-                                        :icon="`mdi mdi-${provider.provider}`"
+                                        :icon="getProviderIcon(provider.provider)"
                                         :label="`绑定 ${provider.name}`"
                                         outlined
-                                        @click="linkSocialAccount(provider.provider)"
+                                        @click="linkSocialAccount(provider)"
                                     />
                                 </template>
                             </div>
@@ -341,8 +341,9 @@ import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
-import { authClient, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/lib/auth-client'
+import { AUTH_BASE_URL, authClient, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
+import type { SocialProvider } from '@/types/social'
 
 const MAX_AVATAR_SIZE = MAX_UPLOAD_SIZE
 
@@ -381,12 +382,16 @@ const usernameError = ref('') // 用户名错误信息
 const isSettingUsername = ref(false) // 设置用户名加载状态
 
 const config = useRuntimeConfig().public
-const socialProviders = ref(config.socialProviders as { name: string, provider: string }[])
+const socialProviders = ref(config.socialProviders as SocialProvider[])
 
 // 根据 provider 获取对应的名称
 const getProviderName = (provider: string) => {
     const providerObj = socialProviders.value.find((p) => p.provider === provider)
-    return `${providerObj ? providerObj.name : provider}`
+    return providerObj ? providerObj.name : provider
+}
+const getProviderIcon = (provider: string) => {
+    const providerObj = socialProviders.value.find((p) => p.provider === provider)
+    return providerObj?.icon || `mdi mdi-${provider}`
 }
 
 const sendPhoneCode = useSendPhoneCode(
@@ -519,26 +524,35 @@ const fetchUserAccounts = async () => {
 }
 
 // 绑定新的第三方账号
-async function linkSocialAccount(type: string) {
+async function linkSocialAccount(socialProvider: SocialProvider) {
+    const { provider, name, social, oauth2 } = socialProvider
     try {
-        const result = await authClient.linkSocial({
-            provider: type,
-            callbackURL: '/profile',
-        })
-        if (result.error) {
-            throw new Error(result.error.message || `${type} 绑定失败`)
+        let result: any
+        if (social) {
+            result = await authClient.linkSocial({
+                provider,
+                callbackURL: `${AUTH_BASE_URL}/profile`,
+            })
+        } else if (oauth2) {
+            result = await authClient.oauth2.link({
+                providerId: provider,
+                callbackURL: `${AUTH_BASE_URL}/profile`, // 回调到资料页
+            })
+        }
+        if (!result || result.error) {
+            throw new Error(result?.error?.message || `${name} 绑定失败`)
         }
         await fetchUserAccounts()
         toast.add({
             severity: 'success',
-            summary: `正在绑定 ${type} 中`,
+            summary: `正在绑定 ${name} 中`,
             life: 2000,
         })
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : `${type} 绑定时发生未知错误`
+        const errorMessage = error instanceof Error ? error.message : `${name} 绑定时发生未知错误`
         toast.add({
             severity: 'error',
-            summary: `${type} 绑定失败`,
+            summary: `${name} 绑定失败`,
             detail: errorMessage,
             life: 5000,
         })
