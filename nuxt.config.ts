@@ -126,6 +126,9 @@ export default defineNuxtConfig({
                 },
             },
         },
+        server: {
+            // allowedHosts: process.env.NODE_ENV === 'development' ? true : undefined,
+        },
     },
     devServer: {
         port: 3000,

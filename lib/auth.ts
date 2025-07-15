@@ -36,7 +36,7 @@ export const auth = betterAuth({
     // 使用 TypeORM 适配器
     database: typeormAdapter(dataSource),
     // 可信来源列表。
-    trustedOrigins: [process.env.NUXT_PUBLIC_AUTH_BASE_URL as string],
+    trustedOrigins: [process.env.NUXT_PUBLIC_AUTH_BASE_URL as string, ...process.env.NODE_ENV === 'development' ? [`http://localhost:${process.env.PORT}`, `http://127.0.0.1:${process.env.PORT}`] : []].filter(Boolean),
     // 用于加密、签名和哈希的秘密。
     secret: process.env.AUTH_SECRET || process.env.BETTER_AUTH_SECRET || '',
     advanced: {
@@ -246,6 +246,7 @@ export const auth = betterAuth({
                     providerId: 'weibo',
                     clientId: process.env.WEIBO_CLIENT_ID as string,
                     clientSecret: process.env.WEIBO_CLIENT_SECRET as string,
+                    redirectURI: process.env.WEIBO_REDIRECT_URI as string,
                     authorizationUrl: 'https://api.weibo.com/oauth2/authorize',
                     tokenUrl: 'https://api.weibo.com/oauth2/access_token',
                     userInfoUrl: 'https://api.weibo.com/2/users/show.json',

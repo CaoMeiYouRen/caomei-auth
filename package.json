@@ -7,7 +7,7 @@
     "lint": "cross-env NODE_ENV=production eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix",
     "release": "semantic-release",
     "build": "nuxt build",
-    "dev": "nuxt dev -o",
+    "dev": "nuxt dev -o --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
