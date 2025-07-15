@@ -12,7 +12,7 @@ services:
       PORT: 3000
       TZ: "Asia/Shanghai"
       # Better Auth 的基础 URL
-      VITE_AUTH_BASE_URL: "http://localhost:3000"
+      NUXT_PUBLIC_AUTH_BASE_URL: "http://localhost:3000"
 
       # 用于加密、签名和哈希的密钥。
       # 在生产环境中，如果未设置，将抛出错误。

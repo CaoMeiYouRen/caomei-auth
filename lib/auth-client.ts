@@ -3,9 +3,9 @@ import { usernameClient, magicLinkClient, emailOTPClient, inferAdditionalFields,
 import { parse } from 'better-bytes'
 import type { auth } from './auth'
 
-export const AUTH_BASE_URL = import.meta.env.VITE_AUTH_BASE_URL as string || window?.location?.origin
+export const AUTH_BASE_URL = import.meta.env.NUXT_PUBLIC_AUTH_BASE_URL as string || window?.location?.origin
 
-export const MAX_UPLOAD_SIZE_TEXT = import.meta.env.VITE_MAX_UPLOAD_SIZE as string || '4.5MiB'
+export const MAX_UPLOAD_SIZE_TEXT = import.meta.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE as string || '4.5MiB'
 export const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
 
 export const authClient = createAuthClient({

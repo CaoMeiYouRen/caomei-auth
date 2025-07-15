@@ -8,7 +8,7 @@ import { getFileExtension, getFileType } from '@/server/utils/file'
 import { auth } from '@/lib/auth'
 import { limiterStorage } from '@/server/database/storage'
 
-const MAX_UPLOAD_SIZE_TEXT = process.env.MAX_UPLOAD_SIZE || process.env.VITE_MAX_UPLOAD_SIZE || '4.5MiB'
+const MAX_UPLOAD_SIZE_TEXT = process.env.MAX_UPLOAD_SIZE || process.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE || '4.5MiB'
 const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
 
 // 上传次数限制窗口
