@@ -23,7 +23,7 @@ const EMAIL_EXPIRES_IN = Number(process.env.EMAIL_EXPIRES_IN || 300)
 
 const PHONE_EXPIRES_IN = Number(process.env.PHONE_EXPIRES_IN || 300)
 
-const ANONYMOUS_EMAIL_DOMAIN_NAME = process.env.ANONYMOUS_EMAIL_DOMAIN_NAME || 'anonymous@example.com'
+const ANONYMOUS_EMAIL_DOMAIN_NAME = process.env.ANONYMOUS_EMAIL_DOMAIN_NAME || 'anonymous.example.com'
 
 const TEMP_EMAIL_DOMAIN_NAME = process.env.TEMP_EMAIL_DOMAIN_NAME || 'example.com'
 
