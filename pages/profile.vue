@@ -187,11 +187,11 @@
                                 <!-- 绑定新账号   -->
                                 <template v-for="provider in socialProviders">
                                     <Button
-                                        v-if="!userAccounts.some(account => account.provider === provider.provider)"
+                                        v-if="!userAccounts.some(account => account.provider === provider.provider) && !provider.anonymous"
                                         :key="provider.provider"
                                         :class="['social-btn', `social-${provider.provider}`]"
                                         :icon="getProviderIcon(provider.provider)"
-                                        :label="`绑定 ${provider.name}`"
+                                        :label="`绑定 ${provider.name} 账号`"
                                         outlined
                                         @click="linkSocialAccount(provider)"
                                     />

@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         if (event.path.startsWith('/api/file')) {
             // 限制 文件上传频率
             await rateLimit(event, {
-                window: 60_000,
+                window: 60,
                 max: 5,
             })
             return
@@ -18,14 +18,14 @@ export default defineEventHandler(async (event) => {
         // 如果是 POST/PATCH/PUT/DELETE 请求，限制为 20 次/分钟
         if (event.method === 'POST' || event.method === 'PATCH' || event.method === 'PUT' || event.method === 'DELETE') {
             await rateLimit(event, {
-                window: 60_000,
+                window: 60,
                 max: 20,
             })
             return
         }
         // 否则限制为 60 次/分钟
         await rateLimit(event, {
-            window: 60_000,
+            window: 60,
             max: 60,
         })
 
