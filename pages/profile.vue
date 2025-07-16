@@ -172,7 +172,7 @@
                                     v-tooltip.top="`点击可解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
                                     :class="['social-btn', `social-${account.provider}`]"
                                     :icon="getProviderIcon(account.provider)"
-                                    :label="`${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 8)}${account.accountId.length > 8 ? '...' : ''})`"
+                                    :label="`${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
                                     outlined
                                     @click="confirmUnlink(account.provider, account.accountId)"
                                 />

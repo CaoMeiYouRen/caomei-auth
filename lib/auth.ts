@@ -301,6 +301,7 @@ export const auth = betterAuth({
                     responseType: 'code',
                     pkce: false,
                     getUserInfo: async (tokens) => {
+                        // console.log(tokens)
                         // 是否获取 unionid。需要获取 getUnionId 接口权限
                         const $unionid = process.env.QQ_USE_UNIONID === 'true' ? '1' : ''
                         // 获取 openid
@@ -308,7 +309,7 @@ export const auth = betterAuth({
                             `https://graph.qq.com/oauth2.0/me?access_token=${tokens.accessToken}&unionid=${$unionid}&fmt=json`,
                         )
                         const openidJson = await openidResponse.json()
-                        console.log(openidJson)
+                        // console.log(openidJson)
                         const openid = openidJson?.openid || ''
                         const unionid = openidJson?.unionid || ''
 
