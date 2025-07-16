@@ -29,6 +29,8 @@ const TEMP_EMAIL_DOMAIN_NAME = process.env.TEMP_EMAIL_DOMAIN_NAME || 'example.co
 
 const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS || '').split(',').map((id) => id.trim()).filter(Boolean)
 
+const getTempEmail = () => `${snowflake.generateId()}@${TEMP_EMAIL_DOMAIN_NAME}`
+
 // TODO 增加注册验证码
 
 export const auth = betterAuth({
@@ -228,7 +230,7 @@ export const auth = betterAuth({
             signUpOnVerification: {
                 // 使用雪花算法生成临时电子邮件地址
                 // 生成的电子邮件地址格式为：<snowflake_id>@example.com
-                getTempEmail: (phoneNumber) => `${snowflake.generateId()}@${TEMP_EMAIL_DOMAIN_NAME}`,
+                getTempEmail: (phoneNumber) => getTempEmail(),
                 getTempName: (phoneNumber) => `user-${snowflake.generateId()}`, // 使用雪花算法生成临时用户名
             },
         }),
@@ -272,8 +274,8 @@ export const auth = betterAuth({
                         const userInfo = await response.json()
                         return {
                             id: userInfo.idstr,
-                            // 微博接口未返回 email，默认设为空字符串
-                            email: userInfo.email || '',
+                            // 微博接口未返回 email，默认设为临时邮箱
+                            email: userInfo.email || getTempEmail(),
                             name: userInfo.screen_name,
                             // 使用大图头像地址
                             image: userInfo.avatar_large || null,
@@ -306,6 +308,7 @@ export const auth = betterAuth({
                             `https://graph.qq.com/oauth2.0/me?access_token=${tokens.accessToken}&unionid=${$unionid}&fmt=json`,
                         )
                         const openidJson = await openidResponse.json()
+                        console.log(openidJson)
                         const openid = openidJson?.openid || ''
                         const unionid = openidJson?.unionid || ''
 
@@ -320,7 +323,8 @@ export const auth = betterAuth({
 
                         return {
                             id: unionid || openid, // 如果有 unionid 则使用 unionid，否则使用 openid
-                            email: userInfo.email || '',
+                            // 若未返回 email 则设为临时邮箱
+                            email: userInfo.email || getTempEmail(),
                             // 用户在QQ空间的昵称。
                             name: userInfo.nickname,
                             // 大小为100×100像素的QQ头像URL 或 大小为40×40像素的QQ头像URL
