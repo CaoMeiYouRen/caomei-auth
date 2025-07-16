@@ -299,18 +299,19 @@ export const auth = betterAuth({
                     responseType: 'code',
                     pkce: false,
                     getUserInfo: async (tokens) => {
+                        // 是否获取 unionid。需要获取 getUnionId 接口权限
+                        const $unionid = process.env.QQ_USE_UNIONID === 'true' ? '1' : ''
                         // 获取 openid
                         const openidResponse = await fetch(
-                            `https://graph.qq.com/oauth2.0/me?access_token=${tokens.accessToken}`,
+                            `https://graph.qq.com/oauth2.0/me?access_token=${tokens.accessToken}&unionid=${$unionid}&fmt=json`,
                         )
-                        const openidText = await openidResponse.text()
-                        const openidMatch = openidText.match(/"openid":"([^"]+)"/)
-                        const openid = openidMatch ? openidMatch[1] : null
+                        const openidJson = await openidResponse.json()
+                        const openid = openidJson?.openid || ''
+                        const unionid = openidJson?.unionid || ''
 
                         if (!openid) {
                             throw new Error('Failed to get openid')
                         }
-
                         // 获取用户信息
                         const userInfoResponse = await fetch(
                             `https://graph.qq.com/user/get_user_info?access_token=${tokens.accessToken}&oauth_consumer_key=${process.env.QQ_CLIENT_ID}&openid=${openid}`,
@@ -318,7 +319,7 @@ export const auth = betterAuth({
                         const userInfo = await userInfoResponse.json()
 
                         return {
-                            id: openid,
+                            id: unionid || openid, // 如果有 unionid 则使用 unionid，否则使用 openid
                             email: userInfo.email || '',
                             // 用户在QQ空间的昵称。
                             name: userInfo.nickname,
