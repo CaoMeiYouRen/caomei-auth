@@ -96,9 +96,6 @@
                                 disabled
                             />
                             <template v-if="!user.username">
-                                <Message severity="warn">
-                                    您当前未设置用户名，无法通过用户名密码登录
-                                </Message>
                                 <Button
                                     label="设置用户名"
                                     text
@@ -106,6 +103,9 @@
                                     class="ml-2"
                                     @click="openSetUsernameDialog"
                                 />
+                                <Message severity="warn">
+                                    您当前未设置用户名，无法通过用户名密码登录
+                                </Message>
                             </template>
                         </div>
                         <div class="form-group">
@@ -119,31 +119,31 @@
                         <div class="form-group">
                             <label class="form-label">邮箱</label>
                             <div class="profile-row">
+                                <span v-tooltip.top="user.email">{{ shortText(user.email,12,12,24) || "未绑定" }}</span>
                                 <template v-if="user.emailVerified">
-                                    <span>{{ user.email || "未绑定" }}</span>
                                     <Button
                                         label="修改"
                                         text
                                         size="small"
                                         class="ml-2"
-                                        @click="showEmailModal = true"
+                                        @click="openEmailModal"
                                     />
                                     <span class="verified">已验证</span>
                                 </template>
                                 <template v-else>
-                                    <span>{{ user.email || "未绑定" }}</span>
                                     <Button
                                         label="验证"
                                         text
                                         size="small"
                                         class="ml-2"
-                                        @click="showEmailModal = true"
+                                        @click="openEmailModal"
                                     />
                                     <span class="unverified">未验证</span>
                                 </template>
                             </div>
                             <Message v-if="!user.emailVerified" severity="warn">
-                                您当前未验证邮箱，无法通过邮箱密码登录
+                                您当前未验证邮箱，无法通过邮箱登录，也无法通过邮箱找回密码。<br>
+                                为了您的账号安全，请尽快验证您的邮箱。
                             </Message>
                         </div>
                         <div class="form-group">
@@ -220,9 +220,9 @@
         <Dialog
             v-model:visible="showEmailModal"
             modal
-            header="修改邮箱"
+            :header="user.emailVerified ? '修改邮箱' : '绑定邮箱'"
             :closable="true"
-            :style="{width: '400px'}"
+            :style="{minWidth: '450px'}"
         >
             <div class="form-group">
                 <InputText
@@ -243,9 +243,9 @@
         <Dialog
             v-model:visible="showPhoneModal"
             modal
-            header="修改手机号"
+            :header="user.phoneVerified ? '修改手机号' : '绑定手机号'"
             :closable="true"
-            :style="{width: '400px'}"
+            :style="{width: '450px'}"
         >
             <div class="form-group">
                 <PhoneInput v-model="phone" placeholder="请输入新手机号" />
@@ -289,7 +289,7 @@
             modal
             header="确认解绑"
             :closable="true"
-            :style="{width: '400px'}"
+            :style="{width: '450px'}"
         >
             <p>确定要解绑 {{ getProviderName(selectedProvider) }} 平台，ID 为 {{ selectedAccountId }} 的账号吗？</p>
             <template #footer>
@@ -312,7 +312,7 @@
             modal
             header="设置用户名"
             :closable="true"
-            :style="{width: '400px'}"
+            :style="{width: '450px'}"
         >
             <div class="form-group">
                 <InputText
@@ -351,6 +351,7 @@ import AuthLeft from '@/components/auth-left.vue'
 import { AUTH_BASE_URL, authClient, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
 import type { SocialProvider } from '@/types/social'
+import { shortText } from '@/utils/short-text'
 
 const MAX_AVATAR_SIZE = MAX_UPLOAD_SIZE
 
@@ -428,6 +429,13 @@ watch(
     },
     { immediate: true }, // 立即执行
 )
+
+function openEmailModal() {
+    showEmailModal.value = true
+    if (!user.emailVerified) { // 如果未验证，则默认填写当前邮箱
+        email.value = user.email
+    }
+}
 
 async function bindEmail() {
     if (!validateEmail(email.value)) {

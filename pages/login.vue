@@ -192,20 +192,29 @@
                     label="登录"
                     @click="login"
                 />
-                <div v-if="socialProviders.length" class="separator">
-                    或者使用以下方式登录
-                </div>
-                <div class="social-login">
-                    <Button
-                        v-for="provider in socialProviders"
-                        :key="provider.provider"
-                        :class="['social-btn', `social-${provider.provider}`]"
-                        :icon="provider.icon || `mdi mdi-${provider.provider}`"
-                        :label="`使用 ${provider.name} 账号登录`"
-                        outlined
-                        @click="loginWithSocial(provider)"
-                    />
-                </div>
+                <template v-if="socialProviders.length">
+                    <div class="separator">
+                        或者使用以下方式登录
+                    </div>
+                    <div class="social-login">
+                        <Button
+                            label="匿名登录"
+                            class="social-anonymous social-btn"
+                            icon="mdi mdi-lock"
+                            outlined
+                            @click="loginAnonymously"
+                        />
+                        <Button
+                            v-for="provider in socialProviders"
+                            :key="provider.provider"
+                            :class="['social-btn', `social-${provider.provider}`]"
+                            :icon="provider.icon || `mdi mdi-${provider.provider}`"
+                            :label="`使用 ${provider.name} 账号登录`"
+                            outlined
+                            @click="loginWithSocial(provider)"
+                        />
+                    </div>
+                </template>
                 <div class="toggle-login">
                     还没有账号？ <NuxtLink :to="`/register?mode=${activeTab}`" class="toggle-link">
                         立即注册
@@ -470,6 +479,34 @@ async function loginWithSocial(socialProvider: SocialProvider) {
     }
 }
 
+async function loginAnonymously() {
+    try {
+        const result = await authClient.signIn.anonymous()
+
+        if (result.error) {
+            throw new Error(result.error.message || '匿名登录失败')
+        }
+
+        toast.add({
+            severity: 'success',
+            summary: '匿名登录成功',
+            detail: '即将跳转到首页',
+            life: 2000,
+        })
+        setTimeout(() => {
+            navigateTo('/profile')
+        }, 1200)
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '匿名登录时发生未知错误'
+        toast.add({
+            severity: 'error',
+            summary: '匿名登录失败',
+            detail: errorMessage,
+            life: 5000,
+        })
+    }
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -687,6 +724,12 @@ async function loginWithSocial(socialProvider: SocialProvider) {
 .switch-btn {
     margin-top: 0.5rem;
     width: 100%;
+}
+
+.social-btn{
+     &.social-anonymous{
+      color: $secondary;
+     }
 }
 </style>
 
