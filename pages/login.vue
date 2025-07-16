@@ -247,9 +247,9 @@ const phoneUseCode = ref(false)
 const phoneCode = ref('')
 const phoneCodeSending = ref(false)
 
-const config = useRuntimeConfig().public
+const { data: providersData } = await useFetch('/api/social/providers')
 
-const socialProviders = ref(config.socialProviders as SocialProvider[])
+const socialProviders = computed(() => providersData.value?.providers || [])
 
 const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
