@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
     // 限制 API 请求频率
     if (event.path.startsWith('/api')) {
         if (event.path.startsWith('/api/auth')) {
-            // auth 路由 的频率限制由better-auth 提供，故此处不做处理
+            // auth 路由的频率限制由 better-auth 提供，故此处不做处理
             return
         }
         if (event.path.startsWith('/api/file')) {
