@@ -119,25 +119,32 @@
                         <div class="form-group">
                             <label class="form-label">邮箱</label>
                             <div class="profile-row">
-                                <span>{{ user.email || "未绑定" }}</span>
-                                <Button
-                                    v-if="user.email"
-                                    label="修改"
-                                    text
-                                    size="small"
-                                    class="ml-2"
-                                    @click="showEmailModal = true"
-                                />
-                                <Button
-                                    v-else
-                                    label="绑定"
-                                    text
-                                    size="small"
-                                    class="ml-2"
-                                    @click="showEmailModal = true"
-                                />
-                                <span v-if="user.emailVerified" class="verified">已验证</span>
+                                <template v-if="user.emailVerified">
+                                    <span>{{ user.email || "未绑定" }}</span>
+                                    <Button
+                                        label="修改"
+                                        text
+                                        size="small"
+                                        class="ml-2"
+                                        @click="showEmailModal = true"
+                                    />
+                                    <span class="verified">已验证</span>
+                                </template>
+                                <template v-else>
+                                    <span>{{ user.email || "未绑定" }}</span>
+                                    <Button
+                                        label="验证"
+                                        text
+                                        size="small"
+                                        class="ml-2"
+                                        @click="showEmailModal = true"
+                                    />
+                                    <span class="unverified">未验证</span>
+                                </template>
                             </div>
+                            <Message v-if="!user.emailVerified" severity="warn">
+                                您当前未验证邮箱，无法通过邮箱密码登录
+                            </Message>
                         </div>
                         <div class="form-group">
                             <label class="form-label">手机号</label>
@@ -858,5 +865,11 @@ async function onFileSelect(event: FileUploadSelectEvent) {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+}
+
+.unverified {
+    color: $primary;
+    margin-left: 0.5em;
+    font-size: 0.98em;
 }
 </style>
