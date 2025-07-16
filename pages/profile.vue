@@ -381,8 +381,8 @@ const newUsername = ref('') // 新用户名
 const usernameError = ref('') // 用户名错误信息
 const isSettingUsername = ref(false) // 设置用户名加载状态
 
-const config = useRuntimeConfig().public
-const socialProviders = ref(config.socialProviders as SocialProvider[])
+const { data: providersData } = await useFetch('/api/social/providers')
+const socialProviders = computed(() => providersData.value?.providers || [])
 
 // 根据 provider 获取对应的名称
 const getProviderName = (provider: string) => {

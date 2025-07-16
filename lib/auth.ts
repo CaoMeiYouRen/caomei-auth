@@ -48,7 +48,7 @@ export const auth = betterAuth({
     },
     rateLimit: {
         window: 60, // time window in seconds
-        max: 50, // max requests in the window
+        max: 60, // max requests in the window
         storage: secondaryStorage ? 'secondary-storage' : 'memory', // 如果配置了 Redis，则使用二级存储；否则使用内存存储
         customRules: {
             '/sign-in/*': { window: 60, max: 3 },
