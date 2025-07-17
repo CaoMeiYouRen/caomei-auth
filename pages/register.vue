@@ -9,7 +9,7 @@
                 <p class="auth-subtitle">
                     请填写以下信息完成注册
                 </p>
-                <div class="form-group">
+                <div class="card form-group">
                     <ButtonGroup>
                         <Button
                             label="邮箱"

@@ -34,6 +34,7 @@
                         <InputText
                             id="email"
                             v-model="email"
+                            v-tooltip.top="'请输入注册时使用的邮箱地址'"
                             class="form-input"
                             placeholder="请输入邮箱"
                         />
@@ -47,10 +48,12 @@
                             <InputText
                                 id="emailCode"
                                 v-model="emailCode"
+                                v-tooltip.top="'请输入发送到您邮箱的验证码'"
                                 class="form-input"
                                 placeholder="请输入邮箱验证码"
                             />
                             <SendCodeButton
+                                v-tooltip.top="'点击获取验证码，验证码将发送到您输入的邮箱'"
                                 :on-send="sendEmailCode"
                                 :duration="60"
                                 :disabled="emailCodeSending || !validateEmail(email)"
@@ -68,7 +71,10 @@
                 <div v-show="activeTab === 'phone'">
                     <div class="form-group">
                         <label class="form-label" for="phone">手机号</label>
-                        <PhoneInput v-model="phone" />
+                        <PhoneInput
+                            v-model="phone"
+                            v-tooltip.top="'请输入注册时使用的手机号'"
+                        />
                         <div v-if="errors.phone" class="error-message">
                             {{ errors.phone }}
                         </div>
@@ -79,10 +85,12 @@
                             <InputText
                                 id="phoneCode"
                                 v-model="phoneCode"
+                                v-tooltip.top="'请输入发送到您手机的短信验证码'"
                                 class="form-input"
                                 placeholder="请输入短信验证码"
                             />
                             <SendCodeButton
+                                v-tooltip.top="'点击获取短信验证码，验证码将发送到您输入的手机号'"
                                 :on-send="sendPhoneCode"
                                 :duration="60"
                                 :disabled="phoneCodeSending || !validatePhone(phone)"
@@ -101,6 +109,7 @@
                     <Password
                         id="newPassword"
                         v-model="newPassword"
+                        v-tooltip.top="'密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'"
                         class="form-input password-input"
                         placeholder="请输入新密码"
                         :feedback="false"
@@ -115,6 +124,7 @@
                     <Password
                         id="confirmPassword"
                         v-model="confirmPassword"
+                        v-tooltip.top="'请再次输入相同的新密码以确认'"
                         class="form-input password-input"
                         placeholder="请再次输入新密码"
                         :feedback="false"
@@ -126,15 +136,21 @@
                 </div>
                 <div class="form-group">
                     <Button
+                        v-tooltip.top="'点击提交信息重置密码'"
                         class="btn btn-primary mt-2"
                         label="重置密码"
+
                         @click="resetPassword"
                     />
                 </div>
                 <div class="toggle-login">
-                    已有账号？ <NuxtLink :to="`/login?mode=${activeTab}`" class="toggle-link">
+                    已有账号？ <NuxtLink
+
+                        :to="`/login?mode=${activeTab}`"
+                        class="toggle-link"
+                    >
                         立即登录
-                    </NuxtLink>
+                    </nuxtlink>
                 </div>
             </div>
         </div>
@@ -367,12 +383,6 @@ async function resetPassword() {
     display: flex;
     width: 100%;
     margin-bottom: 1em;
-}
-
-.card {
-    width: 100%;
-    display: flex;
-    justify-content: center;
 }
 
 .code-row {

@@ -24,6 +24,12 @@
     box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
 }
 
+.card {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .code-row {
     display: flex;
     gap: 0.5rem;
