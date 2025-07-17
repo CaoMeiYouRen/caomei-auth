@@ -62,11 +62,24 @@
                         </NuxtLink>
                     </div>
                     <NuxtLink
+                        to="/privacy"
+                        class="layout-default__footer-bottom-link"
+                    >
+                        隐私政策
+                    </NuxtLink>
+                    <NuxtLink
+                        to="/terms"
+                        class="layout-default__footer-bottom-link"
+                    >
+                        服务条款
+                    </NuxtLink>
+                    <NuxtLink
                         to="/about"
                         class="layout-default__footer-bottom-link"
                     >
                         关于我们
                     </NuxtLink>
+
                     <NuxtLink
                         :to="contactEmail"
                         external
@@ -81,7 +94,6 @@
 </template>
 
 <script setup lang="ts">
-// 默认布局无需特殊逻辑
 const config = useRuntimeConfig().public
 
 const homeUrl = config.authBaseUrl || window?.location?.origin
