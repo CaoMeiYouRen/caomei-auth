@@ -14,6 +14,7 @@
                     <Password
                         id="currentPassword"
                         v-model="currentPassword"
+                        v-tooltip.top="'请输入您当前正在使用的登录密码'"
                         class="form-input password-input"
                         placeholder="请输入当前密码"
                         :feedback="false"
@@ -28,6 +29,7 @@
                     <Password
                         id="newPassword"
                         v-model="newPassword"
+                        v-tooltip.top="'密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'"
                         class="form-input password-input"
                         placeholder="请输入新密码"
                         :feedback="false"
@@ -42,6 +44,7 @@
                     <Password
                         id="confirmPassword"
                         v-model="confirmPassword"
+                        v-tooltip.top="'请再次输入相同的新密码以确认'"
                         class="form-input password-input"
                         placeholder="请再次输入新密码"
                         :feedback="false"
@@ -54,6 +57,7 @@
                 <div class="form-group">
                     <Checkbox
                         v-model="revokeOtherSessions"
+                        v-tooltip.top="'勾选后，系统将撤销您在其他设备上的所有登录会话'"
                         input-id="revokeSessions"
                         binary
                     />
@@ -61,13 +65,18 @@
                 </div>
                 <div class="form-group">
                     <Button
+                        v-tooltip.top="'点击提交修改密码请求'"
                         class="btn btn-primary mt-2"
                         label="修改密码"
                         @click="changePassword"
                     />
                 </div>
                 <div class="toggle-login">
-                    <NuxtLink :to="`/profile`" class="toggle-link">
+                    <NuxtLink
+                        v-tooltip.top="'点击返回个人中心页面'"
+                        :to="`/profile`"
+                        class="toggle-link"
+                    >
                         返回个人中心
                     </NuxtLink>
                 </div>
