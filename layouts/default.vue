@@ -39,28 +39,13 @@
                 </div>
 
                 <div class="layout-default__footer-bottom-links">
-                    <!-- ICP 备案号 -->
-                    <div v-if="icpBeianNumber" class="text-sm">
-                        <NuxtLink
-                            to="https://beian.miit.gov.cn/"
-                            target="_blank"
-                            external
-                            class="layout-default__footer-bottom-link"
-                        >
-                            {{ icpBeianNumber }}
-                        </NuxtLink>
-                    </div>
-                    <!-- 公安备案号 -->
-                    <div v-if="publicSecurityBeianNumber" class="text-gray-500 text-sm">
-                        <NuxtLink
-                            to="https://beian.mps.gov.cn/"
-                            target="_blank"
-                            external
-                            class="layout-default__footer-bottom-link"
-                        >
-                            {{ publicSecurityBeianNumber }}
-                        </NuxtLink>
-                    </div>
+                    <NuxtLink
+                        to="/"
+                        class="layout-default__footer-bottom-link"
+                    >
+                        首页
+                    </NuxtLink>
+
                     <NuxtLink
                         to="/privacy"
                         class="layout-default__footer-bottom-link"
@@ -87,6 +72,28 @@
                     >
                         联系我们
                     </NuxtLink>
+                    <!-- ICP 备案号 -->
+                    <div v-if="icpBeianNumber">
+                        <NuxtLink
+                            to="https://beian.miit.gov.cn/"
+                            target="_blank"
+                            external
+                            class="layout-default__footer-bottom-link"
+                        >
+                            {{ icpBeianNumber }}
+                        </NuxtLink>
+                    </div>
+                    <!-- 公安备案号 -->
+                    <div v-if="publicSecurityBeianNumber">
+                        <NuxtLink
+                            to="https://beian.mps.gov.cn/"
+                            target="_blank"
+                            external
+                            class="layout-default__footer-bottom-link"
+                        >
+                            {{ publicSecurityBeianNumber }}
+                        </NuxtLink>
+                    </div>
                 </div>
             </div>
         </footer>
