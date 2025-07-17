@@ -33,6 +33,7 @@
                         <InputText
                             id="username"
                             v-model="username"
+                            v-tooltip.top="'用户名只能包含字母、数字、下划线和连字符，长度在2到36个字符之间，且不能为邮箱或手机号格式'"
                             class="form-input"
                             placeholder="请输入用户名"
                         />
@@ -50,6 +51,7 @@
                         <InputText
                             id="email"
                             v-model="email"
+                            v-tooltip.top="'请输入有效的邮箱地址，用于接收验证邮件'"
                             class="form-input"
                             placeholder="example@mail.com"
                         />
@@ -67,6 +69,7 @@
                         <Password
                             id="password"
                             v-model="password"
+                            v-tooltip.top="'密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'"
                             class="form-input password-input"
                             placeholder="请输入密码"
                             :feedback="false"
@@ -86,6 +89,7 @@
                         <Password
                             id="confirmPassword"
                             v-model="confirmPassword"
+                            v-tooltip.top="'请再次输入相同的密码以确认'"
                             class="form-input password-input"
                             placeholder="请再次输入密码"
                             :feedback="false"
@@ -109,6 +113,7 @@
                         <InputText
                             id="username"
                             v-model="username"
+                            v-tooltip.top="'用户名只能包含字母、数字、下划线和连字符，长度在2到36个字符之间，且不能为邮箱或手机号格式'"
                             class="form-input"
                             placeholder="请输入用户名"
                         />
@@ -123,7 +128,10 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="phone">手机号 <span style="color: #e63946">*</span></label>
-                        <PhoneInput v-model="phone" />
+                        <PhoneInput
+                            v-model="phone"
+                            v-tooltip.top="'请输入有效的手机号，用于接收短信验证码'"
+                        />
                         <Message
                             v-if="errors.phone"
                             severity="error"
@@ -139,10 +147,12 @@
                             <InputText
                                 id="phoneCode"
                                 v-model="phoneCode"
+                                v-tooltip.top="'请输入发送到您手机的短信验证码'"
                                 class="form-input"
                                 placeholder="请输入短信验证码"
                             />
                             <SendCodeButton
+                                v-tooltip.top="'点击获取短信验证码，验证码将发送到您输入的手机号'"
                                 :on-send="sendPhoneCode"
                                 :duration="60"
                                 :disabled="phoneCodeSending || !validatePhone(phone)"
@@ -168,7 +178,10 @@
                     @click="register"
                 />
                 <div class="toggle-login">
-                    已有账号？ <NuxtLink :to="`/login?mode=${activeTab}`" class="toggle-link">
+                    已有账号？ <NuxtLink
+                        :to="`/login?mode=${activeTab}`"
+                        class="toggle-link"
+                    >
                         立即登录
                     </NuxtLink>
                 </div>
