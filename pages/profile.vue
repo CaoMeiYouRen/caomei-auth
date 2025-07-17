@@ -8,12 +8,12 @@
                         个人中心
                     </h2>
                     <div class="profile-header-actions">
-                        <!-- <Button
+                        <Button
                             label="账号安全设置"
                             class="btn btn-link"
                             icon="mdi mdi-shield-account-outline"
                             @click="goSecurity"
-                        /> -->
+                        />
                         <Button
                             v-tooltip.top="'点击此按钮退出当前账号'"
                             label="登出"

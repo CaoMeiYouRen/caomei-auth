@@ -16,6 +16,9 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.844.0
         version: 3.844.0
+      '@hyperwatch/useragent':
+        specifier: ^3.8.2
+        version: 3.8.2
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
@@ -818,6 +821,10 @@ packages:
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     deprecated: Use @eslint/object-schema instead
+
+  '@hyperwatch/useragent@3.8.2':
+    resolution: {integrity: sha512-az9RCFJ6fCka/6EeefMSArxwe7zOEQBzJTa7s9q7LYCW2poNR2DNxo6MA6x207Ae4G6XKog7wjkXC28lYPBYmQ==}
+    engines: {node: '>=12.0'}
 
   '@ioredis/commands@1.2.0':
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
@@ -9486,6 +9493,13 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/object-schema@2.0.3': {}
+
+  '@hyperwatch/useragent@3.8.2':
+    dependencies:
+      debug: 4.4.1
+      lodash: 4.17.21
+    transitivePeerDependencies:
+      - supports-color
 
   '@ioredis/commands@1.2.0': {}
 
