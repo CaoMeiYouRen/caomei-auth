@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => ({
             provider: 'anonymous',
             name: '匿名',
             icon: 'mdi mdi-lock',
-            anonymous: true,
+            anonymous: true, // 匿名登录
             label: '一键匿名登录',
             tooltip: '匿名登录无需填写用户名、密码、邮箱即可直接登录',
         } as SocialProvider,
@@ -27,6 +27,11 @@ export default defineEventHandler(async (event) => ({
             provider: 'microsoft',
             social: true,
         } as SocialProvider,
+        process.env.DISCORD_CLIENT_ID && {
+            name: 'Discord',
+            provider: 'discord',
+            social: true,
+        } as SocialProvider,
         process.env.WEIBO_CLIENT_ID && {
             name: '微博',
             provider: 'weibo',
@@ -37,7 +42,7 @@ export default defineEventHandler(async (event) => ({
             name: 'QQ',
             provider: 'qq',
             icon: 'mdi mdi-qqchat',
-            oauth2: true, // 使用自定义第三方 OAuth2 登录
+            oauth2: true,
         } as SocialProvider,
     ].filter(Boolean) as SocialProvider[],
 }))

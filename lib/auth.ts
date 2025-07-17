@@ -132,6 +132,10 @@ export const auth = betterAuth({
             tenantId: 'common',
             requireSelectAccount: true,
         },
+        discord: { // 支持 Discord 登录
+            clientId: process.env.DISCORD_CLIENT_ID as string,
+            clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
+        },
     },
     session: {
         expiresIn: ms('30d') / 1000, // 30 天
