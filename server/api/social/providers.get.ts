@@ -31,6 +31,7 @@ export default defineEventHandler(async (event) => ({
             name: 'Discord',
             provider: 'discord',
             social: true,
+            icon: 'iconfont icon-discord-simple',
         } as SocialProvider,
         process.env.WEIBO_CLIENT_ID && {
             name: '微博',
