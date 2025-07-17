@@ -101,7 +101,6 @@
                             <span>IP 地址</span>
                             <span>创建时间</span>
                             <span>过期时间</span>
-
                             <span class="device-action-col" />
                         </li>
                         <li
@@ -109,8 +108,8 @@
                             :key="session.id"
                             class="device-list-row"
                         >
-                            <span v-if="userSession?.session?.id===session.id" v-tooltip.top=" session.id">当前会话</span>
-                            <span v-else v-tooltip.top=" session.id">{{ session.id }}</span>
+                            <span v-if="userSession?.session?.id===session.id" v-tooltip.top="'当前正在使用的会话，令牌为：' + session.id">当前会话</span>
+                            <span v-else v-tooltip.top="'会话令牌：' + session.id">{{ session.id }}</span>
                             <span>{{ session.browser }}</span>
                             <span>{{ session.os }}</span>
                             <span>{{ session.ipAddress }}</span>
@@ -118,6 +117,7 @@
                             <span>{{ session.expiresAt }}</span>
                             <span class="device-action-col">
                                 <Button
+                                    v-tooltip.top="userSession?.session?.id===session.id ? '无法撤销当前会话' : '点击撤销此会话'"
                                     class="btn"
                                     label="撤销会话"
                                     icon="mdi mdi-close"
@@ -129,12 +129,14 @@
                     </ul>
                     <div class="security-actions">
                         <Button
+                            v-tooltip.top="'点击撤销除当前会话外的所有其他会话'"
                             class="btn"
                             label="撤销其他会话"
                             icon="mdi mdi-logout-variant"
                             @click="revokeOtherSessions"
                         />
                         <Button
+                            v-tooltip.top="'注意：点击撤销所有会话，包括当前会话！'"
                             class="btn"
                             label="撤销所有会话"
                             icon="mdi mdi-logout-variant"
