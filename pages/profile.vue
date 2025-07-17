@@ -322,6 +322,7 @@
                     v-tooltip.top="'点击取消解绑操作'"
                     label="取消"
                     class="btn btn-secondary"
+                    severity="secondary"
                     @click="showUnlinkConfirm = false"
                 />
                 <Button
