@@ -38,7 +38,10 @@
             </div>
             <div class="auth-section">
                 <h2>开源协议</h2>
-                <p>本项目遵循 <a href="https://github.com/CaoMeiYouRen/caomei-auth/blob/master/LICENSE" target="_blank">MIT License</a> 开源协议，欢迎贡献与交流。</p>
+                <p>
+                    本项目遵循 <a href="https://github.com/CaoMeiYouRen/caomei-auth/blob/master/LICENSE" target="_blank">MIT
+                        License</a> 开源协议，欢迎贡献与交流。
+                </p>
             </div>
             <div class="auth-author auth-section">
                 <span>作者：</span>
@@ -56,7 +59,7 @@
 @import '@/styles/theme';
 @import '@/styles/common';
 
-.auth-container{
+.auth-container {
     display: flex;
     min-height: 100vh;
     flex-direction: column-reverse;
@@ -76,6 +79,7 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
     color: $secondary;
 }
+
 .auth-title {
     font-size: 2rem;
     font-weight: 700;
@@ -84,52 +88,72 @@
     letter-spacing: 1px;
     text-align: center;
 }
+
 .auth-subtitle {
     font-size: 1.15rem;
     color: $secondary-light;
     margin-bottom: 2rem;
     text-align: center;
 }
+
 .auth-section {
     margin-bottom: 2rem;
+
     h2 {
         font-size: 1.18rem;
         color: $primary-dark;
         font-weight: 600;
         margin-bottom: 0.7rem;
     }
+
     ul {
         padding-left: 1.2rem;
+
         li {
             margin-bottom: 0.5rem;
             line-height: 1.7;
         }
     }
+
     p {
         color: $secondary-light;
         font-size: 1rem;
     }
-}
-.auth-author {
-    text-align: right;
-    font-size: 0.98rem;
-    color: $secondary-light;
+
     a {
         color: $primary;
         text-decoration: none;
         margin-left: 0.3rem;
+
         &:hover {
             text-decoration: underline;
         }
     }
 }
+
+.auth-author {
+    text-align: right;
+    font-size: 0.98rem;
+    color: $secondary-light;
+
+    a {
+        color: $primary;
+        text-decoration: none;
+        margin-left: 0.3rem;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
 @media (max-width: 600px) {
     .auth-container {
         padding: 1.2rem 1.2rem;
     }
+
     .auth-title {
         font-size: 1.3rem;
     }
 }
 </style>
-
