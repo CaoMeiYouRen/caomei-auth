@@ -203,7 +203,7 @@
                             v-tooltip.top="provider.tooltip"
                             :class="['social-btn', `social-${provider.provider}`]"
                             :icon="provider.icon || `mdi mdi-${provider.provider}`"
-                            :label="provider.label ||`使用 ${provider.name} 账号登录`"
+                            :label="provider.label || `使用 ${provider.name} 账号登录`"
                             outlined
                             @click="loginWithSocial(provider)"
                         />
@@ -437,7 +437,7 @@ async function login() {
 
 async function loginWithSocial(socialProvider: SocialProvider) {
     const { provider, name, social, oauth2 } = socialProvider
-       if (provider === 'anonymous') {
+    if (provider === 'anonymous') {
         // 处理匿名登录
         await loginAnonymously()
         return
@@ -725,11 +725,6 @@ async function loginAnonymously() {
     width: 100%;
 }
 
-.social-btn{
-     &.social-anonymous{
-      color: $secondary;
-     }
-}
 </style>
 
 <style lang="scss">
@@ -737,6 +732,12 @@ async function loginAnonymously() {
     .p-password-input {
         width: 100%;
         border: none;
+    }
+}
+.social-btn {
+    .icon-discord-simple {
+        // font-size: 16px;
+        padding-top: 2px;
     }
 }
 </style>
