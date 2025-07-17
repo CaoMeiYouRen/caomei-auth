@@ -15,6 +15,7 @@
                             @click="goSecurity"
                         /> -->
                         <Button
+                            v-tooltip.top="'点击此按钮退出当前账号'"
                             label="登出"
                             class="btn btn-link ml-3"
                             icon="mdi mdi-logout"
@@ -28,6 +29,7 @@
                 <div class="profile-section">
                     <div class="avatar-block">
                         <Image
+                            v-tooltip.top="'点击查看头像大图'"
                             alt="Image"
                             preview
                             :pt="{
@@ -43,6 +45,7 @@
                             </template>
                             <template #image>
                                 <Avatar
+                                    v-tooltip.top="'当前显示的头像'"
                                     :image="showAvatar"
                                     alt="avatar"
                                     preview
@@ -72,7 +75,7 @@
                             @select="onFileSelect"
                         />
                         <Button
-                            v-tooltip.top="'点击上传头像'"
+                            v-tooltip.top="'点击上传新的头像'"
                             label=""
                             class="avatar-btn"
                             icon="mdi mdi-camera"
@@ -92,11 +95,13 @@
                                 v-if="user.username"
                                 id="username"
                                 v-model="user.username"
+                                v-tooltip.top="'当前使用的用户名，不可编辑'"
                                 class="form-input"
                                 disabled
                             />
                             <template v-if="!user.username">
                                 <Button
+                                    v-tooltip.top="'点击设置用户名，设置后可使用用户名密码登录'"
                                     label="设置用户名"
                                     text
                                     size="small"
@@ -113,32 +118,35 @@
                             <InputText
                                 id="nickname"
                                 v-model="user.nickname"
+                                v-tooltip.top="'输入您的昵称，可随时修改'"
                                 class="form-input"
                             />
                         </div>
                         <div class="form-group">
                             <label class="form-label">邮箱</label>
                             <div class="profile-row">
-                                <span v-tooltip.top="user.email">{{ shortText(user.email,12,12,24) || "未绑定" }}</span>
+                                <span v-tooltip.top="'完整邮箱地址：{{ user.email }}'">{{ shortText(user.email,12,12,24) || "未绑定" }}</span>
                                 <template v-if="user.emailVerified">
                                     <Button
+                                        v-tooltip.top="'点击修改已验证的邮箱地址'"
                                         label="修改"
                                         text
                                         size="small"
                                         class="ml-2"
                                         @click="openEmailModal"
                                     />
-                                    <span class="verified">已验证</span>
+                                    <span v-tooltip.top="'邮箱已验证，可用于登录和找回密码'" class="verified">已验证</span>
                                 </template>
                                 <template v-else>
                                     <Button
+                                        v-tooltip.top="'点击验证邮箱，验证后可用于登录和找回密码'"
                                         label="验证"
                                         text
                                         size="small"
                                         class="ml-2"
                                         @click="openEmailModal"
                                     />
-                                    <span class="unverified">未验证</span>
+                                    <span v-tooltip.top="'邮箱未验证，无法用于登录和找回密码'" class="unverified">未验证</span>
                                 </template>
                             </div>
                             <Message v-if="!user.emailVerified" severity="warn">
@@ -149,9 +157,10 @@
                         <div class="form-group">
                             <label class="form-label">手机号</label>
                             <div class="profile-row">
-                                <span>{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
+                                <span v-tooltip.top="'完整手机号：{{ user.phone }}'">{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
                                 <Button
                                     v-if="user.phone"
+                                    v-tooltip.top="'点击修改已绑定的手机号'"
                                     label="修改"
                                     text
                                     size="small"
@@ -160,13 +169,18 @@
                                 />
                                 <Button
                                     v-else
+                                    v-tooltip.top="'点击绑定手机号，绑定后可用于登录和验证'"
                                     label="绑定"
                                     text
                                     size="small"
                                     class="ml-2"
                                     @click="showPhoneModal = true"
                                 />
-                                <span v-if="user.phoneVerified" class="verified">已验证</span>
+                                <span
+                                    v-if="user.phoneVerified"
+                                    v-tooltip.top="'手机号已验证，可用于登录和验证'"
+                                    class="verified"
+                                >已验证</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -176,7 +190,7 @@
                                 <Button
                                     v-for="account in userAccounts"
                                     :key="account.provider"
-                                    v-tooltip.top="`点击可解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
+                                    v-tooltip.top="`点击解绑 ${ getProviderName(account.provider) } 账号，完整 ID: ${ account.accountId }`"
                                     :class="['social-btn', `social-${account.provider}`]"
                                     :icon="getProviderIcon(account.provider)"
                                     :label="`${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
@@ -200,12 +214,14 @@
                         </div>
                         <div class="form-group profile-actions">
                             <Button
+                                v-tooltip.top="'点击保存修改后的个人信息'"
                                 label="保存修改"
                                 class="btn btn-primary"
                                 :loading="saving"
                                 @click="saveProfile"
                             />
                             <Button
+                                v-tooltip.top="'点击跳转到修改密码页面'"
                                 label="修改密码"
                                 class="btn btn-link ml-3"
                                 @click="goChangePassword"
@@ -227,12 +243,14 @@
             <div class="form-group">
                 <InputText
                     v-model="email"
+                    v-tooltip.top="'输入新的邮箱地址'"
                     class="form-input"
                     placeholder="请输入新邮箱"
                 />
             </div>
             <div class="form-group">
                 <Button
+                    v-tooltip.top="'点击发送验证链接到新邮箱'"
                     label="发送验证链接"
                     class="btn btn-primary w-full"
                     :loading="bindingEmail"
@@ -248,7 +266,11 @@
             :style="{width: '450px'}"
         >
             <div class="form-group">
-                <PhoneInput v-model="phone" placeholder="请输入新手机号" />
+                <PhoneInput
+                    v-model="phone"
+                    v-tooltip.top="'输入新的手机号'"
+                    placeholder="请输入新手机号"
+                />
                 <Message
                     v-if="errors.phone"
                     severity="error"
@@ -261,10 +283,12 @@
             <div class="flex-row form-group">
                 <InputText
                     v-model="phoneCode"
+                    v-tooltip.top="'输入收到的短信验证码'"
                     class="form-input"
                     placeholder="验证码"
                 />
                 <SendCodeButton
+                    v-tooltip.top="'点击发送验证码到新手机号'"
                     :on-send="sendPhoneCode"
                     :duration="60"
                     :disabled="phoneCodeSending || !validatePhone(phone)"
@@ -275,6 +299,7 @@
             </div>
             <div class="form-group">
                 <Button
+                    v-tooltip.top="'点击确认修改手机号信息'"
                     label="确认修改"
                     class="btn btn-primary w-full"
                     :loading="bindingPhone"
@@ -294,11 +319,13 @@
             <p>确定要解绑 {{ getProviderName(selectedProvider) }} 平台，ID 为 {{ selectedAccountId }} 的账号吗？</p>
             <template #footer>
                 <Button
+                    v-tooltip.top="'点击取消解绑操作'"
                     label="取消"
                     class="btn btn-secondary"
                     @click="showUnlinkConfirm = false"
                 />
                 <Button
+                    v-tooltip.top="'点击确认解绑操作'"
                     label="确认"
                     class="btn btn-primary"
                     @click="unlinkSelectedAccount"
@@ -317,6 +344,7 @@
             <div class="form-group">
                 <InputText
                     v-model="newUsername"
+                    v-tooltip.top="'输入新的用户名，用于用户名密码登录'"
                     class="form-input"
                     placeholder="请输入新用户名"
                 />
@@ -331,6 +359,7 @@
             </div>
             <div class="form-group">
                 <Button
+                    v-tooltip.top="'点击确认设置新的用户名'"
                     label="确认设置"
                     class="btn btn-primary w-full"
                     :loading="isSettingUsername"
