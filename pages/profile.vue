@@ -118,14 +118,14 @@
                             <InputText
                                 id="nickname"
                                 v-model="user.nickname"
-                                v-tooltip.top="'输入您的昵称，可随时修改'"
+                                v-tooltip.top="'您的昵称，可随时修改。2-36个字符。'"
                                 class="form-input"
                             />
                         </div>
                         <div class="form-group">
                             <label class="form-label">邮箱</label>
                             <div class="profile-row">
-                                <span v-tooltip.top="'完整邮箱地址：{{ user.email }}'">{{ shortText(user.email,12,12,24) || "未绑定" }}</span>
+                                <span v-tooltip.top="`完整邮箱地址：${ user.email }`">{{ shortText(user.email,12,12,24) || "未绑定" }}</span>
                                 <template v-if="user.emailVerified">
                                     <Button
                                         v-tooltip.top="'点击修改已验证的邮箱地址'"
@@ -157,7 +157,7 @@
                         <div class="form-group">
                             <label class="form-label">手机号</label>
                             <div class="profile-row">
-                                <span v-tooltip.top="'完整手机号：{{ user.phone }}'">{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
+                                <span>{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
                                 <Button
                                     v-if="user.phone"
                                     v-tooltip.top="'点击修改已绑定的手机号'"
