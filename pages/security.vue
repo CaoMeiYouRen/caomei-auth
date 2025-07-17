@@ -122,7 +122,7 @@
                                     label="撤销会话"
                                     icon="mdi mdi-close"
                                     :disabled="userSession?.session?.id===session.id"
-                                    @click="revokeSession(session.token)"
+                                    @click="confirmRevokeSession(session.token)"
                                 />
                             </span>
                         </li>
@@ -133,25 +133,99 @@
                             class="btn"
                             label="撤销其他会话"
                             icon="mdi mdi-logout-variant"
-                            @click="revokeOtherSessions"
+                            @click="confirmRevokeOtherSessions"
                         />
                         <Button
                             v-tooltip.top="'注意：点击撤销所有会话，包括当前会话！'"
                             class="btn"
                             label="撤销所有会话"
                             icon="mdi mdi-logout-variant"
-                            @click="revokeAllSessions"
+                            @click="confirmRevokeAllSessions"
                         />
                     </div>
                 </div>
             </div>
         </div>
+        <!-- 撤销单个会话确认对话框 -->
+        <Dialog
+            v-model:visible="showRevokeSessionConfirm"
+            modal
+            header="确认撤销会话"
+            :closable="true"
+            :style="{width: '450px'}"
+        >
+            <p>确定要撤销该会话吗？</p>
+            <template #footer>
+                <Button
+                    v-tooltip.top="'点击取消撤销会话操作'"
+                    label="取消"
+                    class="btn btn-secondary"
+                    severity="secondary"
+                    @click="showRevokeSessionConfirm = false"
+                />
+                <Button
+                    v-tooltip.top="'点击确认撤销会话操作'"
+                    label="确认"
+                    class="btn btn-primary"
+                    @click="revokeSingleSession"
+                />
+            </template>
+        </Dialog>
+        <!-- 撤销其他会话确认对话框 -->
+        <Dialog
+            v-model:visible="showRevokeOtherSessionsConfirm"
+            modal
+            header="确认撤销其他会话"
+            :closable="true"
+            :style="{width: '450px'}"
+        >
+            <p>确定要撤销除当前会话外的所有其他会话吗？</p>
+            <template #footer>
+                <Button
+                    v-tooltip.top="'点击取消撤销其他会话操作'"
+                    label="取消"
+                    class="btn btn-secondary"
+                    severity="secondary"
+                    @click="showRevokeOtherSessionsConfirm = false"
+                />
+                <Button
+                    v-tooltip.top="'点击确认撤销其他会话操作'"
+                    label="确认"
+                    class="btn btn-primary"
+                    @click="revokeOtherSessions"
+                />
+            </template>
+        </Dialog>
+        <!-- 撤销所有会话确认对话框 -->
+        <Dialog
+            v-model:visible="showRevokeAllSessionsConfirm"
+            modal
+            header="确认撤销所有会话"
+            :closable="true"
+            :style="{width: '450px'}"
+        >
+            <p>确定要撤销所有会话，包括当前会话吗？</p>
+            <template #footer>
+                <Button
+                    v-tooltip.top="'点击取消撤销所有会话操作'"
+                    label="取消"
+                    class="btn btn-secondary"
+                    severity="secondary"
+                    @click="showRevokeAllSessionsConfirm = false"
+                />
+                <Button
+                    v-tooltip.top="'点击确认撤销所有会话操作'"
+                    label="确认"
+                    class="btn btn-primary"
+                    @click="revokeAllSessions"
+                />
+            </template>
+        </Dialog>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import Button from 'primevue/button'
 import dayjs from 'dayjs'
 import type { Prettify } from 'better-auth'
 import AuthLeft from '@/components/auth-left.vue'
@@ -233,6 +307,7 @@ const revokeOtherSessions = async () => {
     try {
         await authClient.revokeOtherSessions()
         await listSessions() // 刷新会话列表
+        showRevokeOtherSessionsConfirm.value = false
     } catch (error) {
         console.error('撤销其他会话失败:', error)
     }
@@ -243,6 +318,7 @@ const revokeAllSessions = async () => {
     try {
         await authClient.revokeSessions()
         await listSessions() // 刷新会话列表
+        showRevokeAllSessionsConfirm.value = false
     } catch (error) {
         console.error('撤销所有会话失败:', error)
     }
@@ -254,6 +330,30 @@ function removeDevice(id: number) {
 
 function goProfile() {
     window.location.href = '/profile'
+}
+
+// 新增变量和函数
+const showRevokeSessionConfirm = ref(false)
+const selectedSessionToken = ref('')
+
+const confirmRevokeSession = (token: string) => {
+    selectedSessionToken.value = token
+    showRevokeSessionConfirm.value = true
+}
+
+const revokeSingleSession = async () => {
+    await revokeSession(selectedSessionToken.value)
+    showRevokeSessionConfirm.value = false
+}
+
+const showRevokeOtherSessionsConfirm = ref(false)
+const confirmRevokeOtherSessions = () => {
+    showRevokeOtherSessionsConfirm.value = true
+}
+
+const showRevokeAllSessionsConfirm = ref(false)
+const confirmRevokeAllSessions = () => {
+    showRevokeAllSessionsConfirm.value = true
 }
 
 onMounted(() => {
