@@ -90,6 +90,16 @@
                     </div>
                     <div class="info-block">
                         <div class="form-group">
+                            <label class="form-label">ID</label>
+                            <InputText
+                                id="id"
+                                v-model="user.id"
+                                v-tooltip.top="'当前用户的唯一标识，不可编辑'"
+                                class="form-input"
+                                disabled
+                            />
+                        </div>
+                        <div class="form-group">
                             <label class="form-label" for="username">用户名</label>
                             <InputText
                                 v-if="user.username"
@@ -125,7 +135,9 @@
                         <div class="form-group">
                             <label class="form-label">邮箱</label>
                             <div class="profile-row">
-                                <span v-tooltip.top="`完整邮箱地址：${ user.email }`">{{ shortText(user.email,12,12,24) || "未绑定" }}</span>
+                                <span
+                                    v-tooltip.top="`完整邮箱地址：${user.email}`"
+                                >{{ shortText(user.email, 12, 12, 24) || "未绑定" }}</span>
                                 <template v-if="user.emailVerified">
                                     <Button
                                         v-tooltip.top="'点击修改已验证的邮箱地址'"
@@ -190,7 +202,7 @@
                                 <Button
                                     v-for="account in userAccounts"
                                     :key="account.provider"
-                                    v-tooltip.top="`点击解绑 ${ getProviderName(account.provider) } 账号，完整 ID: ${ account.accountId }`"
+                                    v-tooltip.top="`点击解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
                                     :class="['social-btn', `social-${account.provider}`]"
                                     :icon="getProviderIcon(account.provider)"
                                     :label="`${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
@@ -387,6 +399,7 @@ const MAX_AVATAR_SIZE = MAX_UPLOAD_SIZE
 
 const toast = useToast()
 const user = reactive({
+    id: '',
     username: '',
     nickname: '',
     avatar: '',
@@ -448,6 +461,7 @@ watch(
     async () => {
         const newUser = session.value?.user
         if (newUser) {
+            user.id = newUser.id || ''
             user.username = newUser.displayUsername || ''
             user.nickname = newUser.name || ''
             user.avatar = newUser.image || ''
@@ -866,6 +880,7 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 }
 
 .social-list {
+    margin-top: 1rem;
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
