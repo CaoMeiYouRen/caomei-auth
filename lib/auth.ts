@@ -304,6 +304,9 @@ export const auth = betterAuth({
                     redirectURI: process.env.QQ_REDIRECT_URI || '',
                     responseType: 'code',
                     pkce: false,
+                    tokenUrlParams: {
+                        fmt: 'json', // 需要指定 fmt 才能返回 json 格式
+                    },
                     getUserInfo: async (tokens) => {
                         // console.log(tokens)
                         // 是否获取 unionid。需要获取 getUnionId 接口权限
