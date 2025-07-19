@@ -233,29 +233,61 @@
             header="双因素认证"
         >
             <div class="p-fluid">
-                <p class="mb-3">
-                    请输入您的{{ useBackupCode ? '备份码' : '身份验证器生成的 6 位验证码' }}
-                </p>
-                <div class="field">
-                    <InputText
-                        v-model="twoFactorCode"
-                        class="w-full"
-                        :placeholder=" useBackupCode ?'请输入备份码':'请输入验证码'"
-                        @keyup.enter="verify2FA"
-                    />
-                </div>
+                <TabView v-model="activeAuthTab">
+                    <TabPanel value="totp" header="身份验证器">
+                        <p class="mb-3">
+                            请输入身份验证器生成的 6 位验证码
+                        </p>
+                        <div class="field">
+                            <InputText
+                                v-model="twoFactorCode"
+                                class="w-full"
+                                placeholder="请输入验证码"
+                                @keyup.enter="verify2FA"
+                            />
+                        </div>
+                    </TabPanel>
+                    <TabPanel value="otp" header="一次性验证码">
+                        <p class="mb-3">
+                            如果您无法访问身份验证器，可以使用一次性验证码验证身份。<br>
+                            一次性验证码会发送到已验证的邮箱或手机号(邮箱优先)。
+                        </p>
+                        <div class="field">
+                            <div class="code-row">
+                                <InputText
+                                    v-model="twoFactorCode"
+                                    v-tooltip.top="'请输入一次性验证码'"
+                                    class="w-full"
+                                    placeholder="请输入验证码"
+                                    @keyup.enter="verify2FA"
+                                />
+                                <SendCodeButton
+                                    :disabled="otpSending"
+                                    :on-send="sendOtp"
+                                    :duration="60"
+                                    text="获取验证码"
+                                    resend-text="重新发送"
+                                />
+                            </div>
+                        </div>
+                    </TabPanel>
+                    <TabPanel value="backup" header="备份码">
+                        <p class="mb-3">
+                            如果您失去对手机或电子邮件的访问权限，可以使用备份码验证身份。
+                        </p>
+                        <div class="field">
+                            <InputText
+                                v-model="twoFactorCode"
+                                v-tooltip.top="'请输入您的备份码'"
+                                class="w-full"
+                                placeholder="请输入备份码"
+                                @keyup.enter="verify2FA"
+                            />
+                        </div>
+                    </TabPanel>
+                </TabView>
                 <div v-if="twoFactorError" class="error-message mt-2">
                     {{ twoFactorError }}
-                </div>
-                <div class="align-items-center flex mt-3">
-                    <ToggleSwitch
-                        v-model="useBackupCode"
-                        input-id="use-backup-code"
-                        class="mr-2"
-                    />
-                    <label for="use-backup-code" class="cursor-pointer text-sm">
-                        {{ useBackupCode ? '使用验证器' : '使用备份码' }}
-                    </label>
                 </div>
             </div>
             <template #footer>
@@ -304,8 +336,36 @@ const show2FADialog = ref(false)
 const twoFactorCode = ref('')
 const twoFactorError = ref('')
 const verifying2FA = ref(false)
-const useBackupCode = ref(false)
+const activeAuthTab = ref(0)
+const otpSending = ref(false)
 const pendingLoginData = ref<any>(null) // 存储待完成的登录数据
+
+// 发送 OTP 验证码
+const sendOtp = async () => {
+    try {
+        otpSending.value = true
+        const { error } = await authClient.twoFactor.sendOtp()
+        if (error) {
+            throw new Error(error.message || '发送验证码失败')
+        }
+        toast.add({
+            severity: 'success',
+            summary: '发送成功',
+            detail: '验证码已发送，请检查您的邮箱',
+            life: 3000,
+        })
+    } catch (error: any) {
+        const errorMessage = error instanceof Error ? error.message : '发送验证码失败'
+        toast.add({
+            severity: 'error',
+            summary: '发送失败',
+            detail: errorMessage,
+            life: 5000,
+        })
+    } finally {
+        otpSending.value = false
+    }
+}
 
 const { data: providersData } = await useFetch('/api/social/providers')
 
@@ -352,7 +412,7 @@ const handle2FA = (result: any) => {
 const reset2FAState = () => {
     twoFactorCode.value = ''
     twoFactorError.value = ''
-    useBackupCode.value = false
+    activeAuthTab.value = 0 // 重置为默认的 TOTP 标签页
     show2FADialog.value = false
     verifying2FA.value = false
     pendingLoginData.value = null
@@ -370,16 +430,27 @@ const verify2FA = async () => {
 
     try {
         let result
-        if (useBackupCode.value) {
-            result = await authClient.twoFactor.verifyBackupCode({
-                code: twoFactorCode.value,
-                trustDevice: rememberMe.value, // 如果用户选择了"记住我"，则将设备标记为可信
-            })
-        } else {
-            result = await authClient.twoFactor.verifyTotp({
-                code: twoFactorCode.value,
-                trustDevice: rememberMe.value, // 如果用户选择了"记住我"，则将设备标记为可信
-            })
+        switch (activeAuthTab.value) {
+            case 0: // TOTP
+                result = await authClient.twoFactor.verifyTotp({
+                    code: twoFactorCode.value,
+                    trustDevice: rememberMe.value,
+                })
+                break
+            case 1: // OTP
+                result = await authClient.twoFactor.verifyOtp({
+                    code: twoFactorCode.value,
+                    trustDevice: rememberMe.value,
+                })
+                break
+            case 2: // Backup Code
+                result = await authClient.twoFactor.verifyBackupCode({
+                    code: twoFactorCode.value,
+                    trustDevice: rememberMe.value,
+                })
+                break
+            default:
+                throw new Error('未知的验证方式')
         }
 
         if (result.error) {
