@@ -52,7 +52,6 @@ const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
 const getTempEmail = () => `${snowflake.generateId()}@${TEMP_EMAIL_DOMAIN_NAME}`
 
 // TODO 增加注册验证码
-
 export const auth = betterAuth({
     appName: APP_NAME, // 应用名称。它将被用作发行者。
     // 数据库适配器

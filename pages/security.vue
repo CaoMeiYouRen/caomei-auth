@@ -23,18 +23,119 @@
                 </p>
                 <div class="security-section">
                     <h3 class="section-title">
-                        多因子认证（MFA）
+                        双因素认证
                     </h3>
                     <p class="section-desc">
-                        启用多因子认证可大幅提升账号安全性。支持 TOTP（如 Google
-                        Authenticator）、邮箱验证码、短信验证码等多种方式。
+                        启用双因素认证后，登录时除了密码外，还需要输入身份验证器生成的验证码，可以有效防止账号被盗。
                     </p>
-                    <div class="security-actions">
-                        <Button
-                            class="btn btn-primary"
-                            label="设置多因子认证"
-                            icon="mdi mdi-shield-key-outline"
-                        />
+
+                    <!-- 未启用状态 -->
+                    <div v-if="!userSession?.user.twoFactorEnabled && !showTotpSetup && !showBackupCodes">
+                        <Message severity="warn" icon="mdi mdi-shield-alert">
+                            <span>建议启用双因素认证以提高账号安全性</span>
+                        </Message>
+                        <div class="security-actions">
+                            <Button
+                                class="btn btn-primary"
+                                label="启用双因素认证"
+                                icon="mdi mdi-shield-check-outline"
+                                @click="enable2FA"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- 已启用状态 -->
+                    <div v-if="userSession?.user.twoFactorEnabled && !showTotpSetup && !showBackupCodes">
+                        <Alert severity="success" class="mb-4">
+                            <i class="mdi mdi-shield-check mr-2" />
+                            <span>已启用双因素认证，您的账号受到更好的保护</span>
+                        </Alert>
+                        <div class="security-actions">
+                            <Button
+                                class="btn btn-danger"
+                                label="禁用双因素认证"
+                                icon="mdi mdi-shield-off-outline"
+                                severity="danger"
+                                @click="disable2FA"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- 设置双因素验证器 -->
+                    <div v-if="showTotpSetup" class="totp-setup">
+                        <h4 class="mb-3 setup-title">
+                            设置身份验证器
+                        </h4>
+                        <ol class="mb-4 setup-steps">
+                            <li>在手机上安装身份验证器应用（如 Google Authenticator、Microsoft Authenticator）</li>
+                            <li>使用应用扫描下方二维码</li>
+                            <li>输入应用显示的 6 位验证码</li>
+                        </ol>
+
+                        <div v-if="qrCodeUrl" class="mb-4 qr-code">
+                            <img :src="qrCodeUrl" alt="TOTP QR Code">
+                        </div>
+
+                        <div class="mb-4 verification-input">
+                            <span class="p-float-label">
+                                <InputText
+                                    id="verification-code"
+                                    v-model="verificationCode"
+                                    class="w-full"
+                                    maxlength="6"
+                                />
+                                <label for="verification-code">输入 6 位验证码</label>
+                            </span>
+                        </div>
+
+                        <div class="security-actions">
+                            <Button
+                                label="验证并继续"
+                                icon="mdi mdi-check"
+                                @click="verifyAndEnable2FA"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- 备份恢复码 -->
+                    <div v-if="showBackupCodes" class="backup-codes">
+                        <h4 class="backup-title mb-3">
+                            备份恢复码
+                        </h4>
+                        <Alert severity="info" class="mb-4">
+                            <i class="mdi mdi-information mr-2" />
+                            <span>请妥善保管以下恢复码，当您无法访问验证器时，可使用这些恢复码登录。每个恢复码只能使用一次。</span>
+                        </Alert>
+
+                        <div class="backup-codes-list mb-4">
+                            <div
+                                v-for="code in backupCodes"
+                                :key="code"
+                                class="backup-code"
+                            >
+                                {{ code }}
+                            </div>
+                        </div>
+
+                        <div class="security-actions">
+                            <Button
+                                label="复制恢复码"
+                                icon="mdi mdi-content-copy"
+                                class="mr-2"
+                                @click="copyBackupCodes"
+                            />
+                            <Button
+                                label="下载恢复码"
+                                icon="mdi mdi-download"
+                                class="mr-2"
+                                @click="downloadBackupCodes"
+                            />
+                            <Button
+                                label="完成设置"
+                                icon="mdi mdi-check"
+                                @click="finishSetup"
+                            />
+                        </div>
                     </div>
                 </div>
                 <!-- <div class="divider" />
@@ -227,6 +328,43 @@
                 />
             </template>
         </Dialog>
+
+        <!-- 双因素认证密码确认对话框 -->
+        <Dialog
+            v-model:visible="showPasswordDialog"
+            modal
+            :header="passwordDialogMode === 'enable' ? '启用双因素认证' : '禁用双因素认证'"
+            :closable="true"
+            :style="{width: '450px'}"
+            @hide="onPasswordDialogHide"
+        >
+            <div class="p-fluid">
+                <p class="mb-3">
+                    {{ passwordDialogMode === 'enable'
+                        ? '为了确保是您本人操作，请输入密码以启用双因素认证'
+                        : '为了确保是您本人操作，请输入密码以禁用双因素认证' }}
+                </p>
+                <div class="field">
+                    <Password
+                        v-model="password"
+                        :feedback="false"
+                        :toggle-mask="true"
+                        placeholder="请输入密码"
+                    />
+                </div>
+            </div>
+            <template #footer>
+                <Button
+                    label="取消"
+                    severity="secondary"
+                    @click="showPasswordDialog = false"
+                />
+                <Button label="确认" @click="onPasswordConfirm" />
+            </template>
+        </Dialog>
+
+        <!-- Toast -->
+        <Toast />
     </div>
 </template>
 
@@ -234,10 +372,225 @@
 import { ref, onMounted } from 'vue'
 import dayjs from 'dayjs'
 import type { Prettify } from 'better-auth'
+import QRCode from 'qrcode'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 
+const toast = useToast()
 const { data: userSession } = await authClient.useSession(useFetch)
+
+// 双因素认证状态
+const showTotpSetup = ref(false)
+const showBackupCodes = ref(false)
+const totpUri = ref('')
+const qrCodeUrl = ref('')
+const verificationCode = ref('')
+const backupCodes = ref<string[]>([])
+const password = ref('')
+const showPasswordDialog = ref(false)
+const passwordDialogMode = ref<'enable' | 'disable'>('enable')
+
+// 处理密码对话框关闭
+const onPasswordDialogHide = () => {
+    password.value = ''
+}
+
+// 处理密码确认
+const onPasswordConfirm = async () => {
+    if (!password.value) {
+        toast.add({
+            severity: 'warn',
+            summary: '警告',
+            detail: '请输入密码',
+            life: 3000,
+        })
+        return
+    }
+
+    if (passwordDialogMode.value === 'enable') {
+        await confirmPassword()
+    } else {
+        await confirmDisable2FA()
+    }
+}
+
+// 生成二维码
+const generateQRCode = async (text: string) => {
+    try {
+        qrCodeUrl.value = await QRCode.toDataURL(text)
+    } catch (error) {
+        console.error('生成二维码失败:', error)
+    }
+}
+
+// 启用双因素认证
+const enable2FA = () => {
+    passwordDialogMode.value = 'enable'
+    showPasswordDialog.value = true
+}
+
+// 确认密码并开始设置
+const confirmPassword = async () => {
+    try {
+        showPasswordDialog.value = false
+
+        // 获取 TOTP URI
+        const { data, error } = await authClient.twoFactor.enable({
+            password: password.value,
+        })
+
+        if (error) {
+            throw error
+        }
+
+        totpUri.value = data.totpURI
+        await generateQRCode(data.totpURI)
+        backupCodes.value = data.backupCodes
+
+        showTotpSetup.value = true
+
+        toast.add({
+            severity: 'info',
+            summary: '提示',
+            detail: '请使用身份验证器应用扫描二维码',
+            life: 5000,
+        })
+    } catch (error: any) {
+        toast.add({
+            severity: 'error',
+            summary: '错误',
+            detail: `设置失败：${error.message || '未知错误'}`,
+            life: 3000,
+        })
+    }
+}
+
+// 验证并完成设置
+const verifyAndEnable2FA = async () => {
+    try {
+        if (!verificationCode.value) {
+            toast.add({
+                severity: 'warn',
+                summary: '警告',
+                detail: '请输入验证码',
+                life: 3000,
+            })
+            return
+        }
+
+        const { error } = await authClient.twoFactor.verifyTotp({
+            code: verificationCode.value,
+            // trustDevice: true, // 将此设备标记为可信
+        })
+
+        if (error) {
+            throw error
+        }
+
+        // 生成备份码
+        // const { data: backupData, error: backupError } = await authClient.twoFactor.generateBackupCodes({
+        //     password: password.value,
+        // })
+
+        // if (backupError) {
+        //     throw backupError
+        // }
+
+        // backupCodes.value = backupData.backupCodes
+        showTotpSetup.value = false
+        showBackupCodes.value = true
+
+        toast.add({
+            severity: 'success',
+            summary: '成功',
+            detail: '双因素认证已成功启用！请保存好备份码',
+            life: 5000,
+        })
+    } catch (error: any) {
+        toast.add({
+            severity: 'error',
+            summary: '错误',
+            detail: `验证失败：${error.message || '未知错误'}`,
+            life: 3000,
+        })
+    }
+}
+
+// 禁用双因素认证
+const disable2FA = () => {
+    passwordDialogMode.value = 'disable'
+    showPasswordDialog.value = true
+}
+
+// 确认密码并禁用双因素认证
+const confirmDisable2FA = async () => {
+    try {
+        const { error } = await authClient.twoFactor.disable({
+            password: password.value,
+        })
+
+        if (error) {
+            throw error
+        }
+
+        showPasswordDialog.value = false
+        toast.add({
+            severity: 'success',
+            summary: '成功',
+            detail: '双因素认证已成功禁用',
+            life: 3000,
+        })
+    } catch (error: any) {
+        toast.add({
+            severity: 'error',
+            summary: '错误',
+            detail: `禁用失败：${error.message || '未知错误'}`,
+            life: 3000,
+        })
+    }
+}
+
+// 复制备份码
+const copyBackupCodes = () => {
+    const codesText = backupCodes.value.join('\n')
+    navigator.clipboard.writeText(codesText)
+    toast.add({
+        severity: 'success',
+        summary: '成功',
+        detail: '备份码已复制到剪贴板',
+        life: 3000,
+    })
+}
+
+// 下载备份码
+const downloadBackupCodes = () => {
+    const codesText = backupCodes.value.join('\n')
+    const blob = new Blob([codesText], { type: 'text/plain' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = '2fa-backup-codes.txt'
+    document.body.appendChild(a)
+    a.click()
+    window.URL.revokeObjectURL(url)
+    document.body.removeChild(a)
+    toast.add({
+        severity: 'success',
+        summary: '成功',
+        detail: '备份码已下载',
+        life: 3000,
+    })
+}
+
+// 完成设置
+const finishSetup = () => {
+    showBackupCodes.value = false
+    password.value = ''
+    verificationCode.value = ''
+    totpUri.value = ''
+    qrCodeUrl.value = ''
+    backupCodes.value = []
+}
 
 const logs = ref([
     {
@@ -325,6 +678,7 @@ const revokeAllSessions = async () => {
         await authClient.revokeSessions()
         await listSessions() // 刷新会话列表
         showRevokeAllSessionsConfirm.value = false
+        navigateTo('/login')
     } catch (error) {
         console.error('撤销所有会话失败:', error)
     }

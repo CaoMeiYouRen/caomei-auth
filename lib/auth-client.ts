@@ -16,9 +16,9 @@ export const authClient = createAuthClient({
         adminClient(),
         genericOAuthClient(),
         twoFactorClient({
-            onTwoFactorRedirect() {
-                // 全局处理 2FA 验证
-            },
+            // onTwoFactorRedirect() {
+            //     // 全局处理 2FA 验证
+            // },
         }),
     ],
 })
