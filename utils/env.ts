@@ -1,12 +1,11 @@
 import { parse } from 'better-bytes'
 import ms from 'ms'
-
 /**
  * 基础配置
  * 包含服务器基本设置、备案信息等
  */
 // 雪花算法机器 ID。默认为进程 ID 对 1024 取余数，也可以手动指定
-export const MACHINE_ID = Number(process.env.MACHINE_ID || process.pid % 1024)
+export const MACHINE_ID = Number(process.env.MACHINE_ID || import.meta.server ? process.pid % 1024 : 0)
 // Better Auth 的基础 URL
 export const AUTH_BASE_URL = process.env.NUXT_PUBLIC_AUTH_BASE_URL || import.meta.env.NUXT_PUBLIC_AUTH_BASE_URL as string || ''
 // 联系邮箱
