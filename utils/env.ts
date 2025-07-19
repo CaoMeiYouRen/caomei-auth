@@ -8,13 +8,15 @@ import ms from 'ms'
 // 雪花算法机器 ID。默认为进程 ID 对 1024 取余数，也可以手动指定
 export const MACHINE_ID = Number(process.env.MACHINE_ID || process.pid % 1024)
 // Better Auth 的基础 URL
-export const AUTH_BASE_URL = import.meta.env.NUXT_PUBLIC_AUTH_BASE_URL as string || ''
+export const AUTH_BASE_URL = process.env.NUXT_PUBLIC_AUTH_BASE_URL || import.meta.env.NUXT_PUBLIC_AUTH_BASE_URL as string || ''
 // 联系邮箱
 export const CONTACT_EMAIL = import.meta.env.NUXT_PUBLIC_CONTACT_EMAIL
 // ICP备案号
 export const ICP_BEIAN_NUMBER = import.meta.env.NUXT_PUBLIC_ICP_BEIAN_NUMBER
 // 公安备案号
 export const PUBLIC_SECURITY_BEIAN_NUMBER = import.meta.env.NUXT_PUBLIC_PUBLIC_SECURITY_BEIAN_NUMBER
+// 用于加密、签名和哈希的密钥。生产环境必须设置
+export const AUTH_SECRET = process.env.AUTH_SECRET || process.env.BETTER_AUTH_SECRET || ''
 
 /**
  * 文件上传配置
@@ -61,6 +63,8 @@ export const DATABASE_SSL = process.env.DATABASE_SSL === 'true'
 export const DATABASE_CHARSET = process.env.DATABASE_CHARSET || 'utf8_general_ci'
 // 数据库时区 (仅MySQL使用)
 export const DATABASE_TIMEZONE = process.env.DATABASE_TIMEZONE || 'local'
+// 数据库表前缀
+export const DATABASE_ENTITY_PREFIX = process.env.DATABASE_ENTITY_PREFIX || 'caomei_auth_'
 
 /**
  * Redis配置（可选）

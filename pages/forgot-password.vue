@@ -168,7 +168,7 @@ import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 
 const config = useRuntimeConfig().public
-const phoneEnabled = config.phoneEnabled === 'true'
+const phoneEnabled = config.phoneEnabled
 
 const email = ref('')
 const phone = ref('')

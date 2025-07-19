@@ -72,7 +72,7 @@ export default defineNuxtConfig({
             maxUploadSize: process.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE,
             icpBeianNumber: process.env.NUXT_PUBLIC_ICP_BEIAN_NUMBER,
             publicSecurityBeianNumber: process.env.NUXT_PUBLIC_PUBLIC_SECURITY_BEIAN_NUMBER,
-            phoneEnabled: process.env.NUXT_PUBLIC_PHONE_ENABLED || (process.env.PHONE_CHANNEL ? 'true' : ''),
+            phoneEnabled: String(process.env.NUXT_PUBLIC_PHONE_ENABLED) || (process.env.PHONE_CHANNEL ? 'true' : ''),
         },
     },
     primevue: {

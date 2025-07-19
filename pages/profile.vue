@@ -391,12 +391,12 @@ import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
-import { AUTH_BASE_URL, authClient, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/lib/auth-client'
+import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
 import type { SocialProvider } from '@/types/social'
 import { shortText } from '@/utils/short-text'
 const config = useRuntimeConfig().public
-const phoneEnabled = config.phoneEnabled === 'true'
+const phoneEnabled = config.phoneEnabled
 
 const MAX_AVATAR_SIZE = MAX_UPLOAD_SIZE
 

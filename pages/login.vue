@@ -233,11 +233,10 @@ import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
-import { authClient, AUTH_BASE_URL } from '@/lib/auth-client'
+import { authClient } from '@/lib/auth-client'
 import type { SocialProvider } from '@/types/social'
 const config = useRuntimeConfig().public
-const phoneEnabled = config.phoneEnabled === 'true'
-
+const phoneEnabled = config.phoneEnabled
 const activeTab = ref<'username' | 'email' | 'phone'>('username')
 const email = ref('')
 const emailPassword = ref('')

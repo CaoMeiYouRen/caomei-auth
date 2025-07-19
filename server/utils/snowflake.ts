@@ -59,4 +59,6 @@ export class Snowflake {
 }
 
 // 机器 ID 。默认为进程 ID 对 1024 取余数。可以从环境变量中获取机器 ID
-export const snowflake = new Snowflake(Number(process.env.MACHINE_ID || process.pid % 1024))
+import { MACHINE_ID } from '@/utils/env'
+
+export const snowflake = new Snowflake(MACHINE_ID)

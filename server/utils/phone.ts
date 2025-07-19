@@ -1,23 +1,16 @@
-import ms from 'ms'
 import { limiterStorage } from '@/server/database/storage'
 import { validatePhone } from '@/utils/validate'
-
-// 定义短信验证码的每日发送上限
-const PHONE_DAILY_LIMIT = Number(process.env.PHONE_DAILY_LIMIT || 100)
-// 单个手机号每日验证码发送上限
-const PHONE_SINGLE_USER_DAILY_LIMIT = Number(process.env.PHONE_SINGLE_USER_DAILY_LIMIT || 3)
+import {
+    PHONE_DAILY_LIMIT,
+    PHONE_SINGLE_USER_DAILY_LIMIT,
+    PHONE_LIMIT_WINDOW,
+    PHONE_CHANNEL,
+    PHONE_SPUG_TEMPLATE_ID,
+    PHONE_SENDER_NAME,
+    PHONE_EXPIRES_IN,
+} from '@/utils/env'
 
 const PHONE_LIMIT_KEY = 'phone_global_limit'
-// 限流窗口，单位秒，默认 1 天(86400秒)
-const PHONE_LIMIT_WINDOW = Number(process.env.PHONE_LIMIT_WINDOW || ms('1d') / 1000)
-
-const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
-
-const PHONE_SPUG_TEMPLATE_ID = process.env.PHONE_SPUG_TEMPLATE_ID || ''
-
-const PHONE_SENDER_NAME = process.env.PHONE_SENDER_NAME || '草梅Auth'
-
-const PHONE_EXPIRES_IN = Number(process.env.PHONE_EXPIRES_IN || 300)
 
 /**
  *  TODO：支持更多短信渠道

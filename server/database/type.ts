@@ -1,5 +1,7 @@
+import { DATABASE_TYPE } from '@/utils/env'
+
 export const getDateType = () => {
-    const dbType = process.env.DATABASE_TYPE || 'sqlite'
+    const dbType = DATABASE_TYPE
     switch (dbType) {
         case 'sqlite':
             return 'datetime' // SQLite 使用 datetime 类型

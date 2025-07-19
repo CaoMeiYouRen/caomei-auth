@@ -23,6 +23,7 @@ import {
     PHONE_EXPIRES_IN,
     ANONYMOUS_EMAIL_DOMAIN_NAME,
     TEMP_EMAIL_DOMAIN_NAME,
+    AUTH_SECRET,
     ADMIN_USER_IDS as ENV_ADMIN_USER_IDS,
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
@@ -40,6 +41,7 @@ import {
     QQ_CLIENT_SECRET,
     QQ_REDIRECT_URI,
     QQ_USE_UNIONID,
+    AUTH_BASE_URL,
 } from '@/utils/env'
 
 const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
@@ -53,9 +55,9 @@ export const auth = betterAuth({
     // 使用 TypeORM 适配器
     database: typeormAdapter(dataSource),
     // 可信来源列表。
-    trustedOrigins: [process.env.NUXT_PUBLIC_AUTH_BASE_URL as string, ...process.env.NODE_ENV === 'development' ? [`http://localhost:${process.env.PORT}`, `http://127.0.0.1:${process.env.PORT}`] : []].filter(Boolean),
+    trustedOrigins: [AUTH_BASE_URL],
     // 用于加密、签名和哈希的秘密。
-    secret: process.env.AUTH_SECRET || process.env.BETTER_AUTH_SECRET || '',
+    secret: AUTH_SECRET,
     advanced: {
         database: {
             // 自定义 ID 生成逻辑

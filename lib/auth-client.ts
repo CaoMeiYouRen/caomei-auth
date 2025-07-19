@@ -1,12 +1,7 @@
 import { createAuthClient } from 'better-auth/vue'
 import { usernameClient, magicLinkClient, emailOTPClient, inferAdditionalFields, anonymousClient, phoneNumberClient, adminClient, genericOAuthClient } from 'better-auth/client/plugins'
-import { parse } from 'better-bytes'
 import type { auth } from './auth'
-
-export const AUTH_BASE_URL = import.meta.env.NUXT_PUBLIC_AUTH_BASE_URL as string || window?.location?.origin
-
-export const MAX_UPLOAD_SIZE_TEXT = import.meta.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE as string || '4.5MiB'
-export const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
+import { AUTH_BASE_URL, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/utils/env'
 
 export const authClient = createAuthClient({
     /** 服务器的基础 URL（如果您使用相同域名，则可选） */

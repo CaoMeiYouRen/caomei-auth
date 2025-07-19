@@ -8,15 +8,15 @@ import { getFileExtension, getFileType } from '@/server/utils/file'
 import { auth } from '@/lib/auth'
 import { limiterStorage } from '@/server/database/storage'
 
-const MAX_UPLOAD_SIZE_TEXT = process.env.MAX_UPLOAD_SIZE || process.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE || '4.5MiB'
-const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
-
-// 上传次数限制窗口
-const UPLOAD_LIMIT_WINDOW = Number(process.env.UPLOAD_LIMIT_WINDOW || ms('1d') / 1000)
-// 文件上传每日限制
-const UPLOAD_DAILY_LIMIT = Number(process.env.UPLOAD_DAILY_LIMIT || '100')
-// 单个用户每日上传文件限制
-const UPLOAD_SINGLE_USER_DAILY_LIMIT = Number(process.env.UPLOAD_SINGLE_USER_DAILY_LIMIT || '5')
+import {
+    MAX_UPLOAD_SIZE,
+    MAX_UPLOAD_SIZE_TEXT,
+    UPLOAD_LIMIT_WINDOW,
+    UPLOAD_DAILY_LIMIT,
+    UPLOAD_SINGLE_USER_DAILY_LIMIT,
+    STORAGE_TYPE,
+    BUCKET_PREFIX,
+} from '@/utils/env'
 
 export default defineEventHandler(async (event): Promise<{
     status: number
@@ -57,12 +57,8 @@ export default defineEventHandler(async (event): Promise<{
 
     try {
 
-        // 获取运行时配置
-        const storageType = process.env.STORAGE_TYPE || ''
-        const bucketPrefix = process.env.BUCKET_PREFIX || ''
-
         // 获取存储实例
-        const storage = getFileStorage(storageType, process.env as FileStorageEnv)
+        const storage = getFileStorage(STORAGE_TYPE, process.env as FileStorageEnv)
 
         // 读取表单数据
         const parts = await readMultipartFormData(event)
@@ -99,7 +95,7 @@ export default defineEventHandler(async (event): Promise<{
         const extension = getFileExtension(contentType) || path.extname(filePart.filename)
         const timestamp = dayjs().format('YYYYMMDDHHmmssSSS') // 时间戳
         const random = Math.random().toString(36).slice(2, 9) // 随机字符串，避免文件名冲突
-        const key = `${bucketPrefix}${timestamp}-${random}${extension}` // 文件名
+        const key = `${BUCKET_PREFIX}${timestamp}-${random}${extension}` // 文件名
 
         const { url } = await storage.upload(fileBuffer, key, contentType)
 

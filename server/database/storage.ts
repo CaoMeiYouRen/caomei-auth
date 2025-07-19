@@ -23,10 +23,12 @@ interface BaseStorage {
     increment: (key: string, ttl: number) => Promise<number>
 }
 
+import { REDIS_URL } from '@/utils/env'
+
 // 初始化基础存储
 const createBaseStorage = (): BaseStorage => {
-    if (process.env.REDIS_URL) {
-        const redis = new Redis(process.env.REDIS_URL)
+    if (REDIS_URL) {
+        const redis = new Redis(REDIS_URL)
         return {
             get: async (key: string) => {
                 const value = await redis.get(key)
