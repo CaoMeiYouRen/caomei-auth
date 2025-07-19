@@ -5,21 +5,22 @@
             <div class="auth-card profile-card">
                 <div class="profile-header">
                     <h2 class="auth-title">
-                        个人中心
+                        个人资料
                     </h2>
                     <div class="profile-header-actions">
                         <Button
-                            label="账号安全设置"
-                            class="btn btn-link"
-                            icon="mdi mdi-shield-account-outline"
+                            v-tooltip.top="'账号安全设置'"
+                            label="安全设置"
+                            icon="mdi mdi-shield-account"
+                            severity="secondary"
                             @click="goSecurity"
                         />
                         <Button
-                            v-tooltip.top="'点击此按钮退出当前账号'"
-                            label="登出"
-                            class="btn btn-link ml-3"
+                            v-tooltip.top="'退出登录'"
+                            label="退出登录"
                             icon="mdi mdi-logout"
-                            @click="logout"
+                            severity="secondary"
+                            @click="showLogoutConfirm = true"
                         />
                     </div>
                 </div>
@@ -380,6 +381,33 @@
                     @click="setUsername"
                 />
             </div>
+        </Dialog>
+
+        <!-- 退出登录确认弹窗 -->
+        <Dialog
+            v-model:visible="showLogoutConfirm"
+            modal
+            header="确认退出"
+            :closable="true"
+            :style="{width: '450px'}"
+        >
+            <p>确定要退出登录吗？退出后需要重新登录才能访问您的账户。</p>
+            <template #footer>
+                <Button
+                    v-tooltip.top="'取消退出登录'"
+                    label="取消"
+                    class="btn btn-secondary"
+                    severity="secondary"
+                    @click="showLogoutConfirm = false"
+                />
+                <Button
+                    v-tooltip.top="'确认退出登录'"
+                    label="确认退出"
+                    class="btn btn-primary"
+                    :loading="loggingOut"
+                    @click="confirmLogout"
+                />
+            </template>
         </Dialog>
     </div>
 </template>
@@ -746,11 +774,16 @@ function goSecurity() {
     navigateTo('/security')
 }
 
-// 登出
-async function logout() {
+const showLogoutConfirm = ref(false)
+const loggingOut = ref(false)
+
+// 确认退出登录
+async function confirmLogout() {
+    loggingOut.value = true
     try {
         await authClient.signOut({})
         toast.add({ severity: 'success', summary: '登出成功', life: 2000 })
+        showLogoutConfirm.value = false
         navigateTo('/login') // 重定向到登录页面
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '登出时发生未知错误'
@@ -760,6 +793,8 @@ async function logout() {
             detail: errorMessage,
             life: 5000,
         })
+    } finally {
+        loggingOut.value = false
     }
 }
 
@@ -927,5 +962,32 @@ async function onFileSelect(event: FileUploadSelectEvent) {
     color: $primary;
     margin-left: 0.5em;
     font-size: 0.98em;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .profile-header-actions {
+        display: flex;
+        gap: 0.5rem;
+
+        .btn-header {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+
+            &:hover {
+                background-color: var(--primary-100);
+                color: var(--primary-500);
+            }
+
+            .p-button-icon {
+                font-size: 1.2rem;
+            }
+        }
+    }
 }
 </style>
