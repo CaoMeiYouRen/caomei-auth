@@ -395,7 +395,8 @@ import { AUTH_BASE_URL, authClient, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from
 import { formatPhoneNumberInternational } from '@/utils/phone'
 import type { SocialProvider } from '@/types/social'
 import { shortText } from '@/utils/short-text'
-import { phoneEnabled } from '@/utils/env'
+const config = useRuntimeConfig().public
+const phoneEnabled = config.phoneEnabled === 'true'
 
 const MAX_AVATAR_SIZE = MAX_UPLOAD_SIZE
 

@@ -205,7 +205,9 @@ import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
-import { phoneEnabled } from '@/utils/env'
+
+const config = useRuntimeConfig().public
+const phoneEnabled = config.phoneEnabled === 'true'
 
 const username = ref('')
 const email = ref('')

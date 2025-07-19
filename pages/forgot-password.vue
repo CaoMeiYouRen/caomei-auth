@@ -166,7 +166,9 @@ import { validateEmail, validatePhone, passwordValidator } from '@/utils/validat
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
-import { phoneEnabled } from '@/utils/env'
+
+const config = useRuntimeConfig().public
+const phoneEnabled = config.phoneEnabled === 'true'
 
 const email = ref('')
 const phone = ref('')
