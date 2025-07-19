@@ -18,16 +18,31 @@ import { dataSource } from '@/server/database'
 import { usernameValidator, validatePhone } from '@/utils/validate'
 import { sendPhoneOtp } from '@/server/utils/phone'
 import { secondaryStorage } from '@/server/database/storage'
+import {
+    EMAIL_EXPIRES_IN,
+    PHONE_EXPIRES_IN,
+    ANONYMOUS_EMAIL_DOMAIN_NAME,
+    TEMP_EMAIL_DOMAIN_NAME,
+    ADMIN_USER_IDS as ENV_ADMIN_USER_IDS,
+    GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET,
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    MICROSOFT_CLIENT_ID,
+    MICROSOFT_CLIENT_SECRET,
+    DISCORD_CLIENT_ID,
+    DISCORD_CLIENT_SECRET,
+    WEIBO_CLIENT_ID,
+    WEIBO_CLIENT_SECRET,
+    WEIBO_REDIRECT_URI,
+    WEIBO_SCOPES,
+    QQ_CLIENT_ID,
+    QQ_CLIENT_SECRET,
+    QQ_REDIRECT_URI,
+    QQ_USE_UNIONID,
+} from '@/utils/env'
 
-const EMAIL_EXPIRES_IN = Number(process.env.EMAIL_EXPIRES_IN || 300)
-
-const PHONE_EXPIRES_IN = Number(process.env.PHONE_EXPIRES_IN || 300)
-
-const ANONYMOUS_EMAIL_DOMAIN_NAME = process.env.ANONYMOUS_EMAIL_DOMAIN_NAME || 'anonymous.com'
-
-const TEMP_EMAIL_DOMAIN_NAME = process.env.TEMP_EMAIL_DOMAIN_NAME || 'example.com'
-
-const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS || '').split(',').map((id) => id.trim()).filter(Boolean)
+const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
 
 const getTempEmail = () => `${snowflake.generateId()}@${TEMP_EMAIL_DOMAIN_NAME}`
 
@@ -118,23 +133,23 @@ export const auth = betterAuth({
     },
     socialProviders: {
         github: { // 支持 GitHub 登录
-            clientId: process.env.GITHUB_CLIENT_ID as string,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+            clientId: GITHUB_CLIENT_ID as string,
+            clientSecret: GITHUB_CLIENT_SECRET as string,
         },
         google: { // 支持 Google 登录
-            clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            clientId: GOOGLE_CLIENT_ID as string,
+            clientSecret: GOOGLE_CLIENT_SECRET as string,
         },
         microsoft: { // 支持 Microsoft 登录
-            clientId: process.env.MICROSOFT_CLIENT_ID as string,
-            clientSecret: process.env.MICROSOFT_CLIENT_SECRET as string,
+            clientId: MICROSOFT_CLIENT_ID as string,
+            clientSecret: MICROSOFT_CLIENT_SECRET as string,
             // 可选配置
             tenantId: 'common',
             requireSelectAccount: true,
         },
         discord: { // 支持 Discord 登录
-            clientId: process.env.DISCORD_CLIENT_ID as string,
-            clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
+            clientId: DISCORD_CLIENT_ID as string,
+            clientSecret: DISCORD_CLIENT_SECRET as string,
         },
     },
     session: {
@@ -250,14 +265,14 @@ export const auth = betterAuth({
             config: [
                 {
                     providerId: 'weibo',
-                    clientId: process.env.WEIBO_CLIENT_ID as string,
-                    clientSecret: process.env.WEIBO_CLIENT_SECRET as string,
-                    redirectURI: process.env.WEIBO_REDIRECT_URI as string,
+                    clientId: WEIBO_CLIENT_ID as string,
+                    clientSecret: WEIBO_CLIENT_SECRET as string,
+                    redirectURI: WEIBO_REDIRECT_URI as string,
                     authorizationUrl: 'https://api.weibo.com/oauth2/authorize',
                     tokenUrl: 'https://api.weibo.com/oauth2/access_token',
                     userInfoUrl: 'https://api.weibo.com/2/users/show.json',
                     // 由于微博获取邮箱的接口需要单独申请，故此处不默认申请 email
-                    scopes: ['follow_app_official_microblog', ...(process.env.WEIBO_SCOPES || '').split(',')].filter(Boolean),
+                    scopes: ['follow_app_official_microblog', ...WEIBO_SCOPES].filter(Boolean),
                     pkce: false,
                     // 自定义获取用户信息逻辑
                     getUserInfo: async (tokens) => {
@@ -295,13 +310,13 @@ export const auth = betterAuth({
                 },
                 {
                     providerId: 'qq',
-                    clientId: process.env.QQ_CLIENT_ID || '',
-                    clientSecret: process.env.QQ_CLIENT_SECRET || '',
+                    clientId: QQ_CLIENT_ID || '',
+                    clientSecret: QQ_CLIENT_SECRET || '',
                     authorizationUrl: 'https://graph.qq.com/oauth2.0/authorize',
                     tokenUrl: 'https://graph.qq.com/oauth2.0/token',
                     userInfoUrl: 'https://graph.qq.com/user/get_user_info',
                     scopes: ['get_user_info'],
-                    redirectURI: process.env.QQ_REDIRECT_URI || '',
+                    redirectURI: QQ_REDIRECT_URI || '',
                     responseType: 'code',
                     pkce: false,
                     tokenUrlParams: {
@@ -310,7 +325,7 @@ export const auth = betterAuth({
                     getUserInfo: async (tokens) => {
                         // console.log(tokens)
                         // 是否获取 unionid。需要获取 getUnionId 接口权限
-                        const $unionid = process.env.QQ_USE_UNIONID === 'true' ? '1' : ''
+                        const $unionid = QQ_USE_UNIONID ? '1' : ''
                         // 获取 openid
                         const openidResponse = await fetch(
                             `https://graph.qq.com/oauth2.0/me?access_token=${tokens.accessToken}&unionid=${$unionid}&fmt=json`,
@@ -325,7 +340,7 @@ export const auth = betterAuth({
                         }
                         // 获取用户信息
                         const userInfoResponse = await fetch(
-                            `https://graph.qq.com/user/get_user_info?access_token=${tokens.accessToken}&oauth_consumer_key=${process.env.QQ_CLIENT_ID}&openid=${openid}`,
+                            `https://graph.qq.com/user/get_user_info?access_token=${tokens.accessToken}&oauth_consumer_key=${QQ_CLIENT_ID}&openid=${openid}`,
                         )
                         const userInfo = await userInfoResponse.json()
 
