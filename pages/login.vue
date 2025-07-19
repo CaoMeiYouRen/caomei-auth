@@ -223,6 +223,51 @@
                 </div>
             </div>
         </div>
+
+        <!-- 双因素认证对话框 -->
+        <Dialog
+            v-model:visible="show2FADialog"
+            modal
+            :closable="false"
+            :style="{width: '450px'}"
+            header="双因素认证"
+        >
+            <div class="p-fluid">
+                <p class="mb-3">
+                    请输入您的{{ useBackupCode ? '备份码' : '身份验证器生成的 6 位验证码' }}
+                </p>
+                <div class="field">
+                    <InputText
+                        v-model="twoFactorCode"
+                        class="w-full"
+                        :placeholder=" useBackupCode ?'请输入备份码':'请输入验证码'"
+                        @keyup.enter="verify2FA"
+                    />
+                </div>
+                <div v-if="twoFactorError" class="error-message mt-2">
+                    {{ twoFactorError }}
+                </div>
+                <div class="align-items-center flex mt-3">
+                    <ToggleSwitch
+                        v-model="useBackupCode"
+                        input-id="use-backup-code"
+                        class="mr-2"
+                    />
+                    <label for="use-backup-code" class="cursor-pointer text-sm">
+                        {{ useBackupCode ? '使用验证器' : '使用备份码' }}
+                    </label>
+                </div>
+            </div>
+            <template #footer>
+                <Button
+                    label="验证"
+                    :loading="verifying2FA"
+                    @click="verify2FA"
+                />
+            </template>
+        </Dialog>
+
+        <Toast />
     </div>
 </template>
 
@@ -254,6 +299,14 @@ const phoneUseCode = ref(false)
 const phoneCode = ref('')
 const phoneCodeSending = ref(false)
 
+// 双因素认证相关状态
+const show2FADialog = ref(false)
+const twoFactorCode = ref('')
+const twoFactorError = ref('')
+const verifying2FA = ref(false)
+const useBackupCode = ref(false)
+const pendingLoginData = ref<any>(null) // 存储待完成的登录数据
+
 const { data: providersData } = await useFetch('/api/social/providers')
 
 const socialProviders = computed(() => providersData.value?.providers || [])
@@ -281,6 +334,73 @@ const changeMode = (mode: 'username' | 'email' | 'phone') => {
     }
     params.mode = mode
     activeTab.value = mode
+}
+
+// 处理双因素认证
+const handle2FA = (result: any) => {
+    if (result.data?.twoFactorRedirect) {
+        // 存储登录数据以便验证完成后继续
+        pendingLoginData.value = result.data
+        // 显示 2FA 对话框
+        show2FADialog.value = true
+        return true
+    }
+    return false
+}
+
+// 重置双因素认证状态
+const reset2FAState = () => {
+    twoFactorCode.value = ''
+    twoFactorError.value = ''
+    useBackupCode.value = false
+    show2FADialog.value = false
+    verifying2FA.value = false
+    pendingLoginData.value = null
+}
+
+// 验证双因素认证
+const verify2FA = async () => {
+    if (!twoFactorCode.value) {
+        twoFactorError.value = '请输入验证码'
+        return
+    }
+
+    verifying2FA.value = true
+    twoFactorError.value = ''
+
+    try {
+        let result
+        if (useBackupCode.value) {
+            result = await authClient.twoFactor.verifyBackupCode({
+                code: twoFactorCode.value,
+                trustDevice: rememberMe.value, // 如果用户选择了"记住我"，则将设备标记为可信
+            })
+        } else {
+            result = await authClient.twoFactor.verifyTotp({
+                code: twoFactorCode.value,
+                trustDevice: rememberMe.value, // 如果用户选择了"记住我"，则将设备标记为可信
+            })
+        }
+
+        if (result.error) {
+            throw new Error(result.error.message || '验证失败')
+        }
+
+        reset2FAState()
+        toast.add({
+            severity: 'success',
+            summary: '登录成功',
+            detail: '即将跳转到首页',
+            life: 2000,
+        })
+        setTimeout(() => {
+            navigateTo('/profile')
+        }, 1200)
+    } catch (error: any) {
+        twoFactorError.value = error.message || '验证失败'
+    } finally {
+        verifying2FA.value = false
+    }
 }
 
 async function login() {
@@ -322,6 +442,11 @@ async function login() {
                 throw new Error(result.error.message || '登录失败')
             }
 
+            // 检查是否需要双因素认证
+            if (handle2FA(result)) {
+                return
+            }
+
             toast.add({
                 severity: 'success',
                 summary: '登录成功',
@@ -357,10 +482,16 @@ async function login() {
             const result = await authClient.signIn.username({
                 username: username.value,
                 password: usernamePassword.value,
+                rememberMe: rememberMe.value,
             })
 
             if (result.error) {
                 throw new Error(result.error.message || '登录失败')
+            }
+
+            // 检查是否需要双因素认证
+            if (handle2FA(result)) {
+                return
             }
 
             toast.add({
@@ -421,6 +552,11 @@ async function login() {
 
             if (result.error) {
                 throw new Error(result.error.message || '登录失败')
+            }
+
+            // 检查是否需要双因素认证
+            if (handle2FA(result)) {
+                return
             }
 
             toast.add({
