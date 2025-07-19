@@ -268,7 +268,7 @@ export const auth = betterAuth({
         }),
         twoFactor({
             issuer: APP_NAME, // 发行者是应用程序的名称。它用于生成 TOTP 代码。它将显示在认证器应用程序中。
-            skipVerificationOnEnable: false, // 在为用户启用两因素之前跳过验证过程
+            // skipVerificationOnEnable: false, // 在为用户启用两因素之前跳过验证过程
             totpOptions: {
                 digits: 6, // 验证码位数
                 period: 60, // 验证码有效期（秒）
