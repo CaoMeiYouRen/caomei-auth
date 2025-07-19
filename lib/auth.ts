@@ -271,7 +271,7 @@ export const auth = betterAuth({
             // skipVerificationOnEnable: false, // 在为用户启用两因素之前跳过验证过程
             totpOptions: {
                 digits: 6, // 验证码位数
-                period: 60, // 验证码有效期（秒）
+                period: 30, // 验证码有效期（秒）。采用默认值以兼容部分不支持设置有效期的认证器应用程序
             },
             otpOptions: {
                 period: 60, // 验证码有效期（秒）
@@ -283,15 +283,15 @@ export const auth = betterAuth({
                         sendEmail({
                             to: user.email,
                             subject: '您的一次性验证码',
-                            text: `您的验证码是：${otp}`,
+                            text: `您的验证码是：${otp}。1分钟内有效。如果您没有请求此验证码，请忽略此邮件。`,
                         })
                         return
                     }
                     if ((user as User).phoneNumberVerified) {
-                        await sendPhoneOtp(user.phoneNumber, otp)
+                        await sendPhoneOtp(user.phoneNumber, otp, 60)
                         return
                     }
-                    throw new Error('用户未验证邮箱或手机号')
+                    throw new Error('用户未验证邮箱或手机号，无法发送一次性验证码')
                 },
             },
             backupCodeOptions: {
