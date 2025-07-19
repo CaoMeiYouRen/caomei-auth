@@ -10,13 +10,15 @@ export const MACHINE_ID = Number(process.env.MACHINE_ID || process.pid % 1024)
 // Better Auth 的基础 URL
 export const AUTH_BASE_URL = process.env.NUXT_PUBLIC_AUTH_BASE_URL || import.meta.env.NUXT_PUBLIC_AUTH_BASE_URL as string || ''
 // 联系邮箱
-export const CONTACT_EMAIL = import.meta.env.NUXT_PUBLIC_CONTACT_EMAIL
+export const CONTACT_EMAIL = import.meta.env.NUXT_PUBLIC_CONTACT_EMAIL as string
 // ICP备案号
 export const ICP_BEIAN_NUMBER = import.meta.env.NUXT_PUBLIC_ICP_BEIAN_NUMBER
 // 公安备案号
 export const PUBLIC_SECURITY_BEIAN_NUMBER = import.meta.env.NUXT_PUBLIC_PUBLIC_SECURITY_BEIAN_NUMBER
 // 用于加密、签名和哈希的密钥。生产环境必须设置
 export const AUTH_SECRET = process.env.AUTH_SECRET || process.env.BETTER_AUTH_SECRET || ''
+// 应用名称
+export const APP_NAME = process.env.NUXT_PUBLIC_APP_NAME || import.meta.env.NUXT_PUBLIC_APP_NAME as string || '草梅Auth'
 
 /**
  * 文件上传配置
@@ -82,8 +84,8 @@ export const PHONE_ENABLED = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true
 export const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
 // Spug短信模板ID，在Spug短信模板配置中获取
 export const PHONE_SPUG_TEMPLATE_ID = process.env.PHONE_SPUG_TEMPLATE_ID || ''
-// 短信发件人名称
-export const PHONE_SENDER_NAME = process.env.PHONE_SENDER_NAME || '草梅Auth'
+// 短信发件人名称，默认使用 应用名称
+export const PHONE_SENDER_NAME = process.env.PHONE_SENDER_NAME || APP_NAME || '草梅Auth'
 // 短信验证码有效时间（秒）
 export const PHONE_EXPIRES_IN = Number(process.env.PHONE_EXPIRES_IN || 300)
 // 短信验证码每日发送上限（全局限制）

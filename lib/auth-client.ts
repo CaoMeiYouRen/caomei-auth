@@ -1,5 +1,5 @@
 import { createAuthClient } from 'better-auth/vue'
-import { usernameClient, magicLinkClient, emailOTPClient, inferAdditionalFields, anonymousClient, phoneNumberClient, adminClient, genericOAuthClient } from 'better-auth/client/plugins'
+import { usernameClient, magicLinkClient, emailOTPClient, inferAdditionalFields, anonymousClient, phoneNumberClient, adminClient, genericOAuthClient, twoFactorClient } from 'better-auth/client/plugins'
 import type { auth } from './auth'
 import { AUTH_BASE_URL, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/utils/env'
 
@@ -15,5 +15,10 @@ export const authClient = createAuthClient({
         phoneNumberClient(),
         adminClient(),
         genericOAuthClient(),
+        twoFactorClient({
+            onTwoFactorRedirect() {
+                // 全局处理 2FA 验证
+            },
+        }),
     ],
 })

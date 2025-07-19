@@ -11,6 +11,7 @@
                         label="返回个人中心"
                         class="btn btn-link"
                         icon="mdi mdi-account-circle-outline"
+                        severity="secondary"
                         @click="goProfile"
                     />
                 </div>
@@ -20,7 +21,7 @@
                 <p class="auth-subtitle">
                     管理您的账号安全，设置多因子认证、查看登录日志、管理已登录设备、会话管理等。
                 </p>
-                <!-- <div class="security-section">
+                <div class="security-section">
                     <h3 class="section-title">
                         多因子认证（MFA）
                     </h3>
@@ -28,12 +29,14 @@
                         启用多因子认证可大幅提升账号安全性。支持 TOTP（如 Google
                         Authenticator）、邮箱验证码、短信验证码等多种方式。
                     </p>
-                    <Button
-                        class="btn btn-primary"
-                        label="设置多因子认证"
-                        icon="mdi mdi-shield-key-outline"
-                    />
-                </div> -->
+                    <div class="security-actions">
+                        <Button
+                            class="btn btn-primary"
+                            label="设置多因子认证"
+                            icon="mdi mdi-shield-key-outline"
+                        />
+                    </div>
+                </div>
                 <!-- <div class="divider" />
                 <div class="security-section">
                     <h3 class="section-title">
@@ -108,7 +111,10 @@
                             :key="session.id"
                             class="device-list-row"
                         >
-                            <span v-if="userSession?.session?.id===session.id" v-tooltip.top="'当前正在使用的会话，令牌为：' + session.id">当前会话</span>
+                            <span
+                                v-if="userSession?.session?.id === session.id"
+                                v-tooltip.top="'当前正在使用的会话，令牌为：' + session.id"
+                            >当前会话</span>
                             <span v-else v-tooltip.top="'会话令牌：' + session.id">{{ session.id }}</span>
                             <span>{{ session.browser }}</span>
                             <span>{{ session.os }}</span>
@@ -117,11 +123,11 @@
                             <span>{{ session.expiresAt }}</span>
                             <span class="device-action-col">
                                 <Button
-                                    v-tooltip.top="userSession?.session?.id===session.id ? '无法撤销当前会话' : '点击撤销此会话'"
+                                    v-tooltip.top="userSession?.session?.id === session.id ? '无法撤销当前会话' : '点击撤销此会话'"
                                     class="btn"
                                     label="撤销会话"
                                     icon="mdi mdi-close"
-                                    :disabled="userSession?.session?.id===session.id"
+                                    :disabled="userSession?.session?.id === session.id"
                                     @click="confirmRevokeSession(session.token)"
                                 />
                             </span>
@@ -274,13 +280,13 @@ const sessions = ref<Prettify<{
 }>[]>([])
 
 const sessionList = computed(() => sessions.value.map((session) => ({
-        ...session,
-        createdAt: dayjs(session.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-        updatedAt: dayjs(session.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
-        expiresAt: dayjs(session.expiresAt).format('YYYY-MM-DD HH:mm:ss'),
-        browser: getBrowser(session.userAgent || ''),
-        os: getOs(session.userAgent || ''),
-    })))
+    ...session,
+    createdAt: dayjs(session.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+    updatedAt: dayjs(session.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+    expiresAt: dayjs(session.expiresAt).format('YYYY-MM-DD HH:mm:ss'),
+    browser: getBrowser(session.userAgent || ''),
+    os: getOs(session.userAgent || ''),
+})))
 
 // 列出会话
 const listSessions = async () => {

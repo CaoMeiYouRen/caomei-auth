@@ -9,6 +9,7 @@ import {
     admin,
     captcha,
     genericOAuth,
+    twoFactor,
 } from 'better-auth/plugins'
 import ms from 'ms'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
@@ -42,7 +43,9 @@ import {
     QQ_REDIRECT_URI,
     QQ_USE_UNIONID,
     AUTH_BASE_URL,
+    APP_NAME,
 } from '@/utils/env'
+import type { User } from '@/server/entities/user'
 
 const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
 
@@ -51,6 +54,7 @@ const getTempEmail = () => `${snowflake.generateId()}@${TEMP_EMAIL_DOMAIN_NAME}`
 // TODO 增加注册验证码
 
 export const auth = betterAuth({
+    appName: APP_NAME, // 应用名称。它将被用作发行者。
     // 数据库适配器
     // 使用 TypeORM 适配器
     database: typeormAdapter(dataSource),
@@ -262,6 +266,39 @@ export const auth = betterAuth({
         }), // 支持管理员插件
         openAPI({
             disableDefaultReference: process.env.NODE_ENV !== 'development', // 开发环境启用 OpenAPI 插件
+        }),
+        twoFactor({
+            issuer: APP_NAME, // 发行者是应用程序的名称。它用于生成 TOTP 代码。它将显示在认证器应用程序中。
+            skipVerificationOnEnable: false, // 在为用户启用两因素之前跳过验证过程
+            totpOptions: {
+                digits: 6, // 验证码位数
+                period: 60, // 验证码有效期（秒）
+            },
+            otpOptions: {
+                period: 60, // 验证码有效期（秒）
+                async sendOTP(data, request) {
+                    const { otp } = data
+                    const user = data.user as User
+                    // 向用户发送 otp
+                    if (user.emailVerified) {
+                        sendEmail({
+                            to: user.email,
+                            subject: '您的一次性验证码',
+                            text: `您的验证码是：${otp}`,
+                        })
+                        return
+                    }
+                    if ((user as User).phoneNumberVerified) {
+                        await sendPhoneOtp(user.phoneNumber, otp)
+                        return
+                    }
+                    throw new Error('用户未验证邮箱或手机号')
+                },
+            },
+            backupCodeOptions: {
+                length: 10, // 备份码长度
+                amount: 10, // 备份码数量
+            },
         }),
         genericOAuth({
             config: [

@@ -67,6 +67,7 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
+            appName: process.env.NUXT_PUBLIC_APP_NAME,
             authBaseUrl: process.env.NUXT_PUBLIC_AUTH_BASE_URL,
             contactEmail: process.env.NUXT_PUBLIC_CONTACT_EMAIL,
             maxUploadSize: process.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE,

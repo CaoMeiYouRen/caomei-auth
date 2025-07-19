@@ -4,6 +4,7 @@ import { Account } from '../entities/account'
 import { Session } from '../entities/session'
 import { User } from '../entities/user'
 import { Verification } from '../entities/verification'
+import { TwoFactor } from '../entities/two-factor'
 import { SnakeCaseNamingStrategy } from './naming-strategy'
 import {
     DATABASE_TYPE,
@@ -82,7 +83,7 @@ export const initializeDB = async () => {
         // 创建数据源
         AppDataSource = new DataSource({
             ...options,
-            entities: [Account, Session, User, Verification],
+            entities: [Account, Session, User, Verification, TwoFactor],
             synchronize: process.env.NODE_ENV !== 'production',
             logging: process.env.NODE_ENV === 'development',
             entityPrefix: DATABASE_ENTITY_PREFIX,   // 所有表（或集合）加的前缀

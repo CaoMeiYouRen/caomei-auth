@@ -1,6 +1,7 @@
-import { Entity, Index } from 'typeorm'
+import { Entity, Index, OneToOne } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
+import { TwoFactor } from './two-factor'
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -82,5 +83,11 @@ export class User extends BaseEntity {
      */
     @CustomColumn({ type: 'integer', nullable: true })
     banExpires: number
+
+    /**
+     * 是否启用两因素认证
+     */
+    @CustomColumn({ type: 'boolean', default: false })
+    twoFactorEnabled: boolean
 
 }
