@@ -235,6 +235,7 @@ import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient, AUTH_BASE_URL } from '@/lib/auth-client'
 import type { SocialProvider } from '@/types/social'
+import { phoneEnabled } from '@/utils/env'
 
 const activeTab = ref<'username' | 'email' | 'phone'>('username')
 const email = ref('')
@@ -252,7 +253,6 @@ const emailCodeSending = ref(false)
 const phoneUseCode = ref(false)
 const phoneCode = ref('')
 const phoneCodeSending = ref(false)
-const phoneEnabled = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 
 const { data: providersData } = await useFetch('/api/social/providers')
 

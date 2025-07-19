@@ -166,7 +166,7 @@
                                 为了您的账号安全，请尽快验证您的邮箱。
                             </Message>
                         </div>
-                        <div class="form-group">
+                        <div v-if="phoneEnabled" class="form-group">
                             <label class="form-label">手机号</label>
                             <div class="profile-row">
                                 <span>{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
@@ -395,6 +395,7 @@ import { AUTH_BASE_URL, authClient, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from
 import { formatPhoneNumberInternational } from '@/utils/phone'
 import type { SocialProvider } from '@/types/social'
 import { shortText } from '@/utils/short-text'
+import { phoneEnabled } from '@/utils/env'
 
 const MAX_AVATAR_SIZE = MAX_UPLOAD_SIZE
 
@@ -413,7 +414,6 @@ const user = reactive({
 const saving = ref(false)
 const showEmailModal = ref(false)
 const showPhoneModal = ref(false)
-const phoneEnabled = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 
 const email = ref('')
 const phone = ref('')

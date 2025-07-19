@@ -205,6 +205,7 @@ import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
+import { phoneEnabled } from '@/utils/env'
 
 const username = ref('')
 const email = ref('')
@@ -219,7 +220,6 @@ const toast = useToast()
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
 const activeTab = ref<'email' | 'phone'>('email')
-const phoneEnabled = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 

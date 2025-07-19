@@ -166,6 +166,7 @@ import { validateEmail, validatePhone, passwordValidator } from '@/utils/validat
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
+import { phoneEnabled } from '@/utils/env'
 
 const email = ref('')
 const phone = ref('')
@@ -182,7 +183,6 @@ const route = useRoute()
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
 const activeTab = ref<'email' | 'phone'>('email')
-const phoneEnabled = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 
 onMounted(() => {
     // 如果短信功能未启用，强制使用邮箱方式

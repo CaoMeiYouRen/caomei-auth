@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import { phoneEnabled } from './env'
 import { authClient } from '@/lib/auth-client'
 
 export function useSendEmailCode(email: Ref<string>, type: 'forget-password' | 'sign-in' | 'email-verification', validateEmail: (v: string) => boolean, errors: Ref<Record<string, string>>, sending: Ref<boolean>) {
@@ -34,7 +35,7 @@ export function useSendPhoneCode(phone: Ref<string>, type: 'forget-password' | '
     const toast = useToast()
     return async () => {
         // 检查短信功能是否启用
-        if (!import.meta.env.NUXT_PUBLIC_PHONE_ENABLED || import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'false') {
+        if (!phoneEnabled) {
             toast.add({ severity: 'error', summary: '功能未启用', detail: '短信功能未启用，请使用其他方式', life: 3000 })
             return
         }
