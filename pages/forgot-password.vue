@@ -19,6 +19,7 @@
                                 @click="changeMode('email')"
                             />
                             <Button
+                                v-if="phoneEnabled"
                                 label="手机号"
                                 icon="mdi mdi-phone"
                                 :class="{'p-button-outlined': activeTab!== 'phone'}"
@@ -181,8 +182,15 @@ const route = useRoute()
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
 const activeTab = ref<'email' | 'phone'>('email')
+const phoneEnabled = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 
 onMounted(() => {
+    // 如果短信功能未启用，强制使用邮箱方式
+    if (!phoneEnabled) {
+        activeTab.value = 'email'
+        params.mode = 'email'
+        return
+    }
     // 支持通过 query 传递初始 tab
     if (params.mode === 'phone') {
         activeTab.value = 'phone'

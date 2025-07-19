@@ -181,12 +181,13 @@
                                 />
                                 <Button
                                     v-else
-                                    v-tooltip.top="'点击绑定手机号，绑定后可用于登录和验证'"
+                                    v-tooltip.top="phoneEnabled ? '点击绑定手机号，绑定后可用于登录和验证' : '短信功能未启用，无法绑定手机号'"
                                     label="绑定"
                                     text
                                     size="small"
+                                    :disabled="!phoneEnabled"
                                     class="ml-2"
-                                    @click="showPhoneModal = true"
+                                    @click="phoneEnabled ? showPhoneModal = true : toast.add({severity: 'error', summary: '功能未启用', detail: '短信功能未启用，暂不支持绑定手机号', life: 3000})"
                                 />
                                 <span
                                     v-if="user.phoneVerified"
@@ -412,6 +413,7 @@ const user = reactive({
 const saving = ref(false)
 const showEmailModal = ref(false)
 const showPhoneModal = ref(false)
+const phoneEnabled = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 
 const email = ref('')
 const phone = ref('')

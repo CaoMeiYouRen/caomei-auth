@@ -25,6 +25,8 @@
                                 @click="changeMode('email')"
                             />
                             <Button
+                                v-if="phoneEnabled"
+                                v-tooltip.top="'使用手机号登录'"
                                 label="手机号"
                                 icon="mdi mdi-phone"
                                 :class="{'p-button-outlined': activeTab !== 'phone'}"
@@ -250,6 +252,7 @@ const emailCodeSending = ref(false)
 const phoneUseCode = ref(false)
 const phoneCode = ref('')
 const phoneCodeSending = ref(false)
+const phoneEnabled = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 
 const { data: providersData } = await useFetch('/api/social/providers')
 
@@ -271,6 +274,11 @@ onMounted(() => {
 
 // 切换登录模式并更新 URL
 const changeMode = (mode: 'username' | 'email' | 'phone') => {
+    // 如果短信功能未启用且尝试切换到手机登录，提示错误并阻止切换
+    if (mode === 'phone' && !phoneEnabled) {
+        toast.add({ severity: 'error', summary: '功能未启用', detail: '短信功能未启用，请使用其他方式登录', life: 3000 })
+        return
+    }
     params.mode = mode
     activeTab.value = mode
 }

@@ -18,6 +18,8 @@
                             @click="changeMode('email')"
                         />
                         <Button
+                            v-if="phoneEnabled"
+                            v-tooltip.top="'使用手机号注册'"
                             label="手机号"
                             icon="mdi mdi-phone"
                             :class="{'p-button-outlined': activeTab!== 'phone'}"
@@ -217,10 +219,17 @@ const toast = useToast()
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
 const activeTab = ref<'email' | 'phone'>('email')
+const phoneEnabled = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 
 onMounted(() => {
+    // 如果短信功能未启用，强制使用邮箱方式
+    if (!phoneEnabled) {
+        activeTab.value = 'email'
+        params.mode = 'email'
+        return
+    }
     // 确保默认值
     if (!['email', 'phone'].includes(params.mode as string)) {
         params.mode = 'email'
