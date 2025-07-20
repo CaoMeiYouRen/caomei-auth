@@ -5,6 +5,9 @@ import { Session } from '../entities/session'
 import { User } from '../entities/user'
 import { Verification } from '../entities/verification'
 import { TwoFactor } from '../entities/two-factor'
+import { OAuthAccessToken } from '../entities/oauth-access-token'
+import { OAuthApplication } from '../entities/oauth-application'
+import { OAuthConsent } from '../entities/oauth-consent'
 import { SnakeCaseNamingStrategy } from './naming-strategy'
 import {
     DATABASE_TYPE,
@@ -23,7 +26,7 @@ const SUPPORTED_DATABASE_TYPES = ['sqlite', 'mysql', 'postgres']
 let isInitialized = false
 let AppDataSource: DataSource | null = null
 
-const entities = [Account, Session, User, Verification, TwoFactor]
+const entities = [Account, Session, User, Verification, TwoFactor, OAuthApplication, OAuthAccessToken, OAuthConsent]
 
 export const initializeDB = async () => {
     if (isInitialized && AppDataSource) {
