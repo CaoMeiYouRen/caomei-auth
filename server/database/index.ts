@@ -23,6 +23,8 @@ const SUPPORTED_DATABASE_TYPES = ['sqlite', 'mysql', 'postgres']
 let isInitialized = false
 let AppDataSource: DataSource | null = null
 
+const entities = [Account, Session, User, Verification, TwoFactor]
+
 export const initializeDB = async () => {
     if (isInitialized && AppDataSource) {
         return AppDataSource
@@ -83,7 +85,7 @@ export const initializeDB = async () => {
         // 创建数据源
         AppDataSource = new DataSource({
             ...options,
-            entities: [Account, Session, User, Verification, TwoFactor],
+            entities,
             synchronize: process.env.NODE_ENV !== 'production',
             logging: process.env.NODE_ENV === 'development',
             entityPrefix: DATABASE_ENTITY_PREFIX,   // 所有表（或集合）加的前缀
