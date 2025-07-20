@@ -89,6 +89,8 @@ export const auth = betterAuth({
             '/delete-user': { window: 60, max: 2 },
             '/get-session': { window: 60, max: 10 },
             '/admin/*': { window: 60, max: 10 },
+            '/two-factor/*': { window: 60, max: 3 },
+            '/oauth2/*': { window: 60, max: 3 },
             // '/*': (req) => { // 基础限流
             //     return { window: 60, max: 10 }
             // },
@@ -432,6 +434,9 @@ export const auth = betterAuth({
 
                 return claims
             },
+            // 受信任的客户端
+            // 受信任的客户端可以绕过数据库查询以获得更好的性能，并且可以选择跳过同意屏幕以改善用户体验
+            trustedClients: [],
         }),
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},

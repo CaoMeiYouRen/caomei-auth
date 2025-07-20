@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
                 status: 401,
                 success: false,
                 message: '未登录',
+                data: null,
             }
         }
 
@@ -40,6 +41,7 @@ export default defineEventHandler(async (event) => {
             status: 500,
             success: false,
             message: error instanceof Error ? error.message : '获取应用列表失败',
+            data: null,
         }
     }
 })

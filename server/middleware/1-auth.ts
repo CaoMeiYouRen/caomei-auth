@@ -9,10 +9,10 @@ export default defineEventHandler(async (event) => {
             // 如果不是管理员，拒绝访问
             throw createError({
                 statusCode: 403,
-                statusMessage: '仅管理员可以访问注册应用接口',
+                statusMessage: 'Forbidden',
+                message: '仅管理员可以访问注册应用接口',
             })
-
         }
-        return true
+        
     }
 })

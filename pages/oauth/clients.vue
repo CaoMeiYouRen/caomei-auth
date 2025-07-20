@@ -43,11 +43,11 @@
                     </Column>
                     <Column header="操作">
                         <template #body="{data}">
-                            <Button
+                            <!-- <Button
                                 icon="mdi mdi-pencil"
                                 class="p-button-text"
                                 @click="editApplication(data)"
-                            />
+                            /> -->
                             <Button
                                 icon="mdi mdi-delete"
                                 class="p-button-danger p-button-text"
@@ -157,20 +157,14 @@ const formData = ref({
     redirectURLs: [] as string[],
 })
 
-onMounted(async () => {
-    await loadApplications()
-})
+const applicationsResponse = await useFetch('/api/oauth/applications', {})
+applications.value = applicationsResponse.data.value?.data || []
 
 async function loadApplications() {
     try {
         loading.value = true
-        // const { data, error } = await authClient.oauth2.listApplications()
-
-        // if (error) {
-        //     throw new Error(error.message)
-        // }
-
-        // applications.value = data || []
+        await applicationsResponse.refresh()
+        applications.value = applicationsResponse.data.value?.data || []
     } catch (error: any) {
         toast.add({
             severity: 'error',
@@ -198,26 +192,18 @@ async function submitApplication() {
     try {
         submitting.value = true
 
-        const redirectURLs = formData.value.redirectURLs.join(',')
+        const redirectURLs = formData.value.redirectURLs
         const payload = {
-            name: formData.value.name,
+            client_name: formData.value.name,
             description: formData.value.description,
-            redirectURLs,
+            redirect_uris: redirectURLs,
         }
 
-        let response
-        // if (editing.value) {
-        //     response = await authClient.oauth2.updateApplication({
-        //         clientId: selectedApp.value.clientId,
-        //         ...payload,
-        //     })
-        // } else {
-        //     response = await authClient.oauth2.register(payload)
-        // }
+        const { data, error } = await authClient.oauth2.register(payload)
 
-        // if (response.error) {
-        //     throw new Error(response.error.message)
-        // }
+        if (error) {
+            throw new Error(error.message)
+        }
 
         toast.add({
             severity: 'success',
