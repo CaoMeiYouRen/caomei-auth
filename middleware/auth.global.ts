@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (publicPaths.some((path) => to.path === path)) {
         return true
     }
-    if (to.path.startsWith('/api/auth') && !to.path.startsWith('/api/auth/admin')) {
+    if (to.path.startsWith('/api/auth') && (!to.path.startsWith('/api/auth/admin') && !to.path.startsWith('/api/auth/oauth2/register'))) {
         return true
     }
     const { data: session } = await authClient.useSession(useFetch)
@@ -24,7 +24,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         return false
     }
     // 如果访问管理界面，检查用户是否为管理员
-    if (to.path.startsWith('/api/auth/admin')) {
+    if (to.path.startsWith('/api/auth/admin') || to.path.startsWith('/api/auth/oauth2/register')) {
         if (!session.value.user?.role?.includes('admin')) {
             // 如果不是管理员，拒绝访问
             return false

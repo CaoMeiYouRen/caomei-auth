@@ -407,8 +407,31 @@ export const auth = betterAuth({
                 issuer: AUTH_BASE_URL,
             },
             loginPage: '/login', // 登录页面的路径
-            // allowDynamicClientRegistration: true, // 允许动态客户端注册
-            // ...其他选项
+            consentPage: '/oauth/consent', // 同意页面的路径
+            allowDynamicClientRegistration: true, // 允许动态客户端注册
+            getAdditionalUserInfoClaim: (user, scopes) => {
+                const claims: Record<string, any> = {}
+
+                // 根据请求的作用域添加声明
+                if (scopes.includes('profile')) {
+                    claims.name = user.name
+                    claims.picture = user.image
+                    claims.given_name = user.name
+                    claims.family_name = ''
+                }
+
+                if (scopes.includes('email')) {
+                    claims.email = user.email
+                    claims.email_verified = user.emailVerified
+                }
+
+                if (scopes.includes('phone')) {
+                    claims.phone_number = user.phoneNumber
+                    claims.phone_number_verified = user.phoneNumberVerified
+                }
+
+                return claims
+            },
         }),
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},
