@@ -10,6 +10,7 @@ import {
     captcha,
     genericOAuth,
     twoFactor,
+    oidcProvider,
 } from 'better-auth/plugins'
 import ms from 'ms'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
@@ -400,6 +401,14 @@ export const auth = betterAuth({
                     },
                 },
             ],
+        }),
+        oidcProvider({
+            metadata: {
+                issuer: AUTH_BASE_URL,
+            },
+            loginPage: '/login', // 登录页面的路径
+            // allowDynamicClientRegistration: true, // 允许动态客户端注册
+            // ...其他选项
         }),
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},
