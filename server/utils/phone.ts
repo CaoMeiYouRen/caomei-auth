@@ -21,10 +21,11 @@ const PHONE_LIMIT_KEY = 'phone_global_limit'
  * @export
  * @param phoneNumber
  * @param code
- * @param expiresIn 验证码有效时间，单位分钟，默认 5 分钟
+ * @param expiresIn 验证码有效时间，单位秒，默认 300 秒 (5 分钟)
  * @throws {Error} 如果超过了全局或单个手机号的发送限制，
  */
-export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn = Math.floor(PHONE_EXPIRES_IN / 60)) {
+export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn = PHONE_EXPIRES_IN) {
+    const expiresInMinutes = Math.floor(expiresIn / 60)
     // console.info(`Sending OTP ${code} to phone number ${phoneNumber}`)
     // 检查全局限流
     const globalCount = await limiterStorage.increment(
@@ -57,7 +58,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
             const body = JSON.stringify({
                 key1: PHONE_SENDER_NAME, // 短信发件人名称
                 key2: code, // 验证码
-                key3: expiresIn, // 验证码有效时间(分钟)
+                key3: expiresInMinutes, // 验证码有效时间(分钟)
                 targets: phoneNumber,
             })
             const resp = await fetch(`https://push.spug.cc/send/${PHONE_SPUG_TEMPLATE_ID}`, {
