@@ -5,12 +5,9 @@ import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 
 export default defineEventHandler(async (event) => {
-    try {
-        const auth = await checkAdmin(event)
-        if (!auth.success) {
-            return auth
-        }
+    const auth = await checkAdmin(event)
 
+    try {
         const applications = await dataSource
             .getRepository(OAuthApplication)
             .find()

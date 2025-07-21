@@ -4,12 +4,8 @@ import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 
 export default defineEventHandler(async (event) => {
+    const auth = await checkAdmin(event)
     try {
-        const auth = await checkAdmin(event)
-        if (!auth.success) {
-            return auth
-        }
-
         const body = await readBody(event)
         const {
             id,

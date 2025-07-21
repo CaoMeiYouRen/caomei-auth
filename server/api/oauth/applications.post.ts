@@ -5,11 +5,8 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import { generateRandomString } from '@/server/utils/random'
 
 export default defineEventHandler(async (event) => {
+    const auth = await checkAdmin(event)
     try {
-        const auth = await checkAdmin(event)
-        if (!auth.success) {
-            return auth
-        }
 
         const body = await readBody(event)
         const {
