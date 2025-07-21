@@ -1,26 +1,19 @@
 // coding=utf-8
-import { defineEventHandler, getQuery } from 'h3'
+import { defineEventHandler } from 'h3'
 import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'
-import { getUserSession } from '@/server/utils/get-user-session'
+import { checkAdmin } from '@/server/utils/check-admin'
 
 export default defineEventHandler(async (event) => {
     try {
-        const session = await getUserSession(event)
-        if (!session?.userId) {
-            return {
-                status: 401,
-                success: false,
-                message: '未登录',
-                data: null,
-            }
+        const auth = await checkAdmin(event)
+        if (!auth.success) {
+            return auth
         }
 
         const applications = await dataSource
             .getRepository(OAuthApplication)
-            .find({
-                where: { userId: session.userId },
-            })
+            .find()
 
         return {
             status: 200,
