@@ -264,18 +264,16 @@ async function allowConsent() {
         if (error) {
             throw new Error(error.message)
         }
-
+        toast.add({
+            severity: 'success',
+            summary: '授权成功',
+            detail: '您已成功授权该应用访问您的账户',
+            life: 3000,
+        })
         // 根据 Better Auth 文档，成功后会自动重定向到 redirect_uri
         // 如果没有自动重定向，可以手动处理
         if (data?.redirectURI) {
             window.location.href = data.redirectURI
-        } else {
-            toast.add({
-                severity: 'success',
-                summary: '授权成功',
-                detail: '您已成功授权该应用访问您的账户',
-                life: 3000,
-            })
         }
     } catch (error: any) {
         toast.add({
