@@ -47,6 +47,7 @@ import {
     APP_NAME,
 } from '@/utils/env'
 import type { User } from '@/server/entities/user'
+import { generateRandomString } from '@/server/utils/random'
 
 const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
 
@@ -411,6 +412,8 @@ export const auth = betterAuth({
             loginPage: '/login', // 登录页面的路径
             consentPage: '/oauth/consent', // 同意页面的路径
             allowDynamicClientRegistration: true, // 允许动态客户端注册
+            generateClientId: () => generateRandomString(16).toLowerCase(), // 动态生成客户端 ID
+            generateClientSecret: () => generateRandomString(32), // 动态生成客户端密钥
             getAdditionalUserInfoClaim: (user, scopes) => {
                 const claims: Record<string, any> = {}
 
