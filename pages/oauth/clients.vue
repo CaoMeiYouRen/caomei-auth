@@ -455,12 +455,16 @@ async function submitApplication() {
 
         if (editing.value) {
             // 编辑现有应用
-            const response = await authClient.$fetch('/api/oauth/applications', {
+            const response = await $fetch('/api/oauth/applications', {
                 method: 'PUT',
                 body: payload,
             })
             data = response.data
-            error = response.error
+            if (!response.success) {
+                error = {
+                    message: response.message || '更新应用失败',
+                }
+            }
         } else {
             // 创建新应用
             // 因为 better auth 目前并没有完全实现所有 RFC7591 字段，所以有一些字段是无效的
@@ -509,12 +513,12 @@ async function confirmDelete() {
     try {
         deleting.value = true
 
-        const { data, error } = await authClient.$fetch(`/api/oauth/applications/${selectedApp.value.id}`, {
+        const response = await $fetch(`/api/oauth/applications/${selectedApp.value.id}`, {
             method: 'DELETE',
         })
 
-        if (error) {
-            throw new Error(error.message || '删除失败')
+        if (!response.success) {
+            throw new Error(response.message || '删除失败')
         }
 
         toast.add({
