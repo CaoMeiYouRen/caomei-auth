@@ -35,7 +35,10 @@
                                 >
                                 <div class="application-details">
                                     <span class="application-name">{{ data.name }}</span>
-                                    <small v-if="data.description" class="application-description">{{ data.description }}</small>
+                                    <small
+                                        v-if="data.description"
+                                        class="application-description"
+                                    >{{ data.description }}</small>
                                 </div>
                             </div>
                         </template>
@@ -320,10 +323,7 @@
                 </div>
             </div>
             <template #footer>
-                <Button
-                    label="我已保存"
-                    @click="showSecretDialog = false"
-                />
+                <Button label="我已保存" @click="showSecretDialog = false" />
             </template>
         </Dialog>
     </div>
@@ -433,6 +433,7 @@ async function submitApplication() {
 
         const redirectUris = formData.value.redirect_uris
         const payload = {
+            id: editing.value ? selectedApp.value.id : undefined,
             client_name: formData.value.client_name,
             description: formData.value.description,
             redirect_uris: redirectUris,
@@ -449,7 +450,24 @@ async function submitApplication() {
             software_version: formData.value.software_version,
         }
 
-        const { data, error } = await authClient.oauth2.register(payload)
+        let data
+        let error
+
+        if (editing.value) {
+            // 编辑现有应用
+            const response = await authClient.$fetch('/api/oauth/applications', {
+                method: 'PUT',
+                body: payload,
+            })
+            data = response.data
+            error = response.error
+        } else {
+            // 创建新应用
+            // 因为 better auth 目前并没有完全实现所有 RFC7591 字段，所以有一些字段是无效的
+            const result = await authClient.oauth2.register(payload)
+            data = result.data
+            error = result.error
+        }
 
         if (error) {
             throw new Error(error.message)
@@ -491,13 +509,13 @@ async function confirmDelete() {
     try {
         deleting.value = true
 
-        // const { error } = await authClient.oauth2.deleteApplication({
-        //     clientId: selectedApp.value.clientId,
-        // })
+        const { data, error } = await authClient.$fetch(`/api/oauth/applications/${selectedApp.value.id}`, {
+            method: 'DELETE',
+        })
 
-        // if (error) {
-        //     throw new Error(error.message)
-        // }
+        if (error) {
+            throw new Error(error.message || '删除失败')
+        }
 
         toast.add({
             severity: 'success',
