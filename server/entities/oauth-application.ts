@@ -23,6 +23,12 @@ export class OAuthApplication extends BaseEntity {
     name: string
 
     /**
+     * OAuth客户端的描述
+     */
+    @CustomColumn({ type: 'text', nullable: true })
+    description: string
+
+    /**
      * 重定向URL的列表
      */
     @CustomColumn({ type: 'text', nullable: false })

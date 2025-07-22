@@ -3,16 +3,18 @@
     <div class="oauth-clients">
         <div class="clients-container">
             <div class="clients-header">
-                <h1 class="clients-title">
-                    应用管理
-                </h1>
-                <p class="clients-subtitle">
-                    管理您的 OAuth 2.0 应用
-                </p>
+                <div class="header-content">
+                    <h1 class="clients-title">
+                        应用管理
+                    </h1>
+                    <p class="clients-subtitle">
+                        管理您的 OAuth 2.0 应用，支持 RFC7591 动态客户端注册
+                    </p>
+                </div>
                 <Button
                     label="创建应用"
                     icon="mdi mdi-plus"
-                    @click="showCreateDialog = true"
+                    @click="resetForm(); showCreateDialog = true"
                 />
             </div>
             <div class="clients-list">
@@ -26,16 +28,35 @@
                         <template #body="{data}">
                             <div class="application-info">
                                 <img
-                                    v-if="data.image"
-                                    :src="data.image"
+                                    v-if="data.logoUri"
+                                    :src="data.logoUri"
                                     :alt="data.name"
                                     class="application-logo"
                                 >
-                                <span class="application-name">{{ data.name }}</span>
+                                <div class="application-details">
+                                    <span class="application-name">{{ data.name }}</span>
+                                    <small v-if="data.description" class="application-description">{{ data.description }}</small>
+                                </div>
                             </div>
                         </template>
                     </Column>
-                    <Column field="clientId" header="Client ID" />
+                    <Column field="clientId" header="Client ID">
+                        <template #body="{data}">
+                            <code class="client-id">{{ data.clientId }}</code>
+                        </template>
+                    </Column>
+                    <Column field="scope" header="授权范围">
+                        <template #body="{data}">
+                            <div class="scope-tags">
+                                <Tag
+                                    v-for="scope in (data.scope || '').split(' ').filter((s: string) => s)"
+                                    :key="scope"
+                                    :value="scope"
+                                    class="scope-tag"
+                                />
+                            </div>
+                        </template>
+                    </Column>
                     <Column field="createdAt" header="创建时间">
                         <template #body="{data}">
                             {{ new Date(data.createdAt).toLocaleString() }}
@@ -43,11 +64,11 @@
                     </Column>
                     <Column header="操作">
                         <template #body="{data}">
-                            <!-- <Button
+                            <Button
                                 icon="mdi mdi-pencil"
                                 class="p-button-text"
                                 @click="editApplication(data)"
-                            /> -->
+                            />
                             <Button
                                 icon="mdi mdi-delete"
                                 class="p-button-danger p-button-text"
@@ -71,7 +92,7 @@
                     <label for="name">应用名称</label>
                     <InputText
                         id="name"
-                        v-model="formData.name"
+                        v-model="formData.client_name"
                         required
                         class="w-full"
                     />
@@ -89,18 +110,139 @@
                     <label for="redirectURLs">重定向 URL</label>
                     <Chips
                         id="redirectURLs"
-                        v-model="formData.redirectURLs"
+                        v-model="formData.redirect_uris"
                         separator=","
                         class="w-full"
                     />
                     <small class="helper-text">多个URL请用逗号分隔</small>
+                </div>
+                <div class="form-group">
+                    <label for="client_uri">应用主页</label>
+                    <InputText
+                        id="client_uri"
+                        v-model="formData.client_uri"
+                        placeholder="https://example.com"
+                        class="w-full"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="logo_uri">应用Logo</label>
+                    <InputText
+                        id="logo_uri"
+                        v-model="formData.logo_uri"
+                        placeholder="https://example.com/logo.png"
+                        class="w-full"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="scope">授权范围</label>
+                    <InputText
+                        id="scope"
+                        v-model="formData.scope"
+                        placeholder="openid profile email"
+                        class="w-full"
+                    />
+                    <small class="helper-text">多个范围用空格分隔</small>
+                </div>
+                <div class="form-group">
+                    <label for="contacts">联系邮箱</label>
+                    <Chips
+                        id="contacts"
+                        v-model="formData.contacts"
+                        separator=","
+                        class="w-full"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="token_endpoint_auth_method">认证方式</label>
+                    <Dropdown
+                        id="token_endpoint_auth_method"
+                        v-model="formData.token_endpoint_auth_method"
+                        :options="[
+                            {label: 'Basic认证', value: 'client_secret_basic'},
+                            {label: 'POST认证', value: 'client_secret_post'},
+                            {label: '无认证', value: 'none'}
+                        ]"
+                        option-label="label"
+                        option-value="value"
+                        class="w-full"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="grant_types">授权类型</label>
+                    <MultiSelect
+                        id="grant_types"
+                        v-model="formData.grant_types"
+                        :options="[
+                            {label: '授权码模式', value: 'authorization_code'},
+                            {label: '隐式模式', value: 'implicit'},
+                            {label: '密码模式', value: 'password'},
+                            {label: '客户端模式', value: 'client_credentials'},
+                            {label: '刷新令牌', value: 'refresh_token'}
+                        ]"
+                        option-label="label"
+                        option-value="value"
+                        class="w-full"
+                        display="chip"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="response_types">响应类型</label>
+                    <MultiSelect
+                        id="response_types"
+                        v-model="formData.response_types"
+                        :options="[
+                            {label: '授权码', value: 'code'},
+                            {label: '访问令牌', value: 'token'}
+                        ]"
+                        option-label="label"
+                        option-value="value"
+                        class="w-full"
+                        display="chip"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="tos_uri">服务条款链接</label>
+                    <InputText
+                        id="tos_uri"
+                        v-model="formData.tos_uri"
+                        placeholder="https://example.com/terms"
+                        class="w-full"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="policy_uri">隐私政策链接</label>
+                    <InputText
+                        id="policy_uri"
+                        v-model="formData.policy_uri"
+                        placeholder="https://example.com/privacy"
+                        class="w-full"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="software_id">软件ID</label>
+                    <InputText
+                        id="software_id"
+                        v-model="formData.software_id"
+                        placeholder="my-application"
+                        class="w-full"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="software_version">软件版本</label>
+                    <InputText
+                        id="software_version"
+                        v-model="formData.software_version"
+                        placeholder="1.0.0"
+                        class="w-full"
+                    />
                 </div>
             </form>
             <template #footer>
                 <Button
                     label="取消"
                     class="p-button-text"
-                    @click="showCreateDialog = false"
+                    @click="showCreateDialog = false; resetForm()"
                 />
                 <Button
                     :label="editing ? '保存' : '创建'"
@@ -132,6 +274,58 @@
                 />
             </template>
         </Dialog>
+
+        <!-- 显示应用密钥对话框 -->
+        <Dialog
+            v-model:visible="showSecretDialog"
+            header="应用创建成功"
+            :modal="true"
+            :closable="false"
+            class="secret-dialog"
+        >
+            <div class="secret-content">
+                <div class="success-icon">
+                    <i class="mdi mdi-check-circle" />
+                </div>
+                <p class="success-message">
+                    应用 "{{ createdApplication?.client_name }}" 已成功创建！
+                </p>
+                <div class="credentials">
+                    <div class="credential-item">
+                        <label>Client ID</label>
+                        <div class="credential-value">
+                            <code>{{ createdApplication?.client_id }}</code>
+                            <Button
+                                icon="mdi mdi-content-copy"
+                                class="p-button-sm p-button-text"
+                                @click="copyToClipboard(createdApplication?.client_id)"
+                            />
+                        </div>
+                    </div>
+                    <div class="credential-item">
+                        <label>Client Secret</label>
+                        <div class="credential-value">
+                            <code>{{ createdApplication?.client_secret }}</code>
+                            <Button
+                                icon="mdi mdi-content-copy"
+                                class="p-button-sm p-button-text"
+                                @click="copyToClipboard(createdApplication?.client_secret)"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="warning">
+                    <i class="mdi mdi-alert" />
+                    <span>请务必保存这些凭据，关闭此对话框后将无法再次查看 Client Secret。</span>
+                </div>
+            </div>
+            <template #footer>
+                <Button
+                    label="我已保存"
+                    @click="showSecretDialog = false"
+                />
+            </template>
+        </Dialog>
     </div>
 </template>
 
@@ -146,15 +340,28 @@ const applications = ref<any[]>([])
 const loading = ref(false)
 const showCreateDialog = ref(false)
 const showDeleteDialog = ref(false)
+const showSecretDialog = ref(false)
 const editing = ref(false)
 const submitting = ref(false)
 const deleting = ref(false)
 const selectedApp = ref<any>(null)
+const createdApplication = ref<any>(null)
 
 const formData = ref({
-    name: '',
+    client_name: '',
     description: '',
-    redirectURLs: [] as string[],
+    redirect_uris: [] as string[],
+    client_uri: '',
+    logo_uri: '',
+    scope: 'openid profile email',
+    contacts: [] as string[],
+    tos_uri: '',
+    policy_uri: '',
+    token_endpoint_auth_method: 'client_secret_basic' as 'none' | 'client_secret_basic' | 'client_secret_post',
+    grant_types: ['authorization_code'] as ('authorization_code' | 'implicit' | 'password' | 'client_credentials' | 'refresh_token' | 'urn:ietf:params:oauth:grant-type:jwt-bearer' | 'urn:ietf:params:oauth:grant-type:saml2-bearer')[],
+    response_types: ['code'] as ('code' | 'token')[],
+    software_id: '',
+    software_version: '',
 })
 
 const applicationsResponse = await useFetch('/api/oauth/applications', {})
@@ -181,28 +388,76 @@ function editApplication(app: any) {
     editing.value = true
     selectedApp.value = app
     formData.value = {
-        name: app.name,
+        client_name: app.name || '',
         description: app.description || '',
-        redirectURLs: app.redirectURLs.split(','),
+        redirect_uris: app.redirectURLs ? app.redirectURLs.split(',') : [],
+        client_uri: app.clientUri || '',
+        logo_uri: app.logoUri || '',
+        scope: app.scope || 'openid profile email',
+        contacts: app.contacts ? app.contacts.split(',') : [],
+        tos_uri: app.tosUri || '',
+        policy_uri: app.policyUri || '',
+        token_endpoint_auth_method: app.tokenEndpointAuthMethod || 'client_secret_basic',
+        grant_types: app.grantTypes ? app.grantTypes.split(',') as ('authorization_code' | 'implicit' | 'password' | 'client_credentials' | 'refresh_token' | 'urn:ietf:params:oauth:grant-type:jwt-bearer' | 'urn:ietf:params:oauth:grant-type:saml2-bearer')[] : ['authorization_code'],
+        response_types: app.responseTypes ? app.responseTypes.split(',') as ('code' | 'token')[] : ['code'],
+        software_id: app.softwareId || '',
+        software_version: app.softwareVersion || '',
     }
     showCreateDialog.value = true
+}
+
+function resetForm() {
+    formData.value = {
+        client_name: '',
+        description: '',
+        redirect_uris: [],
+        client_uri: '',
+        logo_uri: '',
+        scope: 'openid profile email',
+        contacts: [],
+        tos_uri: '',
+        policy_uri: '',
+        token_endpoint_auth_method: 'client_secret_basic',
+        grant_types: ['authorization_code'],
+        response_types: ['code'],
+        software_id: '',
+        software_version: '',
+    }
+    editing.value = false
+    selectedApp.value = null
 }
 
 async function submitApplication() {
     try {
         submitting.value = true
 
-        const redirectURLs = formData.value.redirectURLs
+        const redirectUris = formData.value.redirect_uris
         const payload = {
-            client_name: formData.value.name,
+            client_name: formData.value.client_name,
             description: formData.value.description,
-            redirect_uris: redirectURLs,
+            redirect_uris: redirectUris,
+            client_uri: formData.value.client_uri,
+            logo_uri: formData.value.logo_uri,
+            scope: formData.value.scope,
+            contacts: formData.value.contacts,
+            tos_uri: formData.value.tos_uri,
+            policy_uri: formData.value.policy_uri,
+            token_endpoint_auth_method: formData.value.token_endpoint_auth_method,
+            grant_types: formData.value.grant_types,
+            response_types: formData.value.response_types,
+            software_id: formData.value.software_id,
+            software_version: formData.value.software_version,
         }
 
         const { data, error } = await authClient.oauth2.register(payload)
 
         if (error) {
             throw new Error(error.message)
+        }
+
+        if (!editing.value && data) {
+            createdApplication.value = data
+            showSecretDialog.value = true
         }
 
         toast.add({
@@ -213,6 +468,7 @@ async function submitApplication() {
         })
 
         showCreateDialog.value = false
+        resetForm()
         await loadApplications()
     } catch (error: any) {
         toast.add({
@@ -263,6 +519,25 @@ async function confirmDelete() {
         deleting.value = false
     }
 }
+
+async function copyToClipboard(text: string) {
+    try {
+        await navigator.clipboard.writeText(text)
+        toast.add({
+            severity: 'success',
+            summary: '已复制',
+            detail: '内容已复制到剪贴板',
+            life: 2000,
+        })
+    } catch (error) {
+        toast.add({
+            severity: 'error',
+            summary: '复制失败',
+            detail: '无法复制到剪贴板',
+            life: 2000,
+        })
+    }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -283,11 +558,19 @@ async function confirmDelete() {
         justify-content: space-between;
         margin-bottom: 2rem;
 
-        .clients-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-color);
-            margin: 0;
+        .header-content {
+            .clients-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: var(--text-color);
+                margin: 0;
+            }
+
+            .clients-subtitle {
+                margin: 0.5rem 0 0 0;
+                color: var(--text-color-secondary);
+                font-size: 0.875rem;
+            }
         }
     }
 
@@ -295,32 +578,173 @@ async function confirmDelete() {
         .application-info {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
 
             .application-logo {
                 width: 32px;
                 height: 32px;
                 border-radius: 4px;
                 object-fit: cover;
+                flex-shrink: 0;
+            }
+
+            .application-details {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+
+                .application-name {
+                    font-weight: 500;
+                    color: var(--text-color);
+                }
+
+                .application-description {
+                    color: var(--text-color-secondary);
+                    font-size: 0.875rem;
+                }
+            }
+        }
+
+        .client-id {
+            font-family: 'Courier New', monospace;
+            background: var(--surface-100);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .scope-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+
+            .scope-tag {
+                font-size: 0.75rem;
             }
         }
     }
 }
 
 .create-dialog {
+    width: 90vw;
+    max-width: 800px;
+
     .form-group {
         margin-bottom: 1.5rem;
 
         label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--text-color-secondary);
+            color: var(--text-color);
+            font-weight: 500;
         }
 
         .helper-text {
             display: block;
             margin-top: 0.25rem;
             color: var(--text-color-secondary);
+            font-size: 0.875rem;
+        }
+    }
+
+    form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+
+        .form-group:first-child,
+        .form-group:nth-child(2),
+        .form-group:nth-child(3) {
+            grid-column: 1 / -1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        width: 95vw;
+
+        form {
+            grid-template-columns: 1fr;
+
+            .form-group {
+                grid-column: 1;
+            }
+        }
+    }
+}
+
+.secret-dialog {
+    width: 90vw;
+    max-width: 600px;
+
+    .secret-content {
+        text-align: center;
+
+        .success-icon {
+            font-size: 3rem;
+            color: var(--green-500);
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+        }
+
+        .credentials {
+            background: var(--surface-100);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+
+            .credential-item {
+                margin-bottom: 1rem;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                label {
+                    display: block;
+                    font-weight: 500;
+                    color: var(--text-color);
+                    margin-bottom: 0.5rem;
+                }
+
+                .credential-value {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+
+                    code {
+                        flex: 1;
+                        background: var(--surface-0);
+                        border: 1px solid var(--surface-200);
+                        border-radius: 0.25rem;
+                        padding: 0.5rem;
+                        font-family: 'Courier New', monospace;
+                        font-size: 0.875rem;
+                        word-break: break-all;
+                    }
+                }
+            }
+        }
+
+        .warning {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--yellow-50);
+            border: 1px solid var(--yellow-200);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            color: var(--yellow-800);
+
+            i {
+                font-size: 1.25rem;
+                color: var(--yellow-600);
+            }
         }
     }
 }
