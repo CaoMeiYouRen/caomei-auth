@@ -19,6 +19,7 @@
             </div>
             <div class="clients-list">
                 <DataTable
+                    :key="applications.length"
                     :value="applications"
                     :paginator="true"
                     :rows="10"
@@ -55,6 +56,7 @@
                                     v-for="scope in (data.scope || '').split(' ').filter((s: string) => s)"
                                     :key="scope"
                                     :value="scope"
+                                    severity="secondary"
                                     class="scope-tag"
                                 />
                             </div>
@@ -421,7 +423,9 @@ async function loadApplications() {
     try {
         loading.value = true
         await applicationsResponse.refresh()
-        applications.value = applicationsResponse.data.value?.data || []
+        const newData = applicationsResponse.data.value?.data || []
+        // 强制更新响应式数据
+        applications.value = [...newData]
     } catch (error: any) {
         toast.add({
             severity: 'error',
@@ -589,11 +593,17 @@ async function submitApplication() {
                 }
             }
         } else {
-            // 创建新应用
-            // 因为 better auth 目前并没有完全实现所有 RFC7591 字段，所以有一些字段是无效的
-            const result = await authClient.oauth2.register(payload)
-            data = result.data
-            error = result.error
+            // 创建新应用 - 使用自定义接口而不是 better-auth 接口
+            const response = await $fetch('/api/oauth/applications', {
+                method: 'POST',
+                body: payload,
+            })
+            data = response.data
+            if (!response.success) {
+                error = {
+                    message: response.message || '创建应用失败',
+                }
+            }
         }
 
         if (error) {
