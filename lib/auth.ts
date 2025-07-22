@@ -35,6 +35,9 @@ import {
     MICROSOFT_CLIENT_SECRET,
     DISCORD_CLIENT_ID,
     DISCORD_CLIENT_SECRET,
+    APPLE_CLIENT_ID,
+    APPLE_CLIENT_SECRET,
+    APPLE_APP_BUNDLE_IDENTIFIER,
     WEIBO_CLIENT_ID,
     WEIBO_CLIENT_SECRET,
     WEIBO_REDIRECT_URI,
@@ -159,6 +162,11 @@ export const auth = betterAuth({
         discord: { // 支持 Discord 登录
             clientId: DISCORD_CLIENT_ID as string,
             clientSecret: DISCORD_CLIENT_SECRET as string,
+        },
+        apple: { // 支持 Apple 登录
+            clientId: APPLE_CLIENT_ID as string,
+            clientSecret: APPLE_CLIENT_SECRET as string,
+            appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER as string,
         },
     },
     session: {

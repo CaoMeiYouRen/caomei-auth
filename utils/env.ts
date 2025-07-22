@@ -150,6 +150,10 @@ export const QQ_CLIENT_ID = process.env.QQ_CLIENT_ID
 export const QQ_CLIENT_SECRET = process.env.QQ_CLIENT_SECRET
 export const QQ_REDIRECT_URI = process.env.QQ_REDIRECT_URI
 export const QQ_USE_UNIONID = process.env.QQ_USE_UNIONID === 'true'
+// Apple 配置
+export const APPLE_CLIENT_ID = process.env.APPLE_CLIENT_ID
+export const APPLE_CLIENT_SECRET = process.env.APPLE_CLIENT_SECRET
+export const APPLE_APP_BUNDLE_IDENTIFIER = process.env.APPLE_APP_BUNDLE_IDENTIFIER
 
 /**
  * 管理员配置
