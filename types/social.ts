@@ -5,6 +5,7 @@ export type SocialProvider = {
     social?: boolean
     oauth2?: boolean
     icon?: string
+    color?: string
     anonymous?: boolean
     label?: string
     tooltip?: string

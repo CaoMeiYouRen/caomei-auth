@@ -205,7 +205,8 @@
                                     v-for="account in userAccounts"
                                     :key="account.provider"
                                     v-tooltip.top="`点击解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
-                                    :class="['social-btn', `social-${account.provider}`]"
+                                    class="social-btn"
+                                    :style="{color: socialProviders.find(p => p.provider === account.provider)?.color}"
                                     :icon="getProviderIcon(account.provider)"
                                     :label="`${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
                                     outlined
@@ -217,7 +218,8 @@
                                     <Button
                                         v-if="!userAccounts.some(account => account.provider === provider.provider) && !provider.anonymous"
                                         :key="provider.provider"
-                                        :class="['social-btn', `social-${provider.provider}`]"
+                                        class="social-btn"
+                                        :style="{color: provider.color}"
                                         :icon="getProviderIcon(provider.provider)"
                                         :label="`绑定 ${provider.name} 账号`"
                                         outlined

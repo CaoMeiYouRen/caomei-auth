@@ -204,7 +204,8 @@
                             v-for="provider in socialProviders"
                             :key="provider.provider"
                             v-tooltip.top="provider.tooltip"
-                            :class="['social-btn', `social-${provider.provider}`]"
+                            class="social-btn"
+                            :style="{color: provider.color}"
                             :icon="provider.icon || `mdi mdi-${provider.provider}`"
                             :label="provider.label || `使用 ${provider.name} 账号登录`"
                             outlined

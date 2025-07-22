@@ -85,34 +85,6 @@
     transition: background-color 0.2s;
     font-size: 1rem;
 
-    &.social-anonymous {
-        color: $secondary;
-    }
-
-    &.social-github {
-        color: #24292e;
-    }
-
-    &.social-google {
-        color: #4285f4;
-    }
-
-    &.social-microsoft {
-        color: #0078d4;
-    }
-
-    &.social-discord {
-        color: #7289da;
-    }
-
-    &.social-weibo {
-        color: #fbad27;
-    }
-
-    &.social-qq {
-        color: #ea1b26;
-    }
-
     .p-button-icon {
         margin-right: 0.75rem;
     }
