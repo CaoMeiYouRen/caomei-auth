@@ -1,4 +1,3 @@
-// coding=utf-8
 import { defineEventHandler } from 'h3'
 import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'

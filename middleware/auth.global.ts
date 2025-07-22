@@ -24,7 +24,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         return false
     }
     // 如果访问管理界面，检查用户是否为管理员
-    if (to.path.startsWith('/api/auth/admin') || to.path.startsWith('/admin') || to.path.startsWith('/oauth/clients')) {
+    if (to.path.startsWith('/api/auth/admin') || to.path.startsWith('/admin')) {
         if (!session.value.user?.role?.includes('admin')) {
             // 如果不是管理员，拒绝访问
             return false
