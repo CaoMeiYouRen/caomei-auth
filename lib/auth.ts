@@ -38,6 +38,8 @@ import {
     APPLE_CLIENT_ID,
     APPLE_CLIENT_SECRET,
     APPLE_APP_BUNDLE_IDENTIFIER,
+    TWITTER_CLIENT_ID,
+    TWITTER_CLIENT_SECRET,
     WEIBO_CLIENT_ID,
     WEIBO_CLIENT_SECRET,
     WEIBO_REDIRECT_URI,
@@ -167,6 +169,10 @@ export const auth = betterAuth({
             clientId: APPLE_CLIENT_ID as string,
             clientSecret: APPLE_CLIENT_SECRET as string,
             appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER as string,
+        },
+        twitter: { // 支持 Twitter 登录
+            clientId: TWITTER_CLIENT_ID as string,
+            clientSecret: TWITTER_CLIENT_SECRET as string,
         },
     },
     session: {

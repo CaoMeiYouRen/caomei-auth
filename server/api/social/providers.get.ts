@@ -6,6 +6,7 @@ import {
     MICROSOFT_CLIENT_ID,
     DISCORD_CLIENT_ID,
     APPLE_CLIENT_ID,
+    TWITTER_CLIENT_ID,
     WEIBO_CLIENT_ID,
     QQ_CLIENT_ID,
 } from '@/utils/env'
@@ -47,6 +48,13 @@ export default defineEventHandler(async (event) => ({
             color: '#000000',
             social: true,
             icon: 'mdi mdi-apple',
+        } as SocialProvider,
+        TWITTER_CLIENT_ID && {
+            name: 'Twitter(X)',
+            provider: 'twitter',
+            color: '#1da1f2',
+            social: true,
+            icon: 'mdi mdi-twitter',
         } as SocialProvider,
         DISCORD_CLIENT_ID && {
             name: 'Discord',

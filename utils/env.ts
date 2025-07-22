@@ -154,6 +154,9 @@ export const QQ_USE_UNIONID = process.env.QQ_USE_UNIONID === 'true'
 export const APPLE_CLIENT_ID = process.env.APPLE_CLIENT_ID
 export const APPLE_CLIENT_SECRET = process.env.APPLE_CLIENT_SECRET
 export const APPLE_APP_BUNDLE_IDENTIFIER = process.env.APPLE_APP_BUNDLE_IDENTIFIER
+// Twitter 配置
+export const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID
+export const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET
 
 /**
  * 管理员配置

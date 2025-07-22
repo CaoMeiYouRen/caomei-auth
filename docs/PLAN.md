@@ -15,7 +15,7 @@
     -   手机号 + 密码
     -   邮箱验证码
     -   短信验证码
-    -   第三方社交媒体（GitHub、Google 等）
+    -   第三方社交媒体（GitHub、Google、Microsoft、Discord、Apple、Twitter、微博、QQ 等）
 -   用户权限管理基于 better-auth
 -   邮件服务基于 nodemailer
 -   前端采用 Nuxt（Vue 3.x）全栈框架，响应式设计，用户体验友好
@@ -131,7 +131,7 @@
 
 ## 未来规划
 
--   支持更多第三方登录（如微信、QQ、Apple ID 等）
+-   支持更多第三方登录（如微信、钉钉、抖音、TikTok、Facebook、LinkedIn 等）
 -   支持 SSO 单点登录、企业微信/钉钉集成
 -   一键注册/登录（邮箱/短信验证码一键注册）
 -   提供丰富的 API 文档和 SDK
