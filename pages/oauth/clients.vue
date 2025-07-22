@@ -90,15 +90,26 @@
             :modal="true"
             class="create-dialog"
         >
+            <div class="form-header">
+                <p class="form-description">
+                    请填写应用的基本信息。带有 <span class="required">*</span> 的字段为必填项。
+                </p>
+            </div>
             <form @submit.prevent="submitApplication">
                 <div class="form-group">
-                    <label for="name">应用名称</label>
+                    <label for="name">
+                        应用名称 <span class="required">*</span>
+                    </label>
                     <InputText
                         id="name"
                         v-model="formData.client_name"
                         required
                         class="w-full"
+                        :invalid="!formData.client_name.trim()"
                     />
+                    <small v-if="!formData.client_name.trim()" class="error-text">
+                        应用名称为必填项
+                    </small>
                 </div>
                 <div class="form-group">
                     <label for="description">应用简介</label>
@@ -107,17 +118,25 @@
                         v-model="formData.description"
                         rows="3"
                         class="w-full"
+                        placeholder="简要描述您的应用功能和用途"
                     />
                 </div>
                 <div class="form-group">
-                    <label for="redirectURLs">重定向 URL</label>
+                    <label for="redirectURLs">
+                        重定向 URL <span class="required">*</span>
+                    </label>
                     <Chips
                         id="redirectURLs"
                         v-model="formData.redirect_uris"
                         separator=","
                         class="w-full"
+                        :invalid="formData.redirect_uris.length === 0"
+                        placeholder="https://example.com/callback"
                     />
-                    <small class="helper-text">多个URL请用逗号分隔</small>
+                    <small v-if="formData.redirect_uris.length === 0" class="error-text">
+                        至少需要一个重定向URL
+                    </small>
+                    <small v-else class="helper-text">多个URL请用逗号分隔或按回车添加</small>
                 </div>
                 <div class="form-group">
                     <label for="client_uri">应用主页</label>
@@ -127,6 +146,7 @@
                         placeholder="https://example.com"
                         class="w-full"
                     />
+                    <small class="helper-text">应用的官方网站地址</small>
                 </div>
                 <div class="form-group">
                     <label for="logo_uri">应用Logo</label>
@@ -136,16 +156,23 @@
                         placeholder="https://example.com/logo.png"
                         class="w-full"
                     />
+                    <small class="helper-text">应用图标的URL地址</small>
                 </div>
                 <div class="form-group">
-                    <label for="scope">授权范围</label>
+                    <label for="scope">
+                        授权范围 <span class="required">*</span>
+                    </label>
                     <InputText
                         id="scope"
                         v-model="formData.scope"
                         placeholder="openid profile email"
                         class="w-full"
+                        :invalid="!formData.scope.trim()"
                     />
-                    <small class="helper-text">多个范围用空格分隔</small>
+                    <small v-if="!formData.scope.trim()" class="error-text">
+                        授权范围为必填项
+                    </small>
+                    <small v-else class="helper-text">多个范围用空格分隔，如：openid profile email</small>
                 </div>
                 <div class="form-group">
                     <label for="contacts">联系邮箱</label>
@@ -154,30 +181,37 @@
                         v-model="formData.contacts"
                         separator=","
                         class="w-full"
+                        placeholder="admin@example.com"
                     />
+                    <small class="helper-text">应用管理员的联系邮箱</small>
                 </div>
                 <div class="form-group">
-                    <label for="token_endpoint_auth_method">认证方式</label>
+                    <label for="token_endpoint_auth_method">
+                        认证方式 <span class="required">*</span>
+                    </label>
                     <Dropdown
                         id="token_endpoint_auth_method"
                         v-model="formData.token_endpoint_auth_method"
                         :options="[
-                            {label: 'Basic认证', value: 'client_secret_basic'},
+                            {label: 'Basic认证 (推荐)', value: 'client_secret_basic'},
                             {label: 'POST认证', value: 'client_secret_post'},
-                            {label: '无认证', value: 'none'}
+                            {label: '无认证 (仅公开客户端)', value: 'none'}
                         ]"
                         option-label="label"
                         option-value="value"
                         class="w-full"
                     />
+                    <small class="helper-text">客户端向令牌端点进行身份验证的方法</small>
                 </div>
                 <div class="form-group">
-                    <label for="grant_types">授权类型</label>
+                    <label for="grant_types">
+                        授权类型 <span class="required">*</span>
+                    </label>
                     <MultiSelect
                         id="grant_types"
                         v-model="formData.grant_types"
                         :options="[
-                            {label: '授权码模式', value: 'authorization_code'},
+                            {label: '授权码模式 (推荐)', value: 'authorization_code'},
                             {label: '隐式模式', value: 'implicit'},
                             {label: '密码模式', value: 'password'},
                             {label: '客户端模式', value: 'client_credentials'},
@@ -187,10 +221,17 @@
                         option-value="value"
                         class="w-full"
                         display="chip"
+                        :invalid="formData.grant_types.length === 0"
                     />
+                    <small v-if="formData.grant_types.length === 0" class="error-text">
+                        至少需要选择一种授权类型
+                    </small>
+                    <small v-else class="helper-text">应用支持的OAuth2授权模式</small>
                 </div>
                 <div class="form-group">
-                    <label for="response_types">响应类型</label>
+                    <label for="response_types">
+                        响应类型 <span class="required">*</span>
+                    </label>
                     <MultiSelect
                         id="response_types"
                         v-model="formData.response_types"
@@ -202,7 +243,12 @@
                         option-value="value"
                         class="w-full"
                         display="chip"
+                        :invalid="formData.response_types.length === 0"
                     />
+                    <small v-if="formData.response_types.length === 0" class="error-text">
+                        至少需要选择一种响应类型
+                    </small>
+                    <small v-else class="helper-text">授权端点支持的响应类型</small>
                 </div>
                 <div class="form-group">
                     <label for="tos_uri">服务条款链接</label>
@@ -212,6 +258,7 @@
                         placeholder="https://example.com/terms"
                         class="w-full"
                     />
+                    <small class="helper-text">应用服务条款页面的URL</small>
                 </div>
                 <div class="form-group">
                     <label for="policy_uri">隐私政策链接</label>
@@ -221,6 +268,7 @@
                         placeholder="https://example.com/privacy"
                         class="w-full"
                     />
+                    <small class="helper-text">应用隐私政策页面的URL</small>
                 </div>
                 <div class="form-group">
                     <label for="software_id">软件ID</label>
@@ -230,6 +278,7 @@
                         placeholder="my-application"
                         class="w-full"
                     />
+                    <small class="helper-text">应用的唯一软件标识符</small>
                 </div>
                 <div class="form-group">
                     <label for="software_version">软件版本</label>
@@ -239,6 +288,7 @@
                         placeholder="1.0.0"
                         class="w-full"
                     />
+                    <small class="helper-text">当前应用的版本号</small>
                 </div>
             </form>
             <template #footer>
@@ -427,9 +477,82 @@ function resetForm() {
     selectedApp.value = null
 }
 
+function validateForm() {
+    const errors = []
+
+    if (!formData.value.client_name.trim()) {
+        errors.push('应用名称不能为空')
+    }
+
+    if (formData.value.redirect_uris.length === 0) {
+        errors.push('至少需要一个重定向URL')
+    }
+
+    // 验证重定向URL格式
+    for (const uri of formData.value.redirect_uris) {
+        try {
+            new URL(uri)
+        } catch {
+            errors.push(`重定向URL格式无效：${uri}`)
+        }
+    }
+
+    if (!formData.value.scope.trim()) {
+        errors.push('授权范围不能为空')
+    }
+
+    if (formData.value.grant_types.length === 0) {
+        errors.push('至少需要选择一种授权类型')
+    }
+
+    if (formData.value.response_types.length === 0) {
+        errors.push('至少需要选择一种响应类型')
+    }
+
+    // 验证URL字段格式
+    const urlFields = [
+        { field: 'client_uri', name: '应用主页' },
+        { field: 'logo_uri', name: '应用Logo' },
+        { field: 'tos_uri', name: '服务条款链接' },
+        { field: 'policy_uri', name: '隐私政策链接' },
+    ]
+
+    for (const { field, name } of urlFields) {
+        const value = formData.value[field as keyof typeof formData.value] as string
+        if (value && value.trim()) {
+            try {
+                new URL(value)
+            } catch {
+                errors.push(`${name}格式无效：${value}`)
+            }
+        }
+    }
+
+    // 验证邮箱格式
+    for (const email of formData.value.contacts) {
+        if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            errors.push(`联系邮箱格式无效：${email}`)
+        }
+    }
+
+    return errors
+}
+
 async function submitApplication() {
     try {
         submitting.value = true
+
+        // 表单验证
+        const validationErrors = validateForm()
+        if (validationErrors.length > 0) {
+            toast.add({
+                severity: 'error',
+                summary: '表单验证失败',
+                detail: validationErrors.join('；'),
+                life: 5000,
+            })
+            return
+        }
 
         const redirectUris = formData.value.redirect_uris
         const payload = {
@@ -563,6 +686,10 @@ async function copyToClipboard(text: string) {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/theme';
+@import '@/styles/form';
+@import '@/styles/common';
+
 .oauth-clients {
     padding: 2rem;
     background-color: var(--surface-ground);
@@ -659,6 +786,11 @@ async function copyToClipboard(text: string) {
             margin-bottom: 0.5rem;
             color: var(--text-color);
             font-weight: 500;
+
+            .required {
+                color: $primary;
+                margin-left: 0.25rem;
+            }
         }
 
         .helper-text {
@@ -666,6 +798,14 @@ async function copyToClipboard(text: string) {
             margin-top: 0.25rem;
             color: var(--text-color-secondary);
             font-size: 0.875rem;
+        }
+
+        .error-text {
+            display: block;
+            margin-top: 0.25rem;
+            color: var(--red-500);
+            font-size: 0.875rem;
+            font-weight: 500;
         }
     }
 
