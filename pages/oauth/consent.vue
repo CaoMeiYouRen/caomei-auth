@@ -1,7 +1,26 @@
 # coding=utf-8
 <template>
     <div class="oauth-consent">
-        <div class="consent-container">
+        <!-- 加载状态 -->
+        <div v-if="loading" class="loading-container">
+            <div class="loading-content">
+                <i class="loading-icon mdi mdi-loading mdi-spin" />
+                <p>正在验证应用信息...</p>
+            </div>
+        </div>
+
+        <!-- 错误状态 -->
+        <div v-else-if="hasError" class="error-container">
+            <div class="error-content">
+                <i class="error-icon mdi mdi-alert-circle" />
+                <h2>授权请求无效</h2>
+                <p>无法处理此授权请求，请检查链接是否正确或联系应用提供方。</p>
+                <Button label="返回首页" @click="navigateTo('/profile')" />
+            </div>
+        </div>
+
+        <!-- 正常的同意页面 -->
+        <div v-else class="consent-container">
             <div class="consent-header">
                 <h1 class="consent-title">
                     授权申请
@@ -11,17 +30,52 @@
                 </p>
             </div>
             <div class="consent-body">
-                <div v-if="application?.image" class="application-logo">
-                    <img :src="application.image" :alt="application.name">
+                <div v-if="application?.logoUri" class="application-logo">
+                    <img :src="application.logoUri" :alt="applicationName">
+                </div>
+                <div class="application-info">
+                    <h3>应用信息</h3>
+                    <div class="info-item">
+                        <strong>应用名称：</strong>{{ applicationName }}
+                    </div>
+                    <div v-if="application?.description" class="info-item">
+                        <strong>描述：</strong>{{ application.description }}
+                    </div>
+                    <div v-if="application?.clientUri" class="info-item">
+                        <strong>官网：</strong>
+                        <a
+                            :href="application.clientUri"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            {{ application.clientUri }}
+                        </a>
+                    </div>
                 </div>
                 <div class="scopes-list">
                     <h3>将获得以下权限：</h3>
+                    <!-- 受信任客户端提示 -->
+                    <div v-if="isTrustedClient" class="trusted-client-badge">
+                        <i class="mdi mdi-shield-check" />
+                        <span>这是一个受信任的应用</span>
+                    </div>
                     <ul>
                         <li v-for="scope in parsedScopes" :key="scope.scope">
                             <i class="mdi mdi-check-circle" />
                             <span>{{ scope.description }}</span>
                         </li>
                     </ul>
+                    <!-- 如果没有特定权限，显示基本信息 -->
+                    <div v-if="parsedScopes.length === 0" class="no-scopes">
+                        <p>该应用将获得基本的身份验证权限。</p>
+                    </div>
+                </div>
+                <!-- OAuth 参数信息（仅开发环境显示） -->
+                <div v-if="$config.public.NODE_ENV === 'development'" class="debug-info">
+                    <details>
+                        <summary>调试信息</summary>
+                        <pre>{{ JSON.stringify(oauthParams, null, 2) }}</pre>
+                    </details>
                 </div>
             </div>
             <div class="consent-footer">
@@ -29,11 +83,14 @@
                     label="拒绝"
                     class="btn-deny"
                     severity="secondary"
+                    :disabled="submitting"
                     @click="denyConsent"
                 />
                 <Button
-                    label="授权"
+                    :label="submitting ? '处理中...' : '授权'"
                     class="btn-allow"
+                    :loading="submitting"
+                    :disabled="submitting"
                     @click="allowConsent"
                 />
             </div>
@@ -53,11 +110,31 @@ interface Scope {
     description: string
 }
 
+// 标准 OAuth2.0 和 OpenID Connect scopes 的描述映射
 const scopeDescriptions: Record<string, string> = {
+    // OpenID Connect 核心 scopes
     openid: '获取您的基本身份信息',
-    profile: '访问您的个人资料',
+    profile: '访问您的个人资料信息（姓名、头像等）',
     email: '访问您的电子邮件地址',
+    address: '访问您的地址信息',
     phone: '访问您的手机号码',
+
+    // 扩展 scopes
+    offline_access: '离线访问权限（获取刷新令牌）',
+
+    // 自定义 scopes
+    read: '读取权限',
+    write: '写入权限',
+    admin: '管理权限',
+
+    // 用户相关
+    'user:read': '查看用户信息',
+    'user:write': '修改用户信息',
+    'user:email': '访问用户邮箱',
+
+    // 应用相关
+    'app:read': '查看应用信息',
+    'app:write': '修改应用信息',
 }
 
 const application = ref<any>(null)
@@ -69,38 +146,136 @@ const parsedScopes = computed(() => scopes.value.map((scope) => ({
     description: scopeDescriptions[scope] || `访问 ${scope} 权限`,
 })))
 
+const loading = ref(true)
+const submitting = ref(false)
+const hasError = ref(false)
+const isTrustedClient = ref(false)
+const oauthParams = ref<{
+    clientId?: string
+    redirectUri?: string
+    state?: string
+    responseType?: string
+    scope?: string
+}>({})
+
 onMounted(async () => {
     try {
-        // 从 URL 参数中获取 clientId 和 scopes
-        const { clientId, scope } = useRoute().query
-        scopes.value = (scope as string || '').split(' ')
-        // 获取应用信息
-        const { data, error } = await authClient.$fetch<any>(`/oauth2/client/${clientId}`)
+        loading.value = true
+        hasError.value = false
 
-        if (error) {
-            throw new Error(error.message)
+        // 从 URL 参数中获取 OAuth2.0 标准参数
+        const route = useRoute()
+        const {
+            client_id: clientId,
+            redirect_uri: redirectUri,
+            state,
+            response_type: responseType,
+            scope,
+        } = route.query
+
+        // 验证必需参数
+        if (!clientId) {
+            throw new Error('缺少必需参数：client_id')
         }
 
-        application.value = data
-        applicationName.value = data?.name
+        // 保存 OAuth 参数用于后续处理
+        oauthParams.value = {
+            clientId: clientId as string,
+            redirectUri: redirectUri as string,
+            state: state as string,
+            responseType: responseType as string,
+            scope: scope as string,
+        }
+
+        // 解析 scopes
+        scopes.value = (scope as string || '').split(' ').filter((s) => s.trim())
+
+        // 获取应用信息
+        try {
+            // 使用新创建的 API 端点通过 clientId 获取应用信息
+            const { data, error } = await authClient.$fetch<any>(`/oauth2/client/${clientId}`)
+
+            // const response = await $fetch(`/api/oauth/client/${clientId}`)
+
+            if (data) {
+                application.value = data
+                applicationName.value = data.name || '未知应用'
+
+                // 检查是否为受信任客户端（这需要后端支持）
+                // isTrustedClient.value = response.data.trusted || false
+            } else {
+                throw new Error('应用不存在或已被禁用')
+            }
+        } catch (fetchError: any) {
+            // 如果上面的方法失败，尝试备用方案
+            console.warn('使用备用方案获取应用信息:', fetchError)
+
+            // 检查是否是因为应用不存在
+            if (fetchError.statusCode === 404 || fetchError.data?.status === 404) {
+                throw new Error('应用不存在，请检查授权链接是否正确')
+            }
+
+            if (fetchError.statusCode === 403 || fetchError.data?.status === 403) {
+                throw new Error('该应用已被禁用，无法进行授权')
+            }
+
+            // 使用基本信息作为备用方案
+            application.value = {
+                name: '第三方应用',
+                clientId,
+                description: '正在请求访问您的账户权限',
+            }
+            applicationName.value = '第三方应用'
+
+            // 记录警告但不抛出错误，让用户可以继续授权流程
+            console.error('获取应用详细信息失败，使用默认信息:', fetchError)
+        }
+
+        // 对于受信任的客户端，可以考虑自动同意（根据业务需求决定）
+        // if (isTrustedClient.value && shouldAutoConsent()) {
+        //     await allowConsent()
+        // }
     } catch (error: any) {
+        hasError.value = true
         toast.add({
             severity: 'error',
             summary: '错误',
             detail: error.message || '获取应用信息失败',
             life: 3000,
         })
+        console.error('OAuth consent error:', error)
+    } finally {
+        loading.value = false
     }
 })
 
 async function allowConsent() {
+    if (submitting.value) {
+        return
+    }
+
     try {
-        const { error } = await authClient.oauth2.consent({
+        submitting.value = true
+
+        const { error, data } = await authClient.oauth2.consent({
             accept: true,
         })
 
         if (error) {
             throw new Error(error.message)
+        }
+
+        // 根据 Better Auth 文档，成功后会自动重定向到 redirect_uri
+        // 如果没有自动重定向，可以手动处理
+        if (data?.redirectURI) {
+            window.location.href = data.redirectURI
+        } else {
+            toast.add({
+                severity: 'success',
+                summary: '授权成功',
+                detail: '您已成功授权该应用访问您的账户',
+                life: 3000,
+            })
         }
     } catch (error: any) {
         toast.add({
@@ -109,17 +284,42 @@ async function allowConsent() {
             detail: error.message || '授权失败',
             life: 3000,
         })
+    } finally {
+        submitting.value = false
     }
 }
 
 async function denyConsent() {
+    if (submitting.value) {
+        return
+    }
+
     try {
-        const { error } = await authClient.oauth2.consent({
+        submitting.value = true
+
+        const { error, data } = await authClient.oauth2.consent({
             accept: false,
         })
 
         if (error) {
             throw new Error(error.message)
+        }
+
+        // 根据 Better Auth 文档，拒绝后会自动重定向到 redirect_uri 并带有错误参数
+        // 如果没有自动重定向，可以手动处理
+        if (data?.redirectURI) {
+            window.location.href = data.redirectURI
+        } else {
+            toast.add({
+                severity: 'info',
+                summary: '已拒绝授权',
+                detail: '您已拒绝该应用访问您的账户',
+                life: 3000,
+            })
+            // 可以重定向到首页或其他页面
+            setTimeout(() => {
+                navigateTo('/profile')
+            }, 2000)
         }
     } catch (error: any) {
         toast.add({
@@ -128,6 +328,8 @@ async function denyConsent() {
             detail: error.message || '拒绝授权失败',
             life: 3000,
         })
+    } finally {
+        submitting.value = false
     }
 }
 </script>
@@ -148,6 +350,49 @@ async function denyConsent() {
         width: 100%;
         max-width: 600px;
         box-shadow: var(--card-shadow);
+    }
+
+    .loading-container,
+    .error-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .loading-content,
+    .error-content {
+        text-align: center;
+        background: var(--surface-card);
+        border-radius: 1rem;
+        padding: 3rem 2rem;
+        box-shadow: var(--card-shadow);
+    }
+
+    .loading-icon {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .error-icon {
+        font-size: 3rem;
+        color: var(--red-500);
+        margin-bottom: 1rem;
+    }
+
+    .error-content h2 {
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .error-content p {
+        color: var(--text-color-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.6;
     }
 
     .consent-header {
@@ -172,11 +417,49 @@ async function denyConsent() {
         .application-logo {
             display: flex;
             justify-content: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
 
             img {
-                max-width: 100px;
+                max-width: 80px;
+                max-height: 80px;
                 border-radius: 0.5rem;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        .application-info {
+            background: var(--surface-100);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+
+            h3 {
+                font-size: 1rem;
+                margin-bottom: 0.75rem;
+                color: var(--text-color);
+            }
+
+            .info-item {
+                margin-bottom: 0.5rem;
+                font-size: 0.9rem;
+                color: var(--text-color-secondary);
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                strong {
+                    color: var(--text-color);
+                }
+
+                a {
+                    color: var(--primary-color);
+                    text-decoration: none;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
             }
         }
 
@@ -184,6 +467,23 @@ async function denyConsent() {
             h3 {
                 font-size: 1rem;
                 margin-bottom: 1rem;
+            }
+
+            .trusted-client-badge {
+                background: var(--green-50);
+                color: var(--green-700);
+                border: 1px solid var(--green-200);
+                border-radius: 0.5rem;
+                padding: 0.5rem 0.75rem;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.9rem;
+
+                i {
+                    font-size: 1.1rem;
+                }
             }
 
             ul {
@@ -200,6 +500,18 @@ async function denyConsent() {
                     i {
                         color: var(--primary-color);
                     }
+                }
+            }
+
+            .no-scopes {
+                background: var(--surface-100);
+                border-radius: 0.5rem;
+                padding: 1rem;
+                text-align: center;
+
+                p {
+                    color: var(--text-color-secondary);
+                    margin: 0;
                 }
             }
         }
@@ -220,8 +532,67 @@ async function denyConsent() {
             background-color: var(--primary-color);
             color: var(--primary-color-text);
 
-            &:hover {
+            &:hover:not(:disabled) {
                 background-color: var(--primary-600);
+            }
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    // 调试信息样式
+    .debug-info {
+        margin-top: 1.5rem;
+        border-top: 1px solid var(--surface-border);
+        padding-top: 1.5rem;
+
+        details {
+            background: var(--surface-100);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+
+            summary {
+                cursor: pointer;
+                font-weight: 500;
+                color: var(--text-color-secondary);
+                user-select: none;
+
+                &:hover {
+                    color: var(--text-color);
+                }
+            }
+
+            pre {
+                margin-top: 0.75rem;
+                font-size: 0.8rem;
+                color: var(--text-color-secondary);
+                white-space: pre-wrap;
+                word-break: break-all;
+            }
+        }
+    }
+
+    // 响应式设计
+    @media (max-width: 768px) {
+        .oauth-consent {
+            padding: 1rem;
+
+            .consent-container,
+            .loading-content,
+            .error-content {
+                padding: 1.5rem;
+            }
+
+            .consent-footer {
+                flex-direction: column;
+
+                .btn-deny,
+                .btn-allow {
+                    width: 100%;
+                }
             }
         }
     }
