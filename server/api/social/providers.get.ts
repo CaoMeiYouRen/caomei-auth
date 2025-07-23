@@ -83,8 +83,9 @@ export default defineEventHandler(async (event) => ({
             name: '抖音',
             provider: 'douyin',
             color: '#fe2c55',
-            icon: 'mdi mdi-music-note-eighth',
+            icon: 'iconfont icon-douyin',
             oauth2: true,
+            tooltip: '这里的抖音是抖音国内版，不是TikTok(抖音国际版)',
         } as SocialProvider,
         WEIBO_CLIENT_ID && {
             name: '微博',

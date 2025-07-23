@@ -1,17 +1,21 @@
 @font-face {
     font-family: "iconfont";
     /* Project id 4977253 */
-    src: url('iconfont.woff2?t=1752722437839') format('woff2'),
-        url('iconfont.woff?t=1752722437839') format('woff'),
-        url('iconfont.ttf?t=1752722437839') format('truetype');
+    src: url('iconfont.woff2?t=1753289475442') format('woff2'),
+        url('iconfont.woff?t=1753289475442') format('woff'),
+        url('iconfont.ttf?t=1753289475442') format('truetype');
 }
 
 .iconfont {
     font-family: "iconfont" !important;
-    font-size: 1em;
+    font-size: 16px;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-douyin:before {
+    content: "\e8db";
 }
 
 .icon-discord-simple:before {
