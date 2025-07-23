@@ -143,12 +143,10 @@ export const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET
 // 微博配置
 export const WEIBO_CLIENT_ID = process.env.WEIBO_CLIENT_ID
 export const WEIBO_CLIENT_SECRET = process.env.WEIBO_CLIENT_SECRET
-export const WEIBO_REDIRECT_URI = process.env.WEIBO_REDIRECT_URI
 export const WEIBO_SCOPES = process.env.WEIBO_SCOPES?.split(',').map((e) => e.trim()).filter(Boolean) || []
 // QQ 配置
 export const QQ_CLIENT_ID = process.env.QQ_CLIENT_ID
 export const QQ_CLIENT_SECRET = process.env.QQ_CLIENT_SECRET
-export const QQ_REDIRECT_URI = process.env.QQ_REDIRECT_URI
 export const QQ_USE_UNIONID = process.env.QQ_USE_UNIONID === 'true'
 // Apple 配置
 export const APPLE_CLIENT_ID = process.env.APPLE_CLIENT_ID
@@ -160,7 +158,6 @@ export const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET
 // 微信配置
 export const WECHAT_APP_ID = process.env.WECHAT_APP_ID
 export const WECHAT_APP_SECRET = process.env.WECHAT_APP_SECRET
-export const WECHAT_REDIRECT_URI = process.env.WECHAT_REDIRECT_URI
 
 /**
  * 管理员配置

@@ -24,7 +24,6 @@ import {
     EMAIL_EXPIRES_IN,
     PHONE_EXPIRES_IN,
     ANONYMOUS_EMAIL_DOMAIN_NAME,
-    TEMP_EMAIL_DOMAIN_NAME,
     AUTH_SECRET,
     ADMIN_USER_IDS as ENV_ADMIN_USER_IDS,
     GITHUB_CLIENT_ID,
@@ -42,15 +41,12 @@ import {
     TWITTER_CLIENT_SECRET,
     WEIBO_CLIENT_ID,
     WEIBO_CLIENT_SECRET,
-    WEIBO_REDIRECT_URI,
     WEIBO_SCOPES,
     QQ_CLIENT_ID,
     QQ_CLIENT_SECRET,
-    QQ_REDIRECT_URI,
     QQ_USE_UNIONID,
     WECHAT_APP_ID,
     WECHAT_APP_SECRET,
-    WECHAT_REDIRECT_URI,
     AUTH_BASE_URL,
     APP_NAME,
 } from '@/utils/env'
@@ -383,6 +379,7 @@ export const auth = betterAuth({
                     },
                     // 自定义获取用户信息逻辑
                     getUserInfo: async (tokens) => {
+                        // TODO 修复 微信登录缺少 openid 的问题
                         // 微信的token响应包含额外的openid字段，需要从原始响应中获取
                         // 微信token响应格式：
                         // {
@@ -516,10 +513,10 @@ export const auth = betterAuth({
                     claims.email_verified = user.emailVerified
                 }
 
-                if (scopes.includes('phone')) {
-                    claims.phone_number = user.phoneNumber
-                    claims.phone_number_verified = user.phoneNumberVerified
-                }
+                // if (scopes.includes('phone')) {
+                //     claims.phone_number = user.phoneNumber
+                //     claims.phone_number_verified = user.phoneNumberVerified
+                // }
 
                 return claims
             },
