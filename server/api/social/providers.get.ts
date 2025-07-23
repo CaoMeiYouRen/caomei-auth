@@ -64,12 +64,12 @@ export default defineEventHandler(async (event) => ({
             social: true,
             icon: 'iconfont icon-discord-simple',
         } as SocialProvider,
-        WEIBO_CLIENT_ID && {
-            name: '微博',
-            provider: 'weibo',
-            color: '#fbad27',
-            icon: 'mdi mdi-sina-weibo',
-            oauth2: true, // 使用自定义第三方 OAuth2 登录
+        WECHAT_APP_ID && {
+            name: '微信',
+            provider: 'wechat',
+            color: '#07c160',
+            icon: 'mdi mdi-wechat',
+            oauth2: true,
         } as SocialProvider,
         QQ_CLIENT_ID && {
             name: 'QQ',
@@ -78,12 +78,12 @@ export default defineEventHandler(async (event) => ({
             icon: 'mdi mdi-qqchat',
             oauth2: true,
         } as SocialProvider,
-        WECHAT_APP_ID && {
-            name: '微信',
-            provider: 'wechat',
-            color: '#07c160',
-            icon: 'mdi mdi-wechat',
-            oauth2: true,
+        WEIBO_CLIENT_ID && {
+            name: '微博',
+            provider: 'weibo',
+            color: '#fbad27',
+            icon: 'mdi mdi-sina-weibo',
+            oauth2: true, // 使用自定义第三方 OAuth2 登录
         } as SocialProvider,
     ].filter(Boolean) as SocialProvider[],
 }))
