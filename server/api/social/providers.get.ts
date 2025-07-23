@@ -9,6 +9,7 @@ import {
     TWITTER_CLIENT_ID,
     WEIBO_CLIENT_ID,
     QQ_CLIENT_ID,
+    WECHAT_APP_ID,
 } from '@/utils/env'
 
 export default defineEventHandler(async (event) => ({
@@ -75,6 +76,13 @@ export default defineEventHandler(async (event) => ({
             provider: 'qq',
             color: '#ea1b26',
             icon: 'mdi mdi-qqchat',
+            oauth2: true,
+        } as SocialProvider,
+        WECHAT_APP_ID && {
+            name: '微信',
+            provider: 'wechat',
+            color: '#07c160',
+            icon: 'mdi mdi-wechat',
             oauth2: true,
         } as SocialProvider,
     ].filter(Boolean) as SocialProvider[],

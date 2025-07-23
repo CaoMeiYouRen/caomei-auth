@@ -17,6 +17,7 @@
 
 -   **微博** - 中国主流社交媒体
 -   **QQ** - 中国最大即时通讯平台
+-   **微信** - 中国最大社交平台
 
 ### 匿名登录
 
@@ -66,6 +67,11 @@ QQ_CLIENT_SECRET=your_qq_client_secret
 # 可选：使用 UnionID
 QQ_USE_UNIONID=true
 
+# 微信
+WECHAT_APP_ID=your_wechat_app_id
+WECHAT_APP_SECRET=your_wechat_app_secret
+WECHAT_REDIRECT_URI=http://localhost:3000/api/auth/oauth2/callback/wechat
+
 # 匿名登录
 ANONYMOUS_LOGIN_ENABLED=true
 ```
@@ -86,6 +92,7 @@ ANONYMOUS_LOGIN_ENABLED=true
 -   [Twitter 登录配置](./twitter-login-setup.md)
 -   [微博登录配置](./weibo-login-setup.md)
 -   [QQ 登录配置](./qq-login-setup.md)
+-   [微信登录配置](./wechat-login-setup.md)
 
 ## 前端使用
 
@@ -131,6 +138,9 @@ await authClient.signIn.social({ provider: "github" });
 // Google
 await authClient.signIn.social({ provider: "google" });
 
+// 微信
+await authClient.signIn.social({ provider: "wechat" });
+
 // Apple ID Token 登录
 await authClient.signIn.social({
     provider: "apple",
@@ -167,6 +177,7 @@ https://yourdomain.com/api/auth/callback/{provider}
 
 -   微博: `https://yourdomain.com/api/auth/oauth2/callback/weibo`
 -   QQ: `https://yourdomain.com/api/auth/oauth2/callback/qq`
+-   微信: `https://yourdomain.com/api/auth/oauth2/callback/wechat`
 
 ### 本地开发
 
@@ -191,16 +202,17 @@ https://yourdomain.com/api/auth/callback/{provider}
 
 不同提供商提供不同级别的用户数据：
 
-| 提供商    | 基本信息 | 邮箱 | 头像 | 备注             |
-| --------- | -------- | ---- | ---- | ---------------- |
-| GitHub    | ✓        | ✓    | ✓    | -                |
-| Google    | ✓        | ✓    | ✓    | -                |
-| Microsoft | ✓        | ✓    | ✓    | -                |
-| Discord   | ✓        | ✓    | ✓    | -                |
-| Apple     | ✓        | ✓    | ✓    | 隐私保护较强     |
-| Twitter   | ✓        | ✓    | ✓    | 需要申请邮箱权限 |
-| 微博      | ✓        | 可选 | ✓    | 邮箱需要额外申请 |
-| QQ        | ✓        | 可选 | ✓    | 支持 UnionID     |
+| 提供商    | 基本信息 | 邮箱 | 头像 | 备注                         |
+| --------- | -------- | ---- | ---- | ---------------------------- |
+| GitHub    | ✓        | ✓    | ✓    | -                            |
+| Google    | ✓        | ✓    | ✓    | -                            |
+| Microsoft | ✓        | ✓    | ✓    | -                            |
+| Discord   | ✓        | ✓    | ✓    | -                            |
+| Apple     | ✓        | ✓    | ✓    | 隐私保护较强                 |
+| Twitter   | ✓        | ✓    | ✓    | 需要申请邮箱权限             |
+| 微博      | ✓        | 可选 | ✓    | 邮箱需要额外申请             |
+| QQ        | ✓        | ✗    | ✓    | 不提供邮箱信息，支持 UnionID |
+| 微信      | ✓        | ✗    | ✓    | 不提供邮箱信息，支持 UnionID |
 
 ### 临时邮箱处理
 

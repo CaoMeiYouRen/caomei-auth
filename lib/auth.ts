@@ -324,7 +324,6 @@ export const auth = betterAuth({
                     providerId: 'weibo',
                     clientId: WEIBO_CLIENT_ID as string,
                     clientSecret: WEIBO_CLIENT_SECRET as string,
-                    redirectURI: WEIBO_REDIRECT_URI as string,
                     authorizationUrl: 'https://api.weibo.com/oauth2/authorize',
                     tokenUrl: 'https://api.weibo.com/oauth2/access_token',
                     userInfoUrl: 'https://api.weibo.com/2/users/show.json',
@@ -366,14 +365,86 @@ export const auth = betterAuth({
                     },
                 },
                 {
+                    providerId: 'wechat',
+                    clientId: WECHAT_APP_ID as string,
+                    clientSecret: WECHAT_APP_SECRET as string,
+                    authorizationUrl: 'https://open.weixin.qq.com/connect/qrconnect',
+                    tokenUrl: 'https://api.weixin.qq.com/sns/oauth2/access_token',
+                    userInfoUrl: 'https://api.weixin.qq.com/sns/userinfo',
+                    scopes: ['snsapi_login'],
+                    pkce: false,
+                    tokenUrlParams: {
+                        grant_type: 'authorization_code',
+                    },
+                    authorizationUrlParams: {
+                        response_type: 'code',
+                        // 微信登录页面语言设置，cn为中文简体，en为英文
+                        lang: 'cn',
+                    },
+                    // 自定义获取用户信息逻辑
+                    getUserInfo: async (tokens) => {
+                        // 微信的token响应包含额外的openid字段，需要从原始响应中获取
+                        // 微信token响应格式：
+                        // {
+                        //   "access_token": "ACCESS_TOKEN",
+                        //   "expires_in": 7200,
+                        //   "refresh_token": "REFRESH_TOKEN",
+                        //   "openid": "OPENID",
+                        //   "scope": "SCOPE",
+                        //   "unionid": "UNIONID"
+                        // }
+
+                        const openid = ''
+                        const unionid = ''
+
+                        if (!openid) {
+                            throw new Error('Failed to get WeChat openid')
+                        }
+
+                        // 检查 access_token 是否有效
+                        const authResponse = await fetch(
+                            `https://api.weixin.qq.com/sns/auth?access_token=${tokens.accessToken}&openid=${openid}`,
+                        )
+                        const authData = await authResponse.json()
+
+                        if (authData.errcode && authData.errcode !== 0) {
+                            throw new Error(`WeChat auth check failed: ${authData.errmsg}`)
+                        }
+
+                        // 获取用户基本信息
+                        const userInfoResponse = await fetch(
+                            `https://api.weixin.qq.com/sns/userinfo?access_token=${tokens.accessToken}&openid=${openid}&lang=zh_CN`,
+                        )
+                        const userInfo = await userInfoResponse.json()
+
+                        if (userInfo.errcode && userInfo.errcode !== 0) {
+                            throw new Error(`Failed to get WeChat user info: ${userInfo.errmsg}`)
+                        }
+
+                        return {
+                            // 优先使用 unionid，如果没有则使用 openid
+                            id: userInfo.unionid || unionid || userInfo.openid || openid,
+                            // 微信不提供邮箱，使用临时邮箱
+                            email: getTempEmail(),
+                            name: userInfo.nickname,
+                            // 用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像）
+                            image: userInfo.headimgurl || null,
+                            // 微信未返回邮箱，设为未验证
+                            emailVerified: false,
+                            // 微信不提供注册时间，设为当前时间
+                            createdAt: new Date(),
+                            updatedAt: new Date(),
+                        }
+                    },
+                },
+                {
                     providerId: 'qq',
-                    clientId: QQ_CLIENT_ID || '',
-                    clientSecret: QQ_CLIENT_SECRET || '',
+                    clientId: QQ_CLIENT_ID as string,
+                    clientSecret: QQ_CLIENT_SECRET as string,
                     authorizationUrl: 'https://graph.qq.com/oauth2.0/authorize',
                     tokenUrl: 'https://graph.qq.com/oauth2.0/token',
                     userInfoUrl: 'https://graph.qq.com/user/get_user_info',
                     scopes: ['get_user_info'],
-                    redirectURI: QQ_REDIRECT_URI || '',
                     responseType: 'code',
                     pkce: false,
                     tokenUrlParams: {
