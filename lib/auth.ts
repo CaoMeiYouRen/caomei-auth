@@ -48,15 +48,16 @@ import {
     QQ_CLIENT_SECRET,
     QQ_REDIRECT_URI,
     QQ_USE_UNIONID,
+    WECHAT_APP_ID,
+    WECHAT_APP_SECRET,
+    WECHAT_REDIRECT_URI,
     AUTH_BASE_URL,
     APP_NAME,
 } from '@/utils/env'
 import type { User } from '@/server/entities/user'
-import { generateRandomString } from '@/server/utils/random'
+import { getTempEmail, getTempName, generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
 
 const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
-
-const getTempEmail = () => `${snowflake.generateId()}@${TEMP_EMAIL_DOMAIN_NAME}`
 
 // TODO 增加注册验证码
 export const auth = betterAuth({
@@ -272,8 +273,8 @@ export const auth = betterAuth({
             signUpOnVerification: {
                 // 使用雪花算法生成临时电子邮件地址
                 // 生成的电子邮件地址格式为：<snowflake_id>@example.com
-                getTempEmail: (phoneNumber) => getTempEmail(),
-                getTempName: (phoneNumber) => `user-${snowflake.generateId()}`, // 使用雪花算法生成临时用户名
+                getTempEmail: (_phoneNumber) => getTempEmail(),
+                getTempName: (_phoneNumber) => getTempName(), // 使用雪花算法生成临时用户名
             },
         }),
         admin({
@@ -426,8 +427,8 @@ export const auth = betterAuth({
             loginPage: '/login', // 登录页面的路径
             consentPage: '/oauth/consent', // 同意页面的路径
             allowDynamicClientRegistration: true, // 允许动态客户端注册
-            generateClientId: () => generateRandomString(16).toLowerCase(), // 动态生成客户端 ID
-            generateClientSecret: () => generateRandomString(32), // 动态生成客户端密钥
+            generateClientId, // 动态生成客户端 ID
+            generateClientSecret, // 动态生成客户端密钥
             getAdditionalUserInfoClaim: (user, scopes) => {
                 const claims: Record<string, any> = {}
 

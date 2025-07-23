@@ -157,6 +157,10 @@ export const APPLE_APP_BUNDLE_IDENTIFIER = process.env.APPLE_APP_BUNDLE_IDENTIFI
 // Twitter 配置
 export const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID
 export const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET
+// 微信配置
+export const WECHAT_APP_ID = process.env.WECHAT_APP_ID
+export const WECHAT_APP_SECRET = process.env.WECHAT_APP_SECRET
+export const WECHAT_REDIRECT_URI = process.env.WECHAT_REDIRECT_URI
 
 /**
  * 管理员配置

@@ -3,6 +3,7 @@ import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import { generateRandomString } from '@/server/utils/random'
+import { generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -63,8 +64,8 @@ export default defineEventHandler(async (event) => {
         const application = new OAuthApplication()
         application.name = appName
         application.description = body.description || ''
-        application.clientId = generateRandomString(32)
-        application.clientSecret = generateRandomString(64)
+        application.clientId = generateClientId()
+        application.clientSecret = generateClientSecret()
         application.redirectURLs = Array.isArray(appRedirectURIs) ? appRedirectURIs.join(',') : appRedirectURIs
         application.tokenEndpointAuthMethod = token_endpoint_auth_method
         application.grantTypes = grant_types.join(',')
