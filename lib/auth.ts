@@ -47,10 +47,13 @@ import {
     QQ_USE_UNIONID,
     WECHAT_APP_ID,
     WECHAT_APP_SECRET,
+    DOUYIN_CLIENT_KEY,
+    DOUYIN_CLIENT_SECRET,
     AUTH_BASE_URL,
     APP_NAME,
 } from '@/utils/env'
 import type { User } from '@/server/entities/user'
+import { generateRandomString } from '@/server/utils/random'
 import { getTempEmail, getTempName, generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
 
 const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
@@ -347,7 +350,7 @@ export const auth = betterAuth({
                             id: userInfo.idstr,
                             // 微博接口未返回 email，默认设为临时邮箱
                             email: userInfo.email || getTempEmail(),
-                            name: userInfo.screen_name,
+                            name: userInfo.screen_name || `微博用户-${generateRandomString(8)}`,
                             // 使用大图头像地址
                             image: userInfo.avatar_large || null,
                             // 由于微博接口未返回邮箱验证状态，默认设为 false，若有 email 则假设已验证
@@ -423,7 +426,7 @@ export const auth = betterAuth({
                             id: userInfo.unionid || unionid || userInfo.openid || openid,
                             // 微信不提供邮箱，使用临时邮箱
                             email: getTempEmail(),
-                            name: userInfo.nickname,
+                            name: userInfo.nickname || `微信用户-${generateRandomString(8)}`,
                             // 用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像）
                             image: userInfo.headimgurl || null,
                             // 微信未返回邮箱，设为未验证
@@ -471,17 +474,99 @@ export const auth = betterAuth({
 
                         return {
                             id: unionid || openid, // 如果有 unionid 则使用 unionid，否则使用 openid
-                            // 若未返回 email 则设为临时邮箱
-                            email: userInfo.email || getTempEmail(),
+                            // QQ 不返回 email ，设为临时邮箱
+                            email: getTempEmail(),
                             // 用户在QQ空间的昵称。
-                            name: userInfo.nickname,
+                            name: userInfo.nickname || `QQ用户-${generateRandomString(8)}`,
                             // 大小为100×100像素的QQ头像URL 或 大小为40×40像素的QQ头像URL
                             image: userInfo.figureurl_qq_2 || userInfo.figureurl_qq_1,
-                            // 由于 QQ 接口未返回邮箱验证状态，默认设为 false，若有 email 则假设已验证
-                            emailVerified: !!userInfo.email,
+                            // 由于 QQ 接口未返回邮箱验证状态，默认设为 false
+                            emailVerified: false,
                             // 由于 QQ 接口未提供用户注册时间，设为当前时间
                             createdAt: new Date(),
                             // 由于 QQ 接口未提供用户更新时间，设为当前时间
+                            updatedAt: new Date(),
+                        }
+                    },
+                },
+                {
+                    providerId: 'douyin',
+                    clientId: DOUYIN_CLIENT_KEY as string,
+                    clientSecret: DOUYIN_CLIENT_SECRET as string,
+                    authorizationUrl: 'https://open.douyin.com/platform/oauth/connect',
+                    tokenUrl: 'https://open.douyin.com/oauth/access_token/',
+                    userInfoUrl: 'https://open.douyin.com/oauth/userinfo/',
+                    scopes: ['user_info'],
+                    responseType: 'code',
+                    pkce: false,
+                    authorizationUrlParams: {
+                        response_type: 'code',
+                        // 授权时使用 client_key
+                        client_key: DOUYIN_CLIENT_KEY as string,
+                    },
+                    tokenUrlParams: {
+                        grant_type: 'authorization_code',
+                        // token 获取时使用 client_key 和 client_secret
+                        client_key: DOUYIN_CLIENT_KEY as string,
+                        client_secret: DOUYIN_CLIENT_SECRET as string,
+                    },
+                    getUserInfo: async (tokens) => {
+                        // TODO 修复 抖音登录缺少 openid 的问题
+                        // 抖音的 token 响应格式：
+                        // {
+                        //   "access_token": "act.xxxxx",
+                        //   "open_id": "xxxxx",
+                        //   "scope": "user_info",
+                        //   "expires_in": 86400,
+                        //   "refresh_token": "rft.xxxxx",
+                        //   "refresh_expires_in": 86400
+                        // }
+
+                        // 从 tokens 中获取 open_id
+                        // better-auth 应该会将完整的 token 响应传递给 getUserInfo
+                        const openId = (tokens as any).open_id || (tokens as any).openId
+
+                        if (!openId) {
+                            throw new Error('Failed to get open_id from token response')
+                        }
+
+                        // 调用抖音用户信息接口
+                        const userResponse = await fetch(
+                            'https://open.douyin.com/oauth/userinfo/',
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    access_token: tokens.accessToken,
+                                    open_id: openId,
+                                }),
+                            },
+                        )
+
+                        if (!userResponse.ok) {
+                            throw new Error(`抖音用户信息获取失败: ${userResponse.status} ${userResponse.statusText}`)
+                        }
+
+                        const userData = await userResponse.json()
+
+                        // 检查响应错误码
+                        if (userData.err_no !== 0) {
+                            throw new Error(`抖音用户信息 API 错误: ${userData.err_msg} (错误码: ${userData.err_no})`)
+                        }
+
+                        const userInfo = userData.data
+
+                        return {
+                            // 优先使用 union_id，如果没有则使用 open_id
+                            id: userInfo.union_id || userInfo.open_id,
+                            // 抖音不提供邮箱信息，使用临时邮箱
+                            email: getTempEmail(),
+                            name: userInfo.nickname || `抖音用户-${generateRandomString(8)}`,
+                            image: userInfo.avatar || null,
+                            emailVerified: false,
+                            createdAt: new Date(),
                             updatedAt: new Date(),
                         }
                     },

@@ -18,6 +18,7 @@
 -   **微博** - 中国主流社交媒体
 -   **QQ** - 中国最大即时通讯平台
 -   **微信** - 中国最大社交平台
+-   **抖音** - 中国最大短视频平台
 
 ### 匿名登录
 
@@ -72,6 +73,10 @@ WECHAT_APP_ID=your_wechat_app_id
 WECHAT_APP_SECRET=your_wechat_app_secret
 WECHAT_REDIRECT_URI=http://localhost:3000/api/auth/oauth2/callback/wechat
 
+# 抖音
+DOUYIN_CLIENT_KEY=your_douyin_client_key
+DOUYIN_CLIENT_SECRET=your_douyin_client_secret
+
 # 匿名登录
 ANONYMOUS_LOGIN_ENABLED=true
 ```
@@ -93,6 +98,7 @@ ANONYMOUS_LOGIN_ENABLED=true
 -   [微博登录配置](./weibo-login-setup.md)
 -   [QQ 登录配置](./qq-login-setup.md)
 -   [微信登录配置](./wechat-login-setup.md)
+-   [抖音登录配置](./douyin-login-setup.md)
 
 ## 前端使用
 
@@ -178,6 +184,7 @@ https://yourdomain.com/api/auth/callback/{provider}
 -   微博: `https://yourdomain.com/api/auth/oauth2/callback/weibo`
 -   QQ: `https://yourdomain.com/api/auth/oauth2/callback/qq`
 -   微信: `https://yourdomain.com/api/auth/oauth2/callback/wechat`
+-   抖音: `https://yourdomain.com/api/auth/oauth2/callback/douyin`
 
 ### 本地开发
 
@@ -213,6 +220,7 @@ https://yourdomain.com/api/auth/callback/{provider}
 | 微博      | ✓        | 可选 | ✓    | 邮箱需要额外申请             |
 | QQ        | ✓        | ✗    | ✓    | 不提供邮箱信息，支持 UnionID |
 | 微信      | ✓        | ✗    | ✓    | 不提供邮箱信息，支持 UnionID |
+| 抖音      | ✓        | ✗    | ✓    | 不提供邮箱信息               |
 
 ### 临时邮箱处理
 

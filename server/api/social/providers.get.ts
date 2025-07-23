@@ -10,6 +10,7 @@ import {
     WEIBO_CLIENT_ID,
     QQ_CLIENT_ID,
     WECHAT_APP_ID,
+    DOUYIN_CLIENT_KEY,
 } from '@/utils/env'
 
 export default defineEventHandler(async (event) => ({
@@ -76,6 +77,13 @@ export default defineEventHandler(async (event) => ({
             provider: 'qq',
             color: '#ea1b26',
             icon: 'mdi mdi-qqchat',
+            oauth2: true,
+        } as SocialProvider,
+        DOUYIN_CLIENT_KEY && {
+            name: '抖音',
+            provider: 'douyin',
+            color: '#fe2c55',
+            icon: 'mdi mdi-music-note-eighth',
             oauth2: true,
         } as SocialProvider,
         WEIBO_CLIENT_ID && {
