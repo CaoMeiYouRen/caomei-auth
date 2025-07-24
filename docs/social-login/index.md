@@ -89,16 +89,25 @@ ANONYMOUS_LOGIN_ENABLED=true
 
 每个提供商都有独特的配置要求，请查看对应的详细指南：
 
+### 内置社交登录提供商
+
 -   [GitHub 登录配置](./github-login-setup.md)
 -   [Google 登录配置](./google-login-setup.md)
 -   [Microsoft 登录配置](./microsoft-login-setup.md)
 -   [Discord 登录配置](./discord-login-setup.md)
 -   [Apple 登录配置](./apple-login-setup.md)
 -   [Twitter 登录配置](./twitter-login-setup.md)
+
+### 自定义 OAuth2 提供商
+
 -   [微博登录配置](./weibo-login-setup.md)
 -   [QQ 登录配置](./qq-login-setup.md)
 -   [微信登录配置](./wechat-login-setup.md)
 -   [抖音登录配置](./douyin-login-setup.md)
+
+### 特殊登录方式
+
+-   [匿名登录配置](./anonymous-login-setup.md)
 
 ## 前端使用
 
@@ -113,8 +122,9 @@ ANONYMOUS_LOGIN_ENABLED=true
         <button
             v-for="provider in socialProviders"
             :key="provider.provider"
-            @click="signInWith(provider.provider)"
+            @click="signInWith(provider)"
             :style="{ backgroundColor: provider.color }"
+            :class="{ 'anonymous-btn': provider.anonymous }"
         >
             <i :class="provider.icon"></i>
             {{ provider.name }}
@@ -128,7 +138,16 @@ import { authClient } from "@/lib/auth-client";
 const { data: socialProviders } = await useFetch("/api/social/providers");
 
 const signInWith = async (provider) => {
-    await authClient.signIn.social({ provider });
+    if (provider.anonymous) {
+        // 匿名登录
+        await authClient.signIn.anonymous();
+    } else if (provider.social) {
+        // 内置社交登录
+        await authClient.signIn.social({ provider: provider.provider });
+    } else if (provider.oauth2) {
+        // 自定义 OAuth2 登录
+        await authClient.signIn.social({ provider: provider.provider });
+    }
 };
 </script>
 ```
@@ -209,25 +228,36 @@ https://yourdomain.com/api/auth/callback/{provider}
 
 不同提供商提供不同级别的用户数据：
 
-| 提供商    | 基本信息 | 邮箱 | 头像 | 备注                         |
-| --------- | -------- | ---- | ---- | ---------------------------- |
-| GitHub    | ✓        | ✓    | ✓    | -                            |
-| Google    | ✓        | ✓    | ✓    | -                            |
-| Microsoft | ✓        | ✓    | ✓    | -                            |
-| Discord   | ✓        | ✓    | ✓    | -                            |
-| Apple     | ✓        | ✓    | ✓    | 隐私保护较强                 |
-| Twitter   | ✓        | ✓    | ✓    | 需要申请邮箱权限             |
-| 微博      | ✓        | 可选 | ✓    | 邮箱需要额外申请             |
-| QQ        | ✓        | ✗    | ✓    | 不提供邮箱信息，支持 UnionID |
-| 微信      | ✓        | ✗    | ✓    | 不提供邮箱信息，支持 UnionID |
-| 抖音      | ✓        | ✗    | ✓    | 不提供邮箱信息               |
+| 提供商    | 基本信息 | 邮箱     | 头像 | 备注                           |
+| --------- | -------- | -------- | ---- | ------------------------------ |
+| GitHub    | ✓        | ✓        | ✓    | -                              |
+| Google    | ✓        | ✓        | ✓    | -                              |
+| Microsoft | ✓        | ✓        | ✓    | -                              |
+| Discord   | ✓        | ✓        | ✓    | -                              |
+| Apple     | ✓        | ✓        | ✓    | 隐私保护较强                   |
+| Twitter   | ✓        | ✓        | ✓    | 需要申请邮箱权限               |
+| 微博      | ✓        | 可选     | ✓    | 邮箱需要额外申请               |
+| QQ        | ✓        | ✗        | ✓    | 不提供邮箱信息，支持 UnionID   |
+| 微信      | ✓        | ✗        | ✓    | 不提供邮箱信息，支持 UnionID   |
+| 抖音      | ✓        | ✗        | ✓    | 不提供邮箱信息                 |
+| 匿名登录  | 自动生成 | 自动生成 | 默认 | 系统自动生成用户信息，临时账户 |
 
 ### 临时邮箱处理
 
-对于不提供邮箱的社交账户，系统会自动生成临时邮箱地址：
+对于不提供邮箱的社交账户或匿名登录，系统会自动生成临时邮箱地址：
+
+#### 社交账户临时邮箱
 
 -   格式：`{snowflake_id}@example.com`
+-   用于 QQ、微信、抖音等不提供邮箱的平台
 -   用户可以稍后在个人中心更新为真实邮箱
+
+#### 匿名登录邮箱
+
+-   格式：`{snowflake_id}@anonymous.com`
+-   专门用于匿名登录用户
+-   标识用户为临时访客身份
+-   可升级为正式账户
 
 ## 错误排除
 
