@@ -192,7 +192,7 @@
                                     原因：{{ data.banReason }}
                                 </div>
                                 <div v-if="data.banned && data.banExpires" class="ban-expires">
-                                    到期：{{ formatDate(data.banExpires * 1000) }}
+                                    到期：{{ formatDate(data.banExpires ) }}
                                 </div>
                             </div>
                         </template>
@@ -420,7 +420,7 @@
                         </div>
                         <div v-if="viewingUser.banned && viewingUser.banExpires" class="detail-item">
                             <label>禁用到期时间</label>
-                            <span>{{ formatDate(viewingUser.banExpires * 1000) }}</span>
+                            <span>{{ formatDate(viewingUser.banExpires) }}</span>
                         </div>
                     </div>
                 </div>
