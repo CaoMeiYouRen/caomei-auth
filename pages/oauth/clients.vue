@@ -184,7 +184,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import dayjs from 'dayjs'
 
@@ -236,34 +236,45 @@ const scopeDescriptions: Record<string, string> = {
     'app:write': '修改应用信息',
 }
 
-const authorizedApps = ref<AuthorizedApp[]>([])
-const loading = ref(true)
 const showRevokeDialog = ref(false)
 const selectedApp = ref<AuthorizedApp>()
 const revoking = ref(false)
 const revokingApps = ref(new Set<string>())
 
-// 加载授权应用列表
-async function loadAuthorizedApps() {
-    try {
-        loading.value = true
-        const response = await $fetch<any>('/api/oauth/consents')
+// 使用 useFetch 进行 SSR 优化的数据获取
+const { data: authorizedAppsData, pending: loading, error, refresh: refreshApps } = await useFetch<{
+    success: boolean
+    data: AuthorizedApp[]
+    message?: string
+}>('/api/oauth/consents', {
+    default: () => ({ success: false, data: [], message: '' }),
+    server: true,
+    lazy: false,
+})
 
-        if (response.success) {
-            authorizedApps.value = response.data
-        } else {
-            throw new Error(response.message || '获取授权应用列表失败')
-        }
-    } catch (error: any) {
+// 计算属性，从 useFetch 结果中提取数据
+const authorizedApps = computed(() => {
+    if (authorizedAppsData.value?.success) {
+        return authorizedAppsData.value.data
+    }
+    return []
+})
+
+// 处理错误
+watch(error, (newError) => {
+    if (newError) {
         toast.add({
             severity: 'error',
             summary: '错误',
-            detail: error.message || '获取授权应用列表失败',
+            detail: newError.message || '获取授权应用列表失败',
             life: 3000,
         })
-    } finally {
-        loading.value = false
     }
+})
+
+// 重新加载授权应用列表
+async function loadAuthorizedApps() {
+    await refreshApps()
 }
 
 // 格式化日期
@@ -307,18 +318,15 @@ async function revokeAuthorization() {
                 life: 3000,
             })
 
-            // 从列表中移除该应用
-            authorizedApps.value = authorizedApps.value.filter(
-                (app) => app.clientId !== selectedApp.value?.clientId,
-            )
+            await loadAuthorizedApps()
         } else {
             throw new Error(response.message || '撤销授权失败')
         }
-    } catch (error: any) {
+    } catch (revokeError: any) {
         toast.add({
             severity: 'error',
             summary: '撤销失败',
-            detail: error.message || '撤销授权失败',
+            detail: revokeError.message || '撤销授权失败',
             life: 3000,
         })
     } finally {
@@ -337,10 +345,6 @@ function openLink(url: string) {
 function goProfile() {
     navigateTo('/profile')
 }
-
-onMounted(() => {
-    loadAuthorizedApps()
-})
 </script>
 
 <style lang="scss" scoped>

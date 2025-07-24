@@ -67,6 +67,7 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
+            NODE_ENV: process.env.NODE_ENV,
             appName: process.env.NUXT_PUBLIC_APP_NAME,
             authBaseUrl: process.env.NUXT_PUBLIC_AUTH_BASE_URL,
             contactEmail: process.env.NUXT_PUBLIC_CONTACT_EMAIL,

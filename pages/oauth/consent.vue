@@ -60,9 +60,9 @@
                         <span>这是一个受信任的应用</span>
                     </div>
                     <ul>
-                        <li v-for="scope in parsedScopes" :key="scope.scope">
+                        <li v-for="scopeItem in parsedScopes" :key="scopeItem.scope">
                             <i class="mdi mdi-check-circle" />
-                            <span>{{ scope.description }}</span>
+                            <span>{{ scopeItem.description }}</span>
                         </li>
                     </ul>
                     <!-- 如果没有特定权限，显示基本信息 -->
@@ -73,7 +73,7 @@
                 <!-- OAuth 参数信息（仅开发环境显示） -->
                 <div v-if="$config.public.NODE_ENV === 'development'" class="debug-info">
                     <details>
-                        <summary>调试信息</summary>
+                        <summary>调试信息（仅开发环境显示）</summary>
                         <pre>{{ JSON.stringify(oauthParams, null, 2) }}</pre>
                     </details>
                 </div>
@@ -99,7 +99,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
 
@@ -137,115 +137,107 @@ const scopeDescriptions: Record<string, string> = {
     'app:write': '修改应用信息',
 }
 
-const application = ref<any>(null)
-const scopes = ref<string[]>([])
-const applicationName = ref('')
-
-const parsedScopes = computed(() => scopes.value.map((scope) => ({
-    scope,
-    description: scopeDescriptions[scope] || `访问 ${scope} 权限`,
-})))
-
-const loading = ref(true)
+const route = useRoute()
 const submitting = ref(false)
 const hasError = ref(false)
 const isTrustedClient = ref(false)
-const oauthParams = ref<{
-    clientId?: string
-    redirectUri?: string
-    state?: string
-    responseType?: string
-    scope?: string
-}>({})
 
-onMounted(async () => {
-    try {
-        loading.value = true
-        hasError.value = false
+// 从 URL 参数中获取 OAuth2.0 标准参数
+const {
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    state,
+    response_type: responseType,
+    scope,
+} = route.query
 
-        // 从 URL 参数中获取 OAuth2.0 标准参数
-        const route = useRoute()
-        const {
-            client_id: clientId,
-            redirect_uri: redirectUri,
-            state,
-            response_type: responseType,
-            scope,
-        } = route.query
+const oauthParams = ref({
+    clientId: clientId as string,
+    redirectUri: redirectUri as string,
+    state: state as string,
+    responseType: responseType as string,
+    scope: scope as string,
+})
 
-        // 验证必需参数
-        if (!clientId) {
-            throw new Error('缺少必需参数：client_id')
-        }
+// 解析 scopes
+const scopes = ref<string[]>((scope as string || '').split(' ').filter((s) => s.trim()))
 
-        // 保存 OAuth 参数用于后续处理
-        oauthParams.value = {
-            clientId: clientId as string,
-            redirectUri: redirectUri as string,
-            state: state as string,
-            responseType: responseType as string,
-            scope: scope as string,
-        }
+const parsedScopes = computed(() => scopes.value.map((scopeItem) => ({
+    scope: scopeItem,
+    description: scopeDescriptions[scopeItem] || `访问 ${scopeItem} 权限`,
+})))
 
-        // 解析 scopes
-        scopes.value = (scope as string || '').split(' ').filter((s) => s.trim())
+// 使用 useFetch 获取应用信息（仅在有 clientId 时）
+const { data: applicationData, pending: loading, error: fetchError } = await useFetch(`/api/oauth/client/${clientId}`, {
+    key: `oauth-client-${clientId}`,
+    default: () => ({ success: false, data: null, message: '' }),
+    server: true,
+    lazy: false,
+})
 
-        // 获取应用信息
-        try {
-            // 使用新创建的 API 端点通过 clientId 获取应用信息
-            const response = await $fetch(`/api/oauth/client/${clientId}`)
+// 定义应用信息类型
+interface ApplicationInfo {
+    name: string
+    clientId: string
+    description?: string
+    logoUri?: string
+    clientUri?: string
+    tosUri?: string
+    policyUri?: string
+}
 
-            if (response.success && response.data) {
-                application.value = response.data
-                applicationName.value = response.data.name || '未知应用'
+// 计算属性：应用信息
+const application = computed((): ApplicationInfo => {
+    if (applicationData.value?.success && applicationData.value.data) {
+        return applicationData.value.data
+    }
+    // 备用方案
+    return {
+        name: '第三方应用',
+        clientId: clientId as string,
+        description: '正在请求访问您的账户权限',
+    }
+})
 
-                // 检查是否为受信任客户端（这需要后端支持）
-                // isTrustedClient.value = response.data.trusted || false
-            } else {
-                throw new Error((response as any).message || '应用不存在或已被禁用')
-            }
-        } catch (fetchError: any) {
-            // 如果上面的方法失败，尝试备用方案
-            console.warn('使用备用方案获取应用信息:', fetchError)
+const applicationName = computed(() => application.value?.name || '未知应用')
 
-            // 检查是否是因为应用不存在
-            if (fetchError.status === 404 || fetchError.data?.status === 404) {
-                throw new Error('应用不存在，请检查授权链接是否正确')
-            }
-
-            if (fetchError.status === 403 || fetchError.data?.status === 403) {
-                throw new Error('该应用已被禁用，无法进行授权')
-            }
-
-            // 使用基本信息作为备用方案
-            application.value = {
-                name: '第三方应用',
-                clientId,
-                description: '正在请求访问您的账户权限',
-            }
-            applicationName.value = '第三方应用'
-
-            // 记录警告但不抛出错误，让用户可以继续授权流程
-            console.error('获取应用详细信息失败，使用默认信息:', fetchError)
-        }
-
-        // 对于受信任的客户端，可以考虑自动同意（根据业务需求决定）
-        // if (isTrustedClient.value && shouldAutoConsent()) {
-        //     await allowConsent()
-        // }
-    } catch (error: any) {
+// 处理错误和验证
+watch([() => clientId, fetchError], ([newClientId, newError]) => {
+    if (!newClientId) {
         hasError.value = true
         toast.add({
             severity: 'error',
             summary: '错误',
-            detail: error.message || '获取应用信息失败',
+            detail: '缺少必需参数：client_id',
             life: 3000,
         })
-        console.error('OAuth consent error:', error)
-    } finally {
-        loading.value = false
+        return
     }
-})
+
+    if (newError) {
+        // 如果是 404 或 403 错误，显示特定错误信息
+        if (newError.statusCode === 404) {
+            hasError.value = true
+            toast.add({
+                severity: 'error',
+                summary: '错误',
+                detail: '应用不存在，请检查授权链接是否正确',
+                life: 3000,
+            })
+        } else if (newError.statusCode === 403) {
+            hasError.value = true
+            toast.add({
+                severity: 'error',
+                summary: '错误',
+                detail: '该应用已被禁用，无法进行授权',
+                life: 3000,
+            })
+        } else {
+            // 对于其他错误，记录警告但不阻止用户继续（使用备用应用信息）
+            console.warn('获取应用详细信息失败，使用默认信息:', newError)
+        }
+    }
+}, { immediate: true })
 
 async function allowConsent() {
     if (submitting.value) {
