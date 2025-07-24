@@ -51,6 +51,26 @@
                             {{ application.clientUri }}
                         </a>
                     </div>
+                    <div v-if="application?.tosUri" class="info-item">
+                        <strong>服务条款：</strong>
+                        <a
+                            :href="application.tosUri"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            查看服务条款
+                        </a>
+                    </div>
+                    <div v-if="application?.policyUri" class="info-item">
+                        <strong>隐私政策：</strong>
+                        <a
+                            :href="application.policyUri"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            查看隐私政策
+                        </a>
+                    </div>
                 </div>
                 <div class="scopes-list">
                     <h3>将获得以下权限：</h3>
@@ -77,6 +97,36 @@
                         <pre>{{ JSON.stringify(oauthParams, null, 2) }}</pre>
                     </details>
                 </div>
+            </div>
+            <!-- 法律信息区域 -->
+            <div v-if="application?.tosUri || application?.policyUri" class="legal-info">
+                <p class="legal-text">
+                    在授权前，建议您仔细阅读该应用的
+                    <template v-if="application?.tosUri">
+                        <a
+                            :href="application.tosUri"
+                            target="_blank"
+                            rel="noopener"
+                            class="legal-link"
+                        >
+                            服务条款
+                        </a>
+                    </template>
+                    <template v-if="application?.tosUri && application?.policyUri">
+                        和
+                    </template>
+                    <template v-if="application?.policyUri">
+                        <a
+                            :href="application.policyUri"
+                            target="_blank"
+                            rel="noopener"
+                            class="legal-link"
+                        >
+                            隐私政策
+                        </a>
+                    </template>
+                    ，了解您的权利和义务。
+                </p>
             </div>
             <div class="consent-footer">
                 <Button
@@ -323,6 +373,10 @@ async function denyConsent() {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/theme";
+@import "@/styles/form";
+@import "@/styles/common";
+
 .oauth-consent {
     min-height: 100vh;
     display: flex;
@@ -458,9 +512,9 @@ async function denyConsent() {
             }
 
             .trusted-client-badge {
-                background: var(--green-50);
-                color: var(--green-700);
-                border: 1px solid var(--green-200);
+                background: #f0fdf4; // 浅绿色背景
+                color: #166534; // 深绿色文字
+                border: 1px solid #bbf7d0; // 绿色边框
                 border-radius: 0.5rem;
                 padding: 0.5rem 0.75rem;
                 margin-bottom: 1rem;
@@ -500,6 +554,32 @@ async function denyConsent() {
                 p {
                     color: var(--text-color-secondary);
                     margin: 0;
+                }
+            }
+        }
+    }
+
+    .legal-info {
+        background: #eff6ff; // 浅蓝色背景
+        border: 1px solid #bfdbfe; // 蓝色边框
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 2rem;
+
+        .legal-text {
+            color: var(--text-color-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+            text-align: center;
+
+            .legal-link {
+                color: var(--primary-color);
+                text-decoration: none;
+                font-weight: 500;
+
+                &:hover {
+                    text-decoration: underline;
                 }
             }
         }
@@ -572,6 +652,13 @@ async function denyConsent() {
             .loading-content,
             .error-content {
                 padding: 1.5rem;
+            }
+
+            .legal-info {
+                .legal-text {
+                    font-size: 0.85rem;
+                    text-align: left;
+                }
             }
 
             .consent-footer {
