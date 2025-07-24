@@ -82,6 +82,7 @@
 
         <div class="admin-main">
             <slot />
+            <AppFooter />
         </div>
     </div>
 </template>
