@@ -1,6 +1,6 @@
 # coding=utf-8
 <template>
-    <div class="oauth-clients">
+    <div class="admin-clients">
         <div class="clients-container">
             <div class="clients-header">
                 <div class="header-content">
@@ -25,14 +25,51 @@
                     />
                 </div>
             </div>
+
+            <!-- 搜索和筛选 -->
+            <div class="clients-filters">
+                <div class="filter-row">
+                    <div class="search-wrapper">
+                        <IconField icon-position="left">
+                            <InputIcon class="mdi mdi-magnify" />
+                            <InputText
+                                v-model="searchQuery"
+                                placeholder="搜索应用（名称、描述、Client ID）"
+                                @input="debouncedSearch"
+                            />
+                        </IconField>
+                    </div>
+                    <div class="filter-controls">
+                        <Button
+                            icon="mdi mdi-refresh"
+                            severity="secondary"
+                            outlined
+                            @click="refreshApplications"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- 应用列表 -->
             <div class="clients-list">
                 <DataTable
                     :key="applications.length"
-                    :value="applications"
+                    :value="filteredApplications"
                     :paginator="true"
                     :rows="10"
                     :loading="loading"
+                    paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                    current-page-report-template="{first} 到 {last} 共 {totalRecords} 条"
+                    :rows-per-page-options="[10, 25, 50]"
+                    sortable
                 >
+                    <template #header>
+                        <div class="table-header">
+                            <div class="table-title">
+                                应用列表 ({{ filteredApplications.length }})
+                            </div>
+                        </div>
+                    </template>
                     <Column field="name" header="应用名称">
                         <template #body="{data}">
                             <div class="application-info">
@@ -390,8 +427,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import { debounce } from 'lodash-es'
 import { authClient } from '@/lib/auth-client'
 
 definePageMeta({
@@ -412,6 +450,32 @@ const deleting = ref(false)
 const selectedApp = ref<any>(null)
 const createdApplication = ref<any>(null)
 
+// 新增搜索和筛选相关变量
+const searchQuery = ref('')
+
+// 计算属性：过滤后的应用列表
+const filteredApplications = computed(() => {
+    if (!searchQuery.value) {
+        return applications.value
+    }
+
+    const query = searchQuery.value.toLowerCase()
+    return applications.value.filter((app) => app.name?.toLowerCase().includes(query)
+        || app.description?.toLowerCase().includes(query)
+        || app.clientId?.toLowerCase().includes(query))
+})
+
+// 防抖搜索
+const debouncedSearch = debounce(() => {
+    // 搜索逻辑已通过计算属性实现
+}, 300)
+
+// 刷新应用列表
+const refreshApplications = () => {
+    searchQuery.value = ''
+    loadApplications()
+}
+
 const formData = ref({
     client_name: '',
     description: '',
@@ -429,23 +493,30 @@ const formData = ref({
     software_version: '',
 })
 
-const applicationsResponse = await useFetch('/api/oauth/applications', {})
-applications.value = applicationsResponse.data.value?.data || []
-
 async function loadApplications() {
     try {
         loading.value = true
-        await applicationsResponse.refresh()
-        const newData = applicationsResponse.data.value?.data || []
-        // 强制更新响应式数据
-        applications.value = [...newData]
+
+        console.log('开始加载应用列表...')
+        const response = await $fetch('/api/oauth/applications')
+        console.log('API 响应:', response)
+
+        if (response?.success && response?.data) {
+            applications.value = response.data
+            console.log('成功加载应用列表，数量:', response.data.length)
+        } else {
+            console.error('API 响应格式不正确:', response)
+            throw new Error('获取应用列表失败')
+        }
     } catch (error: any) {
+        console.error('加载应用列表失败:', error)
         toast.add({
             severity: 'error',
             summary: '错误',
             detail: error.message || '获取应用列表失败',
             life: 3000,
         })
+        applications.value = []
     } finally {
         loading.value = false
     }
@@ -711,6 +782,11 @@ function goProfile() {
     navigateTo('/profile')
 }
 
+// 页面初始化
+onMounted(() => {
+    loadApplications()
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -718,104 +794,199 @@ function goProfile() {
 @import '@/styles/form';
 @import '@/styles/common';
 
-.oauth-clients {
+.admin-clients {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     padding: 2rem;
-    background-color: var(--surface-ground);
+}
 
-    .clients-container {
-        background: var(--surface-card);
-        border-radius: 1rem;
-        padding: 2rem;
-        box-shadow: var(--card-shadow);
+.clients-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.clients-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+.header-content {
+    .clients-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: $primary;
+        margin: 0 0 0.5rem 0;
     }
 
-    .clients-header {
+    .clients-subtitle {
+        color: $secondary-light;
+        margin: 0;
+        font-size: 1.1rem;
+    }
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+
+    @media (max-width: 768px) {
+        width: 100%;
+
+        :deep(.p-button) {
+            flex: 1;
+        }
+    }
+}
+
+.clients-filters {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+
+    .filter-row {
         display: flex;
+        gap: 1rem;
         align-items: center;
-        justify-content: space-between;
-        margin-bottom: 2rem;
-
-        .header-content {
-            .clients-title {
-                font-size: 1.5rem;
-                font-weight: 600;
-                color: var(--text-color);
-                margin: 0;
-            }
-
-            .clients-subtitle {
-                margin: 0.5rem 0 0 0;
-                color: var(--text-color-secondary);
-                font-size: 0.875rem;
-            }
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
 
         @media (max-width: 768px) {
             flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
+            align-items: stretch;
+        }
+    }
 
-            .header-actions {
-                width: 100%;
-                flex-wrap: wrap;
+    .search-wrapper {
+        flex: 1;
+        min-width: 300px;
+
+        @media (max-width: 768px) {
+            min-width: unset;
+        }
+    }
+
+    .filter-controls {
+        display: flex;
+        gap: 1rem;
+
+        @media (max-width: 768px) {
+            flex-wrap: wrap;
+        }
+    }
+}
+
+.clients-list {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: $primary;
+        }
+    }
+
+    :deep(.p-datatable) {
+        .p-datatable-header {
+            padding: 0;
+            border: none;
+        }
+
+        .p-datatable-thead>tr>th {
+            background: #f8fafc;
+            color: $secondary;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 1rem;
+        }
+
+        .p-datatable-tbody>tr>td {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .p-datatable-tbody>tr:hover {
+            background: #f8fafc;
+        }
+    }
+
+    .application-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        .application-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .application-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            .application-name {
+                font-weight: 600;
+                color: $secondary;
+            }
+
+            .application-description {
+                color: $secondary-light;
+                font-size: 0.875rem;
             }
         }
     }
 
-    .clients-list {
-        .application-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+    .client-id {
+        font-family: 'Courier New', monospace;
+        background: #f1f5f9;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+    }
 
-            .application-logo {
-                width: 32px;
-                height: 32px;
-                border-radius: 4px;
-                object-fit: cover;
-                flex-shrink: 0;
-            }
+    .scope-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
 
-            .application-details {
-                display: flex;
-                flex-direction: column;
-                gap: 0.25rem;
-
-                .application-name {
-                    font-weight: 500;
-                    color: var(--text-color);
-                }
-
-                .application-description {
-                    color: var(--text-color-secondary);
-                    font-size: 0.875rem;
-                }
-            }
+        .scope-tag {
+            font-size: 0.75rem;
         }
+    }
+}
 
-        .client-id {
-            font-family: 'Courier New', monospace;
-            background: var(--surface-100);
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.875rem;
-        }
+// 响应式优化
+@media (max-width: 768px) {
+    .admin-clients {
+        padding: 1rem;
+    }
 
-        .scope-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.25rem;
-
-            .scope-tag {
-                font-size: 0.75rem;
-            }
-        }
+    :deep(.p-datatable-wrapper) {
+        overflow-x: auto;
     }
 }
 
@@ -829,8 +1000,8 @@ function goProfile() {
         label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--text-color);
-            font-weight: 500;
+            font-weight: 600;
+            color: $secondary;
 
             .required {
                 color: $primary;
@@ -841,14 +1012,14 @@ function goProfile() {
         .helper-text {
             display: block;
             margin-top: 0.25rem;
-            color: var(--text-color-secondary);
+            color: $secondary-light;
             font-size: 0.875rem;
         }
 
         .error-text {
             display: block;
             margin-top: 0.25rem;
-            color: var(--red-500);
+            color: $primary;
             font-size: 0.875rem;
             font-weight: 500;
         }
@@ -874,6 +1045,95 @@ function goProfile() {
 
             .form-group {
                 grid-column: 1;
+            }
+        }
+    }
+}
+
+.delete-dialog {
+    .p-button-danger {
+        background: $primary;
+        border-color: $primary;
+
+        &:hover {
+            background: $primary-dark;
+            border-color: $primary-dark;
+        }
+    }
+}
+
+.secret-dialog {
+    width: 90vw;
+    max-width: 600px;
+
+    .secret-content {
+        text-align: center;
+
+        .success-icon {
+            font-size: 3rem;
+            color: #22c55e;
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: $secondary;
+        }
+
+        .credentials {
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+
+            .credential-item {
+                margin-bottom: 1rem;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-weight: 600;
+                    color: $secondary;
+                }
+
+                .credential-value {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+
+                    code {
+                        flex: 1;
+                        padding: 0.5rem;
+                        background: white;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 0.25rem;
+                        font-family: 'Courier New', monospace;
+                        font-size: 0.875rem;
+                        word-break: break-all;
+                    }
+                }
+            }
+        }
+
+        .warning {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            color: #92400e;
+
+            i {
+                font-size: 1.25rem;
+                color: #f59e0b;
             }
         }
     }
