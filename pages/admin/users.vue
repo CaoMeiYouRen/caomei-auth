@@ -829,9 +829,8 @@ const createUser = async () => {
         const response = await authClient.admin.createUser({
             name: createForm.value.name,
             email: createForm.value.email,
-            username: createForm.value.username || undefined,
             password: createForm.value.password,
-            role: createForm.value.role,
+            role: createForm.value.role as 'admin' | 'user',
         })
 
         if (response.data) {
@@ -881,7 +880,7 @@ const updateUser = async () => {
         if (editForm.value.role !== editingUser.value.role) {
             await authClient.admin.setRole({
                 userId: editingUser.value.id,
-                role: editForm.value.role,
+                role: editForm.value.role as 'admin' | 'user',
             })
         }
 
@@ -1043,7 +1042,7 @@ const viewUserSessions = async (user: any) => {
             userId: user.id,
         })
 
-        userSessions.value = response.data || []
+        userSessions.value = response.data?.sessions || []
     } catch (error: any) {
         console.error('加载用户会话失败:', error)
         toast.add({
@@ -1096,38 +1095,43 @@ const revokeAllUserSessions = async () => {
         return
     }
 
-    if (!confirm(`确定要撤销 ${sessionUser.value.name || sessionUser.value.email} 的所有会话吗？`)) {
-        return
-    }
+    confirm.require({
+        message: `确定要撤销 ${sessionUser.value.name || sessionUser.value.email} 的所有会话吗？`,
+        header: '确认撤销',
+        icon: 'mdi mdi-alert',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'p-button-danger',
+        accept: async () => {
+            try {
+                revokeAllLoading.value = true
 
-    try {
-        revokeAllLoading.value = true
+                const response = await authClient.admin.revokeUserSessions({
+                    userId: sessionUser.value.id,
+                })
 
-        const response = await authClient.admin.revokeUserSessions({
-            userId: sessionUser.value.id,
-        })
+                if (response.data) {
+                    toast.add({
+                        severity: 'success',
+                        summary: '撤销成功',
+                        detail: '所有会话已撤销',
+                        life: 3000,
+                    })
 
-        if (response.data) {
-            toast.add({
-                severity: 'success',
-                summary: '撤销成功',
-                detail: '所有会话已撤销',
-                life: 3000,
-            })
-
-            showSessionsDialog.value = false
-        }
-    } catch (error: any) {
-        console.error('撤销所有会话失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '撤销失败',
-            detail: error.message || '撤销所有会话失败',
-            life: 3000,
-        })
-    } finally {
-        revokeAllLoading.value = false
-    }
+                    showSessionsDialog.value = false
+                }
+            } catch (error: any) {
+                console.error('撤销所有会话失败:', error)
+                toast.add({
+                    severity: 'error',
+                    summary: '撤销失败',
+                    detail: error.message || '撤销所有会话失败',
+                    life: 3000,
+                })
+            } finally {
+                revokeAllLoading.value = false
+            }
+        },
+    })
 }
 
 // 分页处理
@@ -1152,36 +1156,41 @@ const batchBanUsers = async () => {
         return
     }
 
-    if (!confirm(`确定要禁用选中的 ${selectedUsers.value.length} 个用户吗？`)) {
-        return
-    }
+    confirm.require({
+        message: `确定要禁用选中的 ${selectedUsers.value.length} 个用户吗？`,
+        header: '确认批量禁用',
+        icon: 'mdi mdi-alert',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'p-button-danger',
+        accept: async () => {
+            try {
+                for (const user of selectedUsers.value) {
+                    await authClient.admin.banUser({
+                        userId: user.id,
+                        banReason: '批量禁用操作',
+                    })
+                }
 
-    try {
-        for (const user of selectedUsers.value) {
-            await authClient.admin.banUser({
-                userId: user.id,
-                banReason: '批量禁用操作',
-            })
-        }
+                toast.add({
+                    severity: 'success',
+                    summary: '禁用成功',
+                    detail: `已禁用 ${selectedUsers.value.length} 个用户`,
+                    life: 3000,
+                })
 
-        toast.add({
-            severity: 'success',
-            summary: '禁用成功',
-            detail: `已禁用 ${selectedUsers.value.length} 个用户`,
-            life: 3000,
-        })
-
-        selectedUsers.value = []
-        loadUsers()
-    } catch (error: any) {
-        console.error('批量禁用失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '批量禁用失败',
-            detail: error.message || '批量禁用用户失败',
-            life: 3000,
-        })
-    }
+                selectedUsers.value = []
+                loadUsers()
+            } catch (error: any) {
+                console.error('批量禁用失败:', error)
+                toast.add({
+                    severity: 'error',
+                    summary: '批量禁用失败',
+                    detail: error.message || '批量禁用用户失败',
+                    life: 3000,
+                })
+            }
+        },
+    })
 }
 
 const batchUnbanUsers = async () => {
@@ -1189,35 +1198,40 @@ const batchUnbanUsers = async () => {
         return
     }
 
-    if (!confirm(`确定要解禁选中的 ${selectedUsers.value.length} 个用户吗？`)) {
-        return
-    }
+    confirm.require({
+        message: `确定要解禁选中的 ${selectedUsers.value.length} 个用户吗？`,
+        header: '确认批量解禁',
+        icon: 'mdi mdi-alert',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'p-button-success',
+        accept: async () => {
+            try {
+                for (const user of selectedUsers.value) {
+                    await authClient.admin.unbanUser({
+                        userId: user.id,
+                    })
+                }
 
-    try {
-        for (const user of selectedUsers.value) {
-            await authClient.admin.unbanUser({
-                userId: user.id,
-            })
-        }
+                toast.add({
+                    severity: 'success',
+                    summary: '解禁成功',
+                    detail: `已解禁 ${selectedUsers.value.length} 个用户`,
+                    life: 3000,
+                })
 
-        toast.add({
-            severity: 'success',
-            summary: '解禁成功',
-            detail: `已解禁 ${selectedUsers.value.length} 个用户`,
-            life: 3000,
-        })
-
-        selectedUsers.value = []
-        loadUsers()
-    } catch (error: any) {
-        console.error('批量解禁失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '批量解禁失败',
-            detail: error.message || '批量解禁用户失败',
-            life: 3000,
-        })
-    }
+                selectedUsers.value = []
+                loadUsers()
+            } catch (error: any) {
+                console.error('批量解禁失败:', error)
+                toast.add({
+                    severity: 'error',
+                    summary: '批量解禁失败',
+                    detail: error.message || '批量解禁用户失败',
+                    life: 3000,
+                })
+            }
+        },
+    })
 }
 
 const batchDeleteUsers = async () => {
@@ -1225,35 +1239,40 @@ const batchDeleteUsers = async () => {
         return
     }
 
-    if (!confirm(`确定要删除选中的 ${selectedUsers.value.length} 个用户吗？此操作不可恢复！`)) {
-        return
-    }
+    confirm.require({
+        message: `确定要删除选中的 ${selectedUsers.value.length} 个用户吗？此操作不可恢复！`,
+        header: '确认批量删除',
+        icon: 'mdi mdi-alert',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'p-button-danger',
+        accept: async () => {
+            try {
+                for (const user of selectedUsers.value) {
+                    await authClient.admin.removeUser({
+                        userId: user.id,
+                    })
+                }
 
-    try {
-        for (const user of selectedUsers.value) {
-            await authClient.admin.removeUser({
-                userId: user.id,
-            })
-        }
+                toast.add({
+                    severity: 'success',
+                    summary: '删除成功',
+                    detail: `已删除 ${selectedUsers.value.length} 个用户`,
+                    life: 3000,
+                })
 
-        toast.add({
-            severity: 'success',
-            summary: '删除成功',
-            detail: `已删除 ${selectedUsers.value.length} 个用户`,
-            life: 3000,
-        })
-
-        selectedUsers.value = []
-        loadUsers()
-    } catch (error: any) {
-        console.error('批量删除失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '批量删除失败',
-            detail: error.message || '批量删除用户失败',
-            life: 3000,
-        })
-    }
+                selectedUsers.value = []
+                loadUsers()
+            } catch (error: any) {
+                console.error('批量删除失败:', error)
+                toast.add({
+                    severity: 'error',
+                    summary: '批量删除失败',
+                    detail: error.message || '批量删除用户失败',
+                    life: 3000,
+                })
+            }
+        },
+    })
 }
 
 // 页面初始化
