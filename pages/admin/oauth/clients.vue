@@ -11,11 +11,19 @@
                         管理您的 OAuth 2.0 应用，支持 RFC7591 动态客户端注册
                     </p>
                 </div>
-                <Button
-                    label="创建应用"
-                    icon="mdi mdi-plus"
-                    @click="resetForm(); showCreateDialog = true"
-                />
+                <div class="header-actions">
+                    <Button
+                        label="返回个人中心"
+                        icon="mdi mdi-arrow-left"
+                        severity="secondary"
+                        @click="goProfile"
+                    />
+                    <Button
+                        label="创建应用"
+                        icon="mdi mdi-plus"
+                        @click="resetForm(); showCreateDialog = true"
+                    />
+                </div>
             </div>
             <div class="clients-list">
                 <DataTable
@@ -693,6 +701,11 @@ async function copyToClipboard(text: string) {
         })
     }
 }
+
+function goProfile() {
+    navigateTo('/profile')
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -729,6 +742,23 @@ async function copyToClipboard(text: string) {
                 margin: 0.5rem 0 0 0;
                 color: var(--text-color-secondary);
                 font-size: 0.875rem;
+            }
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+
+            .header-actions {
+                width: 100%;
+                flex-wrap: wrap;
             }
         }
     }

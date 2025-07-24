@@ -18,6 +18,7 @@
                         label="返回个人中心"
                         icon="mdi mdi-arrow-left"
                         outlined
+                        severity="secondary"
                         @click="goProfile"
                     />
                 </div>
