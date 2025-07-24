@@ -72,13 +72,16 @@
 -   [x] 忘记密码页 `/forgot-password`：支持邮箱/手机号找回密码，含验证码校验。
 -   [x] 个人中心页 `/profile`：展示用户信息，支持修改资料、修改密码、多因子认证设置、查看登录日志等。
 -   [x] 账号安全设置页 `/security`：多因子认证（MFA）设置、登录日志查看、设备管理。
--   授权管理页 `/oauth/consent`、`/oauth/clients`：OAuth2.0 授权同意页、已授权应用管理。
+-   [x] 授权管理页 `/oauth/consent`、`/oauth/clients`：OAuth2.0 授权同意页、已授权应用管理。
 -   管理后台 `/admin` 及子页面：
+
+    -   应用管理 `/admin/oauth/clients`：管理 OAuth2.0 应用
     -   用户管理 `/admin/users`：用户列表、详情、编辑、禁用/启用等操作。
     -   权限管理 `/admin/roles`：角色、权限分配与管理。
     -   登录统计 `/admin/logs`：登录日志、活跃用户、异常登录等统计报表。
     -   系统设置 `/admin/settings`
--   第三方登录回调处理页 `/oauth/callback`
+
+-   ~~第三方登录回调处理页 `/oauth/callback`~~
 -   API 文档/开发者中心页 `/docs` 或 `/developer`：平台开放 API 及 SDK 文档说明。
 -   [x] 统一错误页（如 404、403、500 等）
 -   其他辅助页面：
