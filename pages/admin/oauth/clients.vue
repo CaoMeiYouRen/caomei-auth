@@ -44,7 +44,7 @@
                             icon="mdi mdi-refresh"
                             severity="secondary"
                             outlined
-                            @click="refreshApplications"
+                            @click="handleRefreshApplications"
                         />
                     </div>
                 </div>
@@ -427,7 +427,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { debounce } from 'lodash-es'
 import { authClient } from '@/lib/auth-client'
@@ -439,8 +439,7 @@ definePageMeta({
 
 const toast = useToast()
 
-const applications = ref<any[]>([])
-const loading = ref(false)
+// 对话框状态
 const showCreateDialog = ref(false)
 const showDeleteDialog = ref(false)
 const showSecretDialog = ref(false)
@@ -460,7 +459,7 @@ const filteredApplications = computed(() => {
     }
 
     const query = searchQuery.value.toLowerCase()
-    return applications.value.filter((app) => app.name?.toLowerCase().includes(query)
+    return applications.value.filter((app: any) => app.name?.toLowerCase().includes(query)
         || app.description?.toLowerCase().includes(query)
         || app.clientId?.toLowerCase().includes(query))
 })
@@ -469,12 +468,6 @@ const filteredApplications = computed(() => {
 const debouncedSearch = debounce(() => {
     // 搜索逻辑已通过计算属性实现
 }, 300)
-
-// 刷新应用列表
-const refreshApplications = () => {
-    searchQuery.value = ''
-    loadApplications()
-}
 
 const formData = ref({
     client_name: '',
@@ -493,33 +486,19 @@ const formData = ref({
     software_version: '',
 })
 
-async function loadApplications() {
-    try {
-        loading.value = true
+// 使用 useFetch 进行 SSR 优化的数据获取
+const { data: applicationsResponse, pending: loading, refresh: refreshApplications } = await useFetch('/api/oauth/applications', {
+    default: () => ({ success: false, data: [] }),
+    transform: (response: any) => response,
+})
 
-        console.log('开始加载应用列表...')
-        const response = await $fetch('/api/oauth/applications')
-        console.log('API 响应:', response)
+// 响应式的应用列表
+const applications = computed(() => (applicationsResponse.value?.success ? applicationsResponse.value.data : []))
 
-        if (response?.success && response?.data) {
-            applications.value = response.data
-            console.log('成功加载应用列表，数量:', response.data.length)
-        } else {
-            console.error('API 响应格式不正确:', response)
-            throw new Error('获取应用列表失败')
-        }
-    } catch (error: any) {
-        console.error('加载应用列表失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '错误',
-            detail: error.message || '获取应用列表失败',
-            life: 3000,
-        })
-        applications.value = []
-    } finally {
-        loading.value = false
-    }
+// 刷新应用列表的处理函数
+const handleRefreshApplications = () => {
+    searchQuery.value = ''
+    refreshApplications()
 }
 
 function editApplication(app: any) {
@@ -708,7 +687,7 @@ async function submitApplication() {
 
         showCreateDialog.value = false
         resetForm()
-        await loadApplications()
+        await refreshApplications()
     } catch (error: any) {
         toast.add({
             severity: 'error',
@@ -746,7 +725,7 @@ async function confirmDelete() {
         })
 
         showDeleteDialog.value = false
-        await loadApplications()
+        await refreshApplications()
     } catch (error: any) {
         toast.add({
             severity: 'error',
@@ -782,10 +761,7 @@ function goProfile() {
     navigateTo('/profile')
 }
 
-// 页面初始化
-onMounted(() => {
-    loadApplications()
-})
+// 移除 onMounted，因为使用 useFetch 已在 SSR 时获取数据
 
 </script>
 
