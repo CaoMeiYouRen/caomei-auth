@@ -8,7 +8,7 @@ export async function getUserSession(event: any) {
         headers: event.headers,
     })
     if (!session?.user?.id) {
-        throw createError({ statusCode: 401, statusMessage: '未登录用户' })
+        throw createError({ statusCode: 401, statusMessage: 'Unauthorized', message: '未登录用户' })
     }
     return {
         session,

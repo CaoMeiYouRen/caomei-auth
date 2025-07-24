@@ -7,29 +7,29 @@
                     <h2 class="auth-title">
                         个人资料
                     </h2>
-                    <div class="profile-header-actions">
-                        <Button
-                            v-tooltip.top="'已授权应用管理'"
-                            label="授权应用"
-                            icon="mdi mdi-key-variant"
-                            severity="secondary"
-                            @click="goOAuthClients"
-                        />
-                        <Button
-                            v-tooltip.top="'账号安全设置'"
-                            label="安全设置"
-                            icon="mdi mdi-shield-account"
-                            severity="secondary"
-                            @click="goSecurity"
-                        />
-                        <Button
-                            v-tooltip.top="'退出登录'"
-                            label="退出登录"
-                            icon="mdi mdi-logout"
-                            severity="secondary"
-                            @click="showLogoutConfirm = true"
-                        />
-                    </div>
+                </div>
+                <div class="profile-header-actions">
+                    <Button
+                        v-tooltip.top="'已授权应用管理'"
+                        label="授权应用"
+                        icon="mdi mdi-key-variant"
+                        severity="secondary"
+                        @click="goOAuthClients"
+                    />
+                    <Button
+                        v-tooltip.top="'账号安全设置'"
+                        label="安全设置"
+                        icon="mdi mdi-shield-account"
+                        severity="secondary"
+                        @click="goSecurity"
+                    />
+                    <Button
+                        v-tooltip.top="'退出登录'"
+                        label="退出登录"
+                        icon="mdi mdi-logout"
+                        severity="secondary"
+                        @click="showLogoutConfirm = true"
+                    />
                 </div>
                 <p class="auth-subtitle">
                     管理您的账号信息
@@ -892,7 +892,7 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 
 .profile-header-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-bottom: 0.5rem;
 
     .btn-link {

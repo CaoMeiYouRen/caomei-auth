@@ -13,6 +13,14 @@
                         管理您授权访问账户的第三方应用
                     </p>
                 </div>
+                <div class="header-actions">
+                    <Button
+                        label="返回个人中心"
+                        icon="mdi mdi-arrow-left"
+                        outlined
+                        @click="goProfile"
+                    />
+                </div>
             </div>
 
             <!-- 加载状态 -->
@@ -177,6 +185,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import dayjs from 'dayjs'
 
 definePageMeta({
     layout: 'default',
@@ -258,14 +267,7 @@ async function loadAuthorizedApps() {
 
 // 格式化日期
 function formatDate(dateString: string) {
-    const date = new Date(dateString)
-    return date.toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-    })
+    return dayjs(dateString).format('YYYY-MM-DD HH:mm:ss')
 }
 
 // 获取权限描述
@@ -282,8 +284,8 @@ function confirmRevokeAuthorization(app: AuthorizedApp) {
 // 撤销授权
 async function revokeAuthorization() {
     if (!selectedApp.value) {
-return
-}
+        return
+    }
 
     try {
         revoking.value = true
@@ -331,6 +333,10 @@ function openLink(url: string) {
     window.open(url, '_blank', 'noopener,noreferrer')
 }
 
+function goProfile() {
+    navigateTo('/profile')
+}
+
 onMounted(() => {
     loadAuthorizedApps()
 })
@@ -352,8 +358,14 @@ onMounted(() => {
 
     .page-header {
         margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
 
         .header-content {
+            flex: 1;
+
             .page-title {
                 display: flex;
                 align-items: center;
@@ -372,6 +384,10 @@ onMounted(() => {
                 color: var(--text-color-secondary);
                 font-size: 1.1rem;
             }
+        }
+
+        .header-actions {
+            flex-shrink: 0;
         }
     }
 
@@ -502,7 +518,7 @@ onMounted(() => {
                     margin-bottom: 0.5rem;
                 }
 
-                > span {
+                >span {
                     color: var(--text-color-secondary);
                     font-size: 0.9rem;
                 }
@@ -675,6 +691,14 @@ onMounted(() => {
                 .page-title {
                     font-size: 1.5rem;
                 }
+            }
+
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+
+            .header-actions {
+                align-self: flex-start;
             }
         }
     }

@@ -696,7 +696,7 @@ function removeDevice(id: number) {
 }
 
 function goProfile() {
-    window.location.href = '/profile'
+    navigateTo('/profile')
 }
 
 function goOAuthClients() {
