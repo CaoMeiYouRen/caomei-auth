@@ -129,12 +129,26 @@
                                 <div class="user-details">
                                     <div class="user-name">
                                         {{ data.name || '未设置姓名' }}
-                                        <Tag
-                                            v-if="data.emailVerified"
-                                            value="已验证"
-                                            severity="success"
-                                            class="ml-2"
-                                        />
+                                        <div class="verification-tags">
+                                            <Tag
+                                                v-if="data.emailVerified"
+                                                value="邮箱已验证"
+                                                severity="success"
+                                                size="small"
+                                            />
+                                            <Tag
+                                                v-if="data.phoneVerified"
+                                                value="手机已验证"
+                                                severity="success"
+                                                size="small"
+                                            />
+                                            <Tag
+                                                v-if="!data.emailVerified && !data.phoneVerified"
+                                                value="未验证"
+                                                severity="warning"
+                                                size="small"
+                                            />
+                                        </div>
                                     </div>
                                     <div class="user-email">
                                         {{ data.email }}
@@ -369,11 +383,19 @@
                             />
                         </div>
                         <div class="detail-item">
-                            <label>邮箱验证</label>
-                            <Tag
-                                :value="viewingUser.emailVerified ? '已验证' : '未验证'"
-                                :severity="viewingUser.emailVerified ? 'success' : 'warning'"
-                            />
+                            <label>验证状态</label>
+                            <div class="verification-status">
+                                <Tag
+                                    :value="viewingUser.emailVerified ? '邮箱已验证' : '邮箱未验证'"
+                                    :severity="viewingUser.emailVerified ? 'success' : 'warning'"
+                                    size="small"
+                                />
+                                <Tag
+                                    :value="viewingUser.phoneVerified ? '手机已验证' : '手机未验证'"
+                                    :severity="viewingUser.phoneVerified ? 'success' : 'warning'"
+                                    size="small"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1325,6 +1347,14 @@ onMounted(() => {
             color: $secondary;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .verification-tags {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
         }
 
         .user-email {
@@ -1436,6 +1466,12 @@ onMounted(() => {
 
                 span {
                     color: $secondary;
+                }
+
+                .verification-status {
+                    display: flex;
+                    gap: 0.5rem;
+                    flex-wrap: wrap;
                 }
             }
         }
