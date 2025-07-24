@@ -181,6 +181,9 @@ const scopeDescriptions: Record<string, string> = {
     'user:read': '查看用户信息',
     'user:write': '修改用户信息',
     'user:email': '访问用户邮箱',
+    'read:user': '读取用户基本信息（用户名、ID等）',
+    'read:profile': '读取用户详细资料',
+    'write:user': '修改用户信息',
 
     // 应用相关
     'app:read': '查看应用信息',
