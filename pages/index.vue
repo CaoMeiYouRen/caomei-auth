@@ -22,6 +22,14 @@
                     页面入口
                 </h2>
                 <div class="button-group">
+                    <!-- 如果是管理员，显示管理后台按钮 -->
+                    <Button
+                        v-if="session?.user?.role?.includes('admin')"
+                        label="管理后台"
+                        icon="mdi mdi-cog"
+                        class="btn btn-admin"
+                        @click="toAdmin"
+                    />
                     <!-- 如果session 存在，则显示跳转资料页-->
                     <Button
                         v-if="session?.user"
@@ -88,6 +96,10 @@ function toForgotPassword() {
 
 function toProfile() {
     navigateTo('/profile')
+}
+
+function toAdmin() {
+    navigateTo('/admin/users')
 }
 
 </script>
@@ -207,6 +219,19 @@ function toProfile() {
 
 .btn-primary:hover {
     background-color: $primary-dark !important;
+}
+
+.btn-admin {
+    background-color: #ff6b35 !important;
+    color: $background-light !important;
+    border: none !important;
+    min-height: 44px;
+    box-shadow: none;
+    transition: background 0.2s;
+}
+
+.btn-admin:hover {
+    background-color: #e55a2e !important;
 }
 
 .separator {

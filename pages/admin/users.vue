@@ -13,12 +13,6 @@
                 </div>
                 <div class="header-actions">
                     <Button
-                        label="返回个人中心"
-                        icon="mdi mdi-arrow-left"
-                        severity="secondary"
-                        @click="goProfile"
-                    />
-                    <Button
                         label="创建用户"
                         icon="mdi mdi-plus"
                         @click="resetCreateForm(); showCreateDialog = true"
