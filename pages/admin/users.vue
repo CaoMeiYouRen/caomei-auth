@@ -137,13 +137,13 @@
                                                 size="small"
                                             />
                                             <Tag
-                                                v-if="data.phoneVerified"
+                                                v-if="data.phoneNumberVerified"
                                                 value="手机已验证"
                                                 severity="success"
                                                 size="small"
                                             />
                                             <Tag
-                                                v-if="!data.emailVerified && !data.phoneVerified"
+                                                v-if="!data.emailVerified && !data.phoneNumberVerified"
                                                 value="未验证"
                                                 severity="warning"
                                                 size="small"
@@ -372,6 +372,10 @@
                             <span>{{ viewingUser.email }}</span>
                         </div>
                         <div class="detail-item">
+                            <label>手机号</label>
+                            <span>{{ viewingUser.phoneNumber ? formatPhoneNumberInternational(viewingUser.phoneNumber) : '未设置' }}</span>
+                        </div>
+                        <div class="detail-item">
                             <label>用户名</label>
                             <span>{{ viewingUser.username || '未设置' }}</span>
                         </div>
@@ -391,8 +395,8 @@
                                     size="small"
                                 />
                                 <Tag
-                                    :value="viewingUser.phoneVerified ? '手机已验证' : '手机未验证'"
-                                    :severity="viewingUser.phoneVerified ? 'success' : 'warning'"
+                                    :value="viewingUser.phoneNumberVerified ? '手机已验证' : '手机未验证'"
+                                    :severity="viewingUser.phoneNumberVerified ? 'success' : 'warning'"
                                     size="small"
                                 />
                             </div>
@@ -589,6 +593,7 @@ import { useConfirm } from 'primevue/useconfirm'
 import { debounce } from 'lodash-es'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/useragent'
+import { formatPhoneNumberInternational } from '@/utils/phone'
 
 // 页面元数据
 definePageMeta({
