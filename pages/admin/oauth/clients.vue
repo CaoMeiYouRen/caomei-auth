@@ -394,6 +394,11 @@ import { ref, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
 
+definePageMeta({
+    title: '应用管理 - 草梅 Auth',
+    layout: 'admin',
+})
+
 const toast = useToast()
 
 const applications = ref<any[]>([])
