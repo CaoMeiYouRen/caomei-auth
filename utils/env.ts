@@ -156,10 +156,10 @@ export const APPLE_APP_BUNDLE_IDENTIFIER = process.env.APPLE_APP_BUNDLE_IDENTIFI
 export const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID
 export const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET
 // 微信配置
-export const WECHAT_APP_ID = process.env.WECHAT_APP_ID
-export const WECHAT_APP_SECRET = process.env.WECHAT_APP_SECRET
+export const WECHAT_CLIENT_ID = process.env.WECHAT_CLIENT_ID
+export const WECHAT_CLIENT_SECRET = process.env.WECHAT_CLIENT_SECRET
 // 抖音配置
-export const DOUYIN_CLIENT_KEY = process.env.DOUYIN_CLIENT_KEY
+export const DOUYIN_CLIENT_ID = process.env.DOUYIN_CLIENT_ID
 export const DOUYIN_CLIENT_SECRET = process.env.DOUYIN_CLIENT_SECRET
 
 /**

@@ -48,8 +48,8 @@
 
 ```env
 # 微信登录配置
-WECHAT_APP_ID=your_wechat_app_id          # 微信 AppID
-WECHAT_APP_SECRET=your_wechat_app_secret  # 微信 AppSecret
+WECHAT_CLIENT_ID=your_WECHAT_CLIENT_ID          # 微信 AppID
+WECHAT_CLIENT_SECRET=your_WECHAT_CLIENT_SECRET  # 微信 AppSecret
 WECHAT_REDIRECT_URI=http://localhost:3000/api/auth/oauth2/callback/wechat  # 本地开发
 # WECHAT_REDIRECT_URI=https://yourdomain.com/api/auth/oauth2/callback/wechat  # 生产环境
 ```

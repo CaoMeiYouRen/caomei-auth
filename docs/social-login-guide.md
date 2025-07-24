@@ -69,12 +69,12 @@ QQ_CLIENT_SECRET=your_qq_client_secret
 QQ_USE_UNIONID=true
 
 # 微信
-WECHAT_APP_ID=your_wechat_app_id
-WECHAT_APP_SECRET=your_wechat_app_secret
+WECHAT_CLIENT_ID=your_WECHAT_CLIENT_ID
+WECHAT_CLIENT_SECRET=your_WECHAT_CLIENT_SECRET
 WECHAT_REDIRECT_URI=http://localhost:3000/api/auth/oauth2/callback/wechat
 
 # 抖音
-DOUYIN_CLIENT_KEY=your_douyin_client_key
+DOUYIN_CLIENT_ID=your_DOUYIN_CLIENT_ID
 DOUYIN_CLIENT_SECRET=your_douyin_client_secret
 
 # 匿名登录

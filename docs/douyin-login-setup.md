@@ -77,7 +77,7 @@ https://yourdomain.com/api/auth/oauth2/callback/douyin
 
 ```env
 # 抖音登录配置
-DOUYIN_CLIENT_KEY=your_douyin_client_key
+DOUYIN_CLIENT_ID=your_DOUYIN_CLIENT_ID
 DOUYIN_CLIENT_SECRET=your_douyin_client_secret
 ```
 
@@ -100,7 +100,7 @@ DOUYIN_CLIENT_SECRET=your_douyin_client_secret
 ```typescript
 {
     providerId: 'douyin',
-    clientId: DOUYIN_CLIENT_KEY,
+    clientId: DOUYIN_CLIENT_ID,
     clientSecret: DOUYIN_CLIENT_SECRET,
     authorizationUrl: 'https://open.douyin.com/platform/oauth/connect',
     tokenUrl: 'https://open.douyin.com/oauth/access_token/',

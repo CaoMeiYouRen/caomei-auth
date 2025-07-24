@@ -9,8 +9,8 @@ import {
     TWITTER_CLIENT_ID,
     WEIBO_CLIENT_ID,
     QQ_CLIENT_ID,
-    WECHAT_APP_ID,
-    DOUYIN_CLIENT_KEY,
+    WECHAT_CLIENT_ID,
+    DOUYIN_CLIENT_ID,
 } from '@/utils/env'
 
 export default defineEventHandler(async (event) => ({
@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => ({
             social: true,
             icon: 'iconfont icon-discord-simple',
         } as SocialProvider,
-        WECHAT_APP_ID && {
+        WECHAT_CLIENT_ID && {
             name: '微信',
             provider: 'wechat',
             color: '#07c160',
@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => ({
             icon: 'mdi mdi-qqchat',
             oauth2: true,
         } as SocialProvider,
-        DOUYIN_CLIENT_KEY && {
+        DOUYIN_CLIENT_ID && {
             name: '抖音',
             provider: 'douyin',
             color: '#fe2c55',

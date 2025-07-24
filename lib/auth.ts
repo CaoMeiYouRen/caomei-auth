@@ -45,9 +45,9 @@ import {
     QQ_CLIENT_ID,
     QQ_CLIENT_SECRET,
     QQ_USE_UNIONID,
-    WECHAT_APP_ID,
-    WECHAT_APP_SECRET,
-    DOUYIN_CLIENT_KEY,
+    WECHAT_CLIENT_ID,
+    WECHAT_CLIENT_SECRET,
+    DOUYIN_CLIENT_ID,
     DOUYIN_CLIENT_SECRET,
     AUTH_BASE_URL,
     APP_NAME,
@@ -365,8 +365,8 @@ export const auth = betterAuth({
                 },
                 {
                     providerId: 'wechat',
-                    clientId: WECHAT_APP_ID as string,
-                    clientSecret: WECHAT_APP_SECRET as string,
+                    clientId: WECHAT_CLIENT_ID as string,
+                    clientSecret: WECHAT_CLIENT_SECRET as string,
                     authorizationUrl: 'https://open.weixin.qq.com/connect/qrconnect',
                     tokenUrl: 'https://api.weixin.qq.com/sns/oauth2/access_token',
                     userInfoUrl: 'https://api.weixin.qq.com/sns/userinfo',
@@ -394,8 +394,7 @@ export const auth = betterAuth({
                         //   "unionid": "UNIONID"
                         // }
 
-                        const openid = ''
-                        const unionid = ''
+                        const openid = (tokens as any)?.raw?.openid
 
                         if (!openid) {
                             throw new Error('Failed to get WeChat openid')
@@ -423,7 +422,7 @@ export const auth = betterAuth({
 
                         return {
                             // 优先使用 unionid，如果没有则使用 openid
-                            id: userInfo.unionid || unionid || userInfo.openid || openid,
+                            id: userInfo.unionid || openid,
                             // 微信不提供邮箱，使用临时邮箱
                             email: getTempEmail(),
                             name: userInfo.nickname || `微信用户-${generateRandomString(8)}`,
@@ -491,7 +490,7 @@ export const auth = betterAuth({
                 },
                 {
                     providerId: 'douyin',
-                    clientId: DOUYIN_CLIENT_KEY as string,
+                    clientId: DOUYIN_CLIENT_ID as string,
                     clientSecret: DOUYIN_CLIENT_SECRET as string,
                     authorizationUrl: 'https://open.douyin.com/platform/oauth/connect',
                     tokenUrl: 'https://open.douyin.com/oauth/access_token/',
@@ -502,12 +501,12 @@ export const auth = betterAuth({
                     authorizationUrlParams: {
                         response_type: 'code',
                         // 授权时使用 client_key
-                        client_key: DOUYIN_CLIENT_KEY as string,
+                        client_key: DOUYIN_CLIENT_ID as string,
                     },
                     tokenUrlParams: {
                         grant_type: 'authorization_code',
                         // token 获取时使用 client_key 和 client_secret
-                        client_key: DOUYIN_CLIENT_KEY as string,
+                        client_key: DOUYIN_CLIENT_ID as string,
                         client_secret: DOUYIN_CLIENT_SECRET as string,
                     },
                     getUserInfo: async (tokens) => {
@@ -524,7 +523,7 @@ export const auth = betterAuth({
 
                         // 从 tokens 中获取 open_id
                         // better-auth 应该会将完整的 token 响应传递给 getUserInfo
-                        const openId = (tokens as any).open_id || (tokens as any).openId
+                        const openId = (tokens as any)?.raw?.open_id
 
                         if (!openId) {
                             throw new Error('Failed to get open_id from token response')
