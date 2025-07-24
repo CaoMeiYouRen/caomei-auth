@@ -12,6 +12,7 @@ export async function getUserSession(event: any) {
     }
     return {
         session,
+        user: session.user,
         userId: session.user.id,
     }
 }

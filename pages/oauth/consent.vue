@@ -193,29 +193,27 @@ onMounted(async () => {
         // 获取应用信息
         try {
             // 使用新创建的 API 端点通过 clientId 获取应用信息
-            const { data, error } = await authClient.$fetch<any>(`/oauth2/client/${clientId}`)
+            const response = await $fetch(`/api/oauth/client/${clientId}`)
 
-            // const response = await $fetch(`/api/oauth/client/${clientId}`)
-
-            if (data) {
-                application.value = data
-                applicationName.value = data.name || '未知应用'
+            if (response.success && response.data) {
+                application.value = response.data
+                applicationName.value = response.data.name || '未知应用'
 
                 // 检查是否为受信任客户端（这需要后端支持）
                 // isTrustedClient.value = response.data.trusted || false
             } else {
-                throw new Error('应用不存在或已被禁用')
+                throw new Error((response as any).message || '应用不存在或已被禁用')
             }
         } catch (fetchError: any) {
             // 如果上面的方法失败，尝试备用方案
             console.warn('使用备用方案获取应用信息:', fetchError)
 
             // 检查是否是因为应用不存在
-            if (fetchError.statusCode === 404 || fetchError.data?.status === 404) {
+            if (fetchError.status === 404 || fetchError.data?.status === 404) {
                 throw new Error('应用不存在，请检查授权链接是否正确')
             }
 
-            if (fetchError.statusCode === 403 || fetchError.data?.status === 403) {
+            if (fetchError.status === 403 || fetchError.data?.status === 403) {
                 throw new Error('该应用已被禁用，无法进行授权')
             }
 

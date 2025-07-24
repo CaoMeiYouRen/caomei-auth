@@ -9,6 +9,13 @@
                     </h2>
                     <div class="profile-header-actions">
                         <Button
+                            v-tooltip.top="'已授权应用管理'"
+                            label="授权应用"
+                            icon="mdi mdi-key-variant"
+                            severity="secondary"
+                            @click="goOAuthClients"
+                        />
+                        <Button
                             v-tooltip.top="'账号安全设置'"
                             label="安全设置"
                             icon="mdi mdi-shield-account"
@@ -770,6 +777,10 @@ async function setUsername() {
 function goChangePassword() {
     // 跳转到修改密码页面
     navigateTo('/change-password')
+}
+
+function goOAuthClients() {
+    navigateTo('/oauth/clients')
 }
 
 function goSecurity() {

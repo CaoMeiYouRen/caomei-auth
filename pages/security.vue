@@ -8,6 +8,13 @@
             <div class="auth-card security-card">
                 <div class="security-header-actions">
                     <Button
+                        label="授权应用"
+                        class="btn btn-link"
+                        icon="mdi mdi-key-variant"
+                        severity="secondary"
+                        @click="goOAuthClients"
+                    />
+                    <Button
                         label="返回个人中心"
                         class="btn btn-link"
                         icon="mdi mdi-account-circle-outline"
@@ -690,6 +697,10 @@ function removeDevice(id: number) {
 
 function goProfile() {
     window.location.href = '/profile'
+}
+
+function goOAuthClients() {
+    navigateTo('/oauth/clients')
 }
 
 // 新增变量和函数
