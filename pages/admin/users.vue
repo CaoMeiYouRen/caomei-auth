@@ -206,15 +206,7 @@
                                     @click="viewUser(data)"
                                 />
                                 <Button
-                                    v-tooltip="'编辑用户'"
-                                    icon="mdi mdi-pencil"
-                                    severity="secondary"
-                                    outlined
-                                    size="small"
-                                    @click="editUser(data)"
-                                />
-                                <Button
-                                    v-if="!data.banned"
+                                    v-if="!data.banned && data.role !== 'admin'"
                                     v-tooltip="'禁用用户'"
                                     icon="mdi mdi-block-helper"
                                     severity="warning"
@@ -223,7 +215,7 @@
                                     @click="banUser(data)"
                                 />
                                 <Button
-                                    v-else
+                                    v-else-if="data.banned && data.role !== 'admin'"
                                     v-tooltip="'解禁用户'"
                                     icon="mdi mdi-check-circle"
                                     severity="success"
@@ -232,12 +224,31 @@
                                     @click="unbanUser(data)"
                                 />
                                 <Button
+                                    v-if="data.role !== 'admin'"
                                     v-tooltip="'删除用户'"
                                     icon="mdi mdi-delete"
                                     severity="danger"
                                     outlined
                                     size="small"
                                     @click="deleteUser(data)"
+                                />
+                                <Button
+                                    v-if="data.role === 'admin' && !data.banned"
+                                    v-tooltip="'管理员不可禁用'"
+                                    icon="mdi mdi-block-helper"
+                                    severity="warning"
+                                    outlined
+                                    size="small"
+                                    disabled
+                                />
+                                <Button
+                                    v-if="data.role === 'admin'"
+                                    v-tooltip="'管理员不可删除'"
+                                    icon="mdi mdi-delete"
+                                    severity="danger"
+                                    outlined
+                                    size="small"
+                                    disabled
                                 />
                             </div>
                         </template>
@@ -318,75 +329,6 @@
                         label="创建"
                         type="submit"
                         :loading="createLoading"
-                    />
-                </div>
-            </form>
-        </Dialog>
-
-        <!-- 编辑用户对话框 -->
-        <Dialog
-            v-model:visible="showEditDialog"
-            modal
-            header="编辑用户"
-            :style="{width: '500px'}"
-        >
-            <form
-                v-if="editingUser"
-                class="edit-user-form"
-                @submit.prevent="updateUser"
-            >
-                <div class="field">
-                    <label for="editName">姓名</label>
-                    <InputText
-                        id="editName"
-                        v-model="editForm.name"
-                        placeholder="请输入用户姓名"
-                    />
-                </div>
-
-                <div class="field">
-                    <label for="editEmail">邮箱</label>
-                    <InputText
-                        id="editEmail"
-                        v-model="editForm.email"
-                        type="email"
-                        placeholder="请输入邮箱地址"
-                        disabled
-                    />
-                    <small>邮箱不可修改</small>
-                </div>
-
-                <div class="field">
-                    <label for="editUsername">用户名</label>
-                    <InputText
-                        id="editUsername"
-                        v-model="editForm.username"
-                        placeholder="请输入用户名（可选）"
-                    />
-                </div>
-
-                <div class="field">
-                    <label for="editRole">角色</label>
-                    <Select
-                        id="editRole"
-                        v-model="editForm.role"
-                        :options="roleOptions"
-                        option-label="label"
-                        option-value="value"
-                        placeholder="选择用户角色"
-                    />
-                </div>
-
-                <div class="dialog-footer">
-                    <Button
-                        label="取消"
-                        severity="secondary"
-                        @click="showEditDialog = false"
-                    />
-                    <Button
-                        label="保存"
-                        type="submit"
-                        :loading="updateLoading"
                     />
                 </div>
             </form>
@@ -473,29 +415,31 @@
 
                 <div class="detail-actions">
                     <Button
-                        label="编辑用户"
-                        icon="mdi mdi-pencil"
-                        @click="editUser(viewingUser); showDetailDialog = false"
-                    />
-                    <Button
                         label="查看会话"
                         icon="mdi mdi-account-multiple"
                         severity="info"
                         @click="viewUserSessions(viewingUser)"
                     />
                     <Button
-                        v-if="!viewingUser.banned"
+                        v-if="!viewingUser.banned && viewingUser.role !== 'admin'"
                         label="禁用用户"
                         icon="mdi mdi-block-helper"
                         severity="warning"
                         @click="banUser(viewingUser); showDetailDialog = false"
                     />
                     <Button
-                        v-else
+                        v-else-if="viewingUser.banned && viewingUser.role !== 'admin'"
                         label="解禁用户"
                         icon="mdi mdi-check-circle"
                         severity="success"
                         @click="unbanUser(viewingUser); showDetailDialog = false"
+                    />
+                    <Button
+                        v-if="viewingUser.role === 'admin' && !viewingUser.banned"
+                        label="管理员不可禁用"
+                        icon="mdi mdi-block-helper"
+                        severity="warning"
+                        disabled
                     />
                 </div>
             </div>
@@ -647,7 +591,6 @@ const selectedUsers = ref<any[]>([])
 
 // 对话框显示状态
 const showCreateDialog = ref(false)
-const showEditDialog = ref(false)
 const showDetailDialog = ref(false)
 const showBanDialog = ref(false)
 const showSessionsDialog = ref(false)
@@ -661,13 +604,6 @@ const createForm = ref({
     role: 'user',
 })
 
-const editForm = ref({
-    name: '',
-    email: '',
-    username: '',
-    role: '',
-})
-
 const banForm = ref({
     reason: '',
     duration: null,
@@ -675,14 +611,12 @@ const banForm = ref({
 
 // 操作状态
 const createLoading = ref(false)
-const updateLoading = ref(false)
 const banLoading = ref(false)
 const sessionsLoading = ref(false)
 const revokeAllLoading = ref(false)
 const revokingSession = ref('')
 
 // 当前操作的用户
-const editingUser = ref<any>(null)
 const viewingUser = ref<any>(null)
 const banningUser = ref<any>(null)
 const sessionUser = ref<any>(null)
@@ -854,68 +788,6 @@ const createUser = async () => {
         })
     } finally {
         createLoading.value = false
-    }
-}
-
-const editUser = (user: any) => {
-    editingUser.value = user
-    editForm.value = {
-        name: user.name || '',
-        email: user.email,
-        username: user.username || '',
-        role: user.role,
-    }
-    showEditDialog.value = true
-}
-
-const updateUser = async () => {
-    if (!editingUser.value) {
-        return
-    }
-
-    try {
-        updateLoading.value = true
-
-        // 更新用户角色
-        if (editForm.value.role !== editingUser.value.role) {
-            await authClient.admin.setRole({
-                userId: editingUser.value.id,
-                role: editForm.value.role as 'admin' | 'user',
-            })
-        }
-
-        // 更新用户基本信息
-        if (editForm.value.name !== editingUser.value.name ||
-            editForm.value.username !== editingUser.value.username) {
-            await $fetch('/api/admin/users/update', {
-                method: 'PUT',
-                body: {
-                    userId: editingUser.value.id,
-                    name: editForm.value.name,
-                    username: editForm.value.username,
-                },
-            })
-        }
-
-        toast.add({
-            severity: 'success',
-            summary: '更新成功',
-            detail: '用户信息更新成功',
-            life: 3000,
-        })
-
-        showEditDialog.value = false
-        loadUsers()
-    } catch (error: any) {
-        console.error('更新用户失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '更新失败',
-            detail: error.message || '更新用户失败',
-            life: 3000,
-        })
-    } finally {
-        updateLoading.value = false
     }
 }
 
@@ -1485,8 +1357,7 @@ onMounted(() => {
 }
 
 // 对话框样式
-.create-user-form,
-.edit-user-form {
+.create-user-form {
     .field {
         margin-bottom: 1.5rem;
 
