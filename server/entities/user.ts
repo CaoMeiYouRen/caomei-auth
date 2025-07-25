@@ -127,7 +127,7 @@ export class User extends BaseEntity {
     /**
      * 用户创建的 OAuth 应用（一对多关系）
      */
-    @OneToMany(() => OAuthApplication, (application) => application.owner, {
+    @OneToMany(() => OAuthApplication, (application) => application.user, {
         cascade: true,
         onDelete: 'CASCADE',
     })

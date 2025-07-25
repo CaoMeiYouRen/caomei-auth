@@ -19,7 +19,6 @@ export class TwoFactor extends BaseEntity {
         onDelete: 'CASCADE',
         nullable: false,
     })
-    @JoinColumn({ name: 'userId' })
     user: User
 
     /**

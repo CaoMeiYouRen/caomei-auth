@@ -37,16 +37,15 @@ export class Session extends BaseEntity {
         onDelete: 'CASCADE',
         nullable: false,
     })
-    @JoinColumn({ name: 'userId' })
     user: User
 
     /**
      * 模拟此会话的管理员（多对一关系）
      */
-    @ManyToOne(() => User, {
-        onDelete: 'SET NULL',
-        nullable: true,
-    })
-    @JoinColumn({ name: 'impersonatedBy' })
-    impersonator?: User
+    // @ManyToOne(() => User, {
+    //     onDelete: 'SET NULL',
+    //     nullable: true,
+    // })
+    // @JoinColumn({ name: 'impersonatedBy' })
+    // impersonator?: User
 }

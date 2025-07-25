@@ -39,7 +39,6 @@ export class OAuthConsent extends BaseEntity {
         onDelete: 'CASCADE',
         nullable: false,
     })
-    @JoinColumn({ name: 'clientId' })
     client: OAuthApplication
 
     /**
@@ -49,6 +48,5 @@ export class OAuthConsent extends BaseEntity {
         onDelete: 'CASCADE',
         nullable: false,
     })
-    @JoinColumn({ name: 'userId' })
     user: User
 }

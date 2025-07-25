@@ -154,8 +154,7 @@ export class OAuthApplication extends BaseEntity {
         onDelete: 'CASCADE',
         nullable: true,
     })
-    @JoinColumn({ name: 'userId' })
-    owner?: User
+    user?: User
 
     /**
      * 该应用的访问令牌（一对多关系）

@@ -57,7 +57,6 @@ export class OAuthAccessToken extends BaseEntity {
         onDelete: 'CASCADE',
         nullable: false,
     })
-    @JoinColumn({ name: 'clientId' })
     client: OAuthApplication
 
     /**
@@ -67,6 +66,5 @@ export class OAuthAccessToken extends BaseEntity {
         onDelete: 'CASCADE',
         nullable: false,
     })
-    @JoinColumn({ name: 'userId' })
     user: User
 }
