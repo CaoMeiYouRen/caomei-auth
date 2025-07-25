@@ -196,7 +196,7 @@
                     @click="login"
                 />
                 <template v-if="socialProviders.length">
-                    <div class="separator">
+                    <div v-tooltip.top="'如果第三方账号未在本站注册，将会注册新的账号'" class="separator">
                         或者使用以下方式登录
                     </div>
                     <div class="social-login">
