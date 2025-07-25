@@ -9,4 +9,5 @@ export type SocialProvider = {
     anonymous?: boolean
     label?: string
     tooltip?: string
+    enabled?: boolean
 }

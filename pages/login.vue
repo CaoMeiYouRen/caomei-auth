@@ -368,6 +368,7 @@ const sendOtp = async () => {
     }
 }
 
+// 获取启用的社交登录提供商（默认只返回启用的）
 const { data: providersData } = await useFetch('/api/social/providers')
 
 const socialProviders = computed(() => providersData.value?.providers || [])
@@ -653,7 +654,19 @@ async function login() {
 }
 
 async function loginWithSocial(socialProvider: SocialProvider) {
-    const { provider, name, social, oauth2 } = socialProvider
+    const { provider, name, social, oauth2, enabled } = socialProvider
+
+    // 检查该provider是否已启用
+    if (enabled === false) {
+        toast.add({
+            severity: 'warn',
+            summary: '登录失败',
+            detail: `${name} 登录方式未启用，请使用其他方式登录`,
+            life: 5000,
+        })
+        return
+    }
+
     if (provider === 'anonymous') {
         // 处理匿名登录
         await loginAnonymously()

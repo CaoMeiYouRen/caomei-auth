@@ -221,7 +221,7 @@
                                 />
 
                                 <!-- 绑定新账号   -->
-                                <template v-for="provider in socialProviders">
+                                <template v-for="provider in enabledProviders">
                                     <Button
                                         v-if="!userAccounts.some(account => account.provider === provider.provider) && !provider.anonymous"
                                         :key="provider.provider"
@@ -472,8 +472,11 @@ const newUsername = ref('') // 新用户名
 const usernameError = ref('') // 用户名错误信息
 const isSettingUsername = ref(false) // 设置用户名加载状态
 
-const { data: providersData } = await useFetch('/api/social/providers')
+const { data: providersData } = await useFetch('/api/social/providers?includeDisabled=true')
 const socialProviders = computed(() => providersData.value?.providers || [])
+
+// 获取启用的providers，用于显示绑定按钮
+const enabledProviders = computed(() => socialProviders.value.filter((p) => p.enabled))
 
 // 根据 provider 获取对应的名称
 const getProviderName = (provider: string) => {
@@ -624,7 +627,19 @@ const fetchUserAccounts = async () => {
 
 // 绑定新的第三方账号
 async function linkSocialAccount(socialProvider: SocialProvider) {
-    const { provider, name, social, oauth2 } = socialProvider
+    const { provider, name, social, oauth2, enabled } = socialProvider
+
+    // 检查该provider是否已启用
+    if (!enabled) {
+        toast.add({
+            severity: 'warn',
+            summary: '绑定失败',
+            detail: `${name} 登录方式未启用，无法绑定`,
+            life: 5000,
+        })
+        return
+    }
+
     try {
         let result: any
         if (social) {
