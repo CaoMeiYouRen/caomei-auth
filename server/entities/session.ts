@@ -39,9 +39,9 @@ export class Session extends BaseEntity {
     })
     user: User
 
-    /**
-     * 模拟此会话的管理员（多对一关系）
-     */
+    // /**
+    //  * 模拟此会话的管理员（多对一关系）
+    //  */
     // @ManyToOne(() => User, {
     //     onDelete: 'SET NULL',
     //     nullable: true,
