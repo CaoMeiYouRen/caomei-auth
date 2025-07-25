@@ -12,12 +12,15 @@ export class TwoFactor extends BaseEntity {
     @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: false })
     userId: string
 
-    // /**
-    //  * 关联的用户
-    //  */
-    // @OneToOne(() => User)
-    // @JoinColumn({ name: 'userId' })
-    // user: User
+    /**
+     * 关联的用户（一对一关系）
+     */
+    @OneToOne(() => User, (user) => user.twoFactor, {
+        onDelete: 'CASCADE',
+        nullable: false,
+    })
+    @JoinColumn({ name: 'userId' })
+    user: User
 
     /**
      * TOTP 密钥

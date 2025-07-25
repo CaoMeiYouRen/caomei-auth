@@ -4,6 +4,7 @@ import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 
 @Entity('verification')
+@Index(['identifier', 'value']) // 复合索引，提高查询性能
 export class Verification extends BaseEntity {
 
     @Index()

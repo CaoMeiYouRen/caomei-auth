@@ -1,6 +1,8 @@
-import { Entity } from 'typeorm'
+import { Entity, ManyToOne, JoinColumn } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
+import { User } from './user'
+import { OAuthApplication } from './oauth-application'
 
 @Entity('oauth_access_token')
 export class OAuthAccessToken extends BaseEntity {
@@ -45,4 +47,26 @@ export class OAuthAccessToken extends BaseEntity {
      */
     @CustomColumn({ type: 'text', nullable: true })
     scopes: string
+
+    // ========== 关系定义 ==========
+
+    /**
+     * 关联的 OAuth 客户端（多对一关系）
+     */
+    @ManyToOne(() => OAuthApplication, (client) => client.accessTokens, {
+        onDelete: 'CASCADE',
+        nullable: false,
+    })
+    @JoinColumn({ name: 'clientId' })
+    client: OAuthApplication
+
+    /**
+     * 关联的用户（多对一关系）
+     */
+    @ManyToOne(() => User, (user) => user.oauthAccessTokens, {
+        onDelete: 'CASCADE',
+        nullable: false,
+    })
+    @JoinColumn({ name: 'userId' })
+    user: User
 }

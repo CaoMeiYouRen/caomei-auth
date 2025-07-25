@@ -1,7 +1,12 @@
-import { Entity, Index, OneToOne } from 'typeorm'
+import { Entity, Index, OneToOne, OneToMany } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 import { TwoFactor } from './two-factor'
+import { Account } from './account'
+import { Session } from './session'
+import { OAuthApplication } from './oauth-application'
+import { OAuthAccessToken } from './oauth-access-token'
+import { OAuthConsent } from './oauth-consent'
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -89,5 +94,61 @@ export class User extends BaseEntity {
      */
     @CustomColumn({ type: 'boolean', default: false })
     twoFactorEnabled: boolean
+
+    // ========== 关系定义 ==========
+
+    /**
+     * 用户的两因素认证设置（一对一关系）
+     */
+    @OneToOne(() => TwoFactor, (twoFactor) => twoFactor.user, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    twoFactor?: TwoFactor
+
+    /**
+     * 用户的第三方账户（一对多关系）
+     */
+    @OneToMany(() => Account, (account) => account.user, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    accounts?: Account[]
+
+    /**
+     * 用户的会话（一对多关系）
+     */
+    @OneToMany(() => Session, (session) => session.user, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    sessions?: Session[]
+
+    /**
+     * 用户创建的 OAuth 应用（一对多关系）
+     */
+    @OneToMany(() => OAuthApplication, (application) => application.owner, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    oauthApplications?: OAuthApplication[]
+
+    /**
+     * 用户的 OAuth 访问令牌（一对多关系）
+     */
+    @OneToMany(() => OAuthAccessToken, (token) => token.user, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    oauthAccessTokens?: OAuthAccessToken[]
+
+    /**
+     * 用户的 OAuth 授权同意（一对多关系）
+     */
+    @OneToMany(() => OAuthConsent, (consent) => consent.user, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    oauthConsents?: OAuthConsent[]
 
 }

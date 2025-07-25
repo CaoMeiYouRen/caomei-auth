@@ -1,6 +1,9 @@
-import { Entity } from 'typeorm'
+import { Entity, ManyToOne, OneToMany, JoinColumn } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
+import { User } from './user'
+import { OAuthAccessToken } from './oauth-access-token'
+import { OAuthConsent } from './oauth-consent'
 
 @Entity('oauth_application')
 export class OAuthApplication extends BaseEntity {
@@ -141,4 +144,34 @@ export class OAuthApplication extends BaseEntity {
      */
     @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: true })
     userId: string
+
+    // ========== 关系定义 ==========
+
+    /**
+     * 拥有该应用的用户（多对一关系）
+     */
+    @ManyToOne(() => User, (user) => user.oauthApplications, {
+        onDelete: 'CASCADE',
+        nullable: true,
+    })
+    @JoinColumn({ name: 'userId' })
+    owner?: User
+
+    /**
+     * 该应用的访问令牌（一对多关系）
+     */
+    @OneToMany(() => OAuthAccessToken, (token) => token.client, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    accessTokens?: OAuthAccessToken[]
+
+    /**
+     * 该应用的用户授权同意（一对多关系）
+     */
+    @OneToMany(() => OAuthConsent, (consent) => consent.client, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    consents?: OAuthConsent[]
 }

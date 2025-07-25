@@ -1,6 +1,7 @@
-import { Entity, Index } from 'typeorm'
+import { Entity, Index, ManyToOne, JoinColumn } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
+import { User } from './user'
 
 @Entity('account')
 export class Account extends BaseEntity {
@@ -34,5 +35,17 @@ export class Account extends BaseEntity {
 
     @CustomColumn({ type: 'text', nullable: true })
     password: string
+
+    // ========== 关系定义 ==========
+
+    /**
+     * 关联的用户（多对一关系）
+     */
+    @ManyToOne(() => User, (user) => user.accounts, {
+        onDelete: 'CASCADE',
+        nullable: false,
+    })
+    @JoinColumn({ name: 'userId' })
+    user: User
 
 }
