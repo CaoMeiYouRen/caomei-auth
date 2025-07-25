@@ -583,31 +583,26 @@ export const auth = betterAuth({
             generateClientSecret, // 动态生成客户端密钥
             // 添加自定义作用域支持
             scopes: [
-                'read:user', // 读取用户基本信息
-                'user:email', // 读取用户邮箱
-                'read:profile', // 读取用户详细资料
-                'write:user', // 修改用户信息
+                'openid',
+                'profile',
+                'email',
+                'offline_access',
+
             ],
             getAdditionalUserInfoClaim: (user, scopes) => {
                 const claims: Record<string, any> = {}
 
                 // 根据请求的作用域添加声明
-                if (scopes.includes('profile') || scopes.includes('read:user') || scopes.includes('read:profile')) {
+                if (scopes.includes('profile')) {
                     claims.name = user.name
                     claims.picture = user.image
                     claims.given_name = user.name
                     claims.family_name = ''
                 }
 
-                if (scopes.includes('email') || scopes.includes('user:email')) {
+                if (scopes.includes('email')) {
                     claims.email = user.email
                     claims.email_verified = user.emailVerified
-                }
-
-                // 添加自定义声明
-                if (scopes.includes('read:user')) {
-                    claims.login = user.username || user.email
-                    claims.id = user.id
                 }
 
                 // if (scopes.includes('phone')) {
