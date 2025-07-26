@@ -1,5 +1,76 @@
 # caomei-auth
 
+# [1.1.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.0.0...v1.1.0) (2025-07-26)
+
+
+### ♻ 代码重构
+
+* **admin:** 重构应用列表加载逻辑，优化刷新处理函数 ([4f9acf9](https://github.com/CaoMeiYouRen/caomei-auth/commit/4f9acf9))
+* **auth:** 优化权限检查逻辑，简化代码结构 ([813de65](https://github.com/CaoMeiYouRen/caomei-auth/commit/813de65))
+* **auth:** 移除未使用的变量和注释，优化代码结构 ([3a48a74](https://github.com/CaoMeiYouRen/caomei-auth/commit/3a48a74))
+* **db:** 提取实体数组为常量以简化数据源配置 ([4878fd7](https://github.com/CaoMeiYouRen/caomei-auth/commit/4878fd7))
+* **entities:** 移除不必要的 @JoinColumn 装饰器，简化实体关系定义 ([06e26c3](https://github.com/CaoMeiYouRen/caomei-auth/commit/06e26c3))
+* **profile:** 修改个人中心为个人资料，优化登出确认弹窗逻辑 ([a1a7324](https://github.com/CaoMeiYouRen/caomei-auth/commit/a1a7324))
+* **session:** 注释掉模拟管理员的多对一关系定义，简化代码 ([8ba87f3](https://github.com/CaoMeiYouRen/caomei-auth/commit/8ba87f3))
+
+
+### ✨ 新功能
+
+* **admin:** 优化用户管理功能，增强角色设置和批量操作确认提示 ([f24faf8](https://github.com/CaoMeiYouRen/caomei-auth/commit/f24faf8))
+* **admin:** 新增用户管理页面和用户代理解析功能 ([00d31fd](https://github.com/CaoMeiYouRen/caomei-auth/commit/00d31fd))
+* **admin:** 更新手机号验证状态显示，增加手机号信息展示 ([8af6e2e](https://github.com/CaoMeiYouRen/caomei-auth/commit/8af6e2e))
+* **admin:** 更新用户验证状态显示，增加手机验证标签和样式优化 ([a7a4343](https://github.com/CaoMeiYouRen/caomei-auth/commit/a7a4343))
+* **admin:** 添加应用搜索和筛选功能，优化应用列表展示 ([7f55197](https://github.com/CaoMeiYouRen/caomei-auth/commit/7f55197))
+* **admin:** 添加管理后台按钮，优化用户界面导航 ([b8da132](https://github.com/CaoMeiYouRen/caomei-auth/commit/b8da132))
+* **admin:** 移除用户编辑功能，添加管理员角色禁用和删除提示 ([c934991](https://github.com/CaoMeiYouRen/caomei-auth/commit/c934991))
+* **apple:** 添加 Apple 登录支持，更新环境变量和文档 ([e75652c](https://github.com/CaoMeiYouRen/caomei-auth/commit/e75652c))
+* **auth:** 优化双因素认证界面，添加多种验证方式支持 ([8e943f8](https://github.com/CaoMeiYouRen/caomei-auth/commit/8e943f8))
+* **auth:** 更新作用域支持，简化用户信息声明逻辑 ([a73db47](https://github.com/CaoMeiYouRen/caomei-auth/commit/a73db47))
+* **auth:** 更新微信和抖音配置，调整环境变量名称 ([447dca2](https://github.com/CaoMeiYouRen/caomei-auth/commit/447dca2))
+* **auth:** 更新抖音图标和提示信息，调整字体文件路径 ([7e578e3](https://github.com/CaoMeiYouRen/caomei-auth/commit/7e578e3))
+* **auth:** 更新环境变量和生成器函数 ([5b1d07f](https://github.com/CaoMeiYouRen/caomei-auth/commit/5b1d07f))
+* **auth:** 添加OAuth2相关路由限流配置，优化应用信息获取逻辑，重构授权中间件 ([6f10997](https://github.com/CaoMeiYouRen/caomei-auth/commit/6f10997))
+* **auth:** 添加OAuth相关实体以支持OAuth2认证 ([951a1b8](https://github.com/CaoMeiYouRen/caomei-auth/commit/951a1b8))
+* **auth:** 添加OIDC提供者支持，更新认证配置以包含OIDC插件 ([1bfad8e](https://github.com/CaoMeiYouRen/caomei-auth/commit/1bfad8e))
+* **auth:** 添加两因素认证支持，更新环境变量配置，优化安全页面 ([20b5979](https://github.com/CaoMeiYouRen/caomei-auth/commit/20b5979))
+* **auth:** 添加双因素认证对话框和验证逻辑 ([267f3be](https://github.com/CaoMeiYouRen/caomei-auth/commit/267f3be))
+* **auth:** 添加微信登录支持，更新环境变量和文档 ([d7c76db](https://github.com/CaoMeiYouRen/caomei-auth/commit/d7c76db))
+* **auth:** 添加抖音登录支持，更新环境变量和文档 ([d257db1](https://github.com/CaoMeiYouRen/caomei-auth/commit/d257db1))
+* **auth:** 添加自定义作用域支持，优化用户信息声明逻辑; 增强 OAuth 授权请求调试信息，优化白名单路径处理 ([77443c0](https://github.com/CaoMeiYouRen/caomei-auth/commit/77443c0))
+* **auth:** 调整验证码有效期为30秒，并更新邮件内容提示；优化发送短信验证码的参数 ([0f68fbd](https://github.com/CaoMeiYouRen/caomei-auth/commit/0f68fbd))
+* **database:** 添加数据库关系优化文档及实体关系定义 ([7c213d7](https://github.com/CaoMeiYouRen/caomei-auth/commit/7c213d7))
+* **footer:** 新增应用页脚组件，整合版权和链接信息 ([26d2ad2](https://github.com/CaoMeiYouRen/caomei-auth/commit/26d2ad2))
+* **oauth:** 优化授权应用加载逻辑，使用 useFetch 替代传统方法 ([3095a83](https://github.com/CaoMeiYouRen/caomei-auth/commit/3095a83))
+* **oauth:** 增强应用创建表单，添加字段验证和提示信息 ([cf882cd](https://github.com/CaoMeiYouRen/caomei-auth/commit/cf882cd))
+* **oauth:** 强制更新应用列表响应式数据，优化应用创建逻辑 ([b1368f1](https://github.com/CaoMeiYouRen/caomei-auth/commit/b1368f1))
+* **oauth:** 扩展OAuth应用实体字段 ([108e645](https://github.com/CaoMeiYouRen/caomei-auth/commit/108e645))
+* **oauth:** 更新应用管理接口，支持编辑应用描述和其他字段，优化重定向URI验证 ([7da1087](https://github.com/CaoMeiYouRen/caomei-auth/commit/7da1087))
+* **oauth:** 更新应用编辑和删除逻辑，增强错误处理 ([2669b2b](https://github.com/CaoMeiYouRen/caomei-auth/commit/2669b2b))
+* **oauth:** 添加 OAuth 应用管理和详情接口，优化管理员权限检查 ([ae4f6e9](https://github.com/CaoMeiYouRen/caomei-auth/commit/ae4f6e9))
+* **oauth:** 添加OAuth2应用管理和授权页面，更新相关API处理逻辑 ([27834fd](https://github.com/CaoMeiYouRen/caomei-auth/commit/27834fd))
+* **oauth:** 添加加载和错误状态处理，优化同意页面用户体验 ([6122b66](https://github.com/CaoMeiYouRen/caomei-auth/commit/6122b66))
+* **oauth:** 添加动态生成客户端 ID 和密钥的功能 ([dc335f6](https://github.com/CaoMeiYouRen/caomei-auth/commit/dc335f6))
+* **oauth:** 添加应用描述字段，支持动态客户端注册，优化应用创建和获取逻辑 ([ba67af9](https://github.com/CaoMeiYouRen/caomei-auth/commit/ba67af9))
+* **oauth:** 添加应用管理的增删改查接口，重构权限检查逻辑 ([ccef7b8](https://github.com/CaoMeiYouRen/caomei-auth/commit/ccef7b8))
+* **oauth:** 添加授权应用管理页面及相关API支持 ([5ca065d](https://github.com/CaoMeiYouRen/caomei-auth/commit/5ca065d))
+* **oauth:** 添加服务条款和隐私政策链接，优化法律信息展示 ([8d4d941](https://github.com/CaoMeiYouRen/caomei-auth/commit/8d4d941))
+* **oauth:** 添加返回个人中心按钮，调整按钮样式和布局 ([3c59d8b](https://github.com/CaoMeiYouRen/caomei-auth/commit/3c59d8b))
+* **oauth:** 简化授权成功提示逻辑，优化用户反馈体验 ([ca78e9f](https://github.com/CaoMeiYouRen/caomei-auth/commit/ca78e9f))
+* **profile:** 添加返回个人中心按钮，调整个人资料页面布局 ([0868d78](https://github.com/CaoMeiYouRen/caomei-auth/commit/0868d78))
+* **security:** 添加双因素认证功能，优化安全页面和相关逻辑 ([7986c6e](https://github.com/CaoMeiYouRen/caomei-auth/commit/7986c6e))
+* **social:** 为社交登录提供者添加颜色属性，优化按钮样式 ([1c567ac](https://github.com/CaoMeiYouRen/caomei-auth/commit/1c567ac))
+* **social:** 添加社交登录提供商启用状态，优化登录和绑定逻辑 ([3dbbb7b](https://github.com/CaoMeiYouRen/caomei-auth/commit/3dbbb7b))
+* **twitter:** 添加 Twitter 登录支持，更新环境变量和文档 ([e4829ee](https://github.com/CaoMeiYouRen/caomei-auth/commit/e4829ee))
+
+
+### 🐛 Bug 修复
+
+* **admin:** 修正禁用到期时间格式化逻辑，移除不必要的乘法运算 ([b184870](https://github.com/CaoMeiYouRen/caomei-auth/commit/b184870))
+* **auth:** 更新 Apple 和微信登录配置，调整相关注释 ([65f97c7](https://github.com/CaoMeiYouRen/caomei-auth/commit/65f97c7))
+* **env:** 修正机器ID在客户端环境下的默认值 ([fe3ad0b](https://github.com/CaoMeiYouRen/caomei-auth/commit/fe3ad0b))
+* **login:** 添加社交登录提示，改善用户体验 ([180e030](https://github.com/CaoMeiYouRen/caomei-auth/commit/180e030))
+* **phone:** 修正验证码有效时间参数描述，确保默认值为秒并正确计算分钟 ([45ed15d](https://github.com/CaoMeiYouRen/caomei-auth/commit/45ed15d)), closes [#6](https://github.com/CaoMeiYouRen/caomei-auth/issues/6)
+
 # 1.0.0 (2025-07-19)
 
 
