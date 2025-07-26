@@ -194,6 +194,27 @@
                     label="登录"
                     @click="login"
                 />
+
+                <!-- 用户协议提示 -->
+                <div class="agreement-notice">
+                    登录即表示您已阅读并同意
+                    <NuxtLink
+                        to="/terms"
+                        target="_blank"
+                        class="agreement-link"
+                    >
+                        《服务条款》
+                    </NuxtLink>
+                    和
+                    <NuxtLink
+                        to="/privacy"
+                        target="_blank"
+                        class="agreement-link"
+                    >
+                        《隐私政策》
+                    </NuxtLink>
+                </div>
+
                 <template v-if="socialProviders.length">
                     <div v-tooltip.top="'如果第三方账号未在本站注册，将会注册新的账号'" class="separator">
                         或者使用以下方式登录
@@ -963,6 +984,24 @@ async function loginAnonymously() {
 .switch-btn {
     margin-top: 0.5rem;
     width: 100%;
+}
+
+.agreement-notice {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: $secondary-light;
+    line-height: 1.4;
+}
+
+.agreement-link {
+    color: $primary;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 </style>
