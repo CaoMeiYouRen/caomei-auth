@@ -77,6 +77,7 @@ export default defineNuxtConfig({
             publicSecurityBeianNumber: process.env.NUXT_PUBLIC_PUBLIC_SECURITY_BEIAN_NUMBER,
             phoneEnabled: process.env.NUXT_PUBLIC_PHONE_ENABLED || (process.env.PHONE_CHANNEL ? 'true' : ''),
             sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
+            clarityProjectId: process.env.NUXT_PUBLIC_CLARITY_PROJECT_ID,
         },
     },
     primevue: {

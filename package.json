@@ -20,6 +20,7 @@
     "@aws-sdk/client-s3": "^3.844.0",
     "@hyperwatch/useragent": "^3.8.2",
     "@mdi/font": "^7.4.47",
+    "@microsoft/clarity": "^1.0.0",
     "@primeuix/themes": "^1.1.2",
     "@primevue/forms": "^4.3.5",
     "@sentry/nuxt": "^9.42.0",

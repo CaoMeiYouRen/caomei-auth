@@ -13,6 +13,7 @@ interface ImportMetaEnv {
     readonly NUXT_PUBLIC_PUBLIC_SECURITY_BEIAN_NUMBER: string
     readonly NUXT_PUBLIC_PHONE_ENABLED: string
     readonly NUXT_PUBLIC_SENTRY_DSN: string
+    readonly NUXT_PUBLIC_CLARITY_PROJECT_ID: string
 }
 
 interface ImportMeta {
