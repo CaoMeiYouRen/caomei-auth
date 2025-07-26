@@ -181,10 +181,9 @@
                         />
                     </div>
                 </div>
-                <div class="remember-me">
+                <div v-tooltip.top="'勾选后下次登录将自动填充您的账号信息'" class="remember-me">
                     <Checkbox
                         v-model="rememberMe"
-                        v-tooltip.top="'勾选后下次登录将自动填充您的账号信息'"
                         input-id="remember"
                         binary
                     />

@@ -174,6 +174,44 @@
                     </div>
                 </div>
 
+                <!-- 用户协议和隐私政策 -->
+                <div class="agreement-section form-group">
+                    <div v-tooltip.top="'勾选表示您已阅读并同意服务条款和隐私政策'" class="agreement-checkbox">
+                        <Checkbox
+                            v-model="agreedToTerms"
+
+                            input-id="agreement"
+                            binary
+                        />
+                        <label for="agreement" class="checkbox-label">
+                            我已阅读并同意
+                            <NuxtLink
+                                to="/terms"
+                                target="_blank"
+                                class="agreement-link"
+                            >
+                                《服务条款》
+                            </NuxtLink>
+                            和
+                            <NuxtLink
+                                to="/privacy"
+                                target="_blank"
+                                class="agreement-link"
+                            >
+                                《隐私政策》
+                            </NuxtLink>
+                        </label>
+                    </div>
+                    <Message
+                        v-if="errors.agreement"
+                        severity="error"
+                        size="small"
+                        variant="simple"
+                    >
+                        {{ errors.agreement }}
+                    </Message>
+                </div>
+
                 <Button
                     class="btn btn-primary mt-2"
                     label="注册"
@@ -198,6 +236,8 @@ import { useUrlSearchParams } from '@vueuse/core'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
+import Message from 'primevue/message'
+import Checkbox from 'primevue/checkbox'
 import { useToast } from 'primevue/usetoast'
 import ButtonGroup from 'primevue/buttongroup'
 import { validateEmail, validatePhone, usernameValidator } from '@/utils/validate'
@@ -216,6 +256,7 @@ const phoneCode = ref('')
 const phoneCodeSending = ref(false)
 const password = ref('')
 const confirmPassword = ref('')
+const agreedToTerms = ref(false)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
 
@@ -253,6 +294,7 @@ const resolver = (values: {
     phoneCode?: string
     password?: string
     confirmPassword?: string
+    agreedToTerms?: boolean
 }) => {
     const newErrors: Record<string, string> = {}
 
@@ -293,6 +335,11 @@ const resolver = (values: {
         }
     }
 
+    // 验证用户协议同意
+    if (!values.agreedToTerms) {
+        newErrors.agreement = '请阅读并同意服务条款和隐私政策'
+    }
+
     return newErrors
 }
 
@@ -304,6 +351,7 @@ async function register() {
         phoneCode: phoneCode.value,
         password: password.value,
         confirmPassword: confirmPassword.value,
+        agreedToTerms: agreedToTerms.value,
     }
 
     // 执行验证
@@ -559,6 +607,34 @@ async function register() {
 
 .toggle-login {
     margin-top: 1em;
+}
+
+.agreement-section {
+    margin-bottom: 1.2rem;
+}
+
+.agreement-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.checkbox-label {
+    font-size: 0.9rem;
+    color: $secondary;
+    line-height: 1.5;
+    cursor: pointer;
+    user-select: none;
+}
+
+.agreement-link {
+    color: $primary;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 </style>
 
