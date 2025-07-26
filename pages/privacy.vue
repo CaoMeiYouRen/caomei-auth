@@ -11,6 +11,26 @@
                     <li>数据存储：用户数据会存储在安全的服务器上，采取加密等措施保护数据安全。</li>
                     <li>数据共享：未经用户同意，不会将用户数据共享给第三方，法律法规另有规定的除外。</li>
                     <li>用户权利：用户有权访问、修改和删除自己的数据，可随时联系我们行使这些权利。</li>
+                    <li>
+                        错误监控：我们使用 <NuxtLink
+                            to="https://sentry.io"
+                            external
+                            class="external-link"
+                        >
+                            Sentry
+                        </NuxtLink> 服务监控系统错误和性能问题，以提高服务稳定性。该服务仅收集技术错误信息，不包含个人敏感数据。
+                    </li>
+                    <li>
+                        行为分析：我们使用 <NuxtLink
+                            to="https://clarity.microsoft.com"
+                            external
+                            class="external-link"
+                        >
+                            Microsoft Clarity
+                        </NuxtLink>分析用户在关键页面的操作行为，以优化用户体验。该工具会自动对用户标识符进行哈希加密处理，确保隐私安全。我们仅在登录、注册、安全设置等关键功能页面收集必要的操作数据，不会记录用户输入的密码、邮箱等敏感信息。
+                    </li>
+                    <li>Cookie 使用：我们使用 Cookie 来维持登录状态和提供个性化服务。您可以通过浏览器设置管理 Cookie，但这可能影响部分功能的正常使用。</li>
+                    <li>第三方服务：我们集成的第三方登录服务（如 GitHub、Google 等）将按照其各自的隐私政策处理您的数据。</li>
                 </ol>
             </div>
             <div class="auth-contact auth-section">
@@ -98,6 +118,16 @@ const contactEmailLink = `mailto:${config.contactEmail}`
         &:hover {
             text-decoration: underline;
         }
+    }
+}
+
+.external-link {
+    color: $primary;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+        text-decoration: underline;
     }
 }
 

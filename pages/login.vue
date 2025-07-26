@@ -379,12 +379,19 @@ const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, 
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'username' | 'email' | 'phone' }>('history', { initialValue: { mode: 'username' } })
 
+// Clarity 追踪
+const clarity = useClarity()
+
 onMounted(() => {
     // 确保默认值
     if (!['username', 'email', 'phone'].includes(params.mode as string)) {
         params.mode = 'username'
     }
     activeTab.value = params.mode
+
+    // 追踪页面访问
+    clarity.setTag('page_type', 'login')
+    clarity.setTag('initial_login_method', params.mode)
 })
 
 // 切换登录模式并更新 URL
@@ -396,6 +403,10 @@ const changeMode = (mode: 'username' | 'email' | 'phone') => {
     }
     params.mode = mode
     activeTab.value = mode
+
+    // 追踪登录方式切换
+    clarity.event('login_method_switch')
+    clarity.setTag('switched_to_method', mode)
 }
 
 // 处理双因素认证

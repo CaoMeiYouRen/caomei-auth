@@ -499,19 +499,30 @@ const sendPhoneCode = useSendPhoneCode(
 // 通过 SSR 渲染
 const { data: session } = await authClient.useSession(useFetch)
 
+// Clarity 追踪
+const clarity = useClarity()
+
 watch(
     () => session.value?.session,
     async () => {
         const newUser = session.value?.user
         if (newUser) {
-            user.id = newUser.id || ''
-            user.username = newUser.displayUsername || ''
-            user.nickname = newUser.name || ''
-            user.avatar = newUser.image || ''
-            user.email = newUser.email || ''
-            user.emailVerified = newUser.emailVerified || false
-            user.phone = newUser.phoneNumber || ''
-            user.phoneVerified = newUser.phoneNumberVerified || false
+            Object.assign(user, {
+                id: newUser.id,
+                username: newUser.username || '',
+                nickname: newUser.name || '',
+                avatar: newUser.image || '',
+                email: newUser.email || '',
+                emailVerified: newUser.emailVerified || false,
+                phone: newUser.phoneNumber || '',
+                phoneVerified: newUser.phoneNumberVerified || false,
+            })
+
+            // 用户标识追踪
+            clarity.identify(newUser.id, undefined, '/profile', newUser.name)
+            clarity.setTag('page_type', 'profile')
+            clarity.setTag('user_verified_email', newUser.emailVerified ? 'yes' : 'no')
+            clarity.setTag('user_verified_phone', newUser.phoneNumberVerified ? 'yes' : 'no')
         }
     },
     { immediate: true }, // 立即执行
