@@ -43,6 +43,7 @@ export default defineNuxtConfig({
     devtools: { enabled: false },
     modules: [
         '@primevue/nuxt-module',
+        '@sentry/nuxt/module',
     ],
     build: {
         // 使用 Babel 转译不兼容的包
@@ -74,7 +75,8 @@ export default defineNuxtConfig({
             maxUploadSize: process.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE,
             icpBeianNumber: process.env.NUXT_PUBLIC_ICP_BEIAN_NUMBER,
             publicSecurityBeianNumber: process.env.NUXT_PUBLIC_PUBLIC_SECURITY_BEIAN_NUMBER,
-            phoneEnabled: String(process.env.NUXT_PUBLIC_PHONE_ENABLED) || (process.env.PHONE_CHANNEL ? 'true' : ''),
+            phoneEnabled: process.env.NUXT_PUBLIC_PHONE_ENABLED || (process.env.PHONE_CHANNEL ? 'true' : ''),
+            sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
         },
     },
     primevue: {
@@ -142,5 +144,7 @@ export default defineNuxtConfig({
             },
         },
     },
-
+    sentry: {
+        autoInjectServerSentry: 'top-level-import',
+    },
 })

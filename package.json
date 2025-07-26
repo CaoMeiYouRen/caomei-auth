@@ -22,6 +22,7 @@
     "@mdi/font": "^7.4.47",
     "@primeuix/themes": "^1.1.2",
     "@primevue/forms": "^4.3.5",
+    "@sentry/nuxt": "^9.42.0",
     "@vercel/blob": "^1.1.1",
     "@vueuse/core": "^13.4.0",
     "animate.css": "^4.1.1",
@@ -54,6 +55,7 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
+      "@sentry/cli",
       "esbuild",
       "sqlite3"
     ],
