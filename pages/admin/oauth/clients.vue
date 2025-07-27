@@ -166,18 +166,18 @@
                     <label for="redirectURLs">
                         重定向 URL <span class="required">*</span>
                     </label>
-                    <Chips
+                    <InputText
                         id="redirectURLs"
-                        v-model="formData.redirect_uris"
-                        separator=","
+                        v-model="redirectUrlsInput"
                         class="w-full"
                         :invalid="formData.redirect_uris.length === 0"
                         placeholder="https://example.com/callback"
+                        @blur="updateRedirectUris"
                     />
                     <small v-if="formData.redirect_uris.length === 0" class="error-text">
                         至少需要一个重定向URL
                     </small>
-                    <small v-else class="helper-text">多个URL请用逗号分隔或按回车添加</small>
+                    <small v-else class="helper-text">多个URL请用逗号分隔</small>
                 </div>
                 <div class="form-group">
                     <label for="client_uri">应用主页</label>
@@ -217,14 +217,14 @@
                 </div>
                 <div class="form-group">
                     <label for="contacts">联系邮箱</label>
-                    <Chips
+                    <InputText
                         id="contacts"
-                        v-model="formData.contacts"
-                        separator=","
+                        v-model="contactsInput"
                         class="w-full"
                         placeholder="admin@example.com"
+                        @blur="updateContacts"
                     />
-                    <small class="helper-text">应用管理员的联系邮箱</small>
+                    <small class="helper-text">应用管理员的联系邮箱，多个邮箱请用逗号分隔</small>
                 </div>
                 <div class="form-group">
                     <label for="token_endpoint_auth_method">
@@ -446,6 +446,10 @@ const createdApplication = ref<any>(null)
 // 新增搜索和筛选相关变量
 const searchQuery = ref('')
 
+// 新增输入框变量
+const redirectUrlsInput = ref('')
+const contactsInput = ref('')
+
 // 计算属性：过滤后的应用列表
 const filteredApplications = computed(() => {
     if (!searchQuery.value) {
@@ -462,6 +466,24 @@ const filteredApplications = computed(() => {
 const debouncedSearch = debounce(() => {
     // 搜索逻辑已通过计算属性实现
 }, 300)
+
+// 处理重定向URL输入框
+function updateRedirectUris() {
+    const urls = redirectUrlsInput.value
+        .split(',')
+        .map((url) => url.trim())
+        .filter((url) => url)
+    formData.value.redirect_uris = urls
+}
+
+// 处理联系邮箱输入框
+function updateContacts() {
+    const emails = contactsInput.value
+        .split(',')
+        .map((email) => email.trim())
+        .filter((email) => email)
+    formData.value.contacts = emails
+}
 
 const formData = ref({
     client_name: '',
@@ -514,6 +536,9 @@ function editApplication(app: any) {
         software_id: app.softwareId || '',
         software_version: app.softwareVersion || '',
     }
+    // 同步更新输入框的值
+    redirectUrlsInput.value = formData.value.redirect_uris.join(', ')
+    contactsInput.value = formData.value.contacts.join(', ')
     showCreateDialog.value = true
 }
 
@@ -534,6 +559,9 @@ function resetForm() {
         software_id: '',
         software_version: '',
     }
+    // 重置输入框的值
+    redirectUrlsInput.value = ''
+    contactsInput.value = ''
     editing.value = false
     selectedApp.value = null
 }
@@ -602,6 +630,10 @@ function validateForm() {
 async function submitApplication() {
     try {
         submitting.value = true
+
+        // 先更新数组值
+        updateRedirectUris()
+        updateContacts()
 
         // 表单验证
         const validationErrors = validateForm()
