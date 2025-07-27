@@ -6,19 +6,19 @@ export default defineEventHandler(async (event) => {
         headers: event.headers,
     })
 
-    // 调试 OAuth 授权请求
-    if (event.path.startsWith('/api/auth/oauth2/')) {
-        console.log('OAuth2 Request Debug:', {
-            path: event.path,
-            query: getQuery(event),
-            method: event.method,
-            hasSession: !!session,
-            userAgent: getHeader(event, 'user-agent'),
-        })
-    }
+    // // 调试 OAuth 授权请求
+    // if (event.path.startsWith('/api/auth/oauth2/')) {
+    //     console.log('OAuth2 Request Debug:', {
+    //         path: event.path,
+    //         query: getQuery(event),
+    //         method: event.method,
+    //         hasSession: !!session,
+    //         userAgent: getHeader(event, 'user-agent'),
+    //     })
+    // }
 
     // 白名单路径
-    if (publicPaths.some((path) => event.path === path)) {
+    if (publicPaths.some((path) => event.path.startsWith(path))) {
         return
     }
     // console.log('event.path', event.path)

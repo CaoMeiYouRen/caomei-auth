@@ -62,9 +62,10 @@ export default defineEventHandler(async (event) => {
         }
 
         const application = new OAuthApplication()
+        application.id = snowflake.generateId()
         application.name = appName
         application.description = body.description || ''
-        application.clientId = generateClientId()
+        application.clientId = application.id // 使用ID作为clientId
         application.clientSecret = generateClientSecret()
         application.redirectURLs = Array.isArray(appRedirectURIs) ? appRedirectURIs.join(',') : appRedirectURIs
         application.tokenEndpointAuthMethod = token_endpoint_auth_method
