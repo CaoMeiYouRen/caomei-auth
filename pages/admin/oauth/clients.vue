@@ -10,6 +10,7 @@
                     <p class="clients-subtitle">
                         管理您的 OAuth 2.0 应用，支持 RFC7591 动态客户端注册
                     </p>
+                    <span class="text-muted">Tips: 受 better-auth 底层实现影响，目前并非支持所有的 OAuth 2.0 特性，具体请查看相关文档</span>
                 </div>
                 <div class="header-actions">
                     <Button
@@ -1240,5 +1241,11 @@ function goProfile() {
             }
         }
     }
+}
+
+.text-muted {
+    color: $secondary-light;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
 }
 </style>
