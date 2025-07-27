@@ -1030,13 +1030,37 @@ function goProfile() {
     form {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
+        row-gap: 0rem ;
+        column-gap: 1.5rem;
 
-        .form-group:first-child,
-        .form-group:nth-child(2),
-        .form-group:nth-child(3) {
+        // 重要的或较长的字段占用整行
+        .form-group:nth-child(1),  // 应用名称
+        .form-group:nth-child(2),  // 应用简介
+        .form-group:nth-child(3),  // 重定向 URL
+        .form-group:nth-child(6),  // 授权范围
+        .form-group:nth-child(9),  // 认证方式
+        .form-group:nth-child(10), // 授权类型
+        .form-group:nth-child(11)  // 响应类型
+        {
             grid-column: 1 / -1;
         }
+
+        // 确保PrimeVue组件占满容器宽度
+        .form-group {
+            :deep(.p-inputtext),
+            :deep(.p-dropdown),
+            :deep(.p-multiselect),
+            :deep(.p-textarea) {
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+        }
+
+        // 其他字段使用两列布局：
+        // 应用主页、应用Logo
+        // 联系邮箱
+        // 服务条款链接、隐私政策链接
+        // 软件ID、软件版本
     }
 
     @media (max-width: 768px) {
