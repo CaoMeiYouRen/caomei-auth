@@ -10,7 +10,10 @@
                     <p class="clients-subtitle">
                         管理您的 OAuth 2.0 应用，支持 RFC7591 动态客户端注册
                     </p>
-                    <span class="text-muted">Tips: 受 better-auth 底层实现影响，目前并非支持所有的 OAuth 2.0 特性，具体请查看相关文档</span>
+                    <span class="text-muted">
+                        <strong>注意：</strong>当前 OIDC 实现基于 Better Auth，仅支持标准 OpenID Connect 核心功能。
+                        不支持隐式流程、密码流程、客户端流程等非标准模式。
+                    </span>
                 </div>
                 <div class="header-actions">
                     <Button
@@ -136,6 +139,14 @@
                 <p class="form-description">
                     请填写应用的基本信息。带有 <span class="required">*</span> 的字段为必填项。
                 </p>
+                <div class="oidc-notice">
+                    <i class="mdi mdi-information" />
+                    <span>
+                        <strong>OIDC 兼容性说明：</strong>
+                        当前 OIDC 提供者基于 Better Auth 实现，仅支持标准 OpenID Connect 核心功能。
+                        不支持的功能已标记为"不支持"，建议使用推荐的标准配置。
+                    </span>
+                </div>
             </div>
             <form @submit.prevent="submitApplication">
                 <div class="form-group">
@@ -243,7 +254,7 @@
                         option-value="value"
                         class="w-full"
                     />
-                    <small class="helper-text">客户端向令牌端点进行身份验证的方法</small>
+                    <small class="helper-text">客户端向令牌端点进行身份验证的方法（支持 OIDC 标准方法）</small>
                 </div>
                 <div class="form-group">
                     <label for="grant_types">
@@ -254,13 +265,14 @@
                         v-model="formData.grant_types"
                         :options="[
                             {label: '授权码模式 (推荐)', value: 'authorization_code'},
-                            {label: '隐式模式', value: 'implicit'},
-                            {label: '密码模式', value: 'password'},
-                            {label: '客户端模式', value: 'client_credentials'},
-                            {label: '刷新令牌', value: 'refresh_token'}
+                            {label: '刷新令牌', value: 'refresh_token'},
+                            {label: '隐式模式 (不支持)', value: 'implicit', disabled: true},
+                            {label: '密码模式 (不支持)', value: 'password', disabled: true},
+                            {label: '客户端模式 (不支持)', value: 'client_credentials', disabled: true}
                         ]"
                         option-label="label"
                         option-value="value"
+                        option-disabled="disabled"
                         class="w-full"
                         display="chip"
                         :invalid="formData.grant_types.length === 0"
@@ -268,7 +280,7 @@
                     <small v-if="formData.grant_types.length === 0" class="error-text">
                         至少需要选择一种授权类型
                     </small>
-                    <small v-else class="helper-text">应用支持的OAuth2授权模式</small>
+                    <small v-else class="helper-text">应用支持的OAuth2授权模式（仅支持OIDC标准模式）</small>
                 </div>
                 <div class="form-group">
                     <label for="response_types">
@@ -279,10 +291,11 @@
                         v-model="formData.response_types"
                         :options="[
                             {label: '授权码', value: 'code'},
-                            {label: '访问令牌', value: 'token'}
+                            {label: '访问令牌 (不支持)', value: 'token', disabled: true}
                         ]"
                         option-label="label"
                         option-value="value"
+                        option-disabled="disabled"
                         class="w-full"
                         display="chip"
                         :invalid="formData.response_types.length === 0"
@@ -290,7 +303,7 @@
                     <small v-if="formData.response_types.length === 0" class="error-text">
                         至少需要选择一种响应类型
                     </small>
-                    <small v-else class="helper-text">授权端点支持的响应类型</small>
+                    <small v-else class="helper-text">授权端点支持的响应类型（仅支持授权码流程）</small>
                 </div>
                 <div class="form-group">
                     <label for="tos_uri">服务条款链接</label>
@@ -497,8 +510,8 @@ const formData = ref({
     tos_uri: '',
     policy_uri: '',
     token_endpoint_auth_method: 'client_secret_basic' as 'none' | 'client_secret_basic' | 'client_secret_post',
-    grant_types: ['authorization_code'] as ('authorization_code' | 'implicit' | 'password' | 'client_credentials' | 'refresh_token' | 'urn:ietf:params:oauth:grant-type:jwt-bearer' | 'urn:ietf:params:oauth:grant-type:saml2-bearer')[],
-    response_types: ['code'] as ('code' | 'token')[],
+    grant_types: ['authorization_code'] as ('authorization_code' | 'refresh_token')[],
+    response_types: ['code'] as ('code')[],
     software_id: '',
     software_version: '',
 })
@@ -532,14 +545,14 @@ function editApplication(app: any) {
         tos_uri: app.tosUri || '',
         policy_uri: app.policyUri || '',
         token_endpoint_auth_method: app.tokenEndpointAuthMethod || 'client_secret_basic',
-        grant_types: app.grantTypes ? app.grantTypes.split(',') as ('authorization_code' | 'implicit' | 'password' | 'client_credentials' | 'refresh_token' | 'urn:ietf:params:oauth:grant-type:jwt-bearer' | 'urn:ietf:params:oauth:grant-type:saml2-bearer')[] : ['authorization_code'],
-        response_types: app.responseTypes ? app.responseTypes.split(',') as ('code' | 'token')[] : ['code'],
+        grant_types: app.grantTypes ? app.grantTypes.split(',').filter((type: string) => ['authorization_code', 'refresh_token'].includes(type)) as ('authorization_code' | 'refresh_token')[] : ['authorization_code'],
+        response_types: app.responseTypes ? app.responseTypes.split(',').filter((type: string) => type === 'code') as ('code')[] : ['code'],
         software_id: app.softwareId || '',
         software_version: app.softwareVersion || '',
     }
     // 同步更新输入框的值
-    redirectUrlsInput.value = formData.value.redirect_uris.join(', ')
-    contactsInput.value = formData.value.contacts.join(', ')
+    redirectUrlsInput.value = formData.value.redirect_uris.join(',')
+    contactsInput.value = formData.value.contacts.join(',')
     showCreateDialog.value = true
 }
 
@@ -595,8 +608,22 @@ function validateForm() {
         errors.push('至少需要选择一种授权类型')
     }
 
+    // 验证只支持的授权类型
+    const supportedGrantTypes = ['authorization_code', 'refresh_token']
+    const unsupportedGrants = formData.value.grant_types.filter((type) => !supportedGrantTypes.includes(type))
+    if (unsupportedGrants.length > 0) {
+        errors.push(`不支持的授权类型：${unsupportedGrants.join(', ')}`)
+    }
+
     if (formData.value.response_types.length === 0) {
         errors.push('至少需要选择一种响应类型')
+    }
+
+    // 验证只支持的响应类型
+    const supportedResponseTypes = ['code']
+    const unsupportedResponses = formData.value.response_types.filter((type) => !supportedResponseTypes.includes(type))
+    if (unsupportedResponses.length > 0) {
+        errors.push(`不支持的响应类型：${unsupportedResponses.join(', ')}`)
     }
 
     // 验证URL字段格式
@@ -648,12 +675,11 @@ async function submitApplication() {
             return
         }
 
-        const redirectUris = formData.value.redirect_uris
         const payload = {
             id: editing.value ? selectedApp.value.id : undefined,
             client_name: formData.value.client_name,
             description: formData.value.description,
-            redirect_uris: redirectUris,
+            redirect_uris: formData.value.redirect_uris,
             client_uri: formData.value.client_uri,
             logo_uri: formData.value.logo_uri,
             scope: formData.value.scope,
@@ -996,6 +1022,36 @@ function goProfile() {
 .create-dialog {
     width: 90vw;
     max-width: 800px;
+
+    .form-header {
+        .oidc-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #856404;
+
+            i {
+                color: #f39c12;
+                font-size: 1.25rem;
+                margin-top: 0.1rem;
+                flex-shrink: 0;
+            }
+
+            span {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+
+            strong {
+                font-weight: 600;
+            }
+        }
+    }
 
     .form-group {
         margin-bottom: 1.5rem;
