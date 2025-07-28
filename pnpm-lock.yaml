@@ -44,7 +44,7 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1
       better-auth:
-        specifier: 1.3.4
+        specifier: ^1.3.4
         version: 1.3.4
       better-bytes:
         specifier: ^1.2.4
