@@ -587,24 +587,26 @@ export const auth = betterAuth({
                 'profile',
                 'email',
                 'offline_access',
-
             ],
             getAdditionalUserInfoClaim: (user, scopes) => {
                 const claims: Record<string, any> = {}
 
                 // 根据请求的作用域添加声明
+                if (scopes.includes('openid')) {
+                    claims.sub = user.id // 使用用户 ID 作为 sub
+                }
                 if (scopes.includes('profile')) {
                     claims.name = user.name
+                    claims.nickname = user.name
                     claims.picture = user.image
-                    claims.given_name = user.name
-                    claims.family_name = ''
+                    claims.username = user.username
                 }
 
                 if (scopes.includes('email')) {
                     claims.email = user.email
                     claims.email_verified = user.emailVerified
                 }
-
+                // 由于手机号码较为隐私，故不在 OIDC 中返回
                 // if (scopes.includes('phone')) {
                 //     claims.phone_number = user.phoneNumber
                 //     claims.phone_number_verified = user.phoneNumberVerified
