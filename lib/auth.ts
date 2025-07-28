@@ -576,6 +576,7 @@ export const auth = betterAuth({
             metadata: {
                 issuer: AUTH_BASE_URL,
             },
+            requirePKCE: false, // 是否强制 PKCE
             loginPage: '/login', // 登录页面的路径
             consentPage: '/oauth/consent', // 同意页面的路径
             allowDynamicClientRegistration: true, // 允许动态客户端注册
