@@ -24,6 +24,12 @@
                     {{ contactEmail }}
                 </NuxtLink>
             </div>
+            <div class="auth-nav">
+                <NuxtLink to="/" class="back-home-btn">
+                    <i class="mdi mdi-home" />
+                    返回首页
+                </NuxtLink>
+            </div>
         </div>
     </div>
 </template>
@@ -64,6 +70,35 @@ const contactEmailLink = `mailto:${config.contactEmail}`
     margin-bottom: 1.2rem;
     letter-spacing: 1px;
     text-align: center;
+}
+
+.auth-nav {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.back-home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    background-color: $primary;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: $primary-dark;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($primary, 0.3);
+    }
+
+    i {
+        font-size: 1.1rem;
+    }
 }
 .auth-section {
     margin-bottom: 2rem;
