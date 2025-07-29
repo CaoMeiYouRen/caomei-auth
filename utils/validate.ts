@@ -52,7 +52,10 @@ export function usernameValidator(name: string): boolean {
         // 禁止邮箱格式
         return false
     }
-    if (validatePhone(name)) {
+
+    if (isMobilePhone(name, 'any', {
+        strictMode: false,
+    })) {
         // 禁止手机号格式
         return false
     }
