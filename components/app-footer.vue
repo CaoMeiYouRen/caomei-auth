@@ -40,7 +40,26 @@
                 >
                     首页
                 </NuxtLink>
-
+                <NuxtLink
+                    v-if="session?.user"
+                    to="/profile"
+                    class="app-footer__bottom-link"
+                >
+                    个人中心
+                </NuxtLink>
+                <NuxtLink
+                    v-if="session?.user?.role?.includes('admin')"
+                    to="/admin/users"
+                    class="app-footer__bottom-link"
+                >
+                    管理后台
+                </NuxtLink>
+                <NuxtLink
+                    to="/forgot-password"
+                    class="app-footer__bottom-link"
+                >
+                    忘记密码
+                </NuxtLink>
                 <NuxtLink
                     to="/privacy"
                     class="app-footer__bottom-link"
@@ -95,6 +114,9 @@
 </template>
 
 <script setup lang="ts">
+import { authClient } from '@/lib/auth-client'
+const { data: session } = await authClient.useSession(useFetch)
+
 const config = useRuntimeConfig().public
 
 const homeUrl = config.authBaseUrl || window?.location?.origin
