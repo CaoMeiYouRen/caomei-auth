@@ -202,7 +202,7 @@
                         </template>
                     </Column>
 
-                    <Column header="操作" header-style="width: 12rem">
+                    <Column header="操作" header-style="width: 14rem">
                         <template #body="{data}">
                             <div class="action-buttons">
                                 <Button
@@ -214,7 +214,15 @@
                                     @click="viewUser(data)"
                                 />
                                 <Button
-                                    v-if="!data.banned && data.role !== 'admin'"
+                                    v-tooltip="'同步管理员角色'"
+                                    icon="mdi mdi-sync"
+                                    severity="secondary"
+                                    outlined
+                                    size="small"
+                                    @click="syncUserAdminRole(data)"
+                                />
+                                <Button
+                                    v-if="!data.banned && data.role !== 'admin' && !isCurrentUser(data.id)"
                                     v-tooltip="'禁用用户'"
                                     icon="mdi mdi-block-helper"
                                     severity="warning"
@@ -223,7 +231,16 @@
                                     @click="banUser(data)"
                                 />
                                 <Button
-                                    v-else-if="data.banned && data.role !== 'admin'"
+                                    v-else-if="!data.banned && isCurrentUser(data.id)"
+                                    v-tooltip="'不能禁用自己'"
+                                    icon="mdi mdi-block-helper"
+                                    severity="warning"
+                                    outlined
+                                    size="small"
+                                    disabled
+                                />
+                                <Button
+                                    v-else-if="data.banned && data.role !== 'admin' && !isCurrentUser(data.id)"
                                     v-tooltip="'解禁用户'"
                                     icon="mdi mdi-check-circle"
                                     severity="success"
@@ -232,13 +249,22 @@
                                     @click="unbanUser(data)"
                                 />
                                 <Button
-                                    v-if="data.role !== 'admin'"
+                                    v-if="data.role !== 'admin' && !isCurrentUser(data.id)"
                                     v-tooltip="'删除用户'"
                                     icon="mdi mdi-delete"
                                     severity="danger"
                                     outlined
                                     size="small"
                                     @click="deleteUser(data)"
+                                />
+                                <Button
+                                    v-else-if="isCurrentUser(data.id)"
+                                    v-tooltip="'不能删除自己'"
+                                    icon="mdi mdi-delete"
+                                    severity="danger"
+                                    outlined
+                                    size="small"
+                                    disabled
                                 />
                                 <Button
                                     v-if="data.role === 'admin' && !data.banned"
@@ -441,18 +467,52 @@
                         @click="viewUserSessions(viewingUser)"
                     />
                     <Button
-                        v-if="!viewingUser.banned && viewingUser.role !== 'admin'"
+                        label="同步管理员角色"
+                        icon="mdi mdi-sync"
+                        severity="secondary"
+                        @click="syncUserAdminRole(viewingUser)"
+                    />
+                    <Button
+                        v-if="!viewingUser.role?.includes('admin')"
+                        label="设为管理员"
+                        icon="mdi mdi-shield-account"
+                        severity="help"
+                        @click="setUserAsAdmin(viewingUser)"
+                    />
+                    <Button
+                        v-else-if="viewingUser.role?.includes('admin') && !isCurrentUser(viewingUser.id)"
+                        label="移除管理员"
+                        icon="mdi mdi-shield-remove"
+                        severity="danger"
+                        @click="removeUserAdminRole(viewingUser)"
+                    />
+                    <Button
+                        v-else-if="viewingUser.role?.includes('admin') && isCurrentUser(viewingUser.id)"
+                        label="不能移除自己的管理员权限"
+                        icon="mdi mdi-shield-remove"
+                        severity="danger"
+                        disabled
+                    />
+                    <Button
+                        v-if="!viewingUser.banned && viewingUser.role !== 'admin' && !isCurrentUser(viewingUser.id)"
                         label="禁用用户"
                         icon="mdi mdi-block-helper"
                         severity="warning"
                         @click="banUser(viewingUser); showDetailDialog = false"
                     />
                     <Button
-                        v-else-if="viewingUser.banned && viewingUser.role !== 'admin'"
+                        v-else-if="viewingUser.banned && viewingUser.role !== 'admin' && !isCurrentUser(viewingUser.id)"
                         label="解禁用户"
                         icon="mdi mdi-check-circle"
                         severity="success"
                         @click="unbanUser(viewingUser); showDetailDialog = false"
+                    />
+                    <Button
+                        v-else-if="isCurrentUser(viewingUser.id)"
+                        label="不能操作自己的账户"
+                        icon="mdi mdi-account-alert"
+                        severity="warning"
+                        disabled
                     />
                     <Button
                         v-if="viewingUser.role === 'admin' && !viewingUser.banned"
@@ -588,6 +648,7 @@ import { debounce } from 'lodash-es'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/useragent'
 import { formatPhoneNumberInternational } from '@/utils/phone'
+import { syncAdminRole, addAdminRole, removeAdminRole } from '@/utils/admin-role-client'
 
 // 页面元数据
 definePageMeta({
@@ -598,6 +659,9 @@ definePageMeta({
 const router = useRouter()
 const toast = useToast()
 const confirm = useConfirm()
+
+// 获取当前用户会话
+const { data: currentSession } = await authClient.useSession(useFetch)
 
 // 响应式数据
 const loading = ref(false)
@@ -689,6 +753,8 @@ const debouncedSearch = debounce(() => {
 
 // 工具函数
 const formatDate = (date: string | number) => new Date(date).toLocaleString('zh-CN')
+
+const isCurrentUser = (userId: string) => currentSession.value?.user?.id === userId
 
 const getRoleLabel = (role: string) => {
     const roleMap: Record<string, string> = {
@@ -818,6 +884,17 @@ const viewUser = (user: any) => {
 }
 
 const banUser = (user: any) => {
+    // 防止禁用自己
+    if (isCurrentUser(user.id)) {
+        toast.add({
+            severity: 'warn',
+            summary: '操作不允许',
+            detail: '不能禁用自己的账户',
+            life: 3000,
+        })
+        return
+    }
+
     banningUser.value = user
     banForm.value = {
         reason: '',
@@ -889,7 +966,155 @@ const unbanUser = async (user: any) => {
     }
 }
 
+// 同步用户管理员角色
+const syncUserAdminRole = async (user: any) => {
+    try {
+        loading.value = true
+        const result = await syncAdminRole(user.id)
+
+        if (result.success) {
+            toast.add({
+                severity: 'success',
+                summary: '同步成功',
+                detail: result.message,
+                life: 3000,
+            })
+            // 重新加载用户列表以更新显示
+            await loadUsers()
+        } else {
+            toast.add({
+                severity: 'warning',
+                summary: '同步完成',
+                detail: result.message,
+                life: 3000,
+            })
+        }
+    } catch (error: any) {
+        console.error('同步管理员角色失败:', error)
+        toast.add({
+            severity: 'error',
+            summary: '同步失败',
+            detail: error.message || '同步管理员角色失败',
+            life: 3000,
+        })
+    } finally {
+        loading.value = false
+    }
+}
+
+// 设置用户为管理员
+const setUserAsAdmin = async (user: any) => {
+    confirm.require({
+        message: `确定要将用户 ${user.name || user.email} 设置为管理员吗？`,
+        header: '确认设置管理员',
+        icon: 'mdi mdi-shield-account',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'p-button-success',
+        accept: async () => {
+            try {
+                loading.value = true
+                const result = await addAdminRole(user.id)
+
+                if (result.success) {
+                    toast.add({
+                        severity: 'success',
+                        summary: '设置成功',
+                        detail: result.message,
+                        life: 3000,
+                    })
+                    await loadUsers()
+                    showDetailDialog.value = false
+                } else {
+                    toast.add({
+                        severity: 'warning',
+                        summary: '设置失败',
+                        detail: result.message,
+                        life: 3000,
+                    })
+                }
+            } catch (error: any) {
+                console.error('设置管理员角色失败:', error)
+                toast.add({
+                    severity: 'error',
+                    summary: '设置失败',
+                    detail: error.message || '设置管理员角色失败',
+                    life: 3000,
+                })
+            } finally {
+                loading.value = false
+            }
+        },
+    })
+}
+
+// 移除用户管理员角色
+const removeUserAdminRole = async (user: any) => {
+    // 防止管理员移除自己的权限
+    if (isCurrentUser(user.id)) {
+        toast.add({
+            severity: 'warn',
+            summary: '操作不允许',
+            detail: '不能移除自己的管理员权限',
+            life: 3000,
+        })
+        return
+    }
+
+    confirm.require({
+        message: `确定要移除用户 ${user.name || user.email} 的管理员角色吗？`,
+        header: '确认移除管理员角色',
+        icon: 'mdi mdi-shield-remove',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'p-button-danger',
+        accept: async () => {
+            try {
+                loading.value = true
+                const result = await removeAdminRole(user.id)
+
+                if (result.success) {
+                    toast.add({
+                        severity: 'success',
+                        summary: '移除成功',
+                        detail: result.message,
+                        life: 3000,
+                    })
+                    await loadUsers()
+                    showDetailDialog.value = false
+                } else {
+                    toast.add({
+                        severity: 'warning',
+                        summary: '移除失败',
+                        detail: result.message,
+                        life: 3000,
+                    })
+                }
+            } catch (error: any) {
+                console.error('移除管理员角色失败:', error)
+                toast.add({
+                    severity: 'error',
+                    summary: '移除失败',
+                    detail: error.message || '移除管理员角色失败',
+                    life: 3000,
+                })
+            } finally {
+                loading.value = false
+            }
+        },
+    })
+}
+
 const deleteUser = async (user: any) => {
+    // 防止删除自己
+    if (isCurrentUser(user.id)) {
+        toast.add({
+            severity: 'warn',
+            summary: '操作不允许',
+            detail: '不能删除自己的账户',
+            life: 3000,
+        })
+        return
+    }
+
     confirm.require({
         message: `确定要删除用户 ${user.name || user.email} 吗？此操作不可恢复！`,
         header: '确认删除',

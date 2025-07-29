@@ -1,9 +1,6 @@
 <template>
     <div class="auth-container">
-        <AuthLeft
-            title="草梅 Auth 统一登录平台"
-            subtitle="基于 Nuxt 3 的现代化统一登录平台，支持多种登录注册方式，安全、便捷、可扩展。"
-        >
+        <AuthLeft title="草梅 Auth 统一登录平台" subtitle="基于 Nuxt 3 的现代化统一登录平台，支持多种登录注册方式，安全、便捷、可扩展。">
             <template #content>
                 <div class="auth-links">
                     <a
@@ -78,6 +75,7 @@
 import Button from 'primevue/button'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
+import { syncAdminRole } from '@/utils/admin-role-client'
 
 // 使用 SSR 渲染，解决界面刷新时的 UI 重渲染问题
 const { data: session } = await authClient.useSession(useFetch)
@@ -102,6 +100,50 @@ function toAdmin() {
     navigateTo('/admin/users')
 }
 
+async function checkRole() {
+    const { data, error } = await authClient.admin.hasPermission({
+        permissions: {
+            user: ['create'],
+        },
+    })
+    if (error) {
+        console.error('检查角色失败:', error)
+        return false
+    }
+    console.log(data)
+    return data.success
+}
+
+async function syncCurrentUserAdminRole() {
+    if (!session.value?.user?.id) {
+        return false
+    }
+
+    try {
+        const result = await syncAdminRole(session.value.user.id)
+        console.log('管理员角色同步结果:', result)
+        return result.success
+    } catch (error) {
+        console.error('管理员角色同步失败:', error)
+        return false
+    }
+}
+
+onMounted(async () => {
+    // 如果用户已登录，先同步管理员角色
+    if (session.value?.user?.id) {
+        await syncCurrentUserAdminRole()
+    }
+
+    // 检查用户是否有管理员权限
+    const isAdmin = await checkRole()
+    if (isAdmin) {
+        console.log('用户是管理员')
+    } else {
+        console.log('用户不是管理员')
+    }
+})
+
 </script>
 
 <style scoped lang="scss">
@@ -122,6 +164,7 @@ function toAdmin() {
 
 .auth-links {
     margin-top: 1.2rem;
+
     .project-link {
         color: $secondary-light;
         font-weight: 500;
@@ -133,14 +176,17 @@ function toAdmin() {
         transition: color 0.2s;
         border-bottom: 1px dashed rgba($background-light, 0.3);
         padding-bottom: 2px;
+
         &:hover {
             color: $primary-light;
             text-decoration: underline;
         }
+
         i {
             font-size: 1.3rem;
         }
     }
+
     @media (max-width: 767px) {
         display: none;
     }
@@ -148,10 +194,12 @@ function toAdmin() {
 
 .auth-links-mobile {
     display: none;
+
     @media (max-width: 767px) {
         display: flex;
         justify-content: center;
         margin-top: 1rem;
+
         .project-link {
             color: $secondary;
             background: none;
@@ -166,6 +214,7 @@ function toAdmin() {
     padding: 2rem 1rem;
     min-height: 60vh;
     background: $background;
+
     @media (min-width: 768px) {
         width: 50%;
         min-height: 100vh;
@@ -241,15 +290,18 @@ function toAdmin() {
     margin: 2rem 0 1rem 0;
     width: 100%;
     font-size: 0.98rem;
+
     &::before,
     &::after {
         content: "";
         flex: 1;
         border-bottom: 1px solid $secondary-bg;
     }
+
     &::before {
         margin-right: 1rem;
     }
+
     &::after {
         margin-left: 1rem;
     }

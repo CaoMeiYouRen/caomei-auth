@@ -632,4 +632,3 @@ export const auth = betterAuth({
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},
 })
-
