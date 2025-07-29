@@ -17,6 +17,13 @@
                 </div>
                 <div class="header-actions">
                     <Button
+                        label="API 文档"
+                        icon="mdi mdi-book-open-variant"
+                        severity="secondary"
+                        outlined
+                        @click="showApiDocsDialog = true"
+                    />
+                    <Button
                         label="创建应用"
                         icon="mdi mdi-plus"
                         @click="resetForm(); showCreateDialog = true"
@@ -431,6 +438,150 @@
                 <Button label="我已保存" @click="showSecretDialog = false" />
             </template>
         </Dialog>
+
+        <!-- API 文档对话框 -->
+        <Dialog
+            v-model:visible="showApiDocsDialog"
+            header="OIDC API 端点文档"
+            :modal="true"
+            class="api-docs-dialog"
+        >
+            <div class="api-docs-content">
+                <Accordion :value="['0', '1', '2']" multiple>
+                    <AccordionPanel value="0">
+                        <AccordionHeader>
+                            <i class="mdi mdi-api" />
+                            <span>OpenID Connect Discovery</span>
+                        </AccordionHeader>
+                        <AccordionContent>
+                            <p class="section-description">
+                                OpenID Connect 配置端点，包含所有支持的端点和功能信息。
+                            </p>
+                            <div class="endpoint-group">
+                                <div class="endpoint-item">
+                                    <label>Discovery 端点</label>
+                                    <div class="endpoint-url">
+                                        <code>{{ authBaseUrl }}/api/auth/.well-known/openid-configuration</code>
+                                        <Button
+                                            icon="mdi mdi-content-copy"
+                                            class="p-button-sm p-button-text"
+                                            @click="copyToClipboard(`${authBaseUrl}/api/auth/.well-known/openid-configuration`)"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </AccordionContent>
+                    </AccordionPanel>
+
+                    <AccordionPanel value="1">
+                        <AccordionHeader>
+                            <i class="mdi mdi-cloud-outline" />
+                            <span>主要 OAuth 2.0 / OIDC 端点</span>
+                        </AccordionHeader>
+                        <AccordionContent>
+                            <p class="section-description">
+                                以下是平台提供的主要 OAuth 2.0 和 OpenID Connect 端点。
+                            </p>
+                            <div class="endpoint-group">
+                                <div class="endpoint-item">
+                                    <label>授权端点</label>
+                                    <div class="endpoint-url">
+                                        <code>{{ authBaseUrl }}/api/auth/oauth2/authorize</code>
+                                        <Button
+                                            icon="mdi mdi-content-copy"
+                                            class="p-button-sm p-button-text"
+                                            @click="copyToClipboard(`${authBaseUrl}/api/auth/oauth2/authorize`)"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="endpoint-item">
+                                    <label>令牌端点</label>
+                                    <div class="endpoint-url">
+                                        <code>{{ authBaseUrl }}/api/auth/oauth2/token</code>
+                                        <Button
+                                            icon="mdi mdi-content-copy"
+                                            class="p-button-sm p-button-text"
+                                            @click="copyToClipboard(`${authBaseUrl}/api/auth/oauth2/token`)"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="endpoint-item">
+                                    <label>用户信息端点</label>
+                                    <div class="endpoint-url">
+                                        <code>{{ authBaseUrl }}/api/auth/oauth2/userinfo</code>
+                                        <Button
+                                            icon="mdi mdi-content-copy"
+                                            class="p-button-sm p-button-text"
+                                            @click="copyToClipboard(`${authBaseUrl}/api/auth/oauth2/userinfo`)"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="endpoint-item">
+                                    <label>JWKS 端点</label>
+                                    <div class="endpoint-url">
+                                        <code>{{ authBaseUrl }}/api/auth/jwks</code>
+                                        <Button
+                                            icon="mdi mdi-content-copy"
+                                            class="p-button-sm p-button-text"
+                                            @click="copyToClipboard(`${authBaseUrl}/api/auth/jwks`)"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="endpoint-item">
+                                    <label>动态客户端注册端点</label>
+                                    <div class="endpoint-url">
+                                        <code>{{ authBaseUrl }}/api/auth/oauth2/register</code>
+                                        <Button
+                                            icon="mdi mdi-content-copy"
+                                            class="p-button-sm p-button-text"
+                                            @click="copyToClipboard(`${authBaseUrl}/api/auth/oauth2/register`)"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </AccordionContent>
+                    </AccordionPanel>
+
+                    <AccordionPanel value="2">
+                        <AccordionHeader>
+                            <i class="mdi mdi-code-json" />
+                            <span>Discovery 配置示例</span>
+                        </AccordionHeader>
+                        <AccordionContent>
+                            <p class="section-description">
+                                以下是 OpenID Connect Discovery 端点返回的配置示例。
+                            </p>
+                            <div class="config-example">
+                                <pre><code>{{ JSON.stringify(oidcConfig, null, 2) }}</code></pre>
+                                <Button
+                                    icon="mdi mdi-content-copy"
+                                    class="copy-config-btn p-button-sm p-button-text"
+                                    @click="copyToClipboard(JSON.stringify(oidcConfig, null, 2))"
+                                />
+                            </div>
+                        </AccordionContent>
+                    </AccordionPanel>
+                </Accordion>
+
+                <div class="notice-section section">
+                    <h3>
+                        <i class="mdi mdi-information-outline" />
+                        注意事项
+                    </h3>
+                    <div class="notice">
+                        <ul>
+                            <li>当前 OIDC 实现基于 Better Auth，仅支持标准 OpenID Connect 核心功能</li>
+                            <li>支持授权码流程（Authorization Code Flow）和刷新令牌</li>
+                            <li>不支持隐式流程、密码流程、客户端流程等非标准模式</li>
+                            <li>所有端点都要求使用 HTTPS</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <Button label="关闭" @click="showApiDocsDialog = false" />
+            </template>
+        </Dialog>
     </div>
 </template>
 
@@ -451,6 +602,7 @@ const toast = useToast()
 const showCreateDialog = ref(false)
 const showDeleteDialog = ref(false)
 const showSecretDialog = ref(false)
+const showApiDocsDialog = ref(false)
 const editing = ref(false)
 const submitting = ref(false)
 const deleting = ref(false)
@@ -463,6 +615,37 @@ const searchQuery = ref('')
 // 新增输入框变量
 const redirectUrlsInput = ref('')
 const contactsInput = ref('')
+
+// 从配置获取基础 URL
+const config = useRuntimeConfig().public
+const authBaseUrl = computed(() => {
+    // 从 Nuxt 运行时配置获取基础URL
+    if (config.authBaseUrl) {
+        return config.authBaseUrl
+    }
+    // 如果没有配置，则使用当前域名
+    if (import.meta.client && window.location) {
+        return `${window.location.protocol}//${window.location.host}`
+    }
+    return 'https://example.com' // 默认值
+})
+
+// OIDC 配置
+const oidcConfig = computed(() => ({
+    issuer: authBaseUrl.value,
+    authorization_endpoint: `${authBaseUrl.value}/api/auth/oauth2/authorize`,
+    token_endpoint: `${authBaseUrl.value}/api/auth/oauth2/token`,
+    userinfo_endpoint: `${authBaseUrl.value}/api/auth/oauth2/userinfo`,
+    jwks_uri: `${authBaseUrl.value}/api/auth/jwks`,
+    registration_endpoint: `${authBaseUrl.value}/api/auth/oauth2/register`,
+    response_types_supported: ['code'],
+    grant_types_supported: ['authorization_code', 'refresh_token'],
+    subject_types_supported: ['public'],
+    id_token_signing_alg_values_supported: ['RS256'],
+    scopes_supported: ['openid', 'profile', 'email'],
+    token_endpoint_auth_methods_supported: ['client_secret_basic', 'client_secret_post', 'none'],
+    claims_supported: ['sub', 'name', 'email', 'email_verified', 'preferred_username', 'picture'],
+}))
 
 // 计算属性：过滤后的应用列表
 const filteredApplications = computed(() => {
@@ -1226,5 +1409,229 @@ function goProfile() {
     color: $secondary-light;
     font-size: 0.875rem;
     margin-top: 0.5rem;
+}
+
+.api-docs-dialog {
+    width: 90vw;
+    max-width: 900px;
+
+    .api-docs-content {
+        // PrimeVue Accordion 样式覆盖
+        :deep(.p-accordion) {
+            .p-accordion-header {
+                .p-accordion-header-link {
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 0.5rem;
+                    margin-bottom: 0.5rem;
+                    padding: 1rem 1.5rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    color: $primary;
+                    font-weight: 600;
+                    text-decoration: none;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        background: #f1f5f9;
+                        border-color: $primary;
+                    }
+
+                    &:focus {
+                        box-shadow: 0 0 0 2px rgba($primary, 0.2);
+                    }
+
+                    i {
+                        font-size: 1.25rem;
+                        color: $primary;
+                    }
+
+                    span {
+                        font-size: 1.1rem;
+                    }
+                }
+
+                &.p-accordion-header-active {
+                    .p-accordion-header-link {
+                        background: white;
+                        border-color: $primary;
+                        margin-bottom: 0;
+                        border-bottom-left-radius: 0;
+                        border-bottom-right-radius: 0;
+                    }
+                }
+            }
+
+            .p-accordion-content {
+                border: 1px solid $primary;
+                border-top: none;
+                border-radius: 0 0 0.5rem 0.5rem;
+                margin-bottom: 1rem;
+
+                .p-accordion-content-content {
+                    padding: 1.5rem;
+                    background: white;
+                }
+            }
+        }
+
+        .section {
+            margin-bottom: 2rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            h3 {
+                margin: 0 0 1rem 0;
+                color: $primary;
+                font-size: 1.2rem;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+
+                i {
+                    font-size: 1.25rem;
+                }
+            }
+
+            .section-description {
+                color: $secondary-light;
+                margin: 0 0 1.5rem 0;
+                line-height: 1.5;
+            }
+        }
+
+        .endpoint-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .endpoint-item {
+                label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-weight: 600;
+                    color: $secondary;
+                    font-size: 0.9rem;
+                }
+
+                .endpoint-url {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 0.5rem;
+                    padding: 0.75rem;
+
+                    code {
+                        flex: 1;
+                        font-family: 'Courier New', monospace;
+                        font-size: 0.875rem;
+                        color: $secondary;
+                        background: transparent;
+                        border: none;
+                        word-break: break-all;
+                    }
+
+                    .p-button {
+                        flex-shrink: 0;
+                        color: $secondary-light;
+
+                        &:hover {
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+        }
+
+        .config-example {
+            position: relative;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+
+            pre {
+                margin: 0;
+                font-family: 'Courier New', monospace;
+                font-size: 0.875rem;
+                line-height: 1.4;
+                color: $secondary;
+
+                code {
+                    background: transparent;
+                    padding: 0;
+                    border: none;
+                }
+            }
+
+            .copy-config-btn {
+                position: absolute;
+                top: 0.5rem;
+                right: 0.5rem;
+                color: $secondary-light;
+
+                &:hover {
+                    color: $primary;
+                }
+            }
+        }
+
+        .notice {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 0.5rem;
+            padding: 1rem;
+
+            ul {
+                margin: 0;
+                padding-left: 1.5rem;
+                color: $secondary;
+
+                li {
+                    margin-bottom: 0.5rem;
+                    line-height: 1.5;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        width: 95vw;
+
+        .api-docs-content {
+            .endpoint-group {
+                .endpoint-item {
+                    .endpoint-url {
+                        flex-direction: column;
+                        align-items: stretch;
+                        gap: 0.75rem;
+
+                        code {
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+
+            .config-example {
+                .copy-config-btn {
+                    position: static;
+                    margin-top: 1rem;
+                    width: 100%;
+                }
+            }
+        }
+    }
 }
 </style>
