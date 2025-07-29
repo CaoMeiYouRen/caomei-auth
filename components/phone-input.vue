@@ -136,6 +136,7 @@ watch(() => props.modelValue, (newValue) => {
 
     .form-dropdown {
         padding: 2px;
+        line-height: 1.5;
     }
 }
 </style>

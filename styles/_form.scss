@@ -17,11 +17,14 @@
     border-radius: 8px;
     transition: border-color 0.2s, box-shadow 0.2s;
     font-size: 1rem;
+    // overflow: hidden;
+    line-height: 1.5;
 }
 
 .form-input:focus {
     border-color: $primary;
     box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+    outline: none;
 }
 
 .card {
