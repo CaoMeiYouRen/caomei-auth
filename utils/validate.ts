@@ -1,6 +1,7 @@
 import isEmail from 'validator/es/lib/isEmail'
 import isMobilePhone from 'validator/es/lib/isMobilePhone'
 import isStrongPassword from 'validator/es/lib/isStrongPassword'
+import isURL from 'validator/es/lib/isURL'
 
 // 判断是否为邮箱。
 export function validateEmail(email: string): boolean {
@@ -25,12 +26,17 @@ export function validatePhone(phone: string, locale: 'any' | validator.MobilePho
 }
 
 export function validateUrl(url: string): boolean {
-    try {
-        const u = new URL(url)
-        return u.protocol === 'http:' || u.protocol === 'https:'
-    } catch {
-        return false
-    }
+    return isURL(url, {
+        protocols: ['http', 'https'], // 只允许 http 和 https 协议
+        require_protocol: true, // 要求 URL 包含协议
+        require_host: true, // 要求 URL 包含主机名
+        require_tld: false, // 是否要求顶级域名。出于开发和测试目的，设置为 false
+        require_valid_protocol: true, // 要求协议有效
+        allow_underscores: false, // 不允许下划线
+        allow_trailing_dot: false, // 不允许结尾有点号
+        allow_query_components: true, // 允许查询组件
+        allow_fragments: true, // 允许片段标识符
+    })
 }
 
 // 判断是否为合法的用户名

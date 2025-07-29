@@ -818,6 +818,7 @@ import { ref, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { debounce } from 'lodash-es'
 import { authClient } from '@/lib/auth-client'
+import { validateEmail, validateUrl } from '@/utils/validate'
 
 definePageMeta({
     title: '应用管理 - 草梅 Auth',
@@ -1009,9 +1010,7 @@ function validateForm() {
 
     // 验证重定向URL格式
     for (const uri of formData.value.redirect_uris) {
-        try {
-            new URL(uri)
-        } catch {
+        if (!validateUrl(uri)) {
             errors.push(`重定向URL格式无效：${uri}`)
         }
     }
@@ -1053,9 +1052,7 @@ function validateForm() {
     for (const { field, name } of urlFields) {
         const value = formData.value[field as keyof typeof formData.value] as string
         if (value && value.trim()) {
-            try {
-                new URL(value)
-            } catch {
+            if (!validateUrl(value)) {
                 errors.push(`${name}格式无效：${value}`)
             }
         }
@@ -1063,7 +1060,7 @@ function validateForm() {
 
     // 验证邮箱格式
     for (const email of formData.value.contacts) {
-        if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+        if (email && !validateEmail(email)) {
             errors.push(`联系邮箱格式无效：${email}`)
         }
     }
