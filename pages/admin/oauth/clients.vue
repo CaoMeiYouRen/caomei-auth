@@ -112,6 +112,14 @@
                             </div>
                         </template>
                     </Column>
+                    <Column field="disabled" header="状态">
+                        <template #body="{data}">
+                            <Tag
+                                :value="data.disabled ? '已禁用' : '已启用'"
+                                :severity="data.disabled ? 'danger' : 'success'"
+                            />
+                        </template>
+                    </Column>
                     <Column field="createdAt" header="创建时间">
                         <template #body="{data}">
                             {{ new Date(data.createdAt).toLocaleString() }}
@@ -120,11 +128,25 @@
                     <Column header="操作">
                         <template #body="{data}">
                             <Button
+                                v-tooltip.top="'查看详情'"
+                                icon="mdi mdi-eye"
+                                class="p-button-text"
+                                @click="viewApplication(data)"
+                            />
+                            <Button
+                                v-tooltip.top="'编辑'"
                                 icon="mdi mdi-pencil"
                                 class="p-button-text"
                                 @click="editApplication(data)"
                             />
                             <Button
+                                v-tooltip.top="data.disabled ? '启用应用' : '禁用应用'"
+                                :icon="data.disabled ? 'mdi mdi-play' : 'mdi mdi-pause'"
+                                :class="data.disabled ? 'p-button-success p-button-text' : 'p-button-warning p-button-text'"
+                                @click="toggleApplicationStatus(data)"
+                            />
+                            <Button
+                                v-tooltip.top="'删除'"
                                 icon="mdi mdi-delete"
                                 class="p-button-danger p-button-text"
                                 @click="deleteApplication(data)"
@@ -352,6 +374,24 @@
                     />
                     <small class="helper-text">当前应用的版本号</small>
                 </div>
+                <div v-if="editing" class="form-group">
+                    <label for="disabled">应用状态</label>
+                    <div class="align-items-center flex gap-2">
+                        <ToggleButton
+                            id="disabled"
+                            v-model="formData.disabled"
+                            on-label="已禁用"
+                            off-label="已启用"
+                            on-icon="mdi mdi-pause"
+                            off-icon="mdi mdi-play"
+                            :class="formData.disabled ? 'p-button-danger' : 'p-button-success'"
+                        />
+                        <span class="text-muted">
+                            {{ formData.disabled ? '应用当前已禁用，无法进行OAuth授权' : '应用当前已启用，可正常使用' }}
+                        </span>
+                    </div>
+                    <small class="helper-text">禁用应用后，该应用将无法进行OAuth授权流程</small>
+                </div>
             </form>
             <template #footer>
                 <Button
@@ -363,6 +403,194 @@
                     :label="editing ? '保存' : '创建'"
                     :loading="submitting"
                     @click="submitApplication"
+                />
+            </template>
+        </Dialog>
+
+        <!-- 查看应用详情对话框 -->
+        <Dialog
+            v-model:visible="showViewDialog"
+            header="应用详情"
+            :modal="true"
+            class="view-dialog"
+        >
+            <div v-if="selectedApp" class="view-content">
+                <div class="app-basic-info">
+                    <div class="app-header">
+                        <img
+                            v-if="selectedApp.logoUri"
+                            :src="selectedApp.logoUri"
+                            :alt="selectedApp.name"
+                            class="app-logo"
+                        >
+                        <div class="app-details">
+                            <h3 class="app-name">
+                                {{ selectedApp.name }}
+                            </h3>
+                            <p v-if="selectedApp.description" class="app-description">
+                                {{ selectedApp.description }}
+                            </p>
+                            <div class="app-status">
+                                <Tag
+                                    :value="selectedApp.disabled ? '已禁用' : '已启用'"
+                                    :severity="selectedApp.disabled ? 'danger' : 'success'"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-info-grid">
+                    <div class="info-group">
+                        <h4>基本信息</h4>
+                        <div class="info-item">
+                            <label>Client ID</label>
+                            <div class="value-with-copy">
+                                <code class="client-id">{{ selectedApp.clientId }}</code>
+                                <Button
+                                    icon="mdi mdi-content-copy"
+                                    class="p-button-sm p-button-text"
+                                    @click="copyToClipboard(selectedApp.clientId)"
+                                />
+                            </div>
+                        </div>
+                        <div v-if="selectedApp.clientUri" class="info-item">
+                            <label>应用主页</label>
+                            <a
+                                :href="selectedApp.clientUri"
+                                target="_blank"
+                                class="info-link"
+                            >
+                                {{ selectedApp.clientUri }}
+                                <i class="mdi mdi-open-in-new" />
+                            </a>
+                        </div>
+                        <div class="info-item">
+                            <label>创建时间</label>
+                            <span>{{ new Date(selectedApp.createdAt).toLocaleString() }}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>更新时间</label>
+                            <span>{{ new Date(selectedApp.updatedAt).toLocaleString() }}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-group">
+                        <h4>OAuth 配置</h4>
+                        <div class="info-item">
+                            <label>授权范围</label>
+                            <div class="scope-tags">
+                                <Tag
+                                    v-for="scope in (selectedApp.scope || '').split(' ').filter((s: string) => s)"
+                                    :key="scope"
+                                    :value="scope"
+                                    severity="secondary"
+                                    class="scope-tag"
+                                />
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <label>重定向 URLs</label>
+                            <div class="url-list">
+                                <div
+                                    v-for="(url, index) in (selectedApp.redirectURLs || '').split(',')"
+                                    :key="index"
+                                    class="url-item"
+                                >
+                                    <code>{{ url.trim() }}</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <label>认证方式</label>
+                            <span>{{ selectedApp.tokenEndpointAuthMethod || 'client_secret_basic' }}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>授权类型</label>
+                            <div class="tag-list">
+                                <Tag
+                                    v-for="type in (selectedApp.grantTypes || 'authorization_code').split(',')"
+                                    :key="type"
+                                    :value="type.trim()"
+                                    severity="info"
+                                />
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <label>响应类型</label>
+                            <div class="tag-list">
+                                <Tag
+                                    v-for="type in (selectedApp.responseTypes || 'code').split(',')"
+                                    :key="type"
+                                    :value="type.trim()"
+                                    severity="info"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="selectedApp.contacts || selectedApp.tosUri || selectedApp.policyUri" class="info-group">
+                        <h4>联系方式与政策</h4>
+                        <div v-if="selectedApp.contacts" class="info-item">
+                            <label>联系邮箱</label>
+                            <div class="contact-list">
+                                <a
+                                    v-for="(email, index) in (selectedApp.contacts || '').split(',')"
+                                    :key="index"
+                                    :href="`mailto:${email.trim()}`"
+                                    class="contact-email"
+                                >
+                                    {{ email.trim() }}
+                                </a>
+                            </div>
+                        </div>
+                        <div v-if="selectedApp.tosUri" class="info-item">
+                            <label>服务条款</label>
+                            <a
+                                :href="selectedApp.tosUri"
+                                target="_blank"
+                                class="info-link"
+                            >
+                                {{ selectedApp.tosUri }}
+                                <i class="mdi mdi-open-in-new" />
+                            </a>
+                        </div>
+                        <div v-if="selectedApp.policyUri" class="info-item">
+                            <label>隐私政策</label>
+                            <a
+                                :href="selectedApp.policyUri"
+                                target="_blank"
+                                class="info-link"
+                            >
+                                {{ selectedApp.policyUri }}
+                                <i class="mdi mdi-open-in-new" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div v-if="selectedApp.softwareId || selectedApp.softwareVersion" class="info-group">
+                        <h4>软件信息</h4>
+                        <div v-if="selectedApp.softwareId" class="info-item">
+                            <label>软件ID</label>
+                            <span>{{ selectedApp.softwareId }}</span>
+                        </div>
+                        <div v-if="selectedApp.softwareVersion" class="info-item">
+                            <label>软件版本</label>
+                            <span>{{ selectedApp.softwareVersion }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <Button
+                    label="编辑"
+                    icon="mdi mdi-pencil"
+                    @click="showViewDialog = false; editApplication(selectedApp)"
+                />
+                <Button
+                    label="关闭"
+                    class="p-button-text"
+                    @click="showViewDialog = false"
                 />
             </template>
         </Dialog>
@@ -602,10 +830,12 @@ const toast = useToast()
 const showCreateDialog = ref(false)
 const showDeleteDialog = ref(false)
 const showSecretDialog = ref(false)
+const showViewDialog = ref(false)
 const showApiDocsDialog = ref(false)
 const editing = ref(false)
 const submitting = ref(false)
 const deleting = ref(false)
+const toggling = ref(false)
 const selectedApp = ref<any>(null)
 const createdApplication = ref<any>(null)
 
@@ -697,6 +927,7 @@ const formData = ref({
     response_types: ['code'] as ('code')[],
     software_id: '',
     software_version: '',
+    disabled: false,
 })
 
 // 使用 useFetch 进行 SSR 优化的数据获取
@@ -732,6 +963,7 @@ function editApplication(app: any) {
         response_types: app.responseTypes ? app.responseTypes.split(',').filter((type: string) => type === 'code') as ('code')[] : ['code'],
         software_id: app.softwareId || '',
         software_version: app.softwareVersion || '',
+        disabled: app.disabled || false,
     }
     // 同步更新输入框的值
     redirectUrlsInput.value = formData.value.redirect_uris.join(',')
@@ -755,6 +987,7 @@ function resetForm() {
         response_types: ['code'],
         software_id: '',
         software_version: '',
+        disabled: false,
     }
     // 重置输入框的值
     redirectUrlsInput.value = ''
@@ -874,6 +1107,7 @@ async function submitApplication() {
             response_types: formData.value.response_types,
             software_id: formData.value.software_id,
             software_version: formData.value.software_version,
+            disabled: formData.value.disabled,
         }
 
         let data
@@ -881,7 +1115,7 @@ async function submitApplication() {
 
         if (editing.value) {
             // 编辑现有应用
-            const response = await $fetch('/api/oauth/applications', {
+            const response = await $fetch(`/api/oauth/applications/${selectedApp.value.id}`, {
                 method: 'PUT',
                 body: payload,
             })
@@ -990,6 +1224,42 @@ async function copyToClipboard(text: string) {
             detail: '无法复制到剪贴板',
             life: 2000,
         })
+    }
+}
+
+function viewApplication(app: any) {
+    selectedApp.value = app
+    showViewDialog.value = true
+}
+
+async function toggleApplicationStatus(app: any) {
+    try {
+        toggling.value = true
+
+        await $fetch(`/api/oauth/applications/${app.id}`, {
+            method: 'PUT',
+            body: {
+                disabled: !app.disabled,
+            },
+        })
+
+        toast.add({
+            severity: 'success',
+            summary: '成功',
+            detail: `应用已${app.disabled ? '启用' : '禁用'}`,
+            life: 3000,
+        })
+
+        await refreshApplications()
+    } catch (error: any) {
+        toast.add({
+            severity: 'error',
+            summary: '错误',
+            detail: error.message || '操作失败',
+            life: 3000,
+        })
+    } finally {
+        toggling.value = false
     }
 }
 
@@ -1629,6 +1899,186 @@ function goProfile() {
                     position: static;
                     margin-top: 1rem;
                     width: 100%;
+                }
+            }
+        }
+    }
+}
+
+.view-dialog {
+    width: 90vw;
+    max-width: 900px;
+
+    .view-content {
+        .app-basic-info {
+            margin-bottom: 2rem;
+
+            .app-header {
+                display: flex;
+                align-items: flex-start;
+                gap: 1rem;
+
+                .app-logo {
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 8px;
+                    object-fit: cover;
+                    flex-shrink: 0;
+                }
+
+                .app-details {
+                    flex: 1;
+
+                    .app-name {
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                        color: $primary;
+                        margin: 0 0 0.5rem 0;
+                    }
+
+                    .app-description {
+                        color: $secondary-light;
+                        margin: 0 0 1rem 0;
+                        line-height: 1.5;
+                    }
+
+                    .app-status {
+                        margin-top: 1rem;
+                    }
+                }
+            }
+        }
+
+        .app-info-grid {
+            display: grid;
+            gap: 2rem;
+
+            .info-group {
+                background: #f8fafc;
+                border-radius: 8px;
+                padding: 1.5rem;
+
+                h4 {
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: $primary;
+                    margin: 0 0 1rem 0;
+                    padding-bottom: 0.5rem;
+                    border-bottom: 2px solid #e2e8f0;
+                }
+
+                .info-item {
+                    margin-bottom: 1rem;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+
+                    label {
+                        display: block;
+                        font-weight: 600;
+                        color: $secondary;
+                        margin-bottom: 0.5rem;
+                        font-size: 0.875rem;
+                    }
+
+                    .value-with-copy {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+
+                        .client-id {
+                            font-family: 'Courier New', monospace;
+                            background: white;
+                            padding: 0.5rem;
+                            border-radius: 0.25rem;
+                            font-size: 0.875rem;
+                            border: 1px solid #e2e8f0;
+                        }
+                    }
+
+                    .info-link {
+                        color: $primary;
+                        text-decoration: none;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+
+                        i {
+                            margin-left: 0.25rem;
+                            font-size: 0.875rem;
+                        }
+                    }
+
+                    .scope-tags, .tag-list {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 0.25rem;
+
+                        .scope-tag {
+                            font-size: 0.75rem;
+                        }
+                    }
+
+                    .url-list {
+                        .url-item {
+                            margin-bottom: 0.5rem;
+
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+
+                            code {
+                                background: white;
+                                padding: 0.5rem;
+                                border-radius: 0.25rem;
+                                font-size: 0.875rem;
+                                border: 1px solid #e2e8f0;
+                                display: block;
+                                word-break: break-all;
+                            }
+                        }
+                    }
+
+                    .contact-list {
+                        .contact-email {
+                            display: inline-block;
+                            color: $primary;
+                            text-decoration: none;
+                            margin-right: 1rem;
+                            margin-bottom: 0.5rem;
+
+                            &:hover {
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        width: 95vw;
+
+        .view-content {
+            .app-basic-info {
+                .app-header {
+                    flex-direction: column;
+                    text-align: center;
+
+                    .app-logo {
+                        align-self: center;
+                    }
+                }
+            }
+
+            .app-info-grid {
+                gap: 1rem;
+
+                .info-group {
+                    padding: 1rem;
                 }
             }
         }

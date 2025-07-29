@@ -4,6 +4,7 @@ import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import { generateRandomString } from '@/server/utils/random'
 import { generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
+import { snowflake } from '@/server/utils/snowflake'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -32,6 +33,7 @@ export default defineEventHandler(async (event) => {
             name,
             redirectURLs,
             type = 'web',
+            disabled = false, // 新应用默认启用
         } = body
 
         // 使用新字段或向后兼容的旧字段
@@ -84,6 +86,7 @@ export default defineEventHandler(async (event) => {
         application.softwareVersion = software_version || ''
         application.softwareStatement = software_statement || ''
         application.type = type
+        application.disabled = disabled
         application.userId = auth.data?.userId || ''
 
         await dataSource.getRepository(OAuthApplication).save(application)
@@ -111,6 +114,7 @@ export default defineEventHandler(async (event) => {
             software_version: application.softwareVersion,
             software_statement: application.softwareStatement,
             metadata: application.metadata ? JSON.parse(application.metadata) : metadata,
+            disabled: application.disabled,
         }
 
         return {
