@@ -122,7 +122,7 @@
                                 </div>
                                 <div class="user-details">
                                     <div class="user-name">
-                                        {{ data.name || '未设置姓名' }}
+                                        {{ data.name || '未设置昵称' }}
                                         <div class="verification-tags">
                                             <Tag
                                                 v-if="data.emailVerified"
@@ -274,11 +274,11 @@
         >
             <form class="create-user-form" @submit.prevent="createUser">
                 <div class="field">
-                    <label for="createName">姓名</label>
+                    <label for="createName">昵称</label>
                     <InputText
                         id="createName"
                         v-model="createForm.name"
-                        placeholder="请输入用户姓名"
+                        placeholder="请输入用户昵称"
                         required
                     />
                 </div>
@@ -358,7 +358,7 @@
                             <span>{{ viewingUser.id }}</span>
                         </div>
                         <div class="detail-item">
-                            <label>姓名</label>
+                            <label>昵称</label>
                             <span>{{ viewingUser.name || '未设置' }}</span>
                         </div>
                         <div class="detail-item">

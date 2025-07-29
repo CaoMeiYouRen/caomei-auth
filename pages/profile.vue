@@ -509,7 +509,7 @@ watch(
         if (newUser) {
             Object.assign(user, {
                 id: newUser.id,
-                username: newUser.username || '',
+                username: newUser.displayUsername || '',
                 nickname: newUser.name || '',
                 avatar: newUser.image || '',
                 email: newUser.email || '',
