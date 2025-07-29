@@ -46,10 +46,9 @@
 
                     <!-- 已启用状态 -->
                     <div v-if="userSession?.user.twoFactorEnabled && !showTotpSetup && !showBackupCodes">
-                        <Alert severity="success" class="mb-4">
-                            <i class="mdi mdi-shield-check mr-2" />
+                        <Message severity="success" icon="mdi mdi-shield-check">
                             <span>已启用双因素认证，您的账号受到更好的保护</span>
-                        </Alert>
+                        </Message>
                         <div class="security-actions">
                             <Button
                                 class="btn btn-danger"
@@ -102,10 +101,9 @@
                         <h4 class="backup-title mb-3">
                             备份恢复码
                         </h4>
-                        <Alert severity="info" class="mb-4">
-                            <i class="mdi mdi-information mr-2" />
+                        <Message severity="info" icon="mdi mdi-information">
                             <span>请妥善保管以下恢复码，当您无法访问验证器时，可使用这些恢复码登录。每个恢复码只能使用一次。</span>
-                        </Alert>
+                        </Message>
 
                         <div class="backup-codes-list mb-4">
                             <div
