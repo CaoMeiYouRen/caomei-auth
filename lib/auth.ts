@@ -11,6 +11,7 @@ import {
     genericOAuth,
     twoFactor,
     oidcProvider,
+    jwt,
 } from 'better-auth/plugins'
 import ms from 'ms'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
@@ -619,6 +620,15 @@ export const auth = betterAuth({
             // 受信任的客户端可以绕过数据库查询以获得更好的性能，并且可以选择跳过同意屏幕以改善用户体验
             trustedClients: [],
         }),
+        jwt({
+            jwks: {
+                // 用于生成密钥对的算法
+                keyPairConfig: {
+                    alg: 'EdDSA',
+                    crv: 'Ed25519',
+                },
+            },
+        }), // 支持 JWT 认证
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},
 })
