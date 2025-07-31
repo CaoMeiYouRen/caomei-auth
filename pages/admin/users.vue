@@ -205,6 +205,7 @@
                     <Column header="操作" header-style="width: 14rem">
                         <template #body="{data}">
                             <div class="action-buttons">
+                                <!-- 查看详情 - 所有用户都可以查看 -->
                                 <Button
                                     v-tooltip="'查看详情'"
                                     icon="mdi mdi-eye"
@@ -213,6 +214,8 @@
                                     size="small"
                                     @click="viewUser(data)"
                                 />
+
+                                <!-- 同步管理员角色 - 所有用户都可以同步 -->
                                 <Button
                                     v-tooltip="'同步管理员角色'"
                                     icon="mdi mdi-sync"
@@ -221,69 +224,86 @@
                                     size="small"
                                     @click="syncUserAdminRole(data)"
                                 />
-                                <Button
-                                    v-if="!data.banned && data.role !== 'admin' && !isCurrentUser(data.id)"
-                                    v-tooltip="'禁用用户'"
-                                    icon="mdi mdi-block-helper"
-                                    severity="warning"
-                                    outlined
-                                    size="small"
-                                    @click="banUser(data)"
-                                />
-                                <Button
-                                    v-else-if="!data.banned && isCurrentUser(data.id)"
-                                    v-tooltip="'不能禁用自己'"
-                                    icon="mdi mdi-block-helper"
-                                    severity="warning"
-                                    outlined
-                                    size="small"
-                                    disabled
-                                />
-                                <Button
-                                    v-else-if="data.banned && data.role !== 'admin' && !isCurrentUser(data.id)"
-                                    v-tooltip="'解禁用户'"
-                                    icon="mdi mdi-check-circle"
-                                    severity="success"
-                                    outlined
-                                    size="small"
-                                    @click="unbanUser(data)"
-                                />
-                                <Button
-                                    v-if="data.role !== 'admin' && !isCurrentUser(data.id)"
-                                    v-tooltip="'删除用户'"
-                                    icon="mdi mdi-delete"
-                                    severity="danger"
-                                    outlined
-                                    size="small"
-                                    @click="deleteUser(data)"
-                                />
-                                <Button
-                                    v-else-if="isCurrentUser(data.id)"
-                                    v-tooltip="'不能删除自己'"
-                                    icon="mdi mdi-delete"
-                                    severity="danger"
-                                    outlined
-                                    size="small"
-                                    disabled
-                                />
-                                <Button
-                                    v-if="data.role === 'admin' && !data.banned"
-                                    v-tooltip="'管理员不可禁用'"
-                                    icon="mdi mdi-block-helper"
-                                    severity="warning"
-                                    outlined
-                                    size="small"
-                                    disabled
-                                />
-                                <Button
-                                    v-if="data.role === 'admin'"
-                                    v-tooltip="'管理员不可删除'"
-                                    icon="mdi mdi-delete"
-                                    severity="danger"
-                                    outlined
-                                    size="small"
-                                    disabled
-                                />
+
+                                <!-- 禁用/解禁按钮 -->
+                                <template v-if="data.role === 'admin'">
+                                    <!-- 管理员不可禁用 -->
+                                    <Button
+                                        v-tooltip="'管理员不可禁用'"
+                                        icon="mdi mdi-block-helper"
+                                        severity="warning"
+                                        outlined
+                                        size="small"
+                                        disabled
+                                    />
+                                </template>
+                                <template v-else-if="isCurrentUser(data.id)">
+                                    <!-- 不能禁用自己 -->
+                                    <Button
+                                        v-tooltip="'不能禁用自己'"
+                                        icon="mdi mdi-block-helper"
+                                        severity="warning"
+                                        outlined
+                                        size="small"
+                                        disabled
+                                    />
+                                </template>
+                                <template v-else>
+                                    <!-- 普通用户的禁用/解禁 -->
+                                    <Button
+                                        v-if="!data.banned"
+                                        v-tooltip="'禁用用户'"
+                                        icon="mdi mdi-block-helper"
+                                        severity="warning"
+                                        outlined
+                                        size="small"
+                                        @click="banUser(data)"
+                                    />
+                                    <Button
+                                        v-else
+                                        v-tooltip="'解禁用户'"
+                                        icon="mdi mdi-check-circle"
+                                        severity="success"
+                                        outlined
+                                        size="small"
+                                        @click="unbanUser(data)"
+                                    />
+                                </template>
+
+                                <!-- 删除按钮 -->
+                                <template v-if="data.role === 'admin'">
+                                    <!-- 管理员不可删除 -->
+                                    <Button
+                                        v-tooltip="'管理员不可删除'"
+                                        icon="mdi mdi-delete"
+                                        severity="danger"
+                                        outlined
+                                        size="small"
+                                        disabled
+                                    />
+                                </template>
+                                <template v-else-if="isCurrentUser(data.id)">
+                                    <!-- 不能删除自己 -->
+                                    <Button
+                                        v-tooltip="'不能删除自己'"
+                                        icon="mdi mdi-delete"
+                                        severity="danger"
+                                        outlined
+                                        size="small"
+                                        disabled
+                                    />
+                                </template>
+                                <template v-else>
+                                    <!-- 普通用户可以删除 -->
+                                    <Button
+                                        v-tooltip="'删除用户'"
+                                        icon="mdi mdi-delete"
+                                        severity="danger"
+                                        outlined
+                                        size="small"
+                                        @click="deleteUser(data)"
+                                    />
+                                </template>
                             </div>
                         </template>
                     </Column>
