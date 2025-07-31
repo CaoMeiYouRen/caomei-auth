@@ -14,6 +14,8 @@ interface ImportMetaEnv {
     readonly NUXT_PUBLIC_PHONE_ENABLED: string
     readonly NUXT_PUBLIC_SENTRY_DSN: string
     readonly NUXT_PUBLIC_CLARITY_PROJECT_ID: string
+    readonly NUXT_PUBLIC_CONTACT_EMAIL: string
+    readonly NUXT_PUBLIC_APP_NAME: string
 }
 
 interface ImportMeta {
