@@ -29,10 +29,10 @@ export default defineConfig({
             { text: '开发文档', link: '/docs/development/' },
             { text: 'API 文档', link: '/docs/api/' },
             { text: '项目规划', link: '/docs/PLAN' },
+            { text: '更新日志', link: 'https://github.com/CaoMeiYouRen/caomei-auth/blob/master/CHANGELOG.md' },
             {
                 text: '更多',
                 items: [
-                    { text: '更新日志', link: 'https://github.com/CaoMeiYouRen/caomei-auth/blob/master/CHANGELOG.md' },
                     { text: '贡献指南', link: '/contributing' },
                     { text: '安全政策', link: '/security' },
                     { text: '行为准则', link: '/code-of-conduct' }
