@@ -57,13 +57,22 @@ export default defineConfig({
                     ]
                 },
                 {
-                    text: '集成指南',
-                    collapsed: true,
+                    text: '开发指南',
                     items: [
+                        { text: '指南概览', link: '/docs/developer/guides/' },
+                        { text: '数据库关系', link: '/docs/developer/guides/database-relations' },
+                        { text: '管理员角色同步', link: '/docs/developer/guides/admin-role-sync' },
                         { text: '部署指南', link: '/docs/developer/guides/deployment' },
                         { text: '最佳实践', link: '/docs/developer/guides/best-practices' },
                         { text: '故障排除', link: '/docs/developer/guides/troubleshooting' },
                         { text: '常见问题', link: '/docs/developer/guides/faq' }
+                    ]
+                },
+                {
+                    text: '第三方集成',
+                    items: [
+                        { text: '集成概览', link: '/docs/developer/guides/integrations/' },
+                        { text: 'Microsoft Clarity', link: '/docs/developer/guides/integrations/clarity' }
                     ]
                 }
             ],
@@ -100,10 +109,7 @@ export default defineConfig({
                 {
                     text: '项目文档',
                     items: [
-                        { text: '项目规划', link: '/docs/PLAN' },
-                        { text: '数据库关系', link: '/docs/database-relations' },
-                        { text: 'Clarity 集成', link: '/docs/clarity-integration' },
-                        { text: '管理员角色同步', link: '/docs/admin-role-sync' }
+                        { text: '项目规划', link: '/docs/PLAN' }
                     ]
                 }
             ]
