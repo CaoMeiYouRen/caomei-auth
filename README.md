@@ -20,7 +20,11 @@
 
 ## 🏠 主页
 
-[https://github.com/CaoMeiYouRen/caomei-auth#readme](https://github.com/CaoMeiYouRen/caomei-auth#readme)
+-   **主站**: [https://auth.cmyr.dev/](https://auth.cmyr.dev/)
+
+## 📃 文档
+
+-   **文档站点**: [https://auth-docs.cmyr.dev/](https://auth-docs.cmyr.dev/)
 
 ## 📦 依赖要求
 

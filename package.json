@@ -15,7 +15,7 @@
     "prepare": "husky install",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "docs:dev": "vitepress dev",
+    "docs:dev": "vitepress dev --open",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
   },
