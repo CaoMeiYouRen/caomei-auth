@@ -72,7 +72,8 @@ export default defineConfig({
                     text: '第三方集成',
                     items: [
                         { text: '集成概览', link: '/docs/developer/guides/integrations/' },
-                        { text: 'Microsoft Clarity', link: '/docs/developer/guides/integrations/clarity' }
+                        { text: 'Microsoft Clarity', link: '/docs/developer/guides/integrations/clarity' },
+                        { text: 'Sentry', link: '/docs/developer/guides/integrations/sentry' }
                     ]
                 }
             ],

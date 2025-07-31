@@ -7,10 +7,10 @@
 ### 分析和监控
 
 -   [Microsoft Clarity 集成](./clarity.md) - 行为分析和会话回放工具集成
+-   [Sentry 集成](./sentry.md) - 错误监控和性能跟踪工具集成
 
 ## 即将推出
 
--   Sentry 错误监控集成
 -   Google Analytics 集成
 -   第三方短信服务集成
 -   第三方邮件服务集成
