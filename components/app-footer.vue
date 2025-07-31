@@ -86,6 +86,14 @@
                 >
                     联系我们
                 </NuxtLink>
+                <NuxtLink
+                    to="https://auth-docs.cmyr.dev/"
+                    external
+                    class="app-footer__bottom-link"
+                >
+                    项目文档
+                </NuxtLink>
+
                 <!-- ICP 备案号 -->
                 <div v-if="icpBeianNumber">
                     <NuxtLink

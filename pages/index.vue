@@ -3,13 +3,21 @@
         <AuthLeft title="草梅 Auth 统一登录平台" subtitle="基于 Nuxt 3 的现代化统一登录平台，支持多种登录注册方式，安全、便捷、可扩展。">
             <template #content>
                 <div class="auth-links">
-                    <a
-                        href="https://github.com/CaoMeiYouRen/caomei-auth"
+                    <NuxtLink
+                        to="https://github.com/CaoMeiYouRen/caomei-auth"
                         target="_blank"
                         class="project-link"
                     >
                         <i class="mdi mdi-github" /> GitHub 项目地址
-                    </a>
+                    </NuxtLink>
+                    <br>
+                    <NuxtLink
+                        to="https://auth-docs.cmyr.dev/"
+                        target="_blank"
+                        class="project-link"
+                    >
+                        <i class="mdi mdi-book" /> 项目文档
+                    </NuxtLink>
                 </div>
             </template>
         </AuthLeft>
