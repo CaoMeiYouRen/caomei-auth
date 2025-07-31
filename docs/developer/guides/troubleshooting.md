@@ -186,7 +186,7 @@
     import { parsePhoneNumber } from "libphonenumber-js";
 
     try {
-        const phoneNumber = parsePhoneNumber("+86 13800138000");
+        const phoneNumber = parsePhoneNumber("+86 12312345678");
         console.log("Valid:", phoneNumber.isValid());
         console.log("Format:", phoneNumber.format("E.164"));
     } catch (error) {

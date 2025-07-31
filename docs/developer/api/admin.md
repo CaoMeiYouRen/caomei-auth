@@ -54,7 +54,7 @@ Authorization: Bearer <access_token>
                 "name": "用户名",
                 "email": "user@example.com",
                 "username": "username",
-                "phoneNumber": "+86 13800138000",
+                "phoneNumber": "+86 12312345678",
                 "phoneNumberVerified": true,
                 "emailVerified": true,
                 "image": "https://example.com/avatar.jpg",

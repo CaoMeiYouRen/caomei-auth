@@ -60,8 +60,10 @@ export default defineConfig({
                     text: '集成指南',
                     collapsed: true,
                     items: [
+                        { text: '部署指南', link: '/docs/developer/guides/deployment' },
                         { text: '最佳实践', link: '/docs/developer/guides/best-practices' },
-                        { text: '故障排除', link: '/docs/developer/guides/troubleshooting' }
+                        { text: '故障排除', link: '/docs/developer/guides/troubleshooting' },
+                        { text: '常见问题', link: '/docs/developer/guides/faq' }
                     ]
                 }
             ],

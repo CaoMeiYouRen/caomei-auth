@@ -137,14 +137,6 @@ try {
 
 草梅 Auth 支持多种存储后端，通过环境变量进行配置：
 
-### 本地存储 (默认)
-
-```env
-STORAGE_TYPE=local
-STORAGE_LOCAL_PATH=./uploads
-STORAGE_LOCAL_URL_PREFIX=https://your-domain.com/uploads
-```
-
 ### AWS S3
 
 ```env
