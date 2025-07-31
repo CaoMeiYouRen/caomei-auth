@@ -14,7 +14,10 @@
     "commit": "cz",
     "prepare": "husky install",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.850.0",
@@ -107,6 +110,7 @@
     "stylelint-scss": "^4.3.0",
     "typescript": "^5.8.3",
     "vite": "^6.0.1",
+    "vitepress": "^1.6.3",
     "vitest": "^2.1.6"
   },
   "author": "CaoMeiYouRen",
