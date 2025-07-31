@@ -13,12 +13,7 @@
 - [用户 API](/docs/api/users) - 用户信息管理
 - [OAuth API](/docs/api/oauth) - OAuth2.0 授权服务
 
-### 🛠️ SDK 和示例
-- [JavaScript SDK](/docs/sdk/javascript) - 前端集成
-- [Python SDK](/docs/sdk/python) - 后端集成
-- [PHP SDK](/docs/sdk/php) - 后端集成
-
-### 📖 集成指南
+###  集成指南
 - [Web 应用集成](/docs/guides/web-integration) - 网站集成指南
 - [移动应用集成](/docs/guides/mobile-integration) - 移动App集成
 - [最佳实践](/docs/guides/best-practices) - 安全和性能建议

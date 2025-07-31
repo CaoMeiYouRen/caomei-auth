@@ -49,16 +49,9 @@ export default defineConfig({
                 {
                     text: 'API 文档',
                     items: [
-                        { text: '认证 API', link: '/docs/developer/api/authentication' }
-                    ]
-                },
-                {
-                    text: 'SDK 文档',
-                    collapsed: true,
-                    items: [
-                        { text: 'JavaScript SDK', link: '/docs/developer/sdk/javascript' },
-                        { text: 'Python SDK', link: '/docs/developer/sdk/python' },
-                        { text: 'PHP SDK', link: '/docs/developer/sdk/php' }
+                        { text: '认证 API', link: '/docs/developer/api/authentication' },
+                        { text: 'OAuth API', link: '/docs/developer/api/oauth' },
+                        { text: '用户管理 API', link: '/docs/developer/api/users' }
                     ]
                 },
                 {
