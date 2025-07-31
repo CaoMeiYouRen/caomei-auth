@@ -80,7 +80,12 @@
     -   ~~权限管理 `/admin/roles`：角色、权限分配与管理。~~
     -   [x] 登录统计 `/admin/logs`：登录日志、活跃用户、异常登录等统计报表。
 
--   API 文档/开发者中心页 `/docs` 或 `/developer`：平台开放 API 及 SDK 文档说明。
+-   文档/开发者中心页 `/docs`：基于Markdown文件自动生成的API及SDK文档说明
+    -   `/docs` 或 `/docs/index`：文档首页，概览和快速导航
+    -   `/docs/getting-started`：快速开始指南
+    -   `/docs/api/*`：API文档（认证、用户、OAuth等）
+    -   `/docs/sdk/*`：SDK文档（JavaScript、Python、PHP等）
+    -   `/docs/guides/*`：集成指南、最佳实践、故障排除等
 -   [x] 统一错误页（如 404、403、500 等）
 -   其他辅助页面：
     -   [x] 隐私政策页 `/privacy`：展示平台隐私政策，说明用户数据收集、使用、存储和共享的方式，以及用户的权利和平台的责任。
