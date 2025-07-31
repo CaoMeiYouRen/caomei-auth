@@ -1,5 +1,7 @@
-import { checkAndSyncAdminRole, setUserAdminRole, removeUserAdminRole } from '@/server/utils/admin-role-sync'
+import { checkAndSyncAdminRole, checkAndSyncAdminRoleWithUser, setUserAdminRole, removeUserAdminRole } from '@/server/utils/admin-role-sync'
 import { auth } from '@/lib/auth'
+import { dataSource } from '@/server/database'
+import { User } from '@/server/entities/user'
 
 export default defineEventHandler(async (event) => {
     // 验证用户是否已登录
@@ -15,8 +17,20 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    // 验证用户是否有管理员权限
-    const isCurrentUserAdmin = await checkAndSyncAdminRole(session.user.id)
+    // 获取当前用户的完整信息以验证管理员权限
+    const userRepo = dataSource.getRepository(User)
+    const currentUser = await userRepo.findOne({ where: { id: session.user.id } })
+
+    if (!currentUser) {
+        throw createError({
+            statusCode: 404,
+            statusMessage: 'Not Found',
+            message: '当前用户不存在',
+        })
+    }
+
+    // 验证用户是否有管理员权限（使用已有的用户对象优化）
+    const isCurrentUserAdmin = await checkAndSyncAdminRoleWithUser(currentUser)
     if (!isCurrentUserAdmin) {
         throw createError({
             statusCode: 403,
@@ -50,7 +64,12 @@ export default defineEventHandler(async (event) => {
 
         switch (action) {
             case 'sync':
-                result = await checkAndSyncAdminRole(userId)
+                // 对于同步操作，如果目标用户和当前用户是同一个，直接使用已有的用户对象
+                if (userId === session.user.id) {
+                    result = await checkAndSyncAdminRoleWithUser(currentUser)
+                } else {
+                    result = await checkAndSyncAdminRole(userId)
+                }
                 message = result ? '管理员角色同步成功' : '同步失败，用户不存在或非管理员'
                 break
             case 'add':

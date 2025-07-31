@@ -17,8 +17,22 @@ export async function checkAndSyncAdminRole(userId: string): Promise<boolean> {
             return false
         }
 
+        return await checkAndSyncAdminRoleWithUser(user)
+    } catch (error) {
+        console.error('检查和同步管理员角色失败:', error)
+        return false
+    }
+}
+
+/**
+ * 检查用户是否为管理员，并自动同步角色信息（使用已有的用户对象）
+ * @param user 用户对象
+ * @returns 用户是否为管理员
+ */
+export async function checkAndSyncAdminRoleWithUser(user: User): Promise<boolean> {
+    try {
         // 检查用户是否在 adminUserIds 列表中
-        const isAdminUserId = ADMIN_USER_IDS.includes(userId)
+        const isAdminUserId = ADMIN_USER_IDS.includes(user.id)
 
         // 检查用户角色是否包含 admin
         const hasAdminRole = user.role?.includes('admin') || false
@@ -31,8 +45,11 @@ export async function checkAndSyncAdminRole(userId: string): Promise<boolean> {
             if (!currentRoles.includes('admin')) {
                 currentRoles.push('admin')
                 user.role = currentRoles.join(',')
+
+                // 保存到数据库
+                const userRepo = dataSource.getRepository(User)
                 await userRepo.save(user)
-                console.log(`自动为用户 ${userId} 添加管理员角色`)
+                console.log(`自动为用户 ${user.id} 添加管理员角色`)
             }
             return true
         }

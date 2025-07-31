@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth'
 import { publicPaths } from '@/utils/public-paths'
-import { checkAndSyncAdminRole } from '@/server/utils/admin-role-sync'
+import { checkAndSyncAdminRole, isUserAdmin } from '@/server/utils/admin-role-sync'
 
 export default defineEventHandler(async (event) => {
     const session = await auth.api.getSession({
@@ -33,7 +33,8 @@ export default defineEventHandler(async (event) => {
     }
     // console.log('event.path', event.path)
     if (event.path.startsWith('/api/auth/oauth2/register')) {
-        if (!session?.user?.role?.includes('admin')) {
+        // 使用轻量级的权限检查，避免额外的数据库查询
+        if (!session?.user || !isUserAdmin(session.user, session.user.id)) {
             // 如果不是管理员，拒绝访问
             throw createError({
                 statusCode: 403,

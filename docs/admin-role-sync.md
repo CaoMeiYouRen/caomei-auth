@@ -240,6 +240,40 @@ if (result.success) {
 4. **性能考虑**: 中间件中的自动同步是异步执行的，不会阻塞请求
 5. **日志记录**: 所有角色同步操作都会记录在控制台日志中
 
+## 性能优化 (v1.1.0)
+
+### 新增优化函数
+
+为了减少不必要的数据库查询，新增了优化版本的同步函数：
+
+#### `checkAndSyncAdminRoleWithUser(user: User)`
+
+使用已有的用户对象进行角色同步，避免重复查询：
+
+```typescript
+// 原来的方式 - 会重复查询数据库
+const user = await userRepo.findOne({ where: { id: userId } });
+const isAdmin = await checkAndSyncAdminRole(userId); // 内部又查询一次
+
+// 优化后的方式 - 复用已有对象
+const user = await userRepo.findOne({ where: { id: userId } });
+const isAdmin = await checkAndSyncAdminRoleWithUser(user); // 直接使用用户对象
+```
+
+### 应用场景
+
+优化版本特别适用于以下场景：
+
+1. **API 接口**: 当需要验证权限时，通常已经查询了用户信息
+2. **状态检查**: 在 `/api/admin/status` 中避免重复查询
+3. **权限验证**: 在管理接口中复用权限检查结果
+
+### 性能提升
+
+- **减少数据库查询**: 在权限验证场景下减少 50% 的数据库查询
+- **提高响应速度**: 特别是在管理后台的高频操作中
+- **降低数据库负载**: 减少不必要的查询压力
+
 ## 未来扩展
 
 可以考虑添加以下功能：
@@ -248,3 +282,5 @@ if (result.success) {
 -   批量角色管理
 -   更细粒度的权限控制
 -   角色变更通知机制
+-   缓存机制优化
+-   权限检查中间件优化

@@ -1,4 +1,4 @@
-import { isUserAdmin, checkAndSyncAdminRole } from '@/server/utils/admin-role-sync'
+import { isUserAdmin, checkAndSyncAdminRoleWithUser } from '@/server/utils/admin-role-sync'
 import { auth } from '@/lib/auth'
 import { dataSource } from '@/server/database'
 import { User } from '@/server/entities/user'
@@ -33,8 +33,8 @@ export default defineEventHandler(async (event) => {
         // 检查用户是否为管理员（轻量级检查，不进行数据库同步）
         const isAdminByCheck = isUserAdmin(user, session.user.id)
 
-        // 如果需要，执行同步操作
-        const isSyncedAdmin = await checkAndSyncAdminRole(session.user.id)
+        // 使用已有的用户对象执行同步操作，避免重复查询
+        const isSyncedAdmin = await checkAndSyncAdminRoleWithUser(user)
 
         return {
             success: true,
