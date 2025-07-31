@@ -1,4 +1,5 @@
 import { defineEventHandler, getQuery } from 'h3'
+import dayjs from 'dayjs'
 import { dataSource } from '@/server/database'
 import { Session } from '@/server/entities/session'
 import { User } from '@/server/entities/user'
@@ -54,23 +55,23 @@ export default defineEventHandler(async (event) => {
 
         if (startDate) {
             queryBuilder = queryBuilder.andWhere('session.createdAt >= :startDate', {
-                startDate: new Date(startDate),
+                startDate: dayjs(startDate).toDate(),
             })
         }
 
         if (endDate) {
             queryBuilder = queryBuilder.andWhere('session.createdAt <= :endDate', {
-                endDate: new Date(endDate),
+                endDate: dayjs(endDate).toDate(),
             })
         }
 
         if (status === 'active') {
             queryBuilder = queryBuilder.andWhere('session.expiresAt > :now', {
-                now: new Date(),
+                now: dayjs().toDate(),
             })
         } else if (status === 'expired') {
             queryBuilder = queryBuilder.andWhere('session.expiresAt <= :now', {
-                now: new Date(),
+                now: dayjs().toDate(),
             })
         }
 
@@ -86,7 +87,7 @@ export default defineEventHandler(async (event) => {
         // 处理会话数据
         const sessionLogs = sessions.map((session) => {
             const userAgent = parseUserAgent(session.userAgent || '')
-            const isActive = session.expiresAt > new Date()
+            const isActive = dayjs(session.expiresAt).isAfter(dayjs())
 
             return {
                 id: session.id,

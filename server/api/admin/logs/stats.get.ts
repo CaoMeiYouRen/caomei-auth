@@ -1,4 +1,5 @@
 import { defineEventHandler } from 'h3'
+import dayjs from 'dayjs'
 import { dataSource } from '@/server/database'
 import { Session } from '@/server/entities/session'
 import { User } from '@/server/entities/user'
@@ -15,18 +16,18 @@ export default defineEventHandler(async (event) => {
         const accountRepo = dataSource.getRepository(Account)
 
         // 获取统计数据的基础查询
-        const now = new Date()
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-        const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000)
-        const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
-        const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000)
+        const now = dayjs()
+        const today = now.startOf('day').toDate()
+        const yesterday = now.subtract(1, 'day').startOf('day').toDate()
+        const weekAgo = now.subtract(7, 'day').startOf('day').toDate()
+        const monthAgo = now.subtract(30, 'day').startOf('day').toDate()
 
         // 总体统计
         const totalUsers = await userRepo.count()
         const totalSessions = await sessionRepo.count()
         const activeSessions = await sessionRepo
             .createQueryBuilder('session')
-            .where('session.expiresAt > :now', { now })
+            .where('session.expiresAt > :now', { now: now.toDate() })
             .getCount()
 
         // 今日统计
