@@ -51,7 +51,9 @@ export default defineConfig({
                     items: [
                         { text: '认证 API', link: '/docs/developer/api/authentication' },
                         { text: 'OAuth API', link: '/docs/developer/api/oauth' },
-                        { text: '用户管理 API', link: '/docs/developer/api/users' }
+                        { text: '用户管理 API', link: '/docs/developer/api/users' },
+                        { text: '管理员 API', link: '/docs/developer/api/admin' },
+                        { text: '文件上传 API', link: '/docs/developer/api/file' }
                     ]
                 },
                 {
