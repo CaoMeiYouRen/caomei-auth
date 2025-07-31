@@ -82,18 +82,18 @@ export default defineConfig({
                         { text: 'GitHub', link: '/docs/login-config/social/github' },
                         { text: 'Google', link: '/docs/login-config/social/google' },
                         { text: 'Microsoft', link: '/docs/login-config/social/microsoft' },
-                        { text: 'Discord', link: '/docs/login-config/social/discord' },
                         { text: 'Apple', link: '/docs/login-config/social/apple' },
-                        { text: 'Twitter', link: '/docs/login-config/social/twitter' }
+                        { text: 'Twitter', link: '/docs/login-config/social/twitter' },
+                        { text: 'Discord', link: '/docs/login-config/social/discord' },
                     ]
                 },
                 {
                     text: '自定义提供商',
                     items: [
-                        { text: '微博', link: '/docs/login-config/social/weibo' },
-                        { text: 'QQ', link: '/docs/login-config/social/qq' },
                         { text: '微信', link: '/docs/login-config/social/wechat' },
-                        { text: '抖音', link: '/docs/login-config/social/douyin' }
+                        { text: 'QQ', link: '/docs/login-config/social/qq' },
+                        { text: '抖音', link: '/docs/login-config/social/douyin' },
+                        { text: '微博', link: '/docs/login-config/social/weibo' },
                     ]
                 }
             ],

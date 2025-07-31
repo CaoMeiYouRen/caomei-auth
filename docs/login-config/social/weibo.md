@@ -172,7 +172,7 @@ WEIBO_SCOPES=email
 // 请求特定权限
 await authClient.signIn.social({
   provider: 'weibo',
-  scope: 'email,friendships_groups_read'
+  scope: 'email,follow_app_official_microblog'
 });
 ```
 
@@ -180,17 +180,15 @@ await authClient.signIn.social({
 
 ```env
 # 基础权限（默认）
-WEIBO_SCOPES=email
+WEIBO_SCOPES="follow_app_official_microblog"
 
 # 多个权限用逗号分隔
-WEIBO_SCOPES=email,friendships_groups_read,statuses_to_me_read
+WEIBO_SCOPES=email,follow_app_official_microblog
 ```
 
 权限说明：
 - `email`: 获取用户邮箱
-- `direct_messages_read`: 读取私信
-- `friendships_groups_read`: 读取好友分组
-- `statuses_to_me_read`: 读取@我的微博
+- `follow_app_official_microblog`: 订阅开发者微博
 
 ## 用户数据示例
 

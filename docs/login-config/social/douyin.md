@@ -5,14 +5,14 @@
 ## 前置要求
 
 - 拥有抖音账户
-- 需要在字节小程序开发者平台注册
+- 需要在抖音开放平台注册
 - 需要完成开发者认证
 
 ## 配置步骤
 
-### 1. 注册字节开发者账户
+### 1. 注册抖音开发者账户
 
-1. 访问 [字节小程序开发者平台](https://developer.open-douyin.com/)
+1. 访问 [抖音开放平台](https://developer.open-douyin.com/)
 2. 选择 **网站应用** 接入方式
 3. 使用手机号或邮箱注册开发者账户
 4. 完成身份认证（个人或企业）
@@ -365,7 +365,7 @@ class DouyinAuth {
 
 ## 相关链接
 
-- [字节小程序开发者平台](https://developer.open-douyin.com/)
+- [抖音开放平台](https://developer.open-douyin.com/)
 - [抖音开放平台文档](https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/account-permission/get-account-open-info)
 - [权限申请指南](https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/permission/list)
 - [API 接口文档](https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/list)
