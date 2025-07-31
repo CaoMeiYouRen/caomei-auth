@@ -500,7 +500,7 @@ const debouncedSearch = debounce(() => {
 const getProviderIcon = (provider: string) => {
     const icons: Record<string, string> = {
         email: 'mdi mdi-email',
-        credential: 'mdi mdi-email',
+        credential: 'mdi mdi-lock',
         github: 'mdi mdi-github',
         google: 'mdi mdi-google',
         microsoft: 'mdi mdi-microsoft',
@@ -538,7 +538,7 @@ const getProviderColor = (provider: string) => {
 const getProviderName = (provider: string) => {
     const names: Record<string, string> = {
         email: '邮箱登录',
-        credential: '邮箱登录',
+        credential: '密码登录',
         github: 'GitHub',
         google: 'Google',
         microsoft: 'Microsoft',
