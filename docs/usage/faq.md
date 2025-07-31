@@ -146,18 +146,32 @@ SMTP_PASS=your-app-specific-password
 
 ### Q10: 如何配置自定义邮件模板？
 
-**A**: 目前邮件模板由 better-auth 管理，可以通过插件配置自定义：
+**A**: 目前系统使用简单的纯文本邮件格式，HTML 邮件模板功能计划在未来版本中支持。
+
+当前邮件内容由 better-auth 插件配置管理，可以在 `lib/auth.ts` 中的相关插件配置中修改邮件内容：
 
 ```typescript
 emailVerification: {
     sendVerificationEmail: async ({ user, url, token }, request) => {
         await sendEmail({
             to: user.email,
-            subject: "验证您的邮箱地址",
-            html: `
-        <h1>欢迎注册 ${APP_NAME}</h1>
-        <p>点击下面的链接验证您的邮箱：</p>
-        <a href="${url}">验证邮箱</a>
+            subject: '验证你的邮箱地址',
+            text: `点击链接验证你的邮箱：${url}`,
+        })
+    },
+},
+emailOTP: {
+    async sendVerificationOTP({ email, otp, type }) {
+        if (type === 'sign-in') {
+            await sendEmail({
+                to: email,
+                subject: '您的登录验证码',
+                text: `您的验证码是：${otp}`,
+            })
+        }
+        // ... 其他类型的 OTP 邮件
+    },
+}
       `,
         });
     };
