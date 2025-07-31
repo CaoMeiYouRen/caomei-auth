@@ -108,7 +108,7 @@ if (session?.user?.isAnonymous) {
 
 - **用户 ID**: 使用雪花算法生成唯一 ID
 - **用户名**: 格式为 `匿名用户_{random_id}`
-- **邮箱**: 格式为 `{snowflake_id}@anonymous.com`
+- **邮箱**: 格式为 `{random_id}@anonymous.com`
 - **头像**: 使用默认头像或生成随机头像
 - **创建时间**: 当前时间戳
 
@@ -165,12 +165,6 @@ ANONYMOUS_EMAIL_DOMAIN_NAME='anonymous.com'
 
 # 临时邮箱域名
 TEMP_EMAIL_DOMAIN_NAME='example.com'
-
-# 匿名账户有效期(秒)
-ANONYMOUS_ACCOUNT_LIFETIME=86400
-
-# 单IP每日匿名账户创建限制
-ANONYMOUS_DAILY_LIMIT_PER_IP=5
 ```
 
 ## 常见问题
