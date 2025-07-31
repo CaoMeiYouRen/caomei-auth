@@ -64,15 +64,6 @@
                         <i class="mdi mdi-chart-line" />
                         <span v-show="!isCollapsed">登录统计</span>
                     </NuxtLink>
-                    <a
-                        v-tooltip.right="isCollapsed ? '系统设置' : ''"
-                        href="#"
-                        class="disabled nav-item"
-                    >
-                        <i class="mdi mdi-cog" />
-                        <span v-show="!isCollapsed">系统设置</span>
-                        <small v-show="!isCollapsed">即将上线</small>
-                    </a>
                 </div>
 
                 <div class="nav-section">
