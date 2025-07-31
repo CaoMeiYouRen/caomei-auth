@@ -34,32 +34,90 @@ cp .env.example .env
 
 ```env
 # 基础配置
-NODE_ENV=production
-APP_NAME=草梅 Auth
-AUTH_BASE_URL=https://your-domain.com
-AUTH_SECRET=your-super-secret-key-at-least-32-characters
+NUXT_PUBLIC_AUTH_BASE_URL="https://your-domain.com"
+NUXT_PUBLIC_CONTACT_EMAIL="contact@your-domain.com"
+NUXT_PUBLIC_APP_NAME="草梅Auth"
+AUTH_SECRET="your-super-secret-key-at-least-32-characters"
 
 # 数据库配置
 DATABASE_TYPE=postgres
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=caomei_auth
-DATABASE_PASSWORD=your-db-password
-DATABASE_NAME=caomei_auth
+DATABASE_URL=postgresql://user:password@localhost:5432/caomei_auth
 DATABASE_SSL=true
 
-# 邮件服务配置
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
-
 # 管理员配置
-ADMIN_USER_IDS=admin-user-id-1,admin-user-id-2
+ADMIN_USER_IDS="1,2,3"
+
+# 邮件服务配置
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+EMAIL_SECURE=false
+EMAIL_FROM="Your Name <your-email@gmail.com>"
+EMAIL_EXPIRES_IN=300
+
+# 短信服务配置（可选）
+NUXT_PUBLIC_PHONE_ENABLED=true
+PHONE_SENDER_NAME="草梅Auth"
+PHONE_EXPIRES_IN=300
+PHONE_CHANNEL=spug
+PHONE_SPUG_TEMPLATE_ID=your-template-id
+
+# 第三方监控（可选）
+NUXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
+NUXT_PUBLIC_CLARITY_PROJECT_ID=your-clarity-project-id
 ```
 
-### 3. 数据库初始化
+> 💡 **提示**：更多社交登录配置请参考 [社交登录配置指南](/docs/social-login/)。
+
+### 3. 邮件服务配置详解
+
+草梅 Auth 支持多种邮件服务提供商，用于发送验证码、密码重置等邮件。
+
+#### 必需环境变量
+
+```env
+EMAIL_HOST=smtp.example.com          # SMTP服务器地址
+EMAIL_PORT=587                       # SMTP服务器端口
+EMAIL_USER=your_email@example.com    # 邮件发送者地址
+EMAIL_PASS=your_email_password       # 邮件发送者密码
+EMAIL_SECURE=false                   # 是否使用SSL连接
+EMAIL_FROM="Your Name <your_email@example.com>"  # 默认发送者信息
+EMAIL_EXPIRES_IN=300                 # 邮件验证码有效时间（秒）
+```
+
+#### 常用邮件服务商配置
+
+详细配置请参考下方的 [邮件服务配置](#邮件服务配置) 部分。
+
+### 4. 短信服务配置详解
+
+草梅 Auth 支持短信验证码功能，目前支持 Spug 短信服务。
+
+#### 启用短信功能
+
+```env
+NUXT_PUBLIC_PHONE_ENABLED=true       # 启用短信功能
+PHONE_SENDER_NAME="草梅Auth"          # 短信发送者名称
+PHONE_EXPIRES_IN=300                 # 短信验证码有效时间（秒）
+```
+
+#### Spug 短信配置
+
+```env
+PHONE_CHANNEL=spug                   # 短信渠道
+PHONE_SPUG_TEMPLATE_ID=your-template-id  # Spug短信模板ID
+```
+
+推荐的短信模板格式：
+
+```
+${key1}欢迎您，您的验证码为${key2}，${key3}分钟内有效，如非本人操作请忽略。
+```
+
+更多短信服务配置信息请访问 [Spug 官网](https://push.spug.cc)。
+
+### 5. 数据库初始化
 
 创建数据库并运行迁移：
 
@@ -206,9 +264,9 @@ npm install -g vercel
     "env": {
         "AUTH_SECRET": "@auth-secret",
         "DATABASE_URL": "@database-url",
-        "SMTP_HOST": "@smtp-host",
-        "SMTP_USER": "@smtp-user",
-        "SMTP_PASS": "@smtp-pass"
+        "EMAIL_HOST": "@email-host",
+        "EMAIL_USER": "@email-user",
+        "EMAIL_PASS": "@email-pass"
     }
 }
 ```
@@ -230,41 +288,14 @@ vercel --prod
 ```bash
 vercel env add AUTH_SECRET
 vercel env add DATABASE_URL
-vercel env add SMTP_HOST
-vercel env add SMTP_USER
-vercel env add SMTP_PASS
+vercel env add EMAIL_HOST
+vercel env add EMAIL_USER
+vercel env add EMAIL_PASS
 ```
 
 ### 方式四：Cloudflare Workers 部署
 
-适用于边缘计算环境。
-
-#### 1. 安装 Wrangler
-
-```bash
-npm install -g wrangler
-```
-
-#### 2. 配置 wrangler.toml
-
-```toml
-name = "caomei-auth"
-main = ".output/server/index.mjs"
-compatibility_date = "2024-01-01"
-compatibility_flags = ["nodejs_compat"]
-
-[vars]
-NODE_ENV = "production"
-
-[[kv_namespaces]]
-binding = "CACHE"
-id = "your-kv-namespace-id"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "caomei-auth"
-database_id = "your-d1-database-id"
-```
+目前尚不支持 Cloudflare Workers 部署。
 
 #### 3. 构建和部署
 
@@ -278,34 +309,34 @@ wrangler publish
 
 ## 数据库配置
 
+更多环境变量请参考 `.env.example` 文件
+
 ### PostgreSQL 配置
 
 ```env
 DATABASE_TYPE=postgres
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=caomei_auth
-DATABASE_PASSWORD=your-password
-DATABASE_NAME=caomei_auth
-DATABASE_SSL=true
+DATABASE_URL=postgresql://user:password@localhost:5432/caomei_auth
+DATABASE_SSL=false
+DATABASE_ENTITY_PREFIX=caomei_auth_
 ```
 
 ### MySQL 配置
 
 ```env
 DATABASE_TYPE=mysql
-DATABASE_HOST=localhost
-DATABASE_PORT=3306
-DATABASE_USERNAME=caomei_auth
-DATABASE_PASSWORD=your-password
-DATABASE_NAME=caomei_auth
+DATABASE_URL=mysql://user:password@localhost:3306/caomei_auth
+DATABASE_SSL=false
+DATABASE_CHARSET=utf8_general_ci
+DATABASE_TIMEZONE=local
+DATABASE_ENTITY_PREFIX=caomei_auth_
 ```
 
 ### SQLite 配置
 
 ```env
 DATABASE_TYPE=sqlite
-DATABASE_PATH=./database/caomei-auth.sqlite
+DATABASE_PATH=database/caomei-auth.sqlite
+DATABASE_ENTITY_PREFIX=caomei_auth_
 ```
 
 ## 邮件服务配置
@@ -313,34 +344,42 @@ DATABASE_PATH=./database/caomei-auth.sqlite
 ### Gmail 配置
 
 ```env
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+EMAIL_FROM="Your Name <your-email@gmail.com>"
+EMAIL_EXPIRES_IN=300
 ```
 
 ### 腾讯企业邮箱
 
 ```env
-SMTP_HOST=smtp.exmail.qq.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=your-email@yourcompany.com
-SMTP_PASS=your-password
+EMAIL_HOST=smtp.exmail.qq.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=your-email@yourcompany.com
+EMAIL_PASS=your-password
+EMAIL_FROM="Your Name <your-email@yourcompany.com>"
+EMAIL_EXPIRES_IN=300
 ```
 
 ### 阿里云邮件推送
 
 ```env
-SMTP_HOST=smtpdm.aliyun.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=your-email@your-domain.com
-SMTP_PASS=your-smtp-password
+EMAIL_HOST=smtpdm.aliyun.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=your-email@your-domain.com
+EMAIL_PASS=your-smtp-password
+EMAIL_FROM="Your Name <your-email@your-domain.com>"
+EMAIL_EXPIRES_IN=300
 ```
 
 ## 社交登录配置
+
+> 💡 **详细配置指南**：更多社交登录配置请参考 [社交登录配置指南](/docs/social-login/)，包含各个平台的详细设置步骤。
 
 ### GitHub
 
@@ -364,16 +403,20 @@ GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
-### 微信
+### 更多社交登录
 
-1. 访问 [微信开放平台](https://open.weixin.qq.com/)
-2. 创建网站应用
-3. 配置回调域名
+项目还支持以下社交登录平台：
 
-```env
-WECHAT_CLIENT_ID=your-wechat-app-id
-WECHAT_CLIENT_SECRET=your-wechat-app-secret
-```
+-   **Microsoft**: `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET`
+-   **Discord**: `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`
+-   **Apple**: `APPLE_CLIENT_ID`, `APPLE_CLIENT_SECRET`, `APPLE_APP_BUNDLE_IDENTIFIER`
+-   **Twitter**: `TWITTER_CLIENT_ID`, `TWITTER_CLIENT_SECRET`
+-   **微博**: `WEIBO_CLIENT_ID`, `WEIBO_CLIENT_SECRET`, `WEIBO_SCOPES`
+-   **微信**: `WECHAT_CLIENT_ID`, `WECHAT_CLIENT_SECRET`
+-   **QQ**: `QQ_CLIENT_ID`, `QQ_CLIENT_SECRET`, `QQ_USE_UNIONID`
+-   **抖音**: `DOUYIN_CLIENT_ID`, `DOUYIN_CLIENT_SECRET`
+
+详细配置步骤请参考 [社交登录配置指南](/docs/social-login/)。
 
 ## 性能优化
 
@@ -383,34 +426,18 @@ WECHAT_CLIENT_SECRET=your-wechat-app-secret
 REDIS_URL=redis://localhost:6379
 ```
 
-### 数据库连接池
-
-```env
-DATABASE_MAX_CONNECTIONS=10
-DATABASE_CONNECTION_TIMEOUT=30000
-```
-
-### CDN 配置
-
-建议使用 CDN 加速静态资源：
-
-```env
-CDN_URL=https://your-cdn-domain.com
-```
-
 ## 监控和日志
-
-### 日志配置
-
-```env
-LOG_LEVEL=info
-LOG_FILE=./logs/app.log
-```
 
 ### Sentry 错误监控
 
 ```env
-SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+NUXT_PUBLIC_SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+```
+
+### Microsoft Clarity 分析
+
+```env
+NUXT_PUBLIC_CLARITY_PROJECT_ID=your-clarity-project-id
 ```
 
 ### 健康检查
@@ -421,28 +448,47 @@ SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
 curl https://your-domain.com/api/health
 ```
 
-## 安全配置
+## 限流配置
 
-### HTTPS 配置
+项目内置了多种限流配置，可通过以下环境变量调整：
 
-确保在生产环境使用 HTTPS：
+### 邮箱验证码限流
 
 ```env
-HTTPS_ONLY=true
-SECURE_COOKIES=true
+EMAIL_DAILY_LIMIT=100                    # 邮箱验证码每日发送上限（全局）
+EMAIL_SINGLE_USER_DAILY_LIMIT=5         # 单个邮箱每日验证码发送上限
 ```
 
-### CORS 配置
+### 短信验证码限流
 
 ```env
-CORS_ORIGIN=https://your-frontend-domain.com
+PHONE_DAILY_LIMIT=100                    # 短信验证码每日发送上限（全局）
+PHONE_SINGLE_USER_DAILY_LIMIT=3         # 单个手机号每日验证码发送上限
 ```
 
-### 限流配置
+### 文件上传限流
 
 ```env
-RATE_LIMIT_MAX=100
-RATE_LIMIT_WINDOW=900000
+NUXT_PUBLIC_MAX_UPLOAD_SIZE="4.5MiB"     # 最大允许上传的文件大小
+UPLOAD_DAILY_LIMIT=100                   # 文件上传每日限制
+UPLOAD_SINGLE_USER_DAILY_LIMIT=5        # 单个用户每日上传文件限制
+```
+
+## 其他配置
+
+### 备案信息
+
+```env
+NUXT_PUBLIC_ICP_BEIAN_NUMBER=ICP备xxxxxx号
+NUXT_PUBLIC_PUBLIC_SECURITY_BEIAN_NUMBER=公网安备xxxxxx号
+```
+
+### 匿名登录
+
+```env
+ANONYMOUS_LOGIN_ENABLED=true
+ANONYMOUS_EMAIL_DOMAIN_NAME='anonymous.com'
+TEMP_EMAIL_DOMAIN_NAME='example.com'
 ```
 
 ## 故障排除
@@ -534,13 +580,6 @@ services:
         build: .
         environment:
             - NODE_ENV=production
-```
-
-### 数据库读写分离
-
-```env
-DATABASE_MASTER_URL=postgresql://user:pass@master:5432/db
-DATABASE_SLAVE_URL=postgresql://user:pass@slave:5432/db
 ```
 
 通过这个部署指南，您可以根据自己的需求选择合适的部署方式。如有问题，请查看 [故障排除指南](./guides/troubleshooting.md)。
