@@ -1,6 +1,6 @@
 # Cloudflare Workers 部署
 
-> ⚠️ **注意**: 当前版本尚不完全支持 Cloudflare Workers 部署，此文档为规划中的功能。
+> ⚠️ **注意**: 当前版本尚不支持 Cloudflare Workers 部署，此文档为规划中的功能。
 
 Cloudflare Workers 提供边缘计算能力，在全球 200+ 个数据中心运行，具有极低延迟和高可用性。
 

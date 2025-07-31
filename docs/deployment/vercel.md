@@ -77,34 +77,14 @@ vercel
 
 按照提示完成初始化。
 
-### 4. 配置 vercel.json
+### 4. 配置 vercel.json（可选）
 
-创建 `vercel.json` 文件：
+创建 `vercel.json` 文件来配置函数超时等设置：
 
 ```json
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "nuxt.config.ts",
-      "use": "@nuxtjs/vercel-builder"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/.*",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
   "functions": {
-    "pages/api/**.ts": {
+    "server/api/**.ts": {
       "maxDuration": 30
     }
   }
@@ -256,16 +236,15 @@ vercel env rm VARIABLE_NAME
 
 ## 性能优化
 
-### 1. 构建优化
+### 构建优化
 
 在 `nuxt.config.ts` 中配置：
 
 ```typescript
 export default defineNuxtConfig({
   nitro: {
-    preset: 'vercel-edge',
-    // 或使用标准预设
-    // preset: 'vercel'
+    // 使用标准预设
+    preset: 'vercel'
   },
   
   // 预渲染优化
@@ -277,50 +256,7 @@ export default defineNuxtConfig({
 })
 ```
 
-### 2. 缓存配置
-
-```json
-{
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ]
-}
-```
-
-## 监控和分析
-
-### 1. Vercel Analytics
-
-在 `nuxt.config.ts` 中启用：
-
-```typescript
-export default defineNuxtConfig({
-  modules: ['@nuxtjs/vercel-analytics'],
-  
-  vercelAnalytics: {
-    mode: 'auto'
-  }
-})
-```
-
-### 2. 函数日志
+## 函数日志
 
 查看函数日志：
 
@@ -351,10 +287,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
           
@@ -365,7 +301,7 @@ jobs:
         run: pnpm build
         
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
+        uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.ORG_ID }}
@@ -383,18 +319,7 @@ jobs:
 
 ### 2. 文件上传
 
-由于无服务器特性，文件上传需要使用外部存储：
-
-```typescript
-// 配置外部存储（如 Cloudinary、AWS S3）
-export default defineNuxtConfig({
-  runtimeConfig: {
-    cloudinaryUrl: process.env.CLOUDINARY_URL,
-    awsAccessKey: process.env.AWS_ACCESS_KEY_ID,
-    awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY
-  }
-})
-```
+由于无服务器特性，文件上传需要使用外部存储服务，项目已支持 S3 兼容存储和 Vercel Blob。请参考项目的文件上传配置。
 
 ### 3. 数据库连接
 
