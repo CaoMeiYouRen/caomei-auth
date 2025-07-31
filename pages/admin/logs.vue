@@ -216,7 +216,7 @@
                                     show-clear
                                     @change="() => loadSessions(1)"
                                 />
-                                <Calendar
+                                <Datepicker
                                     v-model="dateRange"
                                     selection-mode="range"
                                     :manual-input="false"

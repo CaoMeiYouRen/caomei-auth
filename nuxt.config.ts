@@ -1,6 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import Lara from '@primeuix/themes/lara'
 import { definePreset } from '@primeuix/themes'
+import { en } from 'primelocale/js/en.js'
+import { zh_CN } from 'primelocale/js/zh_CN.js'
 
 const AppPreset = definePreset(Lara, {
     semantic: {
@@ -87,6 +89,7 @@ export default defineNuxtConfig({
             theme: {
                 preset: AppPreset,
             },
+            locale: zh_CN,
         },
     },
     experimental: {
