@@ -29,6 +29,7 @@
     "animate.css": "^4.1.1",
     "better-auth": "^1.3.4",
     "better-bytes": "^1.2.4",
+    "chart.js": "^4.5.0",
     "dayjs": "^1.11.13",
     "file-type": "^21.0.0",
     "fs-extra": "^11.3.0",

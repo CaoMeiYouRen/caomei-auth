@@ -55,15 +55,15 @@
                         <i class="mdi mdi-application" />
                         <span v-show="!isCollapsed">应用管理</span>
                     </NuxtLink>
-                    <a
+                    <NuxtLink
                         v-tooltip.right="isCollapsed ? '登录统计' : ''"
-                        href="#"
-                        class="disabled nav-item"
+                        to="/admin/logs"
+                        class="nav-item"
+                        active-class="active"
                     >
                         <i class="mdi mdi-chart-line" />
                         <span v-show="!isCollapsed">登录统计</span>
-                        <small v-show="!isCollapsed">即将上线</small>
-                    </a>
+                    </NuxtLink>
                     <a
                         v-tooltip.right="isCollapsed ? '系统设置' : ''"
                         href="#"
