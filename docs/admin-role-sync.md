@@ -146,6 +146,22 @@ pages/
 
 ## 用户界面功能
 
+### 首页智能同步
+
+首页 (`/index`) 实现了智能的管理员角色同步机制：
+
+- **状态检查优先**: 登录后先调用 `/api/admin/status` 检查当前角色状态
+- **按需同步**: 只有在检测到角色不一致时才执行同步操作
+- **避免重复**: 如果角色已经一致，跳过不必要的同步操作
+- **性能优化**: 大大减少了不必要的 API 调用和数据库操作
+
+**工作流程**：
+1. 用户登录后进入首页
+2. 检查用户是否已登录
+3. 调用 `/api/admin/status` 获取详细状态
+4. 如果 `syncRequired` 为 `true`，则执行同步
+5. 否则直接使用现有状态，无需同步
+
 ### 用户管理页面 (`/admin/users`)
 
 新增了以下管理员角色管理功能：
@@ -155,9 +171,46 @@ pages/
 -   **移除管理员**: 可以移除用户的管理员角色
 -   **状态显示**: 清晰显示用户的当前角色状态
 
-### 首页自动同步
+### 智能同步示例
 
--   用户登录后自动检查并同步管理员角色
+```vue
+<script setup>
+// 首页的智能同步逻辑
+async function smartSyncAdminRole() {
+    if (!session.value?.user?.id) {
+        return false
+    }
+
+    try {
+        // 先检查当前状态
+        const adminStatus = await getAdminStatus()
+        
+        if (!adminStatus) {
+            console.log('无法获取管理员状态，跳过同步')
+            return false
+        }
+
+        // 只有在需要同步时才执行同步操作
+        if (adminStatus.adminStatus.syncRequired) {
+            console.log('检测到角色不一致，执行同步操作')
+            const result = await syncAdminRole(session.value.user.id)
+            return result.success
+        }
+        
+        console.log('角色状态一致，无需同步')
+        return adminStatus.isAdmin
+    } catch (error) {
+        console.error('智能同步管理员角色失败:', error)
+        return false
+    }
+}
+</script>
+```
+
+### 原有自动同步功能
+
+-   中间件仍然会在每次请求时进行自动同步（确保一致性）
+-   用户登录后智能检查并同步管理员角色
 -   确保界面显示的管理员权限与实际配置一致
 
 ## 配置说明
@@ -265,8 +318,9 @@ const isAdmin = await checkAndSyncAdminRoleWithUser(user); // 直接使用用户
 优化版本特别适用于以下场景：
 
 1. **API 接口**: 当需要验证权限时，通常已经查询了用户信息
-2. **状态检查**: 在 `/api/admin/status` 中避免重复查询
+2. **状态检查**: 在 `/api/admin/status` 中避免重复查询，也用于智能同步判断
 3. **权限验证**: 在管理接口中复用权限检查结果
+4. **智能同步**: 在首页登录后，先检查状态再决定是否需要同步
 
 ### 性能提升
 

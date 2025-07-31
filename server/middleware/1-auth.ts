@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth'
 import { publicPaths } from '@/utils/public-paths'
-import { checkAndSyncAdminRole, isUserAdmin } from '@/server/utils/admin-role-sync'
+import { checkAndSyncAdminRole, checkAndSyncAdminRoleWithUser, isUserAdmin } from '@/server/utils/admin-role-sync'
 
 export default defineEventHandler(async (event) => {
     const session = await auth.api.getSession({
@@ -10,22 +10,11 @@ export default defineEventHandler(async (event) => {
     // 如果用户已登录，检查并同步管理员角色
     if (session?.user?.id) {
         try {
-            await checkAndSyncAdminRole(session.user.id)
+            await checkAndSyncAdminRoleWithUser(session.user as any)
         } catch (error) {
             console.error('管理员角色同步失败:', error)
         }
     }
-
-    // // 调试 OAuth 授权请求
-    // if (event.path.startsWith('/api/auth/oauth2/')) {
-    //     console.log('OAuth2 Request Debug:', {
-    //         path: event.path,
-    //         query: getQuery(event),
-    //         method: event.method,
-    //         hasSession: !!session,
-    //         userAgent: getHeader(event, 'user-agent'),
-    //     })
-    // }
 
     // 白名单路径
     if (publicPaths.some((path) => event.path.startsWith(path))) {
