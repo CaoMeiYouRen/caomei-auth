@@ -56,15 +56,6 @@
                         <span v-show="!isCollapsed">应用管理</span>
                     </NuxtLink>
                     <a
-                        v-tooltip.right="isCollapsed ? '权限管理' : ''"
-                        href="#"
-                        class="disabled nav-item"
-                    >
-                        <i class="mdi mdi-shield-account" />
-                        <span v-show="!isCollapsed">权限管理</span>
-                        <small v-show="!isCollapsed">即将上线</small>
-                    </a>
-                    <a
                         v-tooltip.right="isCollapsed ? '登录统计' : ''"
                         href="#"
                         class="disabled nav-item"

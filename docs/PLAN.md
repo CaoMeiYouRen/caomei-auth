@@ -77,7 +77,7 @@
 
     -   [x] 应用管理 `/admin/oauth/clients`：管理 OAuth2.0 应用
     -   [x] 用户管理 `/admin/users`：用户列表、详情、编辑、禁用/启用等操作。
-    -   权限管理 `/admin/roles`：角色、权限分配与管理。
+    -   ~~权限管理 `/admin/roles`：角色、权限分配与管理。~~
     -   登录统计 `/admin/logs`：登录日志、活跃用户、异常登录等统计报表。
     -   系统设置 `/admin/settings`
 
