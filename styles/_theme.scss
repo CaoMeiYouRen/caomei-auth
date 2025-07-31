@@ -65,7 +65,20 @@ $error: #e53e3e;
     --color-weibo: #{$color-weibo};
     --color-default: #{$color-default};
 
+    // 主题色
+    --color-primary: #{$primary};
+    --color-secondary: #{$secondary};
+    --color-secondary-light: #{$secondary-light};
+
+    // 蓝色主题（用于图表）
+    --color-blue: #{$blue};
+    --color-blue-light: #{$blue-light};
+    --color-blue-dark: #{$blue-dark};
+    --color-blue-darker: #{$blue-darker};
+    --color-blue-light-alpha: #{rgba($blue-light, 0.2)};
+
     // 边框颜色
+    --color-border: #{$border-color};
     --border-color: #{$border-color};
 }
 

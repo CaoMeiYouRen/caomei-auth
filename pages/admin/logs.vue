@@ -177,20 +177,12 @@
                     </h2>
                 </div>
                 <div class="chart-container">
-                    <!-- 这里可以集成 Chart.js 或其他图表库 -->
-                    <div class="chart-placeholder">
-                        <p>登录趋势图（可集成 Chart.js）</p>
-                        <div class="trend-data">
-                            <div
-                                v-for="item in trendData"
-                                :key="item.date"
-                                class="trend-item"
-                            >
-                                <span class="trend-date">{{ formatDate(item.date) }}</span>
-                                <span class="trend-count">{{ item.count }}</span>
-                            </div>
-                        </div>
-                    </div>
+                    <Chart
+                        type="line"
+                        :data="chartData"
+                        :options="chartOptions"
+                        class="chart-canvas"
+                    />
                 </div>
             </div>
 
@@ -374,6 +366,10 @@ const searchQuery = ref('')
 const selectedStatus = ref<string>()
 const dateRange = ref<Date[]>()
 
+// 图表数据
+const chartData = ref()
+const chartOptions = ref()
+
 const statusOptions = [
     { label: '全部状态', value: 'all' },
     { label: '活跃会话', value: 'active' },
@@ -394,6 +390,8 @@ const loadStats = async () => {
         statsLoading.value = true
         const { data } = await $fetch('/api/admin/logs/stats')
         statsData.value = data
+        // 更新图表数据
+        updateChart()
     } catch (error: any) {
         console.error('加载统计数据失败:', error)
         toast.add({
@@ -495,6 +493,189 @@ const onPageChange = (event: any) => {
 const debouncedSearch = debounce(() => {
     loadSessions(1)
 }, 500)
+
+// 设置图表数据
+const setChartData = () => {
+    // 如果没有数据，生成一些示例数据用于显示
+    if (!trendData.value || trendData.value.length === 0) {
+        const today = new Date()
+        const labels = []
+        const data = []
+
+        // 生成最近7天的示例数据
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date(today)
+            date.setDate(date.getDate() - i)
+            labels.push(formatDate(date))
+            data.push(Math.floor(Math.random() * 10) + 1) // 1-10的随机数
+        }
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: '登录次数',
+                    data,
+                    fill: true,
+                    borderColor: '#4285f4',
+                    backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                    tension: 0.4,
+                    pointBackgroundColor: '#4285f4',
+                    pointBorderColor: '#2563eb',
+                    pointHoverBackgroundColor: '#60a5fa',
+                    pointHoverBorderColor: '#1d4ed8',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                },
+            ],
+        }
+    }
+
+    const labels = trendData.value.map((item: any) => formatDate(item.date))
+    const data = trendData.value.map((item: any) => item.count)
+
+    return {
+        labels,
+        datasets: [
+            {
+                label: '登录次数',
+                data,
+                fill: true,
+                borderColor: '#4285f4',
+                backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                tension: 0.4,
+                pointBackgroundColor: '#4285f4',
+                pointBorderColor: '#2563eb',
+                pointHoverBackgroundColor: '#60a5fa',
+                pointHoverBorderColor: '#1d4ed8',
+                pointRadius: 4,
+                pointHoverRadius: 6,
+            },
+        ],
+    }
+}
+
+// 设置图表配置
+const setChartOptions = () => ({
+        responsive: true,
+        maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    color: '#2d3748',
+                    usePointStyle: true,
+                    padding: 20,
+                    font: {
+                        size: 12,
+                        weight: 500,
+                    },
+                },
+            },
+            tooltip: {
+                backgroundColor: 'rgba(45, 55, 72, 0.9)',
+                titleColor: '#ffffff',
+                bodyColor: '#ffffff',
+                borderColor: '#e2e8f0',
+                borderWidth: 1,
+                cornerRadius: 8,
+                displayColors: true,
+                padding: 12,
+                titleFont: {
+                    size: 13,
+                    weight: 600,
+                },
+                bodyFont: {
+                    size: 12,
+                },
+                callbacks: {
+                    title: (context: any) => `日期: ${context[0].label}`,
+                    label: (context: any) => `登录次数: ${context.parsed.y}`,
+                },
+            },
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: '日期',
+                    color: '#2d3748',
+                    font: {
+                        size: 12,
+                        weight: 500,
+                    },
+                },
+                ticks: {
+                    color: '#718096',
+                    font: {
+                        size: 11,
+                    },
+                    maxTicksLimit: 10,
+                },
+                grid: {
+                    color: '#e2e8f0',
+                    drawBorder: false,
+                },
+            },
+            y: {
+                display: true,
+                title: {
+                    display: true,
+                    text: '登录次数',
+                    color: '#2d3748',
+                    font: {
+                        size: 12,
+                        weight: 500,
+                    },
+                },
+                ticks: {
+                    color: '#718096',
+                    font: {
+                        size: 11,
+                    },
+                    beginAtZero: true,
+                    callback(value: any) {
+                        return Number.isInteger(value) ? value : null
+                    },
+                },
+                grid: {
+                    color: '#e2e8f0',
+                    drawBorder: false,
+                },
+            },
+        },
+        elements: {
+            line: {
+                borderWidth: 2,
+            },
+            point: {
+                borderWidth: 2,
+            },
+        },
+        animation: {
+            duration: 1000,
+            easing: 'easeInOutQuart',
+        },
+    })
+
+// 更新图表数据
+const updateChart = () => {
+    chartData.value = setChartData()
+    chartOptions.value = setChartOptions()
+
+    // 调试日志
+    console.log('更新图表数据:', {
+        trendData: trendData.value,
+        chartData: chartData.value,
+    })
+}
 
 // 工具函数
 const getProviderIcon = (provider: string) => {
@@ -606,6 +787,10 @@ const refreshSessions = async () => {
 
 // 初始化
 onMounted(() => {
+    // 初始化图表配置
+    chartOptions.value = setChartOptions()
+
+    // 加载数据
     loadStats()
     loadSessions()
 })
@@ -860,55 +1045,20 @@ onMounted(() => {
 // 登录趋势图
 .chart-container {
     padding: 2rem;
-}
+    background: $background-light;
 
-.chart-placeholder {
-    text-align: center;
-    padding: 3rem 2rem;
-    color: $secondary-light;
-    background: linear-gradient(135deg, $background 0%, $background-light 100%);
-    border-radius: 8px;
-    border: $border-dashed;
-
-    p {
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-        font-weight: 500;
-    }
-
-    .trend-data {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        justify-content: center;
-    }
-
-    .trend-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 1rem;
+    .chart-canvas {
+        height: 400px;
         background: $background-light;
         border-radius: 8px;
-        min-width: 5rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
 
-        .trend-date {
-            font-size: 0.85rem;
-            color: $secondary-light;
-            font-weight: 500;
-        }
-
-        .trend-count {
-            font-weight: 700;
-            color: $blue-darker;
-            font-size: 1.25rem;
+        :deep(canvas) {
+            background: transparent !important;
+            border-radius: 8px;
         }
     }
-}
-
-// 登录日志详情
+}// 登录日志详情
 .detail-header {
     padding: 1.5rem 2rem;
     border-bottom: 1px solid $border-color;
