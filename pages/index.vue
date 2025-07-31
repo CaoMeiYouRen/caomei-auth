@@ -75,7 +75,6 @@
 import Button from 'primevue/button'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
-import { syncAdminRole } from '@/utils/admin-role-client'
 
 // 使用 SSR 渲染，解决界面刷新时的 UI 重渲染问题
 const { data: session } = await authClient.useSession(useFetch)
@@ -98,74 +97,7 @@ function toProfile() {
 
 function toAdmin() {
     navigateTo('/admin/users')
-}
-
-/**
- * 获取当前用户的管理员状态
- */
-async function getAdminStatus() {
-    try {
-        const response = await $fetch('/api/admin/status')
-        return response.data
-    } catch (error) {
-        console.error('获取管理员状态失败:', error)
-        return null
-    }
-}
-
-/**
- * 智能同步管理员角色：只有在需要时才同步
- */
-async function smartSyncAdminRole() {
-    if (!session.value?.user?.id) {
-        return false
-    }
-
-    try {
-        // 先检查当前状态
-        const adminStatus = await getAdminStatus()
-
-        if (!adminStatus) {
-            console.log('无法获取管理员状态，跳过同步')
-            return false
-        }
-
-        console.log('管理员状态检查:', {
-            isAdmin: adminStatus.isAdmin,
-            isAdminByRole: adminStatus.isAdminByRole,
-            isAdminByConfig: adminStatus.isAdminByConfig,
-            syncRequired: adminStatus.adminStatus.syncRequired,
-        })
-
-        // 只有在需要同步时才执行同步操作
-        if (adminStatus.adminStatus.syncRequired) {
-            console.log('检测到角色不一致，执行同步操作')
-            const result = await syncAdminRole(session.value.user.id)
-            console.log('管理员角色同步结果:', result)
-            return result.success
-        }
-
-        console.log('角色状态一致，无需同步')
-        return adminStatus.isAdmin
-    } catch (error) {
-        console.error('智能同步管理员角色失败:', error)
-        return false
-    }
-}
-
-onMounted(async () => {
-    // 如果用户已登录，智能同步管理员角色
-    if (session.value?.user?.id) {
-        const isAdmin = await smartSyncAdminRole()
-        if (isAdmin) {
-            console.log('用户是管理员')
-        } else {
-            console.log('用户不是管理员')
-        }
-    }
-})
-
-</script>
+}</script>
 
 <style scoped lang="scss">
 @import "@/styles/theme";
