@@ -25,9 +25,49 @@ $blue-dark: #2563eb;
 $blue-darker: #1d4ed8;
 $blue-50: #e6f3ff;
 $blue-100: #cce7ff;
+
+// 社交平台品牌色
+$color-github: #24292e;
+$color-google: #4285f4;
+$color-microsoft: #0078d4;
+$color-discord: #7289da;
+$color-apple: #000000;
+$color-twitter: #1da1f2;
+$color-wechat: #07c160;
+$color-qq: #ea1b26;
+$color-douyin: #fe2c55;
+$color-weibo: #fbad27;
+$color-default: #718096;  // 默认图标颜色
+
+// 边框和分割线颜色
+$border-color: #e2e8f0;
+$border-dashed: 2px dashed $border-color;
+
 // 背景色
 $background: #f8fafc;
 $background-light: #ffffff;
+
+// 错误色
+$error: #e53e3e;
+
+// CSS 变量用于 JavaScript 访问
+:root {
+    // 社交平台品牌色
+    --color-github: #{$color-github};
+    --color-google: #{$color-google};
+    --color-microsoft: #{$color-microsoft};
+    --color-discord: #{$color-discord};
+    --color-apple: #{$color-apple};
+    --color-twitter: #{$color-twitter};
+    --color-wechat: #{$color-wechat};
+    --color-qq: #{$color-qq};
+    --color-douyin: #{$color-douyin};
+    --color-weibo: #{$color-weibo};
+    --color-default: #{$color-default};
+
+    // 边框颜色
+    --border-color: #{$border-color};
+}
 
 // 错误色
 $error: #e53e3e;

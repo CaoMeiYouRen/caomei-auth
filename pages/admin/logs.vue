@@ -518,21 +518,21 @@ const getProviderIcon = (provider: string) => {
 
 const getProviderColor = (provider: string) => {
     const colors: Record<string, string> = {
-        email: '#718096',
-        credential: '#718096',
-        github: '#24292e',
-        google: '#4285f4',
-        microsoft: '#0078d4',
-        discord: '#7289da',
-        apple: '#000000',
-        twitter: '#1da1f2',
-        anonymous: '#718096',
-        wechat: '#07c160',
-        qq: '#ea1b26',
-        douyin: '#fe2c55',
-        weibo: '#fbad27',
+        email: 'var(--color-default)',
+        credential: 'var(--color-default)',
+        github: 'var(--color-github)',
+        google: 'var(--color-google)',
+        microsoft: 'var(--color-microsoft)',
+        discord: 'var(--color-discord)',
+        apple: 'var(--color-apple)',
+        twitter: 'var(--color-twitter)',
+        anonymous: 'var(--color-default)',
+        wechat: 'var(--color-wechat)',
+        qq: 'var(--color-qq)',
+        douyin: 'var(--color-douyin)',
+        weibo: 'var(--color-weibo)',
     }
-    return colors[provider] || '#718096'
+    return colors[provider] || 'var(--color-default)'
 }
 
 const getProviderName = (provider: string) => {
@@ -618,7 +618,7 @@ onMounted(() => {
 
 .admin-logs {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: linear-gradient(135deg, $background 0%, $secondary-bg 100%);
     padding: 2rem;
 }
 
@@ -633,7 +633,7 @@ onMounted(() => {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 2rem;
-    background: white;
+    background: $background-light;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -681,7 +681,7 @@ onMounted(() => {
 }
 
 .stat-card {
-    background: white;
+    background: $background-light;
     border-radius: 12px;
     padding: 2rem;
     display: flex;
@@ -732,7 +732,7 @@ onMounted(() => {
 .provider-stats,
 .trend-chart,
 .logs-detail {
-    background: white;
+    background: $background-light;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
@@ -741,8 +741,8 @@ onMounted(() => {
 
 .section-header {
     padding: 1.5rem 2rem;
-    border-bottom: 1px solid #e2e8f0;
-    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border-bottom: 1px solid $border-color;
+    background: linear-gradient(135deg, $background 0%, $background-light 100%);
 }
 
 .section-title {
@@ -763,7 +763,7 @@ onMounted(() => {
 .period-card {
     padding: 2rem;
     text-align: center;
-    border-right: 1px solid #e2e8f0;
+    border-right: 1px solid $border-color;
     transition: background-color 0.2s ease;
 
     &:last-child {
@@ -771,7 +771,7 @@ onMounted(() => {
     }
 
     &:hover {
-        background: #f8fafc;
+        background: $background;
     }
 
     .period-label {
@@ -806,15 +806,15 @@ onMounted(() => {
 
     :deep(.p-datatable-tbody > tr > td) {
         padding: 1rem 2rem;
-        border-color: #e2e8f0;
+        border-color: $border-color;
     }
 
     :deep(.p-datatable-thead > tr > th) {
-        background: #f8fafc;
+        background: $background;
         color: $secondary;
         font-weight: 600;
         padding: 1rem 2rem;
-        border-color: #e2e8f0;
+        border-color: $border-color;
     }
 }
 
@@ -844,7 +844,7 @@ onMounted(() => {
     .count-bar {
         flex: 1;
         height: 8px;
-        background: #e2e8f0;
+        background: $border-color;
         border-radius: 4px;
         overflow: hidden;
         min-width: 100px;
@@ -866,9 +866,9 @@ onMounted(() => {
     text-align: center;
     padding: 3rem 2rem;
     color: $secondary-light;
-    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    background: linear-gradient(135deg, $background 0%, $background-light 100%);
     border-radius: 8px;
-    border: 2px dashed #e2e8f0;
+    border: $border-dashed;
 
     p {
         font-size: 1.1rem;
@@ -889,7 +889,7 @@ onMounted(() => {
         align-items: center;
         gap: 0.5rem;
         padding: 1rem;
-        background: white;
+        background: $background-light;
         border-radius: 8px;
         min-width: 5rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -911,8 +911,8 @@ onMounted(() => {
 // 登录日志详情
 .detail-header {
     padding: 1.5rem 2rem;
-    border-bottom: 1px solid #e2e8f0;
-    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border-bottom: 1px solid $border-color;
+    background: linear-gradient(135deg, $background 0%, $background-light 100%);
 
     .header-content {
         margin-bottom: 1.5rem;
@@ -966,21 +966,21 @@ onMounted(() => {
 
     :deep(.p-datatable-tbody > tr > td) {
         padding: 1rem 2rem;
-        border-color: #e2e8f0;
+        border-color: $border-color;
         vertical-align: middle;
     }
 
     :deep(.p-datatable-thead > tr > th) {
-        background: #f8fafc;
+        background: $background;
         color: $secondary;
         font-weight: 600;
         padding: 1rem 2rem;
-        border-color: #e2e8f0;
+        border-color: $border-color;
     }
 
     :deep(.p-paginator) {
-        background: #f8fafc;
-        border-top: 1px solid #e2e8f0;
+        background: $background;
+        border-top: 1px solid $border-color;
         padding: 1rem 2rem;
     }
 }
@@ -1059,10 +1059,10 @@ onMounted(() => {
 
     .period-card {
         border-right: none;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid $border-color;
 
         &:nth-child(odd) {
-            border-right: 1px solid #e2e8f0;
+            border-right: 1px solid $border-color;
         }
 
         &:last-child,
@@ -1088,7 +1088,7 @@ onMounted(() => {
         border-right: none;
 
         &:not(:last-child) {
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid $border-color;
         }
     }
 }
