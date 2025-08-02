@@ -1,5 +1,59 @@
 # caomei-auth
 
+# [1.2.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.1.0...v1.2.0) (2025-08-02)
+
+
+### ♻ 代码重构
+
+* **admin:** 优化管理员角色同步逻辑，新增复用用户对象的同步函数 ([c7212e3](https://github.com/CaoMeiYouRen/caomei-auth/commit/c7212e3))
+* **admin:** 移除权限管理相关内容，删除不再使用的管理员状态 API ([51a0e4c](https://github.com/CaoMeiYouRen/caomei-auth/commit/51a0e4c))
+* **applications:** 添加应用创建功能，支持参数验证和返回符合 RFC7591 标准的响应 ([3920d76](https://github.com/CaoMeiYouRen/caomei-auth/commit/3920d76))
+* **auth:** 优化身份验证中间件的代码结构和注释 ([7755884](https://github.com/CaoMeiYouRen/caomei-auth/commit/7755884))
+* **auth:** 移除不必要的角色同步函数调用，优化中间件逻辑 ([35b2fc4](https://github.com/CaoMeiYouRen/caomei-auth/commit/35b2fc4))
+* **clients:** 移除未使用的 secret-dialog 样式代码 ([1cce30c](https://github.com/CaoMeiYouRen/caomei-auth/commit/1cce30c))
+* **security:** 将 Alert 组件替换为 Message 组件，优化双因素认证提示信息 ([7e21714](https://github.com/CaoMeiYouRen/caomei-auth/commit/7e21714))
+* **validate:** 优化 URL 验证逻辑，使用 validator 库进行更严格的格式检查 ([9df9219](https://github.com/CaoMeiYouRen/caomei-auth/commit/9df9219))
+
+
+### ✨ 新功能
+
+* **admin:** 使用dayjs库优化日期处理，提升会话和统计数据查询的准确性 ([48dee2a](https://github.com/CaoMeiYouRen/caomei-auth/commit/48dee2a))
+* **admin:** 实现管理员角色自动同步功能 ([f69e00e](https://github.com/CaoMeiYouRen/caomei-auth/commit/f69e00e))
+* **admin:** 新增登录统计页面和API端点 ([fab4cf8](https://github.com/CaoMeiYouRen/caomei-auth/commit/fab4cf8))
+* **admin:** 添加侧边栏收缩功能，优化导航项显示逻辑 ([9e550c8](https://github.com/CaoMeiYouRen/caomei-auth/commit/9e550c8))
+* **admin:** 集成primelocale库并设置中文为默认语言 ([eb3d5ab](https://github.com/CaoMeiYouRen/caomei-auth/commit/eb3d5ab))
+* **admin:** 集成图表组件并更新图表数据和配置 ([3527c2b](https://github.com/CaoMeiYouRen/caomei-auth/commit/3527c2b))
+* **applications:** 添加应用状态管理功能，支持启用/禁用应用 ([748a99e](https://github.com/CaoMeiYouRen/caomei-auth/commit/748a99e))
+* **auth:** 添加 JWKS 实体类并支持 JWT 认证 ([8073657](https://github.com/CaoMeiYouRen/caomei-auth/commit/8073657))
+* **clarity:** 集成 Microsoft Clarity 行为分析工具，添加相关配置和使用说明 ([77a3fa9](https://github.com/CaoMeiYouRen/caomei-auth/commit/77a3fa9))
+* **clients:** 替换 Chips 组件为 InputText，优化重定向 URL 和联系邮箱的输入处理 ([9d36e93](https://github.com/CaoMeiYouRen/caomei-auth/commit/9d36e93))
+* **clients:** 添加 API 文档对话框，展示 OIDC 端点信息 ([f647622](https://github.com/CaoMeiYouRen/caomei-auth/commit/f647622))
+* **developer:** 新增部署指南和常见问题文档 ([17cf492](https://github.com/CaoMeiYouRen/caomei-auth/commit/17cf492))
+* **docs:** 新增vitepress文档支持 ([e1f8090](https://github.com/CaoMeiYouRen/caomei-auth/commit/e1f8090))
+* **docs:** 更新 VitePress 配置，添加多语言支持和文档重定向 ([8eef51a](https://github.com/CaoMeiYouRen/caomei-auth/commit/8eef51a))
+* **footer:** 添加个人中心、管理后台和忘记密码链接，基于用户会话状态显示 ([6164544](https://github.com/CaoMeiYouRen/caomei-auth/commit/6164544))
+* **index:** 实现首页智能管理员角色同步机制，优化角色状态检查与同步逻辑 ([9c4de27](https://github.com/CaoMeiYouRen/caomei-auth/commit/9c4de27))
+* **login:** 添加用户协议和隐私政策的同意提示 ([380427d](https://github.com/CaoMeiYouRen/caomei-auth/commit/380427d))
+* **nav:** 在关于、隐私和条款页面添加返回首页按钮 ([5c46063](https://github.com/CaoMeiYouRen/caomei-auth/commit/5c46063))
+* **register:** 添加用户协议和隐私政策的同意框及相关验证 ([8204efd](https://github.com/CaoMeiYouRen/caomei-auth/commit/8204efd))
+* **sentry:** 添加 Sentry 错误监控集成 ([acc675a](https://github.com/CaoMeiYouRen/caomei-auth/commit/acc675a))
+* **tracking:** 添加 Microsoft Clarity 用户行为追踪方案及相关页面追踪实现 ([fbd9277](https://github.com/CaoMeiYouRen/caomei-auth/commit/fbd9277))
+* 在页脚和首页新增项目文档链接 ([b97e816](https://github.com/CaoMeiYouRen/caomei-auth/commit/b97e816))
+
+
+### 🐛 Bug 修复
+
+* **admin:** 优化用户操作按钮，增加角色和状态判断逻辑 ([27eaa0d](https://github.com/CaoMeiYouRen/caomei-auth/commit/27eaa0d))
+* **admin:** 更新凭证图标和名称，修正为锁图标和密码登录 ([023b6f6](https://github.com/CaoMeiYouRen/caomei-auth/commit/023b6f6))
+* **auth:** 更新用户信息声明，添加 sub 和 nickname 字段，并优化隐私处理 ([4ac79d7](https://github.com/CaoMeiYouRen/caomei-auth/commit/4ac79d7))
+* **auth:** 添加 requirePKCE 配置选项以控制 PKCE 强制性 ([17fd80f](https://github.com/CaoMeiYouRen/caomei-auth/commit/17fd80f))
+* **clients:** 更新 OAuth 2.0 兼容性提示，明确不支持的特性并优化表单说明 ([b49d01f](https://github.com/CaoMeiYouRen/caomei-auth/commit/b49d01f))
+* **clients:** 添加提示信息说明 OAuth 2.0 特性支持情况，并优化样式 ([374173d](https://github.com/CaoMeiYouRen/caomei-auth/commit/374173d))
+* **nuxt:** 添加 @hyperwatch/useragent 到构建转译列表 ([c6435d1](https://github.com/CaoMeiYouRen/caomei-auth/commit/c6435d1))
+* **users:** 将“姓名”字段更改为“昵称”，以更好地反映用户信息； 更新用户信息中的用户名字段为显示昵称 ([a6827ce](https://github.com/CaoMeiYouRen/caomei-auth/commit/a6827ce))
+* **validate:** 更新用户名验证逻辑，禁止手机号格式 ([079f384](https://github.com/CaoMeiYouRen/caomei-auth/commit/079f384))
+* 添加邮件和上传文件的限流配置选项 ([5434017](https://github.com/CaoMeiYouRen/caomei-auth/commit/5434017))
+
 # [1.1.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.0.0...v1.1.0) (2025-07-26)
 
 
