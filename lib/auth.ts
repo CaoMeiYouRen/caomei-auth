@@ -13,6 +13,7 @@ import {
     oidcProvider,
     jwt,
 } from 'better-auth/plugins'
+import { sso } from '@better-auth/sso'
 import ms from 'ms'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
 import { sendEmail } from '@/server/utils/email'
@@ -629,6 +630,7 @@ export const auth = betterAuth({
                 },
             },
         }), // 支持 JWT 认证
+        sso({}),
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},
 })

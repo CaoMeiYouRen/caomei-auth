@@ -1,5 +1,6 @@
 import { createAuthClient } from 'better-auth/vue'
 import { usernameClient, magicLinkClient, emailOTPClient, inferAdditionalFields, anonymousClient, phoneNumberClient, adminClient, genericOAuthClient, twoFactorClient, oidcClient } from 'better-auth/client/plugins'
+import { ssoClient } from '@better-auth/sso/client'
 import type { auth } from './auth'
 import { AUTH_BASE_URL, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/utils/env'
 
@@ -21,5 +22,6 @@ export const authClient = createAuthClient({
             // },
         }),
         oidcClient(),
+        ssoClient(),
     ],
 })

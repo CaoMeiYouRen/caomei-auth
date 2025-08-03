@@ -235,6 +235,48 @@ CREATE TABLE IF NOT EXISTS caomei_auth_verification (
 );
 
 
+-- 表：caomei_auth_sso_provider
+-- DROP TABLE IF EXISTS caomei_auth_sso_provider;
+
+CREATE TABLE IF NOT EXISTS caomei_auth_sso_provider (
+    id               VARCHAR (36) PRIMARY KEY
+                                  NOT NULL,
+    created_at       DATETIME     NOT NULL
+                                  DEFAULT (datetime('now') ),
+    updated_at       DATETIME     NOT NULL
+                                  DEFAULT (datetime('now') ),
+    issuer           TEXT         NOT NULL,
+    domain           VARCHAR (255) NOT NULL,
+    oidc_config      TEXT,
+    saml_config      TEXT,
+    provider_id      VARCHAR (128) NOT NULL
+                                  UNIQUE,
+    organization_id  VARCHAR (36),
+    user_id          VARCHAR (36) NOT NULL,
+    name             VARCHAR (255),
+    description      TEXT,
+    enabled          BOOLEAN      NOT NULL
+                                  DEFAULT (1),
+    type             VARCHAR (32) NOT NULL
+                                  DEFAULT ('oidc'),
+    metadata_url     TEXT,
+    client_id        VARCHAR (255),
+    client_secret    TEXT,
+    redirect_uri     TEXT,
+    scopes           VARCHAR (500),
+    additional_config TEXT,
+    CONSTRAINT FK_sso_provider_user_id FOREIGN KEY (
+        user_id
+    )
+    REFERENCES caomei_auth_user (id) ON DELETE CASCADE
+                                     ON UPDATE NO ACTION
+);
+
+
+-- 表：caomei_auth_jwks
+-- DROP TABLE IF EXISTS caomei_auth_jwks;
+
+
 -- 索引：IDX_5537b38a6c06bb652a341fa637
 DROP INDEX IF EXISTS IDX_5537b38a6c06bb652a341fa637;
 
@@ -311,6 +353,46 @@ CREATE INDEX IF NOT EXISTS IDX_de6b575c18d7b60ef79b62c9f9 ON caomei_auth_oauth_a
 DROP INDEX IF EXISTS IDX_ed7df12901fcf60dc40654dc47;
 
 CREATE INDEX IF NOT EXISTS IDX_ed7df12901fcf60dc40654dc47 ON caomei_auth_two_factor (
+    "user_id"
+);
+
+
+-- 索引：IDX_sso_provider_issuer
+DROP INDEX IF EXISTS IDX_sso_provider_issuer;
+
+CREATE INDEX IF NOT EXISTS IDX_sso_provider_issuer ON caomei_auth_sso_provider (
+    "issuer"
+);
+
+
+-- 索引：IDX_sso_provider_domain
+DROP INDEX IF EXISTS IDX_sso_provider_domain;
+
+CREATE INDEX IF NOT EXISTS IDX_sso_provider_domain ON caomei_auth_sso_provider (
+    "domain"
+);
+
+
+-- 索引：IDX_sso_provider_provider_id
+DROP INDEX IF EXISTS IDX_sso_provider_provider_id;
+
+CREATE INDEX IF NOT EXISTS IDX_sso_provider_provider_id ON caomei_auth_sso_provider (
+    "provider_id"
+);
+
+
+-- 索引：IDX_sso_provider_organization_id
+DROP INDEX IF EXISTS IDX_sso_provider_organization_id;
+
+CREATE INDEX IF NOT EXISTS IDX_sso_provider_organization_id ON caomei_auth_sso_provider (
+    "organization_id"
+);
+
+
+-- 索引：IDX_sso_provider_user_id
+DROP INDEX IF EXISTS IDX_sso_provider_user_id;
+
+CREATE INDEX IF NOT EXISTS IDX_sso_provider_user_id ON caomei_auth_sso_provider (
     "user_id"
 );
 

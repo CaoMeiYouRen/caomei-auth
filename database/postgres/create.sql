@@ -203,3 +203,40 @@ CREATE INDEX "IDX_64151152d3b06145934b2776db" ON public.caomei_auth_oauth_access
 CREATE INDEX "IDX_79dc2fd873300c86e710e1e573" ON public.caomei_auth_oauth_access_token USING btree (client_id);
 CREATE INDEX "IDX_993218a00f98d6c01350c75c48" ON public.caomei_auth_oauth_access_token USING btree (user_id);
 CREATE INDEX "IDX_de6b575c18d7b60ef79b62c9f9" ON public.caomei_auth_oauth_access_token USING btree (refresh_token);
+
+
+-- public.caomei_auth_sso_provider definition
+
+-- Drop table
+
+-- DROP TABLE public.caomei_auth_sso_provider;
+
+CREATE TABLE public.caomei_auth_sso_provider (
+	id varchar(36) NOT NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+	issuer text NOT NULL,
+	domain varchar(255) NOT NULL,
+	oidc_config text NULL,
+	saml_config text NULL,
+	provider_id varchar(128) NOT NULL,
+	organization_id varchar(36) NULL,
+	user_id varchar(36) NOT NULL,
+	"name" varchar(255) NULL,
+	description text NULL,
+	enabled bool DEFAULT true NOT NULL,
+	"type" varchar(32) DEFAULT 'oidc'::character varying NOT NULL,
+	metadata_url text NULL,
+	client_id varchar(255) NULL,
+	client_secret text NULL,
+	redirect_uri text NULL,
+	scopes varchar(500) NULL,
+	additional_config text NULL,
+	CONSTRAINT "PK_sso_provider_id" PRIMARY KEY (id),
+	CONSTRAINT "UQ_sso_provider_provider_id" UNIQUE (provider_id),
+	CONSTRAINT "FK_sso_provider_user_id" FOREIGN KEY (user_id) REFERENCES public.caomei_auth_user(id) ON DELETE CASCADE
+);
+CREATE INDEX "IDX_sso_provider_issuer" ON public.caomei_auth_sso_provider USING btree (issuer);
+CREATE INDEX "IDX_sso_provider_domain" ON public.caomei_auth_sso_provider USING btree (domain);
+CREATE INDEX "IDX_sso_provider_provider_id" ON public.caomei_auth_sso_provider USING btree (provider_id);
+CREATE INDEX "IDX_sso_provider_organization_id" ON public.caomei_auth_sso_provider USING btree (organization_id);

@@ -181,4 +181,38 @@ CREATE TABLE `caomei_auth_verification` (
     KEY `IDX_fa68522a992ad7d16ac6f652d2` (`identifier`(255), `value`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 表: caomei_auth_sso_provider
+DROP TABLE IF EXISTS `caomei_auth_sso_provider`;
+
+CREATE TABLE `caomei_auth_sso_provider` (
+    `id` VARCHAR(36) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `issuer` TEXT NOT NULL,
+    `domain` VARCHAR(255) NOT NULL,
+    `oidc_config` TEXT NULL,
+    `saml_config` TEXT NULL,
+    `provider_id` VARCHAR(128) NOT NULL,
+    `organization_id` VARCHAR(36) NULL,
+    `user_id` VARCHAR(36) NOT NULL,
+    `name` VARCHAR(255) NULL,
+    `description` TEXT NULL,
+    `enabled` BOOLEAN NOT NULL DEFAULT TRUE,
+    `type` VARCHAR(32) NOT NULL DEFAULT 'oidc',
+    `metadata_url` TEXT NULL,
+    `client_id` VARCHAR(255) NULL,
+    `client_secret` TEXT NULL,
+    `redirect_uri` TEXT NULL,
+    `scopes` VARCHAR(500) NULL,
+    `additional_config` TEXT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `UQ_sso_provider_provider_id` (`provider_id`),
+    KEY `IDX_sso_provider_issuer` (`issuer`(255)),
+    KEY `IDX_sso_provider_domain` (`domain`),
+    KEY `IDX_sso_provider_provider_id` (`provider_id`),
+    KEY `IDX_sso_provider_organization_id` (`organization_id`),
+    KEY `IDX_sso_provider_user_id` (`user_id`),
+    CONSTRAINT `FK_sso_provider_user_id` FOREIGN KEY (`user_id`) REFERENCES `caomei_auth_user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 SET FOREIGN_KEY_CHECKS = 1;
