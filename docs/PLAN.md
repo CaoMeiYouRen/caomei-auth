@@ -81,10 +81,10 @@
     -   [x] 登录统计 `/admin/logs`：登录日志、活跃用户、异常登录等统计报表。
 
 -   [x] 文档/开发者中心页 `/docs`：基于 Markdown 文件自动生成的 API 文档说明
--   `/docs` 或 `/docs/index`：文档首页，概览和快速导航
--   `/docs/getting-started`：快速开始指南
--   `/docs/api/*`：API 文档（认证、用户、OAuth 等）
--   `/docs/guides/*`：集成指南、最佳实践、故障排除等
+    -   `/docs` 或 `/docs/index`：文档首页，概览和快速导航
+    -   `/docs/getting-started`：快速开始指南
+    -   `/docs/api/*`：API 文档（认证、用户、OAuth 等）
+    -   `/docs/guides/*`：集成指南、最佳实践、故障排除等
 -   [x] 统一错误页（如 404、403、500 等）
 -   其他辅助页面：
     -   [x] 隐私政策页 `/privacy`：展示平台隐私政策，说明用户数据收集、使用、存储和共享的方式，以及用户的权利和平台的责任。
@@ -113,26 +113,6 @@
         -   950: #3a0c12
     -   辅助色：#2d3748, #718096, #e2e8f0
     -   背景色：#f8fafc, #ffffff
-
-## 部署方式
-
-### 1. Node.js 本地部署
-
--   安装依赖：`pnpm install`
--   启动服务：`pnpm run dev` 或 `pnpm run build && pnpm run start`
-
-### 2. Docker 部署
-
--   构建镜像：`docker build -t caomei-auth .`
--   运行容器：`docker run -p 3000:3000 caomei-auth`
-
-### 3. Vercel 部署
-
--   参考 `vercel.json` 配置，推送到 GitHub 后自动部署
-
-### 4. Cloudflare Workers 部署
-
--   参考 `wrangler.toml` 配置，使用 `wrangler publish` 部署
 
 ## 未来规划
 

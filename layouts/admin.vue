@@ -90,6 +90,17 @@
                         <span v-show="!isCollapsed">我的应用</span>
                     </NuxtLink>
                     <NuxtLink
+                        v-tooltip.right="isCollapsed ? '项目文档' : ''"
+                        to="https://auth-docs.cmyr.dev/"
+                        external
+                        target="_blank"
+                        class="nav-item"
+                    >
+                        <i class="mdi mdi-book-open-variant" />
+                        <span v-show="!isCollapsed">项目文档</span>
+                        <i v-show="!isCollapsed" class="external-icon mdi mdi-open-in-new" />
+                    </NuxtLink>
+                    <NuxtLink
                         v-tooltip.right="isCollapsed ? '返回首页' : ''"
                         to="/"
                         class="nav-item"
@@ -332,6 +343,12 @@ definePageMeta({
         white-space: nowrap;
         overflow: hidden;
         transition: opacity 0.3s ease;
+    }
+
+    .external-icon {
+        font-size: 0.875rem;
+        margin-left: auto;
+        opacity: 0.7;
     }
 }
 
