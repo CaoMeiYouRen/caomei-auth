@@ -1,6 +1,7 @@
 import { SecondaryStorage } from 'better-auth'
 import { Redis } from 'ioredis'
 import { LRUCache } from 'lru-cache'
+import { REDIS_URL } from '@/utils/env'
 
 // 定义基础存储接口，包含 increment 方法
 interface BaseStorage {
@@ -22,8 +23,6 @@ interface BaseStorage {
      */
     increment: (key: string, ttl: number) => Promise<number>
 }
-
-import { REDIS_URL } from '@/utils/env'
 
 // 初始化基础存储
 const createBaseStorage = (): BaseStorage => {
@@ -53,21 +52,25 @@ const createBaseStorage = (): BaseStorage => {
             },
         }
     }
-    const memoryStorage = new LRUCache<string, number>({
+    const memoryStorage = new LRUCache<string, string>({
         max: 1000,
         ttl: 1000 * 60 * 60,
     })
     return {
-        get: async (key: string) => String(memoryStorage.get(key) ?? null),
+        get: async (key: string) => {
+            const value = memoryStorage.get(key)
+            return value ?? null
+        },
         set: async (key: string, value: string, ttl?: number) => {
-            memoryStorage.set(key, parseInt(value), { ttl })
+            memoryStorage.set(key, value, { ttl: ttl ? ttl * 1000 : undefined })
         },
         delete: async (key: string) => {
             memoryStorage.delete(key)
         },
         increment: async (key: string, ttl: number) => {
-            const current = (memoryStorage.get(key) || 0) + 1
-            memoryStorage.set(key, current, { ttl: ttl * 1000 })
+            const currentValue = memoryStorage.get(key)
+            const current = (currentValue ? parseInt(currentValue, 10) : 0) + 1
+            memoryStorage.set(key, current.toString(), { ttl: ttl * 1000 })
             return current
         },
     }
