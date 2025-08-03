@@ -105,7 +105,8 @@ export default defineConfig({
                         { text: '项目架构', link: '/docs/development/architecture' },
                         { text: '数据库关系', link: '/docs/development/database-relations' },
                         { text: '管理员角色同步', link: '/docs/development/admin-role-sync' },
-                        { text: '最佳实践', link: '/docs/development/best-practices' }
+                        { text: '最佳实践', link: '/docs/development/best-practices' },
+                        { text: '无障碍适配', link: '/docs/development/accessibility' }
                     ]
                 },
                 {

@@ -30,6 +30,7 @@ const allProviders: SocialProvider[] = [
         provider: 'github',
         color: '#24292e',
         social: true, // 使用内置的第三方社交登录
+        icon: 'mdi mdi-github',
         enabled: !!GITHUB_CLIENT_ID,
     },
     {
@@ -37,6 +38,7 @@ const allProviders: SocialProvider[] = [
         provider: 'google',
         color: '#4285f4',
         social: true,
+        icon: 'mdi mdi-google',
         enabled: !!GOOGLE_CLIENT_ID,
     },
     {
@@ -44,6 +46,7 @@ const allProviders: SocialProvider[] = [
         provider: 'microsoft',
         color: '#0078d4',
         social: true,
+        icon: 'mdi mdi-microsoft',
         enabled: !!MICROSOFT_CLIENT_ID,
     },
     {
