@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { generateRandomString } from './random'
 import { TEMP_EMAIL_DOMAIN_NAME } from '@/utils/env'
 
@@ -26,8 +27,7 @@ export const generateClientId = (): string => generateRandomString(16).toLowerCa
 /**
  * 生成OAuth客户端密钥
  * 生成32位随机字符串
- * TODO 考虑使用 crypto 模块生成更安全的密钥
  * @returns {string} 客户端密钥
  */
-export const generateClientSecret = (): string => generateRandomString(32)
+export const generateClientSecret = (): string => crypto.randomBytes(24).toString('base64url') // generateRandomString(32)
 
