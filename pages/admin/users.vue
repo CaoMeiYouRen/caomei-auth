@@ -28,7 +28,7 @@
                             <InputIcon class="mdi mdi-magnify" />
                             <InputText
                                 v-model="searchQuery"
-                                placeholder="搜索用户（有效邮箱、@用户名或姓名）"
+                                placeholder="搜索用户（有效邮箱或姓名，@开头搜索姓名）"
                                 @input="debouncedSearch"
                             />
                         </IconField>
@@ -866,9 +866,10 @@ const loadUsers = async () => {
         // 添加搜索条件 - 智能搜索多个字段
         if (searchQuery.value) {
             const query_value = searchQuery.value.trim()
-            // 如果以@开头，搜索用户名
+            // 如果以@开头，搜索用户名（由于API限制，用email字段代替）
             if (query_value.startsWith('@')) {
-                query.searchField = 'username'
+                // 注意：API不支持username搜索，这里使用name字段搜索
+                query.searchField = 'name'
                 query.searchValue = query_value.substring(1) // 移除@符号
             } else if (validateEmail(query_value)) {
                 // 如果是有效的邮箱格式，搜索邮箱
@@ -915,7 +916,7 @@ const loadUsers = async () => {
         // 添加排序参数
         if (sortField.value) {
             query.sortBy = sortField.value
-            query.sortOrder = sortOrder.value
+            query.sortDirection = sortOrder.value
         }
 
         const response = await authClient.admin.listUsers({ query })

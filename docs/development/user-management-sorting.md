@@ -42,9 +42,10 @@
 ### 2. 智能搜索功能
 
 -   ✅ 自动识别搜索内容类型：
-    -   包含 `@` 符号：搜索邮箱
-    -   以 `@` 开头：搜索用户名（自动移除@符号）
-    -   其他情况：搜索姓名
+    -   有效邮箱格式：搜索邮箱字段
+    -   以 `@` 开头：搜索姓名字段（自动移除@符号）
+    -   其他情况：搜索姓名字段
+-   ✅ 使用 `validateEmail` 函数准确识别邮箱格式
 -   ✅ 模糊匹配搜索
 -   ✅ 防抖处理，减少 API 调用
 
@@ -159,34 +160,50 @@ const onSort = (event: any) => {
 
 ### 智能搜索实现
 
-````typescript
-### 智能搜索实现
-
 ```typescript
 // 添加搜索条件 - 智能搜索多个字段
 if (searchQuery.value) {
-    const query_value = searchQuery.value.trim()
-    // 如果以@开头，搜索用户名
-    if (query_value.startsWith('@')) {
-        query.searchField = 'username'
-        query.searchValue = query_value.substring(1) // 移除@符号
+    const query_value = searchQuery.value.trim();
+    // 如果以@开头，搜索姓名（注意：API不支持username搜索）
+    if (query_value.startsWith("@")) {
+        query.searchField = "name";
+        query.searchValue = query_value.substring(1); // 移除@符号
     } else if (validateEmail(query_value)) {
         // 如果是有效的邮箱格式，搜索邮箱
-        query.searchField = 'email'
-        query.searchValue = query_value
+        query.searchField = "email";
+        query.searchValue = query_value;
     } else {
         // 否则搜索姓名
-        query.searchField = 'name'
-        query.searchValue = query_value
+        query.searchField = "name";
+        query.searchValue = query_value;
     }
-    query.searchOperator = 'contains'
+    query.searchOperator = "contains";
 }
-````
+```
 
 **搜索逻辑说明**：
 
-1. **优先级最高**：以 `@` 开头的输入（如 `@username`）会搜索用户名字段
+1. **优先级最高**：以 `@` 开头的输入（如 `@username`）会搜索姓名字段（注意：由于 better-auth API 限制，不支持直接搜索 username 字段）
 2. **其次**：使用 `validateEmail` 函数验证的有效邮箱格式会搜索邮箱字段
+3. **最后**：其他输入会搜索姓名字段
+
+这种方式比简单的字符串包含检查更准确，能够正确区分有效邮箱和包含 `@` 符号的普通文本。
+
+**API 限制说明**：
+
+-   better-auth 的 `listUsers` API 的 `searchField` 参数只支持 `"name" | "email"` 两个字段
+-   排序参数名为 `sortDirection` 而不是 `sortOrder`
+
+### 排序参数实现
+
+```typescript
+// 添加排序参数
+if (sortField.value) {
+    query.sortBy = sortField.value;
+    query.sortDirection = sortOrder.value; // 注意：API使用sortDirection而不是sortOrder
+}
+```
+
 3. **最后**：其他输入会搜索姓名字段
 
 这种方式比简单的字符串包含检查更准确，能够正确区分有效邮箱和包含 `@` 符号的普通文本。
