@@ -932,7 +932,7 @@ const formData = ref({
 })
 
 // 使用 useFetch 进行 SSR 优化的数据获取
-const { data: applicationsResponse, pending: loading, refresh: refreshApplications } = await useFetch('/api/oauth/applications', {
+const { data: applicationsResponse, pending: loading, refresh: refreshApplications } = await useFetch('/api/admin/oauth/applications', {
     default: () => ({ success: false, data: [] }),
     transform: (response: any) => response,
 })
@@ -1112,7 +1112,7 @@ async function submitApplication() {
 
         if (editing.value) {
             // 编辑现有应用
-            const response = await $fetch(`/api/oauth/applications/${selectedApp.value.id}`, {
+            const response = await $fetch(`/api/admin/oauth/applications/${selectedApp.value.id}`, {
                 method: 'PUT',
                 body: payload,
             })
@@ -1124,7 +1124,7 @@ async function submitApplication() {
             }
         } else {
             // 创建新应用 - 使用自定义接口而不是 better-auth 接口
-            const response = await $fetch('/api/oauth/applications', {
+            const response = await $fetch('/api/admin/oauth/applications', {
                 method: 'POST',
                 body: payload,
             })
@@ -1176,7 +1176,7 @@ async function confirmDelete() {
     try {
         deleting.value = true
 
-        const response = await $fetch(`/api/oauth/applications/${selectedApp.value.id}`, {
+        const response = await $fetch(`/api/admin/oauth/applications/${selectedApp.value.id}`, {
             method: 'DELETE',
         })
 
@@ -1233,7 +1233,7 @@ async function toggleApplicationStatus(app: any) {
     try {
         toggling.value = true
 
-        await $fetch(`/api/oauth/applications/${app.id}`, {
+        await $fetch(`/api/admin/oauth/applications/${app.id}`, {
             method: 'PUT',
             body: {
                 disabled: !app.disabled,

@@ -48,7 +48,7 @@
                     </NuxtLink>
                     <NuxtLink
                         v-tooltip.right="isCollapsed ? '应用管理' : ''"
-                        to="/admin/oauth/clients"
+                        to="/admin/oauth/applications"
                         class="nav-item"
                         active-class="active"
                     >
