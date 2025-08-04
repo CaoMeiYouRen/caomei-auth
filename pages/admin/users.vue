@@ -28,7 +28,7 @@
                             <InputIcon class="mdi mdi-magnify" />
                             <InputText
                                 v-model="searchQuery"
-                                placeholder="搜索用户（邮箱、用户名、姓名）"
+                                placeholder="搜索用户（有效邮箱、@用户名或姓名）"
                                 @input="debouncedSearch"
                             />
                         </IconField>
@@ -76,6 +76,8 @@
                     current-page-report-template="{first} 到 {last} 共 {totalRecords} 条"
                     :rows-per-page-options="[10, 25, 50]"
                     sortable
+                    :sort-field="sortField === 'createdAt' ? 'createdAt' : sortField"
+                    :sort-order="sortOrder === 'asc' ? 1 : -1"
                     selection-mode="multiple"
                     :meta-key-selection="false"
                     @page="onPageChange"
@@ -85,6 +87,9 @@
                         <div class="table-header">
                             <div class="table-title">
                                 用户列表 ({{ totalUsers }})
+                                <small v-if="sortField" class="sort-info">
+                                    按{{ getSortFieldLabel(sortField) }}{{ sortOrder === 'asc' ? '升序' : '降序' }}排列
+                                </small>
                             </div>
                             <div v-if="selectedUsers.length > 0" class="table-actions">
                                 <Button
@@ -668,6 +673,7 @@ import { debounce } from 'lodash-es'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/useragent'
 import { formatPhoneNumberInternational } from '@/utils/phone'
+import { validateEmail } from '@/utils/validate'
 import { syncAdminRole, addAdminRole, removeAdminRole } from '@/utils/admin-role-client'
 
 // 页面元数据
@@ -693,6 +699,10 @@ const searchQuery = ref('')
 const selectedRole = ref(null)
 const selectedStatus = ref(null)
 const selectedUsers = ref<any[]>([])
+
+// 排序相关状态
+const sortField = ref<string>('createdAt') // 默认按创建时间排序
+const sortOrder = ref<'asc' | 'desc'>('desc') // 默认倒序
 
 // 对话框显示状态
 const showCreateDialog = ref(false)
@@ -776,6 +786,32 @@ const formatDate = (date: string | number) => new Date(date).toLocaleString('zh-
 
 const isCurrentUser = (userId: string) => currentSession.value?.user?.id === userId
 
+// 排序字段映射（前端 field -> 后端 field）
+const getSortField = (field: string) => {
+    const fieldMap: Record<string, string> = {
+        name: 'name',
+        role: 'role',
+        banned: 'banned',
+        createdAt: 'createdAt',
+        email: 'email',
+        username: 'username',
+    }
+    return fieldMap[field] || field
+}
+
+// 获取排序字段的中文标签
+const getSortFieldLabel = (field: string) => {
+    const labelMap: Record<string, string> = {
+        name: '姓名',
+        role: '角色',
+        banned: '状态',
+        createdAt: '注册时间',
+        email: '邮箱',
+        username: '用户名',
+    }
+    return labelMap[field] || field
+}
+
 const getRoleLabel = (role: string) => {
     const roleMap: Record<string, string> = {
         user: '用户',
@@ -801,6 +837,9 @@ const refreshUsers = () => {
     searchQuery.value = ''
     selectedRole.value = null
     selectedStatus.value = null
+    sortField.value = 'createdAt'
+    sortOrder.value = 'desc'
+    currentPage.value = 0
     loadUsers()
 }
 
@@ -824,25 +863,59 @@ const loadUsers = async () => {
             offset: currentPage.value * pageSize.value,
         }
 
-        // 添加搜索条件
+        // 添加搜索条件 - 智能搜索多个字段
         if (searchQuery.value) {
-            query.searchField = 'email'
+            const query_value = searchQuery.value.trim()
+            // 如果以@开头，搜索用户名
+            if (query_value.startsWith('@')) {
+                query.searchField = 'username'
+                query.searchValue = query_value.substring(1) // 移除@符号
+            } else if (validateEmail(query_value)) {
+                // 如果是有效的邮箱格式，搜索邮箱
+                query.searchField = 'email'
+                query.searchValue = query_value
+            } else {
+                // 否则搜索姓名
+                query.searchField = 'name'
+                query.searchValue = query_value
+            }
             query.searchOperator = 'contains'
-            query.searchValue = searchQuery.value
         }
+
+        // 添加筛选条件
+        const filters: any[] = []
 
         // 添加角色筛选
         if (selectedRole.value) {
-            query.filterField = 'role'
-            query.filterOperator = 'eq'
-            query.filterValue = selectedRole.value
+            filters.push({
+                field: 'role',
+                operator: 'eq',
+                value: selectedRole.value,
+            })
         }
 
         // 添加状态筛选
         if (selectedStatus.value) {
-            query.filterField = 'banned'
-            query.filterOperator = 'eq'
-            query.filterValue = selectedStatus.value === 'banned'
+            filters.push({
+                field: 'banned',
+                operator: 'eq',
+                value: selectedStatus.value === 'banned',
+            })
+        }
+
+        // 如果有多个筛选条件，使用数组；否则使用单个条件
+        if (filters.length > 1) {
+            query.filters = filters
+        } else if (filters.length === 1) {
+            query.filterField = filters[0].field
+            query.filterOperator = filters[0].operator
+            query.filterValue = filters[0].value
+        }
+
+        // 添加排序参数
+        if (sortField.value) {
+            query.sortBy = sortField.value
+            query.sortOrder = sortOrder.value
         }
 
         const response = await authClient.admin.listUsers({ query })
@@ -1280,8 +1353,17 @@ const onPageChange = (event: any) => {
 }
 
 const onSort = (event: any) => {
-    // TODO: 实现排序逻辑
-    console.log('排序:', event)
+    // event 包含 sortField 和 sortOrder 信息
+    if (event.sortField) {
+        sortField.value = getSortField(event.sortField)
+        sortOrder.value = event.sortOrder === 1 ? 'asc' : 'desc'
+
+        // 重置到第一页
+        currentPage.value = 0
+
+        // 重新加载数据
+        loadUsers()
+    }
 }
 
 // 批量操作
@@ -1533,6 +1615,16 @@ onMounted(() => {
             font-size: 1.2rem;
             font-weight: 600;
             color: $primary;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            .sort-info {
+                font-size: 0.9rem;
+                font-weight: 400;
+                color: $secondary-light;
+                opacity: 0.8;
+            }
         }
     }
 
