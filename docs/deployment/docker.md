@@ -4,10 +4,10 @@
 
 ## 系统要求
 
-- Docker >= 20.10
-- Docker Compose >= 2.0
-- 至少 1GB RAM
-- 至少 2GB 可用存储空间
+-   Docker >= 20.10
+-   Docker Compose >= 2.0
+-   至少 1GB RAM
+-   至少 2GB 可用存储空间
 
 ## 快速开始
 
@@ -19,46 +19,78 @@
 version: "3.8"
 
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgresql://caomei_auth:password@db:5432/caomei_auth
-      - AUTH_SECRET=your-super-secret-key-at-least-32-characters
-      - EMAIL_HOST=smtp.gmail.com
-      - EMAIL_PORT=587
-      - EMAIL_USER=your-email@gmail.com
-      - EMAIL_PASS=your-app-password
-      - EMAIL_FROM="Your Name <your-email@gmail.com>"
-    depends_on:
-      - db
-      - redis
-    restart: unless-stopped
-    volumes:
-      - ./uploads:/app/uploads
+    app:
+        build: .
+        ports:
+            - "3000:3000"
+        environment:
+            - NODE_ENV=production
+            - DATABASE_URL=postgresql://caomei_auth:password@db:5432/caomei_auth
+            - AUTH_SECRET=your-super-secret-key-at-least-32-characters
+            - EMAIL_HOST=smtp.gmail.com
+            - EMAIL_PORT=587
+            - EMAIL_USER=your-email@gmail.com
+            - EMAIL_PASS=your-app-password
+            - EMAIL_FROM="Your Name <your-email@gmail.com>"
+        depends_on:
+            - db
+            - redis
+        restart: unless-stopped
+        volumes:
+            - ./uploads:/app/uploads
 
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: caomei_auth
-      POSTGRES_USER: caomei_auth
-      POSTGRES_PASSWORD: password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
+    db:
+        image: postgres:15
+        environment:
+            POSTGRES_DB: caomei_auth
+            POSTGRES_USER: caomei_auth
+            POSTGRES_PASSWORD: password
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        restart: unless-stopped
 
-  redis:
-    image: redis:7-alpine
-    command: redis-server --appendonly yes
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
+    redis:
+        image: redis:7-alpine
+        command: redis-server --appendonly yes
+        volumes:
+            - redis_data:/data
+        restart: unless-stopped
 
 volumes:
-  postgres_data:
-  redis_data:
+    postgres_data:
+    redis_data:
+```
+
+### 数据库初始化
+
+在启动服务前，您可能需要初始化数据库表结构。
+
+如果需要手动初始化数据库，可以先启动数据库服务，然后导入表结构：
+
+```bash
+# 仅启动数据库服务
+docker-compose up -d db
+
+# 等待数据库启动完成
+sleep 10
+
+# 导入数据库表结构
+docker-compose exec db psql -U caomei_auth -d caomei_auth -f /docker-entrypoint-initdb.d/create.sql
+```
+
+或者，您可以在 `docker-compose.yml` 中添加初始化脚本：
+
+```yaml
+db:
+    image: postgres:15
+    environment:
+        POSTGRES_DB: caomei_auth
+        POSTGRES_USER: caomei_auth
+        POSTGRES_PASSWORD: password
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
+        - ./database/postgres/create.sql:/docker-entrypoint-initdb.d/create.sql:ro
+    restart: unless-stopped
 ```
 
 ### 启动服务
@@ -72,6 +104,9 @@ docker-compose ps
 
 # 查看日志
 docker-compose logs -f app
+
+# 检查数据库连接
+docker-compose logs db | grep "database system is ready to accept connections"
 ```
 
 ## 自定义配置
@@ -114,20 +149,20 @@ REDIS_URL=redis://redis:6379
 version: "3.8"
 
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    depends_on:
-      - db
-      - redis
-    restart: unless-stopped
-    volumes:
-      - ./uploads:/app/uploads
+    app:
+        build: .
+        ports:
+            - "3000:3000"
+        env_file:
+            - .env
+        depends_on:
+            - db
+            - redis
+        restart: unless-stopped
+        volumes:
+            - ./uploads:/app/uploads
 
-  # ... 其他服务配置保持不变
+    # ... 其他服务配置保持不变
 ```
 
 ## 生产环境配置
@@ -144,11 +179,11 @@ upstream caomei_auth {
 server {
     listen 80;
     server_name your-domain.com;
-    
+
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
     }
-    
+
     location / {
         return 301 https://$server_name$request_uri;
     }
@@ -160,7 +195,7 @@ server {
 
     ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
-    
+
     # SSL 配置
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384;
@@ -187,62 +222,62 @@ server {
 version: "3.8"
 
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/certbot
-    depends_on:
-      - app
-    restart: unless-stopped
+    nginx:
+        image: nginx:alpine
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf
+            - certbot-etc:/etc/letsencrypt
+            - certbot-var:/var/lib/letsencrypt
+            - web-root:/var/www/certbot
+        depends_on:
+            - app
+        restart: unless-stopped
 
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/certbot
-    command: certonly --webroot --webroot-path=/var/www/certbot --email your-email@domain.com --agree-tos --no-eff-email -d your-domain.com
+    certbot:
+        image: certbot/certbot
+        volumes:
+            - certbot-etc:/etc/letsencrypt
+            - certbot-var:/var/lib/letsencrypt
+            - web-root:/var/www/certbot
+        command: certonly --webroot --webroot-path=/var/www/certbot --email your-email@domain.com --agree-tos --no-eff-email -d your-domain.com
 
-  app:
-    build: .
-    env_file:
-      - .env
-    depends_on:
-      - db
-      - redis
-    restart: unless-stopped
-    volumes:
-      - ./uploads:/app/uploads
+    app:
+        build: .
+        env_file:
+            - .env
+        depends_on:
+            - db
+            - redis
+        restart: unless-stopped
+        volumes:
+            - ./uploads:/app/uploads
 
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: caomei_auth
-      POSTGRES_USER: caomei_auth
-      POSTGRES_PASSWORD: password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
+    db:
+        image: postgres:15
+        environment:
+            POSTGRES_DB: caomei_auth
+            POSTGRES_USER: caomei_auth
+            POSTGRES_PASSWORD: password
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        restart: unless-stopped
 
-  redis:
-    image: redis:7-alpine
-    command: redis-server --appendonly yes
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
+    redis:
+        image: redis:7-alpine
+        command: redis-server --appendonly yes
+        volumes:
+            - redis_data:/data
+        restart: unless-stopped
 
 volumes:
-  postgres_data:
-  redis_data:
-  certbot-etc:
-  certbot-var:
-  web-root:
+    postgres_data:
+    redis_data:
+    certbot-etc:
+    certbot-var:
+    web-root:
 ```
 
 ## 数据备份
@@ -291,14 +326,14 @@ echo "备份完成: $DATE"
 
 ```yaml
 services:
-  app:
-    # ... 其他配置
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    app:
+        # ... 其他配置
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
 ```
 
 ### 日志管理
@@ -321,13 +356,13 @@ docker-compose logs --tail=100 app
 
 ```yaml
 services:
-  app:
-    # ... 其他配置
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+    app:
+        # ... 其他配置
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
 ```
 
 ## 扩展和更新
@@ -360,23 +395,23 @@ docker-compose up -d app
 version: "3.8"
 
 services:
-  app-blue:
-    build: .
-    env_file: .env
-    depends_on: [db, redis]
-    
-  app-green:
-    build: .
-    env_file: .env
-    depends_on: [db, redis]
-    
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx-blue.conf:/etc/nginx/nginx.conf
+    app-blue:
+        build: .
+        env_file: .env
+        depends_on: [db, redis]
+
+    app-green:
+        build: .
+        env_file: .env
+        depends_on: [db, redis]
+
+    nginx:
+        image: nginx:alpine
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./nginx-blue.conf:/etc/nginx/nginx.conf
 ```
 
 ## 故障排除
@@ -384,44 +419,47 @@ services:
 ### 常见问题
 
 1. **容器启动失败**
-   ```bash
-   # 查看容器状态
-   docker-compose ps
-   
-   # 查看详细日志
-   docker-compose logs app
-   ```
+
+    ```bash
+    # 查看容器状态
+    docker-compose ps
+
+    # 查看详细日志
+    docker-compose logs app
+    ```
 
 2. **数据库连接失败**
-   ```bash
-   # 检查数据库容器状态
-   docker-compose exec db pg_isready -U caomei_auth
-   
-   # 检查网络连接
-   docker-compose exec app nc -zv db 5432
-   ```
+
+    ```bash
+    # 检查数据库容器状态
+    docker-compose exec db pg_isready -U caomei_auth
+
+    # 检查网络连接
+    docker-compose exec app nc -zv db 5432
+    ```
 
 3. **端口冲突**
-   ```bash
-   # 查看端口占用
-   netstat -tulpn | grep :3000
-   
-   # 修改端口映射
-   # 在 docker-compose.yml 中更改端口
-   ```
+
+    ```bash
+    # 查看端口占用
+    netstat -tulpn | grep :3000
+
+    # 修改端口映射
+    # 在 docker-compose.yml 中更改端口
+    ```
 
 ### 性能调优
 
 ```yaml
 services:
-  app:
-    # ... 其他配置
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 1G
-        reservations:
-          cpus: '1'
-          memory: 512M
+    app:
+        # ... 其他配置
+        deploy:
+            resources:
+                limits:
+                    cpus: "2"
+                    memory: 1G
+                reservations:
+                    cpus: "1"
+                    memory: 512M
 ```

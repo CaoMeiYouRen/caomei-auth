@@ -46,6 +46,7 @@ export default defineConfig({
                     text: '部署指南',
                     items: [
                         { text: '部署概览', link: '/docs/deployment/' },
+                        { text: '数据库配置', link: '/docs/deployment/database.md' },
                         { text: 'Node.js 部署', link: '/docs/deployment/nodejs' },
                         { text: 'Docker 部署', link: '/docs/deployment/docker' },
                         { text: 'Vercel 部署', link: '/docs/deployment/vercel' },

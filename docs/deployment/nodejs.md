@@ -4,10 +4,10 @@
 
 ## 系统要求
 
-- **Node.js**: >= 18.0.0
-- **数据库**: PostgreSQL / MySQL / SQLite
-- **内存**: 至少 512MB RAM
-- **存储**: 至少 1GB 可用空间
+-   **Node.js**: >= 18.0.0
+-   **数据库**: PostgreSQL / MySQL / SQLite
+-   **内存**: 至少 512MB RAM
+-   **存储**: 至少 1GB 可用空间
 
 ## 部署步骤
 
@@ -59,14 +59,73 @@ EMAIL_EXPIRES_IN=300
 
 ### 3. 数据库初始化
 
-创建数据库并运行迁移：
+#### 创建数据库
+
+根据您选择的数据库类型，执行相应的创建命令：
+
+**PostgreSQL:**
+
+```bash
+# 方式一：使用 createdb 命令
+createdb caomei_auth
+
+# 方式二：登录 PostgreSQL 后执行
+psql -U postgres
+CREATE DATABASE caomei_auth;
+\q
+```
+
+**MySQL:**
+
+```bash
+# 方式一：使用 mysql 命令
+mysql -u root -p -e "CREATE DATABASE caomei_auth CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# 方式二：登录 MySQL 后执行
+mysql -u root -p
+CREATE DATABASE caomei_auth CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+exit;
+```
+
+**SQLite:**
+SQLite 数据库文件会在首次运行时自动创建，无需手动创建。
+
+#### 导入数据库表结构
+
+导入预定义的数据库表结构：
 
 ```bash
 # PostgreSQL
-createdb caomei_auth
+psql -d caomei_auth -f database/postgres/create.sql
 
 # MySQL
-mysql -u root -p -e "CREATE DATABASE caomei_auth CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -p caomei_auth < database/mysql/create.sql
+
+# SQLite
+sqlite3 database/caomei-auth.sqlite < database/sqlite/create.sql
+```
+
+#### 验证数据库连接
+
+在启动应用前，可以测试数据库连接：
+
+```bash
+# 使用 Node.js 脚本测试连接（可选）
+node -e "
+const { DataSource } = require('typeorm');
+const dataSource = new DataSource({
+  type: process.env.DATABASE_TYPE || 'sqlite',
+  database: process.env.DATABASE_PATH || 'database/caomei-auth.sqlite',
+  url: process.env.DATABASE_URL
+});
+dataSource.initialize().then(() => {
+  console.log('✓ 数据库连接成功');
+  process.exit(0);
+}).catch(err => {
+  console.error('✗ 数据库连接失败:', err.message);
+  process.exit(1);
+});
+"
 ```
 
 ### 4. 构建项目
@@ -126,17 +185,19 @@ server {
 
 ```javascript
 module.exports = {
-    apps: [{
-        name: 'caomei-auth',
-        script: '.output/server/index.mjs',
-        instances: 'max',
-        exec_mode: 'cluster',
-        env: {
-            NODE_ENV: 'production',
-            PORT: 3000
-        }
-    }]
-}
+    apps: [
+        {
+            name: "caomei-auth",
+            script: ".output/server/index.mjs",
+            instances: "max",
+            exec_mode: "cluster",
+            env: {
+                NODE_ENV: "production",
+                PORT: 3000,
+            },
+        },
+    ],
+};
 ```
 
 启动和管理：
@@ -192,31 +253,34 @@ pm2 restart caomei-auth
 ### 常见问题
 
 1. **端口被占用**
-   ```bash
-   # 查看端口占用
-   lsof -i :3000
-   
-   # 杀死进程
-   kill -9 <PID>
-   ```
+
+    ```bash
+    # 查看端口占用
+    lsof -i :3000
+
+    # 杀死进程
+    kill -9 <PID>
+    ```
 
 2. **权限问题**
-   ```bash
-   # 设置正确的文件权限
-   chmod +x .output/server/index.mjs
-   ```
+
+    ```bash
+    # 设置正确的文件权限
+    chmod +x .output/server/index.mjs
+    ```
 
 3. **内存不足**
-   ```bash
-   # 查看内存使用
-   free -m
-   
-   # 增加交换空间
-   sudo fallocate -l 1G /swapfile
-   sudo chmod 600 /swapfile
-   sudo mkswap /swapfile
-   sudo swapon /swapfile
-   ```
+
+    ```bash
+    # 查看内存使用
+    free -m
+
+    # 增加交换空间
+    sudo fallocate -l 1G /swapfile
+    sudo chmod 600 /swapfile
+    sudo mkswap /swapfile
+    sudo swapon /swapfile
+    ```
 
 ### 日志查看
 
