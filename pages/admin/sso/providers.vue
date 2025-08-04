@@ -1,4 +1,3 @@
-# coding=utf-8
 <template>
     <div class="admin-sso">
         <div class="sso-container">
@@ -11,18 +10,15 @@
                     <p class="sso-subtitle">
                         管理单点登录（SSO）提供商，支持 OIDC 和 SAML 协议
                     </p>
+                    <span class="text-muted">
+                        <strong>注意：</strong>当前 SSO 实现基于 Better Auth SSO 插件，支持标准 OIDC/OAuth2 和 SAML 2.0 协议。
+                        请确保提供商端配置正确的回调 URL 和授权范围。
+                    </span>
                 </div>
                 <div class="header-actions">
                     <Button
-                        icon="mdi mdi-refresh"
-                        label="刷新"
-                        severity="secondary"
-                        :loading="loading"
-                        @click="handleRefreshProviders"
-                    />
-                    <Button
+                        label="创建提供商"
                         icon="mdi mdi-plus"
-                        label="添加 SSO 提供商"
                         @click="showCreateDialog = true; resetForm()"
                     />
                 </div>
@@ -58,65 +54,68 @@
                             placeholder="筛选状态"
                             show-clear
                         />
+                        <Button
+                            icon="mdi mdi-refresh"
+                            severity="secondary"
+                            outlined
+                            :loading="loading"
+                            @click="handleRefreshProviders"
+                        />
                     </div>
                 </div>
             </div>
 
             <!-- SSO 提供商列表 -->
             <div class="sso-list">
-                <div class="table-header">
-                    <h3 class="table-title">
-                        SSO 提供商列表
-                        <Badge :value="filteredProviders.length" severity="info" />
-                    </h3>
-                </div>
-
                 <DataTable
+                    :key="providers.length"
                     :value="filteredProviders"
-                    :loading="loading"
-                    paginator
+                    :paginator="true"
                     :rows="10"
-                    :rows-per-page-options="[5, 10, 20, 50]"
-                    paginator-template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    current-page-report-template="显示 {first} 到 {last} 条，共 {totalRecords} 条记录"
+                    :loading="loading"
+                    paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                    current-page-report-template="{first} 到 {last} 共 {totalRecords} 条"
+                    :rows-per-page-options="[10, 25, 50]"
+                    sortable
                     empty-message="暂无 SSO 提供商"
                     responsive-layout="scroll"
                 >
-                    <Column
-                        field="providerId"
-                        header="Provider ID"
-                        sortable
-                    >
+                    <template #header>
+                        <div class="table-header">
+                            <div class="table-title">
+                                SSO 提供商列表 ({{ filteredProviders.length }})
+                            </div>
+                        </div>
+                    </template>
+                    <Column field="name" header="提供商信息">
                         <template #body="{data}">
-                            <div class="provider-id">
-                                <Badge
-                                    :value="data.type?.toUpperCase() || 'OIDC'"
-                                    :severity="data.type === 'saml' ? 'warning' : 'info'"
-                                />
-                                <code>{{ data.providerId }}</code>
+                            <div class="provider-info">
+                                <div class="provider-details">
+                                    <span class="provider-name">{{ data.name || data.providerId }}</span>
+                                    <small
+                                        v-if="data.description"
+                                        class="provider-description"
+                                    >{{ data.description }}</small>
+                                    <div class="provider-meta">
+                                        <small class="provider-domain">
+                                            <i class="mdi mdi-domain" />
+                                            {{ data.domain }}
+                                        </small>
+                                        <small class="provider-issuer">
+                                            <i class="mdi mdi-link" />
+                                            {{ data.issuer }}
+                                        </small>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </Column>
-
-                    <Column
-                        field="name"
-                        header="提供商信息"
-                        sortable
-                    >
+                    <Column field="type" header="协议类型">
                         <template #body="{data}">
-                            <div class="provider-info">
-                                <div class="provider-name">
-                                    {{ data.name || data.providerId }}
-                                </div>
-                                <div class="provider-domain">
-                                    <i class="mdi mdi-domain" />
-                                    {{ data.domain }}
-                                </div>
-                                <div class="provider-issuer">
-                                    <i class="mdi mdi-link" />
-                                    {{ data.issuer }}
-                                </div>
-                            </div>
+                            <Badge
+                                :value="data.type?.toUpperCase() || 'OIDC'"
+                                :severity="data.type === 'saml' ? 'warning' : 'info'"
+                            />
                         </template>
                     </Column>
 
@@ -130,16 +129,6 @@
                                 :value="data.enabled ? '启用' : '禁用'"
                                 :severity="data.enabled ? 'success' : 'danger'"
                             />
-                        </template>
-                    </Column>
-
-                    <Column field="organizationId" header="关联组织">
-                        <template #body="{data}">
-                            <span v-if="data.organizationId">
-                                <i class="mdi mdi-office-building" />
-                                {{ data.organizationId }}
-                            </span>
-                            <span v-else class="text-muted">未关联</span>
                         </template>
                     </Column>
 
@@ -1103,20 +1092,20 @@ async function submitProvider() {
                 method: 'PUT',
                 body: payload,
             })
+            if (!response.success) {
+                throw new Error('更新失败')
+            }
             data = response.data
-            error = response.success ? null : response.error
         } else {
             // 创建提供商
             const response = await $fetch('/api/admin/sso/providers', {
                 method: 'POST',
                 body: payload,
             })
+            if (!response.success) {
+                throw new Error('创建失败')
+            }
             data = response.data
-            error = response.success ? null : response.error
-        }
-
-        if (error) {
-            throw new Error(error.message || error || '操作失败')
         }
 
         toast.add({
@@ -1163,7 +1152,7 @@ async function confirmDelete() {
         })
 
         if (!response.success) {
-            throw new Error(response.error?.message || response.error || '删除失败')
+            throw new Error('删除失败')
         }
 
         toast.add({

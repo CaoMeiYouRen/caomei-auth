@@ -184,7 +184,6 @@ import { authClient } from '@/lib/auth-client'
 definePageMeta({
     title: 'SSO 单点登录 - 草梅 Auth',
     layout: 'default',
-    middleware: 'auth',
     auth: false, // 允许未登录用户访问
 })
 

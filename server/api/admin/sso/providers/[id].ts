@@ -1,30 +1,10 @@
-import { authClient } from '@/lib/auth-client'
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
+import { checkAdmin } from '@/server/utils/check-admin'
 
 export default defineEventHandler(async (event) => {
+    const auth = await checkAdmin(event)
     try {
-        // 验证管理员权限
-        const session = await authClient.getSession({
-            fetchOptions: {
-                headers: getHeaders(event),
-            },
-        })
-
-        if (!session?.data?.user) {
-            throw createError({
-                statusCode: 401,
-                statusMessage: '未登录',
-            })
-        }
-
-        // 检查管理员权限
-        if (!session.data.user.role || !['admin'].includes(session.data.user.role)) {
-            throw createError({
-                statusCode: 403,
-                statusMessage: '权限不足',
-            })
-        }
 
         const providerId = getRouterParam(event, 'id')
         if (!providerId) {
@@ -75,9 +55,9 @@ export default defineEventHandler(async (event) => {
                 if (field in body) {
                     if (field === 'oidcConfig' || field === 'samlConfig') {
                         // 确保配置是字符串格式
-                        provider[field] = body[field] ? JSON.stringify(body[field]) : null
+                        (provider as any)[field] = body[field] ? JSON.stringify(body[field]) : null
                     } else {
-                        provider[field] = body[field]
+                        (provider as any)[field] = body[field]
                     }
                 }
             }
