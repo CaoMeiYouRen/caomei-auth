@@ -56,6 +56,15 @@
                         <span v-show="!isCollapsed">应用管理</span>
                     </NuxtLink>
                     <NuxtLink
+                        v-tooltip.right="isCollapsed ? 'SSO 管理' : ''"
+                        to="/admin/sso/providers"
+                        class="nav-item"
+                        active-class="active"
+                    >
+                        <i class="mdi mdi-account-network" />
+                        <span v-show="!isCollapsed">SSO 管理</span>
+                    </NuxtLink>
+                    <NuxtLink
                         v-tooltip.right="isCollapsed ? '登录统计' : ''"
                         to="/admin/logs"
                         class="nav-item"

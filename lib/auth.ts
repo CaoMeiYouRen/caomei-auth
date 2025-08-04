@@ -630,7 +630,58 @@ export const auth = betterAuth({
                 },
             },
         }), // 支持 JWT 认证
-        sso({}),
+        sso({
+            // 用户自动注册函数，当用户通过 SSO 提供商登录时运行
+            provisionUser: async ({ user, userInfo, token, provider }) => {
+                // 记录 SSO 登录日志
+                console.log(`用户 ${user.email} 通过 SSO 提供商 ${provider.providerId} 登录`)
+
+                // 可以在这里添加用户同步逻辑，如：
+                // - 更新用户资料信息
+                // - 同步外部系统数据
+                // - 创建用户特定资源
+                // - 记录登录审计日志
+
+                // 示例：更新用户最后登录时间
+                // await updateUserLastLogin(user.id, provider.providerId)
+            },
+            // 组织自动配置选项
+            organizationProvisioning: {
+                disabled: false, // 启用组织自动配置
+                defaultRole: 'member', // 新成员的默认角色
+                // 根据 SSO 属性动态分配角色
+                getRole: async ({ user, userInfo, provider }) => {
+                    // 可以根据 SSO 提供商返回的用户信息分配不同角色
+                    // 例如：根据部门、职位等信息分配管理员角色
+                    const department = userInfo.attributes?.department
+                    const jobTitle = userInfo.attributes?.jobTitle
+
+                    // 管理员角色分配逻辑
+                    if (jobTitle?.toLowerCase().includes('manager') ||
+                        jobTitle?.toLowerCase().includes('director') ||
+                        jobTitle?.toLowerCase().includes('admin')) {
+                        return 'admin'
+                    }
+
+                    // IT 部门自动获得管理员权限
+                    if (department?.toLowerCase() === 'it' ||
+                        department?.toLowerCase() === '信息技术部') {
+                        return 'admin'
+                    }
+
+                    // 默认为普通成员
+                    return 'member'
+                },
+            },
+            // 默认覆盖用户信息：使用 SSO 提供商的信息更新本地用户信息
+            defaultOverrideUserInfo: false,
+            // 禁用隐式注册：需要显式调用注册才能创建新用户
+            disableImplicitSignUp: false,
+            // 限制每个用户可以注册的 SSO 提供商数量
+            providersLimit: 10,
+            // 信任邮箱验证状态：信任 SSO 提供商的邮箱验证状态
+            trustEmailVerified: true,
+        }),
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},
 })
