@@ -153,6 +153,7 @@
                                     icon="mdi mdi-eye"
                                     size="small"
                                     severity="info"
+                                    :loading="viewLoading"
                                     @click="viewProvider(data)"
                                 />
                                 <Button
@@ -160,6 +161,7 @@
                                     icon="mdi mdi-pencil"
                                     size="small"
                                     severity="warning"
+                                    :loading="editLoading"
                                     @click="editProvider(data)"
                                 />
                                 <Button
@@ -659,11 +661,26 @@
 import { ref, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { debounce } from 'lodash-es'
-import { validateEmail, validateUrl } from '@/utils/validate'
+import { validateUrl } from '@/utils/validate'
 
 definePageMeta({
     title: 'SSO 提供商管理 - 草梅 Auth',
     layout: 'admin',
+})
+
+// 设置页面 SEO
+useHead({
+    title: 'SSO 提供商管理',
+    meta: [
+        {
+            name: 'description',
+            content: '管理单点登录（SSO）提供商，支持 OIDC 和 SAML 协议的配置和管理',
+        },
+        {
+            name: 'keywords',
+            content: 'SSO,单点登录,OIDC,SAML,身份验证,提供商管理',
+        },
+    ],
 })
 
 const toast = useToast()
@@ -676,6 +693,8 @@ const editing = ref(false)
 const submitting = ref(false)
 const deleting = ref(false)
 const toggling = ref(false)
+const viewLoading = ref(false)
+const editLoading = ref(false)
 const selectedProvider = ref<any>(null)
 
 // 搜索和筛选
@@ -775,13 +794,31 @@ function getMetadataUrl(provider: any) {
 }
 
 // 使用 useFetch 进行 SSR 优化的数据获取
-const { data: providersResponse, pending: loading, refresh: refreshProviders } = await useFetch('/api/admin/sso/providers', {
+const { data: providersResponse, pending: loading, refresh: refreshProviders, error: fetchError } = await useFetch('/api/admin/sso/providers', {
     default: () => ({ success: false, data: [] }),
+    server: true, // 确保在服务端执行
+    key: 'sso-providers', // 缓存键
     transform: (response: any) => response,
+    onResponseError({ response }) {
+        console.error('[SSO Providers] Fetch error:', response.status, response.statusText)
+    },
 })
 
 // 响应式的提供商列表
 const providers = computed(() => (providersResponse.value?.success ? providersResponse.value.data : []))
+
+// 监听获取错误
+watch(fetchError, (error) => {
+    if (error) {
+        console.error('[SSO Providers] Data fetch error:', error)
+        toast.add({
+            severity: 'error',
+            summary: '数据加载失败',
+            detail: '无法获取SSO提供商列表，请刷新页面重试',
+            life: 5000,
+        })
+    }
+}, { immediate: true })
 
 // 计算属性：过滤后的提供商列表
 const filteredProviders = computed(() => {
@@ -816,11 +853,28 @@ const debouncedSearch = debounce(() => {
 }, 300)
 
 // 刷新提供商列表的处理函数
-const handleRefreshProviders = () => {
-    searchQuery.value = ''
-    typeFilter.value = ''
-    statusFilter.value = ''
-    refreshProviders()
+const handleRefreshProviders = async () => {
+    try {
+        searchQuery.value = ''
+        typeFilter.value = ''
+        statusFilter.value = ''
+        await refreshProviders()
+
+        toast.add({
+            severity: 'success',
+            summary: '刷新成功',
+            detail: 'SSO提供商列表已刷新',
+            life: 2000,
+        })
+    } catch (error: any) {
+        console.error('刷新提供商列表失败:', error)
+        toast.add({
+            severity: 'error',
+            summary: '刷新失败',
+            detail: '无法刷新提供商列表，请检查网络连接',
+            life: 3000,
+        })
+    }
 }
 
 // 重置表单
@@ -871,88 +925,110 @@ function resetForm() {
 }
 
 // 编辑提供商
-function editProvider(provider: any) {
-    editing.value = true
-    selectedProvider.value = provider
+async function editProvider(provider: any) {
+    try {
+        editLoading.value = true
+        editing.value = true
+        selectedProvider.value = provider
 
-    formData.value = {
-        type: provider.type || 'oidc',
-        providerId: provider.providerId || '',
-        name: provider.name || '',
-        description: provider.description || '',
-        issuer: provider.issuer || '',
-        domain: provider.domain || '',
-        organizationId: provider.organizationId || '',
-        enabled: provider.enabled !== false,
-    }
+        // 从API获取最新的提供商数据
+        const response = await $fetch(`/api/admin/sso/providers/${provider.id}`)
 
-    // 解析配置
-    if (provider.type === 'oidc' && provider.oidcConfig) {
-        try {
-            const oidcConfig = typeof provider.oidcConfig === 'string'
-                ? JSON.parse(provider.oidcConfig)
-                : provider.oidcConfig
-
-            oidcFormData.value = {
-                clientId: oidcConfig.clientId || '',
-                clientSecret: oidcConfig.clientSecret || '',
-                discoveryEndpoint: oidcConfig.discoveryEndpoint || '',
-                authorizationEndpoint: oidcConfig.authorizationEndpoint || '',
-                tokenEndpoint: oidcConfig.tokenEndpoint || '',
-                userInfoEndpoint: oidcConfig.userInfoEndpoint || '',
-                jwksEndpoint: oidcConfig.jwksEndpoint || '',
-                scopes: oidcConfig.scopes || ['openid', 'profile', 'email'],
-                pkce: oidcConfig.pkce !== false,
-            }
-
-            scopesInput.value = oidcFormData.value.scopes.join(' ')
-
-            // 解析映射配置
-            if (oidcConfig.mapping) {
-                mappingFormData.value = {
-                    id: oidcConfig.mapping.id || 'sub',
-                    email: oidcConfig.mapping.email || 'email',
-                    emailVerified: oidcConfig.mapping.emailVerified || 'email_verified',
-                    name: oidcConfig.mapping.name || 'name',
-                    firstName: '',
-                    lastName: '',
-                    image: oidcConfig.mapping.image || 'picture',
-                }
-            }
-        } catch (error) {
-            console.error('解析 OIDC 配置失败:', error)
+        if (!response?.success) {
+            throw new Error('获取提供商数据失败')
         }
-    } else if (provider.type === 'saml' && provider.samlConfig) {
-        try {
-            const samlConfig = typeof provider.samlConfig === 'string'
-                ? JSON.parse(provider.samlConfig)
-                : provider.samlConfig
 
-            samlFormData.value = {
-                entryPoint: samlConfig.entryPoint || '',
-                certificate: samlConfig.certificate || '',
-                signingKey: samlConfig.signingKey || '',
-                attributeConsumingServiceIndex: samlConfig.attributeConsumingServiceIndex || 0,
-            }
+        const latestProvider = response.data
 
-            // 解析映射配置
-            if (samlConfig.mapping) {
-                mappingFormData.value = {
-                    id: samlConfig.mapping.id || 'nameID',
-                    email: samlConfig.mapping.email || 'email',
-                    emailVerified: '',
-                    name: samlConfig.mapping.name || 'displayName',
-                    firstName: samlConfig.mapping.firstName || 'givenName',
-                    lastName: samlConfig.mapping.lastName || 'surname',
-                    image: '',
-                }
-            }
-        } catch (error) {
-            console.error('解析 SAML 配置失败:', error)
+        formData.value = {
+            type: latestProvider.type || 'oidc',
+            providerId: latestProvider.providerId || '',
+            name: latestProvider.name || '',
+            description: latestProvider.description || '',
+            issuer: latestProvider.issuer || '',
+            domain: latestProvider.domain || '',
+            organizationId: latestProvider.organizationId || '',
+            enabled: latestProvider.enabled !== false,
         }
-    }
 
-    showCreateDialog.value = true
+        // 解析配置
+        if (latestProvider.type === 'oidc' && latestProvider.oidcConfig) {
+            try {
+                const oidcConfig = typeof latestProvider.oidcConfig === 'string'
+                    ? JSON.parse(latestProvider.oidcConfig)
+                    : latestProvider.oidcConfig
+
+                oidcFormData.value = {
+                    clientId: oidcConfig.clientId || latestProvider.clientId || '',
+                    clientSecret: oidcConfig.clientSecret || latestProvider.clientSecret || '',
+                    discoveryEndpoint: oidcConfig.discoveryEndpoint || latestProvider.metadataUrl || '',
+                    authorizationEndpoint: oidcConfig.authorizationEndpoint || '',
+                    tokenEndpoint: oidcConfig.tokenEndpoint || '',
+                    userInfoEndpoint: oidcConfig.userInfoEndpoint || '',
+                    jwksEndpoint: oidcConfig.jwksEndpoint || '',
+                    scopes: oidcConfig.scopes || latestProvider.scopes?.split(' ') || ['openid', 'profile', 'email'],
+                    pkce: oidcConfig.pkce !== false,
+                }
+
+                scopesInput.value = oidcFormData.value.scopes.join(' ')
+
+                // 解析映射配置
+                if (oidcConfig.mapping) {
+                    mappingFormData.value = {
+                        id: oidcConfig.mapping.id || 'sub',
+                        email: oidcConfig.mapping.email || 'email',
+                        emailVerified: oidcConfig.mapping.emailVerified || 'email_verified',
+                        name: oidcConfig.mapping.name || 'name',
+                        firstName: '',
+                        lastName: '',
+                        image: oidcConfig.mapping.image || 'picture',
+                    }
+                }
+            } catch (error) {
+                console.error('解析 OIDC 配置失败:', error)
+            }
+        } else if (latestProvider.type === 'saml' && latestProvider.samlConfig) {
+            try {
+                const samlConfig = typeof latestProvider.samlConfig === 'string'
+                    ? JSON.parse(latestProvider.samlConfig)
+                    : latestProvider.samlConfig
+
+                samlFormData.value = {
+                    entryPoint: samlConfig.entryPoint || '',
+                    certificate: samlConfig.certificate || '',
+                    signingKey: samlConfig.signingKey || '',
+                    attributeConsumingServiceIndex: samlConfig.attributeConsumingServiceIndex || 0,
+                }
+
+                // 解析映射配置
+                if (samlConfig.mapping) {
+                    mappingFormData.value = {
+                        id: samlConfig.mapping.id || 'nameID',
+                        email: samlConfig.mapping.email || 'email',
+                        emailVerified: '',
+                        name: samlConfig.mapping.name || 'displayName',
+                        firstName: samlConfig.mapping.firstName || 'givenName',
+                        lastName: samlConfig.mapping.lastName || 'surname',
+                        image: '',
+                    }
+                }
+            } catch (error) {
+                console.error('解析 SAML 配置失败:', error)
+            }
+        }
+
+        showCreateDialog.value = true
+    } catch (error: any) {
+        console.error('获取提供商编辑数据失败:', error)
+        toast.add({
+            severity: 'error',
+            summary: '获取数据失败',
+            detail: error.message || '无法获取提供商数据进行编辑',
+            life: 3000,
+        })
+    } finally {
+        editLoading.value = false
+    }
 }
 
 // 表单验证
@@ -1083,29 +1159,23 @@ async function submitProvider() {
             }
         }
 
-        let data
-        let error
-
+        let response
         if (editing.value) {
-            // 更新提供商
-            const response = await $fetch(`/api/admin/sso/providers/${selectedProvider.value.id}`, {
+            // 更新提供商 - 使用 PUT 方法
+            response = await $fetch(`/api/admin/sso/providers/${selectedProvider.value.id}`, {
                 method: 'PUT',
                 body: payload,
             })
-            if (!response.success) {
-                throw new Error('更新失败')
-            }
-            data = response.data
         } else {
-            // 创建提供商
-            const response = await $fetch('/api/admin/sso/providers', {
+            // 创建提供商 - 使用 POST 方法
+            response = await $fetch('/api/admin/sso/providers', {
                 method: 'POST',
                 body: payload,
             })
-            if (!response.success) {
-                throw new Error('创建失败')
-            }
-            data = response.data
+        }
+
+        if (!response.success) {
+            throw new Error(response.message || '操作失败')
         }
 
         toast.add({
@@ -1131,9 +1201,31 @@ async function submitProvider() {
 }
 
 // 查看提供商详情
-function viewProvider(provider: any) {
-    selectedProvider.value = provider
-    showViewDialog.value = true
+async function viewProvider(provider: any) {
+    try {
+        viewLoading.value = true
+        selectedProvider.value = null
+
+        // 使用新的API获取详细信息
+        const response = await $fetch(`/api/admin/sso/providers/${provider.id}`)
+
+        if (response?.success) {
+            selectedProvider.value = response.data
+            showViewDialog.value = true
+        } else {
+            throw new Error('获取提供商详情失败')
+        }
+    } catch (error: any) {
+        console.error('获取提供商详情失败:', error)
+        toast.add({
+            severity: 'error',
+            summary: '获取详情失败',
+            detail: error.message || '无法获取提供商详细信息',
+            life: 3000,
+        })
+    } finally {
+        viewLoading.value = false
+    }
 }
 
 // 删除提供商
@@ -1144,6 +1236,10 @@ function deleteProvider(provider: any) {
 
 // 确认删除
 async function confirmDelete() {
+    if (!selectedProvider.value) {
+        return
+    }
+
     try {
         deleting.value = true
 
@@ -1152,7 +1248,7 @@ async function confirmDelete() {
         })
 
         if (!response.success) {
-            throw new Error('删除失败')
+            throw new Error(response.message || '删除失败')
         }
 
         toast.add({
@@ -1163,8 +1259,10 @@ async function confirmDelete() {
         })
 
         showDeleteDialog.value = false
+        selectedProvider.value = null
         await refreshProviders()
     } catch (error: any) {
+        console.error('删除 SSO 提供商失败:', error)
         toast.add({
             severity: 'error',
             summary: '删除失败',
@@ -1178,13 +1276,21 @@ async function confirmDelete() {
 
 // 切换提供商状态
 async function toggleProviderStatus(provider: any) {
+    if (!provider) {
+        return
+    }
+
     try {
         toggling.value = true
 
-        await $fetch(`/api/admin/sso/providers/${provider.id}`, {
+        const response = await $fetch(`/api/admin/sso/providers/${provider.id}`, {
             method: 'PUT',
             body: { enabled: !provider.enabled },
         })
+
+        if (!response.success) {
+            throw new Error(response.message || '状态更新失败')
+        }
 
         toast.add({
             severity: 'success',
@@ -1195,6 +1301,7 @@ async function toggleProviderStatus(provider: any) {
 
         await refreshProviders()
     } catch (error: any) {
+        console.error('切换提供商状态失败:', error)
         toast.add({
             severity: 'error',
             summary: '状态更新失败',
