@@ -78,7 +78,7 @@ export default defineConfig({
                     ]
                 },
                 {
-                    text: '社交登录配置',
+                    text: '社交媒体登录',
                     items: [
                         { text: 'GitHub', link: '/docs/login-config/social/github' },
                         { text: 'Google', link: '/docs/login-config/social/google' },
@@ -89,7 +89,7 @@ export default defineConfig({
                     ]
                 },
                 {
-                    text: '自定义提供商',
+                    text: '区域社交媒体登录',
                     items: [
                         { text: '微信', link: '/docs/login-config/social/wechat' },
                         { text: 'QQ', link: '/docs/login-config/social/qq' },

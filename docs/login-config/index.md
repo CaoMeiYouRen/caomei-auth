@@ -22,7 +22,7 @@
 
 ### 社交登录方式
 
-#### 内置提供商
+#### 国际社交媒体
 - [GitHub](./social/github) - 开发者友好的登录方式
 - [Google](./social/google) - 最广泛使用的社交登录
 - [Microsoft](./social/microsoft) - 企业级应用集成
@@ -30,7 +30,7 @@
 - [Apple](./social/apple) - iOS 生态集成
 - [Twitter](./social/twitter) - 社交媒体集成
 
-#### 自定义提供商
+#### 区域社交媒体
 - [微博](./social/weibo) - 中国主流社交平台
 - [QQ](./social/qq) - 腾讯生态集成
 - [微信](./social/wechat) - 微信生态集成
