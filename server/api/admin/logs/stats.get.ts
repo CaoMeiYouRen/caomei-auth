@@ -5,6 +5,7 @@ import { Session } from '@/server/entities/session'
 import { User } from '@/server/entities/user'
 import { Account } from '@/server/entities/account'
 import { checkAdmin } from '@/server/utils/check-admin'
+import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     // 检查管理员权限

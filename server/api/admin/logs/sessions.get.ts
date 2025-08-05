@@ -6,6 +6,7 @@ import { User } from '@/server/entities/user'
 import { Account } from '@/server/entities/account'
 import { checkAdmin } from '@/server/utils/check-admin'
 import { parseUserAgent } from '@/utils/useragent'
+import logger from '@/server/utils/logger'
 
 interface SessionLogQuery {
     page?: number
@@ -122,7 +123,17 @@ export default defineEventHandler(async (event) => {
             },
         }
     } catch (error) {
-        console.error('获取登录日志失败:', error)
+        logger.api.error({
+            method: 'GET',
+            path: '/api/admin/logs/sessions',
+            error: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+        })
+        logger.error('获取登录日志失败', {
+            error: error instanceof Error ? error.message : String(error),
+            query,
+            stack: error instanceof Error ? error.stack : undefined,
+        })
         throw createError({
             statusCode: 500,
             statusMessage: 'Internal Server Error',

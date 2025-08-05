@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth'
 import { publicPaths } from '@/utils/public-paths'
 import { checkAndSyncAdminRoleWithUser, isUserAdmin } from '@/server/utils/admin-role-sync'
+import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     const session = await auth.api.getSession({
@@ -17,7 +18,12 @@ export default defineEventHandler(async (event) => {
         try {
             await checkAndSyncAdminRoleWithUser(session.user as any)
         } catch (error) {
-            console.error('管理员角色同步失败:', error)
+            logger.error('管理员角色同步失败', {
+                error: error instanceof Error ? error.message : String(error),
+                userId: session.user.id,
+                path: event.path,
+                stack: error instanceof Error ? error.stack : undefined,
+            })
         }
     }
     // console.log('event.path', event.path)

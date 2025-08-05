@@ -1,3 +1,4 @@
+import path from 'path'
 import ms from 'ms'
 import { DataSource, DataSourceOptions } from 'typeorm'
 import { Account } from '../entities/account'
@@ -10,6 +11,7 @@ import { OAuthApplication } from '../entities/oauth-application'
 import { OAuthConsent } from '../entities/oauth-consent'
 import { Jwks } from '../entities/jwks'
 import { SSOProvider } from '../entities/sso-provider'
+import logger from '../utils/logger'
 import { SnakeCaseNamingStrategy } from './naming-strategy'
 import {
     DATABASE_TYPE,
@@ -104,13 +106,33 @@ export const initializeDB = async () => {
             await AppDataSource.initialize()
             // 更新连接状态
             isInitialized = true
-            console.log(`Database initialized successfully with type: ${dbType}`)
+            logger.system.startup({
+                dbType,
+                env: process.env.NODE_ENV,
+            })
+            logger.info(`Database initialized successfully with type: ${dbType}`, {
+                type: 'database',
+                event: 'initialized',
+                dbType,
+            })
         } catch (error: any) {
-            console.error('Error initializing database:', error)
+            logger.database.error({
+                error: error.message,
+                stack: error.stack,
+                query: 'database_initialization',
+            })
+            logger.error('Error initializing database', {
+                error: error.message,
+                dbType,
+                stack: error.stack,
+            })
             throw new Error(`Database initialization failed: ${error.message}`)
         }
     } catch (error: any) {
-        console.error('Error creating database configuration:', error)
+        logger.error('Error creating database configuration', {
+            error: error.message,
+            stack: error.stack,
+        })
         throw error
     }
 

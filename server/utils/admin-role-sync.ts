@@ -1,3 +1,4 @@
+import logger from './logger'
 import { dataSource } from '@/server/database'
 import { User } from '@/server/entities/user'
 import { ADMIN_USER_IDS } from '@/utils/env'
@@ -19,7 +20,11 @@ export async function checkAndSyncAdminRole(userId: string): Promise<boolean> {
 
         return await checkAndSyncAdminRoleWithUser(user)
     } catch (error) {
-        console.error('检查和同步管理员角色失败:', error)
+        logger.error('检查和同步管理员角色失败', {
+            error: error instanceof Error ? error.message : String(error),
+            userId,
+            stack: error instanceof Error ? error.stack : undefined,
+        })
         return false
     }
 }
@@ -49,7 +54,16 @@ export async function checkAndSyncAdminRoleWithUser(user: User): Promise<boolean
                 // 保存到数据库
                 const userRepo = dataSource.getRepository(User)
                 await userRepo.save(user)
-                console.log(`自动为用户 ${user.id} 添加管理员角色`)
+                logger.business.userRegistered({
+                    userId: user.id,
+                    email: user.email,
+                    provider: 'auto-admin-sync',
+                })
+                logger.info(`自动为用户 ${user.id} 添加管理员角色`, {
+                    userId: user.id,
+                    email: user.email,
+                    type: 'admin_role_sync',
+                })
             }
             return true
         }
@@ -60,7 +74,12 @@ export async function checkAndSyncAdminRoleWithUser(user: User): Promise<boolean
         // 返回是否为管理员（任一条件满足即可）
         return isAdminUserId || hasAdminRole
     } catch (error) {
-        console.error('检查和同步管理员角色失败:', error)
+        logger.error('检查和同步管理员角色失败', {
+            error: error instanceof Error ? error.message : String(error),
+            userId: user.id,
+            email: user.email,
+            stack: error instanceof Error ? error.stack : undefined,
+        })
         return false
     }
 }
@@ -103,12 +122,21 @@ export async function setUserAdminRole(userId: string): Promise<boolean> {
             currentRoles.push('admin')
             user.role = currentRoles.join(',')
             await userRepo.save(user)
-            console.log(`为用户 ${userId} 设置管理员角色`)
+            logger.info(`为用户 ${userId} 设置管理员角色`, {
+                userId,
+                email: user.email,
+                type: 'admin_role_manual_set',
+                roles: currentRoles,
+            })
         }
 
         return true
     } catch (error) {
-        console.error('设置管理员角色失败:', error)
+        logger.error('设置管理员角色失败', {
+            error: error instanceof Error ? error.message : String(error),
+            userId,
+            stack: error instanceof Error ? error.stack : undefined,
+        })
         return false
     }
 }
@@ -123,7 +151,16 @@ export async function removeUserAdminRole(userId: string, currentUserId?: string
     try {
         // 防止用户移除自己的管理员权限
         if (currentUserId && userId === currentUserId) {
-            console.warn(`用户 ${userId} 试图移除自己的管理员权限，操作被拒绝`)
+            logger.security.permissionDenied({
+                userId,
+                resource: 'admin_role',
+                action: 'remove_self',
+            })
+            logger.warn(`用户 ${userId} 试图移除自己的管理员权限，操作被拒绝`, {
+                userId,
+                currentUserId,
+                type: 'admin_role_self_removal_denied',
+            })
             return false
         }
 
@@ -146,11 +183,22 @@ export async function removeUserAdminRole(userId: string, currentUserId?: string
 
         user.role = newRoles.join(',')
         await userRepo.save(user)
-        console.log(`为用户 ${userId} 移除管理员角色`)
+        logger.info(`为用户 ${userId} 移除管理员角色`, {
+            userId,
+            email: user.email,
+            type: 'admin_role_manual_remove',
+            roles: newRoles,
+            operatorId: currentUserId,
+        })
 
         return true
     } catch (error) {
-        console.error('移除管理员角色失败:', error)
+        logger.error('移除管理员角色失败', {
+            error: error instanceof Error ? error.message : String(error),
+            userId,
+            currentUserId,
+            stack: error instanceof Error ? error.stack : undefined,
+        })
         return false
     }
 }

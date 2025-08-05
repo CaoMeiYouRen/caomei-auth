@@ -1371,6 +1371,7 @@ return `${days}天前`
 </script>
 
 <style lang="scss" scoped>
+@use "sass:color";
 @import '@/styles/theme';
 @import '@/styles/form';
 @import '@/styles/common';
@@ -1749,8 +1750,8 @@ return `${days}天前`
         border-color: $error;
 
         &:hover {
-            background: darken($error, 10%);
-            border-color: darken($error, 10%);
+            background: color.scale($error, $lightness: -10%);
+            border-color: color.scale($error, $lightness: -10%);
         }
     }
 }
