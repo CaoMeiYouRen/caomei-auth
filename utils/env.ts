@@ -19,6 +19,11 @@ export const AUTH_SECRET = process.env.AUTH_SECRET || process.env.BETTER_AUTH_SE
 // 应用名称
 export const APP_NAME = process.env.NUXT_PUBLIC_APP_NAME || import.meta.env.NUXT_PUBLIC_APP_NAME as string || '草梅Auth'
 
+// 是否写入日志到文件
+export const LOGFILES = process.env.LOGFILES === 'true'
+// 日志等级
+export const LOG_LEVEL = process.env.LOG_LEVEL || (process.env.NODE_ENV === 'development' ? 'silly' : 'http')
+
 /**
  * 文件上传配置
  * 包含文件上传大小限制、每日限额等设置
