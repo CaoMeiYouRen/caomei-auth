@@ -1,0 +1,4 @@
+{
+    "devCommand": "pnpm dev",
+    "framework": "nuxtjs"
+}

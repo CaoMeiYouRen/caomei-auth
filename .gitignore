@@ -21,6 +21,7 @@ node_modules
 # Local env files
 .env
 .env.*
+.env*.local
 !.env.example
 
 *.db
@@ -30,3 +31,6 @@ node_modules
 *.pem
 
 .vitepress/cache
+
+.vercel
+
