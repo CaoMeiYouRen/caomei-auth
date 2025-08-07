@@ -11,6 +11,27 @@ export default defineConfig({
     cleanUrls: true,
     // 不会因为死链而导致构建失败
     ignoreDeadLinks: true,
+    // Markdown 配置
+    markdown: {
+        lineNumbers: true,
+        config: (md) => {
+            // 修复不支持的语言标识符
+            const fence = md.renderer.rules.fence!
+            md.renderer.rules.fence = (...args) => {
+                const [tokens, idx] = args
+                const token = tokens[idx]
+                // 将不支持的语言标识符映射到支持的语言
+                const langMap: Record<string, string> = {
+                    'env': 'bash',
+                    'dns': 'text'
+                }
+                if (token.info && langMap[token.info]) {
+                    token.info = langMap[token.info]
+                }
+                return fence(...args)
+            }
+        }
+    },
     // 重定向路由
     rewrites: {
         'README.md': 'index.md',

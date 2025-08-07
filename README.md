@@ -92,38 +92,46 @@ pnpm preview
 ## 🛠️ 技术栈
 
 <table>
-  <tr>
-    <td><strong>前端框架</strong></td>
-    <td>Vue 3, Nuxt 3</td>
-  </tr>
-  <tr>
-    <td><strong>UI 组件库</strong></td>
-    <td>PrimeVue, @mdi/font</td>
-  </tr>
-  <tr>
-    <td><strong>认证框架</strong></td>
-    <td>Better Auth</td>
-  </tr>
-  <tr>
-    <td><strong>数据库</strong></td>
-    <td>PostgreSQL, MySQL, SQLite</td>
-  </tr>
-  <tr>
-    <td><strong>ORM</strong></td>
-    <td>TypeORM</td>
-  </tr>
-  <tr>
-    <td><strong>样式预处理</strong></td>
-    <td>SCSS</td>
-  </tr>
-  <tr>
-    <td><strong>包管理器</strong></td>
-    <td>PNPM</td>
-  </tr>
-  <tr>
-    <td><strong>类型检查</strong></td>
-    <td>TypeScript</td>
-  </tr>
+  <thead>
+    <tr>
+      <th>技术分类</th>
+      <th>使用技术</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>前端框架</strong></td>
+      <td>Vue 3, Nuxt 3</td>
+    </tr>
+    <tr>
+      <td><strong>UI 组件库</strong></td>
+      <td>PrimeVue, @mdi/font</td>
+    </tr>
+    <tr>
+      <td><strong>认证框架</strong></td>
+      <td>Better Auth</td>
+    </tr>
+    <tr>
+      <td><strong>数据库</strong></td>
+      <td>PostgreSQL, MySQL, SQLite</td>
+    </tr>
+    <tr>
+      <td><strong>ORM</strong></td>
+      <td>TypeORM</td>
+    </tr>
+    <tr>
+      <td><strong>样式预处理</strong></td>
+      <td>SCSS</td>
+    </tr>
+    <tr>
+      <td><strong>包管理器</strong></td>
+      <td>PNPM</td>
+    </tr>
+    <tr>
+      <td><strong>类型检查</strong></td>
+      <td>TypeScript</td>
+    </tr>
+  </tbody>
 </table>
 
 ## 📋 功能列表
