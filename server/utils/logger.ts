@@ -5,25 +5,25 @@ import { LOGFILES, LOG_LEVEL } from '@/utils/env'
 
 // 自定义日志格式
 const createCustomFormat = () => winston.format.combine(
-        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZ' }),
-        winston.format.errors({ stack: true }), // 捕获错误堆栈
-        winston.format.splat(),
-        winston.format.json(), // 使用JSON格式便于解析
-    )
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZ' }),
+    winston.format.errors({ stack: true }), // 捕获错误堆栈
+    winston.format.splat(),
+    winston.format.json(), // 使用JSON格式便于解析
+)
 
 // 控制台输出格式（带颜色）
 const createConsoleFormat = () => winston.format.combine(
-        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
-        winston.format.errors({ stack: true }),
-        winston.format.splat(),
-        winston.format.printf((info) => {
-            const level = winston.format.colorize().colorize(info.level, `[${info.timestamp}] ${info.level.toUpperCase()}`)
-            const message = info.message
-            const meta = info.meta ? ` ${JSON.stringify(info.meta)}` : ''
-            const stack = info.stack ? `\n${info.stack}` : ''
-            return `${level}: ${message}${meta}${stack}`
-        }),
-    )
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+    winston.format.errors({ stack: true }),
+    winston.format.splat(),
+    winston.format.printf((info) => {
+        const level = winston.format.colorize().colorize(info.level, `[${info.timestamp}] ${info.level.toUpperCase()}`)
+        const message = info.message
+        const meta = info.meta ? ` ${JSON.stringify(info.meta)}` : ''
+        const stack = info.stack ? `\n${info.stack}` : ''
+        return `${level}: ${message}${meta}${stack}`
+    }),
+)
 
 function createLogger() {
     const logDir = path.resolve('logs')
