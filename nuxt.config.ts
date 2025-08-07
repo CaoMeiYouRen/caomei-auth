@@ -119,7 +119,7 @@ export default defineNuxtConfig({
         },
 
         build: {
-            minify: 'esbuild',
+            // minify: 'esbuild',
         },
     },
     devServer: {
