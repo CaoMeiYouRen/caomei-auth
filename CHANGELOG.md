@@ -1,5 +1,36 @@
 # caomei-auth
 
+# [1.3.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.2.0...v1.3.0) (2025-08-09)
+
+
+### ♻ 代码重构
+
+* **logger:** 优化日志格式化代码，提升可读性和一致性 ([419b480](https://github.com/CaoMeiYouRen/caomei-auth/commit/419b480))
+* **logger:** 简化日志记录实现，移除不必要的依赖和复杂性 ([2ac9ebf](https://github.com/CaoMeiYouRen/caomei-auth/commit/2ac9ebf))
+* **oauth:** 重构OAuth应用管理路由和命名 ([e5f91e3](https://github.com/CaoMeiYouRen/caomei-auth/commit/e5f91e3))
+* **sso:** 添加SSO提供商的增删改查功能，支持敏感信息隐藏和错误处理 ([61e2857](https://github.com/CaoMeiYouRen/caomei-auth/commit/61e2857))
+* 移除 @hyperwatch/useragent 依赖，改用 ua-parser-js 进行用户代理解析 ([998e3d8](https://github.com/CaoMeiYouRen/caomei-auth/commit/998e3d8))
+
+
+### ✨ 新功能
+
+* **admin:** 添加项目文档链接到侧边栏，增强用户导航体验 ([61ed851](https://github.com/CaoMeiYouRen/caomei-auth/commit/61ed851))
+* **auth:** 添加SSO登录功能和管理界面 ([593b599](https://github.com/CaoMeiYouRen/caomei-auth/commit/593b599))
+* **logging:** 添加日志记录功能，支持每日轮转和错误处理 ([571df39](https://github.com/CaoMeiYouRen/caomei-auth/commit/571df39))
+* **logging:** 集成 Winston 日志库，增强日志记录功能，支持多种日志级别和格式 ([7e3fe34](https://github.com/CaoMeiYouRen/caomei-auth/commit/7e3fe34))
+* **sso:** 更新SSO提供商管理功能，添加敏感信息隐藏和错误处理 ([1c03f70](https://github.com/CaoMeiYouRen/caomei-auth/commit/1c03f70))
+* **sso:** 添加SSO提供商管理界面的数据加载和错误处理功能 ([efc9fd1](https://github.com/CaoMeiYouRen/caomei-auth/commit/efc9fd1))
+* **user-management:** 更新用户搜索功能，支持有效邮箱和姓名搜索，优化@符号处理 ([682ea31](https://github.com/CaoMeiYouRen/caomei-auth/commit/682ea31))
+* **user-management:** 添加用户管理页面的排序、搜索和筛选功能 ([fedd0da](https://github.com/CaoMeiYouRen/caomei-auth/commit/fedd0da))
+* 添加 SSOProvider 实体以管理单点登录配置 ([2352248](https://github.com/CaoMeiYouRen/caomei-auth/commit/2352248))
+* 添加无障碍适配文档，提升用户体验；为社交登录提供者添加图标支持 ([15908c0](https://github.com/CaoMeiYouRen/caomei-auth/commit/15908c0))
+
+
+### 🐛 Bug 修复
+
+* **auth:** 使用 crypto 模块生成更安全的 OAuth 客户端密钥 ([3a18ccc](https://github.com/CaoMeiYouRen/caomei-auth/commit/3a18ccc))
+* **storage:** 修复内存存储类型和增量逻辑，确保正确处理字符串值 ([f653ab1](https://github.com/CaoMeiYouRen/caomei-auth/commit/f653ab1))
+
 # [1.2.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.1.0...v1.2.0) (2025-08-02)
 
 
