@@ -377,7 +377,7 @@ const statusOptions = [
 ]
 
 // 计算属性
-const providerStatsData = computed(() => statsData.value?.providers || [])
+const providerStatsData = computed(() => (statsData.value?.providers || []).sort((a: any, b: any) => b.count - a.count))
 const trendData = computed(() => statsData.value?.trend || [])
 const maxProviderCount = computed(() => Math.max(...providerStatsData.value.map((item: any) => item.count), 1),
 )
