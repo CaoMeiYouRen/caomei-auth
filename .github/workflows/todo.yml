@@ -16,6 +16,6 @@ jobs:
     timeout-minutes: 10
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v5"
       - name: "TODO to Issue"
         uses: "alstr/todo-to-issue-action@v4"
