@@ -245,8 +245,8 @@ const extendedLogger: ExtendedLogger = {
 
     // 系统相关日志
     system: {
-        startup: (data) => systemLogger.ready(`System started on port ${data.port || 'unknown'} (${data.env || 'unknown'} mode)`, data),
-        shutdown: (data) => systemLogger.info(`System shutting down: ${data.reason || 'Unknown reason'}`, data),
+        startup: (data) => systemLogger.ready(`System started on port ${data.port || 'unknown'} (${data.env || 'unknown'} mode)`),
+        shutdown: (data) => systemLogger.info(`System shutting down: ${data.reason || 'Unknown reason'}`),
         healthCheck: (data) => {
             if (data.status === 'healthy') {
                 systemLogger.success('Health check passed', data)

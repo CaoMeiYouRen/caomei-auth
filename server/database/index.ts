@@ -12,6 +12,7 @@ import { OAuthConsent } from '../entities/oauth-consent'
 import { Jwks } from '../entities/jwks'
 import { SSOProvider } from '../entities/sso-provider'
 import logger from '../utils/logger'
+import { CustomLogger } from './logger'
 import { SnakeCaseNamingStrategy } from './naming-strategy'
 import {
     DATABASE_TYPE,
@@ -37,102 +38,86 @@ export const initializeDB = async () => {
         return AppDataSource
     }
 
+    // 从环境变量获取数据库类型
+    const dbType = DATABASE_TYPE
+
+    // 检查数据库类型是否支持
+    if (!SUPPORTED_DATABASE_TYPES.includes(dbType)) {
+        throw new Error(`Unsupported database type: ${dbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
+    }
+
+    // 数据库配置
+    let options: DataSourceOptions
+
+    // 配置数据库连接
+    switch (dbType) {
+        case 'sqlite':
+            options = {
+                type: 'sqlite',
+                database: DATABASE_PATH, // 默认 SQLite 数据库路径
+            }
+            break
+        case 'mysql':
+            options = {
+                type: dbType as any,
+                url: DATABASE_URL,
+                supportBigNumbers: true, // 处理数据库中的大数字
+                bigNumberStrings: false, // 仅当它们无法用 JavaScript Number 对象准确表示时才会返回大数字作为 String 对象
+                ssl: DATABASE_SSL ? { rejectUnauthorized: false } : false, // 是否启用 SSL
+                connectTimeout: ms('60 s'), // 连接超时设置为 60 秒
+                charset: DATABASE_CHARSET, // 连接的字符集
+                timezone: DATABASE_TIMEZONE, // 连接的时区
+            }
+            break
+        case 'postgres':
+            options = {
+                type: dbType as any,
+                url: DATABASE_URL,
+                parseInt8: true, // 解析 bigint 为 number。将 64 位整数（int8）解析为 JavaScript 整数
+                ssl: DATABASE_SSL ? { rejectUnauthorized: false } : false, // 是否启用 SSL
+                extra: {
+                    max: 20,
+                    connectionTimeoutMillis: ms('60s'), // 连接超时设置为 60 秒
+                },
+            }
+            break
+        default:
+            throw new Error(`Unsupported database type: ${dbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
+    }
+
+    // 创建数据源
+    AppDataSource = new DataSource({
+        ...options,
+        entities,
+        synchronize: process.env.NODE_ENV !== 'production',
+        logging: process.env.NODE_ENV === 'development',
+        logger: new CustomLogger(),
+        entityPrefix: DATABASE_ENTITY_PREFIX,   // 所有表（或集合）加的前缀
+        namingStrategy: new SnakeCaseNamingStrategy(), // 表、字段命名策略，改为 snake_case
+        cache: false, // 是否启用实体结果缓存
+        maxQueryExecutionTime: 3000, // 记录耗时长的查询
+    })
+
     try {
-        // 从环境变量获取数据库类型
-        const dbType = DATABASE_TYPE
+        // 初始化连接
+        await AppDataSource.initialize()
+        // 更新连接状态
+        isInitialized = true
 
-        // 检查数据库类型是否支持
-        if (!SUPPORTED_DATABASE_TYPES.includes(dbType)) {
-            throw new Error(`Unsupported database type: ${dbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
-        }
-
-        // 检查数据库类型是否支持
-        if (!SUPPORTED_DATABASE_TYPES.includes(dbType)) {
-            throw new Error(`Unsupported database type: ${dbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
-        }
-        // 数据库配置
-        let options: DataSourceOptions
-
-        // 配置数据库连接
-        switch (dbType) {
-            case 'sqlite':
-                options = {
-                    type: 'sqlite',
-                    database: DATABASE_PATH, // 默认 SQLite 数据库路径
-                }
-                break
-            case 'mysql':
-                options = {
-                    type: dbType as any,
-                    url: DATABASE_URL,
-                    supportBigNumbers: true, // 处理数据库中的大数字
-                    bigNumberStrings: false, // 仅当它们无法用 JavaScript Number 对象准确表示时才会返回大数字作为 String 对象
-                    ssl: DATABASE_SSL ? { rejectUnauthorized: false } : false, // 是否启用 SSL
-                    connectTimeout: ms('60 s'), // 连接超时设置为 60 秒
-                    charset: DATABASE_CHARSET, // 连接的字符集
-                    timezone: DATABASE_TIMEZONE, // 连接的时区
-                }
-                break
-            case 'postgres':
-                options = {
-                    type: dbType as any,
-                    url: DATABASE_URL,
-                    parseInt8: true, // 解析 bigint 为 number。将 64 位整数（int8）解析为 JavaScript 整数
-                    ssl: DATABASE_SSL ? { rejectUnauthorized: false } : false, // 是否启用 SSL
-                    extra: {
-                        max: 20,
-                        connectionTimeoutMillis: ms('60s'), // 连接超时设置为 60 秒
-                    },
-                }
-                break
-            default:
-                throw new Error(`Unsupported database type: ${dbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
-        }
-
-        // 创建数据源
-        AppDataSource = new DataSource({
-            ...options,
-            entities,
-            synchronize: process.env.NODE_ENV !== 'production',
-            logging: process.env.NODE_ENV === 'development',
-            entityPrefix: DATABASE_ENTITY_PREFIX,   // 所有表（或集合）加的前缀
-            namingStrategy: new SnakeCaseNamingStrategy(), // 表、字段命名策略，改为 snake_case
-            cache: false, // 是否启用实体结果缓存
-            maxQueryExecutionTime: 3000, // 记录耗时长的查询
+        logger.system.startup({
+            dbType,
+            env: process.env.NODE_ENV,
         })
-
-        try {
-            // 初始化连接
-            await AppDataSource.initialize()
-            // 更新连接状态
-            isInitialized = true
-            logger.system.startup({
-                dbType,
-                env: process.env.NODE_ENV,
-            })
-            logger.info(`Database initialized successfully with type: ${dbType}`, {
-                type: 'database',
-                event: 'initialized',
-                dbType,
-            })
-        } catch (error: any) {
-            logger.database.error({
-                error: error.message,
-                stack: error.stack,
-                query: 'database_initialization',
-            })
-            logger.error('Error initializing database', {
-                error: error.message,
-                dbType,
-                stack: error.stack,
-            })
-            throw new Error(`Database initialization failed: ${error.message}`)
-        }
+        logger.info(`Database initialized successfully with type: ${dbType}`)
     } catch (error: any) {
-        logger.error('Error creating database configuration', {
+        // 使用专门的数据库错误日志记录详细信息
+        logger.database.error({
             error: error.message,
             stack: error.stack,
+            query: `database_initialization (${dbType})`,
         })
+
+        // 直接抛出原始错误，避免多层包装
         throw error
     }
 
