@@ -8,17 +8,25 @@
       <mj-text line-height="1.6" />
     </mj-attributes>
     <mj-style inline="inline">
-      .primary-color { color: {{primaryColor}} !important; }
-      .primary-bg { background-color: {{primaryColor}} !important; }
-      .gradient-bg { background: linear-gradient(135deg, {{primaryColor}} 0%, {{primaryColorLight}} 100%) !important; }
+      .primary-color { color: #e63946 !important; }
+      .primary-bg { background-color: #e63946 !important; }
+      .gradient-bg { background: linear-gradient(135deg, #e63946 0%, #ff6b6b 100%) !important; }
       .security-icon { font-size: 32px; margin-bottom: 16px; }
       .code-box {
-        background: #f7fafc;
-        border: 2px solid #e2e8f0;
-        border-left: 4px solid {{primaryColor}};
-        padding: 16px;
-        border-radius: 8px;
-        margin: 20px 0;
+        background: #f7fafc !important;
+        border: 2px solid #e2e8f0 !important;
+        border-left: 4px solid #e63946 !important;
+        padding: 16px !important;
+        border-radius: 8px !important;
+        margin: 20px 0 !important;
+        word-break: break-all !important;
+      }
+      .security-tip {
+        background: #e6fffa !important;
+        border-left: 4px solid #38b2ac !important;
+        padding: 16px !important;
+        border-radius: 6px !important;
+        margin: 20px 0 !important;
       }
       @media only screen and (max-width: 600px) {
         .mobile-padding { padding: 20px !important; }
@@ -63,7 +71,7 @@
 
           <!-- CTA Button -->
           <mj-button
-            background-color="{{primaryColor}}"
+            css-class="primary-bg"
             color="#ffffff"
             font-size="16px"
             href="{{verificationUrl}}"
@@ -74,25 +82,22 @@
           </mj-button>
 
           <!-- Alternative Link Section -->
-          <mj-section background-color="#f7fafc" border-left="4px solid {{primaryColor}}" padding="20px" margin="30px 0">
-            <mj-column>
-              <mj-text font-size="14px" color="#4a5568" font-weight="600" padding="0 0 10px 0">
-                无法点击按钮？
-              </mj-text>
-              <mj-text font-size="14px" color="#718096" padding="0 0 10px 0">
-                请复制以下链接到浏览器地址栏：
-              </mj-text>
-              <mj-text
-                font-size="12px"
-                color="#4a5568"
-                font-family="Monaco, Consolas, 'Lucida Console', monospace"
-                word-spacing="normal"
-                padding="0"
-              >
-                {{verificationUrl}}
-              </mj-text>
-            </mj-column>
-          </mj-section>
+          <mj-text font-size="14px" color="#4a5568" font-weight="600" padding="30px 0 10px 0">
+            无法点击按钮？
+          </mj-text>
+          <mj-text font-size="14px" color="#718096" padding="0 0 10px 0">
+            请复制以下链接到浏览器地址栏：
+          </mj-text>
+          <mj-text
+            font-size="12px"
+            color="#4a5568"
+            font-family="Monaco, Consolas, 'Lucida Console', monospace"
+            padding="0 0 20px 0"
+            background-color="#f7fafc"
+            css-class="code-box"
+          >
+            {{verificationUrl}}
+          </mj-text>
 
           <!-- Important Notice -->
           <mj-text font-size="16px" color="#4a5568" padding="30px 0 0 0">
@@ -106,16 +111,12 @@
           </mj-text>
 
           <!-- Security Tips -->
-          <mj-section background-color="#e6fffa" border-left="4px solid #38b2ac" padding="20px" margin="30px 0">
-            <mj-column>
-              <mj-text font-size="14px" color="#234e52" font-weight="600" padding="0 0 8px 0">
-                🛡️ 安全提示
-              </mj-text>
-              <mj-text font-size="14px" color="#234e52" padding="0">
-                {{appName}} 永远不会通过邮件要求您提供密码、验证码或其他敏感信息。
-              </mj-text>
-            </mj-column>
-          </mj-section>
+          <mj-text font-size="14px" color="#234e52" font-weight="600" padding="30px 0 8px 0" background-color="#e6fffa">
+            🛡️ 安全提示
+          </mj-text>
+          <mj-text font-size="14px" color="#234e52" padding="8px 0 20px 0" background-color="#e6fffa">
+            {{appName}} 永远不会通过邮件要求您提供密码、验证码或其他敏感信息。
+          </mj-text>
 
         </mj-column>
       </mj-section>
@@ -131,9 +132,9 @@
 
           <!-- Footer Links -->
           <mj-text align="center" font-size="14px" padding="0 0 20px 0">
-            <a href="{{baseUrl}}/docs" style="color: {{primaryColor}}; text-decoration: none; margin: 0 12px;">帮助中心</a>
-            <a href="{{baseUrl}}/privacy" style="color: {{primaryColor}}; text-decoration: none; margin: 0 12px;">隐私政策</a>
-            <a href="{{baseUrl}}/terms" style="color: {{primaryColor}}; text-decoration: none; margin: 0 12px;">服务条款</a>
+            <a href="{{baseUrl}}/docs" style="color: #e63946; text-decoration: none; margin: 0 12px;">帮助中心</a>
+            <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 12px;">隐私政策</a>
+            <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 12px;">服务条款</a>
           </mj-text>
 
           <!-- Copyright -->

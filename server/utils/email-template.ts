@@ -71,7 +71,6 @@ export class EmailTemplateEngine {
             // 编译MJML为HTML
             const { html, errors } = mjml2html(mjmlWithData, {
                 validationLevel: 'soft', // 忽略非关键性错误
-                minify: true, // 压缩HTML
             })
 
             if (errors && errors.length > 0) {
