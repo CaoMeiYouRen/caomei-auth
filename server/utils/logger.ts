@@ -5,10 +5,52 @@ import DailyRotateFile from 'winston-daily-rotate-file'
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
 import { LOG_LEVEL, LOGFILES } from '@/utils/env'
 
-// 创建日志目录
+// 日志目录路径
 const logDir = path.join(process.cwd(), 'logs')
-if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true })
+
+// 检测是否为无服务器环境
+const isServerlessEnvironment = () => {
+    // Vercel
+    if (process.env.VERCEL || process.env.VERCEL_ENV) {
+        return true
+    }
+    // Netlify
+    if (process.env.NETLIFY || process.env.NETLIFY_DEV) {
+        return true
+    }
+    // AWS Lambda
+    if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+        return true
+    }
+    // Cloudflare Workers
+    if (process.env.CF_PAGES || process.env.CLOUDFLARE_ENV) {
+        return true
+    }
+    // 检查只读文件系统路径（常见的无服务器环境特征）
+    if (process.cwd().includes('/var/task') || process.cwd().includes('/tmp')) {
+        return true
+    }
+    return false
+}
+
+// 检查是否可以使用文件日志
+let canWriteToFile = LOGFILES && !isServerlessEnvironment()
+if (LOGFILES && !isServerlessEnvironment()) {
+    try {
+        if (!fs.existsSync(logDir)) {
+            fs.mkdirSync(logDir, { recursive: true })
+        }
+        // 测试写入权限
+        const testFile = path.join(logDir, '.write-test')
+        fs.writeFileSync(testFile, 'test')
+        fs.unlinkSync(testFile)
+    } catch (error) {
+        // 无法创建目录或写入文件，禁用文件日志
+        console.warn('Failed to create log directory or write to file system, file logging will be disabled:', error)
+        canWriteToFile = false
+    }
+} else if (LOGFILES && isServerlessEnvironment()) {
+    console.warn('Serverless environment detected, file logging is disabled')
 }
 
 // 判断是否为生产环境
@@ -58,8 +100,8 @@ const createWinstonLogger = () => {
         }),
     ]
 
-    // 如果启用日志文件，添加文件传输
-    if (LOGFILES) {
+    // 如果可以写入文件，添加文件传输
+    if (canWriteToFile) {
         transports.push(
             // 所有日志文件
             new DailyRotateFile({
@@ -80,14 +122,14 @@ const createWinstonLogger = () => {
         level: LOG_LEVEL,
         format,
         transports,
-        exceptionHandlers: LOGFILES ? [
+        exceptionHandlers: canWriteToFile ? [
             new DailyRotateFile({
                 ...dailyRotateFileOption,
                 level: 'error',
                 filename: '%DATE%.exceptions.log',
             }),
         ] : [],
-        rejectionHandlers: LOGFILES ? [
+        rejectionHandlers: canWriteToFile ? [
             new DailyRotateFile({
                 ...dailyRotateFileOption,
                 level: 'error',
