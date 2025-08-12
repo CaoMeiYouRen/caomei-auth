@@ -40,14 +40,6 @@ export class EmailTemplateEngine {
     }
 
     /**
-     * 组合模板内容
-     */
-    private composeTemplate(baseTemplate: string, mainContent: string, data: EmailTemplateData): string {
-        // 将主要内容插入到基础模板中
-        return baseTemplate.replace('{{mainContent}}', mainContent)
-    }
-
-    /**
      * 获取MJML模板内容
      */
     private getMjmlTemplate(templateName: string): string {

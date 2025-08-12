@@ -85,7 +85,7 @@ export const emailService = {
                     message: `您正在尝试登录 <strong>${APP_NAME}</strong>。请使用以下验证码完成登录：`,
                     verificationCode: otp,
                     expiresIn: expiresInMinutes,
-                    securityTip: '如果不是您本人操作，请立即检查您的账户安全。',
+                    securityTip: '如果不是您本人操作，请忽略此邮件并检查您的账户安全。',
                 },
                 {
                     title: `您的 ${APP_NAME} 登录验证码`,
