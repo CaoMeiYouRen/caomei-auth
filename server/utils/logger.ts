@@ -67,14 +67,14 @@ const format = winston.format.combine(
     }),
 )
 
-// 控制台日志格式配置（带颜色）
+// 控制台日志格式配置（根据环境决定是否带颜色）
 const consoleFormat = winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
     winston.format.errors({ stack: true }),
     winston.format.ms(),
     winston.format.splat(),
     nestWinstonModuleUtilities.format.nestLike('caomei-auth', {
-        colors: true,
+        colors: !isServerlessEnvironment(), // 在无服务器环境中禁用颜色
         prettyPrint: true,
     }),
 )
