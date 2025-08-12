@@ -282,7 +282,7 @@
                                 {{ formatDateTime(data.loginTime) }}
                             </template>
                         </Column>
-                        <Column field="provider" header="登录方式">
+                        <!-- <Column field="provider" header="登录方式">
                             <template #body="{data}">
                                 <div class="provider-cell">
                                     <i
@@ -292,7 +292,7 @@
                                     <span>{{ getProviderName(data.provider) }}</span>
                                 </div>
                             </template>
-                        </Column>
+                        </Column> -->
                         <Column field="ipAddress" header="IP地址" />
                         <Column field="device" header="设备信息">
                             <template #body="{data}">
