@@ -80,6 +80,7 @@ export default defineNuxtConfig({
             phoneEnabled: process.env.NUXT_PUBLIC_PHONE_ENABLED || (process.env.PHONE_CHANNEL ? 'true' : ''),
             sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
             clarityProjectId: process.env.NUXT_PUBLIC_CLARITY_PROJECT_ID,
+            baiduAnalyticsId: process.env.NUXT_PUBLIC_BAIDU_ANALYTICS_ID,
         },
     },
     primevue: {

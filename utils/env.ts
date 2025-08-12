@@ -33,7 +33,7 @@ export const STORAGE_TYPE = process.env.STORAGE_TYPE || ''
 // 文件名前缀
 export const BUCKET_PREFIX = process.env.BUCKET_PREFIX || ''
 // 最大允许上传的文件大小，默认 4.5 MiB
-export const MAX_UPLOAD_SIZE_TEXT = import.meta.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE as string || '4.5MiB'
+export const MAX_UPLOAD_SIZE_TEXT = process.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE || import.meta.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE as string || '4.5MiB'
 export const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
 // 限流时间窗口（默认1天）
 export const UPLOAD_LIMIT_WINDOW = Number(process.env.UPLOAD_LIMIT_WINDOW || ms('1d') / 1000)
@@ -83,7 +83,7 @@ export const REDIS_URL = process.env.REDIS_URL
  * 目前提供Spug渠道作为示例，如有需要，可在issue或discussion中提出其他渠道，会看情况适配
  */
 // 是否启用短信发送功能（包含注册、登录、绑定、找回密码等页面）
-export const PHONE_ENABLED = import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
+export const PHONE_ENABLED = process.env.NUXT_PUBLIC_PHONE_ENABLED || import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 // 短信发件渠道
 export const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
 // Spug短信模板ID，在Spug短信模板配置中获取
