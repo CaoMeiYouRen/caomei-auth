@@ -99,7 +99,7 @@
     "@vue/eslint-config-typescript": "^13.0.0",
     "commitizen": "^4.2.3",
     "conventional-changelog-cmyr-config": "^2.1.2",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "cz-conventional-changelog-cmyr": "^1.1.1",
     "eslint": "^8.57.1",
     "eslint-config-cmyr": "^1.1.33",
