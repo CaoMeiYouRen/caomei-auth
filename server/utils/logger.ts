@@ -1,80 +1,138 @@
-import { createConsola, type ConsolaInstance } from 'consola'
+import fs from 'fs'
+import path from 'path'
+import winston from 'winston'
+import DailyRotateFile from 'winston-daily-rotate-file'
+import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
+import { LOG_LEVEL, LOGFILES } from '@/utils/env'
 
-// 创建自定义的 consola 实例
-const baseLogger = createConsola({
-    level: process.env.NODE_ENV === 'development' ? 4 : 3, // 开发环境显示 debug 日志
-    formatOptions: {
-        date: true,
+// 创建日志目录
+const logDir = path.join(process.cwd(), 'logs')
+if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true })
+}
+
+// 判断是否为生产环境
+const __PROD__ = process.env.NODE_ENV === 'production'
+
+// 日志格式配置（不带颜色）
+const format = winston.format.combine(
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZ' }),
+    winston.format.errors({ stack: true }),
+    winston.format.splat(),
+    nestWinstonModuleUtilities.format.nestLike('caomei-auth', {
+        colors: false,
+        prettyPrint: true,
+    }),
+)
+
+// 控制台日志格式配置（带颜色）
+const consoleFormat = winston.format.combine(
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+    winston.format.errors({ stack: true }),
+    winston.format.ms(),
+    winston.format.splat(),
+    nestWinstonModuleUtilities.format.nestLike('caomei-auth', {
         colors: true,
-        compact: false,
-    },
-})
+        prettyPrint: true,
+    }),
+)
 
-// 基础日志方法
+// 日志文件轮转配置
+const dailyRotateFileOption = {
+    dirname: logDir,
+    datePattern: 'YYYY-MM-DD',
+    zippedArchive: __PROD__, // 如果是生产环境，压缩日志文件
+    maxSize: '20m',
+    maxFiles: '31d',
+    format,
+    auditFile: path.join(logDir, '.audit.json'),
+}
+
+// 创建 Winston logger 实例
+const createWinstonLogger = () => {
+    const transports: winston.transport[] = [
+        // 控制台输出
+        new winston.transports.Console({
+            format: consoleFormat,
+            level: LOG_LEVEL,
+        }),
+    ]
+
+    // 如果启用日志文件，添加文件传输
+    if (LOGFILES) {
+        transports.push(
+            // 所有日志文件
+            new DailyRotateFile({
+                ...dailyRotateFileOption,
+                filename: '%DATE%.log',
+                level: LOG_LEVEL,
+            }),
+            // 错误日志文件
+            new DailyRotateFile({
+                ...dailyRotateFileOption,
+                level: 'error',
+                filename: '%DATE%.errors.log',
+            }),
+        )
+    }
+
+    return winston.createLogger({
+        level: LOG_LEVEL,
+        format,
+        transports,
+        exceptionHandlers: LOGFILES ? [
+            new DailyRotateFile({
+                ...dailyRotateFileOption,
+                level: 'error',
+                filename: '%DATE%.exceptions.log',
+            }),
+        ] : [],
+        rejectionHandlers: LOGFILES ? [
+            new DailyRotateFile({
+                ...dailyRotateFileOption,
+                level: 'error',
+                filename: '%DATE%.rejections.log',
+            }),
+        ] : [],
+        exitOnError: false,
+    })
+}
+
+const winstonLogger = createWinstonLogger()
+
+// Winston 到 consola 风格的适配器
+const baseLogger = {
+    withTag: (tag: string) => ({
+        debug: (message: string, meta?: any) => winstonLogger.debug(`[${tag}] ${message}`, meta),
+        info: (message: string, meta?: any) => winstonLogger.info(`[${tag}] ${message}`, meta),
+        warn: (message: string, meta?: any) => winstonLogger.warn(`[${tag}] ${message}`, meta),
+        error: (message: string, meta?: any) => winstonLogger.error(`[${tag}] ${message}`, meta),
+        success: (message: string, meta?: any) => winstonLogger.info(`[${tag}] ✅ ${message}`, meta),
+        start: (message: string, meta?: any) => winstonLogger.info(`[${tag}] 🚀 ${message}`, meta),
+        ready: (message: string, meta?: any) => winstonLogger.info(`[${tag}] ✨ ${message}`, meta),
+        fatal: (message: string, meta?: any) => winstonLogger.error(`[${tag}] 💀 ${message}`, meta),
+    }),
+    debug: (message: string, meta?: any) => winstonLogger.debug(message, meta),
+    info: (message: string, meta?: any) => winstonLogger.info(message, meta),
+    warn: (message: string, meta?: any) => winstonLogger.warn(message, meta),
+    error: (message: string, meta?: any) => winstonLogger.error(message, meta),
+    success: (message: string, meta?: any) => winstonLogger.info(`✅ ${message}`, meta),
+    start: (message: string, meta?: any) => winstonLogger.info(`🚀 ${message}`, meta),
+    ready: (message: string, meta?: any) => winstonLogger.info(`✨ ${message}`, meta),
+    fatal: (message: string, meta?: any) => winstonLogger.error(`💀 ${message}`, meta),
+}
+
+// 基础日志方法 - 简化版本，直接使用 baseLogger
 const logger = {
-    debug: (message: string, meta?: any) => {
-        if (meta) {
-            baseLogger.debug(message, meta)
-        } else {
-            baseLogger.debug(message)
-        }
-    },
-    info: (message: string, meta?: any) => {
-        if (meta) {
-            baseLogger.info(message, meta)
-        } else {
-            baseLogger.info(message)
-        }
-    },
-    warn: (message: string, meta?: any) => {
-        if (meta) {
-            baseLogger.warn(message, meta)
-        } else {
-            baseLogger.warn(message)
-        }
-    },
-    error: (message: string, meta?: any) => {
-        if (meta) {
-            baseLogger.error(message, meta)
-        } else {
-            baseLogger.error(message)
-        }
-    },
-    http: (message: string, meta?: any) => {
-        if (meta) {
-            baseLogger.info(`🌐 ${message}`, meta)
-        } else {
-            baseLogger.info(`🌐 ${message}`)
-        }
-    },
-    success: (message: string, meta?: any) => {
-        if (meta) {
-            baseLogger.success(message, meta)
-        } else {
-            baseLogger.success(message)
-        }
-    },
-    start: (message: string, meta?: any) => {
-        if (meta) {
-            baseLogger.start(message, meta)
-        } else {
-            baseLogger.start(message)
-        }
-    },
-    ready: (message: string, meta?: any) => {
-        if (meta) {
-            baseLogger.ready(message, meta)
-        } else {
-            baseLogger.ready(message)
-        }
-    },
-    fatal: (message: string, meta?: any) => {
-        if (meta) {
-            baseLogger.fatal(message, meta)
-        } else {
-            baseLogger.fatal(message)
-        }
-    },
+    debug: (message: string, meta?: any) => baseLogger.debug(message, meta),
+    info: (message: string, meta?: any) => baseLogger.info(message, meta),
+    warn: (message: string, meta?: any) => baseLogger.warn(message, meta),
+    error: (message: string, meta?: any) => baseLogger.error(message, meta),
+    http: (message: string, meta?: any) => baseLogger.info(`🌐 ${message}`, meta),
+    success: (message: string, meta?: any) => baseLogger.success(message, meta),
+    start: (message: string, meta?: any) => baseLogger.start(message, meta),
+    ready: (message: string, meta?: any) => baseLogger.ready(message, meta),
+    fatal: (message: string, meta?: any) => baseLogger.fatal(message, meta),
 }
 
 // 扩展 logger 接口类型定义
@@ -209,25 +267,20 @@ const extendedLogger: ExtendedLogger = {
 
 export default extendedLogger
 
-// 导出基础的 consola 实例，以便在需要时使用其他方法
-export { baseLogger as consola }
+// 导出 Winston logger 实例（用于需要直接使用 winston 功能的场景）
+export { winstonLogger }
 
 // 导出类型
 export type { ExtendedLogger }
 
-// 创建带标签的 logger 工厂函数
-export function createTaggedLogger(tag: string): ConsolaInstance {
-    return baseLogger.withTag(tag)
+// 创建 Winston 适配器类型，兼容 consola 接口
+export interface WinstonAdapter {
+    debug: (message: string, meta?: any) => void
+    info: (message: string, meta?: any) => void
+    warn: (message: string, meta?: any) => void
+    error: (message: string, meta?: any) => void
+    success: (message: string, meta?: any) => void
+    start: (message: string, meta?: any) => void
+    ready: (message: string, meta?: any) => void
+    fatal: (message: string, meta?: any) => void
 }
-
-// 性能测试 logger
-export const performanceLogger = baseLogger.withTag('⚡ Performance')
-
-// 缓存 logger
-export const cacheLogger = baseLogger.withTag('🗃️  Cache')
-
-// 邮件 logger
-export const emailLogger = baseLogger.withTag('📧 Email')
-
-// OAuth logger
-export const oauthLogger = baseLogger.withTag('🔑 OAuth')
