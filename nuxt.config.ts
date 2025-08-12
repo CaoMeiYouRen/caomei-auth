@@ -49,7 +49,7 @@ export default defineNuxtConfig({
     ],
     build: {
         // 使用 Babel 转译不兼容的包
-        transpile: ['sqlite3', (ctx) => !ctx.isDev && 'google-libphonenumber', 'winston', 'winston-daily-rotate-file', 'async', 'logform', '@colors/colors'],
+        transpile: ['sqlite3', (ctx) => !ctx.isDev && 'google-libphonenumber', 'async', 'logform', '@colors/colors'],
     },
     css: [
         'normalize.css/normalize.css',
