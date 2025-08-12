@@ -100,52 +100,46 @@ const createWinstonLogger = () => {
 
 const winstonLogger = createWinstonLogger()
 
-// Winston 到 consola 风格的适配器
+// 基于 Winston 的标准日志级别
 const baseLogger = {
     withTag: (tag: string) => ({
         debug: (message: string, meta?: any) => winstonLogger.debug(`[${tag}] ${message}`, meta),
         info: (message: string, meta?: any) => winstonLogger.info(`[${tag}] ${message}`, meta),
         warn: (message: string, meta?: any) => winstonLogger.warn(`[${tag}] ${message}`, meta),
         error: (message: string, meta?: any) => winstonLogger.error(`[${tag}] ${message}`, meta),
-        success: (message: string, meta?: any) => winstonLogger.info(`[${tag}] ✅ ${message}`, meta),
-        start: (message: string, meta?: any) => winstonLogger.info(`[${tag}] 🚀 ${message}`, meta),
-        ready: (message: string, meta?: any) => winstonLogger.info(`[${tag}] ✨ ${message}`, meta),
-        fatal: (message: string, meta?: any) => winstonLogger.error(`[${tag}] 💀 ${message}`, meta),
+        http: (message: string, meta?: any) => winstonLogger.http(`[${tag}] ${message}`, meta),
+        verbose: (message: string, meta?: any) => winstonLogger.verbose(`[${tag}] ${message}`, meta),
+        silly: (message: string, meta?: any) => winstonLogger.silly(`[${tag}] ${message}`, meta),
     }),
     debug: (message: string, meta?: any) => winstonLogger.debug(message, meta),
     info: (message: string, meta?: any) => winstonLogger.info(message, meta),
     warn: (message: string, meta?: any) => winstonLogger.warn(message, meta),
     error: (message: string, meta?: any) => winstonLogger.error(message, meta),
-    success: (message: string, meta?: any) => winstonLogger.info(`✅ ${message}`, meta),
-    start: (message: string, meta?: any) => winstonLogger.info(`🚀 ${message}`, meta),
-    ready: (message: string, meta?: any) => winstonLogger.info(`✨ ${message}`, meta),
-    fatal: (message: string, meta?: any) => winstonLogger.error(`💀 ${message}`, meta),
+    http: (message: string, meta?: any) => winstonLogger.http(message, meta),
+    verbose: (message: string, meta?: any) => winstonLogger.verbose(message, meta),
+    silly: (message: string, meta?: any) => winstonLogger.silly(message, meta),
 }
 
-// 基础日志方法 - 简化版本，直接使用 baseLogger
+// 基础日志方法 - 使用 Winston 标准级别
 const logger = {
     debug: (message: string, meta?: any) => baseLogger.debug(message, meta),
     info: (message: string, meta?: any) => baseLogger.info(message, meta),
     warn: (message: string, meta?: any) => baseLogger.warn(message, meta),
     error: (message: string, meta?: any) => baseLogger.error(message, meta),
-    http: (message: string, meta?: any) => baseLogger.info(`🌐 ${message}`, meta),
-    success: (message: string, meta?: any) => baseLogger.success(message, meta),
-    start: (message: string, meta?: any) => baseLogger.start(message, meta),
-    ready: (message: string, meta?: any) => baseLogger.ready(message, meta),
-    fatal: (message: string, meta?: any) => baseLogger.fatal(message, meta),
+    http: (message: string, meta?: any) => baseLogger.http(message, meta),
+    verbose: (message: string, meta?: any) => baseLogger.verbose(message, meta),
+    silly: (message: string, meta?: any) => baseLogger.silly(message, meta),
 }
 
-// 扩展 logger 接口类型定义
+// 扩展 logger 接口类型定义 - 使用 Winston 标准级别
 interface ExtendedLogger {
     debug: (message: string, meta?: any) => void
     info: (message: string, meta?: any) => void
     warn: (message: string, meta?: any) => void
     error: (message: string, meta?: any) => void
     http: (message: string, meta?: any) => void
-    success: (message: string, meta?: any) => void
-    start: (message: string, meta?: any) => void
-    ready: (message: string, meta?: any) => void
-    fatal: (message: string, meta?: any) => void
+    verbose: (message: string, meta?: any) => void
+    silly: (message: string, meta?: any) => void
 
     // 安全相关日志
     security: {
@@ -187,12 +181,12 @@ interface ExtendedLogger {
     }
 }
 
-// 创建带标签的 logger 实例
-const securityLogger = baseLogger.withTag('🔐 Security')
-const apiLogger = baseLogger.withTag('🌐 API')
-const databaseLogger = baseLogger.withTag('🗄️  Database')
-const systemLogger = baseLogger.withTag('⚙️  System')
-const businessLogger = baseLogger.withTag('💼 Business')
+// 创建带标签的 logger 实例 - 去除 emoji
+const securityLogger = baseLogger.withTag('Security')
+const apiLogger = baseLogger.withTag('API')
+const databaseLogger = baseLogger.withTag('Database')
+const systemLogger = baseLogger.withTag('System')
+const businessLogger = baseLogger.withTag('Business')
 
 // 创建扩展的 logger
 const extendedLogger: ExtendedLogger = {
@@ -202,12 +196,12 @@ const extendedLogger: ExtendedLogger = {
     security: {
         loginAttempt: (data) => {
             if (data.success) {
-                securityLogger.success(`Login attempt successful for ${data.email || data.userId}`, data)
+                securityLogger.info(`Login attempt successful for ${data.email || data.userId}`, data)
             } else {
                 securityLogger.warn(`Login attempt failed for ${data.email || 'unknown'}`, data)
             }
         },
-        loginSuccess: (data) => securityLogger.success(`User ${data.email} logged in successfully`, data),
+        loginSuccess: (data) => securityLogger.info(`User ${data.email} logged in successfully`, data),
         loginFailure: (data) => securityLogger.warn(`Login failed: ${data.reason}`, data),
         passwordReset: (data) => securityLogger.info(`Password reset initiated for ${data.email || data.userId}`, data),
         accountLocked: (data) => securityLogger.error(`Account locked for ${data.email || data.userId}: ${data.reason || 'Unknown reason'}`, data),
@@ -216,16 +210,16 @@ const extendedLogger: ExtendedLogger = {
 
     // API 相关日志
     api: {
-        request: (data) => apiLogger.debug(`${data.method} ${data.path}`, data),
+        request: (data) => apiLogger.http(`${data.method} ${data.path}`, data),
         response: (data) => {
             const responseTime = data.responseTime ? ` (${data.responseTime}ms)` : ''
-            let statusIcon = '✅'
-            if (data.statusCode >= 400) {
-                statusIcon = '❌'
-            } else if (data.statusCode >= 300) {
-                statusIcon = '🔄'
+            if (data.statusCode >= 500) {
+                apiLogger.error(`${data.method} ${data.path} - ${data.statusCode}${responseTime}`, data)
+            } else if (data.statusCode >= 400) {
+                apiLogger.warn(`${data.method} ${data.path} - ${data.statusCode}${responseTime}`, data)
+            } else {
+                apiLogger.http(`${data.method} ${data.path} - ${data.statusCode}${responseTime}`, data)
             }
-            apiLogger.debug(`${statusIcon} ${data.method} ${data.path} - ${data.statusCode}${responseTime}`, data)
         },
         error: (data) => apiLogger.error(`${data.method} ${data.path} failed: ${data.error}`, data),
     },
@@ -245,11 +239,11 @@ const extendedLogger: ExtendedLogger = {
 
     // 系统相关日志
     system: {
-        startup: (data) => systemLogger.ready(`System started on port ${data.port || 'unknown'} (${data.env || 'unknown'} mode)`),
+        startup: (data) => systemLogger.info(`System started on port ${data.port || 'unknown'} (${data.env || 'unknown'} mode)`),
         shutdown: (data) => systemLogger.info(`System shutting down: ${data.reason || 'Unknown reason'}`),
         healthCheck: (data) => {
             if (data.status === 'healthy') {
-                systemLogger.success('Health check passed', data)
+                systemLogger.info('Health check passed', data)
             } else {
                 systemLogger.error('Health check failed', data)
             }
@@ -258,7 +252,7 @@ const extendedLogger: ExtendedLogger = {
 
     // 业务相关日志
     business: {
-        userRegistered: (data) => businessLogger.success(`New user registered: ${data.email}`, data),
+        userRegistered: (data) => businessLogger.info(`New user registered: ${data.email}`, data),
         userDeleted: (data) => businessLogger.warn(`User deleted: ${data.email}`, data),
         oauthAppCreated: (data) => businessLogger.info(`OAuth app created: ${data.name}`, data),
         fileUploaded: (data) => businessLogger.info(`File uploaded: ${data.fileName} (${data.size} bytes)`, data),
@@ -273,14 +267,13 @@ export { winstonLogger }
 // 导出类型
 export type { ExtendedLogger }
 
-// 创建 Winston 适配器类型，兼容 consola 接口
+// 创建 Winston 适配器类型，使用标准日志级别
 export interface WinstonAdapter {
     debug: (message: string, meta?: any) => void
     info: (message: string, meta?: any) => void
     warn: (message: string, meta?: any) => void
     error: (message: string, meta?: any) => void
-    success: (message: string, meta?: any) => void
-    start: (message: string, meta?: any) => void
-    ready: (message: string, meta?: any) => void
-    fatal: (message: string, meta?: any) => void
+    http: (message: string, meta?: any) => void
+    verbose: (message: string, meta?: any) => void
+    silly: (message: string, meta?: any) => void
 }
