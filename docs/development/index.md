@@ -6,36 +6,51 @@
 
 草梅 Auth 是基于 Nuxt.js 全栈框架构建的统一登录平台，采用现代化的技术栈：
 
-- **前端**: Nuxt.js 3 + Vue 3 + TypeScript
-- **后端**: Nitro + H3 + TypeORM
-- **数据库**: 支持 PostgreSQL、MySQL、SQLite
-- **认证**: Better-Auth + OAuth2.0
-- **样式**: SCSS + 响应式设计
+-   **前端**: Nuxt.js 3 + Vue 3 + TypeScript
+-   **后端**: Nitro + H3 + TypeORM
+-   **数据库**: 支持 PostgreSQL、MySQL、SQLite
+-   **认证**: Better-Auth + OAuth2.0
+-   **样式**: SCSS + 响应式设计
 
 ## 开发指南
 
 ### [项目架构](./architecture)
+
 了解项目的整体架构设计和技术选型。
 
 ### [数据库关系](./database-relations)
+
 详细介绍数据库表结构和实体关系。
 
 ### [管理员角色同步](./admin-role-sync)
+
 了解管理员权限机制和同步逻辑。
 
 ### [最佳实践](./best-practices)
+
 开发过程中的最佳实践和代码规范。
 
 ## 第三方集成
 
 ### [集成概览](./integrations/)
+
 了解支持的第三方服务集成。
 
 ### [Microsoft Clarity](./integrations/clarity)
+
 网站分析服务集成指南。
 
 ### [Sentry](./integrations/sentry)
+
 错误监控服务集成指南。
+
+### [百度统计](./integrations/baidu-analytics)
+
+百度统计服务集成指南。
+
+### [Google Analytics](./integrations/google-analytics)
+
+Google Analytics 4 服务集成指南。
 
 ## 技术栈详解
 
@@ -44,16 +59,12 @@
 ```typescript
 // Nuxt 3 配置示例
 export default defineNuxtConfig({
-  modules: [
-    '@nuxtjs/tailwindcss',
-    '@pinia/nuxt',
-    '@vueuse/nuxt'
-  ],
-  css: ['~/styles/main.scss'],
-  typescript: {
-    strict: true
-  }
-})
+    modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@vueuse/nuxt"],
+    css: ["~/styles/main.scss"],
+    typescript: {
+        strict: true,
+    },
+});
 ```
 
 ### 后端技术栈
@@ -61,12 +72,12 @@ export default defineNuxtConfig({
 ```typescript
 // 数据库配置示例
 export const dataSourceOptions: DataSourceOptions = {
-  type: 'postgres',
-  url: process.env.DATABASE_URL,
-  entities: [User, Session, Account, /* ... */],
-  migrations: ['server/migrations/*.ts'],
-  synchronize: false
-}
+    type: "postgres",
+    url: process.env.DATABASE_URL,
+    entities: [User, Session, Account /* ... */],
+    migrations: ["server/migrations/*.ts"],
+    synchronize: false,
+};
 ```
 
 ### 认证系统
@@ -74,18 +85,18 @@ export const dataSourceOptions: DataSourceOptions = {
 ```typescript
 // Better-Auth 配置示例
 export const auth = betterAuth({
-  database: typeormAdapter(AppDataSource),
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: true
-  },
-  socialProviders: {
-    github: {
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!
-    }
-  }
-})
+    database: typeormAdapter(AppDataSource),
+    emailAndPassword: {
+        enabled: true,
+        requireEmailVerification: true,
+    },
+    socialProviders: {
+        github: {
+            clientId: process.env.GITHUB_CLIENT_ID!,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+        },
+    },
+});
 ```
 
 ## 开发环境搭建
@@ -148,45 +159,45 @@ caomei-auth/
 
 ### 实体关系
 
-- **User**: 用户实体，存储用户基本信息
-- **Account**: 账户实体，关联第三方登录
-- **Session**: 会话实体，管理用户登录状态
-- **OAuthApplication**: OAuth 应用管理
-- **TwoFactor**: 双因子认证（计划中）
+-   **User**: 用户实体，存储用户基本信息
+-   **Account**: 账户实体，关联第三方登录
+-   **Session**: 会话实体，管理用户登录状态
+-   **OAuthApplication**: OAuth 应用管理
+-   **TwoFactor**: 双因子认证（计划中）
 
 ### 中间件系统
 
 ```typescript
 // 认证中间件示例
 export default defineEventHandler(async (event) => {
-  // 限流检查
-  await rateLimitMiddleware(event)
-  
-  // 身份验证
-  await authMiddleware(event)
-  
-  // 权限检查
-  await permissionMiddleware(event)
-})
+    // 限流检查
+    await rateLimitMiddleware(event);
+
+    // 身份验证
+    await authMiddleware(event);
+
+    // 权限检查
+    await permissionMiddleware(event);
+});
 ```
 
 ### API 设计
 
 遵循 RESTful 设计原则：
 
-- `GET /api/auth/session` - 获取当前会话
-- `POST /api/auth/sign-in` - 用户登录
-- `POST /api/auth/sign-up` - 用户注册
-- `DELETE /api/auth/sign-out` - 用户登出
+-   `GET /api/auth/session` - 获取当前会话
+-   `POST /api/auth/sign-in` - 用户登录
+-   `POST /api/auth/sign-up` - 用户注册
+-   `DELETE /api/auth/sign-out` - 用户登出
 
 ## 开发工具
 
 ### 推荐 VS Code 插件
 
-- **Vue Language Features (Volar)**: Vue 3 支持
-- **TypeScript Vue Plugin**: TypeScript 集成
-- **Prettier**: 代码格式化
-- **ESLint**: 代码检查
+-   **Vue Language Features (Volar)**: Vue 3 支持
+-   **TypeScript Vue Plugin**: TypeScript 集成
+-   **Prettier**: 代码格式化
+-   **ESLint**: 代码检查
 
 ### 调试工具
 
@@ -227,17 +238,17 @@ git commit -m "docs: 更新文档"
 
 ### 前端优化
 
-- 使用 Nuxt 3 的 SSR 和 SSG
-- 按需加载组件
-- 图片懒加载
-- CDN 资源优化
+-   使用 Nuxt 3 的 SSR 和 SSG
+-   按需加载组件
+-   图片懒加载
+-   CDN 资源优化
 
 ### 后端优化
 
-- 数据库查询优化
-- Redis 缓存
-- API 响应压缩
-- 连接池管理
+-   数据库查询优化
+-   Redis 缓存
+-   API 响应压缩
+-   连接池管理
 
 ## 监控和日志
 
@@ -248,13 +259,13 @@ git commit -m "docs: 更新文档"
 ```typescript
 // 错误处理示例
 export default defineNitroErrorHandler((error, event) => {
-  console.error('Server error:', error)
-  
-  // 发送到 Sentry
-  if (process.env.NUXT_PUBLIC_SENTRY_DSN) {
-    captureException(error)
-  }
-})
+    console.error("Server error:", error);
+
+    // 发送到 Sentry
+    if (process.env.NUXT_PUBLIC_SENTRY_DSN) {
+        captureException(error);
+    }
+});
 ```
 
 ### 性能监控
@@ -263,6 +274,6 @@ export default defineNitroErrorHandler((error, event) => {
 
 ## 下一步
 
-- 查看 [项目架构](./architecture) 了解系统设计
-- 阅读 [API 文档](/docs/api/) 了解接口规范
-- 参考 [最佳实践](./best-practices) 进行开发
+-   查看 [项目架构](./architecture) 了解系统设计
+-   阅读 [API 文档](/docs/api/) 了解接口规范
+-   参考 [最佳实践](./best-practices) 进行开发
