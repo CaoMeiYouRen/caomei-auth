@@ -8,6 +8,7 @@
 
 -   [Microsoft Clarity 集成](./clarity.md) - 行为分析和会话回放工具集成
 -   [Sentry 集成](./sentry.md) - 错误监控和性能跟踪工具集成
+-   [百度统计集成](./baidu-analytics.md) - 网站流量分析和用户行为统计工具集成
 
 ## 即将推出
 
