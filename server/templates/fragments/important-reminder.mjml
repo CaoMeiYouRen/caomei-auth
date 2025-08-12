@@ -1,0 +1,8 @@
+<!-- 重要提醒 -->
+<mj-text font-size="16px" color="#4a5568" padding="30px 0 0 0">
+  <strong style="color: #e53e3e;">⚠️ 重要提醒：</strong>
+</mj-text>
+
+<mj-text font-size="15px" color="#4a5568" padding="10px 0 0 0">
+  {{reminderContent}}
+</mj-text>

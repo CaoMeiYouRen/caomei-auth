@@ -1,0 +1,130 @@
+<mjml>
+  <mj-head>
+    <mj-title>{{title}}</mj-title>
+    <mj-preview>{{preheader}}</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" />
+      <mj-button font-weight="600" border-radius="8px" padding="16px 32px" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      .primary-color { color: #e63946 !important; }
+      .primary-bg { background-color: #e63946 !important; }
+      .gradient-bg { background: linear-gradient(135deg, #e63946 0%, #ff6b6b 100%) !important; }
+      .security-icon { font-size: 32px; margin-bottom: 16px; }
+      .code-box {
+        background: #f7fafc !important;
+        border: 2px solid #e2e8f0 !important;
+        border-left: 4px solid #e63946 !important;
+        padding: 16px !important;
+        border-radius: 8px !important;
+        margin: 20px 0 !important;
+        word-break: break-all !important;
+      }
+      .security-tip {
+        background: #e6fffa !important;
+        border-left: 4px solid #38b2ac !important;
+        padding: 16px !important;
+        border-radius: 6px !important;
+        margin: 20px 0 !important;
+      }
+      .info-box {
+        background: #f0f9ff !important;
+        border-left: 4px solid #0284c7 !important;
+        padding: 16px !important;
+        border-radius: 6px !important;
+        margin: 20px 0 !important;
+      }
+      .warning-box {
+        background: #fefce8 !important;
+        border-left: 4px solid #eab308 !important;
+        padding: 16px !important;
+        border-radius: 6px !important;
+        margin: 20px 0 !important;
+      }
+      .error-box {
+        background: #fef2f2 !important;
+        border-left: 4px solid #ef4444 !important;
+        padding: 16px !important;
+        border-radius: 6px !important;
+        margin: 20px 0 !important;
+      }
+      @media only screen and (max-width: 600px) {
+        .mobile-padding { padding: 20px !important; }
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#f8fafc">
+    <!-- Main Container -->
+    <mj-wrapper background-color="#ffffff" border-radius="12px" padding="0">
+
+      <!-- Header with Gradient Background -->
+      <mj-section css-class="gradient-bg" padding="40px 20px">
+        <mj-column>
+          <!-- Logo/Icon -->
+          <mj-text align="center" css-class="security-icon">
+            {{headerIcon}}
+          </mj-text>
+          <!-- App Name -->
+          <mj-text align="center" color="#ffffff" font-size="32px" font-weight="bold" padding="0">
+            {{appName}}
+          </mj-text>
+          <!-- Subtitle -->
+          <mj-text align="center" color="rgba(255,255,255,0.9)" font-size="16px" font-weight="400" padding="8px 0 0 0">
+            {{headerSubtitle}}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <!-- Main Content -->
+      <mj-section padding="40px 30px" css-class="mobile-padding">
+        <mj-column>
+          <!-- Greeting -->
+          <mj-text font-size="20px" color="#2d3748" font-weight="600" padding="0 0 20px 0">
+            {{greeting}}
+          </mj-text>
+
+          <!-- Main Content (will be replaced by specific templates) -->
+          {{mainContent}}
+
+        </mj-column>
+      </mj-section>
+
+      <!-- Footer -->
+      <mj-section background-color="#f7fafc" padding="30px" border-top="1px solid #e2e8f0">
+        <mj-column>
+          <!-- Help Text -->
+          <mj-text align="center" font-size="14px" color="#718096" padding="0 0 15px 0">
+            {{helpText}}
+          </mj-text>
+
+          <!-- Footer Links -->
+          <mj-text align="center" font-size="14px" padding="0 0 20px 0">
+            <a href="{{baseUrl}}/docs" style="color: #e63946; text-decoration: none; margin: 0 12px;">帮助中心</a>
+            <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 12px;">隐私政策</a>
+            <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 12px;">服务条款</a>
+          </mj-text>
+
+          <!-- Copyright -->
+          <mj-text align="center" font-size="12px" color="#a0aec0" padding="0">
+            © {{currentYear}} {{appName}}. 保留所有权利。
+          </mj-text>
+
+          <!-- Footer Note -->
+          <mj-text align="center" font-size="11px" color="#cbd5e0" padding="10px 0 0 0">
+            {{footerNote}}
+          </mj-text>
+
+        </mj-column>
+      </mj-section>
+
+    </mj-wrapper>
+
+    <!-- Bottom Spacer -->
+    <mj-section padding="20px">
+      <mj-column>
+        <mj-spacer height="1px" />
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>

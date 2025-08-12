@@ -11,12 +11,40 @@ interface EmailTemplateData {
 
 export class EmailTemplateEngine {
     private templateCache = new Map<string, string>()
+    private fragmentCache = new Map<string, string>()
 
     /**
      * 渲染模板变量
      */
     private renderTemplate(template: string, data: EmailTemplateData): string {
         return template.replace(/\{\{(\w+)\}\}/g, (match, key) => String(data[key] || match))
+    }
+
+    /**
+     * 获取模板片段
+     */
+    private getFragment(fragmentName: string): string {
+        if (this.fragmentCache.has(fragmentName)) {
+            return this.fragmentCache.get(fragmentName) || ''
+        }
+
+        try {
+            const fragmentPath = join(process.cwd(), 'server/templates/fragments', `${fragmentName}.mjml`)
+            const fragment = readFileSync(fragmentPath, 'utf-8')
+            this.fragmentCache.set(fragmentName, fragment)
+            return fragment
+        } catch (error) {
+            console.warn(`Fragment ${fragmentName} not found`)
+            return ''
+        }
+    }
+
+    /**
+     * 组合模板内容
+     */
+    private composeTemplate(baseTemplate: string, mainContent: string, data: EmailTemplateData): string {
+        // 将主要内容插入到基础模板中
+        return baseTemplate.replace('{{mainContent}}', mainContent)
     }
 
     /**
@@ -40,37 +68,52 @@ export class EmailTemplateEngine {
     }
 
     /**
-     * 生成邮件模板（HTML和纯文本版本）
+     * 生成带操作按钮的邮件模板（如验证邮箱、重置密码等）
      */
-    public generateEmailTemplate(
-        templateName: string,
-        data: EmailTemplateData,
+    public generateActionEmailTemplate(
+        templateConfig: {
+            headerIcon: string
+            message: string
+            buttonText: string
+            actionUrl: string
+            reminderContent: string
+            securityTip: string
+        },
         options: {
             title: string
             preheader?: string
-            primaryColor?: string
         },
     ): { html: string, text: string } {
-        const mjmlTemplate = this.getMjmlTemplate(templateName)
+        const baseTemplate = this.getMjmlTemplate('base-template')
+        const actionFragment = this.getFragment('action-message')
+        const reminderFragment = this.getFragment('important-reminder')
+        const securityFragment = this.getFragment('security-tip')
+
+        // 组合主要内容
+        const mainContent = [
+            this.renderTemplate(actionFragment, templateConfig),
+            this.renderTemplate(reminderFragment, templateConfig),
+            this.renderTemplate(securityFragment, templateConfig),
+        ].join('')
 
         const templateData = {
             appName: APP_NAME,
             baseUrl: AUTH_BASE_URL,
             currentYear: new Date().getFullYear(),
-            primaryColor: '#e63946',
-            primaryColorLight: '#ff6b6b',
-            primaryColorDark: '#a52834',
-            ...data,
+            headerIcon: templateConfig.headerIcon,
+            headerSubtitle: '安全 • 便捷 • 统一的身份认证平台',
+            greeting: '您好！',
+            helpText: '需要帮助？联系我们的客服团队',
+            footerNote: '这是一封系统自动发送的邮件，请勿直接回复。',
+            mainContent,
             ...options,
         }
 
-        // 渲染MJML模板
-        const mjmlWithData = this.renderTemplate(mjmlTemplate, templateData)
+        const finalTemplate = this.renderTemplate(baseTemplate, templateData)
 
         try {
-            // 编译MJML为HTML
-            const { html, errors } = mjml2html(mjmlWithData, {
-                validationLevel: 'soft', // 忽略非关键性错误
+            const { html, errors } = mjml2html(finalTemplate, {
+                validationLevel: 'soft',
             })
 
             if (errors && errors.length > 0) {
@@ -81,8 +124,115 @@ export class EmailTemplateEngine {
             return { html, text }
         } catch (error) {
             console.error('MJML compilation failed:', error)
-            // 回退到简单HTML模板
-            return this.generateFallbackTemplate(templateName, templateData, options)
+            return this.generateFallbackTemplate('action-email', templateData, options)
+        }
+    }
+
+    /**
+     * 生成验证码邮件模板
+     */
+    public generateCodeEmailTemplate(
+        templateConfig: {
+            headerIcon: string
+            message: string
+            verificationCode: string
+            expiresIn: number
+            securityTip: string
+        },
+        options: {
+            title: string
+            preheader?: string
+        },
+    ): { html: string, text: string } {
+        const baseTemplate = this.getMjmlTemplate('base-template')
+        const codeFragment = this.getFragment('verification-code')
+        const securityFragment = this.getFragment('security-tip')
+
+        const mainContent = [
+            this.renderTemplate(codeFragment, templateConfig),
+            this.renderTemplate(securityFragment, templateConfig),
+        ].join('')
+
+        const templateData = {
+            appName: APP_NAME,
+            baseUrl: AUTH_BASE_URL,
+            currentYear: new Date().getFullYear(),
+            headerIcon: templateConfig.headerIcon,
+            headerSubtitle: '安全 • 便捷 • 统一的身份认证平台',
+            greeting: '您好！',
+            helpText: '需要帮助？联系我们的客服团队',
+            footerNote: '这是一封系统自动发送的验证码邮件，请勿直接回复。',
+            mainContent,
+            ...options,
+        }
+
+        const finalTemplate = this.renderTemplate(baseTemplate, templateData)
+
+        try {
+            const { html, errors } = mjml2html(finalTemplate, {
+                validationLevel: 'soft',
+            })
+
+            if (errors && errors.length > 0) {
+                console.warn('MJML compilation warnings:', errors)
+            }
+
+            const text = this.generateTextVersion(html, templateData)
+            return { html, text }
+        } catch (error) {
+            console.error('MJML compilation failed:', error)
+            return this.generateFallbackTemplate('code-email', templateData, options)
+        }
+    }
+
+    /**
+     * 生成简单消息邮件模板
+     */
+    public generateSimpleMessageTemplate(
+        templateConfig: {
+            headerIcon: string
+            message: string
+            extraInfo?: string
+        },
+        options: {
+            title: string
+            preheader?: string
+        },
+    ): { html: string, text: string } {
+        const baseTemplate = this.getMjmlTemplate('base-template')
+        const messageFragment = this.getFragment('simple-message')
+
+        const mainContent = this.renderTemplate(messageFragment, templateConfig)
+
+        const templateData = {
+            appName: APP_NAME,
+            baseUrl: AUTH_BASE_URL,
+            currentYear: new Date().getFullYear(),
+            headerIcon: templateConfig.headerIcon,
+            headerSubtitle: '安全 • 便捷 • 统一的身份认证平台',
+            greeting: '您好！',
+            helpText: '需要帮助？联系我们的客服团队',
+            footerNote: '这是一封系统自动发送的邮件，请勿直接回复。',
+            mainContent,
+            ...options,
+        }
+
+        const finalTemplate = this.renderTemplate(baseTemplate, templateData)
+
+        try {
+            const { html, errors } = mjml2html(finalTemplate, {
+                validationLevel: 'soft',
+            })
+
+            if (errors && errors.length > 0) {
+                console.warn('MJML compilation warnings:', errors)
+            }
+
+            const text = this.generateTextVersion(html, templateData)
+            return { html, text }
+        } catch (error) {
+            console.error('MJML compilation failed:', error)
+            return this.generateFallbackTemplate('simple-message', templateData, options)
         }
     }
 

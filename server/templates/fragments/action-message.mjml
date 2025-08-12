@@ -1,0 +1,34 @@
+<!-- 带按钮的消息内容 -->
+<mj-text font-size="16px" color="#4a5568" padding="0 0 30px 0">
+  {{message}}
+</mj-text>
+
+<!-- CTA Button -->
+<mj-button
+  css-class="primary-bg"
+  color="#ffffff"
+  font-size="16px"
+  href="{{actionUrl}}"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  {{buttonText}}
+</mj-button>
+
+<!-- Alternative Link Section -->
+<mj-text font-size="14px" color="#4a5568" font-weight="600" padding="30px 0 10px 0">
+  无法点击按钮？
+</mj-text>
+<mj-text font-size="14px" color="#718096" padding="0 0 10px 0">
+  请复制以下链接到浏览器地址栏：
+</mj-text>
+<mj-text
+  font-size="12px"
+  color="#4a5568"
+  font-family="Monaco, Consolas, 'Lucida Console', monospace"
+  padding="0 0 20px 0"
+  background-color="#f7fafc"
+  css-class="code-box"
+>
+  {{actionUrl}}
+</mj-text>

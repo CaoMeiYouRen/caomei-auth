@@ -7,14 +7,18 @@ import { APP_NAME } from '@/utils/env'
  */
 export const emailService = {
     /**
-     * 发送邮箱验证邮件（使用MJML模板）
+     * 发送邮箱验证邮件（使用新的模板系统）
      */
     async sendVerificationEmail(email: string, verificationUrl: string): Promise<void> {
         try {
-            const { html, text } = emailTemplateEngine.generateEmailTemplate(
-                'email-verification',
+            const { html, text } = emailTemplateEngine.generateActionEmailTemplate(
                 {
-                    verificationUrl,
+                    headerIcon: '🔐',
+                    message: `感谢您注册 <strong>${APP_NAME}</strong>！为了确保您的账户安全，请点击下方按钮验证您的邮箱地址。`,
+                    buttonText: '验证邮箱地址',
+                    actionUrl: verificationUrl,
+                    reminderContent: `• 此验证链接将在 <strong>24 小时</strong>后过期<br/>• 如果您没有注册 ${APP_NAME} 账户，请忽略此邮件<br/>• 请勿将此链接分享给他人，以保护您的账户安全`,
+                    securityTip: `${APP_NAME} 永远不会通过邮件要求您提供密码、验证码或其他敏感信息。`,
                 },
                 {
                     title: `验证您的 ${APP_NAME} 邮箱地址`,
@@ -37,57 +41,167 @@ export const emailService = {
     },
 
     /**
-     * 发送邮箱更改验证邮件（使用MJML模板，暂时用回退方案）
+     * 发送密码重置邮件
      */
-    async sendEmailChangeVerification(
-        currentEmail: string,
-        newEmail: string,
-        changeUrl: string,
-    ): Promise<void> {
+    async sendPasswordResetEmail(email: string, resetUrl: string): Promise<void> {
         try {
-            // 暂时使用简单的邮件格式，后续可以创建专门的MJML模板
+            const { html, text } = emailTemplateEngine.generateActionEmailTemplate(
+                {
+                    headerIcon: '🔑',
+                    message: `有人请求重置您的 <strong>${APP_NAME}</strong> 账户密码。如果是您本人操作，请点击下方按钮重置密码：`,
+                    buttonText: '重置密码',
+                    actionUrl: resetUrl,
+                    reminderContent: '• 此重置链接将在 <strong>1 小时</strong>后过期<br/>• 如果不是您本人操作，请立即检查您的账户安全<br/>• 建议修改密码并启用两步验证',
+                    securityTip: '如果您没有请求重置密码，请忽略此邮件并检查您的账户安全。',
+                },
+                {
+                    title: `重置您的 ${APP_NAME} 密码`,
+                    preheader: '有人请求重置您的密码，如果是您本人操作请点击链接。',
+                },
+            )
+
+            await sendEmail({
+                to: email,
+                subject: `重置您的 ${APP_NAME} 密码`,
+                html,
+                text,
+            })
+
+            console.log(`Password reset email sent to: ${email}`)
+        } catch (error) {
+            console.error('Failed to send password reset email:', error)
+            throw error
+        }
+    },
+
+    /**
+     * 发送登录验证码邮件
+     */
+    async sendLoginOTP(email: string, otp: string, expiresInMinutes: number = 5): Promise<void> {
+        try {
+            const { html, text } = emailTemplateEngine.generateCodeEmailTemplate(
+                {
+                    headerIcon: '🔓',
+                    message: `您正在尝试登录 <strong>${APP_NAME}</strong>。请使用以下验证码完成登录：`,
+                    verificationCode: otp,
+                    expiresIn: expiresInMinutes,
+                    securityTip: '如果不是您本人操作，请立即检查您的账户安全。',
+                },
+                {
+                    title: `您的 ${APP_NAME} 登录验证码`,
+                    preheader: `您的登录验证码是 ${otp}`,
+                },
+            )
+
+            await sendEmail({
+                to: email,
+                subject: `您的 ${APP_NAME} 登录验证码`,
+                html,
+                text,
+            })
+
+            console.log(`Login OTP sent to: ${email}`)
+        } catch (error) {
+            console.error('Failed to send login OTP:', error)
+            throw error
+        }
+    },
+
+    /**
+     * 发送Magic Link邮件
+     */
+    async sendMagicLink(email: string, magicUrl: string): Promise<void> {
+        try {
+            const { html, text } = emailTemplateEngine.generateActionEmailTemplate(
+                {
+                    headerIcon: '✨',
+                    message: `点击下方按钮，无需密码即可安全登录您的 <strong>${APP_NAME}</strong> 账户：`,
+                    buttonText: '一键登录',
+                    actionUrl: magicUrl,
+                    reminderContent: '• 此登录链接将在 <strong>15 分钟</strong>后过期<br/>• 链接只能使用一次<br/>• 如果不是您本人操作，请忽略此邮件',
+                    securityTip: '为了您的账户安全，请勿将此链接分享给任何人。',
+                },
+                {
+                    title: `您的 ${APP_NAME} 登录链接`,
+                    preheader: '点击即可安全登录，无需输入密码。',
+                },
+            )
+
+            await sendEmail({
+                to: email,
+                subject: `您的 ${APP_NAME} 登录链接`,
+                html,
+                text,
+            })
+
+            console.log(`Magic link sent to: ${email}`)
+        } catch (error) {
+            console.error('Failed to send magic link:', error)
+            throw error
+        }
+    },
+
+    /**
+     * 发送邮箱更改验证邮件
+     */
+    async sendEmailChangeVerification(currentEmail: string, newEmail: string, changeUrl: string): Promise<void> {
+        try {
+            const { html, text } = emailTemplateEngine.generateActionEmailTemplate(
+                {
+                    headerIcon: '📧',
+                    message: `您即将修改邮箱地址为：<strong>${newEmail}</strong><br/><br/>如果确认变更，请点击下方按钮：`,
+                    buttonText: '确认邮箱变更',
+                    actionUrl: changeUrl,
+                    reminderContent: '• 此确认链接将在 <strong>24 小时</strong>后过期<br/>• 变更邮箱后，您需要使用新邮箱地址登录<br/>• 如果这不是您的操作，请忽略此邮件',
+                    securityTip: '为了您的账户安全，邮箱变更确认链接已发送到您当前的邮箱地址。',
+                },
+                {
+                    title: `确认邮箱地址变更 - ${APP_NAME}`,
+                    preheader: `确认将邮箱地址变更为 ${newEmail}`,
+                },
+            )
+
             await sendEmail({
                 to: currentEmail,
                 subject: `确认邮箱地址变更 - ${APP_NAME}`,
-                text: `您即将修改为新邮箱地址是 ${newEmail}，请点击链接以批准更改：${changeUrl}`,
-                html: `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <meta charset="utf-8">
-                        <style>
-                            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f8fafc; }
-                            .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-                            .header { text-align: center; margin-bottom: 30px; color: #e63946; font-size: 24px; font-weight: bold; }
-                            .content { color: #4a5568; line-height: 1.6; font-size: 16px; }
-                            .button { display: inline-block; padding: 16px 32px; background: #e63946; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; }
-                            .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #a0aec0; text-align: center; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <div class="header">${APP_NAME}</div>
-                            <div class="content">
-                                <p>您好！</p>
-                                <p>您即将修改邮箱地址为：<strong>${newEmail}</strong></p>
-                                <p>如果确认变更，请点击下方按钮：</p>
-                                <p style="text-align: center;">
-                                    <a href="${changeUrl}" class="button">确认邮箱变更</a>
-                                </p>
-                                <p>如果这不是您的操作，请忽略此邮件。</p>
-                            </div>
-                            <div class="footer">
-                                © ${new Date().getFullYear()} ${APP_NAME}. 保留所有权利。
-                            </div>
-                        </div>
-                    </body>
-                    </html>
-                `,
+                html,
+                text,
             })
 
             console.log(`Email change verification sent to: ${currentEmail} for new email: ${newEmail}`)
         } catch (error) {
             console.error('Failed to send email change verification:', error)
+            throw error
+        }
+    },
+
+    /**
+     * 发送账户安全通知邮件
+     */
+    async sendSecurityNotification(email: string, action: string, details: string): Promise<void> {
+        try {
+            const { html, text } = emailTemplateEngine.generateSimpleMessageTemplate(
+                {
+                    headerIcon: '🛡️',
+                    message: `我们检测到您的 <strong>${APP_NAME}</strong> 账户有以下安全活动：<br/><br/><strong>${action}</strong>`,
+                    extraInfo: details,
+                },
+                {
+                    title: `${APP_NAME} 账户安全通知`,
+                    preheader: '您的账户有安全活动，请查看详情。',
+                },
+            )
+
+            await sendEmail({
+                to: email,
+                subject: `${APP_NAME} 账户安全通知`,
+                html,
+                text,
+            })
+
+            console.log(`Security notification sent to: ${email}`)
+        } catch (error) {
+            console.error('Failed to send security notification:', error)
             throw error
         }
     },

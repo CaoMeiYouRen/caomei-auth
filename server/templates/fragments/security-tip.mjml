@@ -1,0 +1,7 @@
+<!-- Security Tips -->
+<mj-text font-size="14px" color="#234e52" font-weight="600" padding="30px 0 8px 0" background-color="#e6fffa">
+  🛡️ 安全提示
+</mj-text>
+<mj-text font-size="14px" color="#234e52" padding="8px 0 20px 0" background-color="#e6fffa">
+  {{securityTip}}
+</mj-text>

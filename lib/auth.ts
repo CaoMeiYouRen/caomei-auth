@@ -110,11 +110,7 @@ export const auth = betterAuth({
         minPasswordLength: 6,
         maxPasswordLength: 64,
         sendResetPassword: async ({ user, url, token }, request) => {
-            await sendEmail({
-                to: user.email,
-                subject: '重置您的密码',
-                text: `点击链接重置您的密码：${url}`,
-            })
+            await emailService.sendPasswordResetEmail(user.email, url)
         },
     },
     emailVerification: {
@@ -202,11 +198,7 @@ export const auth = betterAuth({
             disableSignUp: false, // 当用户未注册时是否阻止自动注册
             // 支持一次性链接登录
             sendMagicLink: async ({ email, token, url }, request) => {
-                await sendEmail({
-                    to: email,
-                    subject: '您的登录链接',
-                    text: `点击此链接登录：${url}`,
-                })
+                await emailService.sendMagicLink(email, url)
             },
         }),
         emailOTP({
@@ -217,38 +209,24 @@ export const auth = betterAuth({
             sendVerificationOnSignUp: false, // 用户注册时是否发送 OTP。因为已经发送验证邮件，所以不需要再发送 OTP。
             // 支持电子邮件 OTP 登录
             async sendVerificationOTP({ email, otp, type }) {
+                const expiresInMinutes = Math.floor(EMAIL_EXPIRES_IN / 60)
+
                 if (type === 'sign-in') {
                     // 发送登录用的OTP
-                    await sendEmail({
-                        to: email,
-                        subject: '您的登录验证码',
-                        text: `您的验证码是：${otp}`,
-                    })
+                    await emailService.sendLoginOTP(email, otp, expiresInMinutes)
                     return
                 }
                 if (type === 'email-verification') {
                     // 发送电子邮件验证用的OTP
-                    await sendEmail({
-                        to: email,
-                        subject: '验证您的电子邮件地址',
-                        text: `您的验证码是：${otp}`,
-                    })
+                    await emailService.sendLoginOTP(email, otp, expiresInMinutes)
                     return
                 }
                 if (type === 'forget-password') {
                     // 发送密码重置用的OTP
-                    await sendEmail({
-                        to: email,
-                        subject: '重置您的密码',
-                        text: `您的验证码是：${otp}`,
-                    })
+                    await emailService.sendLoginOTP(email, otp, expiresInMinutes)
                     return
                 }
-                await sendEmail({
-                    to: email,
-                    subject: '您的一次性验证码',
-                    text: `您的验证码是：${otp}`,
-                })
+                await emailService.sendLoginOTP(email, otp, expiresInMinutes)
             },
         }),
         $phoneNumber({

@@ -1,0 +1,25 @@
+<!-- 验证码显示 -->
+<mj-text font-size="16px" color="#4a5568" padding="0 0 20px 0">
+  {{message}}
+</mj-text>
+
+<!-- 验证码框 -->
+<mj-text align="center" padding="20px 0">
+  <span style="
+    display: inline-block;
+    background: linear-gradient(135deg, #e63946 0%, #ff6b6b 100%);
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: bold;
+    padding: 20px 40px;
+    border-radius: 12px;
+    letter-spacing: 4px;
+    font-family: Monaco, Consolas, 'Lucida Console', monospace;
+    box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+  ">{{verificationCode}}</span>
+</mj-text>
+
+<!-- 验证码说明 -->
+<mj-text font-size="14px" color="#718096" align="center" padding="0 0 20px 0">
+  请在 {{expiresIn}} 分钟内使用此验证码
+</mj-text>
