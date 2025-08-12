@@ -137,7 +137,10 @@ export default defineConfig({
                     items: [
                         { text: '集成概览', link: '/docs/development/integrations/' },
                         { text: 'Microsoft Clarity', link: '/docs/development/integrations/clarity' },
-                        { text: 'Sentry', link: '/docs/development/integrations/sentry' }
+                        { text: 'Sentry', link: '/docs/development/integrations/sentry' },
+                        { text: 'Google Analytics', link: '/docs/development/integrations/google-analytics' },
+                        { text: '百度统计', link: '/docs/development/integrations/baidu-analytics' },
+
                     ]
                 }
             ],
