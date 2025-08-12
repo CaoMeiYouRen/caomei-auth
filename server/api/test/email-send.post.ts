@@ -1,6 +1,14 @@
 import { emailService } from '~/server/utils/email-service'
 
 export default defineEventHandler(async (event) => {
+
+    if (import.meta.env.PROD) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Email testing endpoint is disabled in production',
+        })
+    }
+
     const method = getMethod(event)
 
     if (method !== 'POST') {
@@ -93,7 +101,7 @@ export default defineEventHandler(async (event) => {
 
         return {
             success: true,
-            message: `Email sent successfully to ${email}`,
+            message: 'Email sent successfully',
         }
     } catch (error) {
         console.error('Email test error:', error)

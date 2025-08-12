@@ -5,9 +5,12 @@
 
 <!-- CTA Button -->
 <mj-button
-  css-class="primary-bg"
+  background-color="#d12f3a"
   color="#ffffff"
   font-size="16px"
+  font-weight="600"
+  border-radius="8px"
+  padding="16px 32px"
   href="{{actionUrl}}"
   target="_blank"
   rel="noopener noreferrer"
