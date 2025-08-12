@@ -57,6 +57,7 @@ import {
 import type { User } from '@/server/entities/user'
 import { generateRandomString } from '@/server/utils/random'
 import { getTempEmail, getTempName, generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
+import { emailService } from '@/server/utils/email-service'
 
 const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
 
@@ -121,11 +122,7 @@ export const auth = betterAuth({
         autoSignInAfterVerification: true, // 验证后自动登录
         // 发送验证邮件
         sendVerificationEmail: async ({ user, url, token }, request) => {
-            await sendEmail({
-                to: user.email,
-                subject: '验证你的邮箱地址',
-                text: `点击链接验证你的邮箱：${url}`,
-            })
+            await emailService.sendVerificationEmail(user.email, url)
         },
     },
     user: {
@@ -133,11 +130,7 @@ export const auth = betterAuth({
             enabled: true, // 启用更改邮箱功能
             // 发送更改邮箱验证邮件
             sendChangeEmailVerification: async ({ user, newEmail, url, token }, request) => {
-                await sendEmail({
-                    to: user.email, // 验证邮件必须发送到当前用户邮箱以批准更改
-                    subject: '批准邮箱更改',
-                    text: `您即将修改为新邮箱地址是 ${newEmail}，请点击链接以批准更改：${url}`,
-                })
+                await emailService.sendEmailChangeVerification(user.email, newEmail, url)
             },
         },
     },
