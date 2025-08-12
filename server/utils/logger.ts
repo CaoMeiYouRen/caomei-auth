@@ -1,38 +1,79 @@
-// 简化的 logger，使用普通的 console 输出
-function createTimestamp() {
-    return new Date().toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-    })
-}
+import { createConsola, type ConsolaInstance } from 'consola'
 
-function formatLog(level: string, message: string, meta?: any) {
-    const timestamp = createTimestamp()
-    const metaStr = meta && Object.keys(meta).length > 0 ? ` ${JSON.stringify(meta, null, 2)}` : ''
-    return `[${timestamp}] ${level.toUpperCase()}: ${message}${metaStr}`
-}
+// 创建自定义的 consola 实例
+const baseLogger = createConsola({
+    level: process.env.NODE_ENV === 'development' ? 4 : 3, // 开发环境显示 debug 日志
+    formatOptions: {
+        date: true,
+        colors: true,
+        compact: false,
+    },
+})
 
-// 创建简化的 logger
+// 基础日志方法
 const logger = {
     debug: (message: string, meta?: any) => {
-        console.debug(formatLog('debug', message, meta))
+        if (meta) {
+            baseLogger.debug(message, meta)
+        } else {
+            baseLogger.debug(message)
+        }
     },
     info: (message: string, meta?: any) => {
-        console.info(formatLog('info', message, meta))
+        if (meta) {
+            baseLogger.info(message, meta)
+        } else {
+            baseLogger.info(message)
+        }
     },
     warn: (message: string, meta?: any) => {
-        console.warn(formatLog('warn', message, meta))
+        if (meta) {
+            baseLogger.warn(message, meta)
+        } else {
+            baseLogger.warn(message)
+        }
     },
     error: (message: string, meta?: any) => {
-        console.error(formatLog('error', message, meta))
+        if (meta) {
+            baseLogger.error(message, meta)
+        } else {
+            baseLogger.error(message)
+        }
     },
     http: (message: string, meta?: any) => {
-        console.info(formatLog('http', message, meta))
+        if (meta) {
+            baseLogger.info(`🌐 ${message}`, meta)
+        } else {
+            baseLogger.info(`🌐 ${message}`)
+        }
+    },
+    success: (message: string, meta?: any) => {
+        if (meta) {
+            baseLogger.success(message, meta)
+        } else {
+            baseLogger.success(message)
+        }
+    },
+    start: (message: string, meta?: any) => {
+        if (meta) {
+            baseLogger.start(message, meta)
+        } else {
+            baseLogger.start(message)
+        }
+    },
+    ready: (message: string, meta?: any) => {
+        if (meta) {
+            baseLogger.ready(message, meta)
+        } else {
+            baseLogger.ready(message)
+        }
+    },
+    fatal: (message: string, meta?: any) => {
+        if (meta) {
+            baseLogger.fatal(message, meta)
+        } else {
+            baseLogger.fatal(message)
+        }
     },
 }
 
@@ -43,6 +84,10 @@ interface ExtendedLogger {
     warn: (message: string, meta?: any) => void
     error: (message: string, meta?: any) => void
     http: (message: string, meta?: any) => void
+    success: (message: string, meta?: any) => void
+    start: (message: string, meta?: any) => void
+    ready: (message: string, meta?: any) => void
+    fatal: (message: string, meta?: any) => void
 
     // 安全相关日志
     security: {
@@ -84,47 +129,105 @@ interface ExtendedLogger {
     }
 }
 
+// 创建带标签的 logger 实例
+const securityLogger = baseLogger.withTag('🔐 Security')
+const apiLogger = baseLogger.withTag('🌐 API')
+const databaseLogger = baseLogger.withTag('🗄️  Database')
+const systemLogger = baseLogger.withTag('⚙️  System')
+const businessLogger = baseLogger.withTag('💼 Business')
+
 // 创建扩展的 logger
 const extendedLogger: ExtendedLogger = {
     ...logger,
+
     // 安全相关日志
     security: {
-        loginAttempt: (data) => logger.info('Login attempt', { type: 'security', event: 'login_attempt', ...data }),
-        loginSuccess: (data) => logger.info('Login successful', { type: 'security', event: 'login_success', ...data }),
-        loginFailure: (data) => logger.warn('Login failed', { type: 'security', event: 'login_failure', ...data }),
-        passwordReset: (data) => logger.info('Password reset initiated', { type: 'security', event: 'password_reset', ...data }),
-        accountLocked: (data) => logger.warn('Account locked', { type: 'security', event: 'account_locked', ...data }),
-        permissionDenied: (data) => logger.warn('Permission denied', { type: 'security', event: 'permission_denied', ...data }),
+        loginAttempt: (data) => {
+            if (data.success) {
+                securityLogger.success(`Login attempt successful for ${data.email || data.userId}`, data)
+            } else {
+                securityLogger.warn(`Login attempt failed for ${data.email || 'unknown'}`, data)
+            }
+        },
+        loginSuccess: (data) => securityLogger.success(`User ${data.email} logged in successfully`, data),
+        loginFailure: (data) => securityLogger.warn(`Login failed: ${data.reason}`, data),
+        passwordReset: (data) => securityLogger.info(`Password reset initiated for ${data.email || data.userId}`, data),
+        accountLocked: (data) => securityLogger.error(`Account locked for ${data.email || data.userId}: ${data.reason || 'Unknown reason'}`, data),
+        permissionDenied: (data) => securityLogger.warn(`Permission denied: ${data.action} on ${data.resource}`, data),
     },
 
-    // API 日志
+    // API 相关日志
     api: {
-        request: (data) => logger.http('API request', { type: 'api', event: 'request', ...data }),
-        response: (data) => logger.http('API response', { type: 'api', event: 'response', ...data }),
-        error: (data) => logger.error('API error', { type: 'api', event: 'error', ...data }),
+        request: (data) => apiLogger.debug(`${data.method} ${data.path}`, data),
+        response: (data) => {
+            const responseTime = data.responseTime ? ` (${data.responseTime}ms)` : ''
+            let statusIcon = '✅'
+            if (data.statusCode >= 400) {
+                statusIcon = '❌'
+            } else if (data.statusCode >= 300) {
+                statusIcon = '🔄'
+            }
+            apiLogger.debug(`${statusIcon} ${data.method} ${data.path} - ${data.statusCode}${responseTime}`, data)
+        },
+        error: (data) => apiLogger.error(`${data.method} ${data.path} failed: ${data.error}`, data),
     },
 
-    // 数据库日志
+    // 数据库相关日志
     database: {
-        query: (data) => logger.debug('Database query', { type: 'database', event: 'query', ...data }),
-        error: (data) => logger.error('Database error', { type: 'database', event: 'error', ...data }),
-        migration: (data) => logger.info('Database migration', { type: 'database', event: 'migration', ...data }),
+        query: (data) => {
+            const duration = data.duration ? ` (${data.duration}ms)` : ''
+            databaseLogger.debug(`Query executed${duration}`, { ...data, query: data.query.substring(0, 100) + (data.query.length > 100 ? '...' : '') })
+        },
+        error: (data) => databaseLogger.error(`Database error: ${data.error}`, data),
+        migration: (data) => {
+            const duration = data.duration ? ` in ${data.duration}ms` : ''
+            databaseLogger.info(`Migration ${data.name} ${data.direction}${duration}`, data)
+        },
     },
 
-    // 系统日志
+    // 系统相关日志
     system: {
-        startup: (data) => logger.info('System startup', { type: 'system', event: 'startup', ...data }),
-        shutdown: (data) => logger.info('System shutdown', { type: 'system', event: 'shutdown', ...data }),
-        healthCheck: (data) => logger.info('Health check', { type: 'system', event: 'health_check', ...data }),
+        startup: (data) => systemLogger.ready(`System started on port ${data.port || 'unknown'} (${data.env || 'unknown'} mode)`, data),
+        shutdown: (data) => systemLogger.info(`System shutting down: ${data.reason || 'Unknown reason'}`, data),
+        healthCheck: (data) => {
+            if (data.status === 'healthy') {
+                systemLogger.success('Health check passed', data)
+            } else {
+                systemLogger.error('Health check failed', data)
+            }
+        },
     },
 
-    // 业务日志
+    // 业务相关日志
     business: {
-        userRegistered: (data) => logger.info('User registered', { type: 'business', event: 'user_registered', ...data }),
-        userDeleted: (data) => logger.warn('User deleted', { type: 'business', event: 'user_deleted', ...data }),
-        oauthAppCreated: (data) => logger.info('OAuth app created', { type: 'business', event: 'oauth_app_created', ...data }),
-        fileUploaded: (data) => logger.info('File uploaded', { type: 'business', event: 'file_uploaded', ...data }),
+        userRegistered: (data) => businessLogger.success(`New user registered: ${data.email}`, data),
+        userDeleted: (data) => businessLogger.warn(`User deleted: ${data.email}`, data),
+        oauthAppCreated: (data) => businessLogger.info(`OAuth app created: ${data.name}`, data),
+        fileUploaded: (data) => businessLogger.info(`File uploaded: ${data.fileName} (${data.size} bytes)`, data),
     },
 }
 
 export default extendedLogger
+
+// 导出基础的 consola 实例，以便在需要时使用其他方法
+export { baseLogger as consola }
+
+// 导出类型
+export type { ExtendedLogger }
+
+// 创建带标签的 logger 工厂函数
+export function createTaggedLogger(tag: string): ConsolaInstance {
+    return baseLogger.withTag(tag)
+}
+
+// 性能测试 logger
+export const performanceLogger = baseLogger.withTag('⚡ Performance')
+
+// 缓存 logger
+export const cacheLogger = baseLogger.withTag('🗃️  Cache')
+
+// 邮件 logger
+export const emailLogger = baseLogger.withTag('📧 Email')
+
+// OAuth logger
+export const oauthLogger = baseLogger.withTag('🔑 OAuth')
