@@ -36,20 +36,14 @@ export default defineEventHandler(async (event) => {
     // 监听响应完成
     event.context.logStartTime = startTime
 
-    // 使用 onAfterResponse 钩子记录响应
+    // 记录响应
     if (!event.context.logResponseAdded) {
         event.context.logResponseAdded = true
-
-        // 添加响应时间头
-        setResponseHeader(event, 'X-Response-Time', '0ms')
 
         // 监听响应完成事件
         event.node.res.on('finish', () => {
             const responseTime = Date.now() - startTime
             const statusCode = event.node.res.statusCode || 200
-
-            // 更新响应时间头
-            setResponseHeader(event, 'X-Response-Time', `${responseTime}ms`)
 
             // 记录响应
             logger.api.response({
