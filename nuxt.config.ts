@@ -81,6 +81,7 @@ export default defineNuxtConfig({
             sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
             clarityProjectId: process.env.NUXT_PUBLIC_CLARITY_PROJECT_ID,
             baiduAnalyticsId: process.env.NUXT_PUBLIC_BAIDU_ANALYTICS_ID,
+            googleAnalyticsId: process.env.NUXT_PUBLIC_GOOGLE_ANALYTICS_ID,
         },
     },
     primevue: {
