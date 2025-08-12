@@ -11,6 +11,7 @@
                     <li>数据存储：用户数据会存储在安全的服务器上，采取加密等措施保护数据安全。</li>
                     <li>数据共享：未经用户同意，不会将用户数据共享给第三方，法律法规另有规定的除外。</li>
                     <li>用户权利：用户有权访问、修改和删除自己的数据，可随时联系我们行使这些权利。</li>
+                    <li>Cookie 使用：我们使用 Cookie 来维持登录状态和提供个性化服务。您可以通过浏览器设置管理 Cookie，但这可能影响部分功能的正常使用。</li>
                     <li>
                         错误监控：我们使用 <NuxtLink
                             to="https://sentry.io"
@@ -47,8 +48,101 @@
                             Google Analytics
                         </NuxtLink> 服务分析网站流量和用户行为，以了解用户如何使用我们的服务并改进用户体验。Google Analytics 会收集匿名的使用数据，包括页面访问、用户互动、设备信息和大致地理位置等。这些数据经过匿名化处理，不会直接识别个人身份。Google 会根据其隐私政策处理这些数据。您可以通过安装 Google Analytics 退出插件或调整浏览器设置来选择不被追踪。
                     </li>
-                    <li>Cookie 使用：我们使用 Cookie 来维持登录状态和提供个性化服务。您可以通过浏览器设置管理 Cookie，但这可能影响部分功能的正常使用。</li>
-                    <li>第三方服务：我们集成的第三方登录服务（如 GitHub、Google 等）将按照其各自的隐私政策处理您的数据。</li>
+                    <li>
+                        第三方登录服务：我们集成了以下第三方登录服务，这些服务将按照其各自的隐私政策处理您的数据：
+                        <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                            <li>
+                                <NuxtLink
+                                    to="https://docs.github.com/zh/site-policy/privacy-policies/github-privacy-statement"
+                                    external
+                                    class="external-link"
+                                >
+                                    GitHub 隐私声明
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
+                                    to="https://policies.google.com/privacy"
+                                    external
+                                    class="external-link"
+                                >
+                                    Google 隐私政策
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
+                                    to="https://privacy.microsoft.com/zh-cn/privacystatement"
+                                    external
+                                    class="external-link"
+                                >
+                                    Microsoft 隐私声明
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
+                                    to="https://www.apple.com/legal/privacy/"
+                                    external
+                                    class="external-link"
+                                >
+                                    Apple 隐私政策
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
+                                    to="https://x.com/privacy"
+                                    external
+                                    class="external-link"
+                                >
+                                    Twitter 隐私政策
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
+                                    to="https://discord.com/privacy"
+                                    external
+                                    class="external-link"
+                                >
+                                    Discord 隐私政策
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
+                                    to="https://support.weixin.qq.com/cgi-bin/mmsupportacctnodeweb-bin/pages/RYiYJkLOrQwu0nb8"
+                                    external
+                                    class="external-link"
+                                >
+                                    微信隐私保护指引
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
+                                    to="https://wiki.connect.qq.com/qq%e4%ba%92%e8%81%94sdk%e9%9a%90%e7%a7%81%e4%bf%9d%e6%8a%a4%e5%a3%b0%e6%98%8e"
+                                    external
+                                    class="external-link"
+                                >
+                                    QQ 隐私保护指引
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
+                                    to="https://developer.open-douyin.com/docs/resource/zh-CN/dop/operation-standard/service-protocol/douyin-sdk-privacy-policy"
+                                    external
+                                    class="external-link"
+                                >
+                                    抖音隐私政策
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
+                                    to="https://open.weibo.com/wiki/Sdk/privacy"
+                                    external
+                                    class="external-link"
+                                >
+                                    微博隐私保护政策
+                                </NuxtLink>
+                            </li>
+                        </ul>
+                    </li>
                 </ol>
             </div>
             <div class="auth-contact auth-section">
