@@ -107,6 +107,7 @@ export const initializeDB = async () => {
         logger.system.startup({
             dbType,
             env: process.env.NODE_ENV,
+            port: Number(process.env.PORT || process.env.NITRO_PORT || 3000),
         })
         logger.info(`Database initialized successfully with type: ${dbType}`)
     } catch (error: any) {
