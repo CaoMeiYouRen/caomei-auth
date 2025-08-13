@@ -22,3 +22,19 @@ jobs:
       - run: pnpm i --frozen-lockfile
       - run: pnpm run lint
       - run: pnpm run build
+  auto-merge:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    if: |
+      github.actor == 'dependabot[bot]' &&
+      github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.labels.*.name, 'dependencies')
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          target: minor
+          merge-method: rebase
