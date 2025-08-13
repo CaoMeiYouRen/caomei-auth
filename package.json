@@ -31,7 +31,7 @@
     "@vercel/blob": "^1.1.1",
     "@vueuse/core": "^13.6.0",
     "animate.css": "^4.1.1",
-    "better-auth": "^1.3.4",
+    "better-auth": "^1.3.6",
     "better-bytes": "^1.2.4",
     "chart.js": "^4.5.0",
     "consola": "^3.4.2",
