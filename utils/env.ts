@@ -24,6 +24,10 @@ export const LOGFILES = process.env.LOGFILES === 'true'
 // 日志等级
 export const LOG_LEVEL = process.env.LOG_LEVEL || (process.env.NODE_ENV === 'development' ? 'silly' : 'http')
 
+// Axiom 日志配置
+export const AXIOM_DATASET_NAME = process.env.AXIOM_DATASET_NAME
+export const AXIOM_API_TOKEN = process.env.AXIOM_API_TOKEN
+
 /**
  * 文件上传配置
  * 包含文件上传大小限制、每日限额等设置

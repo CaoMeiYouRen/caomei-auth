@@ -3,7 +3,8 @@ import path from 'path'
 import winston from 'winston'
 import DailyRotateFile from 'winston-daily-rotate-file'
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
-import { LOG_LEVEL, LOGFILES } from '@/utils/env'
+import { WinstonTransport as AxiomTransport } from '@axiomhq/winston'
+import { LOG_LEVEL, LOGFILES, AXIOM_DATASET_NAME, AXIOM_API_TOKEN } from '@/utils/env'
 
 // 日志目录路径
 const logDir = path.join(process.cwd(), 'logs')
@@ -117,25 +118,52 @@ const createWinstonLogger = () => {
             }),
         )
     }
+    if (AXIOM_DATASET_NAME && AXIOM_API_TOKEN) {
+        transports.push(
+            // Axiom 日志传输
+            new AxiomTransport({
+                dataset: AXIOM_DATASET_NAME,
+                token: AXIOM_API_TOKEN,
+                level: LOG_LEVEL,
+            }),
+        )
+    }
 
-    return winston.createLogger({
-        level: LOG_LEVEL,
-        format,
-        transports,
-        exceptionHandlers: canWriteToFile ? [
+    const exceptionHandlers: winston.transport[] = []
+    const rejectionHandlers: winston.transport[] = []
+
+    if (canWriteToFile) {
+        exceptionHandlers.push(
             new DailyRotateFile({
                 ...dailyRotateFileOption,
                 level: 'error',
                 filename: '%DATE%.exceptions.log',
             }),
-        ] : [],
-        rejectionHandlers: canWriteToFile ? [
+        )
+        rejectionHandlers.push(
             new DailyRotateFile({
                 ...dailyRotateFileOption,
                 level: 'error',
                 filename: '%DATE%.rejections.log',
             }),
-        ] : [],
+        )
+    }
+
+    if (AXIOM_DATASET_NAME && AXIOM_API_TOKEN) {
+        const axiomExceptionTransport = new AxiomTransport({
+            dataset: AXIOM_DATASET_NAME,
+            token: AXIOM_API_TOKEN,
+        })
+        exceptionHandlers.push(axiomExceptionTransport)
+        rejectionHandlers.push(axiomExceptionTransport)
+    }
+
+    return winston.createLogger({
+        level: LOG_LEVEL,
+        format,
+        transports,
+        exceptionHandlers,
+        rejectionHandlers,
         exitOnError: false,
     })
 }
