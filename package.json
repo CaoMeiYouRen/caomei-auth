@@ -109,7 +109,7 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "postcss-html": "^1.5.0",
-    "sass": "^1.89.2",
+    "sass": "^1.90.0",
     "semantic-release": "21.0.1",
     "stylelint": "^14.16.1",
     "stylelint-config-cmyr": "^0.2.1",
