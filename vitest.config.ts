@@ -1,19 +1,15 @@
 import path from 'path'
-import { defineConfig } from 'vitest/config'
+import { defineVitestConfig } from '@nuxt/test-utils/config'
 
-export default defineConfig({
+export default defineVitestConfig({
     test: {
         globals: true,
-        environment: 'node',
+        environment: 'nuxt',
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'src'),
+            '@': path.resolve(__dirname, './'),
         },
     },
     root: path.resolve('./'),
-    coverage: {
-        clean: true,
-        reportsDirectory: path.resolve('./coverage'),
-    },
 })
