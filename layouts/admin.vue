@@ -140,10 +140,6 @@ const toggleSidebar = () => {
     isCollapsed.value = !isCollapsed.value
 }
 
-// 页面元数据
-definePageMeta({
-    layout: false,
-})
 </script>
 
 <style lang="scss" scoped>
