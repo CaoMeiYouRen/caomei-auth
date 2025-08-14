@@ -62,3 +62,5 @@ export class Snowflake {
 import { MACHINE_ID } from '@/utils/env'
 
 export const snowflake = new Snowflake(MACHINE_ID)
+
+logger.info(`Snowflake ID generator initialized with machine ID: ${MACHINE_ID}`)

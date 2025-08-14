@@ -4,10 +4,10 @@ import winston from 'winston'
 import DailyRotateFile from 'winston-daily-rotate-file'
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
 import { WinstonTransport as AxiomTransport } from '@axiomhq/winston'
-import { LOG_LEVEL, LOGFILES, AXIOM_DATASET_NAME, AXIOM_API_TOKEN } from '@/utils/env'
+import { LOG_LEVEL, LOGFILES, AXIOM_DATASET_NAME, AXIOM_API_TOKEN, LOG_DIR } from '@/utils/env'
 
 // 日志目录路径
-const logDir = path.join(process.cwd(), 'logs')
+const logDir = path.isAbsolute(LOG_DIR) ? LOG_DIR : path.join(process.cwd(), LOG_DIR)
 
 // 检测是否为无服务器环境
 const isServerlessEnvironment = () => {

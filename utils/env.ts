@@ -23,6 +23,8 @@ export const APP_NAME = process.env.NUXT_PUBLIC_APP_NAME || import.meta.env.NUXT
 export const LOGFILES = process.env.LOGFILES === 'true'
 // 日志等级
 export const LOG_LEVEL = process.env.LOG_LEVEL || (process.env.NODE_ENV === 'development' ? 'silly' : 'http')
+// 日志文件目录
+export const LOG_DIR = process.env.LOG_DIR || 'logs'
 
 // Axiom 日志配置
 export const AXIOM_DATASET_NAME = process.env.AXIOM_DATASET_NAME
