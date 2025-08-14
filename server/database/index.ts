@@ -54,7 +54,7 @@ export const initializeDB = async () => {
         case 'sqlite':
             options = {
                 type: 'sqlite',
-                database: DATABASE_PATH, // 默认 SQLite 数据库路径
+                database: DATABASE_PATH, // 默认 SQLite 数据库路径，测试时可以是 ':memory:'
             }
             break
         case 'mysql':
@@ -85,17 +85,20 @@ export const initializeDB = async () => {
             throw new Error(`Unsupported database type: ${dbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
     }
 
+    // 检查是否为测试环境
+    const isTestEnv = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true'
+
     // 创建数据源
     AppDataSource = new DataSource({
         ...options,
         entities,
-        synchronize: process.env.NODE_ENV !== 'production',
-        logging: process.env.NODE_ENV === 'development',
-        logger: new CustomLogger(),
+        synchronize: isTestEnv || process.env.NODE_ENV !== 'production', // 测试环境总是同步表结构
+        logging: isTestEnv ? false : process.env.NODE_ENV === 'development', // 测试时禁用日志
+        logger: isTestEnv ? undefined : new CustomLogger(), // 测试时不使用自定义日志器
         entityPrefix: DATABASE_ENTITY_PREFIX,   // 所有表（或集合）加的前缀
         namingStrategy: new SnakeCaseNamingStrategy(), // 表、字段命名策略，改为 snake_case
         cache: false, // 是否启用实体结果缓存
-        maxQueryExecutionTime: 3000, // 记录耗时长的查询
+        maxQueryExecutionTime: isTestEnv ? 10000 : 3000, // 测试时允许更长的查询时间
     })
 
     try {
@@ -104,19 +107,27 @@ export const initializeDB = async () => {
         // 更新连接状态
         isInitialized = true
 
-        logger.system.startup({
-            dbType,
-            env: process.env.NODE_ENV,
-            port: Number(process.env.PORT || process.env.NITRO_PORT || 3000),
-        })
-        logger.info(`Database initialized successfully with type: ${dbType}`)
+        // 测试环境时减少日志输出
+        if (!isTestEnv) {
+            logger.system.startup({
+                dbType,
+                env: process.env.NODE_ENV,
+                port: Number(process.env.PORT || process.env.NITRO_PORT || 3000),
+            })
+            logger.info(`Database initialized successfully with type: ${dbType}`)
+        }
     } catch (error: any) {
-        // 使用专门的数据库错误日志记录详细信息
-        logger.database.error({
-            error: error.message,
-            stack: error.stack,
-            query: `database_initialization (${dbType})`,
-        })
+        // 测试环境时也需要记录错误，但使用较低级别
+        if (isTestEnv) {
+            console.error(`Database initialization failed: ${error.message}`)
+        } else {
+            // 使用专门的数据库错误日志记录详细信息
+            logger.database.error({
+                error: error.message,
+                stack: error.stack,
+                query: `database_initialization (${dbType})`,
+            })
+        }
 
         // 直接抛出原始错误，避免多层包装
         throw error
