@@ -3,6 +3,7 @@ import { join } from 'path'
 
 import mjml2html from 'mjml'
 
+import logger from './logger'
 import { APP_NAME, AUTH_BASE_URL } from '@/utils/env'
 
 interface EmailTemplateData {
@@ -34,7 +35,7 @@ export class EmailTemplateEngine {
             this.fragmentCache.set(fragmentName, fragment)
             return fragment
         } catch (error) {
-            console.warn(`Fragment ${fragmentName} not found`)
+            logger.warn('Email template fragment not found', { fragmentName })
             return ''
         }
     }
@@ -54,7 +55,7 @@ export class EmailTemplateEngine {
             this.templateCache.set(cacheKey, template)
             return template
         } catch (error) {
-            console.warn(`MJML template ${templateName} not found, using fallback`)
+            logger.warn('MJML template not found, using fallback', { templateName })
             return this.getFallbackMjmlTemplate(templateName)
         }
     }
@@ -109,13 +110,13 @@ export class EmailTemplateEngine {
             })
 
             if (errors && errors.length > 0) {
-                console.warn('MJML compilation warnings:', errors)
+                logger.warn('MJML compilation warnings', { errors })
             }
 
             const text = this.generateTextVersion(html, templateData)
             return { html, text }
         } catch (error) {
-            console.error('MJML compilation failed:', error)
+            logger.error('MJML compilation failed', { error: error instanceof Error ? error.message : error })
             return this.generateFallbackTemplate('action-email', templateData, options)
         }
     }

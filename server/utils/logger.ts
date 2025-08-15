@@ -4,6 +4,7 @@ import winston from 'winston'
 import DailyRotateFile from 'winston-daily-rotate-file'
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
 import { WinstonTransport as AxiomTransport } from '@axiomhq/winston'
+import { createSafeLogData } from './privacy'
 import { LOG_LEVEL, LOGFILES, AXIOM_DATASET_NAME, AXIOM_API_TOKEN, LOG_DIR } from '@/utils/env'
 
 // 日志目录路径
@@ -265,67 +266,133 @@ const extendedLogger: ExtendedLogger = {
     // 安全相关日志
     security: {
         loginAttempt: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = data.success
+                ? `Login attempt successful for ${safeData.email || safeData.userId}${data.provider ? ` via ${data.provider}` : ''}${data.ip ? ` from ${safeData.ip}` : ''}`
+                : `Login attempt failed for ${safeData.email || 'unknown'}${data.provider ? ` via ${data.provider}` : ''}${data.ip ? ` from ${safeData.ip}` : ''}`
+
             if (data.success) {
-                securityLogger.info(`Login attempt successful for ${data.email || data.userId}`, data)
+                securityLogger.info(message, { provider: data.provider, userAgent: data.userAgent })
             } else {
-                securityLogger.warn(`Login attempt failed for ${data.email || 'unknown'}`, data)
+                securityLogger.warn(message, { provider: data.provider, userAgent: data.userAgent })
             }
         },
-        loginSuccess: (data) => securityLogger.info(`User ${data.email} logged in successfully`, data),
-        loginFailure: (data) => securityLogger.warn(`Login failed: ${data.reason}`, data),
-        passwordReset: (data) => securityLogger.info(`Password reset initiated for ${data.email || data.userId}`, data),
-        accountLocked: (data) => securityLogger.error(`Account locked for ${data.email || data.userId}: ${data.reason || 'Unknown reason'}`, data),
-        permissionDenied: (data) => securityLogger.warn(`Permission denied: ${data.action} on ${data.resource}`, data),
+        loginSuccess: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `User logged in successfully${data.provider ? ` via ${data.provider}` : ''}${data.ip ? ` from ${safeData.ip}` : ''}`
+            securityLogger.info(message, { userId: safeData.userId, email: safeData.email, provider: data.provider, userAgent: data.userAgent })
+        },
+        loginFailure: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `Login failed: ${data.reason}${data.provider ? ` via ${data.provider}` : ''}${data.ip ? ` from ${safeData.ip}` : ''}`
+            securityLogger.warn(message, { email: safeData.email, provider: data.provider, userAgent: data.userAgent })
+        },
+        passwordReset: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `Password reset initiated${data.ip ? ` from ${safeData.ip}` : ''}`
+            securityLogger.info(message, { userId: safeData.userId, email: safeData.email })
+        },
+        accountLocked: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `Account locked: ${data.reason || 'Unknown reason'}${data.ip ? ` from ${safeData.ip}` : ''}`
+            securityLogger.error(message, { userId: safeData.userId, email: safeData.email })
+        },
+        permissionDenied: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `Permission denied: ${data.action} on ${data.resource}${data.ip ? ` from ${safeData.ip}` : ''}`
+            securityLogger.warn(message, { userId: safeData.userId, resource: data.resource, action: data.action })
+        },
     },
 
     // API 相关日志
     api: {
-        request: (data) => apiLogger.http(`${data.method} ${data.path}`, data),
+        request: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `${data.method} ${data.path}${data.ip ? ` from ${safeData.ip}` : ''}`
+            apiLogger.http(message, { userId: safeData.userId, userAgent: data.userAgent })
+        },
         response: (data) => {
+            const safeData = createSafeLogData(data)
             const responseTime = data.responseTime ? ` (${data.responseTime}ms)` : ''
+            const message = `${data.method} ${data.path} - ${data.statusCode}${responseTime}`
+
             if (data.statusCode >= 500) {
-                apiLogger.error(`${data.method} ${data.path} - ${data.statusCode}${responseTime}`, data)
+                apiLogger.error(message, { userId: safeData.userId })
             } else if (data.statusCode >= 400) {
-                apiLogger.warn(`${data.method} ${data.path} - ${data.statusCode}${responseTime}`, data)
+                apiLogger.warn(message, { userId: safeData.userId })
             } else {
-                apiLogger.http(`${data.method} ${data.path} - ${data.statusCode}${responseTime}`, data)
+                apiLogger.http(message, { userId: safeData.userId })
             }
         },
-        error: (data) => apiLogger.error(`${data.method} ${data.path} failed: ${data.error}`, data),
+        error: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `${data.method} ${data.path} failed: ${data.error}`
+            apiLogger.error(message, { userId: safeData.userId, stack: data.stack })
+        },
     },
 
     // 数据库相关日志
     database: {
         query: (data) => {
             const duration = data.duration ? ` (${data.duration}ms)` : ''
-            databaseLogger.debug(`Query executed${duration}`, { ...data, query: data.query.substring(0, 100) + (data.query.length > 100 ? '...' : '') })
+            const message = `Query executed${duration}`
+            const truncatedQuery = data.query.substring(0, 100) + (data.query.length > 100 ? '...' : '')
+            databaseLogger.debug(message, { query: truncatedQuery, params: data.params })
         },
-        error: (data) => databaseLogger.error(`Database error: ${data.error}`, data),
+        error: (data) => {
+            const message = `Database error: ${data.error}`
+            const truncatedQuery = data.query ? data.query.substring(0, 100) + (data.query.length > 100 ? '...' : '') : undefined
+            databaseLogger.error(message, { query: truncatedQuery, stack: data.stack })
+        },
         migration: (data) => {
             const duration = data.duration ? ` in ${data.duration}ms` : ''
-            databaseLogger.info(`Migration ${data.name} ${data.direction}${duration}`, data)
+            const message = `Migration ${data.name} ${data.direction}${duration}`
+            databaseLogger.info(message)
         },
     },
 
     // 系统相关日志
     system: {
-        startup: (data) => systemLogger.info(`System started on port ${data.port || 'unknown'} (${data.env || 'unknown'} mode)`),
-        shutdown: (data) => systemLogger.info(`System shutting down: ${data.reason || 'Unknown reason'}`),
+        startup: (data) => {
+            const message = `System started on port ${data.port || 'unknown'} (${data.env || 'unknown'} mode)`
+            systemLogger.info(message, { dbType: data.dbType })
+        },
+        shutdown: (data) => {
+            const message = `System shutting down: ${data.reason || 'Unknown reason'}`
+            systemLogger.info(message, { graceful: data.graceful })
+        },
         healthCheck: (data) => {
+            const message = data.status === 'healthy' ? 'Health check passed' : 'Health check failed'
             if (data.status === 'healthy') {
-                systemLogger.info('Health check passed', data)
+                systemLogger.info(message, { checks: data.checks })
             } else {
-                systemLogger.error('Health check failed', data)
+                systemLogger.error(message, { checks: data.checks })
             }
         },
     },
 
     // 业务相关日志
     business: {
-        userRegistered: (data) => businessLogger.info(`New user registered: ${data.email}`, data),
-        userDeleted: (data) => businessLogger.warn(`User deleted: ${data.email}`, data),
-        oauthAppCreated: (data) => businessLogger.info(`OAuth app created: ${data.name}`, data),
-        fileUploaded: (data) => businessLogger.info(`File uploaded: ${data.fileName} (${data.size} bytes)`, data),
+        userRegistered: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `New user registered${data.provider ? ` via ${data.provider}` : ''}`
+            businessLogger.info(message, { userId: safeData.userId, email: safeData.email, provider: data.provider })
+        },
+        userDeleted: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = 'User deleted'
+            businessLogger.warn(message, { userId: safeData.userId, email: safeData.email, adminId: safeData.adminId })
+        },
+        oauthAppCreated: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `OAuth app created: ${data.name}`
+            businessLogger.info(message, { appId: data.appId, createdBy: safeData.createdBy })
+        },
+        fileUploaded: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `File uploaded: ${data.fileName} (${data.size} bytes)`
+            businessLogger.info(message, { userId: safeData.userId, type: data.type })
+        },
     },
 }
 

@@ -1,5 +1,7 @@
 import { sendEmail } from './email'
 import { emailTemplateEngine } from './email-template'
+import logger from './logger'
+import { maskEmail } from './privacy'
 import { APP_NAME } from '@/utils/env'
 
 /**
@@ -33,9 +35,12 @@ export const emailService = {
                 text,
             })
 
-            console.log(`Email verification sent to: ${email}`)
+            logger.info('Email verification sent successfully', { email: maskEmail(email) })
         } catch (error) {
-            console.error('Failed to send email verification:', error)
+            logger.error('Failed to send email verification', {
+                email: maskEmail(email),
+                error: error instanceof Error ? error.message : error,
+            })
             throw error
         }
     },
@@ -67,9 +72,12 @@ export const emailService = {
                 text,
             })
 
-            console.log(`Password reset email sent to: ${email}`)
+            logger.info('Password reset email sent successfully', { email: maskEmail(email) })
         } catch (error) {
-            console.error('Failed to send password reset email:', error)
+            logger.error('Failed to send password reset email', {
+                email: maskEmail(email),
+                error: error instanceof Error ? error.message : error,
+            })
             throw error
         }
     },
@@ -100,9 +108,12 @@ export const emailService = {
                 text,
             })
 
-            console.log(`Login OTP sent to: ${email}`)
+            logger.info('Login OTP email sent successfully', { email: maskEmail(email) })
         } catch (error) {
-            console.error('Failed to send login OTP:', error)
+            logger.error('Failed to send login OTP', {
+                email: maskEmail(email),
+                error: error instanceof Error ? error.message : error,
+            })
             throw error
         }
     },
@@ -134,9 +145,12 @@ export const emailService = {
                 text,
             })
 
-            console.log(`Magic link sent to: ${email}`)
+            logger.info('Magic link email sent successfully', { email: maskEmail(email) })
         } catch (error) {
-            console.error('Failed to send magic link:', error)
+            logger.error('Failed to send magic link', {
+                email: maskEmail(email),
+                error: error instanceof Error ? error.message : error,
+            })
             throw error
         }
     },
@@ -168,9 +182,16 @@ export const emailService = {
                 text,
             })
 
-            console.log(`Email change verification sent to: ${currentEmail} for new email: ${newEmail}`)
+            logger.info('Email change verification sent successfully', {
+                currentEmail: maskEmail(currentEmail),
+                newEmail: maskEmail(newEmail),
+            })
         } catch (error) {
-            console.error('Failed to send email change verification:', error)
+            logger.error('Failed to send email change verification', {
+                currentEmail: maskEmail(currentEmail),
+                newEmail: maskEmail(newEmail),
+                error: error instanceof Error ? error.message : error,
+            })
             throw error
         }
     },
@@ -199,9 +220,16 @@ export const emailService = {
                 text,
             })
 
-            console.log(`Security notification sent to: ${email}`)
+            logger.info('Security notification email sent successfully', {
+                email: maskEmail(email),
+                action,
+            })
         } catch (error) {
-            console.error('Failed to send security notification:', error)
+            logger.error('Failed to send security notification', {
+                email: maskEmail(email),
+                action,
+                error: error instanceof Error ? error.message : error,
+            })
             throw error
         }
     },
