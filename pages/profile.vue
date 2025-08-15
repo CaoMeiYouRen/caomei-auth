@@ -470,7 +470,7 @@ import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
 import type { SocialProvider } from '@/types/social'
-import { maskEmail, maskPhone } from '@/utils/privacy-client'
+import { maskEmail, maskPhone } from '@/utils/privacy'
 import { shortText } from '@/utils/short-text'
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled

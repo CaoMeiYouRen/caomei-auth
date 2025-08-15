@@ -1,15 +1,15 @@
 /**
- * 前端隐私保护工具函数
- * 用于在前端界面中对敏感信息进行脱敏处理
+ * 通用隐私保护工具函数
+ * 前后端共用的脱敏处理逻辑
  */
 
 /**
  * 脱敏邮箱地址
- * 例如：test@example.com -> t***@example.com
+ * 例如：test@example.com -> t***t@example.com
  */
 export function maskEmail(email: string): string {
     if (!email || typeof email !== 'string') {
-        return '未绑定'
+        return email
     }
 
     const [username, domain] = email.split('@')
@@ -33,7 +33,7 @@ export function maskEmail(email: string): string {
  */
 export function maskPhone(phone: string): string {
     if (!phone || typeof phone !== 'string') {
-        return '未绑定'
+        return phone
     }
 
     // 处理E164格式（以+开头）
@@ -81,4 +81,65 @@ export function maskPhone(phone: string): string {
 
     // 短号码，显示前2位和后2位
     return `${cleanPhone.slice(0, 2)}***${cleanPhone.slice(-2)}`
+}
+
+/**
+ * 脱敏用户ID
+ * 例如：1234567890abcdef -> 1234****cdef
+ */
+export function maskUserId(userId: string): string {
+    if (!userId || typeof userId !== 'string') {
+        return userId
+    }
+
+    // 如果长度小于等于8，只显示前2位和后2位
+    if (userId.length <= 8) {
+        return `${userId.slice(0, 2)}***${userId.slice(-2)}`
+    }
+
+    // 显示前4位和后4位，中间用*代替
+    return `${userId.slice(0, 4)}****${userId.slice(-4)}`
+}
+
+/**
+ * 脱敏IP地址
+ * 例如：192.168.1.100 -> 192.168.1.***
+ */
+export function maskIP(ip: string): string {
+    if (!ip || typeof ip !== 'string') {
+        return ip
+    }
+
+    // IPv4 地址
+    if (ip.includes('.')) {
+        const parts = ip.split('.')
+        if (parts.length === 4) {
+            return `${parts[0]}.${parts[1]}.${parts[2]}.***`
+        }
+    }
+
+    // IPv6 地址
+    if (ip.includes(':')) {
+        const parts = ip.split(':')
+        if (parts.length >= 4) {
+            return `${parts.slice(0, -2).join(':')}:***:***`
+        }
+    }
+
+    return ip
+}
+
+/**
+ * 脱敏通用字符串
+ */
+export function maskString(str: string, showStart = 2, showEnd = 2): string {
+    if (!str || typeof str !== 'string') {
+        return str
+    }
+
+    if (str.length <= showStart + showEnd) {
+        return '*'.repeat(str.length)
+    }
+
+    return `${str.slice(0, showStart)}***${str.slice(-showEnd)}`
 }
