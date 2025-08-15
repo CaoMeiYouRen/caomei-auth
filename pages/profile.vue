@@ -144,7 +144,6 @@
                             <div class="privacy-field-header">
                                 <label class="form-label">邮箱</label>
                                 <div class="privacy-controls">
-                                    <span class="privacy-label">显示邮箱</span>
                                     <ToggleSwitch
                                         v-model="showEmailDetails"
                                         v-tooltip.top="'切换是否显示完整邮箱信息'"
@@ -197,7 +196,6 @@
                             <div class="privacy-field-header">
                                 <label class="form-label">手机号</label>
                                 <div class="privacy-controls">
-                                    <span class="privacy-label">显示手机号</span>
                                     <ToggleSwitch
                                         v-model="showPhoneDetails"
                                         v-tooltip.top="'切换是否显示完整手机号信息'"
@@ -1162,20 +1160,20 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 .privacy-label {
     color: $secondary;
     font-size: 0.85rem;
-    font-weight: 500;
+    // font-weight: 500;
     white-space: nowrap;
 }
 
 .privacy-value {
     color: $secondary;
-    font-weight: 500;
+    // font-weight: 500;
     word-break: break-all;
     flex: 1;
 }
 
 .privacy-hidden {
     color: $secondary;
-    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    // font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
     font-weight: 500;
 }
 </style>
