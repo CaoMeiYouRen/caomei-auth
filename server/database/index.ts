@@ -119,7 +119,7 @@ export const initializeDB = async () => {
     } catch (error: any) {
         // 测试环境时也需要记录错误，但使用较低级别
         if (isTestEnv) {
-            console.error(`Database initialization failed: ${error.message}`)
+            logger.error(`Database initialization failed: ${error.message}`)
         } else {
             // 使用专门的数据库错误日志记录详细信息
             logger.database.error({

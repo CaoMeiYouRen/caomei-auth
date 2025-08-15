@@ -1,5 +1,6 @@
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
+import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     try {
@@ -37,7 +38,10 @@ export default defineEventHandler(async (event) => {
             data: providers,
         }
     } catch (error: any) {
-        console.error('获取可用 SSO 提供商错误:', error)
+        logger.error('Failed to get available SSO providers', {
+            error: error.message,
+            stack: error.stack,
+        })
 
         if (error.statusCode) {
             throw error

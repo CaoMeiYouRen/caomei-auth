@@ -4,7 +4,7 @@ import winston from 'winston'
 import DailyRotateFile from 'winston-daily-rotate-file'
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
 import { WinstonTransport as AxiomTransport } from '@axiomhq/winston'
-import { createSafeLogData } from './privacy'
+import { createSafeLogData, maskEmail, maskPhone } from './privacy'
 import { LOG_LEVEL, LOGFILES, AXIOM_DATASET_NAME, AXIOM_API_TOKEN, LOG_DIR } from '@/utils/env'
 
 // 日志目录路径
@@ -250,6 +250,22 @@ interface ExtendedLogger {
         oauthAppCreated: (data: { appId: string, name: string, createdBy: string }) => void
         fileUploaded: (data: { fileName: string, size: number, userId: string, type?: string }) => void
     }
+
+    // 邮件相关日志
+    email: {
+        sent: (data: { type: string, email: string, success?: boolean }) => void
+        failed: (data: { type: string, email: string, error: string }) => void
+        templateRendered: (data: { templateName: string, success?: boolean }) => void
+        templateError: (data: { templateName: string, error: string }) => void
+        rateLimited: (data: { email?: string, limitType: 'global' | 'user', remainingTime?: number }) => void
+    }
+
+    // 短信相关日志
+    phone: {
+        sent: (data: { type: string, phone: string, success?: boolean }) => void
+        failed: (data: { type: string, phone: string, error: string }) => void
+        rateLimited: (data: { phone?: string, limitType: 'global' | 'user', remainingTime?: number }) => void
+    }
 }
 
 // 创建带标签的 logger 实例 - 去除 emoji
@@ -258,6 +274,8 @@ const apiLogger = baseLogger.withTag('API')
 const databaseLogger = baseLogger.withTag('Database')
 const systemLogger = baseLogger.withTag('System')
 const businessLogger = baseLogger.withTag('Business')
+const emailLogger = baseLogger.withTag('Email')
+const phoneLogger = baseLogger.withTag('Phone')
 
 // 创建扩展的 logger
 const extendedLogger: ExtendedLogger = {
@@ -392,6 +410,52 @@ const extendedLogger: ExtendedLogger = {
             const safeData = createSafeLogData(data)
             const message = `File uploaded: ${data.fileName} (${data.size} bytes)`
             businessLogger.info(message, { userId: safeData.userId, type: data.type })
+        },
+    },
+
+    // 邮件相关日志
+    email: {
+        sent: (data) => {
+            const message = `Email ${data.type} sent successfully to ${maskEmail(data.email)}`
+            emailLogger.info(message, { type: data.type, success: data.success })
+        },
+        failed: (data) => {
+            const message = `Failed to send ${data.type} email to ${maskEmail(data.email)}: ${data.error}`
+            emailLogger.error(message, { type: data.type })
+        },
+        templateRendered: (data) => {
+            const message = data.success
+                ? `Email template ${data.templateName} rendered successfully`
+                : `Email template ${data.templateName} rendering failed`
+            emailLogger.debug(message, { templateName: data.templateName, success: data.success })
+        },
+        templateError: (data) => {
+            const message = `Email template ${data.templateName} error: ${data.error}`
+            emailLogger.error(message, { templateName: data.templateName })
+        },
+        rateLimited: (data) => {
+            const emailInfo = data.email ? ` for ${maskEmail(data.email)}` : ''
+            const remainingInfo = data.remainingTime ? ` (${Math.ceil(data.remainingTime / 60)}min remaining)` : ''
+            const message = `Email rate limit reached (${data.limitType})${emailInfo}${remainingInfo}`
+            emailLogger.warn(message, { limitType: data.limitType, remainingTime: data.remainingTime })
+        },
+    },
+
+    // 短信相关日志
+    phone: {
+        sent: (data) => {
+            const message = `SMS ${data.type} sent successfully to ${maskPhone(data.phone)}`
+            phoneLogger.info(message, { type: data.type, success: data.success })
+        },
+        failed: (data) => {
+            const message = `Failed to send ${data.type} SMS to ${maskPhone(data.phone)}: ${data.error}`
+            phoneLogger.error(message, { type: data.type })
+        },
+        rateLimited: (data) => {
+            const phoneInfo = data.phone ? ` for ${maskPhone(data.phone)}` : ''
+            const remainingInfo = data.remainingTime ? ` (${Math.ceil(data.remainingTime / 60)}min remaining)` : ''
+            const message = `SMS rate limit reached (${data.limitType})${phoneInfo}${remainingInfo}`
+            phoneLogger.warn(message, { limitType: data.limitType, remainingTime: data.remainingTime })
         },
     },
 }

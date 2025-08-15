@@ -1,7 +1,6 @@
 import { sendEmail } from './email'
 import { emailTemplateEngine } from './email-template'
 import logger from './logger'
-import { maskEmail } from './privacy'
 import { APP_NAME } from '@/utils/env'
 
 /**
@@ -35,11 +34,12 @@ export const emailService = {
                 text,
             })
 
-            logger.info('Email verification sent successfully', { email: maskEmail(email) })
+            logger.email.sent({ type: 'verification', email })
         } catch (error) {
-            logger.error('Failed to send email verification', {
-                email: maskEmail(email),
-                error: error instanceof Error ? error.message : error,
+            logger.email.failed({
+                type: 'verification',
+                email,
+                error: error instanceof Error ? error.message : String(error),
             })
             throw error
         }
@@ -72,11 +72,12 @@ export const emailService = {
                 text,
             })
 
-            logger.info('Password reset email sent successfully', { email: maskEmail(email) })
+            logger.email.sent({ type: 'password-reset', email })
         } catch (error) {
-            logger.error('Failed to send password reset email', {
-                email: maskEmail(email),
-                error: error instanceof Error ? error.message : error,
+            logger.email.failed({
+                type: 'password-reset',
+                email,
+                error: error instanceof Error ? error.message : String(error),
             })
             throw error
         }
@@ -108,11 +109,12 @@ export const emailService = {
                 text,
             })
 
-            logger.info('Login OTP email sent successfully', { email: maskEmail(email) })
+            logger.email.sent({ type: 'login-otp', email })
         } catch (error) {
-            logger.error('Failed to send login OTP', {
-                email: maskEmail(email),
-                error: error instanceof Error ? error.message : error,
+            logger.email.failed({
+                type: 'login-otp',
+                email,
+                error: error instanceof Error ? error.message : String(error),
             })
             throw error
         }
@@ -145,11 +147,12 @@ export const emailService = {
                 text,
             })
 
-            logger.info('Magic link email sent successfully', { email: maskEmail(email) })
+            logger.email.sent({ type: 'magic-link', email })
         } catch (error) {
-            logger.error('Failed to send magic link', {
-                email: maskEmail(email),
-                error: error instanceof Error ? error.message : error,
+            logger.email.failed({
+                type: 'magic-link',
+                email,
+                error: error instanceof Error ? error.message : String(error),
             })
             throw error
         }
@@ -182,15 +185,12 @@ export const emailService = {
                 text,
             })
 
-            logger.info('Email change verification sent successfully', {
-                currentEmail: maskEmail(currentEmail),
-                newEmail: maskEmail(newEmail),
-            })
+            logger.email.sent({ type: 'email-change', email: currentEmail })
         } catch (error) {
-            logger.error('Failed to send email change verification', {
-                currentEmail: maskEmail(currentEmail),
-                newEmail: maskEmail(newEmail),
-                error: error instanceof Error ? error.message : error,
+            logger.email.failed({
+                type: 'email-change',
+                email: currentEmail,
+                error: error instanceof Error ? error.message : String(error),
             })
             throw error
         }
@@ -220,15 +220,12 @@ export const emailService = {
                 text,
             })
 
-            logger.info('Security notification email sent successfully', {
-                email: maskEmail(email),
-                action,
-            })
+            logger.email.sent({ type: 'security-notification', email })
         } catch (error) {
-            logger.error('Failed to send security notification', {
-                email: maskEmail(email),
-                action,
-                error: error instanceof Error ? error.message : error,
+            logger.email.failed({
+                type: 'security-notification',
+                email,
+                error: error instanceof Error ? error.message : String(error),
             })
             throw error
         }

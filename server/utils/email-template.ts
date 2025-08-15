@@ -167,13 +167,13 @@ export class EmailTemplateEngine {
             })
 
             if (errors && errors.length > 0) {
-                console.warn('MJML compilation warnings:', errors)
+                logger.email.templateError({ templateName: 'code-email', error: `MJML compilation warnings: ${errors.map((e) => e.message).join(', ')}` })
             }
 
             const text = this.generateTextVersion(html, templateData)
             return { html, text }
         } catch (error) {
-            console.error('MJML compilation failed:', error)
+            logger.email.templateError({ templateName: 'code-email', error: error instanceof Error ? error.message : String(error) })
             return this.generateFallbackTemplate('code-email', templateData, options)
         }
     }
@@ -218,13 +218,13 @@ export class EmailTemplateEngine {
             })
 
             if (errors && errors.length > 0) {
-                console.warn('MJML compilation warnings:', errors)
+                logger.email.templateError({ templateName: 'simple-message', error: `MJML compilation warnings: ${errors.map((e) => e.message).join(', ')}` })
             }
 
             const text = this.generateTextVersion(html, templateData)
             return { html, text }
         } catch (error) {
-            console.error('MJML compilation failed:', error)
+            logger.email.templateError({ templateName: 'simple-message', error: error instanceof Error ? error.message : String(error) })
             return this.generateFallbackTemplate('simple-message', templateData, options)
         }
     }
