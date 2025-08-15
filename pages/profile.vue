@@ -875,18 +875,16 @@ onMounted(async () => {
     }
 })
 
-// 监听隐私设置变化并保存到本地存储
-watch(showEmailDetails, (newValue) => {
-    if (import.meta.client) {
+if (import.meta.client) {
+    // 监听隐私设置变化并保存到本地存储
+    watch(showEmailDetails, (newValue) => {
         localStorage.setItem('caomei-auth-show-email', String(newValue))
-    }
-})
+    })
 
-watch(showPhoneDetails, (newValue) => {
-    if (import.meta.client) {
+    watch(showPhoneDetails, (newValue) => {
         localStorage.setItem('caomei-auth-show-phone', String(newValue))
-    }
-})
+    })
+}
 
 // 获取用户关联的第三方账号
 
@@ -1166,7 +1164,7 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 
 .privacy-value {
     color: $secondary;
-    // font-weight: 500;
+    font-weight: 500;
     word-break: break-all;
     flex: 1;
 }
