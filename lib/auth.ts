@@ -15,6 +15,7 @@ import {
 } from 'better-auth/plugins'
 import { sso } from '@better-auth/sso'
 import ms from 'ms'
+import { localization } from 'better-auth-localization'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
 import { sendEmail } from '@/server/utils/email'
 import { snowflake } from '@/server/utils/snowflake'
@@ -58,6 +59,7 @@ import type { User } from '@/server/entities/user'
 import { generateRandomString } from '@/server/utils/random'
 import { getTempEmail, getTempName, generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email-service'
+import { getUserLocale } from '@/server/utils/locale'
 
 const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
 
@@ -652,6 +654,19 @@ export const auth = betterAuth({
             providersLimit: 10,
             // 信任邮箱验证状态：信任 SSO 提供商的邮箱验证状态
             trustEmailVerified: true,
+        }),
+        localization({
+            defaultLocale: 'zh-Hans', // 默认为简体中文
+            fallbackLocale: 'default', // 回退到英语
+            getLocale: (request) => {
+                try {
+                    const userLocale = getUserLocale(request) as any
+                    return userLocale || 'default'
+                } catch (error) {
+                    console.warn('Error detecting locale:', error)
+                    return 'default' // 安全回退
+                }
+            },
         }),
     ], // 过滤掉未定义的插件
     ...secondaryStorage ? { secondaryStorage } : {},

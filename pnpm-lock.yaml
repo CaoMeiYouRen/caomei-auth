@@ -52,6 +52,9 @@ importers:
       better-auth:
         specifier: ^1.3.6
         version: 1.3.6(zod@4.0.10)
+      better-auth-localization:
+        specifier: ^2.0.8
+        version: 2.0.8(better-auth@1.3.6(zod@4.0.10))
       better-bytes:
         specifier: ^1.2.4
         version: 1.2.4
@@ -3582,6 +3585,11 @@ packages:
 
   before-after-hook@2.2.3:
     resolution: {integrity: sha512-NzUnlZexiaH/46WDhANlyR2bXRopNg4F/zuSA3OpZnllCUgRaOF2znDioDWrmbNVsuZk6l9pMquQB38cfBZwkQ==}
+
+  better-auth-localization@2.0.8:
+    resolution: {integrity: sha512-1iK4VebvRMF5oOdUOjkMr7PEd6jrxsjAfPiMTSkChy0FK6f03jEGLXqN7qsI8LQJMcUvwy9md17YM3/K3s877w==}
+    peerDependencies:
+      better-auth: ^1.3.4
 
   better-auth@1.3.6:
     resolution: {integrity: sha512-zjwbz9GpgGt3LuvJ8ZXfQeowSRpzdGojVvkhxvXjhCLwGOaOrZmFiNdEVyIKWTraN4oBtgNimcxUIQTGs6OKYg==}
@@ -14640,6 +14648,10 @@ snapshots:
       safe-buffer: 5.1.2
 
   before-after-hook@2.2.3: {}
+
+  better-auth-localization@2.0.8(better-auth@1.3.6(zod@4.0.10)):
+    dependencies:
+      better-auth: 1.3.6(zod@4.0.10)
 
   better-auth@1.3.6(zod@4.0.10):
     dependencies:
