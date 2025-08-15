@@ -141,11 +141,27 @@
                             />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">邮箱</label>
+                            <div class="privacy-field-header">
+                                <label class="form-label">邮箱</label>
+                                <div class="privacy-controls">
+                                    <span class="privacy-label">显示邮箱</span>
+                                    <ToggleSwitch
+                                        v-model="showEmailDetails"
+                                        v-tooltip.top="'切换是否显示完整邮箱信息'"
+                                        size="small"
+                                    />
+                                </div>
+                            </div>
                             <div class="profile-row">
                                 <span
+                                    v-if="showEmailDetails"
                                     v-tooltip.top="`完整邮箱地址：${user.email}`"
                                 >{{ shortText(user.email, 12, 12, 24) || "未绑定" }}</span>
+                                <span
+                                    v-else
+                                    v-tooltip.top="'邮箱信息已隐藏，点击右侧开关可显示'"
+                                    class="privacy-hidden"
+                                >{{ user.email ? '••••••@••••.••' : "未绑定" }}</span>
                                 <template v-if="user.emailVerified">
                                     <Button
                                         v-tooltip.top="'点击修改已验证的邮箱地址'"
@@ -175,9 +191,24 @@
                             </Message>
                         </div>
                         <div v-if="phoneEnabled" class="form-group">
-                            <label class="form-label">手机号</label>
+                            <div class="privacy-field-header">
+                                <label class="form-label">手机号</label>
+                                <div class="privacy-controls">
+                                    <span class="privacy-label">显示手机号</span>
+                                    <ToggleSwitch
+                                        v-model="showPhoneDetails"
+                                        v-tooltip.top="'切换是否显示完整手机号信息'"
+                                        size="small"
+                                    />
+                                </div>
+                            </div>
                             <div class="profile-row">
-                                <span>{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
+                                <span v-if="showPhoneDetails">{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
+                                <span
+                                    v-else
+                                    v-tooltip.top="'手机号信息已隐藏，点击右侧开关可显示'"
+                                    class="privacy-hidden"
+                                >{{ user.phone ? '••• •••• ••••' : "未绑定" }}</span>
                                 <Button
                                     v-if="user.phone"
                                     v-tooltip.top="'点击修改已绑定的手机号'"
@@ -816,6 +847,42 @@ function goSecurity() {
 const showLogoutConfirm = ref(false)
 const loggingOut = ref(false)
 
+// 隐私信息显示控制
+const showEmailDetails = ref(true)
+const showPhoneDetails = ref(true)
+
+onMounted(async () => {
+    await fetchUserAccounts()
+
+    // 恢复隐私设置
+    if (import.meta.client) {
+        const savedEmailSetting = localStorage.getItem('caomei-auth-show-email')
+        const savedPhoneSetting = localStorage.getItem('caomei-auth-show-phone')
+
+        if (savedEmailSetting !== null) {
+            showEmailDetails.value = savedEmailSetting === 'true'
+        }
+        if (savedPhoneSetting !== null) {
+            showPhoneDetails.value = savedPhoneSetting === 'true'
+        }
+    }
+})
+
+// 监听隐私设置变化并保存到本地存储
+watch(showEmailDetails, (newValue) => {
+    if (import.meta.client) {
+        localStorage.setItem('caomei-auth-show-email', String(newValue))
+    }
+})
+
+watch(showPhoneDetails, (newValue) => {
+    if (import.meta.client) {
+        localStorage.setItem('caomei-auth-show-phone', String(newValue))
+    }
+})
+
+// 获取用户关联的第三方账号
+
 // 确认退出登录
 async function confirmLogout() {
     loggingOut.value = true
@@ -1028,5 +1095,30 @@ async function onFileSelect(event: FileUploadSelectEvent) {
             }
         }
     }
+}
+
+.privacy-field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.privacy-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.privacy-label {
+    color: $secondary;
+    font-size: 0.85rem;
+}
+
+.privacy-hidden {
+    color: $secondary-light;
+    font-family: monospace;
+    letter-spacing: 0.1em;
 }
 </style>
