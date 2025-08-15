@@ -153,37 +153,40 @@
                                 </div>
                             </div>
                             <div class="profile-row">
-                                <span
-                                    v-if="showEmailDetails"
-                                    v-tooltip.top="`完整邮箱地址：${user.email}`"
-                                >{{ shortText(user.email, 12, 12, 24) || "未绑定" }}</span>
-                                <span
-                                    v-else
-                                    v-tooltip.top="'邮箱信息已隐藏，点击右侧开关可显示'"
-                                    class="privacy-hidden"
-                                >{{ user.email ? '••••••@••••.••' : "未绑定" }}</span>
-                                <template v-if="user.emailVerified">
-                                    <Button
-                                        v-tooltip.top="'点击修改已验证的邮箱地址'"
-                                        label="修改"
-                                        text
-                                        size="small"
-                                        class="ml-2"
-                                        @click="openEmailModal"
-                                    />
-                                    <span v-tooltip.top="'邮箱已验证，可用于登录和找回密码'" class="verified">已验证</span>
-                                </template>
-                                <template v-else>
-                                    <Button
-                                        v-tooltip.top="'点击验证邮箱，验证后可用于登录和找回密码'"
-                                        label="验证"
-                                        text
-                                        size="small"
-                                        class="ml-2"
-                                        @click="openEmailModal"
-                                    />
-                                    <span v-tooltip.top="'邮箱未验证，无法用于登录和找回密码'" class="unverified">未验证</span>
-                                </template>
+                                <div class="profile-info-content">
+                                    <span
+                                        v-if="showEmailDetails"
+                                        v-tooltip.top="`完整邮箱地址：${user.email}`"
+                                        class="privacy-value"
+                                    >{{ user.email || "未绑定" }}</span>
+                                    <span
+                                        v-else
+                                        v-tooltip.top="'邮箱信息已隐藏，点击右侧开关可显示'"
+                                        class="privacy-hidden"
+                                    >{{ user.email ? maskEmail(user.email) : "未绑定" }}</span>
+                                </div>
+                                <div class="profile-info-actions">
+                                    <template v-if="user.emailVerified">
+                                        <Button
+                                            v-tooltip.top="'点击修改已验证的邮箱地址'"
+                                            label="修改"
+                                            text
+                                            size="small"
+                                            @click="openEmailModal"
+                                        />
+                                        <span v-tooltip.top="'邮箱已验证，可用于登录和找回密码'" class="verified">已验证</span>
+                                    </template>
+                                    <template v-else>
+                                        <Button
+                                            v-tooltip.top="'点击验证邮箱，验证后可用于登录和找回密码'"
+                                            label="验证"
+                                            text
+                                            size="small"
+                                            @click="openEmailModal"
+                                        />
+                                        <span v-tooltip.top="'邮箱未验证，无法用于登录和找回密码'" class="unverified">未验证</span>
+                                    </template>
+                                </div>
                             </div>
                             <Message v-if="!user.emailVerified" severity="warn">
                                 您当前未验证邮箱，无法通过邮箱登录，也无法通过邮箱找回密码。<br>
@@ -203,36 +206,41 @@
                                 </div>
                             </div>
                             <div class="profile-row">
-                                <span v-if="showPhoneDetails">{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
-                                <span
-                                    v-else
-                                    v-tooltip.top="'手机号信息已隐藏，点击右侧开关可显示'"
-                                    class="privacy-hidden"
-                                >{{ user.phone ? '••• •••• ••••' : "未绑定" }}</span>
-                                <Button
-                                    v-if="user.phone"
-                                    v-tooltip.top="'点击修改已绑定的手机号'"
-                                    label="修改"
-                                    text
-                                    size="small"
-                                    class="ml-2"
-                                    @click="showPhoneModal = true"
-                                />
-                                <Button
-                                    v-else
-                                    v-tooltip.top="phoneEnabled ? '点击绑定手机号，绑定后可用于登录和验证' : '短信功能未启用，无法绑定手机号'"
-                                    label="绑定"
-                                    text
-                                    size="small"
-                                    :disabled="!phoneEnabled"
-                                    class="ml-2"
-                                    @click="phoneEnabled ? showPhoneModal = true : toast.add({severity: 'error', summary: '功能未启用', detail: '短信功能未启用，暂不支持绑定手机号', life: 3000})"
-                                />
-                                <span
-                                    v-if="user.phoneVerified"
-                                    v-tooltip.top="'手机号已验证，可用于登录和验证'"
-                                    class="verified"
-                                >已验证</span>
+                                <div class="profile-info-content">
+                                    <span
+                                        v-if="showPhoneDetails"
+                                        class="privacy-value"
+                                    >{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
+                                    <span
+                                        v-else
+                                        v-tooltip.top="'手机号信息已隐藏，点击右侧开关可显示'"
+                                        class="privacy-hidden"
+                                    >{{ user.phone ? maskPhone(user.phone) : "未绑定" }}</span>
+                                </div>
+                                <div class="profile-info-actions">
+                                    <Button
+                                        v-if="user.phone"
+                                        v-tooltip.top="'点击修改已绑定的手机号'"
+                                        label="修改"
+                                        text
+                                        size="small"
+                                        @click="showPhoneModal = true"
+                                    />
+                                    <Button
+                                        v-else
+                                        v-tooltip.top="phoneEnabled ? '点击绑定手机号，绑定后可用于登录和验证' : '短信功能未启用，无法绑定手机号'"
+                                        label="绑定"
+                                        text
+                                        size="small"
+                                        :disabled="!phoneEnabled"
+                                        @click="phoneEnabled ? showPhoneModal = true : toast.add({severity: 'error', summary: '功能未启用', detail: '短信功能未启用，暂不支持绑定手机号', life: 3000})"
+                                    />
+                                    <span
+                                        v-if="user.phoneVerified"
+                                        v-tooltip.top="'手机号已验证，可用于登录和验证'"
+                                        class="verified"
+                                    >已验证</span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -462,6 +470,7 @@ import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
 import type { SocialProvider } from '@/types/social'
+import { maskEmail, maskPhone } from '@/utils/privacy-client'
 import { shortText } from '@/utils/short-text'
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -1020,7 +1029,22 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 .profile-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    min-height: 2.5rem;
+    padding: 0.5rem 0;
+    gap: 1rem;
+}
+
+.profile-info-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-info-actions {
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .social-list {
@@ -1102,23 +1126,56 @@ async function onFileSelect(event: FileUploadSelectEvent) {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.5rem;
+
+    .form-label {
+        margin-bottom: 0;
+        font-weight: 600;
+    }
 }
 
 .privacy-controls {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+    background: rgba($secondary, 0.05);
+    border-radius: 6px;
+    border: 1px solid rgba($secondary, 0.1);
+
+    :deep(.p-toggleswitch) {
+        .p-toggleswitch-slider {
+            background: rgba($secondary-light, 0.3);
+            border-radius: 10px;
+
+            &:before {
+                background: #fff;
+                border-radius: 50%;
+            }
+        }
+
+        &.p-toggleswitch-checked .p-toggleswitch-slider {
+            background: $primary;
+        }
+    }
 }
 
 .privacy-label {
     color: $secondary;
     font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.privacy-value {
+    color: $secondary;
+    font-weight: 500;
+    word-break: break-all;
+    flex: 1;
 }
 
 .privacy-hidden {
-    color: $secondary-light;
-    font-family: monospace;
-    letter-spacing: 0.1em;
+    color: $secondary;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-weight: 500;
 }
 </style>
