@@ -1,6 +1,7 @@
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
+import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
@@ -90,7 +91,10 @@ export default defineEventHandler(async (event) => {
             message: 'SSO 提供商更新成功',
         }
     } catch (error: any) {
-        console.error('更新 SSO 提供商错误:', error)
+        logger.error('Failed to update SSO provider', {
+            error: error.message,
+            providerId: getRouterParam(event, 'id'),
+        })
 
         if (error.statusCode) {
             throw error

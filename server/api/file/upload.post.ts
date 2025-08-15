@@ -7,6 +7,7 @@ import { FileStorageEnv, getFileStorage } from '@/server/storage/factory'
 import { getFileExtension, getFileType } from '@/server/utils/file'
 import { auth } from '@/lib/auth'
 import { limiterStorage } from '@/server/database/storage'
+import logger from '@/server/utils/logger'
 
 import {
     MAX_UPLOAD_SIZE,
@@ -113,7 +114,10 @@ export default defineEventHandler(async (event): Promise<{
             url,
         }
     } catch (error) {
-        console.error('文件上传失败:', error)
+        logger.error('File upload failed', {
+            error: error instanceof Error ? error.message : String(error),
+            userId: session?.user?.id,
+        })
         return {
             status: 400,
             success: false,

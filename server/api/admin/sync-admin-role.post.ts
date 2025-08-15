@@ -2,6 +2,7 @@ import { checkAndSyncAdminRole, checkAndSyncAdminRoleWithUser, setUserAdminRole,
 import { auth } from '@/lib/auth'
 import { dataSource } from '@/server/database'
 import { User } from '@/server/entities/user'
+import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     // 验证用户是否已登录
@@ -101,7 +102,11 @@ export default defineEventHandler(async (event) => {
             },
         }
     } catch (error) {
-        console.error('管理员角色操作失败:', error)
+        logger.error('Admin role operation failed', {
+            error: error instanceof Error ? error.message : String(error),
+            action: body.action,
+            userId: body.userId,
+        })
         throw createError({
             statusCode: 500,
             statusMessage: 'Internal Server Error',

@@ -1,13 +1,15 @@
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
+import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
 
+    let body: any = null
     try {
         // 创建 SSO 提供商
-        const body = await readBody(event)
+        body = await readBody(event)
 
         const {
             type,
@@ -111,7 +113,10 @@ export default defineEventHandler(async (event) => {
             message: 'SSO 提供商创建成功',
         }
     } catch (error: any) {
-        console.error('创建 SSO 提供商错误:', error)
+        logger.error('Failed to create SSO provider', {
+            error: error.message,
+            provider: body?.provider,
+        })
 
         if (error.statusCode) {
             throw error

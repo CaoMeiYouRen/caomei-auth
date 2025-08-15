@@ -34,7 +34,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
         PHONE_LIMIT_WINDOW,
     )
     if (globalCount > PHONE_DAILY_LIMIT) {
-        logger.phone.rateLimited({ limitType: 'global' })
+        logger.phone.rateLimited({ limitType: 'global', remainingTime: PHONE_DAILY_LIMIT })
         throw new Error('今日短信验证码发送次数已达全局上限')
     }
 
@@ -45,7 +45,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
         PHONE_LIMIT_WINDOW,
     )
     if (singleUserCount > PHONE_SINGLE_USER_DAILY_LIMIT) {
-        logger.phone.rateLimited({ phone: phoneNumber, limitType: 'user' })
+        logger.phone.rateLimited({ phone: phoneNumber, limitType: 'user', remainingTime: PHONE_DAILY_LIMIT })
         throw new Error('您的手机号今日验证码发送次数已达上限')
     }
     switch (PHONE_CHANNEL) {

@@ -109,7 +109,9 @@ export default defineEventHandler(async (event) => {
             },
         }
     } catch (error) {
-        console.error('获取登录统计失败:', error)
+        logger.error('Failed to get login stats', {
+            error: error instanceof Error ? error.message : String(error),
+        })
         throw createError({
             statusCode: 500,
             statusMessage: 'Internal Server Error',
