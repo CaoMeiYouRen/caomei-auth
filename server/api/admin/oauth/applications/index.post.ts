@@ -5,12 +5,13 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import { generateRandomString } from '@/server/utils/random'
 import { generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
 import { snowflake } from '@/server/utils/snowflake'
+import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
+    let body: any = null
     try {
-
-        const body = await readBody(event)
+        body = await readBody(event)
         const {
             client_name,
             redirect_uris,
@@ -124,6 +125,11 @@ export default defineEventHandler(async (event) => {
             data: response,
         }
     } catch (error) {
+        logger.business.oauthAppCreateFailed({
+            name: body?.client_name || body?.name,
+            createdBy: auth.data.userId,
+            error: error instanceof Error ? error.message : String(error),
+        })
         return {
             status: 500,
             success: false,

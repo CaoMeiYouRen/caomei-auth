@@ -2,6 +2,7 @@ import { defineEventHandler } from 'h3'
 import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
+import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -41,6 +42,10 @@ export default defineEventHandler(async (event) => {
             data: null,
         }
     } catch (error) {
+        logger.business.oauthAppDeleted({
+            appId: event.context.params?.id || 'unknown',
+            deletedBy: auth.data.userId,
+        })
         return {
             status: 500,
             success: false,

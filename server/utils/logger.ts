@@ -248,7 +248,15 @@ interface ExtendedLogger {
         userRegistered: (data: { userId: string, email: string, provider?: string }) => void
         userDeleted: (data: { userId: string, email: string, adminId?: string }) => void
         oauthAppCreated: (data: { appId: string, name: string, createdBy: string }) => void
+        oauthAppCreateFailed: (data: { name?: string, createdBy: string, error: string }) => void
+        oauthAppUpdated: (data: { appId: string, name?: string, updatedBy: string }) => void
+        oauthAppDeleted: (data: { appId: string, name?: string, deletedBy: string }) => void
+        oauthAppListFailed: (data: { error: string, adminId: string }) => void
         fileUploaded: (data: { fileName: string, size: number, userId: string, type?: string }) => void
+        ssoProviderCreated: (data: { providerId: string, name: string, createdBy: string }) => void
+        ssoProviderUpdated: (data: { providerId: string, updatedBy: string }) => void
+        ssoProviderDeleted: (data: { providerId: string, deletedBy: string }) => void
+        sessionLogQueryFailed: (data: { adminId: string, error: string, queryParams?: any }) => void
     }
 
     // 邮件相关日志
@@ -406,10 +414,50 @@ const extendedLogger: ExtendedLogger = {
             const message = `OAuth app created: ${data.name}`
             businessLogger.info(message, { appId: data.appId, createdBy: safeData.createdBy })
         },
+        oauthAppCreateFailed: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `Failed to create OAuth app${data.name ? `: ${data.name}` : ''} - ${data.error}`
+            businessLogger.error(message, { createdBy: safeData.createdBy })
+        },
+        oauthAppUpdated: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `OAuth app updated${data.name ? `: ${data.name}` : ''}`
+            businessLogger.info(message, { appId: data.appId, updatedBy: safeData.updatedBy })
+        },
+        oauthAppDeleted: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `OAuth app deleted${data.name ? `: ${data.name}` : ''}`
+            businessLogger.warn(message, { appId: data.appId, deletedBy: safeData.deletedBy })
+        },
+        oauthAppListFailed: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `Failed to list OAuth applications: ${data.error}`
+            businessLogger.error(message, { adminId: safeData.adminId })
+        },
         fileUploaded: (data) => {
             const safeData = createSafeLogData(data)
             const message = `File uploaded: ${data.fileName} (${data.size} bytes)`
             businessLogger.info(message, { userId: safeData.userId, type: data.type })
+        },
+        ssoProviderCreated: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `SSO provider created: ${data.name}`
+            businessLogger.info(message, { providerId: data.providerId, createdBy: safeData.createdBy })
+        },
+        ssoProviderUpdated: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = 'SSO provider updated'
+            businessLogger.info(message, { providerId: data.providerId, updatedBy: safeData.updatedBy })
+        },
+        ssoProviderDeleted: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = 'SSO provider deleted'
+            businessLogger.warn(message, { providerId: data.providerId, deletedBy: safeData.deletedBy })
+        },
+        sessionLogQueryFailed: (data) => {
+            const safeData = createSafeLogData(data)
+            const message = `Failed to query session logs: ${data.error}`
+            businessLogger.error(message, { adminId: safeData.adminId, queryParams: data.queryParams })
         },
     },
 
