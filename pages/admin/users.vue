@@ -1501,9 +1501,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url('@/styles/theme');
+@import url('@/styles/form');
+@import url('@/styles/common');
 
 .admin-users {
     min-height: 100vh;
@@ -1524,9 +1524,9 @@ onMounted(() => {
     background: white;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         flex-direction: column;
         gap: 1.5rem;
     }
@@ -1537,7 +1537,7 @@ onMounted(() => {
         font-size: 2rem;
         font-weight: 700;
         color: $primary;
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.5rem;
     }
 
     .users-subtitle {
@@ -1551,7 +1551,7 @@ onMounted(() => {
     display: flex;
     gap: 1rem;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         width: 100%;
 
         :deep(.p-button) {
@@ -1564,7 +1564,7 @@ onMounted(() => {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
     margin-bottom: 1.5rem;
 
     .filter-row {
@@ -1572,7 +1572,7 @@ onMounted(() => {
         gap: 1rem;
         align-items: center;
 
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             flex-direction: column;
             align-items: stretch;
         }
@@ -1582,7 +1582,7 @@ onMounted(() => {
         flex: 1;
         min-width: 300px;
 
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             min-width: unset;
         }
     }
@@ -1591,7 +1591,7 @@ onMounted(() => {
         display: flex;
         gap: 1rem;
 
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             flex-wrap: wrap;
         }
     }
@@ -1600,7 +1600,7 @@ onMounted(() => {
 .users-list {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
     overflow: hidden;
 
     .table-header {
@@ -1706,7 +1706,6 @@ onMounted(() => {
 }
 
 .user-status {
-
     .ban-reason,
     .ban-expires {
         font-size: 0.8rem;
@@ -1856,7 +1855,7 @@ onMounted(() => {
 }
 
 // 响应式优化
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .admin-users {
         padding: 1rem;
     }

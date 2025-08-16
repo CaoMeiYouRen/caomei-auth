@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint:css": "stylelint ./**/*.{html,css,scss,sass,vue} --fix --custom-syntax postcss-html",
+    "lint:css": "stylelint ./**/*.{css,scss,sass} --fix && stylelint ./**/*.vue --fix --custom-syntax postcss-html",
     "lint": "cross-env NODE_ENV=production eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix",
     "release": "semantic-release",
     "build": "nuxt build",
@@ -76,7 +76,8 @@
     "overrides": {
       "vite": "^6.2.6",
       "parse-git-config": "^3.0.0",
-      "esbuild": "^0.25.0"
+      "esbuild": "^0.25.0",
+      "postcss": "^8.5.0"
     }
   },
   "devDependencies": {
@@ -112,12 +113,13 @@
     "husky": "^9.0.11",
     "lint-staged": "^16.1.5",
     "playwright-core": "^1.54.2",
+    "postcss": "^8.5.6",
     "postcss-html": "^1.8.0",
+    "postcss-scss": "^4.0.9",
     "sass": "^1.90.0",
     "semantic-release": "21.0.1",
     "stylelint": "^16.23.1",
     "stylelint-config-cmyr": "^0.2.1",
-    "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-standard": "^39.0.0",
     "stylelint-order": "^7.0.0",
     "stylelint-scss": "^6.12.1",

@@ -47,7 +47,7 @@ const props = defineProps({
         max-width: 160px;
     }
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         width: 50%;
         min-height: 100vh;
 

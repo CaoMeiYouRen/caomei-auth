@@ -9,12 +9,14 @@
 </template>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
+@import url("@/styles/theme");
+
 .layout-default {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
+
 .layout-default__main {
     flex: 1 1 auto;
 }

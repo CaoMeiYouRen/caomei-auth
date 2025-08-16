@@ -118,7 +118,7 @@ function toAdmin() {
     min-height: 100vh;
     background: $background;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         flex-direction: row;
     }
 }
@@ -148,7 +148,7 @@ function toAdmin() {
         }
     }
 
-    @media (max-width: 767px) {
+    @media (width <= 767px) {
         display: none;
     }
 }
@@ -156,7 +156,7 @@ function toAdmin() {
 .auth-links-mobile {
     display: none;
 
-    @media (max-width: 767px) {
+    @media (width <= 767px) {
         display: flex;
         justify-content: center;
         margin-top: 1rem;
@@ -176,7 +176,7 @@ function toAdmin() {
     padding: 2rem 1rem;
     background: $background;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         width: 50%;
         min-height: 100vh;
     }
@@ -267,7 +267,7 @@ function toAdmin() {
         margin-left: 1rem;
     }
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         display: none;
     }
 }

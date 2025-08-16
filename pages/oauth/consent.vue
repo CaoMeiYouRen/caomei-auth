@@ -647,7 +647,7 @@ async function denyConsent() {
     }
 
     // 响应式设计
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         .oauth-consent {
             padding: 1rem;
 

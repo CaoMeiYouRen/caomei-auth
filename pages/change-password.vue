@@ -155,7 +155,7 @@ async function changePassword() {
     flex-direction: column-reverse;
     background: $background;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         flex-direction: row;
     }
 }
@@ -174,7 +174,7 @@ async function changePassword() {
         max-width: 160px;
     }
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         width: 50%;
         min-height: 100vh;
 
@@ -192,7 +192,7 @@ async function changePassword() {
     min-height: 60vh;
     padding: 1rem;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         width: 50%;
         min-height: 100vh;
     }

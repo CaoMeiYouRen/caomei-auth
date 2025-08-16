@@ -50,7 +50,7 @@ const contactEmailLink = `mailto:${config.contactEmail}`
     min-height: 100vh;
     background-color: $background;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         flex-direction: row;
     }
 }
@@ -143,7 +143,7 @@ const contactEmailLink = `mailto:${config.contactEmail}`
     }
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
     .auth-container {
         padding: 1.2rem;
     }

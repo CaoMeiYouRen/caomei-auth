@@ -789,9 +789,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url('@/styles/theme');
+@import url('@/styles/form');
+@import url('@/styles/common');
 
 .admin-logs {
     min-height: 100vh;
@@ -813,9 +813,9 @@ onMounted(() => {
     background: $background-light;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         flex-direction: column;
         gap: 1.5rem;
     }
@@ -826,7 +826,7 @@ onMounted(() => {
         font-size: 2rem;
         font-weight: 700;
         color: $primary;
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.5rem;
     }
 
     .logs-subtitle {
@@ -840,7 +840,7 @@ onMounted(() => {
     display: flex;
     gap: 1rem;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         width: 100%;
 
         :deep(.p-button) {
@@ -864,12 +864,12 @@ onMounted(() => {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 16px rgb(0 0 0 / 15%);
     }
 
     .stat-icon {
@@ -911,7 +911,7 @@ onMounted(() => {
 .logs-detail {
     background: $background-light;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
     margin-bottom: 2rem;
     overflow: hidden;
 }
@@ -1068,7 +1068,7 @@ onMounted(() => {
             gap: 1rem;
             align-items: center;
 
-            @media (max-width: 768px) {
+            @media (width <= 768px) {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -1078,7 +1078,7 @@ onMounted(() => {
             flex: 1;
             min-width: 300px;
 
-            @media (max-width: 768px) {
+            @media (width <= 768px) {
                 min-width: 0;
             }
         }
@@ -1088,7 +1088,7 @@ onMounted(() => {
             gap: 1rem;
             align-items: center;
 
-            @media (max-width: 768px) {
+            @media (width <= 768px) {
                 flex-wrap: wrap;
             }
         }
@@ -1188,7 +1188,7 @@ onMounted(() => {
 }
 
 // 响应式设计
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .admin-logs {
         padding: 1rem;
     }
@@ -1216,7 +1216,6 @@ onMounted(() => {
     }
 
     .sessions-list {
-
         :deep(.p-datatable-tbody > tr > td),
         :deep(.p-datatable-thead > tr > th) {
             padding: 0.75rem 1rem;
@@ -1224,7 +1223,7 @@ onMounted(() => {
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .period-cards {
         grid-template-columns: 1fr;
     }

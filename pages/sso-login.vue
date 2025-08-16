@@ -379,9 +379,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url('@/styles/theme');
+@import url('@/styles/form');
+@import url('@/styles/common');
 
 .sso-login {
     min-height: 100vh;
@@ -402,7 +402,7 @@ onMounted(() => {
         font-size: 2.5rem;
         font-weight: 700;
         color: $primary;
-        margin: 0 0 1rem 0;
+        margin: 0 0 1rem;
     }
 
     .sso-subtitle {
@@ -423,11 +423,11 @@ onMounted(() => {
     background: white;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 
     h3 {
         color: $primary;
-        margin: 0 0 1rem 0;
+        margin: 0 0 1rem;
         font-size: 1.25rem;
         font-weight: 600;
     }
@@ -458,12 +458,12 @@ onMounted(() => {
     background: white;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
     margin-bottom: 2rem;
 
     h3 {
         color: $primary;
-        margin: 0 0 1.5rem 0;
+        margin: 0 0 1.5rem;
         font-size: 1.25rem;
         font-weight: 600;
     }
@@ -485,7 +485,7 @@ onMounted(() => {
 
     &:hover {
         border-color: $primary;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
         transform: translateY(-2px);
     }
 
@@ -500,7 +500,7 @@ onMounted(() => {
             font-size: 1.125rem;
             font-weight: 600;
             color: $secondary;
-            margin: 0 0 0.5rem 0;
+            margin: 0 0 0.5rem;
         }
 
         .provider-domain,
@@ -530,7 +530,7 @@ onMounted(() => {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 
     .text-muted {
         color: $secondary-light;
@@ -549,7 +549,7 @@ onMounted(() => {
 }
 
 // 响应式优化
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .sso-login {
         padding: 1rem;
     }

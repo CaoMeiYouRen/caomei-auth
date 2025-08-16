@@ -781,14 +781,14 @@ async function loginAnonymously() {
 }
 
 // 添加媒体查询优化小屏幕显示
-@media (max-width: 375px) {
+@media (width <= 375px) {
     .login-btn .p-button {
         padding: 0.5rem 0.75rem !important;
         font-size: 0.875rem !important;
     }
 }
 
-@media (max-width: 320px) {
+@media (width <= 320px) {
     .login-btn .p-button {
         padding: 0.5rem !important;
         font-size: 0.75rem !important;
@@ -801,7 +801,7 @@ async function loginAnonymously() {
     min-height: 100vh;
     background: $background;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         flex-direction: row;
     }
 }
@@ -820,7 +820,7 @@ async function loginAnonymously() {
         max-width: 160px;
     }
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         width: 50%;
         min-height: 100vh;
 
@@ -838,7 +838,7 @@ async function loginAnonymously() {
     min-height: 60vh;
     padding: 1rem;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         width: 50%;
         min-height: 100vh;
     }

@@ -1,5 +1,6 @@
 @font-face {
-    font-family: "iconfont";
+    font-family: iconfont;
+
     /* Project id 4977253 */
     src: url('iconfont.woff2?t=1753289475442') format('woff2'),
         url('iconfont.woff?t=1753289475442') format('woff'),
@@ -7,21 +8,21 @@
 }
 
 .iconfont {
-    font-family: "iconfont" !important;
     font-size: 16px;
+    font-family: iconfont, sans-serif !important;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-douyin:before {
+.icon-douyin::before {
     content: "\e8db";
 }
 
-.icon-discord-simple:before {
+.icon-discord-simple::before {
     content: "\ebf8";
 }
 
-.icon-discord:before {
+.icon-discord::before {
     content: "\e60b";
 }

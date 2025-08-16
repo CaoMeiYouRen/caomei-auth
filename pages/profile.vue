@@ -973,9 +973,9 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
 
 .profile-card {
     max-width: 480px;
@@ -1143,7 +1143,7 @@ async function onFileSelect(event: FileUploadSelectEvent) {
             background: rgba($secondary-light, 0.3);
             border-radius: 10px;
 
-            &:before {
+            &::before {
                 background: #fff;
                 border-radius: 50%;
             }

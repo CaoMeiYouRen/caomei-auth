@@ -197,7 +197,7 @@ const toggleSidebar = () => {
         }
     }
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         position: relative;
         width: 100%;
         height: auto;
@@ -368,7 +368,7 @@ const toggleSidebar = () => {
         margin-left: 80px;
     }
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         margin-left: 0;
 
         &.collapsed {
@@ -378,7 +378,7 @@ const toggleSidebar = () => {
 }
 
 // 响应式调整
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .admin-layout {
         flex-direction: column;
     }

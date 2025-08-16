@@ -724,9 +724,9 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
 
 .auth-container {
     display: flex;
@@ -734,7 +734,7 @@ onMounted(() => {
     flex-direction: column-reverse;
     background: $background;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         flex-direction: row;
     }
 }
@@ -747,7 +747,7 @@ onMounted(() => {
     min-height: 60vh;
     width: 100%;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         width: 100%;
         min-height: 100vh;
     }
@@ -756,7 +756,7 @@ onMounted(() => {
 .auth-card.security-card {
     background-color: $background-light;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 25px rgb(0 0 0 / 5%);
     padding: 2rem;
     width: 100%;
     max-width: 1200px;
@@ -874,9 +874,9 @@ onMounted(() => {
     }
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
     .auth-container {
-        padding: 1.2rem 1.2rem;
+        padding: 1.2rem;
     }
 
     .auth-title {

@@ -1269,9 +1269,9 @@ function goProfile() {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url('@/styles/theme');
+@import url('@/styles/form');
+@import url('@/styles/common');
 
 .admin-clients {
     min-height: 100vh;
@@ -1292,9 +1292,9 @@ function goProfile() {
     background: white;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         flex-direction: column;
         gap: 1.5rem;
     }
@@ -1305,7 +1305,7 @@ function goProfile() {
         font-size: 2rem;
         font-weight: 700;
         color: $primary;
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.5rem;
     }
 
     .clients-subtitle {
@@ -1319,7 +1319,7 @@ function goProfile() {
     display: flex;
     gap: 1rem;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         width: 100%;
 
         :deep(.p-button) {
@@ -1332,7 +1332,7 @@ function goProfile() {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
     margin-bottom: 1.5rem;
 
     .filter-row {
@@ -1340,7 +1340,7 @@ function goProfile() {
         gap: 1rem;
         align-items: center;
 
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             flex-direction: column;
             align-items: stretch;
         }
@@ -1350,7 +1350,7 @@ function goProfile() {
         flex: 1;
         min-width: 300px;
 
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             min-width: unset;
         }
     }
@@ -1359,7 +1359,7 @@ function goProfile() {
         display: flex;
         gap: 1rem;
 
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             flex-wrap: wrap;
         }
     }
@@ -1368,7 +1368,7 @@ function goProfile() {
 .clients-list {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
     overflow: hidden;
 
     .table-header {
@@ -1459,7 +1459,7 @@ function goProfile() {
 }
 
 // 响应式优化
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .admin-clients {
         padding: 1rem;
     }
@@ -1537,8 +1537,7 @@ function goProfile() {
     form {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        row-gap: 0rem ;
-        column-gap: 1.5rem;
+        gap: 0 1.5rem;
 
         // 重要的或较长的字段占用整行
         .form-group:nth-child(1),  // 应用名称
@@ -1570,7 +1569,7 @@ function goProfile() {
         // 软件ID、软件版本
     }
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         width: 95vw;
 
         form {
@@ -1751,7 +1750,7 @@ function goProfile() {
             }
 
             h3 {
-                margin: 0 0 1rem 0;
+                margin: 0 0 1rem;
                 color: $primary;
                 font-size: 1.2rem;
                 font-weight: 600;
@@ -1766,7 +1765,7 @@ function goProfile() {
 
             .section-description {
                 color: $secondary-light;
-                margin: 0 0 1.5rem 0;
+                margin: 0 0 1.5rem;
                 line-height: 1.5;
             }
         }
@@ -1873,7 +1872,7 @@ function goProfile() {
         }
     }
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         width: 95vw;
 
         .api-docs-content {
@@ -1930,12 +1929,12 @@ function goProfile() {
                         font-size: 1.5rem;
                         font-weight: 700;
                         color: $primary;
-                        margin: 0 0 0.5rem 0;
+                        margin: 0 0 0.5rem;
                     }
 
                     .app-description {
                         color: $secondary-light;
-                        margin: 0 0 1rem 0;
+                        margin: 0 0 1rem;
                         line-height: 1.5;
                     }
 
@@ -1959,7 +1958,7 @@ function goProfile() {
                     font-size: 1.1rem;
                     font-weight: 600;
                     color: $primary;
-                    margin: 0 0 1rem 0;
+                    margin: 0 0 1rem;
                     padding-bottom: 0.5rem;
                     border-bottom: 2px solid #e2e8f0;
                 }
@@ -2056,7 +2055,7 @@ function goProfile() {
         }
     }
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         width: 95vw;
 
         .view-content {

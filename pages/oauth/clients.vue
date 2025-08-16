@@ -655,7 +655,7 @@ function goDocs() {
     }
 
     // 响应式设计
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         .container {
             padding: 1rem;
         }

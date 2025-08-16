@@ -1362,9 +1362,10 @@ function formatRelativeTime(date: string | Date) {
 
 <style lang="scss" scoped>
 @use "sass:color";
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+
+@import url('@/styles/theme');
+@import url('@/styles/form');
+@import url('@/styles/common');
 
 .admin-sso {
     min-height: 100vh;
@@ -1385,9 +1386,9 @@ function formatRelativeTime(date: string | Date) {
     background: white;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         flex-direction: column;
         gap: 1.5rem;
     }
@@ -1398,7 +1399,7 @@ function formatRelativeTime(date: string | Date) {
         font-size: 2rem;
         font-weight: 700;
         color: $primary;
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.5rem;
     }
 
     .sso-subtitle {
@@ -1412,7 +1413,7 @@ function formatRelativeTime(date: string | Date) {
     display: flex;
     gap: 1rem;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         width: 100%;
 
         :deep(.p-button) {
@@ -1425,7 +1426,7 @@ function formatRelativeTime(date: string | Date) {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
     margin-bottom: 1.5rem;
 
     .filter-row {
@@ -1433,7 +1434,7 @@ function formatRelativeTime(date: string | Date) {
         gap: 1rem;
         align-items: center;
 
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             flex-direction: column;
             align-items: stretch;
         }
@@ -1443,7 +1444,7 @@ function formatRelativeTime(date: string | Date) {
         flex: 1;
         min-width: 300px;
 
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             min-width: auto;
         }
     }
@@ -1452,7 +1453,7 @@ function formatRelativeTime(date: string | Date) {
         display: flex;
         gap: 1rem;
 
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             flex-direction: column;
         }
     }
@@ -1461,7 +1462,7 @@ function formatRelativeTime(date: string | Date) {
 .sso-list {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
     overflow: hidden;
 
     .table-header {
@@ -1559,7 +1560,7 @@ function formatRelativeTime(date: string | Date) {
 }
 
 // 响应式优化
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .admin-sso {
         padding: 1rem;
     }
@@ -1595,7 +1596,7 @@ function formatRelativeTime(date: string | Date) {
 
         h4 {
             color: $primary;
-            margin: 0 0 1rem 0;
+            margin: 0 0 1rem;
             font-size: 1.125rem;
             font-weight: 600;
         }
@@ -1621,7 +1622,7 @@ function formatRelativeTime(date: string | Date) {
         border-top: 1px solid #e2e8f0;
     }
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         width: 95vw;
 
         .form-actions {
@@ -1652,7 +1653,7 @@ function formatRelativeTime(date: string | Date) {
 
             h4 {
                 color: $primary;
-                margin: 0 0 1rem 0;
+                margin: 0 0 1rem;
                 font-size: 1.125rem;
                 font-weight: 600;
             }
@@ -1715,7 +1716,7 @@ function formatRelativeTime(date: string | Date) {
         }
     }
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
         width: 95vw;
 
         .detail-grid {

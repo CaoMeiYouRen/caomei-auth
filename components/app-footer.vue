@@ -136,15 +136,15 @@ const publicSecurityBeianNumber = config.publicSecurityBeianNumber
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
+@import url("@/styles/theme");
 
 .app-footer {
     background: $background-light;
     border-top: 1px solid $secondary-bg;
-    padding: 1.2rem 0 0.5rem 0;
+    padding: 1.2rem 0 0.5rem;
     font-size: 0.98rem;
 
-    @media (max-width: 767px) {
+    @media (width <= 767px) {
         display: none;
     }
 
@@ -191,7 +191,7 @@ const publicSecurityBeianNumber = config.publicSecurityBeianNumber
 
     .app-footer__bottom {
         max-width: 1200px;
-        margin: 0.7rem auto 0 auto;
+        margin: 0.7rem auto 0;
         padding: 0 1.2rem;
         display: flex;
         flex-direction: column;
