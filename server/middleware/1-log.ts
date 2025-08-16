@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
     const path = event.path
     const ip = getRequestIP(event, { xForwardedFor: true }) || 'unknown'
     const userAgent = getHeader(event, 'user-agent') || ''
+    const locale = detectUserLocale(event)
 
     // 尝试获取用户信息（如果用户已登录）
     let userId: string | undefined
@@ -31,6 +32,7 @@ export default defineEventHandler(async (event) => {
         ip,
         userAgent,
         userId,
+        locale,
     })
 
     // 监听响应完成

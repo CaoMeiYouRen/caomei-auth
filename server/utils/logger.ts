@@ -224,7 +224,7 @@ interface ExtendedLogger {
 
     // API 相关日志
     api: {
-        request: (data: { method: string, path: string, ip?: string, userAgent?: string, userId?: string }) => void
+        request: (data: { method: string, path: string, ip?: string, userAgent?: string, userId?: string, locale?: string }) => void
         response: (data: { method: string, path: string, statusCode: number, responseTime?: number, userId?: string }) => void
         error: (data: { method: string, path: string, error: string, stack?: string, userId?: string }) => void
     }
@@ -334,8 +334,8 @@ const extendedLogger: ExtendedLogger = {
     api: {
         request: (data) => {
             const safeData = createSafeLogData(data)
-            const message = `${data.method} ${data.path}${data.ip ? ` from ${safeData.ip}` : ''}`
-            apiLogger.http(message, { userId: safeData.userId, userAgent: data.userAgent })
+            const message = `${data.method} ${data.path}${data.ip ? ` from ${safeData.ip}` : ''}${data.locale ? ` [${data.locale}]` : ''}`
+            apiLogger.http(message, { userId: safeData.userId, userAgent: data.userAgent, locale: data.locale })
         },
         response: (data) => {
             const safeData = createSafeLogData(data)

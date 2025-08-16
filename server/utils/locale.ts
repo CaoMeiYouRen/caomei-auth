@@ -236,7 +236,7 @@ export function getLocaleFromHeaders(event: H3Event): SupportedLocale {
  * @param event H3Event 对象
  * @returns 检测到的语言
  */
-export async function detectUserLocale(event: H3Event): Promise<SupportedLocale> {
+export function detectUserLocale(event: H3Event): SupportedLocale {
     try {
         // 1. 优先从 Cookie 获取用户明确设置的语言
         const cookieLocale = getLocaleFromCookie(event)
