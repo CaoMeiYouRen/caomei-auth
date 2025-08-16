@@ -335,7 +335,7 @@ const extendedLogger: ExtendedLogger = {
         request: (data) => {
             const safeData = createSafeLogData(data)
             const message = `${data.method} ${data.path}${data.ip ? ` from ${safeData.ip}` : ''}${data.locale ? ` [${data.locale}]` : ''}`
-            apiLogger.http(message, { userId: safeData.userId, userAgent: data.userAgent, locale: data.locale })
+            apiLogger.http(message, { userId: safeData.userId, userAgent: data.userAgent })
         },
         response: (data) => {
             const safeData = createSafeLogData(data)
