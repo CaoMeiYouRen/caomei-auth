@@ -138,14 +138,14 @@ const createWinstonLogger = () => {
             new DailyRotateFile({
                 ...dailyRotateFileOption,
                 level: 'error',
-                filename: '%DATE%.exceptions.log',
+                filename: '%DATE%.errors.log',
             }),
         )
         rejectionHandlers.push(
             new DailyRotateFile({
                 ...dailyRotateFileOption,
                 level: 'error',
-                filename: '%DATE%.rejections.log',
+                filename: '%DATE%.errors.log',
             }),
         )
     }
