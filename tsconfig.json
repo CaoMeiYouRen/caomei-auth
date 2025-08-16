@@ -1,4 +1,13 @@
 {
-  // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+    // https://nuxt.com/docs/guide/concepts/typescript
+    "extends": "./.nuxt/tsconfig.json",
+    "compilerOptions": {
+        "strictPropertyInitialization": false,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "noImplicitAny": false,
+        "useDefineForClassFields": false,
+        "allowSyntheticDefaultImports": true, // 允许默认导入非模块
+        "esModuleInterop": true, // 允许与 CommonJS 模块互操作
+    }
 }
