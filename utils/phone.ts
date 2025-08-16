@@ -4,9 +4,9 @@ const { PhoneNumberFormat, PhoneNumberUtil } = pkg
 export const phoneUtil = PhoneNumberUtil.getInstance()
 
 export const SUPPORTED_REGIONS = phoneUtil.getSupportedRegions().map((region) => ({
-        region, // 区域代码(字母)
-        countryCode: phoneUtil.getCountryCodeForRegion(region), // 区域代码(数字)
-    }))
+    region, // 区域代码(字母)
+    countryCode: phoneUtil.getCountryCodeForRegion(region), // 区域代码(数字)
+}))
 
 /**
  * 格式化手机号到 E164 格式，用于数据库存储。
