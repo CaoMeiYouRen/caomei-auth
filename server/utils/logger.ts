@@ -57,6 +57,8 @@ if (LOGFILES && !isServerlessEnvironment()) {
 
 // 判断是否为生产环境
 const __PROD__ = process.env.NODE_ENV === 'production'
+// 判断是否为开发环境
+const __DEV__ = process.env.NODE_ENV === 'development'
 
 // 日志格式配置（不带颜色）
 const format = winston.format.combine(
@@ -231,8 +233,8 @@ interface ExtendedLogger {
 
     // 数据库相关日志
     database: {
-        query: (data: { query: string, params?: any, duration?: number }) => void
-        error: (data: { query?: string, error: string, stack?: string }) => void
+        query: (data: { query: string, params?: any, duration?: number, type?: string, sensitive?: boolean, slow?: boolean }) => void
+        error: (data: { query?: string, error: string, stack?: string, type?: string, sensitive?: boolean }) => void
         migration: (data: { name: string, direction: 'up' | 'down', duration?: number }) => void
     }
 
@@ -361,14 +363,37 @@ const extendedLogger: ExtendedLogger = {
     database: {
         query: (data) => {
             const duration = data.duration ? ` (${data.duration}ms)` : ''
-            const message = `Query executed${duration}`
-            const truncatedQuery = data.query.substring(0, 100) + (data.query.length > 100 ? '...' : '')
-            databaseLogger.debug(message, { query: truncatedQuery, params: data.params })
+            const typeInfo = data.type ? ` [${data.type}]` : ''
+            const sensitiveInfo = data.sensitive ? ' [SENSITIVE]' : ''
+            const slowInfo = data.slow ? ' [SLOW]' : ''
+
+            const message = `Query executed${typeInfo}${sensitiveInfo}${slowInfo}${duration}`
+
+            // 根据查询类型和环境调整日志级别
+            if (data.slow || data.sensitive) {
+                databaseLogger.warn(message, {
+                    query: data.sensitive ? '[REDACTED]' : data.query?.substring(0, 200),
+                    params: data.sensitive ? '[REDACTED]' : data.params,
+                })
+            } else if (__DEV__) {
+                databaseLogger.debug(message, {
+                    query: data.query?.substring(0, 200),
+                    params: data.params,
+                })
+            } else if (data.type && data.type !== 'SELECT') {
+                // 生产环境只记录非SELECT操作的概要
+                databaseLogger.debug(message)
+            }
         },
         error: (data) => {
-            const message = `Database error: ${data.error}`
-            const truncatedQuery = data.query ? data.query.substring(0, 100) + (data.query.length > 100 ? '...' : '') : undefined
-            databaseLogger.error(message, { query: truncatedQuery, stack: data.stack })
+            const typeInfo = data.type ? ` [${data.type}]` : ''
+            const sensitiveInfo = data.sensitive ? ' [SENSITIVE]' : ''
+            const message = `Database error${typeInfo}${sensitiveInfo}: ${data.error}`
+
+            databaseLogger.error(message, {
+                query: data.sensitive ? '[REDACTED]' : data.query?.substring(0, 200),
+                stack: data.stack,
+            })
         },
         migration: (data) => {
             const duration = data.duration ? ` in ${data.duration}ms` : ''

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "lint:css": "stylelint ./**/*.{css,scss,sass} --fix && stylelint ./**/*.vue --fix --custom-syntax postcss-html",
-    "lint": "cross-env NODE_ENV=production eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix",
+    "lint": "cross-env NODE_ENV=production eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix && npm run lint:css",
     "release": "semantic-release",
     "build": "nuxt build",
     "dev": "nuxt dev -o --host",
