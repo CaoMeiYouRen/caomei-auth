@@ -36,7 +36,6 @@
     "better-auth-localization": "^2.0.8",
     "better-bytes": "^1.2.4",
     "chart.js": "^4.5.0",
-    "consola": "^3.4.2",
     "dayjs": "^1.11.13",
     "file-type": "^21.0.0",
     "fs-extra": "^11.3.1",

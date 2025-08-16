@@ -61,9 +61,6 @@ importers:
       chart.js:
         specifier: ^4.5.0
         version: 4.5.0
-      consola:
-        specifier: ^3.4.2
-        version: 3.4.2
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
