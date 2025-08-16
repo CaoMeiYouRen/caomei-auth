@@ -118,9 +118,9 @@ function goBack() {
 </script>
 
 <style scoped lang="scss">
-@import url("@/styles/theme");
-@import url("@/styles/form");
-@import url("@/styles/common");
+@import "@/styles/theme";
+@import "@/styles/form";
+@import "@/styles/common";
 
 .error-card {
     padding-top: 2.5rem;

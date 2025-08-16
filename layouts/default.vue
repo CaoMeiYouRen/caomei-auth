@@ -9,7 +9,7 @@
 </template>
 
 <style scoped lang="scss">
-@import url("@/styles/theme");
+@import "@/styles/theme";
 
 .layout-default {
     min-height: 100vh;

@@ -346,8 +346,8 @@ function goDocs() {
 </script>
 
 <style lang="scss" scoped>
-@import url("@/styles/theme");
-@import url("@/styles/common");
+@import "@/styles/theme";
+@import "@/styles/common";
 
 .oauth-clients-page {
     min-height: 100vh;

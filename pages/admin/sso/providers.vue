@@ -1363,9 +1363,9 @@ function formatRelativeTime(date: string | Date) {
 <style lang="scss" scoped>
 @use "sass:color";
 
-@import url('@/styles/theme');
-@import url('@/styles/form');
-@import url('@/styles/common');
+@import '@/styles/theme';
+@import '@/styles/form';
+@import '@/styles/common';
 
 .admin-sso {
     min-height: 100vh;

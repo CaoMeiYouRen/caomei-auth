@@ -136,7 +136,7 @@ const publicSecurityBeianNumber = config.publicSecurityBeianNumber
 </script>
 
 <style scoped lang="scss">
-@import url("@/styles/theme");
+@import "@/styles/theme";
 
 .app-footer {
     background: $background-light;

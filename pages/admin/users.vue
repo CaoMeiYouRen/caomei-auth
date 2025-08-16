@@ -1501,9 +1501,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import url('@/styles/theme');
-@import url('@/styles/form');
-@import url('@/styles/common');
+@import '@/styles/theme';
+@import '@/styles/form';
+@import '@/styles/common';
 
 .admin-users {
     min-height: 100vh;

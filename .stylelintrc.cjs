@@ -40,5 +40,6 @@ module.exports = {
             'custom-properties',
             'declarations',
         ],
+        "import-notation": "string",
     },
 }
