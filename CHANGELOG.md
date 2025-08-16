@@ -1,5 +1,68 @@
 # caomei-auth
 
+# [1.4.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.3.0...v1.4.0) (2025-08-16)
+
+
+### ♻ 代码重构
+
+* **email:** 删除邮件发送测试端点的实现代码 ([3702934](https://github.com/CaoMeiYouRen/caomei-auth/commit/3702934))
+* **email:** 更新登录验证码邮件的安全提示信息；移除未使用的模板组合方法 ([74ddcfc](https://github.com/CaoMeiYouRen/caomei-auth/commit/74ddcfc))
+* **email:** 更新邮件发送成功消息格式，简化返回信息；删除邮箱验证模板 ([f793d2c](https://github.com/CaoMeiYouRen/caomei-auth/commit/f793d2c))
+* **email:** 更新邮件模板样式并移除HTML压缩选项 ([620b8a9](https://github.com/CaoMeiYouRen/caomei-auth/commit/620b8a9))
+* **logger:** 使用 Winston 替代 Consola 作为日志记录工具，添加日志文件轮转功能 ([cbfcc25](https://github.com/CaoMeiYouRen/caomei-auth/commit/cbfcc25))
+* **logger:** 增强日志记录功能，支持无服务器环境下的文件日志检测与处理 ([9993c6e](https://github.com/CaoMeiYouRen/caomei-auth/commit/9993c6e))
+* **logger:** 更新控制台日志格式配置，根据环境决定是否带颜色 ([7070cce](https://github.com/CaoMeiYouRen/caomei-auth/commit/7070cce))
+* **logger:** 更新日志记录器以使用 Winston 标准日志级别，移除不必要的 emoji ([7d4efe3](https://github.com/CaoMeiYouRen/caomei-auth/commit/7d4efe3))
+* **logger:** 简化响应记录逻辑，移除不必要的响应时间头设置 ([9239730](https://github.com/CaoMeiYouRen/caomei-auth/commit/9239730))
+* **navigation:** 优先使用 navigateTo 函数处理页面导航，新增 goDocs 函数 ([55fcde8](https://github.com/CaoMeiYouRen/caomei-auth/commit/55fcde8))
+* **phone:** 优化 google-libphonenumber 导入方式，使用解构赋值 ([d33a725](https://github.com/CaoMeiYouRen/caomei-auth/commit/d33a725))
+
+
+### ✨ 新功能
+
+* **api:** 添加返回服务信息的API端点 ([e31fd12](https://github.com/CaoMeiYouRen/caomei-auth/commit/e31fd12))
+* **database:** 添加自定义日志记录器以增强数据库操作日志 ([b9ed54b](https://github.com/CaoMeiYouRen/caomei-auth/commit/b9ed54b))
+* **date:** 添加日期格式化工具函数，统一日期处理方式 ([e2d1ccf](https://github.com/CaoMeiYouRen/caomei-auth/commit/e2d1ccf))
+* **email:** 添加邮件验证服务与MJML模板支持 ([6df7e5c](https://github.com/CaoMeiYouRen/caomei-auth/commit/6df7e5c))
+* **email:** 重构邮件发送逻辑，整合新的邮件模板系统并添加多种邮件类型支持 ([54b58b5](https://github.com/CaoMeiYouRen/caomei-auth/commit/54b58b5))
+* **locale:** 添加国际化支持，集成语言检测和管理功能 ([f9c93e8](https://github.com/CaoMeiYouRen/caomei-auth/commit/f9c93e8))
+* **logger:** 增强日志记录功能，添加敏感数据检查和安全参数格式化 ([4e9ca49](https://github.com/CaoMeiYouRen/caomei-auth/commit/4e9ca49))
+* **logger:** 引入 consola 作为日志记录工具，重构日志方法并添加标签支持 ([977d3f2](https://github.com/CaoMeiYouRen/caomei-auth/commit/977d3f2))
+* **logger:** 添加 Axiom 日志传输支持，更新环境变量配置 ([96e55b8](https://github.com/CaoMeiYouRen/caomei-auth/commit/96e55b8))
+* **logging:** 使用logger替代console.error，增强错误记录的详细性 ([095c27d](https://github.com/CaoMeiYouRen/caomei-auth/commit/095c27d))
+* **logging:** 增强OAuth应用管理的日志记录，添加创建、更新、删除失败的详细信息 ([f39dc9c](https://github.com/CaoMeiYouRen/caomei-auth/commit/f39dc9c))
+* **logging:** 引入隐私保护工具，增强日志记录中的敏感信息脱敏处理 ([2e7a095](https://github.com/CaoMeiYouRen/caomei-auth/commit/2e7a095))
+* **logging:** 更新日志记录，增强邮件和短信发送的错误处理与成功记录 ([cbdcfee](https://github.com/CaoMeiYouRen/caomei-auth/commit/cbdcfee))
+* **logging:** 添加用户语言检测到 API 请求日志中 ([fac5e50](https://github.com/CaoMeiYouRen/caomei-auth/commit/fac5e50))
+* **middleware:** 添加请求日志记录和用户身份验证处理 ([bba3654](https://github.com/CaoMeiYouRen/caomei-auth/commit/bba3654))
+* **privacy:** 重构隐私保护工具函数，统一前后端脱敏逻辑 ([e7e55db](https://github.com/CaoMeiYouRen/caomei-auth/commit/e7e55db))
+* **profile:** 添加邮箱和手机号脱敏处理功能，增强用户隐私保护 ([1ec3ff3](https://github.com/CaoMeiYouRen/caomei-auth/commit/1ec3ff3))
+* **profile:** 添加隐私设置功能，允许用户控制邮箱和手机号的显示状态 ([e75daed](https://github.com/CaoMeiYouRen/caomei-auth/commit/e75daed))
+* 添加 Google Analytics 集成及相关配置 ([4e0ebe3](https://github.com/CaoMeiYouRen/caomei-auth/commit/4e0ebe3))
+* 添加 Google Analytics 集成文档及相关配置 ([59b0e7d](https://github.com/CaoMeiYouRen/caomei-auth/commit/59b0e7d))
+* 添加百度统计客户端插件实现 ([8c0ec5f](https://github.com/CaoMeiYouRen/caomei-auth/commit/8c0ec5f))
+* 添加百度统计集成及类型定义 ([72b48c1](https://github.com/CaoMeiYouRen/caomei-auth/commit/72b48c1))
+* 添加百度统计集成支持 ([fe8ac20](https://github.com/CaoMeiYouRen/caomei-auth/commit/fe8ac20))
+
+
+### 🐛 Bug 修复
+
+* **database:** 在数据库初始化日志中添加端口信息 ([eba9cc1](https://github.com/CaoMeiYouRen/caomei-auth/commit/eba9cc1))
+* **db:** 更新数据库初始化逻辑以支持测试环境，调整日志记录和查询时间设置 ([d84d888](https://github.com/CaoMeiYouRen/caomei-auth/commit/d84d888))
+* **env:** 添加日志目录配置并更新日志记录器 ([82caea5](https://github.com/CaoMeiYouRen/caomei-auth/commit/82caea5))
+* **logger:** 修改日志级别为 http，并移除请求日志中的 locale 信息 ([1aefee8](https://github.com/CaoMeiYouRen/caomei-auth/commit/1aefee8))
+* **logger:** 修改错误日志文件名为 errors.log，以统一错误处理日志格式 ([e7d7490](https://github.com/CaoMeiYouRen/caomei-auth/commit/e7d7490))
+* **phone:** 修复 SUPPORTED_REGIONS 的格式化，确保区域代码和国家代码正确映射 ([5173d65](https://github.com/CaoMeiYouRen/caomei-auth/commit/5173d65))
+* **privacy:** 优化手机号码脱敏逻辑，支持区域解析和多种格式处理 ([5a7388b](https://github.com/CaoMeiYouRen/caomei-auth/commit/5a7388b))
+* **privacy:** 更新第三方登录服务链接及描述，确保隐私政策的准确性 ([516f16b](https://github.com/CaoMeiYouRen/caomei-auth/commit/516f16b))
+* **privacy:** 更新隐私政策，添加 Cookie 使用说明及第三方服务隐私声明链接 ([4fa80bf](https://github.com/CaoMeiYouRen/caomei-auth/commit/4fa80bf))
+* **privacy:** 添加 Google Analytics 服务说明以增强隐私政策透明度 ([c658ce4](https://github.com/CaoMeiYouRen/caomei-auth/commit/c658ce4))
+* **profile:** 更新隐私设置监听逻辑，优化本地存储保存方式 ([f377d55](https://github.com/CaoMeiYouRen/caomei-auth/commit/f377d55))
+* **tsconfig:** 修复 tsconfig.json 格式，添加 compilerOptions 配置 ([e2d4e25](https://github.com/CaoMeiYouRen/caomei-auth/commit/e2d4e25))
+* 优化 stylelint ([3270999](https://github.com/CaoMeiYouRen/caomei-auth/commit/3270999))
+* 对提供者统计数据进行排序以确保正确显示 ([aa27883](https://github.com/CaoMeiYouRen/caomei-auth/commit/aa27883))
+* 更新日期格式化方法，使用 dayjs 统一日期处理 ([3eb4ebd](https://github.com/CaoMeiYouRen/caomei-auth/commit/3eb4ebd))
+
 # [1.3.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.2.0...v1.3.0) (2025-08-09)
 
 
