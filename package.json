@@ -112,7 +112,7 @@
     "husky": "^9.0.11",
     "lint-staged": "^16.1.5",
     "playwright-core": "^1.54.2",
-    "postcss-html": "^1.5.0",
+    "postcss-html": "^1.8.0",
     "sass": "^1.90.0",
     "semantic-release": "21.0.1",
     "stylelint": "^16.23.1",

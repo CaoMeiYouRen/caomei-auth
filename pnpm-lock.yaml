@@ -246,7 +246,7 @@ importers:
         specifier: ^1.54.2
         version: 1.54.2
       postcss-html:
-        specifier: ^1.5.0
+        specifier: ^1.8.0
         version: 1.8.0
       sass:
         specifier: ^1.90.0
