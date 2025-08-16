@@ -1,4 +1,5 @@
-import { PhoneNumberFormat, PhoneNumberUtil, type RegionCode, type RegionCodeUnknown } from 'google-libphonenumber'
+import pkg, { type RegionCode, type RegionCodeUnknown } from 'google-libphonenumber'
+const { PhoneNumberFormat, PhoneNumberUtil } = pkg
 
 export const phoneUtil = PhoneNumberUtil.getInstance()
 

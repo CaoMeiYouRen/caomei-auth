@@ -29,7 +29,8 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { PhoneNumberFormat } from 'google-libphonenumber'
+import pkg from 'google-libphonenumber'
+const { PhoneNumberFormat } = pkg
 import { SUPPORTED_REGIONS, formatPhoneNumber, phoneUtil } from '@/utils/phone'
 
 const props = defineProps({
