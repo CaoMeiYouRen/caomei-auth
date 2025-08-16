@@ -118,37 +118,41 @@ function goBack() {
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
 
 .error-card {
-    text-align: center;
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
+    text-align: center;
 }
+
 .error-code {
-    font-size: 4.5rem;
-    font-weight: 800;
-    color: $primary;
     margin-bottom: 0.5rem;
+    color: $primary;
+    font-weight: 800;
+    font-size: 4.5rem;
     letter-spacing: 2px;
 }
+
 .error-actions {
     display: flex;
-    justify-content: center;
-    gap: 1.2rem;
-    margin-top: 2.5rem;
     flex-wrap: wrap;
+    gap: 1.2rem;
+    justify-content: center;
+    margin-top: 2.5rem;
 }
+
 .btn-secondary {
-    background: $secondary-bg !important;
     color: $secondary !important;
+    background: $secondary-bg !important;
     border: 1px solid $secondary-bg !important;
 }
+
 .error-message {
-    color: $error;
     margin-top: 1rem;
+    color: $error;
     font-size: 1.05rem;
 }
 </style>

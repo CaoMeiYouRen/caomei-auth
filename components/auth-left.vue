@@ -31,15 +31,16 @@ const props = defineProps({
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/theme';
+@import url("@/styles/theme");
+
 .auth-left {
-    color: $background-light;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 1rem;
-    text-align: center;
     min-height: 20vh;
+    padding: 1rem;
+    color: $background-light;
+    text-align: center;
 
     .auth-logo img {
         width: 80%;
@@ -49,22 +50,25 @@ const props = defineProps({
     @media (min-width: 768px) {
         width: 50%;
         min-height: 100vh;
+
         .auth-logo img {
             width: 25%;
             max-width: none;
         }
     }
 }
+
 .auth-title {
-    font-size: 2.3rem;
-    font-weight: 700;
     margin-bottom: 0.7rem;
     color: $secondary;
+    font-weight: 700;
+    font-size: 2.3rem;
     letter-spacing: 1px;
 }
+
 .auth-subtitle {
-    color: $secondary-light;
     margin-bottom: 2rem;
+    color: $secondary-light;
     font-size: 1.15rem;
     opacity: 0.92;
 }

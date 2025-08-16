@@ -62,13 +62,14 @@
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
+
 .auth-container {
     display: flex;
-    min-height: 100vh;
     flex-direction: column-reverse;
+    min-height: 100vh;
     background-color: $background;
 
     @media (min-width: 768px) {
@@ -78,45 +79,45 @@
 
 .auth-main {
     max-width: 800px;
-    margin: 2.5rem auto 2rem auto;
+    margin: 2.5rem auto 2rem;
     padding: 2rem 1.2rem;
+    color: $secondary;
     // background: $background;
     border-radius: 14px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-    color: $secondary;
+    box-shadow: 0 10px 25px rgb(0 0 0 / 7%);
 }
 
 .auth-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: $primary;
     margin-bottom: 1.2rem;
+    color: $primary;
+    font-weight: 700;
+    font-size: 2rem;
     letter-spacing: 1px;
     text-align: center;
 }
 
 .auth-nav {
-    text-align: center;
     margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 .back-home-btn {
     display: inline-flex;
-    align-items: center;
     gap: 0.5rem;
+    align-items: center;
     padding: 0.6rem 1.2rem;
-    background-color: $primary;
     color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
     font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    background-color: $primary;
+    border-radius: 8px;
     transition: all 0.3s ease;
 
     &:hover {
         background-color: $primary-dark;
-        transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba($primary, 0.3);
+        transform: translateY(-2px);
     }
 
     i {
@@ -125,9 +126,9 @@
 }
 
 .auth-subtitle {
-    font-size: 1.15rem;
-    color: $secondary-light;
     margin-bottom: 2rem;
+    color: $secondary-light;
+    font-size: 1.15rem;
     text-align: center;
 }
 
@@ -135,10 +136,10 @@
     margin-bottom: 2rem;
 
     h2 {
-        font-size: 1.18rem;
+        margin-bottom: 0.7rem;
         color: $primary-dark;
         font-weight: 600;
-        margin-bottom: 0.7rem;
+        font-size: 1.18rem;
     }
 
     ul {
@@ -156,9 +157,9 @@
     }
 
     a {
+        margin-left: 0.3rem;
         color: $primary;
         text-decoration: none;
-        margin-left: 0.3rem;
 
         &:hover {
             text-decoration: underline;
@@ -167,14 +168,14 @@
 }
 
 .auth-author {
-    text-align: right;
-    font-size: 0.98rem;
     color: $secondary-light;
+    font-size: 0.98rem;
+    text-align: right;
 
     a {
+        margin-left: 0.3rem;
         color: $primary;
         text-decoration: none;
-        margin-left: 0.3rem;
 
         &:hover {
             text-decoration: underline;
@@ -184,7 +185,7 @@
 
 @media (max-width: 600px) {
     .auth-container {
-        padding: 1.2rem 1.2rem;
+        padding: 1.2rem;
     }
 
     .auth-title {

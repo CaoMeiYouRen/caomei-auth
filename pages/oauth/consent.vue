@@ -376,24 +376,24 @@ async function denyConsent() {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
 
 .oauth-consent {
-    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 100vh;
     padding: 2rem;
     background-color: var(--surface-ground);
 
     .consent-container {
-        background: var(--surface-card);
-        border-radius: 1rem;
-        padding: 2rem;
         width: 100%;
         max-width: 600px;
+        padding: 2rem;
+        background: var(--surface-card);
+        border-radius: 1rem;
         box-shadow: var(--card-shadow);
     }
 
@@ -402,53 +402,53 @@ async function denyConsent() {
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 400px;
         width: 100%;
         max-width: 600px;
+        min-height: 400px;
     }
 
     .loading-content,
     .error-content {
+        padding: 3rem 2rem;
         text-align: center;
         background: var(--surface-card);
         border-radius: 1rem;
-        padding: 3rem 2rem;
         box-shadow: var(--card-shadow);
     }
 
     .loading-icon {
-        font-size: 3rem;
-        color: var(--primary-color);
         margin-bottom: 1rem;
+        color: var(--primary-color);
+        font-size: 3rem;
     }
 
     .error-icon {
-        font-size: 3rem;
-        color: var(--red-500);
         margin-bottom: 1rem;
+        color: var(--red-500);
+        font-size: 3rem;
     }
 
     .error-content h2 {
-        color: var(--text-color);
         margin-bottom: 1rem;
+        color: var(--text-color);
         font-size: 1.5rem;
     }
 
     .error-content p {
-        color: var(--text-color-secondary);
         margin-bottom: 2rem;
+        color: var(--text-color-secondary);
         line-height: 1.6;
     }
 
     .consent-header {
-        text-align: center;
         margin-bottom: 2rem;
+        text-align: center;
 
         .consent-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-color);
             margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 1.5rem;
         }
 
         .consent-subtitle {
@@ -468,26 +468,26 @@ async function denyConsent() {
                 max-width: 80px;
                 max-height: 80px;
                 border-radius: 0.5rem;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
             }
         }
 
         .application-info {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
             background: var(--surface-100);
             border-radius: 0.5rem;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
 
             h3 {
-                font-size: 1rem;
                 margin-bottom: 0.75rem;
                 color: var(--text-color);
+                font-size: 1rem;
             }
 
             .info-item {
                 margin-bottom: 0.5rem;
-                font-size: 0.9rem;
                 color: var(--text-color-secondary);
+                font-size: 0.9rem;
 
                 &:last-child {
                     margin-bottom: 0;
@@ -510,21 +510,21 @@ async function denyConsent() {
 
         .scopes-list {
             h3 {
-                font-size: 1rem;
                 margin-bottom: 1rem;
+                font-size: 1rem;
             }
 
             .trusted-client-badge {
-                background: #f0fdf4; // 浅绿色背景
+                display: flex;
+                gap: 0.5rem;
+                align-items: center;
+                margin-bottom: 1rem;
+                padding: 0.5rem 0.75rem;
                 color: #166534; // 深绿色文字
+                font-size: 0.9rem;
+                background: #f0fdf4; // 浅绿色背景
                 border: 1px solid #bbf7d0; // 绿色边框
                 border-radius: 0.5rem;
-                padding: 0.5rem 0.75rem;
-                margin-bottom: 1rem;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                font-size: 0.9rem;
 
                 i {
                     font-size: 1.1rem;
@@ -532,13 +532,13 @@ async function denyConsent() {
             }
 
             ul {
-                list-style: none;
                 padding: 0;
+                list-style: none;
 
                 li {
                     display: flex;
-                    align-items: center;
                     gap: 0.5rem;
+                    align-items: center;
                     padding: 0.5rem 0;
                     color: var(--text-color-secondary);
 
@@ -549,37 +549,37 @@ async function denyConsent() {
             }
 
             .no-scopes {
-                background: var(--surface-100);
-                border-radius: 0.5rem;
                 padding: 1rem;
                 text-align: center;
+                background: var(--surface-100);
+                border-radius: 0.5rem;
 
                 p {
-                    color: var(--text-color-secondary);
                     margin: 0;
+                    color: var(--text-color-secondary);
                 }
             }
         }
     }
 
     .legal-info {
+        margin-bottom: 2rem;
+        padding: 1rem;
         background: #eff6ff; // 浅蓝色背景
         border: 1px solid #bfdbfe; // 蓝色边框
         border-radius: 0.5rem;
-        padding: 1rem;
-        margin-bottom: 2rem;
 
         .legal-text {
+            margin: 0;
             color: var(--text-color-secondary);
             font-size: 0.9rem;
             line-height: 1.5;
-            margin: 0;
             text-align: center;
 
             .legal-link {
                 color: var(--primary-color);
-                text-decoration: none;
                 font-weight: 500;
+                text-decoration: none;
 
                 &:hover {
                     text-decoration: underline;
@@ -590,8 +590,8 @@ async function denyConsent() {
 
     .consent-footer {
         display: flex;
-        justify-content: flex-end;
         gap: 1rem;
+        justify-content: flex-end;
 
         .btn-deny {
             &:hover {
@@ -600,16 +600,16 @@ async function denyConsent() {
         }
 
         .btn-allow {
-            background-color: var(--primary-color);
             color: var(--primary-color-text);
+            background-color: var(--primary-color);
 
             &:hover:not(:disabled) {
                 background-color: var(--primary-600);
             }
 
             &:disabled {
-                opacity: 0.6;
                 cursor: not-allowed;
+                opacity: 0.6;
             }
         }
     }
@@ -617,18 +617,18 @@ async function denyConsent() {
     // 调试信息样式
     .debug-info {
         margin-top: 1.5rem;
-        border-top: 1px solid var(--surface-border);
         padding-top: 1.5rem;
+        border-top: 1px solid var(--surface-border);
 
         details {
+            padding: 0.75rem;
             background: var(--surface-100);
             border-radius: 0.5rem;
-            padding: 0.75rem;
 
             summary {
-                cursor: pointer;
-                font-weight: 500;
                 color: var(--text-color-secondary);
+                font-weight: 500;
+                cursor: pointer;
                 user-select: none;
 
                 &:hover {
@@ -638,8 +638,8 @@ async function denyConsent() {
 
             pre {
                 margin-top: 0.75rem;
-                font-size: 0.8rem;
                 color: var(--text-color-secondary);
+                font-size: 0.8rem;
                 white-space: pre-wrap;
                 word-break: break-all;
             }

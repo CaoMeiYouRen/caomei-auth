@@ -106,9 +106,9 @@ watch(() => props.modelValue, (newValue) => {
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
 
 .phone-input {
     display: flex;
@@ -118,12 +118,11 @@ watch(() => props.modelValue, (newValue) => {
         flex: 1;
 
         .p-select {
+            border-color: $secondary-bg;
+            border-right: 0;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
-            border-right: 0;
-            border-color: $secondary-bg;
         }
-
     }
 
     .phone-number-input {

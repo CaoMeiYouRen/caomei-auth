@@ -143,9 +143,10 @@ const toggleSidebar = () => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
+
 .admin-layout {
     display: flex;
     min-height: 100vh;
@@ -153,26 +154,26 @@ const toggleSidebar = () => {
 }
 
 .admin-sidebar {
-    width: 280px;
-    background: white;
-    border-right: 1px solid #e2e8f0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
     display: flex;
     flex-direction: column;
-    position: fixed;
+    width: 280px;
     height: 100vh;
-    left: 0;
-    top: 0;
-    z-index: 100;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-right: 1px solid #e2e8f0;
+    box-shadow: 2px 0 8px rgb(0 0 0 / 10%);
     transition: width 0.3s ease;
 
     &.collapsed {
         width: 80px;
 
         .sidebar-header {
-            padding: 1rem;
             flex-direction: column;
             gap: 0.5rem;
+            padding: 1rem;
 
             .logo {
                 width: 32px;
@@ -186,9 +187,9 @@ const toggleSidebar = () => {
         }
 
         .nav-item {
-            padding: 0.75rem 1rem;
-            margin: 0 0.25rem;
             justify-content: center;
+            margin: 0 0.25rem;
+            padding: 0.75rem 1rem;
 
             i {
                 margin: 0;
@@ -197,8 +198,8 @@ const toggleSidebar = () => {
     }
 
     @media (max-width: 768px) {
-        width: 100%;
         position: relative;
+        width: 100%;
         height: auto;
 
         &.collapsed {
@@ -208,46 +209,46 @@ const toggleSidebar = () => {
 }
 
 .sidebar-header {
+    position: relative;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
     padding: 1.5rem;
     border-bottom: 1px solid #e2e8f0;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    position: relative;
     transition: all 0.3s ease;
 
     .logo {
+        flex-shrink: 0;
         width: 40px;
         height: 40px;
         border-radius: 8px;
-        flex-shrink: 0;
         transition: all 0.3s ease;
     }
 
     .app-name {
         margin: 0;
-        color: $primary;
-        font-size: 1.2rem;
-        font-weight: 700;
-        white-space: nowrap;
         overflow: hidden;
+        color: $primary;
+        font-weight: 700;
+        font-size: 1.2rem;
+        white-space: nowrap;
         transition: opacity 0.3s ease;
     }
 
     .collapse-btn {
+        flex-shrink: 0;
+        margin-left: auto;
+        padding: 8px;
+        color: $secondary;
         background: none;
         border: none;
-        padding: 8px;
         border-radius: 6px;
         cursor: pointer;
-        color: $secondary;
         transition: all 0.2s ease;
-        margin-left: auto;
-        flex-shrink: 0;
 
         &:hover {
-            background: $primary-50;
             color: $primary;
+            background: $primary-50;
         }
 
         i {
@@ -271,96 +272,96 @@ const toggleSidebar = () => {
 }
 
 .nav-title {
+    margin: 0 0 0.75rem;
     padding: 0 1.5rem;
-    margin: 0 0 0.75rem 0;
-    font-size: 0.875rem;
-    font-weight: 600;
     color: $secondary-light;
-    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 0.875rem;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .nav-item {
+    position: relative;
     display: flex;
-    align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem 1.5rem;
+    align-items: center;
     margin: 0 0.5rem;
-    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
     color: $secondary;
     text-decoration: none;
+    border-radius: 8px;
     transition: all 0.2s ease;
-    position: relative;
 
     &:hover {
-        background: $primary-50;
         color: $primary;
+        background: $primary-50;
     }
 
     &.active {
-        background: $primary-100;
         color: $primary;
         font-weight: 600;
+        background: $primary-100;
 
         &::before {
-            content: '';
             position: absolute;
-            left: 0;
             top: 50%;
-            transform: translateY(-50%);
+            left: 0;
             width: 3px;
             height: 20px;
             background: $primary;
             border-radius: 0 2px 2px 0;
+            transform: translateY(-50%);
+            content: "";
         }
     }
 
     &.disabled {
-        opacity: 0.5;
         cursor: not-allowed;
+        opacity: 0.5;
 
         &:hover {
-            background: transparent;
             color: $secondary;
+            background: transparent;
         }
 
         small {
+            margin-left: auto;
             color: $secondary-light;
             font-size: 0.75rem;
-            margin-left: auto;
         }
     }
 
     i {
-        font-size: 1.25rem;
-        min-width: 1.25rem;
         flex-shrink: 0;
+        min-width: 1.25rem;
+        font-size: 1.25rem;
     }
 
     span {
         flex: 1;
-        white-space: nowrap;
         overflow: hidden;
+        white-space: nowrap;
         transition: opacity 0.3s ease;
     }
 
     small {
-        white-space: nowrap;
         overflow: hidden;
+        white-space: nowrap;
         transition: opacity 0.3s ease;
     }
 
     .external-icon {
-        font-size: 0.875rem;
         margin-left: auto;
+        font-size: 0.875rem;
         opacity: 0.7;
     }
 }
 
 .admin-main {
     flex: 1;
-    margin-left: 280px;
     min-height: 100vh;
+    margin-left: 280px;
     transition: margin-left 0.3s ease;
 
     &.collapsed {

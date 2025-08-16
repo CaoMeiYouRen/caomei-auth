@@ -108,9 +108,9 @@ function toAdmin() {
 }</script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
 
 .auth-container {
     display: flex;
@@ -127,16 +127,16 @@ function toAdmin() {
     margin-top: 1.2rem;
 
     .project-link {
+        display: inline-flex;
+        gap: 0.5rem;
+        align-items: center;
+        padding-bottom: 2px;
         color: $secondary-light;
         font-weight: 500;
-        text-decoration: none;
         font-size: 1.1rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: color 0.2s;
+        text-decoration: none;
         border-bottom: 1px dashed rgba($background-light, 0.3);
-        padding-bottom: 2px;
+        transition: color 0.2s;
 
         &:hover {
             color: $primary-light;
@@ -170,10 +170,10 @@ function toAdmin() {
 
 .auth-right {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 2rem 1rem;
+    justify-content: center;
     min-height: 60vh;
+    padding: 2rem 1rem;
     background: $background;
 
     @media (min-width: 768px) {
@@ -183,22 +183,22 @@ function toAdmin() {
 }
 
 .auth-card {
-    background-color: $background-light;
-    border-radius: 14px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-    padding: 2.5rem 2rem 2rem 2rem;
-    width: 100%;
-    max-width: 420px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    max-width: 420px;
+    padding: 2.5rem 2rem 2rem;
+    background-color: $background-light;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgb(0 0 0 / 7%);
 }
 
 .auth-title {
-    color: $secondary;
-    font-size: 1.5rem;
-    font-weight: 600;
     margin-bottom: 2rem;
+    color: $secondary;
+    font-weight: 600;
+    font-size: 1.5rem;
     letter-spacing: 0.5px;
 }
 
@@ -212,17 +212,17 @@ function toAdmin() {
 .btn {
     width: 100%;
     padding: 0.75rem 0;
-    border-radius: 8px;
     font-weight: 500;
     font-size: 1rem;
     text-align: center;
+    border-radius: 8px;
 }
 
 .btn-primary {
-    background-color: $primary !important;
-    color: $background-light !important;
-    border: none !important;
     min-height: 44px;
+    color: $background-light !important;
+    background-color: $primary !important;
+    border: none !important;
     box-shadow: none;
     transition: background 0.2s;
 }
@@ -232,10 +232,10 @@ function toAdmin() {
 }
 
 .btn-admin {
-    background-color: #ff6b35 !important;
-    color: $background-light !important;
-    border: none !important;
     min-height: 44px;
+    color: $background-light !important;
+    background-color: #ff6b35 !important;
+    border: none !important;
     box-shadow: none;
     transition: background 0.2s;
 }
@@ -245,18 +245,18 @@ function toAdmin() {
 }
 
 .separator {
-    color: $secondary-light;
     display: flex;
     align-items: center;
-    margin: 2rem 0 1rem 0;
     width: 100%;
+    margin: 2rem 0 1rem;
+    color: $secondary-light;
     font-size: 0.98rem;
 
     &::before,
     &::after {
-        content: "";
         flex: 1;
         border-bottom: 1px solid $secondary-bg;
+        content: "";
     }
 
     &::before {

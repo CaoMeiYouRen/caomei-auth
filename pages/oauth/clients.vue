@@ -346,8 +346,8 @@ function goDocs() {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
-@import '@/styles/common';
+@import url("@/styles/theme");
+@import url("@/styles/common");
 
 .oauth-clients-page {
     min-height: 100vh;
@@ -360,23 +360,23 @@ function goDocs() {
     }
 
     .page-header {
-        margin-bottom: 2rem;
         display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
         gap: 2rem;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 2rem;
 
         .header-content {
             flex: 1;
 
             .page-title {
                 display: flex;
-                align-items: center;
                 gap: 0.75rem;
-                font-size: 2rem;
-                font-weight: 600;
-                color: var(--text-color);
+                align-items: center;
                 margin-bottom: 0.5rem;
+                color: var(--text-color);
+                font-weight: 600;
+                font-size: 2rem;
 
                 i {
                     color: var(--primary-color);
@@ -396,17 +396,17 @@ function goDocs() {
 
     .loading-container {
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
         min-height: 300px;
 
         .loading-content {
             text-align: center;
 
             .loading-icon {
-                font-size: 3rem;
-                color: var(--primary-color);
                 margin-bottom: 1rem;
+                color: var(--primary-color);
+                font-size: 3rem;
             }
 
             p {
@@ -423,11 +423,11 @@ function goDocs() {
     }
 
     .app-card {
-        background: var(--surface-card);
-        border-radius: 1rem;
         padding: 1.5rem;
-        box-shadow: var(--card-shadow);
+        background: var(--surface-card);
         border: 1px solid var(--surface-border);
+        border-radius: 1rem;
+        box-shadow: var(--card-shadow);
         transition: all 0.2s ease;
 
         &:hover {
@@ -441,14 +441,14 @@ function goDocs() {
             margin-bottom: 1.5rem;
 
             .app-logo {
-                width: 60px;
-                height: 60px;
-                border-radius: 0.75rem;
                 display: flex;
+                flex-shrink: 0;
                 align-items: center;
                 justify-content: center;
+                width: 60px;
+                height: 60px;
                 background: var(--surface-100);
-                flex-shrink: 0;
+                border-radius: 0.75rem;
 
                 img {
                     width: 100%;
@@ -458,8 +458,8 @@ function goDocs() {
                 }
 
                 i {
-                    font-size: 2rem;
                     color: var(--text-color-secondary);
+                    font-size: 2rem;
                 }
             }
 
@@ -468,27 +468,27 @@ function goDocs() {
                 min-width: 0;
 
                 .app-name {
-                    font-size: 1.25rem;
-                    font-weight: 600;
-                    color: var(--text-color);
                     margin-bottom: 0.5rem;
+                    color: var(--text-color);
+                    font-weight: 600;
+                    font-size: 1.25rem;
                 }
 
                 .app-description {
+                    display: -webkit-box;
+                    margin-bottom: 0.5rem;
+                    overflow: hidden;
                     color: var(--text-color-secondary);
                     font-size: 0.9rem;
                     line-height: 1.4;
-                    margin-bottom: 0.5rem;
-                    display: -webkit-box;
                     line-clamp: 2;
                     -webkit-box-orient: vertical;
-                    overflow: hidden;
                 }
 
                 .app-website {
                     display: inline-flex;
-                    align-items: center;
                     gap: 0.25rem;
+                    align-items: center;
                     color: var(--primary-color);
                     font-size: 0.85rem;
                     text-decoration: none;
@@ -515,10 +515,10 @@ function goDocs() {
                 }
 
                 strong {
-                    color: var(--text-color);
-                    font-size: 0.9rem;
                     display: block;
                     margin-bottom: 0.5rem;
+                    color: var(--text-color);
+                    font-size: 0.9rem;
                 }
 
                 >span {
@@ -532,18 +532,18 @@ function goDocs() {
                     gap: 0.5rem;
 
                     .scope-tag {
-                        background: var(--primary-50);
-                        color: var(--primary-700);
                         padding: 0.25rem 0.5rem;
-                        border-radius: 0.375rem;
-                        font-size: 0.8rem;
+                        color: var(--primary-700);
                         font-weight: 500;
+                        font-size: 0.8rem;
+                        background: var(--primary-50);
+                        border-radius: 0.375rem;
                     }
 
                     .no-scopes {
                         color: var(--text-color-secondary);
-                        font-style: italic;
                         font-size: 0.85rem;
+                        font-style: italic;
                     }
                 }
             }
@@ -551,8 +551,8 @@ function goDocs() {
 
         .app-actions {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             padding-top: 1rem;
             border-top: 1px solid var(--surface-border);
 
@@ -565,39 +565,39 @@ function goDocs() {
 
     .empty-state {
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
         min-height: 400px;
 
         .empty-content {
-            text-align: center;
             max-width: 400px;
+            text-align: center;
 
             .empty-icon {
-                font-size: 4rem;
-                color: var(--text-color-secondary);
                 margin-bottom: 1.5rem;
+                color: var(--text-color-secondary);
+                font-size: 4rem;
                 opacity: 0.6;
             }
 
             h3 {
-                font-size: 1.5rem;
-                color: var(--text-color);
                 margin-bottom: 1rem;
+                color: var(--text-color);
+                font-size: 1.5rem;
             }
 
             p {
+                margin-bottom: 2rem;
                 color: var(--text-color-secondary);
                 line-height: 1.6;
-                margin-bottom: 2rem;
             }
         }
     }
 
     .dialog-header {
         display: flex;
-        align-items: center;
         gap: 0.5rem;
+        align-items: center;
 
         i {
             color: var(--orange-500);
@@ -611,18 +611,18 @@ function goDocs() {
         }
 
         .warning-notice {
+            display: flex;
+            gap: 0.75rem;
+            padding: 1rem;
             background: var(--yellow-50);
             border: 1px solid var(--yellow-200);
             border-radius: 0.5rem;
-            padding: 1rem;
-            display: flex;
-            gap: 0.75rem;
 
             i {
-                color: var(--yellow-600);
-                font-size: 1.2rem;
                 flex-shrink: 0;
                 margin-top: 0.1rem;
+                color: var(--yellow-600);
+                font-size: 1.2rem;
             }
 
             div {
@@ -630,8 +630,8 @@ function goDocs() {
 
                 p {
                     margin-bottom: 0.5rem;
-                    font-weight: 500;
                     color: var(--text-color);
+                    font-weight: 500;
                 }
 
                 ul {
@@ -639,8 +639,8 @@ function goDocs() {
                     padding-left: 1.2rem;
 
                     li {
-                        color: var(--text-color-secondary);
                         margin-bottom: 0.25rem;
+                        color: var(--text-color-secondary);
                         font-size: 0.9rem;
                     }
                 }
@@ -650,8 +650,8 @@ function goDocs() {
 
     .dialog-footer {
         display: flex;
-        justify-content: flex-end;
         gap: 0.75rem;
+        justify-content: flex-end;
     }
 
     // 响应式设计
@@ -697,8 +697,8 @@ function goDocs() {
             }
 
             flex-direction: column;
-            align-items: stretch;
             gap: 1rem;
+            align-items: stretch;
 
             .header-actions {
                 align-self: flex-start;

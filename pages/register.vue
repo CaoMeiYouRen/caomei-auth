@@ -31,7 +31,7 @@
                 <!-- 邮箱注册表单 -->
                 <div v-show="activeTab === 'email'">
                     <div class="form-group">
-                        <label class="form-label" for="username">用户名 <span style="color: #e63946">*</span></label>
+                        <label class="form-label" for="username">用户名 <span style="color: #e63946;">*</span></label>
                         <InputText
                             id="username"
                             v-model="username"
@@ -49,7 +49,7 @@
                         </Message>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="email">邮箱 <span style="color: #e63946">*</span></label>
+                        <label class="form-label" for="email">邮箱 <span style="color: #e63946;">*</span></label>
                         <InputText
                             id="email"
                             v-model="email"
@@ -67,7 +67,7 @@
                         </Message>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="password">密码 <span style="color: #e63946">*</span></label>
+                        <label class="form-label" for="password">密码 <span style="color: #e63946;">*</span></label>
                         <Password
                             id="password"
                             v-model="password"
@@ -87,7 +87,7 @@
                         </Message>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="confirmPassword">确认密码 <span style="color: #e63946">*</span></label>
+                        <label class="form-label" for="confirmPassword">确认密码 <span style="color: #e63946;">*</span></label>
                         <Password
                             id="confirmPassword"
                             v-model="confirmPassword"
@@ -111,7 +111,7 @@
                 <!-- 手机号注册表单 -->
                 <div v-show="activeTab === 'phone'">
                     <div class="form-group">
-                        <label class="form-label" for="username">用户名 <span style="color: #e63946">*</span></label>
+                        <label class="form-label" for="username">用户名 <span style="color: #e63946;">*</span></label>
                         <InputText
                             id="username"
                             v-model="username"
@@ -129,7 +129,7 @@
                         </Message>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="phone">手机号 <span style="color: #e63946">*</span></label>
+                        <label class="form-label" for="phone">手机号 <span style="color: #e63946;">*</span></label>
                         <PhoneInput
                             v-model="phone"
                             v-tooltip.top="'请输入有效的手机号，用于接收短信验证码'"
@@ -144,7 +144,7 @@
                         </Message>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="phoneCode">短信验证码 <span style="color: #e63946">*</span></label>
+                        <label class="form-label" for="phoneCode">短信验证码 <span style="color: #e63946;">*</span></label>
                         <div class="code-row">
                             <InputText
                                 id="phoneCode"
@@ -420,9 +420,9 @@ async function register() {
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
 
 .auth-container {
     display: flex;
@@ -435,13 +435,13 @@ async function register() {
 }
 
 .auth-left {
-    color: $background-light;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 1rem;
-    text-align: center;
     min-height: 20vh;
+    padding: 1rem;
+    color: $background-light;
+    text-align: center;
 
     .auth-logo img {
         width: 80%;
@@ -461,10 +461,10 @@ async function register() {
 
 .auth-right {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 1rem;
+    justify-content: center;
     min-height: 60vh;
+    padding: 1rem;
 
     @media (min-width: 768px) {
         width: 50%;
@@ -473,24 +473,24 @@ async function register() {
 }
 
 .auth-card {
-    background-color: $background-light;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
     width: 100%;
     max-width: 450px;
+    padding: 2rem;
+    background-color: $background-light;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgb(0 0 0 / 5%);
 }
 
 .auth-title {
-    color: $secondary;
-    font-size: 2rem;
-    font-weight: 600;
     margin-bottom: 1rem;
+    color: $secondary;
+    font-weight: 600;
+    font-size: 2rem;
 }
 
 .auth-subtitle {
-    color: $secondary-light;
     margin-bottom: 2rem;
+    color: $secondary-light;
 }
 
 .form-group {
@@ -504,19 +504,19 @@ async function register() {
 }
 
 .form-input {
-    border: 1px solid $secondary-bg;
-    background-color: $background-light;
     width: 100%;
-    padding: 0.75rem 1rem;
     margin-bottom: 0.25rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background-color: $background-light;
+    border: 1px solid $secondary-bg;
     border-radius: 8px;
     transition: border-color 0.2s, box-shadow 0.2s;
-    font-size: 1rem;
 }
 
 .form-input:focus {
     border-color: $primary;
-    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+    box-shadow: 0 0 0 3px rgb(230 57 70 / 20%);
 }
 
 .register-btn {
@@ -526,24 +526,24 @@ async function register() {
 }
 
 .card {
-    width: 100%;
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
 .separator {
-    color: $secondary-light;
     display: flex;
-    align-items: center;
-    margin: 2rem 0;
-    justify-content: center;
     gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
+    color: $secondary-light;
 
     &::before,
     &::after {
-        content: '';
         flex: 1;
         border-bottom: 1px solid $secondary-bg;
+        content: "";
     }
 
     &::before {
@@ -557,8 +557,8 @@ async function register() {
 
 .toggle-link {
     color: $primary;
-    text-decoration: none;
     font-weight: 500;
+    text-decoration: none;
 
     &:hover {
         text-decoration: underline;
@@ -568,18 +568,18 @@ async function register() {
 .btn {
     width: 100%;
     padding: 0.75rem 0;
-    border-radius: 8px;
     font-weight: 500;
     font-size: 1rem;
     text-align: center;
+    border-radius: 8px;
 }
 
 .btn-primary {
-    background-color: $primary !important;
-    color: $background-light !important;
-    border: none !important;
     width: 100%;
     min-height: 44px;
+    color: $background-light !important;
+    background-color: $primary !important;
+    border: none !important;
     box-shadow: none;
     transition: background 0.2s;
 }
@@ -589,8 +589,8 @@ async function register() {
 }
 
 .p-password {
-    padding: 0 0 0 0;
     width: 100%;
+    padding: 0;
 }
 
 .code-row {
@@ -601,7 +601,7 @@ async function register() {
 
 .code-btn {
     min-width: 110px;
-    padding: 0.75rem 0.75rem;
+    padding: 0.75rem;
     font-size: 0.95rem;
 }
 
@@ -615,13 +615,13 @@ async function register() {
 
 .agreement-checkbox {
     display: flex;
-    align-items: flex-start;
     gap: 0.5rem;
+    align-items: flex-start;
 }
 
 .checkbox-label {
-    font-size: 0.9rem;
     color: $secondary;
+    font-size: 0.9rem;
     line-height: 1.5;
     cursor: pointer;
     user-select: none;
@@ -629,8 +629,8 @@ async function register() {
 
 .agreement-link {
     color: $primary;
-    text-decoration: none;
     font-weight: 500;
+    text-decoration: none;
 
     &:hover {
         text-decoration: underline;

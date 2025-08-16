@@ -60,13 +60,13 @@ defineExpose({ start, reset })
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/theme';
+@import url("@/styles/theme");
 
 .code-btn {
     max-width: 135px;
+    margin-top: -1px;
     padding: 0.75rem 0.5rem;
     font-size: 0.95rem;
-    margin-top: -1px;
     line-height: 1.5;
 }
 </style>

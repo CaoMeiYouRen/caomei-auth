@@ -770,9 +770,9 @@ async function loginAnonymously() {
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
 
 .login-btn {
     display: flex;
@@ -790,15 +790,15 @@ async function loginAnonymously() {
 
 @media (max-width: 320px) {
     .login-btn .p-button {
-        padding: 0.5rem 0.5rem !important;
+        padding: 0.5rem !important;
         font-size: 0.75rem !important;
     }
 }
 
 .auth-container {
     display: flex;
-    min-height: 100vh;
     flex-direction: column-reverse;
+    min-height: 100vh;
     background: $background;
 
     @media (min-width: 768px) {
@@ -807,13 +807,13 @@ async function loginAnonymously() {
 }
 
 .auth-left {
-    color: $background-light;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 1rem;
-    text-align: center;
     min-height: 20vh;
+    padding: 1rem;
+    color: $background-light;
+    text-align: center;
 
     .auth-logo img {
         width: 80%;
@@ -833,10 +833,10 @@ async function loginAnonymously() {
 
 .auth-right {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 1rem;
+    justify-content: center;
     min-height: 60vh;
+    padding: 1rem;
 
     @media (min-width: 768px) {
         width: 50%;
@@ -845,24 +845,24 @@ async function loginAnonymously() {
 }
 
 .auth-card {
-    background-color: $background-light;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
     width: 100%;
     max-width: 450px;
+    padding: 2rem;
+    background-color: $background-light;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgb(0 0 0 / 5%);
 }
 
 .auth-title {
-    color: $secondary;
-    font-size: 2rem;
-    font-weight: 600;
     margin-bottom: 1rem;
+    color: $secondary;
+    font-weight: 600;
+    font-size: 2rem;
 }
 
 .auth-subtitle {
-    color: $secondary-light;
     margin-bottom: 2rem;
+    color: $secondary-light;
 }
 
 .form-group {
@@ -876,31 +876,31 @@ async function loginAnonymously() {
 }
 
 .form-input {
-    border: 1px solid $secondary-bg;
-    background-color: $background-light;
     width: 100%;
     padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background-color: $background-light;
+    border: 1px solid $secondary-bg;
     border-radius: 8px;
     transition: border-color 0.2s, box-shadow 0.2s;
-    font-size: 1rem;
 }
 
 .form-input:focus {
     border-color: $primary;
-    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2); // 可考虑用rgba($primary, 0.2)如有mixin
+    box-shadow: 0 0 0 3px rgb(230 57 70 / 20%); // 可考虑用rgba($primary, 0.2)如有mixin
 }
 
 .separator {
-    color: $secondary-light;
     display: flex;
     align-items: center;
     margin: 2rem 0;
+    color: $secondary-light;
 
     &::before,
     &::after {
-        content: '';
         flex: 1;
         border-bottom: 1px solid $secondary-bg;
+        content: "";
     }
 
     &::before {
@@ -914,14 +914,14 @@ async function loginAnonymously() {
 
 .toggle-login {
     margin-top: 1.5rem;
-    text-align: center;
     color: $secondary-light;
+    text-align: center;
 }
 
 .toggle-link {
     color: $primary;
-    text-decoration: none;
     font-weight: 500;
+    text-decoration: none;
 
     &:hover {
         text-decoration: underline;
@@ -944,18 +944,18 @@ async function loginAnonymously() {
 .btn {
     width: 100%;
     padding: 0.75rem 0;
-    border-radius: 8px;
     font-weight: 500;
     font-size: 1rem;
     text-align: center;
+    border-radius: 8px;
 }
 
 .btn-primary {
-    background-color: $primary !important;
-    color: $background-light !important;
-    border: none !important;
     width: 100%;
     min-height: 44px;
+    color: $background-light !important;
+    background-color: $primary !important;
+    border: none !important;
     box-shadow: none;
     transition: background 0.2s;
 }
@@ -965,8 +965,8 @@ async function loginAnonymously() {
 }
 
 .p-password {
-    padding: 0 0 0 0;
     width: 100%;
+    padding: 0;
 }
 
 .code-row {
@@ -977,27 +977,27 @@ async function loginAnonymously() {
 
 .code-btn {
     min-width: 110px;
-    padding: 0.75rem 0.75rem;
+    padding: 0.75rem;
     font-size: 0.95rem;
 }
 
 .switch-btn {
-    margin-top: 0.5rem;
     width: 100%;
+    margin-top: 0.5rem;
 }
 
 .agreement-notice {
     margin-top: 0.75rem;
-    text-align: center;
-    font-size: 0.85rem;
     color: $secondary-light;
+    font-size: 0.85rem;
     line-height: 1.4;
+    text-align: center;
 }
 
 .agreement-link {
     color: $primary;
-    text-decoration: none;
     font-weight: 500;
+    text-decoration: none;
 
     &:hover {
         text-decoration: underline;
@@ -1013,6 +1013,7 @@ async function loginAnonymously() {
         border: none;
     }
 }
+
 .social-btn {
     .icon-discord-simple {
         // font-size: 16px;

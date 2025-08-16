@@ -146,9 +146,9 @@ async function changePassword() {
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
+@import url("@/styles/theme");
+@import url("@/styles/form");
+@import url("@/styles/common");
 
 .auth-container {
     display: flex;
@@ -161,13 +161,13 @@ async function changePassword() {
 }
 
 .auth-left {
-    color: $background-light;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 1rem;
-    text-align: center;
     min-height: 20vh;
+    padding: 1rem;
+    color: $background-light;
+    text-align: center;
 
     .auth-logo img {
         width: 80%;
@@ -187,10 +187,10 @@ async function changePassword() {
 
 .auth-right {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 1rem;
+    justify-content: center;
     min-height: 60vh;
+    padding: 1rem;
 
     @media (min-width: 768px) {
         width: 50%;
@@ -199,24 +199,24 @@ async function changePassword() {
 }
 
 .auth-card {
-    background-color: $background-light;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
     width: 100%;
     max-width: 450px;
+    padding: 2rem;
+    background-color: $background-light;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgb(0 0 0 / 5%);
 }
 
 .auth-title {
-    color: $secondary;
-    font-size: 2rem;
-    font-weight: 600;
     margin-bottom: 1rem;
+    color: $secondary;
+    font-weight: 600;
+    font-size: 2rem;
 }
 
 .auth-subtitle {
-    color: $secondary-light;
     margin-bottom: 2rem;
+    color: $secondary-light;
 }
 
 .form-group {
@@ -231,40 +231,40 @@ async function changePassword() {
 
 .checkbox-label {
     position: relative;
-    left: 8px;
     top: -3px;
+    left: 8px;
 }
 
 .form-input {
-    border: 1px solid $secondary-bg;
-    background-color: $background-light;
     width: 100%;
     padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background-color: $background-light;
+    border: 1px solid $secondary-bg;
     border-radius: 8px;
     transition: border-color 0.2s, box-shadow 0.2s;
-    font-size: 1rem;
 }
 
 .form-input:focus {
     border-color: $primary;
-    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+    box-shadow: 0 0 0 3px rgb(230 57 70 / 20%);
 }
 
 .btn {
     width: 100%;
     padding: 0.75rem 0;
-    border-radius: 8px;
     font-weight: 500;
     font-size: 1rem;
     text-align: center;
+    border-radius: 8px;
 }
 
 .btn-primary {
-    background-color: $primary !important;
-    color: $background-light !important;
-    border: none !important;
     width: 100%;
     min-height: 44px;
+    color: $background-light !important;
+    background-color: $primary !important;
+    border: none !important;
     box-shadow: none;
     transition: background 0.2s;
 }
@@ -275,14 +275,14 @@ async function changePassword() {
 
 .toggle-login {
     margin-top: 1.5rem;
-    text-align: center;
     color: $secondary-light;
+    text-align: center;
 }
 
 .toggle-link {
     color: $primary;
-    text-decoration: none;
     font-weight: 500;
+    text-decoration: none;
 
     &:hover {
         text-decoration: underline;
@@ -290,8 +290,8 @@ async function changePassword() {
 }
 
 .p-password {
-    padding: 0 0 0 0;
     width: 100%;
+    padding: 0;
 }
 </style>
 
