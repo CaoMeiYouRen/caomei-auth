@@ -1,4 +1,3 @@
-# coding=utf-8
 <template>
     <div class="oauth-clients-page">
         <div class="container">
@@ -127,7 +126,7 @@
                     <Button
                         label="了解更多"
                         outlined
-                        @click="navigateTo('/docs')"
+                        @click="goDocs"
                     />
                 </div>
             </div>
@@ -339,6 +338,10 @@ function openLink(url: string) {
 
 function goProfile() {
     navigateTo('/profile')
+}
+
+function goDocs() {
+    navigateTo('/docs')
 }
 </script>
 

@@ -125,10 +125,7 @@
                         sortable
                     >
                         <template #body="{data}">
-                            <Tag
-                                :value="data.enabled ? '启用' : '禁用'"
-                                :severity="data.enabled ? 'success' : 'danger'"
-                            />
+                            <Tag :value="data.enabled ? '启用' : '禁用'" :severity="data.enabled ? 'success' : 'danger'" />
                         </template>
                     </Column>
 
@@ -1033,8 +1030,8 @@ async function editProvider(provider: any) {
 }
 
 // 表单验证
-function validateForm() {
-    const errors = []
+function validateForm(): string[] {
+    const errors: string[] = []
 
     // 基本信息验证
     if (!formData.value.providerId.trim()) {
@@ -1337,8 +1334,8 @@ async function copyToClipboard(text: string) {
 // 格式化相对时间
 function formatRelativeTime(date: string | Date) {
     if (!date) {
-return ''
-}
+        return ''
+    }
     const now = new Date()
     const target = new Date(date)
     const diff = now.getTime() - target.getTime()
@@ -1348,17 +1345,17 @@ return ''
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
     if (minutes < 1) {
-return '刚刚'
-}
+        return '刚刚'
+    }
     if (minutes < 60) {
-return `${minutes}分钟前`
-}
+        return `${minutes}分钟前`
+    }
     if (hours < 24) {
-return `${hours}小时前`
-}
+        return `${hours}小时前`
+    }
     if (days < 30) {
-return `${days}天前`
-}
+        return `${days}天前`
+    }
     return ''
 }
 </script>
