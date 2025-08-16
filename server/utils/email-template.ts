@@ -2,9 +2,12 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 
 import mjml2html from 'mjml'
+import dayjs from 'dayjs'
 
 import logger from './logger'
-import { APP_NAME, AUTH_BASE_URL } from '@/utils/env'
+import { APP_NAME, AUTH_BASE_URL, EMAIL_FROM } from '@/utils/env'
+
+const smtp = { from: EMAIL_FROM }
 
 interface EmailTemplateData {
     [key: string]: string | number | boolean
@@ -92,7 +95,7 @@ export class EmailTemplateEngine {
         const templateData = {
             appName: APP_NAME,
             baseUrl: AUTH_BASE_URL,
-            currentYear: new Date().getFullYear(),
+            currentYear: dayjs().year(),
             headerIcon: templateConfig.headerIcon,
             headerSubtitle: '安全 • 便捷 • 统一的身份认证平台',
             greeting: '您好！',
@@ -149,7 +152,7 @@ export class EmailTemplateEngine {
         const templateData = {
             appName: APP_NAME,
             baseUrl: AUTH_BASE_URL,
-            currentYear: new Date().getFullYear(),
+            currentYear: dayjs().year(),
             headerIcon: templateConfig.headerIcon,
             headerSubtitle: '安全 • 便捷 • 统一的身份认证平台',
             greeting: '您好！',
@@ -200,7 +203,7 @@ export class EmailTemplateEngine {
         const templateData = {
             appName: APP_NAME,
             baseUrl: AUTH_BASE_URL,
-            currentYear: new Date().getFullYear(),
+            currentYear: dayjs().year(),
             headerIcon: templateConfig.headerIcon,
             headerSubtitle: '安全 • 便捷 • 统一的身份认证平台',
             greeting: '您好！',

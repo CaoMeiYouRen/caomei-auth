@@ -191,7 +191,7 @@
                                     原因：{{ data.banReason }}
                                 </div>
                                 <div v-if="data.banned && data.banExpires" class="ban-expires">
-                                    到期：{{ formatDate(data.banExpires ) }}
+                                    到期：{{ formatDate(data.banExpires) }}
                                 </div>
                             </div>
                         </template>
@@ -670,6 +670,7 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { debounce } from 'lodash-es'
+import dayjs from 'dayjs'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/useragent'
 import { formatPhoneNumberInternational } from '@/utils/phone'
@@ -782,7 +783,7 @@ const debouncedSearch = debounce(() => {
 }, 500)
 
 // 工具函数
-const formatDate = (date: string | number) => new Date(date).toLocaleString('zh-CN')
+const formatDate = (date: string | number) => dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 
 const isCurrentUser = (userId: string) => currentSession.value?.user?.id === userId
 

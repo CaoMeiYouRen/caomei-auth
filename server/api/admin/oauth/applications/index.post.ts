@@ -1,4 +1,5 @@
 import { defineEventHandler, readBody } from 'h3'
+import dayjs from 'dayjs'
 import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
@@ -96,7 +97,7 @@ export default defineEventHandler(async (event) => {
         const response = {
             client_id: application.clientId,
             client_secret: application.clientSecret,
-            client_id_issued_at: Math.floor(application.createdAt.getTime() / 1000),
+            client_id_issued_at: dayjs(application.createdAt).unix(),
             client_secret_expires_at: 0, // 0 表示不过期
             redirect_uris: appRedirectURIs,
             token_endpoint_auth_method: application.tokenEndpointAuthMethod,

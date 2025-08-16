@@ -338,6 +338,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { debounce } from 'lodash-es'
+import dayjs from 'dayjs'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/useragent'
 
@@ -424,8 +425,8 @@ const loadSessions = async (page = 1) => {
         }
 
         if (dateRange.value && dateRange.value.length === 2) {
-            params.startDate = dateRange.value[0].toISOString()
-            params.endDate = dateRange.value[1].toISOString()
+            params.startDate = dateRange.value[0]?.toISOString()
+            params.endDate = dateRange.value[1]?.toISOString()
         }
 
         const { data } = await $fetch('/api/admin/logs/sessions', { params })
@@ -498,15 +499,12 @@ const debouncedSearch = debounce(() => {
 const setChartData = () => {
     // 如果没有数据，生成一些示例数据用于显示
     if (!trendData.value || trendData.value.length === 0) {
-        const today = new Date()
-        const labels = []
-        const data = []
+        const labels: string[] = []
+        const data: number[] = []
 
         // 生成最近7天的示例数据
         for (let i = 6; i >= 0; i--) {
-            const date = new Date(today)
-            date.setDate(date.getDate() - i)
-            labels.push(formatDate(date))
+            labels.push(dayjs().subtract(i, 'day').format('MM月DD日'))
             data.push(Math.floor(Math.random() * 10) + 1) // 1-10的随机数
         }
 
@@ -557,113 +555,113 @@ const setChartData = () => {
 
 // 设置图表配置
 const setChartOptions = () => ({
-        responsive: true,
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                    color: '#2d3748',
-                    usePointStyle: true,
-                    padding: 20,
-                    font: {
-                        size: 12,
-                        weight: 500,
-                    },
-                },
-            },
-            tooltip: {
-                backgroundColor: 'rgba(45, 55, 72, 0.9)',
-                titleColor: '#ffffff',
-                bodyColor: '#ffffff',
-                borderColor: '#e2e8f0',
-                borderWidth: 1,
-                cornerRadius: 8,
-                displayColors: true,
-                padding: 12,
-                titleFont: {
-                    size: 13,
-                    weight: 600,
-                },
-                bodyFont: {
+    responsive: true,
+    maintainAspectRatio: false,
+    aspectRatio: 0.8,
+    plugins: {
+        legend: {
+            display: true,
+            position: 'top',
+            labels: {
+                color: '#2d3748',
+                usePointStyle: true,
+                padding: 20,
+                font: {
                     size: 12,
-                },
-                callbacks: {
-                    title: (context: any) => `日期: ${context[0].label}`,
-                    label: (context: any) => `登录次数: ${context.parsed.y}`,
+                    weight: 500,
                 },
             },
         },
-        interaction: {
-            intersect: false,
-            mode: 'index',
+        tooltip: {
+            backgroundColor: 'rgba(45, 55, 72, 0.9)',
+            titleColor: '#ffffff',
+            bodyColor: '#ffffff',
+            borderColor: '#e2e8f0',
+            borderWidth: 1,
+            cornerRadius: 8,
+            displayColors: true,
+            padding: 12,
+            titleFont: {
+                size: 13,
+                weight: 600,
+            },
+            bodyFont: {
+                size: 12,
+            },
+            callbacks: {
+                title: (context: any) => `日期: ${context[0].label}`,
+                label: (context: any) => `登录次数: ${context.parsed.y}`,
+            },
         },
-        scales: {
-            x: {
+    },
+    interaction: {
+        intersect: false,
+        mode: 'index',
+    },
+    scales: {
+        x: {
+            display: true,
+            title: {
                 display: true,
-                title: {
-                    display: true,
-                    text: '日期',
-                    color: '#2d3748',
-                    font: {
-                        size: 12,
-                        weight: 500,
-                    },
-                },
-                ticks: {
-                    color: '#718096',
-                    font: {
-                        size: 11,
-                    },
-                    maxTicksLimit: 10,
-                },
-                grid: {
-                    color: '#e2e8f0',
-                    drawBorder: false,
+                text: '日期',
+                color: '#2d3748',
+                font: {
+                    size: 12,
+                    weight: 500,
                 },
             },
-            y: {
+            ticks: {
+                color: '#718096',
+                font: {
+                    size: 11,
+                },
+                maxTicksLimit: 10,
+            },
+            grid: {
+                color: '#e2e8f0',
+                drawBorder: false,
+            },
+        },
+        y: {
+            display: true,
+            title: {
                 display: true,
-                title: {
-                    display: true,
-                    text: '登录次数',
-                    color: '#2d3748',
-                    font: {
-                        size: 12,
-                        weight: 500,
-                    },
-                },
-                ticks: {
-                    color: '#718096',
-                    font: {
-                        size: 11,
-                    },
-                    beginAtZero: true,
-                    callback(value: any) {
-                        return Number.isInteger(value) ? value : null
-                    },
-                },
-                grid: {
-                    color: '#e2e8f0',
-                    drawBorder: false,
+                text: '登录次数',
+                color: '#2d3748',
+                font: {
+                    size: 12,
+                    weight: 500,
                 },
             },
-        },
-        elements: {
-            line: {
-                borderWidth: 2,
+            ticks: {
+                color: '#718096',
+                font: {
+                    size: 11,
+                },
+                beginAtZero: true,
+                callback(value: any) {
+                    return Number.isInteger(value) ? value : null
+                },
             },
-            point: {
-                borderWidth: 2,
+            grid: {
+                color: '#e2e8f0',
+                drawBorder: false,
             },
         },
-        animation: {
-            duration: 1000,
-            easing: 'easeInOutQuart',
+    },
+    elements: {
+        line: {
+            borderWidth: 2,
         },
-    })
+        point: {
+            borderWidth: 2,
+        },
+    },
+    animation: {
+        duration: 1000,
+        easing: 'easeInOutQuart',
+    },
+})
 
 // 更新图表数据
 const updateChart = () => {
@@ -737,43 +735,40 @@ const getProviderName = (provider: string) => {
 
 const getDeviceIcon = (device: any) => {
     if (!device) {
-return 'mdi mdi-help-circle'
-}
+        return 'mdi mdi-help-circle'
+    }
 
     if (device.isMobile) {
-return 'mdi mdi-cellphone'
-}
+        return 'mdi mdi-cellphone'
+    }
     if (device.isTablet) {
-return 'mdi mdi-tablet'
-}
+        return 'mdi mdi-tablet'
+    }
     if (device.isDesktop) {
-return 'mdi mdi-desktop-classic'
-}
+        return 'mdi mdi-desktop-classic'
+    }
     return 'mdi mdi-devices'
 }
 
 const formatDevice = (device: any) => {
     if (!device) {
-return '未知设备'
-}
+        return '未知设备'
+    }
 
-    const parts = []
+    const parts: string[] = []
     if (device.browser) {
-parts.push(device.browser)
-}
+        parts.push(device.browser)
+    }
     if (device.os) {
-parts.push(device.os)
-}
+        parts.push(device.os)
+    }
 
     return parts.join(' / ') || '未知设备'
 }
 
-const formatDateTime = (date: string | Date) => new Date(date).toLocaleString('zh-CN')
+const formatDateTime = (date: string | Date) => dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 
-const formatDate = (date: string | Date) => new Date(date).toLocaleDateString('zh-CN', {
-        month: 'short',
-        day: 'numeric',
-    })
+const formatDate = (date: string | Date) => dayjs(date).format('MM月DD日')
 
 // 刷新数据
 const refreshData = async () => {
@@ -1058,7 +1053,9 @@ onMounted(() => {
             border-radius: 8px;
         }
     }
-}// 登录日志详情
+}
+
+// 登录日志详情
 .detail-header {
     padding: 1.5rem 2rem;
     border-bottom: 1px solid $border-color;
@@ -1222,6 +1219,7 @@ onMounted(() => {
     }
 
     .sessions-list {
+
         :deep(.p-datatable-tbody > tr > td),
         :deep(.p-datatable-thead > tr > th) {
             padding: 0.75rem 1rem;
