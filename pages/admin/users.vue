@@ -191,7 +191,7 @@
                                     原因：{{ data.banReason }}
                                 </div>
                                 <div v-if="data.banned && data.banExpires" class="ban-expires">
-                                    到期：{{ formatDate(data.banExpires) }}
+                                    到期：{{ formatDateTime(data.banExpires) }}
                                 </div>
                             </div>
                         </template>
@@ -203,7 +203,7 @@
                         sortable
                     >
                         <template #body="{data}">
-                            {{ formatDate(data.createdAt) }}
+                            {{ formatDateTime(data.createdAt) }}
                         </template>
                     </Column>
 
@@ -465,7 +465,7 @@
                         </div>
                         <div v-if="viewingUser.banned && viewingUser.banExpires" class="detail-item">
                             <label>禁用到期时间</label>
-                            <span>{{ formatDate(viewingUser.banExpires) }}</span>
+                            <span>{{ formatDateTime(viewingUser.banExpires) }}</span>
                         </div>
                     </div>
                 </div>
@@ -475,11 +475,11 @@
                     <div class="detail-grid">
                         <div class="detail-item">
                             <label>注册时间</label>
-                            <span>{{ formatDate(viewingUser.createdAt) }}</span>
+                            <span>{{ formatDateTime(viewingUser.createdAt) }}</span>
                         </div>
                         <div class="detail-item">
                             <label>更新时间</label>
-                            <span>{{ formatDate(viewingUser.updatedAt) }}</span>
+                            <span>{{ formatDateTime(viewingUser.updatedAt) }}</span>
                         </div>
                     </div>
                 </div>
@@ -636,13 +636,13 @@
 
                     <Column field="createdAt" header="创建时间">
                         <template #body="{data}">
-                            {{ formatDate(data.createdAt) }}
+                            {{ formatDateTime(data.createdAt) }}
                         </template>
                     </Column>
 
                     <Column field="expiresAt" header="到期时间">
                         <template #body="{data}">
-                            {{ formatDate(data.expiresAt) }}
+                            {{ formatDateTime(data.expiresAt) }}
                         </template>
                     </Column>
 
@@ -670,11 +670,11 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { debounce } from 'lodash-es'
-import dayjs from 'dayjs'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/useragent'
 import { formatPhoneNumberInternational } from '@/utils/phone'
 import { validateEmail } from '@/utils/validate'
+import { formatDateTime } from '@/utils/date'
 import { syncAdminRole, addAdminRole, removeAdminRole } from '@/utils/admin-role-client'
 
 // 页面元数据
@@ -781,9 +781,6 @@ const batchMenuItems = [
 const debouncedSearch = debounce(() => {
     loadUsers()
 }, 500)
-
-// 工具函数
-const formatDate = (date: string | number) => dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 
 const isCurrentUser = (userId: string) => currentSession.value?.user?.id === userId
 

@@ -71,7 +71,7 @@
                     <div class="app-details">
                         <div class="detail-item">
                             <strong>授权时间：</strong>
-                            <span>{{ formatDate(app.consentedAt) }}</span>
+                            <span>{{ formatDateTime(app.consentedAt) }}</span>
                         </div>
                         <div class="detail-item">
                             <strong>应用权限：</strong>
@@ -186,7 +186,7 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import dayjs from 'dayjs'
+import { formatDateTime } from '@/utils/date'
 
 definePageMeta({
     layout: 'default',
@@ -275,11 +275,6 @@ watch(error, (newError) => {
 // 重新加载授权应用列表
 async function loadAuthorizedApps() {
     await refreshApps()
-}
-
-// 格式化日期
-function formatDate(dateString: string) {
-    return dayjs(dateString).format('YYYY-MM-DD HH:mm:ss')
 }
 
 // 获取权限描述

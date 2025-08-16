@@ -139,7 +139,7 @@
                     >
                         <template #body="{data}">
                             <div class="date-info">
-                                <div>{{ formatDate(data.createdAt) }}</div>
+                                <div>{{ formatDateLocale(data.createdAt) }}</div>
                                 <small class="text-muted">{{ formatRelativeTime(data.createdAt) }}</small>
                             </div>
                         </template>
@@ -615,11 +615,11 @@
                     <div class="detail-grid">
                         <div class="detail-item">
                             <span class="label">创建时间:</span>
-                            <span>{{ formatDate(selectedProvider.createdAt) }}</span>
+                            <span>{{ formatDateLocale(selectedProvider.createdAt) }}</span>
                         </div>
                         <div class="detail-item">
                             <span class="label">更新时间:</span>
-                            <span>{{ formatDate(selectedProvider.updatedAt) }}</span>
+                            <span>{{ formatDateLocale(selectedProvider.updatedAt) }}</span>
                         </div>
                     </div>
                 </div>
@@ -662,6 +662,7 @@ import { ref, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { debounce } from 'lodash-es'
 import { validateUrl } from '@/utils/validate'
+import { formatDateLocale } from '@/utils/date'
 
 definePageMeta({
     title: 'SSO 提供商管理 - 草梅 Auth',
@@ -1331,14 +1332,6 @@ async function copyToClipboard(text: string) {
             life: 2000,
         })
     }
-}
-
-// 格式化日期
-function formatDate(date: string | Date) {
-    if (!date) {
-return '-'
-}
-    return new Date(date).toLocaleString('zh-CN')
 }
 
 // 格式化相对时间

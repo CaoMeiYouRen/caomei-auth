@@ -338,9 +338,9 @@ import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { debounce } from 'lodash-es'
-import dayjs from 'dayjs'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/useragent'
+import { formatDateTime, formatDate } from '@/utils/date'
 
 // 页面元数据
 definePageMeta({
@@ -765,10 +765,6 @@ const formatDevice = (device: any) => {
 
     return parts.join(' / ') || '未知设备'
 }
-
-const formatDateTime = (date: string | Date) => dayjs(date).format('YYYY-MM-DD HH:mm:ss')
-
-const formatDate = (date: string | Date) => dayjs(date).format('MM月DD日')
 
 // 刷新数据
 const refreshData = async () => {

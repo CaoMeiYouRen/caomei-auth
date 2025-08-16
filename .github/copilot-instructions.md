@@ -62,12 +62,12 @@
 -   `public/`: 公共静态资源目录（如图片、字体等）。
 -   `plugins/`: Nuxt 插件目录。
 -   `store/`: 状态管理目录。
--   `utils/`: 工具函数目录。
+-   `utils/`: 工具函数目录（前后端通用）。
 -   `server`: 服务器端代码目录（如 API 路由等）。
     -   `server/api/`: API 路由目录。
     -   `server/middleware/`: 服务器中间件目录。
     -   `server/config/`: 服务器配置目录。
-    -   `server/utils/`: 服务器端工具函数目录。
+    -   `server/utils/`: 服务器端工具函数目录（仅服务器端）。
     -   `server/database/`: 数据库相关代码目录。
 -   `middleware/`: 中间件目录。
 -   `tests/`: 测试代码目录。
