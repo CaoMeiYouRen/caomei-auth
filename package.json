@@ -99,7 +99,7 @@
     "@types/validator": "^13.15.2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "@vue/eslint-config-typescript": "^13.0.0",
+    "@vue/eslint-config-typescript": "^14.0.0",
     "@vue/test-utils": "^2.4.6",
     "commitizen": "^4.2.3",
     "conventional-changelog-cmyr-config": "^2.1.2",
