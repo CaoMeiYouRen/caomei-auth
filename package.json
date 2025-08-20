@@ -108,7 +108,7 @@
     "eslint": "^8.57.1",
     "eslint-config-cmyr": "^1.1.33",
     "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-vue": "^9.33.0",
+    "eslint-plugin-vue": "^10.0.0",
     "happy-dom": "^18.0.1",
     "husky": "^9.0.11",
     "lint-staged": "^16.1.5",
