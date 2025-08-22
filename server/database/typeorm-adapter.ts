@@ -124,10 +124,10 @@ export const typeormAdapter =
                         useDatabaseGeneratedId || action === 'update'
                             ? {}
                             : {
-                                    id: options.advanced?.database?.generateId
-                                        ? options.advanced.database.generateId({ model })
-                                        : data.id || generateId(),
-                                }
+                                id: options.advanced?.database?.generateId
+                                    ? options.advanced.database.generateId({ model })
+                                    : data.id || generateId(),
+                            }
                     const modelSchema = schema[model]
                     if (!modelSchema) {
                         throw new Error(`Model ${model} not found in schema`)
@@ -314,8 +314,8 @@ export const typeormAdapter =
                         skip: offset || 0,
                         order: sortBy?.field
                             ? {
-                                    [sortBy.field]: sortBy.direction === 'desc' ? 'DESC' : 'ASC',
-                                }
+                                [sortBy.field]: sortBy.direction === 'desc' ? 'DESC' : 'ASC',
+                            }
                             : undefined,
                     })
 

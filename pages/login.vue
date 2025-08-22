@@ -533,14 +533,14 @@ async function login() {
         try {
             const result = emailUseCode.value
                 ? await authClient.signIn.emailOtp({
-                        email: email.value,
-                        otp: emailCode.value,
-                    })
+                    email: email.value,
+                    otp: emailCode.value,
+                })
                 : await authClient.signIn.email({
-                        email: email.value,
-                        password: emailPassword.value,
-                        rememberMe: rememberMe.value,
-                    })
+                    email: email.value,
+                    password: emailPassword.value,
+                    rememberMe: rememberMe.value,
+                })
 
             if (result.error) {
                 throw new Error(result.error.message || '登录失败')

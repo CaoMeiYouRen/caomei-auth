@@ -22,6 +22,7 @@ export default withNuxt(cmyrConfig,
             // 保留原有的一些特殊配置，但移除已经无效的规则
             'vue/multi-word-component-names': 0,
             '@stylistic/operator-linebreak': [1, 'before', { overrides: { '=': 'after' } }], // '?': 'before', ':': 'before', '|': 'before', '&': 'before',
+            '@stylistic/indent': [1, 4, { SwitchCase: 1 }],
         },
     },
 )
