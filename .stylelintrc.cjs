@@ -15,8 +15,8 @@ module.exports = {
         'selector-pseudo-class-no-unknown': [
             true,
             {
-                ignorePseudoClasses: ['deep', 'global', 'slotted']
-            }
+                ignorePseudoClasses: ['deep', 'global', 'slotted'],
+            },
         ],
 
         // SCSS 变量相关
@@ -40,6 +40,6 @@ module.exports = {
             'custom-properties',
             'declarations',
         ],
-        "import-notation": "string",
+        'import-notation': 'string',
     },
 }

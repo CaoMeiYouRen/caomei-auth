@@ -825,10 +825,10 @@ const filteredProviders = computed(() => {
     // 搜索过滤
     if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase()
-        result = result.filter((provider: any) => provider.name?.toLowerCase().includes(query) ||
-            provider.providerId?.toLowerCase().includes(query) ||
-            provider.domain?.toLowerCase().includes(query) ||
-            provider.issuer?.toLowerCase().includes(query),
+        result = result.filter((provider: any) => provider.name?.toLowerCase().includes(query)
+            || provider.providerId?.toLowerCase().includes(query)
+            || provider.domain?.toLowerCase().includes(query)
+            || provider.issuer?.toLowerCase().includes(query),
         )
     }
 

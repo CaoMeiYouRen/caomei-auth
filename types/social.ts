@@ -1,4 +1,3 @@
-
 export type SocialProvider = {
     name: string
     provider: string

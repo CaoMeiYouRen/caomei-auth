@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion,@typescript-eslint/ban-types */
 /**
  * Function that returns a new decorator that applies all decorators provided by param
  *
@@ -9,22 +8,22 @@
  */
 export function applyDecorators(
     ...decorators: Array<ClassDecorator | MethodDecorator | PropertyDecorator>
-  ) {
+) {
     return <TFunction extends Function, Y>(
-      target: TFunction | object,
-      propertyKey?: string | symbol,
-      descriptor?: TypedPropertyDescriptor<Y>,
+        target: TFunction | object,
+        propertyKey?: string | symbol,
+        descriptor?: TypedPropertyDescriptor<Y>,
     ) => {
-      for (const decorator of decorators) {
-        if (target instanceof Function && !descriptor) {
-          (decorator as ClassDecorator)(target)
-          continue
+        for (const decorator of decorators) {
+            if (target instanceof Function && !descriptor) {
+                (decorator as ClassDecorator)(target)
+                continue
+            }
+            (decorator as MethodDecorator | PropertyDecorator)(
+                target,
+                propertyKey!,
+                descriptor!,
+            )
         }
-        (decorator as MethodDecorator | PropertyDecorator)(
-          target,
-          propertyKey!,
-          descriptor!,
-        )
-      }
     }
-  }
+}

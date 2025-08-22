@@ -27,8 +27,8 @@ export function CustomColumn(options: ColumnOptions & { index?: boolean }) {
                 'longtext',
                 'simple-json',
                 'simple-array',
-            ].includes(options.type as string) &&
-            options.length
+            ].includes(options.type as string)
+            && options.length
         ) {
             if (
                 ['text', 'mediumtext', 'longtext'].includes(
@@ -49,8 +49,8 @@ export function CustomColumn(options: ColumnOptions & { index?: boolean }) {
         }
         // mysql 不支持在 simple-json 类型字段上设置 default
         if (
-            ['simple-json', 'simple-array'].includes(options.type as string) &&
-            typeof options.default !== 'undefined'
+            ['simple-json', 'simple-array'].includes(options.type as string)
+            && typeof options.default !== 'undefined'
         ) {
             delete options.default
         }
@@ -74,15 +74,15 @@ export function CustomColumn(options: ColumnOptions & { index?: boolean }) {
                 'longtext',
                 'simple-json',
                 'simple-array',
-            ].includes(options.type as string) &&
-            options.length
+            ].includes(options.type as string)
+            && options.length
         ) {
             delete options.length
         }
         // postgres 不支持在 simple-json 类型字段上设置 default
         if (
-            ['simple-json', 'simple-array'].includes(options.type as string) &&
-            typeof options.default !== 'undefined'
+            ['simple-json', 'simple-array'].includes(options.type as string)
+            && typeof options.default !== 'undefined'
         ) {
             delete options.default
         }

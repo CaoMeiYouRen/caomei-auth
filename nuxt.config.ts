@@ -46,10 +46,16 @@ export default defineNuxtConfig({
     modules: [
         '@primevue/nuxt-module',
         '@sentry/nuxt/module',
+        '@nuxt/eslint',
     ],
     build: {
         // 使用 Babel 转译不兼容的包
         transpile: ['sqlite3', (ctx) => !ctx.isDev && 'google-libphonenumber', 'async', 'logform', '@colors/colors'],
+    },
+    eslint: {
+        config: {
+            standalone: false,
+        },
     },
     css: [
         'normalize.css/normalize.css',

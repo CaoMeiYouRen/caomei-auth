@@ -132,8 +132,8 @@ export function normalizeLocale(locale: string): SupportedLocale {
     // 尝试前缀匹配（例如 'zh-xxx' -> 'zh-Hans'）
     const languagePrefix = cleanLocale.split('-')[0]
     const prefixMatch = SUPPORTED_LOCALES.find(
-        (supportedLocale) => supportedLocale.toLowerCase().startsWith(`${languagePrefix}-`) ||
-            supportedLocale.toLowerCase() === languagePrefix,
+        (supportedLocale) => supportedLocale.toLowerCase().startsWith(`${languagePrefix}-`)
+            || supportedLocale.toLowerCase() === languagePrefix,
     )
     if (prefixMatch) {
         return prefixMatch
@@ -208,9 +208,9 @@ export function getLocaleFromCookie(event: H3Event): SupportedLocale | null {
 export function getLocaleFromHeaders(event: H3Event): SupportedLocale {
     try {
         // 检查自定义头部
-        const customLocale = getHeader(event, 'x-locale') ||
-            getHeader(event, 'x-language') ||
-            getHeader(event, 'x-lang')
+        const customLocale = getHeader(event, 'x-locale')
+            || getHeader(event, 'x-language')
+            || getHeader(event, 'x-lang')
 
         if (customLocale) {
             return normalizeLocale(customLocale as string)
@@ -298,9 +298,9 @@ export function getUserLocale(request: Request): SupportedLocale {
     try {
         // 从 URL 查询参数获取语言
         const url = new URL(request.url)
-        const urlLocale = url.searchParams.get('locale') ||
-            url.searchParams.get('lang') ||
-            url.searchParams.get('language')
+        const urlLocale = url.searchParams.get('locale')
+            || url.searchParams.get('lang')
+            || url.searchParams.get('language')
 
         if (urlLocale && SUPPORTED_LOCALES.includes(urlLocale as SupportedLocale)) {
             return urlLocale as SupportedLocale
@@ -332,9 +332,9 @@ export function getUserLocale(request: Request): SupportedLocale {
         }
 
         // 从自定义头部获取语言
-        const customLocale = request.headers.get('x-locale') ||
-            request.headers.get('x-language') ||
-            request.headers.get('x-lang')
+        const customLocale = request.headers.get('x-locale')
+            || request.headers.get('x-language')
+            || request.headers.get('x-lang')
 
         if (customLocale) {
             return normalizeLocale(customLocale)

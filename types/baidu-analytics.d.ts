@@ -24,7 +24,7 @@ declare global {
     /**
      * 百度统计全局变量
      */
-    // eslint-disable-next-line no-var
+
     var _hmt: BaiduAnalyticsCommand[] | undefined
 }
 

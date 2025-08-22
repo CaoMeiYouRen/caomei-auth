@@ -592,7 +592,6 @@ async function bindEmail() {
         user.emailVerified = false
         showEmailModal.value = false
         toast.add({ severity: 'success', summary: '邮箱已更新', life: 2000 })
-
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '发送验证链接时发生未知错误'
         toast.add({
@@ -962,7 +961,6 @@ async function onFileSelect(event: FileUploadSelectEvent) {
             await fetchUserAccounts()
             // 清理临时头像
             tempAvatar.value = ''
-
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '头像上传失败'
             toast.add({ severity: 'error', summary: errorMessage, life: 2000 })

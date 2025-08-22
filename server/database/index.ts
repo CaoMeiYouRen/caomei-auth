@@ -95,7 +95,7 @@ export const initializeDB = async () => {
         synchronize: isTestEnv || process.env.NODE_ENV !== 'production', // 测试环境总是同步表结构
         logging: isTestEnv ? false : process.env.NODE_ENV === 'development', // 测试时禁用日志
         logger: isTestEnv ? undefined : new CustomLogger(), // 测试时不使用自定义日志器
-        entityPrefix: DATABASE_ENTITY_PREFIX,   // 所有表（或集合）加的前缀
+        entityPrefix: DATABASE_ENTITY_PREFIX, // 所有表（或集合）加的前缀
         namingStrategy: new SnakeCaseNamingStrategy(), // 表、字段命名策略，改为 snake_case
         cache: false, // 是否启用实体结果缓存
         maxQueryExecutionTime: isTestEnv ? 10000 : 3000, // 测试时允许更长的查询时间

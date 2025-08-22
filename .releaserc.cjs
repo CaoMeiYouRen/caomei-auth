@@ -1,35 +1,36 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { name } = require('./package.json')
 module.exports = {
     plugins: [
         [
-            "@semantic-release/commit-analyzer",
+            '@semantic-release/commit-analyzer',
             {
-                "config": "conventional-changelog-cmyr-config"
-            }
+                config: 'conventional-changelog-cmyr-config',
+            },
         ],
         [
-            "@semantic-release/release-notes-generator",
+            '@semantic-release/release-notes-generator',
             {
-                "config": "conventional-changelog-cmyr-config"
-            }
+                config: 'conventional-changelog-cmyr-config',
+            },
         ],
         [
-            "@semantic-release/changelog",
+            '@semantic-release/changelog',
             {
-                "changelogFile": "CHANGELOG.md",
-                "changelogTitle": "# " + name
-            }
+                changelogFile: 'CHANGELOG.md',
+                changelogTitle: `# ${name}`,
+            },
         ],
         '@semantic-release/npm',
         '@semantic-release/github',
         [
-            "@semantic-release/git",
+            '@semantic-release/git',
             {
-                "assets": [
-                    "CHANGELOG.md",
-                    "package.json"
-                ]
-            }
-        ]
-    ]
+                assets: [
+                    'CHANGELOG.md',
+                    'package.json',
+                ],
+            },
+        ],
+    ],
 }

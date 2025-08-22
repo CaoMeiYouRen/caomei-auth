@@ -921,7 +921,6 @@ const loadUsers = async () => {
 
         users.value = response.data?.users || []
         totalUsers.value = response.data?.total || 0
-
     } catch (error: any) {
         console.error('加载用户列表失败:', error)
         toast.add({

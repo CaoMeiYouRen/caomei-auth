@@ -51,9 +51,9 @@ export class Snowflake {
         // 时间戳 48 位掩码，机器 ID 10 位，序列号 12 位，共 70 位
         // 生成的 ID 是一个 70 位二进制数，转换为十六进制
         // '0x1FFFFFFFFFF'
-        const id = (BigInt(timestamp) & BigInt('0xFFFFFFFFFFFF')) << BigInt(22) |
-            (BigInt(this.machineId) & BigInt(0x3FF)) << BigInt(12) |
-            BigInt(this.sequence) & BigInt(0xFFF)
+        const id = (BigInt(timestamp) & BigInt('0xFFFFFFFFFFFF')) << BigInt(22)
+            | (BigInt(this.machineId) & BigInt(0x3FF)) << BigInt(12)
+            | BigInt(this.sequence) & BigInt(0xFFF)
         return id.toString(16)
     }
 }

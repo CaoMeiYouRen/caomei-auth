@@ -630,15 +630,15 @@ export const auth = betterAuth({
                     const jobTitle = userInfo.attributes?.jobTitle
 
                     // 管理员角色分配逻辑
-                    if (jobTitle?.toLowerCase().includes('manager') ||
-                        jobTitle?.toLowerCase().includes('director') ||
-                        jobTitle?.toLowerCase().includes('admin')) {
+                    if (jobTitle?.toLowerCase().includes('manager')
+                        || jobTitle?.toLowerCase().includes('director')
+                        || jobTitle?.toLowerCase().includes('admin')) {
                         return 'admin'
                     }
 
                     // IT 部门自动获得管理员权限
-                    if (department?.toLowerCase() === 'it' ||
-                        department?.toLowerCase() === '信息技术部') {
+                    if (department?.toLowerCase() === 'it'
+                        || department?.toLowerCase() === '信息技术部') {
                         return 'admin'
                     }
 

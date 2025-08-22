@@ -59,9 +59,9 @@ export interface GoogleAnalyticsMethods {
  * @returns Google Analytics 方法集合
  */
 export const useGoogleAnalytics = (): GoogleAnalyticsMethods => {
-    const checkGoogleAnalytics = (): boolean => typeof window !== 'undefined' &&
-        typeof window.gtag === 'function' &&
-        Array.isArray(window.dataLayer)
+    const checkGoogleAnalytics = (): boolean => typeof window !== 'undefined'
+        && typeof window.gtag === 'function'
+        && Array.isArray(window.dataLayer)
 
     const trackPageview = (config?: {
         page_title?: string

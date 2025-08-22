@@ -378,7 +378,6 @@ async function register() {
                 throw new Error(error.message || '注册失败')
             }
         } else if (params.mode === 'phone') {
-
             // 验证手机号码
             const isVerified = await authClient.phoneNumber.verify({
                 phoneNumber: phone.value,

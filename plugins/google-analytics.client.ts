@@ -87,9 +87,9 @@ export default defineNuxtPlugin(() => {
                      * 检查 Google Analytics 是否已加载
                      */
                     isLoaded() {
-                        return typeof window !== 'undefined' &&
-                            typeof window.gtag === 'function' &&
-                            Array.isArray(window.dataLayer)
+                        return typeof window !== 'undefined'
+                            && typeof window.gtag === 'function'
+                            && Array.isArray(window.dataLayer)
                     },
                 },
             },
