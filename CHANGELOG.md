@@ -1,5 +1,13 @@
 # caomei-auth
 
+## [1.4.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.4.0...v1.4.1) (2025-08-23)
+
+
+### 🐛 Bug 修复
+
+* **deps:** update dependency typeorm to v0.3.26 ([1a48034](https://github.com/CaoMeiYouRen/caomei-auth/commit/1a48034))
+* **deps:** update dependency vue to v3.5.19 ([#55](https://github.com/CaoMeiYouRen/caomei-auth/issues/55)) ([bcd7410](https://github.com/CaoMeiYouRen/caomei-auth/commit/bcd7410))
+
 # [1.4.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.3.0...v1.4.0) (2025-08-16)
 
 
