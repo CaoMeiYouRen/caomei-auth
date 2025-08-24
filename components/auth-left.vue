@@ -31,7 +31,7 @@ const props = defineProps({
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme.scss";
+@import "@/styles/theme";
 
 .auth-left {
     display: flex;

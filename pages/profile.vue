@@ -1156,7 +1156,6 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 .privacy-label {
     color: $secondary;
     font-size: 0.85rem;
-    // font-weight: 500;
     white-space: nowrap;
 }
 
@@ -1169,6 +1168,7 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 
 .privacy-hidden {
     color: $secondary;
+
     // font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
     font-weight: 500;
 }

@@ -1002,8 +1002,8 @@ onMounted(() => {
     font-weight: 500;
 
     i {
-        font-size: 1.25rem;
-        // 颜色通过内联样式设置，使用各平台品牌色
+        font-size: 1.25rem; // 颜色通过内联样式设置，使用各平台品牌色
+
     }
 }
 

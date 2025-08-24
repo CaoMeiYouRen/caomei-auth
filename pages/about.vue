@@ -82,7 +82,6 @@
     margin: 2.5rem auto 2rem;
     padding: 2rem 1.2rem;
     color: $secondary;
-    // background: $background;
     border-radius: 14px;
     box-shadow: 0 10px 25px rgb(0 0 0 / 7%);
 }

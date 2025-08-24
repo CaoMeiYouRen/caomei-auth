@@ -1362,7 +1362,6 @@ function formatRelativeTime(date: string | Date) {
 
 <style lang="scss" scoped>
 @use "sass:color";
-
 @import '@/styles/theme';
 @import '@/styles/form';
 @import '@/styles/common';
