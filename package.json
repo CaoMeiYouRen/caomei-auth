@@ -115,7 +115,7 @@
     "sass": "^1.90.0",
     "semantic-release": "21.0.1",
     "stylelint": "^16.23.1",
-    "stylelint-config-cmyr": "1.0.0-beta.1",
+    "stylelint-config-cmyr": "1.0.0-beta.2",
     "typescript": "^5.9.2",
     "vite": "^7.1.2",
     "vitepress": "^1.6.4",
