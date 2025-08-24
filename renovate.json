@@ -2,9 +2,35 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["config:recommended"],
     "automerge": true,
+    "schedule": [
+        "after 10pm every weekday",
+        "before 5am every weekday",
+        "every weekend"
+    ],
+    "timezone": "Asia/Shanghai",
     "packageRules": [
         {
-            "matchUpdateTypes": ["major", "minor", "patch"]
+            "groupName": "all non-major dependencies",
+            "groupSlug": "all-minor-patch",
+            "matchUpdateTypes": ["minor", "patch"],
+            "schedule": [
+                "after 10pm every weekday",
+                "before 5am every weekday",
+                "every weekend"
+            ]
+        },
+        {
+            "groupName": "major dependencies",
+            "groupSlug": "all-major",
+            "matchUpdateTypes": ["major"],
+            "schedule": ["every weekend"]
+        },
+        {
+            "groupName": "dev dependencies",
+            "groupSlug": "dev-deps",
+            "matchDepTypes": ["devDependencies"],
+            "matchUpdateTypes": ["minor", "patch"],
+            "automerge": true
         }
     ]
 }
