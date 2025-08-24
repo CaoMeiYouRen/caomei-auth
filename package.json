@@ -33,7 +33,7 @@
     "@vueuse/core": "^13.6.0",
     "animate.css": "^4.1.1",
     "better-auth": "^1.3.7",
-    "better-auth-localization": "^2.0.8",
+    "better-auth-localization": "^2.1.4",
     "better-bytes": "^1.2.4",
     "chart.js": "^4.5.0",
     "dayjs": "^1.11.13",
