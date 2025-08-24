@@ -250,8 +250,8 @@ importers:
         specifier: ^16.23.1
         version: 16.23.1(typescript@5.9.2)
       stylelint-config-cmyr:
-        specifier: 1.0.0-beta.1
-        version: 1.0.0-beta.1(postcss@8.5.6)(stylelint@16.23.1(typescript@5.9.2))
+        specifier: 1.0.0-beta.2
+        version: 1.0.0-beta.2(postcss@8.5.6)(stylelint@16.23.1(typescript@5.9.2))
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
@@ -8625,8 +8625,8 @@ packages:
     peerDependencies:
       postcss: ^8.5.0
 
-  stylelint-config-cmyr@1.0.0-beta.1:
-    resolution: {integrity: sha512-MA4oCJxt/iRiJzLfXq81fRvtzt5Ed6aM9V6YAQVFoB0akhFNlgPBaX7gHkulEji8M9nc5hTBQXQpZ5+aK5N4LA==}
+  stylelint-config-cmyr@1.0.0-beta.2:
+    resolution: {integrity: sha512-RrHdihf8aWLonYR5b0yqd3kjxNuYWMfbtTeKSBqaiM8apfqF17/bipNksFnT6qtoEHSaYJy8ZTHBC9k71Rx0UA==}
     engines: {node: '>=16'}
     peerDependencies:
       postcss: ^8.5.0
@@ -20203,7 +20203,7 @@ snapshots:
       postcss: 8.5.6
       postcss-selector-parser: 7.1.0
 
-  stylelint-config-cmyr@1.0.0-beta.1(postcss@8.5.6)(stylelint@16.23.1(typescript@5.9.2)):
+  stylelint-config-cmyr@1.0.0-beta.2(postcss@8.5.6)(stylelint@16.23.1(typescript@5.9.2)):
     dependencies:
       postcss: 8.5.6
       postcss-html: 1.8.0
