@@ -90,6 +90,7 @@ export default defineConfig({
                     text: '使用文档',
                     items: [
                         { text: '使用概览', link: '/docs/usage/' },
+                        { text: '方案对比', link: '/docs/usage/comparison' },
                         { text: '快速开始', link: '/docs/usage/getting-started' },
                         { text: '用户管理', link: '/docs/usage/user-management' },
                         { text: '应用集成', link: '/docs/usage/app-integration' },
