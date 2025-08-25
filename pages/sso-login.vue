@@ -423,7 +423,7 @@ onMounted(() => {
     background: white;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 
     h3 {
         color: $primary;
@@ -458,7 +458,7 @@ onMounted(() => {
     background: white;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     margin-bottom: 2rem;
 
     h3 {
@@ -485,7 +485,7 @@ onMounted(() => {
 
     &:hover {
         border-color: $primary;
-        box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
         transform: translateY(-2px);
     }
 
@@ -530,7 +530,7 @@ onMounted(() => {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 
     .text-muted {
         color: $secondary-light;

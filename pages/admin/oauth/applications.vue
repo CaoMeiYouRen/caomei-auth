@@ -1292,7 +1292,7 @@ function goProfile() {
     background: white;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 
     @media (width <= 768px) {
         flex-direction: column;
@@ -1332,7 +1332,7 @@ function goProfile() {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     margin-bottom: 1.5rem;
 
     .filter-row {
@@ -1368,7 +1368,7 @@ function goProfile() {
 .clients-list {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     overflow: hidden;
 
     .table-header {

@@ -468,7 +468,7 @@ async function denyConsent() {
                 max-width: 80px;
                 max-height: 80px;
                 border-radius: 0.5rem;
-                box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+                box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
             }
         }
 

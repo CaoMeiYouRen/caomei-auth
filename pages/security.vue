@@ -756,7 +756,7 @@ onMounted(() => {
 .auth-card.security-card {
     background-color: $background-light;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgb(0 0 0 / 5%);
+    box-shadow: 0 10px 25px rgb(0 0 0 / 0.05);
     padding: 2rem;
     width: 100%;
     max-width: 1200px;

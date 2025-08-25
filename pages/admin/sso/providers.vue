@@ -1385,7 +1385,7 @@ function formatRelativeTime(date: string | Date) {
     background: white;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 
     @media (width <= 768px) {
         flex-direction: column;
@@ -1425,7 +1425,7 @@ function formatRelativeTime(date: string | Date) {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     margin-bottom: 1.5rem;
 
     .filter-row {
@@ -1461,7 +1461,7 @@ function formatRelativeTime(date: string | Date) {
 .sso-list {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     overflow: hidden;
 
     .table-header {

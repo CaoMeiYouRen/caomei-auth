@@ -813,7 +813,7 @@ onMounted(() => {
     background: $background-light;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 
     @media (width <= 768px) {
         flex-direction: column;
@@ -864,12 +864,12 @@ onMounted(() => {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgb(0 0 0 / 15%);
+        box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
     }
 
     .stat-icon {
@@ -911,7 +911,7 @@ onMounted(() => {
 .logs-detail {
     background: $background-light;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     margin-bottom: 2rem;
     overflow: hidden;
 }

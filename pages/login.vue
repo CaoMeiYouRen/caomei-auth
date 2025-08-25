@@ -850,7 +850,7 @@ async function loginAnonymously() {
     padding: 2rem;
     background-color: $background-light;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgb(0 0 0 / 5%);
+    box-shadow: 0 10px 25px rgb(0 0 0 / 0.05);
 }
 
 .auth-title {
@@ -887,7 +887,7 @@ async function loginAnonymously() {
 
 .form-input:focus {
     border-color: $primary;
-    box-shadow: 0 0 0 3px rgb(230 57 70 / 20%); // 可考虑用rgba($primary, 0.2)如有mixin
+    box-shadow: 0 0 0 3px rgb(230 57 70 / 0.2); // 可考虑用rgba($primary, 0.2)如有mixin
 }
 
 .separator {

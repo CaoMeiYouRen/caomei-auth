@@ -164,7 +164,7 @@ const toggleSidebar = () => {
     height: 100vh;
     background: white;
     border-right: 1px solid #e2e8f0;
-    box-shadow: 2px 0 8px rgb(0 0 0 / 10%);
+    box-shadow: 2px 0 8px rgb(0 0 0 / 0.1);
     transition: width 0.3s ease;
 
     &.collapsed {

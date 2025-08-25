@@ -191,7 +191,7 @@ function toAdmin() {
     padding: 2.5rem 2rem 2rem;
     background-color: $background-light;
     border-radius: 14px;
-    box-shadow: 0 10px 25px rgb(0 0 0 / 7%);
+    box-shadow: 0 10px 25px rgb(0 0 0 / 0.07);
 }
 
 .auth-title {

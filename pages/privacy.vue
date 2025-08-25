@@ -192,7 +192,7 @@ const contactEmailLink = `mailto:${config.contactEmail}`
     padding: 2rem 1.2rem;
     color: $secondary;
     border-radius: 14px;
-    box-shadow: 0 10px 25px rgb(0 0 0 / 7%);
+    box-shadow: 0 10px 25px rgb(0 0 0 / 0.07);
 }
 
 .auth-title {
