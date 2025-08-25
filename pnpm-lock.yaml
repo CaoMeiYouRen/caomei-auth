@@ -118,8 +118,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3(typescript@5.9.2)(vue@3.5.20(typescript@5.9.2))
       primelocale:
-        specifier: ^2.1.5
-        version: 2.1.5
+        specifier: ^2.1.6
+        version: 2.1.6
       primevue:
         specifier: ^4.3.7
         version: 4.3.7(vue@3.5.20(typescript@5.9.2))
@@ -7773,8 +7773,8 @@ packages:
     resolution: {integrity: sha512-mQUvGU6aUFQ+rNvTIAcZuWGRT9a6f6Yrg9bHs4ImKF+HZCEK+plBvnAZYSIQztknZF2qnzNtr6F8s0+IuptdlQ==}
     engines: {node: ^14.13.1 || >=16.0.0}
 
-  primelocale@2.1.5:
-    resolution: {integrity: sha512-FqdKvMTaqpbc7Kq8NbWtREcT6Xl4cuRLKh8MDyuCGtOLNiR8nPMBWnUhsAf06IVKav9u7chrMmvNjH1xgjWouQ==}
+  primelocale@2.1.6:
+    resolution: {integrity: sha512-23xJgb0alNrWwiVDdYLhgDc5SIjfUcYAcFdznolqLApuuaVQnIQ0u8pidi/eN/n8dN1dUWBE2a1/llI9RoO1QQ==}
     engines: {node: '>=18.0.0', npm: '>=8.6.0'}
 
   primevue@4.3.7:
@@ -19037,7 +19037,7 @@ snapshots:
 
   pretty-bytes@6.1.1: {}
 
-  primelocale@2.1.5: {}
+  primelocale@2.1.6: {}
 
   primevue@4.3.7(vue@3.5.20(typescript@5.9.2)):
     dependencies:
