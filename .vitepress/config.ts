@@ -73,6 +73,16 @@ export default defineConfig({
                         { text: 'Vercel 部署', link: '/docs/deployment/vercel' },
                         { text: 'Cloudflare Workers 部署', link: '/docs/deployment/cloudflare' }
                     ]
+                },
+                {
+                    text: '第三方集成',
+                    items: [
+                        { text: '集成概览', link: '/docs/deployment/integrations/' },
+                        { text: 'Microsoft Clarity', link: '/docs/deployment/integrations/clarity' },
+                        { text: 'Sentry', link: '/docs/deployment/integrations/sentry' },
+                        { text: 'Google Analytics', link: '/docs/deployment/integrations/google-analytics' },
+                        { text: '百度统计', link: '/docs/deployment/integrations/baidu-analytics' },
+                    ]
                 }
             ],
             '/docs/usage/': [
@@ -130,17 +140,6 @@ export default defineConfig({
                         { text: '用户管理', link: '/docs/development/user-management-sorting' },
                         { text: '最佳实践', link: '/docs/development/best-practices' },
                         { text: '无障碍适配', link: '/docs/development/accessibility' }
-                    ]
-                },
-                {
-                    text: '第三方集成',
-                    items: [
-                        { text: '集成概览', link: '/docs/development/integrations/' },
-                        { text: 'Microsoft Clarity', link: '/docs/development/integrations/clarity' },
-                        { text: 'Sentry', link: '/docs/development/integrations/sentry' },
-                        { text: 'Google Analytics', link: '/docs/development/integrations/google-analytics' },
-                        { text: '百度统计', link: '/docs/development/integrations/baidu-analytics' },
-
                     ]
                 }
             ],

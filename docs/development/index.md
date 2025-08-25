@@ -30,28 +30,6 @@
 
 开发过程中的最佳实践和代码规范。
 
-## 第三方集成
-
-### [集成概览](./integrations/)
-
-了解支持的第三方服务集成。
-
-### [Microsoft Clarity](./integrations/clarity)
-
-网站分析服务集成指南。
-
-### [Sentry](./integrations/sentry)
-
-错误监控服务集成指南。
-
-### [百度统计](./integrations/baidu-analytics)
-
-百度统计服务集成指南。
-
-### [Google Analytics](./integrations/google-analytics)
-
-Google Analytics 4 服务集成指南。
-
 ## 技术栈详解
 
 ### 前端技术栈

@@ -279,4 +279,4 @@ Sentry.init({
 
 ---
 
-如果您在集成过程中遇到问题，请查阅 [故障排除指南](../troubleshooting.md) 或提交 [Issue](https://github.com/CaoMeiYouRen/caomei-auth/issues)。
+如果您在集成过程中遇到问题，请查阅 [故障排除指南](../../usage/troubleshooting.md) 或提交 [Issue](https://github.com/CaoMeiYouRen/caomei-auth/issues)。

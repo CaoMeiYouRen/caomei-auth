@@ -20,6 +20,21 @@
 
 边缘计算部署，极低延迟和全球分布。
 
+## 第三方集成
+
+草梅 Auth 支持多种第三方服务集成，用于分析、监控和其他功能增强。
+
+### [集成概览](./integrations/)
+
+了解支持的第三方服务集成。
+
+### 分析和监控服务
+
+-   **[Microsoft Clarity](./integrations/clarity)** - 行为分析和会话回放工具
+-   **[Sentry](./integrations/sentry)** - 错误监控和性能跟踪工具
+-   **[百度统计](./integrations/baidu-analytics)** - 网站流量分析和用户行为统计工具
+-   **[Google Analytics](./integrations/google-analytics)** - Google Analytics 4 网站分析和用户行为跟踪工具
+
 ## 环境要求
 
 -   Node.js >= 18
