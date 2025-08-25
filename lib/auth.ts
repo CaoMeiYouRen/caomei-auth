@@ -185,6 +185,12 @@ export const auth = betterAuth({
             minUsernameLength: 2, // 最小用户名长度
             maxUsernameLength: 36, // 最大用户名长度
             usernameValidator,
+            // displayUsernameValidator: usernameValidator,
+            usernameNormalization: (name) => name.toLowerCase().trim(), // 用户名规范化函数
+            // displayUsernameNormalization: (name) => name.trim(), // 用户名规范化函数
+            validationOrder: {
+                username: 'pre-normalization',
+            },
         }), // 支持用户名登录
         anonymous({
             // 支持匿名登录
