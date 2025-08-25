@@ -54,7 +54,7 @@
     "p-queue": "^8.1.0",
     "pg": "^8.16.3",
     "pinia": "^3.0.3",
-    "primelocale": "^2.1.5",
+    "primelocale": "^2.1.6",
     "primevue": "^4.3.7",
     "qrcode": "^1.5.4",
     "sqlite3": "^5.1.7",
