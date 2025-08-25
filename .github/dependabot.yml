@@ -21,6 +21,6 @@ updates:
     directory: /
     open-pull-requests-limit: 20
     schedule:
-      interval: monthly
+      interval: weekly
       time: "04:00"
       timezone: Asia/Shanghai
