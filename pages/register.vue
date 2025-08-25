@@ -31,21 +31,21 @@
                 <!-- 邮箱注册表单 -->
                 <div v-show="activeTab === 'email'">
                     <div class="form-group">
-                        <label class="form-label" for="username">用户名 <span style="color: #e63946;">*</span></label>
+                        <label class="form-label" for="nickname">昵称 <span style="color: #e63946;">*</span></label>
                         <InputText
-                            id="username"
-                            v-model="username"
-                            v-tooltip.top="'用户名只能包含字母、数字、下划线和连字符，长度在2到36个字符之间，且不能为邮箱或手机号格式'"
+                            id="nickname"
+                            v-model="nickname"
+                            v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊控制字符'"
                             class="form-input"
-                            placeholder="请输入用户名"
+                            placeholder="请输入昵称"
                         />
                         <Message
-                            v-if="errors.username"
+                            v-if="errors.nickname"
                             severity="error"
                             size="small"
                             variant="simple"
                         >
-                            {{ errors.username }}
+                            {{ errors.nickname }}
                         </Message>
                     </div>
                     <div class="form-group">
@@ -111,21 +111,21 @@
                 <!-- 手机号注册表单 -->
                 <div v-show="activeTab === 'phone'">
                     <div class="form-group">
-                        <label class="form-label" for="username">用户名 <span style="color: #e63946;">*</span></label>
+                        <label class="form-label" for="nickname">昵称 <span style="color: #e63946;">*</span></label>
                         <InputText
-                            id="username"
-                            v-model="username"
-                            v-tooltip.top="'用户名只能包含字母、数字、下划线和连字符，长度在2到36个字符之间，且不能为邮箱或手机号格式'"
+                            id="nickname"
+                            v-model="nickname"
+                            v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊字符'"
                             class="form-input"
-                            placeholder="请输入用户名"
+                            placeholder="请输入昵称"
                         />
                         <Message
-                            v-if="errors.username"
+                            v-if="errors.nickname"
                             severity="error"
                             size="small"
                             variant="simple"
                         >
-                            {{ errors.username }}
+                            {{ errors.nickname }}
                         </Message>
                     </div>
                     <div class="form-group">
@@ -240,7 +240,7 @@ import Message from 'primevue/message'
 import Checkbox from 'primevue/checkbox'
 import { useToast } from 'primevue/usetoast'
 import ButtonGroup from 'primevue/buttongroup'
-import { validateEmail, validatePhone, usernameValidator } from '@/utils/validate'
+import { validateEmail, validatePhone, nicknameValidator } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
@@ -249,7 +249,7 @@ import { authClient } from '@/lib/auth-client'
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
 
-const username = ref('')
+const nickname = ref('')
 const email = ref('')
 const phone = ref('')
 const phoneCode = ref('')
@@ -288,7 +288,7 @@ const changeMode = (mode: 'email' | 'phone') => {
 
 // 表单验证函数
 const resolver = (values: {
-    username: string
+    nickname: string
     email?: string
     phone?: string
     phoneCode?: string
@@ -298,10 +298,10 @@ const resolver = (values: {
 }) => {
     const newErrors: Record<string, string> = {}
 
-    if (!values.username) {
-        newErrors.username = '请输入用户名'
-    } else if (!usernameValidator(values.username)) {
-        newErrors.username = '用户名只能包含字母、数字、下划线和连字符，长度在2到36个字符之间，且不能为邮箱或手机号格式'
+    if (!values.nickname) {
+        newErrors.nickname = '请输入昵称'
+    } else if (!nicknameValidator(values.nickname)) {
+        newErrors.nickname = '昵称长度为2到36个字符，不能包含特殊字符'
     }
 
     if (params.mode === 'email') {
@@ -345,7 +345,7 @@ const resolver = (values: {
 
 async function register() {
     const values = {
-        username: username.value,
+        nickname: nickname.value,
         email: email.value,
         phone: phone.value,
         phoneCode: phoneCode.value,
@@ -366,12 +366,11 @@ async function register() {
 
     try {
         if (params.mode === 'email') {
-            // 使用邮箱和用户名注册
+            // 使用邮箱和昵称注册
             const { data, error } = await authClient.signUp.email({
                 email: email.value,
                 password: password.value,
-                name: username.value,
-                username: username.value,
+                name: nickname.value,
             })
 
             if (error) {
@@ -387,10 +386,9 @@ async function register() {
             if (!isVerified.data?.status) {
                 throw new Error('手机号码验证失败')
             }
-            // 验证手机号之后就自动注册了，所以这里更新用户名
+            // 验证手机号之后就自动注册了，所以这里更新昵称
             const { data, error } = await authClient.updateUser({
-                name: username.value,
-                username: username.value,
+                name: nickname.value,
             })
             if (error) {
                 throw new Error(error.message || '更新用户信息失败')
