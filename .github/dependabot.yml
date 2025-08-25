@@ -11,12 +11,6 @@ updates:
       - dependency-name: semantic-release
         versions:
           - ">= 21.0.1"
-      - dependency-name: "@commitlint/cli"
-        versions:
-          - ">= 19.0.0"
-      - dependency-name: "@commitlint/config-conventional"
-        versions:
-          - ">= 19.0.0"
   - package-ecosystem: github-actions
     directory: /
     open-pull-requests-limit: 20
