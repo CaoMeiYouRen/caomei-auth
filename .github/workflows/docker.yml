@@ -34,7 +34,7 @@ jobs:
   build:
     needs: test # 等待 test 执行成功
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     permissions:
       packages: write
       contents: read
