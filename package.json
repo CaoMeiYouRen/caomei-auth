@@ -28,7 +28,7 @@
     "@primeuix/themes": "^1.2.3",
     "@primevue/core": "^4.3.7",
     "@primevue/forms": "^4.3.7",
-    "@sentry/nuxt": "^10.5.0",
+    "@sentry/nuxt": "^10.7.0",
     "@vercel/blob": "^1.1.1",
     "@vueuse/core": "^13.6.0",
     "animate.css": "^4.1.1",
