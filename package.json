@@ -36,6 +36,7 @@
     "better-auth-localization": "^2.0.8",
     "better-bytes": "^1.2.4",
     "chart.js": "^4.5.0",
+    "conventional-changelog-cmyr-config": "^3.0.0",
     "dayjs": "^1.11.13",
     "file-type": "^21.0.0",
     "fs-extra": "^11.3.1",
@@ -86,8 +87,6 @@
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/test-utils": "^3.19.2",
     "@primevue/nuxt-module": "^4.3.7",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
     "@types/fs-extra": "^11.0.4",
     "@types/google-libphonenumber": "^7.4.30",
     "@types/lodash-es": "^4.17.12",
@@ -101,11 +100,11 @@
     "@vue/test-utils": "^2.4.6",
     "commitizen": "^4.2.3",
     "commitlint": "^19.8.1",
-    "commitlint-config-cmyr": "1.0.0-beta.2",
+    "commitlint-config-cmyr": "1.0.0",
     "cross-env": "^10.0.0",
-    "cz-conventional-changelog-cmyr": "2.0.0-beta.1",
+    "cz-conventional-changelog-cmyr": "2.0.0",
     "eslint": "^9.33.0",
-    "eslint-config-cmyr": "2.0.0-beta.15",
+    "eslint-config-cmyr": "2.0.0",
     "eslint-plugin-vue": "^10.4.0",
     "happy-dom": "^18.0.1",
     "husky": "^9.0.11",
@@ -113,9 +112,10 @@
     "playwright-core": "^1.54.2",
     "postcss": "^8.5.6",
     "sass": "^1.90.0",
-    "semantic-release": "21.1.2",
+    "semantic-release": "^24.0.0",
+    "semantic-release-cmyr-config": "^1.0.0",
     "stylelint": "^16.23.1",
-    "stylelint-config-cmyr": "1.0.0-beta.2",
+    "stylelint-config-cmyr": "1.0.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.2",
     "vitepress": "^1.6.4",
@@ -162,7 +162,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "cz-conventional-changelog-cmyr"
+      "path": "./node_modules/cz-conventional-changelog-cmyr"
     }
   },
   "changelog": {
