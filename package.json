@@ -111,7 +111,7 @@
     "lint-staged": "^16.1.5",
     "playwright-core": "^1.54.2",
     "postcss": "^8.5.6",
-    "sass": "^1.90.0",
+    "sass": "^1.91.0",
     "semantic-release": "^24.0.0",
     "semantic-release-cmyr-config": "^1.0.0",
     "stylelint": "^16.23.1",
