@@ -90,6 +90,8 @@ export const REDIS_URL = process.env.REDIS_URL
  */
 // 是否启用短信发送功能（包含注册、登录、绑定、找回密码等页面）
 export const PHONE_ENABLED = process.env.NUXT_PUBLIC_PHONE_ENABLED || import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
+// 是否启用用户名登录功能
+export const USERNAME_ENABLED = process.env.NUXT_PUBLIC_USERNAME_ENABLED === 'true'
 // 短信发件渠道
 export const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
 // Spug短信模板ID，在Spug短信模板配置中获取

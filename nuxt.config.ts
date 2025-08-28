@@ -84,6 +84,7 @@ export default defineNuxtConfig({
             icpBeianNumber: process.env.NUXT_PUBLIC_ICP_BEIAN_NUMBER,
             publicSecurityBeianNumber: process.env.NUXT_PUBLIC_PUBLIC_SECURITY_BEIAN_NUMBER,
             phoneEnabled: process.env.NUXT_PUBLIC_PHONE_ENABLED || (process.env.PHONE_CHANNEL ? 'true' : ''),
+            usernameEnabled: process.env.NUXT_PUBLIC_USERNAME_ENABLED === 'true',
             sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
             clarityProjectId: process.env.NUXT_PUBLIC_CLARITY_PROJECT_ID,
             baiduAnalyticsId: process.env.NUXT_PUBLIC_BAIDU_ANALYTICS_ID,

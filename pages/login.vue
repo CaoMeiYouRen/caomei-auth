@@ -13,6 +13,7 @@
                     <div class="card flex justify-center">
                         <ButtonGroup>
                             <Button
+                                v-if="usernameEnabled"
                                 label="用户名"
                                 icon="mdi mdi-account"
                                 :class="{'p-button-outlined': activeTab !== 'username'}"
@@ -335,6 +336,7 @@ import { authClient } from '@/lib/auth-client'
 import type { SocialProvider } from '@/types/social'
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
+const usernameEnabled = config.usernameEnabled
 const activeTab = ref<'username' | 'email' | 'phone'>('username')
 const email = ref('')
 const emailPassword = ref('')
@@ -403,10 +405,21 @@ const params = useUrlSearchParams<{ mode: 'username' | 'email' | 'phone' }>('his
 const clarity = useClarity()
 
 onMounted(() => {
-    // 确保默认值
+    // 确保默认值，如果用户名登录未启用，则默认使用邮箱登录
     if (!['username', 'email', 'phone'].includes(params.mode as string)) {
-        params.mode = 'username'
+        params.mode = usernameEnabled ? 'username' : 'email'
     }
+
+    // 如果当前模式是用户名登录但未启用，则切换到邮箱登录
+    if (params.mode === 'username' && !usernameEnabled) {
+        params.mode = 'email'
+    }
+
+    // 如果当前模式是手机登录但未启用，则切换到邮箱登录或用户名登录
+    if (params.mode === 'phone' && !phoneEnabled) {
+        params.mode = usernameEnabled ? 'username' : 'email'
+    }
+
     activeTab.value = params.mode
 
     // 追踪页面访问
@@ -419,6 +432,11 @@ const changeMode = (mode: 'username' | 'email' | 'phone') => {
     // 如果短信功能未启用且尝试切换到手机登录，提示错误并阻止切换
     if (mode === 'phone' && !phoneEnabled) {
         toast.add({ severity: 'error', summary: '功能未启用', detail: '短信功能未启用，请使用其他方式登录', life: 3000 })
+        return
+    }
+    // 如果用户名登录未启用且尝试切换到用户名登录，提示错误并阻止切换
+    if (mode === 'username' && !usernameEnabled) {
+        toast.add({ severity: 'error', summary: '功能未启用', detail: '用户名登录功能未启用，请使用其他方式登录', life: 3000 })
         return
     }
     params.mode = mode
