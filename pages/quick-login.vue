@@ -1,9 +1,6 @@
 <template>
     <div class="auth-container">
-        <AuthLeft
-            title="快速登录"
-            subtitle="智能识别，一步到位。"
-        />
+        <AuthLeft title="快速登录" subtitle="智能识别，一步到位。" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -17,12 +14,55 @@
                 <div class="smart-input-section">
                     <div class="form-group">
                         <label class="form-label" for="account">邮箱地址或手机号</label>
-                        <div class="smart-input" :class="{'has-type': inputType !== 'unknown'}">
+                        <div v-if="inputType === 'phone' && showRegionSelector" class="phone-input-wrapper">
+                            <!-- 国家/地区选择器 -->
+                            <Dropdown
+                                v-model="selectedRegion"
+                                class="region-dropdown"
+                                :options="regionOptions"
+                                option-label="label"
+                                option-value="value"
+                                placeholder="CN +86"
+                                filter
+                                :filter-placeholder="'搜索国家/地区'"
+                                @change="handleRegionChange"
+                            >
+                                <template #option="{option}">
+                                    <div class="region-option">
+                                        <span class="region-name">{{
+                                            option.label
+                                        }}</span>
+                                    </div>
+                                </template>
+                            </Dropdown>
+                            <!-- 手机号输入框 -->
+                            <div class="phone-input smart-input">
+                                <InputText
+                                    id="account"
+                                    v-model="account"
+                                    class="form-input"
+                                    :class="{error: hasInputError}"
+                                    placeholder="请输入手机号"
+                                    @input="handleInputChange"
+                                    @blur="handleInputBlur"
+                                />
+                                <!-- 输入类型指示器 -->
+                                <div class="input-type-indicator">
+                                    <i class="mdi mdi-phone type-icon" />
+                                    <span class="type-text">手机号</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            v-else
+                            class="smart-input"
+                            :class="{'has-type': inputType !== 'unknown'}"
+                        >
                             <InputText
                                 id="account"
                                 v-model="account"
                                 class="form-input"
-                                :class="{'error': hasInputError}"
+                                :class="{error: hasInputError}"
                                 placeholder="请输入邮箱地址或手机号"
                                 @input="handleInputChange"
                                 @blur="handleInputBlur"
@@ -30,11 +70,18 @@
                             <!-- 输入类型指示器 -->
                             <div v-if="inputType !== 'unknown'" class="input-type-indicator">
                                 <i
-                                    :class="inputType === 'email' ? 'mdi mdi-email' : 'mdi mdi-phone'"
+                                    :class="inputType === 'email'
+                                        ? 'mdi mdi-email'
+                                        : 'mdi mdi-phone'
+                                    "
                                     class="type-icon"
                                 />
                                 <span class="type-text">
-                                    {{ inputType === 'email' ? '邮箱' : '手机号' }}
+                                    {{
+                                        inputType === "email"
+                                            ? "邮箱"
+                                            : "手机号"
+                                    }}
                                 </span>
                             </div>
                         </div>
@@ -46,15 +93,24 @@
                     </div>
 
                     <!-- 智能提示信息 -->
-                    <div v-if="suggestion.suggestion && !inputError && account.trim()" class="suggestion-section">
-                        <Message
-                            :severity="getSuggestionSeverity(suggestion)"
-                            :closable="false"
-                        >
+                    <div
+                        v-if="
+                            suggestion.suggestion &&
+                                !inputError &&
+                                account.trim()
+                        "
+                        class="suggestion-section"
+                    >
+                        <Message :severity="getSuggestionSeverity(suggestion)" :closable="false">
                             <div class="suggestion-content">
-                                <span class="suggestion-text">{{ suggestion.suggestion }}</span>
+                                <span class="suggestion-text">{{
+                                    suggestion.suggestion
+                                }}</span>
                                 <Button
-                                    v-if="suggestion.needConfirm && !isRegionConfirmed"
+                                    v-if="
+                                        suggestion.needConfirm &&
+                                            !isRegionConfirmed
+                                    "
                                     class="confirm-btn"
                                     size="small"
                                     @click="confirmSuggestion"
@@ -63,33 +119,6 @@
                                 </Button>
                             </div>
                         </Message>
-                    </div>
-
-                    <!-- 区域选择器 -->
-                    <div v-if="showRegionSelector" class="form-group region-selector-group">
-                        <label class="form-label" for="region">国家/地区</label>
-                        <Dropdown
-                            id="region"
-                            v-model="selectedRegion"
-                            class="form-dropdown"
-                            :options="regionOptions"
-                            option-label="label"
-                            option-value="value"
-                            placeholder="选择国家/地区"
-                            filter
-                            :filter-placeholder="'搜索国家/地区'"
-                            @change="handleRegionChange"
-                        >
-                            <template #option="{option}">
-                                <div class="region-option">
-                                    <span class="region-flag">{{ option.flag }}</span>
-                                    <span class="region-name">{{ option.label }}</span>
-                                </div>
-                            </template>
-                        </Dropdown>
-                        <small class="help-text">
-                            选择手机号所属的国家或地区
-                        </small>
                     </div>
                 </div>
 
@@ -102,7 +131,7 @@
                             id="code"
                             v-model="verificationCode"
                             class="code-input form-input"
-                            :class="{'error': hasCodeError}"
+                            :class="{error: hasCodeError}"
                             placeholder="请输入6位验证码"
                             maxlength="6"
                             @input="handleCodeInput"
@@ -229,31 +258,28 @@ const toast = useToast()
 // 区域选项
 const regionOptions = computed(() => {
     return SUPPORTED_REGIONS.map((region) => {
-        const flagMap: Record<string, string> = {
-            CN: '🇨🇳', US: '🇺🇸', GB: '🇬🇧', JP: '🇯🇵', KR: '🇰🇷',
-            SG: '🇸🇬', TW: '🇹🇼', HK: '🇭🇰', CA: '🇨🇦', AU: '🇦🇺',
-            FR: '🇫🇷', DE: '🇩🇪', IT: '🇮🇹', ES: '🇪🇸', NL: '🇳🇱',
-            BR: '🇧🇷', IN: '🇮🇳', TH: '🇹🇭', VN: '🇻🇳', MY: '🇲🇾',
-            ID: '🇮🇩', PH: '🇵🇭', RU: '🇷🇺', TR: '🇹🇷', SA: '🇸🇦',
-        }
-
         return {
             label: `${region.region} +${region.countryCode}`,
             value: region.region,
-            flag: flagMap[region.region] || '🌍',
         }
     })
 })
 
 // 计算属性
 const showRegionSelector = computed(() => {
-    return (inputType.value === 'phone' && suggestion.value.needConfirm)
+    return (
+        (inputType.value === 'phone' && suggestion.value.needConfirm)
         || (inputType.value === 'unknown' && suggestion.value.needConfirm)
+    )
 })
 
 const hasInputError = computed(() => {
-    return !!inputError.value
-        || (suggestion.value.type === 'unknown' && suggestion.value.confidence === 0 && account.value.length > 0)
+    return (
+        !!inputError.value
+        || (suggestion.value.type === 'unknown'
+            && suggestion.value.confidence === 0
+            && account.value.length > 0)
+    )
 })
 
 const hasCodeError = computed(() => {
@@ -264,7 +290,11 @@ const canSendCode = computed(() => {
     if (!account.value.trim()) return false
 
     // 如果需要确认且未确认，不能发送
-    if (suggestion.value.needConfirm && !isRegionConfirmed.value && !selectedRegion.value) {
+    if (
+        suggestion.value.needConfirm
+        && !isRegionConfirmed.value
+        && !selectedRegion.value
+    ) {
         return false
     }
 
@@ -335,7 +365,10 @@ const confirmSuggestion = () => {
         toast.add({
             severity: 'success',
             summary: '已确认',
-            detail: `已设置为${regionOptions.value.find((r) => r.value === selectedRegion.value)?.label}`,
+            detail: `已设置为${regionOptions.value.find(
+                (r) => r.value === selectedRegion.value,
+            )?.label
+            }`,
             life: 2000,
         })
     }
@@ -358,7 +391,10 @@ const sendVerificationCode = async () => {
     inputError.value = ''
 
     // 格式化账号
-    const formattedAccount = formatAccountForVerification(account.value, selectedRegion.value)
+    const formattedAccount = formatAccountForVerification(
+        account.value,
+        selectedRegion.value,
+    )
 
     // 验证格式化后的账号
     if (!validateFormattedAccount(formattedAccount)) {
@@ -406,7 +442,10 @@ const handleCodeInput = () => {
     codeError.value = ''
 
     // 自动提交（当输入6位数字时）
-    if (verificationCode.value.length === 6 && /^\d{6}$/.test(verificationCode.value)) {
+    if (
+        verificationCode.value.length === 6
+        && /^\d{6}$/.test(verificationCode.value)
+    ) {
         // 延迟一下再自动登录，给用户反应时间
         setTimeout(() => {
             if (canLogin.value && !isLoggingIn.value) {
@@ -430,7 +469,10 @@ const quickLogin = async () => {
         }
 
         // 格式化账号
-        const formattedAccount = formatAccountForVerification(account.value, selectedRegion.value)
+        const formattedAccount = formatAccountForVerification(
+            account.value,
+            selectedRegion.value,
+        )
 
         // 实际登录的 API 调用
         console.log('一键登录:', {
@@ -471,7 +513,8 @@ const quickLogin = async () => {
             navigateTo('/profile')
         }, 1200)
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '登录失败'
+        const errorMessage =
+            error instanceof Error ? error.message : '登录失败'
         codeError.value = errorMessage
         toast.add({
             severity: 'error',
@@ -485,13 +528,16 @@ const quickLogin = async () => {
 }
 
 // 监听
-watch(() => inputType.value, (newType) => {
-    // 当输入类型确定后，重置区域选择状态
-    if (newType !== 'phone') {
-        selectedRegion.value = ''
-        isRegionConfirmed.value = false
-    }
-})
+watch(
+    () => inputType.value,
+    (newType) => {
+        // 当输入类型确定后，重置区域选择状态
+        if (newType !== 'phone') {
+            selectedRegion.value = ''
+            isRegionConfirmed.value = false
+        }
+    },
+)
 
 // 初始化
 onMounted(() => {
@@ -511,7 +557,7 @@ onMounted(() => {
     min-height: 100vh;
     background: $background;
 
-    @media (width >= 768px) {
+    @media (width >=768px) {
         flex-direction: row;
     }
 }
@@ -525,7 +571,7 @@ onMounted(() => {
     color: $background-light;
     text-align: center;
 
-    @media (width >= 768px) {
+    @media (width >=768px) {
         width: 50%;
         min-height: 100vh;
     }
@@ -538,7 +584,7 @@ onMounted(() => {
     min-height: 60vh;
     padding: 1rem;
 
-    @media (width >= 768px) {
+    @media (width >=768px) {
         width: 50%;
         min-height: 100vh;
     }
@@ -567,6 +613,46 @@ onMounted(() => {
 
 .smart-input-section {
     margin-bottom: 1.5rem;
+
+    .phone-input-wrapper {
+        display: flex;
+        align-items: stretch;
+        gap: 0.5rem;
+
+        .region-dropdown {
+            flex-shrink: 0;
+            min-width: 120px;
+            padding: 2px;
+            line-height: 1.5;
+
+            // :deep(.p-dropdown) {
+            //     height: 100%;
+            //     border: 1px solid $secondary-bg;
+            //     border-radius: 8px;
+            //     background-color: $background-light;
+
+            //     .p-dropdown-label {
+            //         padding: 0.75rem 1rem;
+            //         font-size: 1rem;
+            //         line-height: 1.5;
+            //     }
+
+            //     .p-dropdown-trigger {
+            //         width: 2.5rem;
+            //         color: $secondary-light;
+            //     }
+
+            //     &:focus-within {
+            //         border-color: $primary;
+            //         box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+            //     }
+            // }
+        }
+
+        .phone-input {
+            flex: 1;
+        }
+    }
 
     .smart-input {
         position: relative;
@@ -623,25 +709,6 @@ onMounted(() => {
 
         .confirm-btn {
             flex-shrink: 0;
-        }
-    }
-}
-
-.region-selector-group {
-    .help-text {
-        color: $secondary-light;
-        font-size: 0.8rem;
-        margin-top: 0.25rem;
-        display: block;
-    }
-
-    .region-option {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-
-        .region-flag {
-            font-size: 1.2rem;
         }
     }
 }
@@ -773,13 +840,25 @@ onMounted(() => {
 }
 
 // 响应式优化
-@media (width <= 480px) {
+@media (width <=480px) {
     .auth-card {
         padding: 1.5rem;
     }
 
     .auth-title {
         font-size: 1.75rem;
+    }
+
+    .smart-input-section {
+        .phone-input-wrapper {
+            flex-direction: column;
+            gap: 0.75rem;
+
+            .region-dropdown {
+                width: 100%;
+                min-width: unset;
+            }
+        }
     }
 
     .code-row {
