@@ -17,36 +17,26 @@
                 <div class="smart-input-section">
                     <div class="form-group">
                         <label class="form-label" for="account">邮箱地址或手机号</label>
-                        <div class="input-with-button">
-                            <div class="smart-input" :class="{'has-type': inputType !== 'unknown'}">
-                                <InputText
-                                    id="account"
-                                    v-model="account"
-                                    class="form-input"
-                                    :class="{'error': hasInputError}"
-                                    placeholder="请输入邮箱地址或手机号"
-                                    @input="handleInputChange"
-                                    @blur="handleInputBlur"
-                                />
-                                <!-- 输入类型指示器 -->
-                                <div v-if="inputType !== 'unknown'" class="input-type-indicator">
-                                    <i
-                                        :class="inputType === 'email' ? 'mdi mdi-email' : 'mdi mdi-phone'"
-                                        class="type-icon"
-                                    />
-                                    <span class="type-text">
-                                        {{ inputType === 'email' ? '邮箱' : '手机号' }}
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- 发送验证码按钮 -->
-                            <SendCodeButton
-                                class="send-code-btn"
-                                :text="'获取验证码'"
-                                :resend-text="'重新发送'"
-                                :disabled="!canSendCode"
-                                :on-send="sendVerificationCode"
+                        <div class="smart-input" :class="{'has-type': inputType !== 'unknown'}">
+                            <InputText
+                                id="account"
+                                v-model="account"
+                                class="form-input"
+                                :class="{'error': hasInputError}"
+                                placeholder="请输入邮箱地址或手机号"
+                                @input="handleInputChange"
+                                @blur="handleInputBlur"
                             />
+                            <!-- 输入类型指示器 -->
+                            <div v-if="inputType !== 'unknown'" class="input-type-indicator">
+                                <i
+                                    :class="inputType === 'email' ? 'mdi mdi-email' : 'mdi mdi-phone'"
+                                    class="type-icon"
+                                />
+                                <span class="type-text">
+                                    {{ inputType === 'email' ? '邮箱' : '手机号' }}
+                                </span>
+                            </div>
                         </div>
 
                         <!-- 输入错误提示 -->
@@ -103,27 +93,41 @@
                     </div>
                 </div>
 
-                <!-- 验证码输入 -->
-                <div v-if="showCodeInput" class="code-input-section">
-                    <div class="form-group">
-                        <label class="form-label" for="code">验证码</label>
-                        <div class="code-input-wrapper">
-                            <InputText
-                                id="code"
-                                v-model="verificationCode"
-                                class="code-input form-input"
-                                :class="{'error': hasCodeError}"
-                                placeholder="请输入6位验证码"
-                                maxlength="6"
-                                @input="handleCodeInput"
-                            />
-                        </div>
-                        <div v-if="codeError" class="error-message">
-                            {{ codeError }}
-                        </div>
+                <!-- 发送验证码 -->
+                <div class="form-group">
+                    <label class="form-label" for="code">验证码</label>
+                    <div class="code-row">
+                        <InputText
+                            v-if="showCodeInput"
+                            id="code"
+                            v-model="verificationCode"
+                            class="code-input form-input"
+                            :class="{'error': hasCodeError}"
+                            placeholder="请输入6位验证码"
+                            maxlength="6"
+                            @input="handleCodeInput"
+                        />
+                        <InputText
+                            v-else
+                            class="code-input form-input"
+                            placeholder="点击获取验证码"
+                            disabled
+                        />
+                        <SendCodeButton
+                            class="code-btn"
+                            :text="'获取验证码'"
+                            :resend-text="'重新发送'"
+                            :disabled="!canSendCode"
+                            :on-send="sendVerificationCode"
+                        />
                     </div>
+                    <div v-if="codeError" class="error-message">
+                        {{ codeError }}
+                    </div>
+                </div>
 
-                    <!-- 一键登录按钮 -->
+                <!-- 一键登录按钮 -->
+                <div v-if="showCodeInput">
                     <Button
                         class="btn btn-primary login-btn"
                         :label="loginButtonText"
@@ -564,51 +568,37 @@ onMounted(() => {
 .smart-input-section {
     margin-bottom: 1.5rem;
 
-    .input-with-button {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
+    .smart-input {
+        position: relative;
 
-        .smart-input {
-            flex: 1;
-            position: relative;
-
-            &.has-type {
-                .form-input {
-                    padding-right: 80px;
-                }
-            }
-
-            .input-type-indicator {
-                position: absolute;
-                top: 50%;
-                right: 12px;
-                z-index: 10;
-                display: flex;
-                align-items: center;
-                gap: 0.25rem;
-                padding: 0.25rem 0.5rem;
-                color: $secondary-light;
-                font-size: 0.85rem;
-                background-color: $background;
-                border-radius: 4px;
-                transform: translateY(-50%);
-
-                .type-icon {
-                    font-size: 1rem;
-                }
-
-                .type-text {
-                    font-weight: 500;
-                }
+        &.has-type {
+            .form-input {
+                padding-right: 80px;
             }
         }
 
-        .send-code-btn {
-            flex-shrink: 0;
+        .input-type-indicator {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            color: $secondary-light;
+            font-size: 0.85rem;
+            background-color: $background;
+            border-radius: 4px;
+            transform: translateY(-50%);
 
-            // min-width: 120px;
-            // height: 44px;
+            .type-icon {
+                font-size: 1rem;
+            }
+
+            .type-text {
+                font-weight: 500;
+            }
         }
     }
 
@@ -654,6 +644,18 @@ onMounted(() => {
             font-size: 1.2rem;
         }
     }
+}
+
+.code-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.code-btn {
+    min-width: 110px;
+    padding: 0.75rem;
+    font-size: 0.95rem;
 }
 
 .code-input-section {
@@ -780,15 +782,13 @@ onMounted(() => {
         font-size: 1.75rem;
     }
 
-    .smart-input-section {
-        .input-with-button {
-            flex-direction: column;
-            gap: 0.75rem;
+    .code-row {
+        flex-direction: column;
+        gap: 0.5rem;
 
-            .send-code-btn {
-                width: 100%;
-                min-width: unset;
-            }
+        .code-btn {
+            width: 100%;
+            min-width: unset;
         }
     }
 
