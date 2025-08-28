@@ -50,6 +50,12 @@
                         @click="toLogin"
                     />
                     <Button
+                        label="前往快速登录页"
+                        icon="mdi mdi-flash"
+                        class="btn btn-primary"
+                        @click="toQuickLogin"
+                    />
+                    <Button
                         label="前往注册页"
                         icon="mdi mdi-account-plus"
                         class="btn btn-primary"
@@ -89,6 +95,10 @@ const { data: session } = await authClient.useSession(useFetch)
 
 function toLogin() {
     navigateTo('/login')
+}
+
+function toQuickLogin() {
+    navigateTo('/quick-login')
 }
 
 function toRegister() {
