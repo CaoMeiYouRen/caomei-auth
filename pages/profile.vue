@@ -108,8 +108,8 @@
                             <label class="form-label">ID</label>
                             <InputText
                                 id="id"
-                                v-model="user.id"
-                                v-tooltip.top="'当前用户的唯一标识，不可编辑'"
+                                v-tooltip.top="privacyMode ? '用户ID已隐藏，点击顶部隐私模式开关可显示' : '当前用户的唯一标识，不可编辑'"
+                                :value="privacyMode ? maskUserId(user.id) : user.id"
                                 class="form-input"
                                 disabled
                             />
@@ -119,8 +119,8 @@
                             <InputText
                                 v-if="user.username"
                                 id="username"
-                                v-model="user.username"
-                                v-tooltip.top="'当前使用的用户名，不可编辑'"
+                                v-tooltip.top="privacyMode ? '用户名已隐藏，点击顶部隐私模式开关可显示' : '当前使用的用户名，不可编辑'"
+                                :value="privacyMode ? maskUsername(user.username) : user.username"
                                 class="form-input"
                                 disabled
                             />
@@ -237,11 +237,11 @@
                                 <Button
                                     v-for="account in userAccounts"
                                     :key="account.provider"
-                                    v-tooltip.top="privacyMode ? `点击解绑 ${getProviderName(account.provider)} 账号，ID: ${maskAccountId(account.accountId)}` : `点击解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
+                                    v-tooltip.top="privacyMode ? `点击解绑 ${getProviderName(account.provider)} 账号，ID: ${maskUserId(account.accountId)}` : `点击解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
                                     class="social-btn"
                                     :style="{color: socialProviders.find(p => p.provider === account.provider)?.color}"
                                     :icon="getProviderIcon(account.provider)"
-                                    :label="privacyMode ? `${getProviderName(account.provider)}(ID: ${maskAccountId(account.accountId)})` : `${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
+                                    :label="privacyMode ? `${getProviderName(account.provider)}(ID: ${maskUserId(account.accountId)})` : `${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
                                     outlined
                                     @click="confirmUnlink(account.provider, account.accountId)"
                                 />
@@ -457,24 +457,9 @@ import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
 import type { SocialProvider } from '@/types/social'
-import { maskEmail, maskPhone, maskUserId } from '@/utils/privacy'
+import { maskEmail, maskPhone, maskUserId, maskUsername } from '@/utils/privacy'
 import { shortText } from '@/utils/short-text'
 
-// 掩码第三方账号ID，用于隐私保护
-function maskAccountId(accountId: string): string {
-    return maskUserId(accountId)
-}
-
-// 掩码用户名，用于隐私保护
-function maskUsername(username: string): string {
-    if (!username || username.length <= 2) {
-        return username
-    }
-    if (username.length <= 4) {
-        return `${username[0]}***${username[username.length - 1]}`
-    }
-    return `${username.slice(0, 2)}***${username.slice(-2)}`
-}
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
 

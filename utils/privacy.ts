@@ -121,6 +121,29 @@ export function maskUserId(userId: string): string {
 }
 
 /**
+ * 脱敏用户名
+ * 例如：testuser -> te***er
+ */
+export function maskUsername(username: string): string {
+    if (!username || typeof username !== 'string') {
+        return username
+    }
+
+    // 长度 ≤ 2：不脱敏
+    if (username.length <= 2) {
+        return username
+    }
+
+    // 长度 ≤ 4：显示首尾字符，中间用 ***
+    if (username.length <= 4) {
+        return `${username[0]}***${username[username.length - 1]}`
+    }
+
+    // 长度 > 4：显示前2位和后2位，中间用 ***
+    return `${username.slice(0, 2)}***${username.slice(-2)}`
+}
+
+/**
  * 脱敏IP地址
  * 例如：192.168.1.100 -> 192.168.1.***
  */
