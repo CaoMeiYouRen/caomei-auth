@@ -576,6 +576,7 @@ export const auth = betterAuth({
                 // 根据请求的作用域添加声明
                 if (scopes.includes('openid')) {
                     claims.sub = user.id // 使用用户 ID 作为 sub
+                    claims.openid = user.id
                 }
                 if (scopes.includes('profile')) {
                     claims.name = user.name

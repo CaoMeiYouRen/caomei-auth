@@ -92,6 +92,10 @@ pnpm preview
 -   **演示站点**: [https://auth.cmyr.dev/](https://auth.cmyr.dev/)
 -   **文档站点**: [https://auth-docs.cmyr.dev/](https://auth-docs.cmyr.dev/)
 
+希望试用基于 `草梅 Auth` 的第三方登录功能？
+
+- **afdian-linker**: [https://afdian.cmyr.dev/](https://afdian.cmyr.dev/)
+
 ## 🛠️ 技术栈
 
 <table>
