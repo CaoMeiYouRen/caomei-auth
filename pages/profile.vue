@@ -10,6 +10,13 @@
                 </div>
                 <div class="profile-header-actions">
                     <Button
+                        v-tooltip.top="privacyMode ? '关闭隐私模式，显示完整信息' : '开启隐私模式，隐藏敏感信息'"
+                        :label="privacyMode ? '隐私模式' : '显示详情'"
+                        :icon="privacyMode ? 'mdi mdi-eye-off' : 'mdi mdi-eye'"
+                        :severity="privacyMode ? 'warn' : 'info'"
+                        @click="togglePrivacyMode"
+                    />
+                    <Button
                         v-tooltip.top="'已授权应用管理'"
                         label="授权应用"
                         icon="mdi mdi-key-variant"
@@ -141,26 +148,17 @@
                             />
                         </div>
                         <div class="form-group">
-                            <div class="privacy-field-header">
-                                <label class="form-label">邮箱</label>
-                                <div class="privacy-controls">
-                                    <ToggleSwitch
-                                        v-model="showEmailDetails"
-                                        v-tooltip.top="'切换是否显示完整邮箱信息'"
-                                        size="small"
-                                    />
-                                </div>
-                            </div>
+                            <label class="form-label">邮箱</label>
                             <div class="profile-row">
                                 <div class="profile-info-content">
                                     <span
-                                        v-if="showEmailDetails"
+                                        v-if="!privacyMode"
                                         v-tooltip.top="`完整邮箱地址：${user.email}`"
                                         class="privacy-value"
                                     >{{ user.email || "未绑定" }}</span>
                                     <span
                                         v-else
-                                        v-tooltip.top="'邮箱信息已隐藏，点击右侧开关可显示'"
+                                        v-tooltip.top="'邮箱信息已隐藏，点击顶部隐私模式开关可显示'"
                                         class="privacy-hidden"
                                     >{{ user.email ? maskEmail(user.email) : "未绑定" }}</span>
                                 </div>
@@ -193,25 +191,16 @@
                             </Message>
                         </div>
                         <div v-if="phoneEnabled" class="form-group">
-                            <div class="privacy-field-header">
-                                <label class="form-label">手机号</label>
-                                <div class="privacy-controls">
-                                    <ToggleSwitch
-                                        v-model="showPhoneDetails"
-                                        v-tooltip.top="'切换是否显示完整手机号信息'"
-                                        size="small"
-                                    />
-                                </div>
-                            </div>
+                            <label class="form-label">手机号</label>
                             <div class="profile-row">
                                 <div class="profile-info-content">
                                     <span
-                                        v-if="showPhoneDetails"
+                                        v-if="!privacyMode"
                                         class="privacy-value"
                                     >{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
                                     <span
                                         v-else
-                                        v-tooltip.top="'手机号信息已隐藏，点击右侧开关可显示'"
+                                        v-tooltip.top="'手机号信息已隐藏，点击顶部隐私模式开关可显示'"
                                         class="privacy-hidden"
                                     >{{ user.phone ? maskPhone(user.phone) : "未绑定" }}</span>
                                 </div>
@@ -248,11 +237,11 @@
                                 <Button
                                     v-for="account in userAccounts"
                                     :key="account.provider"
-                                    v-tooltip.top="`点击解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
+                                    v-tooltip.top="privacyMode ? `点击解绑 ${getProviderName(account.provider)} 账号，ID: ${maskAccountId(account.accountId)}` : `点击解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
                                     class="social-btn"
                                     :style="{color: socialProviders.find(p => p.provider === account.provider)?.color}"
                                     :icon="getProviderIcon(account.provider)"
-                                    :label="`${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
+                                    :label="privacyMode ? `${getProviderName(account.provider)}(ID: ${maskAccountId(account.accountId)})` : `${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
                                     outlined
                                     @click="confirmUnlink(account.provider, account.accountId)"
                                 />
@@ -468,8 +457,24 @@ import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
 import type { SocialProvider } from '@/types/social'
-import { maskEmail, maskPhone } from '@/utils/privacy'
+import { maskEmail, maskPhone, maskUserId } from '@/utils/privacy'
 import { shortText } from '@/utils/short-text'
+
+// 掩码第三方账号ID，用于隐私保护
+function maskAccountId(accountId: string): string {
+    return maskUserId(accountId)
+}
+
+// 掩码用户名，用于隐私保护
+function maskUsername(username: string): string {
+    if (!username || username.length <= 2) {
+        return username
+    }
+    if (username.length <= 4) {
+        return `${username[0]}***${username[username.length - 1]}`
+    }
+    return `${username.slice(0, 2)}***${username.slice(-2)}`
+}
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
 
@@ -853,35 +858,30 @@ function goSecurity() {
 const showLogoutConfirm = ref(false)
 const loggingOut = ref(false)
 
-// 隐私信息显示控制
-const showEmailDetails = ref(true)
-const showPhoneDetails = ref(true)
+// 统一隐私模式控制
+const privacyMode = ref(false)
+
+// 切换隐私模式
+function togglePrivacyMode() {
+    privacyMode.value = !privacyMode.value
+}
 
 onMounted(async () => {
     await fetchUserAccounts()
 
-    // 恢复隐私设置
+    // 恢复隐私模式设置
     if (import.meta.client) {
-        const savedEmailSetting = localStorage.getItem('caomei-auth-show-email')
-        const savedPhoneSetting = localStorage.getItem('caomei-auth-show-phone')
-
-        if (savedEmailSetting !== null) {
-            showEmailDetails.value = savedEmailSetting === 'true'
-        }
-        if (savedPhoneSetting !== null) {
-            showPhoneDetails.value = savedPhoneSetting === 'true'
+        const savedPrivacyMode = localStorage.getItem('caomei-auth-privacy-mode')
+        if (savedPrivacyMode !== null) {
+            privacyMode.value = savedPrivacyMode === 'true'
         }
     }
 })
 
 if (import.meta.client) {
-    // 监听隐私设置变化并保存到本地存储
-    watch(showEmailDetails, (newValue) => {
-        localStorage.setItem('caomei-auth-show-email', String(newValue))
-    })
-
-    watch(showPhoneDetails, (newValue) => {
-        localStorage.setItem('caomei-auth-show-phone', String(newValue))
+    // 监听隐私模式变化并保存到本地存储
+    watch(privacyMode, (newValue) => {
+        localStorage.setItem('caomei-auth-privacy-mode', String(newValue))
     })
 }
 
@@ -1113,50 +1113,6 @@ async function onFileSelect(event: FileUploadSelectEvent) {
             }
         }
     }
-}
-
-.privacy-field-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-
-    .form-label {
-        margin-bottom: 0;
-        font-weight: 600;
-    }
-}
-
-.privacy-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    background: rgba($secondary, 0.05);
-    border-radius: 6px;
-    border: 1px solid rgba($secondary, 0.1);
-
-    :deep(.p-toggleswitch) {
-        .p-toggleswitch-slider {
-            background: rgba($secondary-light, 0.3);
-            border-radius: 10px;
-
-            &::before {
-                background: #fff;
-                border-radius: 50%;
-            }
-        }
-
-        &.p-toggleswitch-checked .p-toggleswitch-slider {
-            background: $primary;
-        }
-    }
-}
-
-.privacy-label {
-    color: $secondary;
-    font-size: 0.85rem;
-    white-space: nowrap;
 }
 
 .privacy-value {
