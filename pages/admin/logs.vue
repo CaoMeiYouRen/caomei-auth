@@ -342,6 +342,7 @@ import dayjs from 'dayjs'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/useragent'
 import { formatDateTime, formatDate } from '@/utils/date'
+import { getProviderIcon, getProviderColor, getProviderName } from '@/utils/social-provider-helpers'
 
 // 页面元数据
 definePageMeta({
@@ -676,63 +677,7 @@ const updateChart = () => {
     })
 }
 
-// 工具函数
-const getProviderIcon = (provider: string) => {
-    const icons: Record<string, string> = {
-        email: 'mdi mdi-email',
-        credential: 'mdi mdi-lock',
-        github: 'mdi mdi-github',
-        google: 'mdi mdi-google',
-        microsoft: 'mdi mdi-microsoft',
-        discord: 'iconfont icon-discord-simple',
-        apple: 'mdi mdi-apple',
-        twitter: 'mdi mdi-twitter',
-        anonymous: 'mdi mdi-incognito',
-        wechat: 'mdi mdi-wechat',
-        qq: 'mdi mdi-qqchat',
-        douyin: 'iconfont icon-douyin',
-        weibo: 'mdi mdi-sina-weibo',
-    }
-    return icons[provider] || 'mdi mdi-account'
-}
-
-const getProviderColor = (provider: string) => {
-    const colors: Record<string, string> = {
-        email: 'var(--color-default)',
-        credential: 'var(--color-default)',
-        github: 'var(--color-github)',
-        google: 'var(--color-google)',
-        microsoft: 'var(--color-microsoft)',
-        discord: 'var(--color-discord)',
-        apple: 'var(--color-apple)',
-        twitter: 'var(--color-twitter)',
-        anonymous: 'var(--color-default)',
-        wechat: 'var(--color-wechat)',
-        qq: 'var(--color-qq)',
-        douyin: 'var(--color-douyin)',
-        weibo: 'var(--color-weibo)',
-    }
-    return colors[provider] || 'var(--color-default)'
-}
-
-const getProviderName = (provider: string) => {
-    const names: Record<string, string> = {
-        email: '邮箱登录',
-        credential: '密码登录',
-        github: 'GitHub',
-        google: 'Google',
-        microsoft: 'Microsoft',
-        discord: 'Discord',
-        apple: 'Apple',
-        twitter: 'Twitter(X)',
-        anonymous: '匿名登录',
-        wechat: '微信',
-        qq: 'QQ',
-        douyin: '抖音',
-        weibo: '微博',
-    }
-    return names[provider] || provider
-}
+// 已经从 social-provider-helpers 导入，无需重复定义
 
 const getDeviceIcon = (device: any) => {
     if (!device) {

@@ -26,17 +26,18 @@ $blue-darker: #1d4ed8;
 $blue-50: #e6f3ff;
 $blue-100: #cce7ff;
 
-// 社交平台品牌色
-$color-github: #24292e;
-$color-google: #4285f4;
-$color-microsoft: #0078d4;
-$color-discord: #7289da;
-$color-apple: #000000;
-$color-twitter: #1da1f2;
-$color-wechat: #07c160;
-$color-qq: #ea1b26;
-$color-douyin: #fe2c55;
-$color-weibo: #fbad27;
+// 社交平台品牌色（来自统一定义 - utils/social-colors.ts）
+$color-github: #24292e; // GitHub
+$color-google: #4285f4; // Google
+$color-microsoft: #0078d4; // Microsoft
+$color-discord: #5865f2; // Discord - Discord Brand Guidelines 2024
+$color-apple: #000000; // Apple
+$color-apple-dark: #ffffff; // Apple (Dark Theme)
+$color-twitter: #1da1f2; // Twitter(X) - Twitter Brand Guidelines（历史版本）
+$color-wechat: #07c160; // 微信
+$color-qq: #ea1c26; // QQ - QQ 红 - QQ 互联平台品牌指南
+$color-douyin: #fe2c55; // 抖音
+$color-weibo: #ff8140; // 微博 - 微博开放平台品牌指南
 $color-default: #718096;  // 默认图标颜色
 
 // 边框和分割线颜色
@@ -65,6 +66,10 @@ $error-dark: #c82333;
     --color-douyin: #{$color-douyin};
     --color-weibo: #{$color-weibo};
     --color-default: #{$color-default};
+
+    // 暗色主题的社交平台颜色
+    --color-apple-dark: #{$color-apple-dark};
+    --color-github-dark: #{$color-apple-dark}; // GitHub 在暗色主题下也使用白色
 
     // 主题色
     --color-primary: #{$primary};
