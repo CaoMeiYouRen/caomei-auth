@@ -1,6 +1,6 @@
 <template>
     <div class="auth-container">
-        <AuthLeft title="注册新账号" subtitle="欢迎加入草梅 Auth，支持邮箱、手机号注册。" />
+        <AuthLeft title="注册新账号" subtitle="欢迎加入草梅 Auth，支持邮箱、手机号注册，可设置用户名。" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
@@ -35,7 +35,7 @@
                         <InputText
                             id="nickname"
                             v-model="nickname"
-                            v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊控制字符'"
+                            v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊控制字符。\n昵称将用于展示'"
                             class="form-input"
                             placeholder="请输入昵称"
                         />
@@ -46,6 +46,24 @@
                             variant="simple"
                         >
                             {{ errors.nickname }}
+                        </Message>
+                    </div>
+                    <div v-if="usernameEnabled" class="form-group">
+                        <label class="form-label" for="username">用户名 <span style="color: #e63946;">*</span></label>
+                        <InputText
+                            id="username"
+                            v-model="username"
+                            v-tooltip.top="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。\n用户名将用于登录'"
+                            class="form-input"
+                            placeholder="请输入用户名"
+                        />
+                        <Message
+                            v-if="errors.username"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ errors.username }}
                         </Message>
                     </div>
                     <div class="form-group">
@@ -115,7 +133,7 @@
                         <InputText
                             id="nickname"
                             v-model="nickname"
-                            v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊字符'"
+                            v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊字符。\n昵称将用于展示'"
                             class="form-input"
                             placeholder="请输入昵称"
                         />
@@ -126,6 +144,24 @@
                             variant="simple"
                         >
                             {{ errors.nickname }}
+                        </Message>
+                    </div>
+                    <div v-if="usernameEnabled" class="form-group">
+                        <label class="form-label" for="username">用户名 <span style="color: #e63946;">*</span></label>
+                        <InputText
+                            id="username"
+                            v-model="username"
+                            v-tooltip.top="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。\n用户名将用于登录'"
+                            class="form-input"
+                            placeholder="请输入用户名"
+                        />
+                        <Message
+                            v-if="errors.username"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ errors.username }}
                         </Message>
                     </div>
                     <div class="form-group">
@@ -240,7 +276,7 @@ import Message from 'primevue/message'
 import Checkbox from 'primevue/checkbox'
 import { useToast } from 'primevue/usetoast'
 import ButtonGroup from 'primevue/buttongroup'
-import { validateEmail, validatePhone, nicknameValidator } from '@/utils/validate'
+import { validateEmail, validatePhone, nicknameValidator, usernameValidator, passwordValidator } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
@@ -248,8 +284,10 @@ import { authClient } from '@/lib/auth-client'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
+const usernameEnabled = config.usernameEnabled
 
 const nickname = ref('')
+const username = ref('')
 const email = ref('')
 const phone = ref('')
 const phoneCode = ref('')
@@ -289,6 +327,7 @@ const changeMode = (mode: 'email' | 'phone') => {
 // 表单验证函数
 const resolver = (values: {
     nickname: string
+    username?: string
     email?: string
     phone?: string
     phoneCode?: string
@@ -302,6 +341,15 @@ const resolver = (values: {
         newErrors.nickname = '请输入昵称'
     } else if (!nicknameValidator(values.nickname)) {
         newErrors.nickname = '昵称长度为2到36个字符，不能包含特殊字符'
+    }
+
+    // 验证用户名（如果启用用户名功能则为必填项）
+    if (usernameEnabled) {
+        if (!values.username || !values.username.trim()) {
+            newErrors.username = '请输入用户名'
+        } else if (!usernameValidator(values.username)) {
+            newErrors.username = '用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符，且不能是邮箱或手机号格式'
+        }
     }
 
     if (params.mode === 'email') {
@@ -346,6 +394,7 @@ const resolver = (values: {
 async function register() {
     const values = {
         nickname: nickname.value,
+        username: username.value,
         email: email.value,
         phone: phone.value,
         phoneCode: phoneCode.value,
@@ -367,11 +416,18 @@ async function register() {
     try {
         if (params.mode === 'email') {
             // 使用邮箱和昵称注册
-            const { data, error } = await authClient.signUp.email({
+            const signUpData: any = {
                 email: email.value,
                 password: password.value,
                 name: nickname.value,
-            })
+            }
+
+            // 如果启用了用户名功能，则包含用户名
+            if (usernameEnabled) {
+                signUpData.username = username.value.trim()
+            }
+
+            const { data, error } = await authClient.signUp.email(signUpData)
 
             if (error) {
                 throw new Error(error.message || '注册失败')
@@ -386,10 +442,18 @@ async function register() {
             if (!isVerified.data?.status) {
                 throw new Error('手机号码验证失败')
             }
-            // 验证手机号之后就自动注册了，所以这里更新昵称
-            const { data, error } = await authClient.updateUser({
+
+            // 验证手机号之后就自动注册了，所以这里更新昵称和用户名
+            const updateData: any = {
                 name: nickname.value,
-            })
+            }
+
+            // 如果启用了用户名功能，则包含用户名
+            if (usernameEnabled) {
+                updateData.username = username.value.trim()
+            }
+
+            const { data, error } = await authClient.updateUser(updateData)
             if (error) {
                 throw new Error(error.message || '更新用户信息失败')
             }
