@@ -862,12 +862,16 @@ onMounted(() => {
     }
 
     .code-row {
-        flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.25rem;
 
         .code-btn {
-            width: 100%;
-            min-width: unset;
+            min-width: 90px;
+            font-size: 0.85rem;
+            padding: 0.6rem 0.4rem;
+        }
+
+        .code-input {
+            font-size: 0.9rem;
         }
     }
 
