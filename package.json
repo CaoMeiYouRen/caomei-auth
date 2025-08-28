@@ -80,7 +80,8 @@
       "parse-git-config": "^3.0.0",
       "esbuild": "^0.25.0",
       "postcss": "^8.5.0",
-      "tmp": "^0.2.4"
+      "tmp": "^0.2.4",
+      "devalue": "^5.3.2"
     }
   },
   "devDependencies": {
