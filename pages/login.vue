@@ -1023,20 +1023,3 @@ async function loginAnonymously() {
 }
 
 </style>
-
-<style lang="scss">
-.password-input {
-    .p-password-input {
-        width: 100%;
-        border: none;
-        line-height: 1.5;
-    }
-}
-
-.social-btn {
-    .icon-discord-simple {
-        // font-size: 16px;
-        padding-top: 2px;
-    }
-}
-</style>

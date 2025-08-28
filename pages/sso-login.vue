@@ -379,9 +379,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
 
 .sso-login {
     min-height: 100vh;

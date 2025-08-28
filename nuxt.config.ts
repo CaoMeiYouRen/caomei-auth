@@ -60,8 +60,8 @@ export default defineNuxtConfig({
     css: [
         'normalize.css/normalize.css',
         '@mdi/font/css/materialdesignicons.min.css',
-        '@/styles/_theme.scss',
         '@/assets/iconfont.css',
+        '@/styles/_global.scss',
     ],
     app: {
         head: {
@@ -120,6 +120,12 @@ export default defineNuxtConfig({
             preprocessorOptions: {
                 scss: {
                     silenceDeprecations: ['import', 'legacy-js-api'], // 忽略警告
+                    // 自动在每个 .scss 文件中注入这些内容
+                    additionalData: `
+                    @import "@/styles/theme.scss";
+                    @import "@/styles/common.scss";
+                    @import "@/styles/form.scss";
+                    `,
                 },
             },
         },

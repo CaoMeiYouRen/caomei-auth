@@ -789,9 +789,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
-@import '@/styles/form';
-@import '@/styles/common';
 
 .admin-logs {
     min-height: 100vh;
