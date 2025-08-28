@@ -3,7 +3,7 @@ export const publicPaths = [
     // '/api/auth/register',
     // '/api/auth/ok',
     // '/api/auth',
-
+    '/quick-login',
     '/login',
     '/about',
     '/register',
