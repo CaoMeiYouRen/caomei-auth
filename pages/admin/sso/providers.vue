@@ -1361,7 +1361,6 @@ function formatRelativeTime(date: string | Date) {
 </script>
 
 <style lang="scss" scoped>
-@use "sass:color";
 
 .admin-sso {
     min-height: 100vh;
@@ -1737,8 +1736,8 @@ function formatRelativeTime(date: string | Date) {
         border-color: $error;
 
         &:hover {
-            background: color.scale($error, $lightness: -10%);
-            border-color: color.scale($error, $lightness: -10%);
+            background: $error-dark;
+            border-color: $error-dark;
         }
     }
 }

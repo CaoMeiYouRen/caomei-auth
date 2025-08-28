@@ -49,6 +49,7 @@ $background-light: #ffffff;
 
 // 错误色
 $error: #e53e3e;
+$error-dark: #c82333;
 
 // CSS 变量用于 JavaScript 访问
 :root {
@@ -69,6 +70,10 @@ $error: #e53e3e;
     --color-primary: #{$primary};
     --color-secondary: #{$secondary};
     --color-secondary-light: #{$secondary-light};
+
+    // 错误色
+    --color-error: #{$error};
+    --color-error-dark: #{$error-dark};
 
     // 蓝色主题（用于图表）
     --color-blue: #{$blue};
