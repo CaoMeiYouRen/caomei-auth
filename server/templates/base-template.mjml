@@ -99,7 +99,7 @@
 
           <!-- Footer Links -->
           <mj-text align="center" font-size="14px" padding="0 0 20px 0">
-            <a href="{{baseUrl}}/docs" style="color: #e63946; text-decoration: none; margin: 0 12px;">帮助中心</a>
+            <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 12px;">联系方式</a>
             <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 12px;">隐私政策</a>
             <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 12px;">服务条款</a>
           </mj-text>
