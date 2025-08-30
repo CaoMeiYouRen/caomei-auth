@@ -1,5 +1,36 @@
 # caomei-auth
 
+# [1.5.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.4.1...v1.5.0) (2025-08-30)
+
+
+### ✨ 新功能
+
+* **auth:** 添加快速登录页面和智能输入功能，支持邮箱和手机号登录 ([649008f](https://github.com/CaoMeiYouRen/caomei-auth/commit/649008f))
+* **auth:** 添加用户名登录功能及相关配置 ([9450cbe](https://github.com/CaoMeiYouRen/caomei-auth/commit/9450cbe))
+* **profile:** 添加隐私模式切换功能，优化邮箱和手机号显示逻辑 ([7a99878](https://github.com/CaoMeiYouRen/caomei-auth/commit/7a99878))
+* **quick-login:** 优化输入区域和验证码发送逻辑，简化组件结构 ([6486ead](https://github.com/CaoMeiYouRen/caomei-auth/commit/6486ead))
+* **quick-login:** 添加手机号输入框和区域选择器，优化输入逻辑 ([67c11ba](https://github.com/CaoMeiYouRen/caomei-auth/commit/67c11ba))
+* **register:** 添加用户名输入功能及相关验证 ([23edd3d](https://github.com/CaoMeiYouRen/caomei-auth/commit/23edd3d))
+* **social:** 统一社交平台品牌色定义，新增辅助工具函数以获取平台信息 ([c8e3d79](https://github.com/CaoMeiYouRen/caomei-auth/commit/c8e3d79))
+* **styles:** 重构样式导入，新增全局样式文件并移除不必要的导入 ([9b62a16](https://github.com/CaoMeiYouRen/caomei-auth/commit/9b62a16))
+
+
+### 🐛 Bug 修复
+
+* **auth:** 修复用户名规范化变更 ([0256a9a](https://github.com/CaoMeiYouRen/caomei-auth/commit/0256a9a))
+* **auth:** 添加 OpenID 用户 ID 声明并更新文档 ([b3e4bff](https://github.com/CaoMeiYouRen/caomei-auth/commit/b3e4bff))
+* **deps:** update all non-major dependencies ([#61](https://github.com/CaoMeiYouRen/caomei-auth/issues/61)) ([fbd6950](https://github.com/CaoMeiYouRen/caomei-auth/commit/fbd6950))
+* **home:** 添加快速登录页面跳转功能 ([b967dff](https://github.com/CaoMeiYouRen/caomei-auth/commit/b967dff))
+* **login:** 调整匿名登录密码输入框的行高 ([bd2d082](https://github.com/CaoMeiYouRen/caomei-auth/commit/bd2d082))
+* **profile:** 修复用户信息更新时用户名的获取逻辑 ([c13f444](https://github.com/CaoMeiYouRen/caomei-auth/commit/c13f444))
+* **styles:** 添加错误色的深色变量并更新相关样式 ([cea4482](https://github.com/CaoMeiYouRen/caomei-auth/commit/cea4482))
+
+
+### 📦 代码重构
+
+* **profile:** 更新隐私模式下用户ID和用户名的显示逻辑，添加用户名脱敏处理 ([2e2bcee](https://github.com/CaoMeiYouRen/caomei-auth/commit/2e2bcee))
+* 注册时不再要求设置用户名，而是昵称 ([b5eb32d](https://github.com/CaoMeiYouRen/caomei-auth/commit/b5eb32d))
+
 ## [1.4.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.4.0...v1.4.1) (2025-08-23)
 
 
