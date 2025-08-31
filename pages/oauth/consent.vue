@@ -15,7 +15,7 @@
                 <i class="error-icon mdi mdi-alert-circle" />
                 <h2>授权请求无效</h2>
                 <p>无法处理此授权请求，请检查链接是否正确或联系应用提供方。</p>
-                <Button label="返回首页" @click="navigateTo('/profile')" />
+                <Button label="返回首页" @click="handleGoHome" />
             </div>
         </div>
 
@@ -91,7 +91,7 @@
                     </div>
                 </div>
                 <!-- OAuth 参数信息（仅开发环境显示） -->
-                <div v-if="$config.public.NODE_ENV === 'development'" class="debug-info">
+                <div v-if="config.public.NODE_ENV === 'development'" class="debug-info">
                     <details>
                         <summary>调试信息（仅开发环境显示）</summary>
                         <pre>{{ JSON.stringify(oauthParams, null, 2) }}</pre>
@@ -154,6 +154,8 @@ import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
 
 const toast = useToast()
+const config = useRuntimeConfig()
+const route = useRoute()
 
 interface Scope {
     scope: string
@@ -190,7 +192,6 @@ const scopeDescriptions: Record<string, string> = {
     'app:write': '修改应用信息',
 }
 
-const route = useRoute()
 const submitting = ref(false)
 const hasError = ref(false)
 const isTrustedClient = ref(false)
@@ -253,6 +254,11 @@ const application = computed((): ApplicationInfo => {
 })
 
 const applicationName = computed(() => application.value?.name || '未知应用')
+
+// 封装导航函数
+const handleGoHome = () => {
+    navigateTo('/profile')
+}
 
 // 处理错误和验证
 watch([() => clientId, fetchError], ([newClientId, newError]) => {
