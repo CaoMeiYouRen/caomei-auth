@@ -14,12 +14,14 @@
                         <ButtonGroup>
                             <Button
                                 v-if="usernameEnabled"
+                                v-tooltip.top="'使用用户名登录'"
                                 label="用户名"
                                 icon="mdi mdi-account"
                                 :class="{'p-button-outlined': activeTab !== 'username'}"
                                 @click="changeMode('username')"
                             />
                             <Button
+                                v-tooltip.top="'使用邮箱登录'"
                                 label="邮箱"
                                 icon="mdi mdi-email"
                                 :class="{'p-button-outlined': activeTab !== 'email'}"

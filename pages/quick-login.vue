@@ -22,7 +22,7 @@
                             />
                             <Button
                                 v-if="phoneEnabled"
-                                v-tooltip.top="'使用手机验证码登录'"
+                                v-tooltip.top="'使用短信验证码登录'"
                                 label="短信验证码"
                                 icon="mdi mdi-phone"
                                 :class="{'p-button-outlined': activeTab !== 'phone'}"
@@ -103,6 +103,7 @@
                                     class="form-input"
                                     placeholder="请输入短信验证码"
                                     maxlength="6"
+                                    @input="handlePhoneCodeInput"
                                 />
                                 <SendCodeButton
                                     :on-send="sendPhoneVerificationCode"
@@ -274,6 +275,34 @@ const sendEmailVerificationCode = async () => {
             life: 5000,
         })
         throw error
+    }
+}
+
+const handleEmailCodeInput = () => {
+    errors.value.emailCode = ''
+
+    // 自动提交（当输入6位数字时）
+    if (emailCode.value.length === 6 && /^\d{6}$/.test(emailCode.value)) {
+        // 延迟一下再自动登录，给用户反应时间
+        setTimeout(() => {
+            if (emailCode.value.length === 6 && !isEmailLoggingIn.value) {
+                loginWithEmail()
+            }
+        }, 500)
+    }
+}
+
+const handlePhoneCodeInput = () => {
+    errors.value.phoneCode = ''
+
+    // 自动提交（当输入6位数字时）
+    if (phoneCode.value.length === 6 && /^\d{6}$/.test(phoneCode.value)) {
+        // 延迟一下再自动登录，给用户反应时间
+        setTimeout(() => {
+            if (phoneCode.value.length === 6 && !isPhoneLoggingIn.value) {
+                loginWithPhone()
+            }
+        }, 500)
     }
 }
 
