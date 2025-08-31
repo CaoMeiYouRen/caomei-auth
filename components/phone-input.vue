@@ -106,9 +106,6 @@ watch(() => props.modelValue, (newValue) => {
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
 
 .phone-input {
     display: flex;

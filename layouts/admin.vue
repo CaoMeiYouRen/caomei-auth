@@ -143,9 +143,6 @@ const toggleSidebar = () => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
 
 .admin-layout {
     display: flex;

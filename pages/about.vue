@@ -62,9 +62,6 @@
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
 
 .auth-container {
     display: flex;

@@ -172,8 +172,6 @@ const contactEmailLink = `mailto:${config.contactEmail}`
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
-@import "@/styles/common";
 
 .auth-container {
     display: flex;

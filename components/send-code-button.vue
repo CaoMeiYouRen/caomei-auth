@@ -60,7 +60,6 @@ defineExpose({ start, reset })
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
 
 .code-btn {
     max-width: 135px;

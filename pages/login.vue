@@ -790,9 +790,6 @@ async function loginAnonymously() {
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
 
 .login-btn {
     display: flex;

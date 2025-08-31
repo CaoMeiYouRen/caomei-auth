@@ -956,9 +956,6 @@ async function onFileSelect(event: FileUploadSelectEvent) {
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
 
 .profile-card {
     max-width: 480px;

@@ -376,9 +376,6 @@ async function denyConsent() {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/theme";
-@import "@/styles/form";
-@import "@/styles/common";
 
 .oauth-consent {
     display: flex;
