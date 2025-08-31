@@ -1,185 +1,142 @@
 <template>
     <div class="auth-container">
-        <AuthLeft title="快速登录" subtitle="智能识别，一步到位。" />
+        <AuthLeft title="快速登录" subtitle="验证码快速登录，安全便捷。" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
                     快速登录
                 </h2>
                 <p class="auth-subtitle">
-                    输入邮箱或手机号，一键完成登录注册
+                    使用验证码一键完成登录。未注册的账号将自动创建。
                 </p>
 
-                <!-- 智能输入框 -->
-                <div class="smart-input-section">
-                    <div class="form-group">
-                        <label class="form-label" for="account">邮箱地址或手机号</label>
-                        <div v-if="inputType === 'phone' && showRegionSelector" class="phone-input-wrapper">
-                            <!-- 国家/地区选择器 -->
-                            <Dropdown
-                                v-model="selectedRegion"
-                                class="region-dropdown"
-                                :options="regionOptions"
-                                option-label="label"
-                                option-value="value"
-                                placeholder="CN +86"
-                                filter
-                                :filter-placeholder="'搜索国家/地区'"
-                                @change="handleRegionChange"
-                            >
-                                <template #option="{option}">
-                                    <div class="region-option">
-                                        <span class="region-name">{{
-                                            option.label
-                                        }}</span>
-                                    </div>
-                                </template>
-                            </Dropdown>
-                            <!-- 手机号输入框 -->
-                            <div class="phone-input smart-input">
-                                <InputText
-                                    id="account"
-                                    v-model="account"
-                                    class="form-input"
-                                    :class="{error: hasInputError}"
-                                    placeholder="请输入手机号"
-                                    @input="handleInputChange"
-                                    @blur="handleInputBlur"
-                                />
-                                <!-- 输入类型指示器 -->
-                                <div class="input-type-indicator">
-                                    <i class="mdi mdi-phone type-icon" />
-                                    <span class="type-text">手机号</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            v-else
-                            class="smart-input"
-                            :class="{'has-type': inputType !== 'unknown'}"
-                        >
-                            <InputText
-                                id="account"
-                                v-model="account"
-                                class="form-input"
-                                :class="{error: hasInputError}"
-                                placeholder="请输入邮箱地址或手机号"
-                                @input="handleInputChange"
-                                @blur="handleInputBlur"
+                <!-- Tab切换 -->
+                <div class="login-btn mb-4">
+                    <div class="card flex justify-center">
+                        <ButtonGroup>
+                            <Button
+                                label="邮箱验证码"
+                                icon="mdi mdi-email"
+                                :class="{'p-button-outlined': activeTab !== 'email'}"
+                                @click="changeTab('email')"
                             />
-                            <!-- 输入类型指示器 -->
-                            <div v-if="inputType !== 'unknown'" class="input-type-indicator">
-                                <i
-                                    :class="inputType === 'email'
-                                        ? 'mdi mdi-email'
-                                        : 'mdi mdi-phone'
-                                    "
-                                    class="type-icon"
+                            <Button
+                                v-if="phoneEnabled"
+                                v-tooltip.top="'使用手机验证码登录'"
+                                label="短信验证码"
+                                icon="mdi mdi-phone"
+                                :class="{'p-button-outlined': activeTab !== 'phone'}"
+                                @click="changeTab('phone')"
+                            />
+                        </ButtonGroup>
+                    </div>
+                </div>
+
+                <!-- 邮箱验证码登录 -->
+                <div v-show="activeTab === 'email'">
+                    <div class="form-group">
+                        <label class="form-label" for="email">邮箱地址</label>
+                        <InputText
+                            id="email"
+                            v-model="email"
+                            class="form-input"
+                            placeholder="example@mail.com"
+                        />
+                        <div v-if="errors.email" class="error-message">
+                            {{ errors.email }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <label class="form-label" for="emailCode">验证码</label>
+                            <div class="code-row">
+                                <InputText
+                                    id="emailCode"
+                                    v-model="emailCode"
+                                    class="form-input"
+                                    placeholder="请输入邮箱验证码"
+                                    maxlength="6"
+                                    @input="handleEmailCodeInput"
                                 />
-                                <span class="type-text">
-                                    {{
-                                        inputType === "email"
-                                            ? "邮箱"
-                                            : "手机号"
-                                    }}
-                                </span>
+                                <SendCodeButton
+                                    :on-send="sendEmailVerificationCode"
+                                    :duration="60"
+                                    :disabled="emailCodeSending || !validateEmail(email)"
+                                    :loading="emailCodeSending"
+                                    text="获取验证码"
+                                    resend-text="重新发送"
+                                />
                             </div>
                         </div>
-
-                        <!-- 输入错误提示 -->
-                        <div v-if="inputError && account.trim()" class="error-message">
-                            {{ inputError }}
+                        <div v-if="errors.emailCode" class="error-message">
+                            {{ errors.emailCode }}
                         </div>
                     </div>
 
-                    <!-- 智能提示信息 -->
-                    <div
-                        v-if="
-                            suggestion.suggestion &&
-                                !inputError &&
-                                account.trim()
-                        "
-                        class="suggestion-section"
-                    >
-                        <Message :severity="getSuggestionSeverity(suggestion)" :closable="false">
-                            <div class="suggestion-content">
-                                <span class="suggestion-text">{{
-                                    suggestion.suggestion
-                                }}</span>
-                                <Button
-                                    v-if="
-                                        suggestion.needConfirm &&
-                                            !isRegionConfirmed
-                                    "
-                                    class="confirm-btn"
-                                    size="small"
-                                    @click="confirmSuggestion"
-                                >
-                                    确认
-                                </Button>
-                            </div>
-                        </Message>
-                    </div>
-                </div>
-
-                <!-- 发送验证码 -->
-                <div class="form-group">
-                    <label class="form-label" for="code">验证码</label>
-                    <div class="code-row">
-                        <InputText
-                            v-if="showCodeInput"
-                            id="code"
-                            v-model="verificationCode"
-                            class="code-input form-input"
-                            :class="{error: hasCodeError}"
-                            placeholder="请输入6位验证码"
-                            maxlength="6"
-                            @input="handleCodeInput"
-                        />
-                        <InputText
-                            v-else
-                            class="code-input form-input"
-                            placeholder="点击获取验证码"
-                            disabled
-                        />
-                        <SendCodeButton
-                            class="code-btn"
-                            :text="'获取验证码'"
-                            :resend-text="'重新发送'"
-                            :disabled="!canSendCode"
-                            :on-send="sendVerificationCode"
-                        />
-                    </div>
-                    <div v-if="codeError" class="error-message">
-                        {{ codeError }}
-                    </div>
-                </div>
-
-                <!-- 一键登录按钮 -->
-                <div v-if="showCodeInput">
+                    <!-- 邮箱登录按钮 -->
                     <Button
-                        class="btn btn-primary login-btn"
-                        :label="loginButtonText"
-                        :loading="isLoggingIn"
-                        :disabled="!canLogin"
-                        @click="quickLogin"
+                        class="btn btn-primary"
+                        label="邮箱快速登录"
+                        :loading="isEmailLoggingIn"
+                        @click="loginWithEmail"
+                    />
+                </div>
+
+                <!-- 手机验证码登录 -->
+                <div v-show="activeTab === 'phone'">
+                    <div class="form-group">
+                        <label class="form-label" for="phone">手机号</label>
+                        <PhoneInput v-model="phone" />
+                        <div v-if="errors.phone" class="error-message">
+                            {{ errors.phone }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <label class="form-label" for="phoneCode">验证码</label>
+                            <div class="code-row">
+                                <InputText
+                                    id="phoneCode"
+                                    v-model="phoneCode"
+                                    class="form-input"
+                                    placeholder="请输入短信验证码"
+                                    maxlength="6"
+                                />
+                                <SendCodeButton
+                                    :on-send="sendPhoneVerificationCode"
+                                    :duration="60"
+                                    :disabled="phoneCodeSending || !validatePhone(phone)"
+                                    :loading="phoneCodeSending"
+                                    text="获取验证码"
+                                    resend-text="重新发送"
+                                />
+                            </div>
+                        </div>
+                        <div v-if="errors.phoneCode" class="error-message">
+                            {{ errors.phoneCode }}
+                        </div>
+                    </div>
+
+                    <!-- 手机登录按钮 -->
+                    <Button
+                        class="btn btn-primary"
+                        label="手机快速登录"
+                        :loading="isPhoneLoggingIn"
+                        @click="loginWithPhone"
                     />
                 </div>
 
                 <!-- 其他登录方式 -->
-                <div class="alternative-login">
-                    <div class="separator">
-                        其他登录方式
-                    </div>
-                    <div class="login-links">
-                        <NuxtLink to="/login" class="login-link">
-                            使用密码登录
-                        </NuxtLink>
-                        <span class="divider">|</span>
-                        <NuxtLink to="/register" class="login-link">
-                            传统注册
-                        </NuxtLink>
-                    </div>
+                <div class="toggle-login">
+                    <NuxtLink to="/login" class="toggle-link">
+                        使用密码登录
+                    </NuxtLink>
+                    <span class="divider">|</span>
+                    <NuxtLink to="/register" class="toggle-link">
+                        传统注册
+                    </NuxtLink>
                 </div>
 
                 <!-- 用户协议 -->
@@ -209,293 +166,168 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useUrlSearchParams } from '@vueuse/core'
 import AuthLeft from '@/components/auth-left.vue'
 import SendCodeButton from '@/components/send-code-button.vue'
+import PhoneInput from '@/components/phone-input.vue'
 import { authClient } from '@/lib/auth-client'
-import {
-    detectInputType,
-    getInputSuggestion,
-    formatAccountForVerification,
-    validateFormattedAccount,
-    getDefaultRegionByLocation,
-    saveRegionPreference,
-    detectPossibleRegions,
-    type InputType,
-    type InputSuggestion,
-} from '@/utils/smart-input'
-import { SUPPORTED_REGIONS } from '@/utils/phone'
+import { validateEmail, validatePhone } from '@/utils/validate'
+import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 
 // SEO 设置
 definePageMeta({
     title: '快速登录 - 草梅 Auth',
-    description: '智能识别邮箱和手机号，一键完成登录注册',
+    description: '使用验证码一键完成登录注册，安全便捷',
 })
+
+// 配置
+const config = useRuntimeConfig().public
+const phoneEnabled = config.phoneEnabled
 
 // 响应式数据
-const account = ref('')
-const inputType = ref<InputType>('unknown')
-const suggestion = ref<InputSuggestion>({
-    type: 'unknown',
-    suggestion: '',
-    needConfirm: false,
-    confidence: 0,
-})
-const inputError = ref('')
-const selectedRegion = ref('')
-const isRegionConfirmed = ref(false)
-const verificationCode = ref('')
-const codeError = ref('')
+const activeTab = ref<'email' | 'phone'>('email')
 
-// 状态控制
-const isLoggingIn = ref(false)
-const showCodeInput = ref(false)
-const codeSentAccount = ref('') // 记录已发送验证码的账号
+// 邮箱相关
+const email = ref('')
+const emailCode = ref('')
+const isEmailLoggingIn = ref(false)
+
+// 手机相关
+const phone = ref('')
+const phoneCode = ref('')
+const isPhoneLoggingIn = ref(false)
+
+// 错误状态
+const errors = ref<Record<string, string>>({})
+
+// 发送验证码状态
+const emailCodeSending = ref(false)
+const phoneCodeSending = ref(false)
 
 // 组件
 const toast = useToast()
 
-// 区域选项
-const regionOptions = computed(() => {
-    return SUPPORTED_REGIONS.map((region) => {
-        return {
-            label: `${region.region} +${region.countryCode}`,
-            value: region.region,
-        }
-    })
-})
+// 使用 URL 参数
+const params = useUrlSearchParams<{ tab: 'email' | 'phone' }>('history', { initialValue: { tab: 'email' } })
+
+// 邮箱验证码发送工具
+const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
+
+// 手机验证码发送工具
+const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
 
 // 计算属性
-const showRegionSelector = computed(() => {
-    return (
-        (inputType.value === 'phone' && suggestion.value.needConfirm)
-        || (inputType.value === 'unknown' && suggestion.value.needConfirm)
-    )
+const canSendEmailCode = computed(() => {
+    return email.value.trim() && validateEmail(email.value) && !errors.value.email
 })
 
-const hasInputError = computed(() => {
-    return (
-        !!inputError.value
-        || (suggestion.value.type === 'unknown'
-            && suggestion.value.confidence === 0
-            && account.value.length > 0)
-    )
-})
-
-const hasCodeError = computed(() => {
-    return !!codeError.value
-})
-
-const canSendCode = computed(() => {
-    if (!account.value.trim()) return false
-
-    // 如果需要确认且未确认，不能发送
-    if (
-        suggestion.value.needConfirm
-        && !isRegionConfirmed.value
-        && !selectedRegion.value
-    ) {
-        return false
-    }
-
-    // 如果输入有错误，不能发送
-    if (hasInputError.value) return false
-
-    // 如果置信度为0，不能发送
-    if (suggestion.value.confidence === 0) return false
-
-    return true
-})
-
-const canLogin = computed(() => {
-    return verificationCode.value.length === 6 && !hasCodeError.value
-})
-
-const loginButtonText = computed(() => {
-    if (isLoggingIn.value) return '登录中...'
-    return '一键登录'
+const canSendPhoneCode = computed(() => {
+    return phone.value.trim() && validatePhone(phone.value) && !errors.value.phone
 })
 
 // 方法
-const handleInputChange = () => {
-    // 清除之前的错误
-    inputError.value = ''
-    codeError.value = ''
-    isRegionConfirmed.value = false
-
-    // 检测输入类型
-    inputType.value = detectInputType(account.value)
-    suggestion.value = getInputSuggestion(account.value)
-
-    // 如果账号变化了，隐藏验证码输入框
-    if (codeSentAccount.value && codeSentAccount.value !== account.value) {
-        showCodeInput.value = false
-        verificationCode.value = ''
+const changeTab = (tab: 'email' | 'phone') => {
+    // 如果短信功能未启用且尝试切换到手机登录，提示错误并阻止切换
+    if (tab === 'phone' && !phoneEnabled) {
+        toast.add({
+            severity: 'error',
+            summary: '功能未启用',
+            detail: '短信功能未启用，请使用邮箱验证码登录',
+            life: 3000,
+        })
+        return
     }
 
-    // 自动设置区域（仅对手机号）
-    if (inputType.value === 'phone' && suggestion.value.needConfirm) {
-        const cleanInput = account.value.trim().replace(/[\s\-()]/g, '')
-        const possibleRegions = detectPossibleRegions(cleanInput)
+    params.tab = tab
+    activeTab.value = tab
 
-        if (possibleRegions.length > 0 && possibleRegions[0]) {
-            // 自动选择最可能的区域
-            selectedRegion.value = possibleRegions[0].region
-        } else {
-            // 使用默认区域
-            selectedRegion.value = getDefaultRegionByLocation()
+    // 清除错误状态
+    errors.value = {}
+}
+
+const sendEmailVerificationCode = async () => {
+    try {
+        errors.value.email = ''
+
+        if (!validateEmail(email.value)) {
+            throw new Error('请输入有效的邮箱地址')
         }
-    }
-}
 
-const handleInputBlur = () => {
-    // 输入失焦时进行最终验证
-    if (account.value.trim() && suggestion.value.confidence === 0) {
-        inputError.value = '请输入有效的邮箱地址或手机号'
-    }
-}
-
-const confirmSuggestion = () => {
-    isRegionConfirmed.value = true
-
-    if (selectedRegion.value) {
-        // 保存用户的区域偏好
-        saveRegionPreference(selectedRegion.value)
+        const result = await sendEmailCode()
 
         toast.add({
             severity: 'success',
-            summary: '已确认',
-            detail: `已设置为${regionOptions.value.find(
-                (r) => r.value === selectedRegion.value,
-            )?.label
-            }`,
-            life: 2000,
+            summary: '验证码已发送',
+            detail: '验证码已发送到您的邮箱，请注意查收',
+            life: 3000,
         })
-    }
-}
 
-const handleRegionChange = () => {
-    if (selectedRegion.value) {
-        isRegionConfirmed.value = true
-        saveRegionPreference(selectedRegion.value)
-    }
-}
-
-const getSuggestionSeverity = (suggestion: InputSuggestion) => {
-    if (suggestion.confidence === 0) return 'error'
-    if (suggestion.needConfirm) return 'warn'
-    return 'success'
-}
-
-const sendVerificationCode = async () => {
-    inputError.value = ''
-
-    // 格式化账号
-    const formattedAccount = formatAccountForVerification(
-        account.value,
-        selectedRegion.value,
-    )
-
-    // 验证格式化后的账号
-    if (!validateFormattedAccount(formattedAccount)) {
-        throw new Error('账号格式不正确，请检查输入')
-    }
-
-    // 实际发送验证码的 API 调用
-    console.log('发送验证码到:', formattedAccount)
-
-    // 使用authClient发送验证码
-    let result
-    if (inputType.value === 'email') {
-        // 发送邮箱验证码
-        result = await authClient.emailOtp.sendVerificationOtp({
-            email: formattedAccount,
-            type: 'sign-in',
+        return result
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '验证码发送失败'
+        errors.value.email = errorMessage
+        toast.add({
+            severity: 'error',
+            summary: '发送失败',
+            detail: errorMessage,
+            life: 5000,
         })
-    } else {
-        // 发送手机验证码
-        result = await authClient.phoneNumber.sendOtp({
-            phoneNumber: formattedAccount,
-        })
-    }
-
-    if (result.error) {
-        throw new Error(result.error.message || '验证码发送失败')
-    }
-
-    // 成功发送 - 显示验证码输入框
-    codeSentAccount.value = account.value
-    showCodeInput.value = true
-
-    const accountType = inputType.value === 'email' ? '邮箱' : '手机号'
-    toast.add({
-        severity: 'success',
-        summary: '验证码已发送',
-        detail: `验证码已发送到您的${accountType}，请注意查收`,
-        life: 3000,
-    })
-
-    return result
-}
-
-const handleCodeInput = () => {
-    codeError.value = ''
-
-    // 自动提交（当输入6位数字时）
-    if (
-        verificationCode.value.length === 6
-        && /^\d{6}$/.test(verificationCode.value)
-    ) {
-        // 延迟一下再自动登录，给用户反应时间
-        setTimeout(() => {
-            if (canLogin.value && !isLoggingIn.value) {
-                quickLogin()
-            }
-        }, 500)
+        throw error
     }
 }
 
-const quickLogin = async () => {
+const sendPhoneVerificationCode = async () => {
     try {
-        isLoggingIn.value = true
-        codeError.value = ''
+        errors.value.phone = ''
 
-        if (!verificationCode.value || verificationCode.value.length !== 6) {
-            throw new Error('请输入6位验证码')
+        if (!validatePhone(phone.value)) {
+            throw new Error('请输入有效的手机号')
         }
 
-        if (!/^\d{6}$/.test(verificationCode.value)) {
-            throw new Error('验证码格式不正确')
-        }
+        const result = await sendPhoneCode()
 
-        // 格式化账号
-        const formattedAccount = formatAccountForVerification(
-            account.value,
-            selectedRegion.value,
-        )
-
-        // 实际登录的 API 调用
-        console.log('一键登录:', {
-            account: formattedAccount,
-            code: verificationCode.value,
-            type: inputType.value,
+        toast.add({
+            severity: 'success',
+            summary: '验证码已发送',
+            detail: '验证码已发送到您的手机，请注意查收',
+            life: 3000,
         })
 
-        // 使用authClient进行登录
-        let result
-        if (inputType.value === 'email') {
-            // 邮箱验证码登录
-            result = await authClient.signIn.emailOtp({
-                email: formattedAccount,
-                otp: verificationCode.value,
-            })
-        } else {
-            // 手机验证码登录
-            result = await authClient.phoneNumber.verify({
-                phoneNumber: formattedAccount,
-                code: verificationCode.value,
-            })
+        return result
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '验证码发送失败'
+        errors.value.phone = errorMessage
+        toast.add({
+            severity: 'error',
+            summary: '发送失败',
+            detail: errorMessage,
+            life: 5000,
+        })
+        throw error
+    }
+}
+
+const loginWithEmail = async () => {
+    try {
+        isEmailLoggingIn.value = true
+        errors.value.emailCode = ''
+
+        if (!emailCode.value || emailCode.value.length !== 6) {
+            errors.value.emailCode = '请输入6位验证码'
+            return
         }
+
+        if (!/^\d{6}$/.test(emailCode.value)) {
+            errors.value.emailCode = '验证码格式不正确'
+            return
+        }
+
+        // 使用authClient进行邮箱验证码登录
+        const result = await authClient.signIn.emailOtp({
+            email: email.value,
+            otp: emailCode.value,
+        })
 
         if (result.error) {
             throw new Error(result.error.message || '登录失败')
@@ -505,7 +337,7 @@ const quickLogin = async () => {
         toast.add({
             severity: 'success',
             summary: '登录成功',
-            detail: '即将跳转到首页',
+            detail: '即将跳转到个人中心',
             life: 2000,
         })
 
@@ -513,9 +345,8 @@ const quickLogin = async () => {
             navigateTo('/profile')
         }, 1200)
     } catch (error) {
-        const errorMessage =
-            error instanceof Error ? error.message : '登录失败'
-        codeError.value = errorMessage
+        const errorMessage = error instanceof Error ? error.message : '登录失败'
+        errors.value.emailCode = errorMessage
         toast.add({
             severity: 'error',
             summary: '登录失败',
@@ -523,26 +354,73 @@ const quickLogin = async () => {
             life: 5000,
         })
     } finally {
-        isLoggingIn.value = false
+        isEmailLoggingIn.value = false
     }
 }
 
-// 监听
-watch(
-    () => inputType.value,
-    (newType) => {
-        // 当输入类型确定后，重置区域选择状态
-        if (newType !== 'phone') {
-            selectedRegion.value = ''
-            isRegionConfirmed.value = false
+const loginWithPhone = async () => {
+    try {
+        isPhoneLoggingIn.value = true
+        errors.value.phoneCode = ''
+
+        if (!phoneCode.value || phoneCode.value.length !== 6) {
+            errors.value.phoneCode = '请输入6位验证码'
+            return
         }
-    },
-)
+
+        if (!/^\d{6}$/.test(phoneCode.value)) {
+            errors.value.phoneCode = '验证码格式不正确'
+            return
+        }
+
+        // 使用authClient进行手机验证码登录
+        const result = await authClient.phoneNumber.verify({
+            phoneNumber: phone.value,
+            code: phoneCode.value,
+        })
+
+        if (result.error) {
+            throw new Error(result.error.message || '登录失败')
+        }
+
+        // 成功登录
+        toast.add({
+            severity: 'success',
+            summary: '登录成功',
+            detail: '即将跳转到个人中心',
+            life: 2000,
+        })
+
+        setTimeout(() => {
+            navigateTo('/profile')
+        }, 1200)
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '登录失败'
+        errors.value.phoneCode = errorMessage
+        toast.add({
+            severity: 'error',
+            summary: '登录失败',
+            detail: errorMessage,
+            life: 5000,
+        })
+    } finally {
+        isPhoneLoggingIn.value = false
+    }
+}
 
 // 初始化
 onMounted(() => {
-    // 设置默认区域
-    selectedRegion.value = getDefaultRegionByLocation()
+    // 确保默认值
+    if (!['email', 'phone'].includes(params.tab as string)) {
+        params.tab = 'email'
+    }
+
+    // 如果手机登录未启用但URL参数是phone，则切换到email
+    if (params.tab === 'phone' && !phoneEnabled) {
+        params.tab = 'email'
+    }
+
+    activeTab.value = params.tab
 })
 </script>
 
@@ -611,106 +489,181 @@ onMounted(() => {
     color: $secondary-light;
 }
 
-.smart-input-section {
-    margin-bottom: 1.5rem;
+.login-btn {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1em;
+}
 
-    .phone-input-wrapper {
-        display: flex;
-        align-items: stretch;
-        gap: 0.5rem;
-
-        .region-dropdown {
-            flex-shrink: 0;
-            min-width: 120px;
-            padding: 2px;
-            line-height: 1.5;
-
-            // :deep(.p-dropdown) {
-            //     height: 100%;
-            //     border: 1px solid $secondary-bg;
-            //     border-radius: 8px;
-            //     background-color: $background-light;
-
-            //     .p-dropdown-label {
-            //         padding: 0.75rem 1rem;
-            //         font-size: 1rem;
-            //         line-height: 1.5;
-            //     }
-
-            //     .p-dropdown-trigger {
-            //         width: 2.5rem;
-            //         color: $secondary-light;
-            //     }
-
-            //     &:focus-within {
-            //         border-color: $primary;
-            //         box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
-            //     }
-            // }
-        }
-
-        .phone-input {
-            flex: 1;
-        }
-    }
-
-    .smart-input {
-        position: relative;
-
-        &.has-type {
-            .form-input {
-                padding-right: 80px;
-            }
-        }
-
-        .input-type-indicator {
-            position: absolute;
-            top: 50%;
-            right: 12px;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.25rem 0.5rem;
-            color: $secondary-light;
-            font-size: 0.85rem;
-            background-color: $background;
-            border-radius: 4px;
-            transform: translateY(-50%);
-
-            .type-icon {
-                font-size: 1rem;
-            }
-
-            .type-text {
-                font-weight: 500;
-            }
-        }
-    }
-
-    .form-input.error {
-        border-color: #e74c3c;
-        box-shadow: 0 0 0 3px rgb(231 76 60 / 0.2);
+// 添加媒体查询优化小屏幕显示
+@media (width <= 375px) {
+    .login-btn .p-button {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.875rem !important;
     }
 }
 
-.suggestion-section {
-    margin-bottom: 1rem;
+@media (width <= 320px) {
+    .login-btn .p-button {
+        padding: 0.5rem !important;
+        font-size: 0.75rem !important;
+    }
+}
 
-    .suggestion-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
+.auth-container {
+    display: flex;
+    flex-direction: column-reverse;
+    min-height: 100vh;
+    background: $background;
 
-        .suggestion-text {
-            flex: 1;
-        }
+    @media (width >= 768px) {
+        flex-direction: row;
+    }
+}
 
-        .confirm-btn {
-            flex-shrink: 0;
+.auth-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 20vh;
+    padding: 1rem;
+    color: $background-light;
+    text-align: center;
+
+    .auth-logo img {
+        width: 80%;
+        max-width: 160px;
+    }
+
+    @media (width >= 768px) {
+        width: 50%;
+        min-height: 100vh;
+
+        .auth-logo img {
+            width: 25%;
+            max-width: none;
         }
     }
+}
+
+.auth-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 1rem;
+
+    @media (width >= 768px) {
+        width: 50%;
+        min-height: 100vh;
+    }
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+    background-color: $background-light;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgb(0 0 0 / 0.05);
+}
+
+.auth-title {
+    margin-bottom: 1rem;
+    color: $secondary;
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+.auth-subtitle {
+    margin-bottom: 2rem;
+    color: $secondary-light;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background-color: $background-light;
+    border: 1px solid $secondary-bg;
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgb(230 57 70 / 0.2);
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    margin: 2rem 0;
+    color: $secondary-light;
+
+    &::before,
+    &::after {
+        flex: 1;
+        border-bottom: 1px solid $secondary-bg;
+        content: "";
+    }
+
+    &::before {
+        margin-right: 1rem;
+    }
+
+    &::after {
+        margin-left: 1rem;
+    }
+}
+
+.toggle-login {
+    margin-top: 1.5rem;
+    color: $secondary-light;
+    text-align: center;
+}
+
+.toggle-link {
+    color: $primary;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.btn {
+    width: 100%;
+    padding: 0.75rem 0;
+    font-weight: 500;
+    font-size: 1rem;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    width: 100%;
+    min-height: 44px;
+    color: $background-light !important;
+    background-color: $primary !important;
+    border: none !important;
+    box-shadow: none;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: $primary-dark !important;
 }
 
 .code-row {
@@ -725,187 +678,21 @@ onMounted(() => {
     font-size: 0.95rem;
 }
 
-.code-input-section {
-    margin-bottom: 1.5rem;
-
-    .code-input-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-
-        .code-input {
-            flex: 1;
-            text-align: center;
-            font-size: 1.1rem;
-            letter-spacing: 0.2em;
-
-            &.error {
-                border-color: #e74c3c;
-                box-shadow: 0 0 0 3px rgb(231 76 60 / 0.2);
-            }
-        }
-
-        .resend-btn {
-            flex-shrink: 0;
-            min-width: 120px;
-            font-size: 0.875rem;
-        }
-    }
-
-    .login-btn {
-        width: 100%;
-        min-height: 44px;
-        color: $background-light !important;
-        background-color: $primary !important;
-        border: none !important;
-        transition: background 0.2s;
-
-        &:hover:not(:disabled) {
-            background-color: $primary-dark !important;
-        }
-
-        &:disabled {
-            opacity: 0.6;
-        }
-    }
-}
-
-.alternative-login {
-    margin-top: 2rem;
-    text-align: center;
-
-    .separator {
-        position: relative;
-        margin: 1.5rem 0;
-        color: $secondary-light;
-        font-size: 0.9rem;
-
-        &::before,
-        &::after {
-            position: absolute;
-            top: 50%;
-            width: 30%;
-            height: 1px;
-            background-color: $secondary-bg;
-            content: "";
-        }
-
-        &::before {
-            left: 0;
-        }
-
-        &::after {
-            right: 0;
-        }
-    }
-
-    .login-links {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-
-        .login-link {
-            color: $primary;
-            font-weight: 500;
-            text-decoration: none;
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-
-        .divider {
-            color: $secondary-light;
-        }
-    }
-}
-
 .agreement-notice {
-    margin-top: 1.5rem;
+    margin-top: 0.75rem;
     color: $secondary-light;
     font-size: 0.85rem;
     line-height: 1.4;
     text-align: center;
-
-    .agreement-link {
-        color: $primary;
-        font-weight: 500;
-        text-decoration: none;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
 }
 
-// 响应式优化
-@media (width <=480px) {
-    .auth-card {
-        padding: 1.5rem;
-    }
+.agreement-link {
+    color: $primary;
+    font-weight: 500;
+    text-decoration: none;
 
-    .auth-title {
-        font-size: 1.75rem;
-    }
-
-    .smart-input-section {
-        .phone-input-wrapper {
-            flex-direction: column;
-            gap: 0.75rem;
-
-            .region-dropdown {
-                width: 100%;
-                min-width: unset;
-            }
-        }
-    }
-
-    .code-row {
-        gap: 0.25rem;
-
-        .code-btn {
-            min-width: 90px;
-            font-size: 0.85rem;
-            padding: 0.6rem 0.4rem;
-        }
-
-        .code-input {
-            font-size: 0.9rem;
-        }
-    }
-
-    .code-input-wrapper {
-        flex-direction: column;
-        gap: 0.5rem;
-
-        .code-input {
-            text-align: left;
-        }
-
-        .resend-btn {
-            align-self: stretch;
-            min-width: unset;
-        }
-    }
-
-    .suggestion-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-
-        .confirm-btn {
-            align-self: flex-end;
-        }
-    }
-
-    .login-links {
-        flex-direction: column;
-        gap: 0.5rem;
-
-        .divider {
-            display: none;
-        }
+    &:hover {
+        text-decoration: underline;
     }
 }
 </style>
