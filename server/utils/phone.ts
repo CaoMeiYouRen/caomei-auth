@@ -1,3 +1,4 @@
+import twilio from 'twilio'
 import logger from './logger'
 import { limiterStorage } from '@/server/database/storage'
 import { validatePhone } from '@/utils/validate'
@@ -9,12 +10,16 @@ import {
     PHONE_SPUG_TEMPLATE_ID,
     PHONE_SENDER_NAME,
     PHONE_EXPIRES_IN,
+    TWILIO_ACCOUNT_SID,
+    TWILIO_AUTH_TOKEN,
+    TWILIO_PHONE_NUMBER,
 } from '@/utils/env'
+
 
 const PHONE_LIMIT_KEY = 'phone_global_limit'
 
 /**
- *  TODO：支持更多短信渠道
+ *  支持多种短信渠道：Spug、Twilio
  *  发送短信验证码
  *
  * @author CaoMeiYouRen
@@ -90,6 +95,53 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
                     error: error instanceof Error ? error.message : String(error),
                 })
                 throw error
+            }
+        }
+        case 'twilio': {
+            try {
+
+                if (!validatePhone(phoneNumber)) {
+                    throw new Error('不支持的国家或地区手机号格式')
+                }
+
+                // 验证必要配置
+                if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
+                    throw new Error('Twilio 配置不完整，请检查 TWILIO_ACCOUNT_SID、TWILIO_AUTH_TOKEN、TWILIO_PHONE_NUMBER')
+                }
+
+                const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+                // 构建短信内容
+                const messageBody = `${PHONE_SENDER_NAME}欢迎您，您的验证码为${code}，${expiresInMinutes}分钟内有效，如非本人操作请忽略。`
+
+                // 发送短信
+                const message = await client.messages.create({
+                    body: messageBody,
+                    from: TWILIO_PHONE_NUMBER,
+                    to: phoneNumber,
+                })
+
+                const result = {
+                    success: true,
+                    sid: message.sid,
+                    message: '短信发送成功',
+                }
+
+                logger.phone.sent({
+                    type: 'verification',
+                    phone: phoneNumber,
+                    success: true,
+                    sid: message.sid,
+                })
+
+                return result
+            } catch (error) {
+                logger.phone.failed({
+                    type: 'verification',
+                    phone: phoneNumber,
+                    error: error instanceof Error ? error.message : String(error),
+                })
+                throw new Error(`Twilio 短信发送失败: ${error instanceof Error ? error.message : '未知错误'}`)
             }
         }
         default:

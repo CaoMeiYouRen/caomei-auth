@@ -272,7 +272,7 @@ interface ExtendedLogger {
 
     // 短信相关日志
     phone: {
-        sent: (data: { type: string, phone: string, success?: boolean }) => void
+        sent: (data: { type: string, phone: string, success?: boolean, sid?: string }) => void
         failed: (data: { type: string, phone: string, error: string }) => void
         rateLimited: (data: { phone?: string, limitType: 'global' | 'user', remainingTime?: number }) => void
     }
@@ -518,7 +518,7 @@ const extendedLogger: ExtendedLogger = {
     phone: {
         sent: (data) => {
             const message = `SMS ${data.type} sent successfully to ${maskPhone(data.phone)}`
-            phoneLogger.info(message, { type: data.type, success: data.success })
+            phoneLogger.info(message, { type: data.type, success: data.success, sid: data.sid })
         },
         failed: (data) => {
             const message = `Failed to send ${data.type} SMS to ${maskPhone(data.phone)}: ${data.error}`

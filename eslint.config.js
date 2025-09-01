@@ -42,6 +42,7 @@ export default withNuxt(cmyrConfig,
                 tabLength: 4,
                 VariableDeclarator: 1,
             }],
+            '@stylistic/no-trailing-spaces': [1, { skipBlankLines: true, ignoreComments: false }],
         },
     },
 )

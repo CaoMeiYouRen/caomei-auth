@@ -86,13 +86,13 @@ export const REDIS_URL = process.env.REDIS_URL
 
 /**
  * 短信服务配置
- * 目前提供Spug渠道作为示例，如有需要，可在issue或discussion中提出其他渠道，会看情况适配
+ * 支持 Spug、Twilio 等短信平台，如有需要，可在issue或discussion中提出其他渠道，会看情况适配
  */
 // 是否启用短信发送功能（包含注册、登录、绑定、找回密码等页面）
 export const PHONE_ENABLED = process.env.NUXT_PUBLIC_PHONE_ENABLED || import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
 // 是否启用用户名登录功能
 export const USERNAME_ENABLED = process.env.NUXT_PUBLIC_USERNAME_ENABLED === 'true'
-// 短信发件渠道
+// 短信发件渠道：spug, twilio
 export const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
 // Spug短信模板ID，在Spug短信模板配置中获取
 export const PHONE_SPUG_TEMPLATE_ID = process.env.PHONE_SPUG_TEMPLATE_ID || ''
@@ -106,6 +106,16 @@ export const PHONE_DAILY_LIMIT = Number(process.env.PHONE_DAILY_LIMIT || 100)
 export const PHONE_SINGLE_USER_DAILY_LIMIT = Number(process.env.PHONE_SINGLE_USER_DAILY_LIMIT || 3)
 // 限流时间窗口
 export const PHONE_LIMIT_WINDOW = Number(process.env.PHONE_LIMIT_WINDOW || ms('1d') / 1000)
+
+/**
+ * Twilio 短信配置
+ */
+// Twilio Account SID
+export const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID || ''
+// Twilio Auth Token
+export const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN || ''
+// Twilio 发送号码
+export const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER || ''
 
 /**
  * 邮件服务配置
