@@ -569,8 +569,10 @@ export const auth = betterAuth({
                 'profile',
                 'email',
                 'offline_access',
+                'phone',
             ],
-            getAdditionalUserInfoClaim: (user, scopes) => {
+            getAdditionalUserInfoClaim: (_user, scopes) => {
+                const user = _user as User
                 const claims: Record<string, any> = {}
 
                 // 根据请求的作用域添加声明
@@ -589,11 +591,11 @@ export const auth = betterAuth({
                     claims.email = user.email
                     claims.email_verified = user.emailVerified
                 }
-                // 由于手机号码较为隐私，故不在 OIDC 中返回
-                // if (scopes.includes('phone')) {
-                //     claims.phone_number = user.phoneNumber
-                //     claims.phone_number_verified = user.phoneNumberVerified
-                // }
+                // OIDC 支持返回手机号
+                if (scopes.includes('phone')) {
+                    claims.phone_number = user.phoneNumber
+                    claims.phone_number_verified = user.phoneNumberVerified
+                }
 
                 return claims
             },
