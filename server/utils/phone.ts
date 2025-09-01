@@ -7,7 +7,7 @@ import {
     PHONE_SINGLE_USER_DAILY_LIMIT,
     PHONE_LIMIT_WINDOW,
     PHONE_CHANNEL,
-    PHONE_SPUG_TEMPLATE_ID,
+    SPUG_TEMPLATE_ID,
     PHONE_SENDER_NAME,
     PHONE_EXPIRES_IN,
     TWILIO_ACCOUNT_SID,
@@ -70,7 +70,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
                     key3: expiresInMinutes, // 验证码有效时间(分钟)
                     targets: phoneNumber,
                 })
-                const resp = await fetch(`https://push.spug.cc/send/${PHONE_SPUG_TEMPLATE_ID}`, {
+                const resp = await fetch(`https://push.spug.cc/send/${SPUG_TEMPLATE_ID}`, {
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json',

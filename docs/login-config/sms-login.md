@@ -57,7 +57,7 @@ Spug 是一个中国的短信服务提供商，提供稳定可靠的短信发送
 
 ```env
 PHONE_CHANNEL=spug
-PHONE_SPUG_TEMPLATE_ID=your-template-id
+SPUG_TEMPLATE_ID=your-template-id
 ```
 
 #### 支持范围

@@ -94,8 +94,7 @@ export const PHONE_ENABLED = process.env.NUXT_PUBLIC_PHONE_ENABLED || import.met
 export const USERNAME_ENABLED = process.env.NUXT_PUBLIC_USERNAME_ENABLED === 'true'
 // 短信发件渠道：spug, twilio
 export const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
-// Spug短信模板ID，在Spug短信模板配置中获取
-export const PHONE_SPUG_TEMPLATE_ID = process.env.PHONE_SPUG_TEMPLATE_ID || ''
+
 // 短信发件人名称，默认使用 应用名称
 export const PHONE_SENDER_NAME = process.env.PHONE_SENDER_NAME || APP_NAME || '草梅Auth'
 // 短信验证码有效时间（秒）
@@ -106,6 +105,9 @@ export const PHONE_DAILY_LIMIT = Number(process.env.PHONE_DAILY_LIMIT || 100)
 export const PHONE_SINGLE_USER_DAILY_LIMIT = Number(process.env.PHONE_SINGLE_USER_DAILY_LIMIT || 3)
 // 限流时间窗口
 export const PHONE_LIMIT_WINDOW = Number(process.env.PHONE_LIMIT_WINDOW || ms('1d') / 1000)
+
+// Spug短信模板ID，在Spug短信模板配置中获取
+export const SPUG_TEMPLATE_ID = process.env.SPUG_TEMPLATE_ID || process.env.PHONE_SPUG_TEMPLATE_ID || ''
 
 /**
  * Twilio 短信配置
