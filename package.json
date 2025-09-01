@@ -37,7 +37,7 @@
     "better-bytes": "^1.2.4",
     "chart.js": "^4.5.0",
     "conventional-changelog-cmyr-config": "^3.0.0",
-    "dayjs": "^1.11.14",
+    "dayjs": "^1.11.18",
     "file-type": "^21.0.0",
     "fs-extra": "^11.3.1",
     "google-libphonenumber": "^3.2.42",
