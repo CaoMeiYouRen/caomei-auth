@@ -25,6 +25,14 @@ export interface SmsResult {
     message: string
     sid?: string
     code?: number
+    // Twilio 特有字段
+    status?: string
+    direction?: string
+    numSegments?: string
+    price?: string
+    priceUnit?: string
+    errorCode?: number
+    errorMessage?: string
 }
 
 /**
@@ -83,13 +91,14 @@ class SpugSmsProvider implements SmsProvider {
         })
 
         // {"code": 200, "msg": "请求成功"}
-        const result = await resp.json() as { code: number, msg: string }
+        const result = await resp.json() as { code: number, msg: string, request_id: string }
 
         if (result.code === 200) {
             return {
                 success: true,
                 message: result.msg,
                 code: result.code,
+                sid: result.request_id,
             }
         }
         throw new Error(`短信发送失败: ${result.msg}`)
@@ -126,6 +135,14 @@ class TwilioSmsProvider implements SmsProvider {
             success: true,
             sid: message.sid,
             message: '短信发送成功',
+            // 返回额外的Twilio字段用于日志记录
+            status: message.status,
+            direction: message.direction,
+            numSegments: message.numSegments,
+            price: message.price,
+            priceUnit: message.priceUnit,
+            errorCode: message.errorCode,
+            errorMessage: message.errorMessage,
         }
     }
 }
@@ -205,6 +222,15 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
             phone: phoneNumber,
             success: true,
             sid: result.sid,
+            channel: PHONE_CHANNEL.toLowerCase(),
+            // 传递 Twilio 特有字段（如果存在）
+            status: result.status,
+            direction: result.direction,
+            numSegments: result.numSegments,
+            price: result.price,
+            priceUnit: result.priceUnit,
+            errorCode: result.errorCode,
+            errorMessage: result.errorMessage,
         })
 
         return result
@@ -214,6 +240,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
             type: 'verification',
             phone: phoneNumber,
             error: error instanceof Error ? error.message : String(error),
+            channel: PHONE_CHANNEL.toLowerCase(),
         })
         throw error
     }

@@ -272,8 +272,22 @@ interface ExtendedLogger {
 
     // 短信相关日志
     phone: {
-        sent: (data: { type: string, phone: string, success?: boolean, sid?: string }) => void
-        failed: (data: { type: string, phone: string, error: string }) => void
+        sent: (data: {
+            type: string
+            phone: string
+            success?: boolean
+            sid?: string
+            // Twilio 特有字段
+            status?: string
+            direction?: string
+            numSegments?: string
+            price?: string
+            priceUnit?: string
+            errorCode?: number
+            errorMessage?: string
+            channel?: string // 短信渠道：spug、twilio 等
+        }) => void
+        failed: (data: { type: string, phone: string, error: string, channel?: string }) => void
         rateLimited: (data: { phone?: string, limitType: 'global' | 'user', remainingTime?: number }) => void
     }
 }
@@ -517,12 +531,45 @@ const extendedLogger: ExtendedLogger = {
     // 短信相关日志
     phone: {
         sent: (data) => {
-            const message = `SMS ${data.type} sent successfully to ${maskPhone(data.phone)}`
-            phoneLogger.info(message, { type: data.type, success: data.success, sid: data.sid })
+            const channelInfo = data.channel ? ` via ${data.channel}` : ''
+            const statusInfo = data.status ? ` (status: ${data.status})` : ''
+            const segmentsInfo = data.numSegments ? ` [${data.numSegments} segments]` : ''
+            const message = `SMS ${data.type} sent successfully${channelInfo} to ${maskPhone(data.phone)}${statusInfo}${segmentsInfo}`
+
+            // 构建元数据，只记录有意义的字段
+            const meta: any = {
+                type: data.type,
+                success: data.success,
+                sid: data.sid,
+                channel: data.channel,
+            }
+
+            // 添加 Twilio 特有字段（如果存在）
+            if (data.status) {
+                meta.status = data.status
+            }
+            if (data.direction) {
+                meta.direction = data.direction
+            }
+            if (data.numSegments) {
+                meta.numSegments = data.numSegments
+            }
+            if (data.price && data.priceUnit) {
+                meta.cost = `${data.price} ${data.priceUnit.toUpperCase()}`
+            }
+
+            // 记录错误信息（如果状态为失败）
+            if (data.errorCode && data.errorMessage) {
+                meta.errorCode = data.errorCode
+                meta.errorMessage = data.errorMessage
+            }
+
+            phoneLogger.info(message, meta)
         },
         failed: (data) => {
-            const message = `Failed to send ${data.type} SMS to ${maskPhone(data.phone)}: ${data.error}`
-            phoneLogger.error(message, { type: data.type })
+            const channelInfo = data.channel ? ` via ${data.channel}` : ''
+            const message = `Failed to send ${data.type} SMS${channelInfo} to ${maskPhone(data.phone)}: ${data.error}`
+            phoneLogger.error(message, { type: data.type, channel: data.channel })
         },
         rateLimited: (data) => {
             const phoneInfo = data.phone ? ` for ${maskPhone(data.phone)}` : ''
