@@ -89,7 +89,7 @@
 import { ref } from 'vue'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
-import { passwordValidator } from '@/utils/validate'
+import { passwordValidator } from '@/utils/password'
 
 const currentPassword = ref('')
 const newPassword = ref('')

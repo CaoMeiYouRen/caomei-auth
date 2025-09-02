@@ -68,24 +68,6 @@ export function usernameValidator(name: string): boolean {
     return true
 }
 
-/**
- * 验证密码强度
- *
- * @author CaoMeiYouRen
- * @date 2025-07-14
- * @export
- * @param password
- */
-export function passwordValidator(password: string): boolean {
-    return isStrongPassword(password, {
-        minLength: 8, // 密码最小长度
-        minLowercase: 1, // 密码必须包含小写字母
-        minUppercase: 1, // 密码必须包含大写字母
-        minNumbers: 1, // 密码必须包含数字
-        minSymbols: 1, // 密码必须包含特殊字符
-    })
-}
-
 // 昵称验证函数
 // 长度 2-36 个字符，仅对特殊字符做限制
 // 限制的特殊字符有：零宽字符、字符方向控制符、有可能引起页面排版错误的字符、有可能引起数据库存储错误的字符

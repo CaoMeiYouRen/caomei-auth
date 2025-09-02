@@ -276,11 +276,12 @@ import Message from 'primevue/message'
 import Checkbox from 'primevue/checkbox'
 import { useToast } from 'primevue/usetoast'
 import ButtonGroup from 'primevue/buttongroup'
-import { validateEmail, validatePhone, nicknameValidator, usernameValidator, passwordValidator } from '@/utils/validate'
+import { validateEmail, validatePhone, nicknameValidator, usernameValidator } from '@/utils/validate'
 import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
+import { passwordValidator } from '@/utils/password'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -695,5 +696,3 @@ async function register() {
     }
 }
 </style>
-
-import { passwordValidator } from '@/utils/validate'

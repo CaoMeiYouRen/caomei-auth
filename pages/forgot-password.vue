@@ -162,10 +162,11 @@
 import { ref, onMounted } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import SendCodeButton from '@/components/send-code-button.vue'
-import { validateEmail, validatePhone, passwordValidator } from '@/utils/validate'
+import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
+import { passwordValidator } from '@/utils/password'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
