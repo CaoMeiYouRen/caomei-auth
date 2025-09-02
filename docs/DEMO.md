@@ -1,12 +1,17 @@
 ## Demo 模式实现计划
 
+### 0.管理员和用户账号
+
+demo_admin 用于展示 管理员 视角
+
+demo_user 用于展示 用户 视角
+
 ### 1. 环境变量配置
 
 **新增环境变量**
 
 -   `DEMO_MODE` - 启用 Demo 模式
 -   `DEMO_ADMIN_USER_EMAIL` - Demo 模式管理员邮箱
--   `DEMO_FAKE_DATA_SEED` - 假数据生成种子
 
 **修改文件：**
 
@@ -146,5 +151,4 @@
 # Demo 模式配置
 DEMO_MODE=true
 DEMO_ADMIN_USER_EMAIL=admin@demo.com
-DEMO_FAKE_DATA_SEED=caomei-auth-demo-2025
 ```
