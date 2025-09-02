@@ -155,3 +155,163 @@ export function getPasswordScore(
 ): number {
     return passwordValidator(password, { ...options, returnScore: true }) as number
 }
+
+/**
+ * 获取密码强度的中文描述
+ *
+ * @param strength 密码强度级别
+ * @returns 中文描述
+ */
+export function getPasswordStrengthText(strength: PasswordStrength): string {
+    switch (strength) {
+        case PasswordStrength.VERY_STRONG:
+            return '非常强'
+        case PasswordStrength.STRONG:
+            return '强'
+        case PasswordStrength.MEDIUM:
+            return '中等'
+        case PasswordStrength.WEAK:
+            return '弱'
+        default:
+            return '弱'
+    }
+}
+
+/**
+ * 获取密码强度的颜色标识
+ *
+ * @param strength 密码强度级别
+ * @returns 颜色值
+ */
+export function getPasswordStrengthColor(strength: PasswordStrength): string {
+    switch (strength) {
+        case PasswordStrength.VERY_STRONG:
+            return '#22c55e' // 绿色
+        case PasswordStrength.STRONG:
+            return '#3b82f6' // 蓝色
+        case PasswordStrength.MEDIUM:
+            return '#f59e0b' // 橙色
+        case PasswordStrength.WEAK:
+            return '#ef4444' // 红色
+        default:
+            return '#ef4444'
+    }
+}
+
+/**
+ * 根据密码强度级别获取详细的要求说明
+ *
+ * @param strength 目标密码强度级别
+ * @returns 密码要求说明
+ */
+export function getPasswordRequirements(strength: PasswordStrength = PasswordStrength.STRONG): string {
+    const preset = passwordStrengthPresets[strength]
+    const requirements: string[] = []
+
+    requirements.push(`至少 ${preset.minLength} 个字符`)
+
+    if (preset.minLowercase && preset.minLowercase > 0) {
+        requirements.push(`${preset.minLowercase} 个小写字母`)
+    }
+    if (preset.minUppercase && preset.minUppercase > 0) {
+        requirements.push(`${preset.minUppercase} 个大写字母`)
+    }
+    if (preset.minNumbers && preset.minNumbers > 0) {
+        requirements.push(`${preset.minNumbers} 个数字`)
+    }
+    if (preset.minSymbols && preset.minSymbols > 0) {
+        requirements.push(`${preset.minSymbols} 个特殊字符（如 !@#$%^&*）`)
+    }
+
+    return `密码需要包含：${requirements.join('、')}`
+}
+
+/**
+ * 获取简化的密码要求说明（用于 tooltip）
+ *
+ * @param strength 目标密码强度级别
+ * @returns 简化的密码要求说明
+ */
+export function getPasswordRequirementsShort(strength: PasswordStrength = PasswordStrength.STRONG): string {
+    const preset = passwordStrengthPresets[strength]
+
+    if (strength === PasswordStrength.WEAK) {
+        return `至少 ${preset.minLength} 个字符`
+    }
+
+    if (strength === PasswordStrength.MEDIUM) {
+        return `至少 ${preset.minLength} 个字符，包含字母和数字`
+    }
+
+    if (strength === PasswordStrength.STRONG) {
+        return `至少 ${preset.minLength} 个字符，包含大小写字母、数字和特殊字符`
+    }
+
+    if (strength === PasswordStrength.VERY_STRONG) {
+        return `至少 ${preset.minLength} 个字符，包含多个大小写字母、数字和特殊字符`
+    }
+
+    return getPasswordRequirements(strength)
+}
+
+/**
+ * 获取密码验证失败时的友好错误信息
+ *
+ * @param password 输入的密码
+ * @param targetStrength 目标密码强度级别
+ * @returns 友好的错误信息
+ */
+export function getPasswordValidationError(password: string, targetStrength: PasswordStrength = PasswordStrength.STRONG): string | null {
+    if (!password) {
+        return '请输入密码'
+    }
+
+    const preset = passwordStrengthPresets[targetStrength]
+
+    // 检查长度
+    if (password.length < (preset.minLength || 8)) {
+        const minLength = preset.minLength || 8
+        return `密码长度至少需要 ${minLength} 个字符，当前为 ${password.length} 个字符`
+    }
+
+    if (password.length > 128) {
+        return '密码长度不能超过 128 个字符'
+    }
+
+    // 检查字符类型
+    const missingTypes: string[] = []
+
+    if (preset.minLowercase && preset.minLowercase > 0) {
+        const count = (password.match(/[a-z]/g) || []).length
+        if (count < preset.minLowercase) {
+            missingTypes.push(`${preset.minLowercase} 个小写字母`)
+        }
+    }
+
+    if (preset.minUppercase && preset.minUppercase > 0) {
+        const count = (password.match(/[A-Z]/g) || []).length
+        if (count < preset.minUppercase) {
+            missingTypes.push(`${preset.minUppercase} 个大写字母`)
+        }
+    }
+
+    if (preset.minNumbers && preset.minNumbers > 0) {
+        const count = (password.match(/\d/g) || []).length
+        if (count < preset.minNumbers) {
+            missingTypes.push(`${preset.minNumbers} 个数字`)
+        }
+    }
+
+    if (preset.minSymbols && preset.minSymbols > 0) {
+        const count = (password.match(/[^a-zA-Z0-9]/g) || []).length
+        if (count < preset.minSymbols) {
+            missingTypes.push(`${preset.minSymbols} 个特殊字符`)
+        }
+    }
+
+    if (missingTypes.length > 0) {
+        return `密码还需要包含：${missingTypes.join('、')}`
+    }
+
+    return null
+}

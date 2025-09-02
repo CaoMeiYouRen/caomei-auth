@@ -29,11 +29,17 @@
                     <Password
                         id="newPassword"
                         v-model="newPassword"
-                        v-tooltip.top="'密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'"
+                        v-tooltip.top="getPasswordRequirementsShort()"
                         class="form-input password-input"
                         placeholder="请输入新密码"
                         :feedback="false"
                         toggle-mask
+                    />
+                    <PasswordStrength
+                        :show-strength="!!newPassword"
+                        :password="newPassword"
+                        :show-score="false"
+                        :min-length-for-display="1"
                     />
                     <div v-if="errors.newPassword" class="error-message">
                         {{ errors.newPassword }}
@@ -88,8 +94,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import AuthLeft from '@/components/auth-left.vue'
+import PasswordStrength from '@/components/password-strength.vue'
 import { authClient } from '@/lib/auth-client'
-import { passwordValidator } from '@/utils/password'
+import { getPasswordRequirementsShort } from '@/utils/password'
+import { validatePasswordForm } from '@/utils/password-validator'
 
 const currentPassword = ref('')
 const newPassword = ref('')
@@ -101,24 +109,15 @@ const revokeOtherSessions = ref(true)
 async function changePassword() {
     errors.value = {}
 
-    if (!currentPassword.value) {
-        errors.value.currentPassword = '请输入当前密码'
-        return
-    }
-    if (!newPassword.value) {
-        errors.value.newPassword = '请输入新密码'
-        return
-    }
-    if (!passwordValidator(newPassword.value)) {
-        errors.value.newPassword = '密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'
-        return
-    }
-    if (!confirmPassword.value) {
-        errors.value.confirmPassword = '请确认新密码'
-        return
-    }
-    if (newPassword.value !== confirmPassword.value) {
-        errors.value.confirmPassword = '两次输入的密码不一致'
+    // 使用新的密码验证工具函数
+    const validationErrors = validatePasswordForm({
+        currentPassword: currentPassword.value,
+        password: newPassword.value,
+        confirmPassword: confirmPassword.value,
+    })
+
+    if (Object.keys(validationErrors).length > 0) {
+        errors.value = validationErrors
         return
     }
 

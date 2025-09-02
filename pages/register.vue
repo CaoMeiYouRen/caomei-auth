@@ -89,11 +89,17 @@
                         <Password
                             id="password"
                             v-model="password"
-                            v-tooltip.top="'密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'"
+                            v-tooltip.top="getPasswordRequirementsShort()"
                             class="form-input password-input"
                             placeholder="请输入密码"
                             :feedback="false"
                             toggle-mask
+                        />
+                        <PasswordStrength
+                            :show-strength="!!password"
+                            :password="password"
+                            :show-score="false"
+                            :min-length-for-display="1"
                         />
                         <Message
                             v-if="errors.password"
@@ -280,8 +286,10 @@ import { validateEmail, validatePhone, nicknameValidator, usernameValidator } fr
 import { useSendPhoneCode } from '@/utils/code'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
+import PasswordStrength from '@/components/password-strength.vue'
 import { authClient } from '@/lib/auth-client'
-import { passwordValidator } from '@/utils/password'
+import { getPasswordRequirementsShort } from '@/utils/password'
+import { validatePasswordForm } from '@/utils/password-validator'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -359,20 +367,13 @@ const resolver = (values: {
         } else if (!validateEmail(values.email)) {
             newErrors.email = '请输入有效的邮箱地址'
         }
-        if (!values.password) {
-            newErrors.password = '请输入密码'
-        } else if (values.password.length < 6) {
-            newErrors.password = '密码长度不能少于6个字符'
-        } else if (values.password.length > 64) {
-            newErrors.password = '密码长度不能超过64个字符'
-        } else if (!passwordValidator(values.password)) {
-            newErrors.password = '密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'
-        }
-        if (!values.confirmPassword) {
-            newErrors.confirmPassword = '请确认密码'
-        } else if (values.password !== values.confirmPassword) {
-            newErrors.confirmPassword = '两次输入的密码不一致'
-        }
+
+        // 使用新的密码验证工具函数
+        const passwordErrors = validatePasswordForm({
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+        })
+        Object.assign(newErrors, passwordErrors)
     } else if (params.mode === 'phone') {
         if (!values.phone) {
             newErrors.phone = '请输入手机号'
@@ -662,6 +663,7 @@ async function register() {
     min-width: 110px;
     padding: 0.75rem;
     font-size: 0.95rem;
+    margin-top: -5px;
 }
 
 .toggle-login {

@@ -110,11 +110,17 @@
                     <Password
                         id="newPassword"
                         v-model="newPassword"
-                        v-tooltip.top="'密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'"
+                        v-tooltip.top="getPasswordRequirementsShort()"
                         class="form-input password-input"
                         placeholder="请输入新密码"
                         :feedback="false"
                         toggle-mask
+                    />
+                    <PasswordStrength
+                        :show-strength="!!newPassword"
+                        :password="newPassword"
+                        :show-score="false"
+                        :min-length-for-display="1"
                     />
                     <div v-if="errors.newPassword" class="error-message">
                         {{ errors.newPassword }}
@@ -165,8 +171,10 @@ import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
+import PasswordStrength from '@/components/password-strength.vue'
 import { authClient } from '@/lib/auth-client'
-import { passwordValidator } from '@/utils/password'
+import { getPasswordRequirementsShort } from '@/utils/password'
+import { validatePasswordForm } from '@/utils/password-validator'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -213,6 +221,8 @@ const changeMode = (mode: 'email' | 'phone') => {
 }
 
 async function resetPassword() {
+    errors.value = {}
+
     if (activeTab.value === 'email') {
         if (!email.value) {
             errors.value.email = '请输入邮箱'
@@ -240,21 +250,18 @@ async function resetPassword() {
             return
         }
     }
-    if (!newPassword.value) {
-        errors.value.newPassword = '请输入新密码'
-        return
-    } if (!passwordValidator(newPassword.value)) {
-        errors.value.newPassword = '密码必须包含至少1个小写字母、1个大写字母、1个数字和1个特殊字符，且长度至少为8个字符'
-        return
-    }
-    if (!confirmPassword.value) {
-        errors.value.confirmPassword = '请确认新密码'
-        return
-    }
-    if (newPassword.value !== confirmPassword.value) {
-        errors.value.confirmPassword = '两次输入的密码不一致'
+
+    // 使用新的密码验证工具函数
+    const passwordErrors = validatePasswordForm({
+        password: newPassword.value,
+        confirmPassword: confirmPassword.value,
+    })
+
+    if (Object.keys(passwordErrors).length > 0) {
+        Object.assign(errors.value, passwordErrors)
         return
     }
+
     try {
         if (activeTab.value === 'email') {
             const { data, error } = await authClient.emailOtp.resetPassword({
