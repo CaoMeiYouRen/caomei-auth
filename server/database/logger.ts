@@ -109,7 +109,7 @@ export class CustomLogger implements Logger {
 
     // 批量日志缓存（减少高频查询的日志输出）
     private readonly queryBuffer = new Map<string, { count: number, lastSeen: number }>()
-    private readonly BUFFER_FLUSH_INTERVAL = 30000 // 30秒
+    private readonly BUFFER_FLUSH_INTERVAL = 60000 // 60秒
 
     constructor(loggerService?: ExtendedLogger) {
         this.loggerService = loggerService || logger
