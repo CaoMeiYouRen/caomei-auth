@@ -582,11 +582,13 @@ curl -X POST http://localhost:3000/api/auth/sign-in \
 
 在 `.env.example` 中添加新的配置项：
 
-````env
+```env
 # 新短信服务商配置
 PHONE_CHANNEL=new-provider
 NEW_PROVIDER_API_KEY=your-api-key
 NEW_PROVIDER_SECRET=your-secret
+```
+
 ## 常见问题解答 (FAQ)
 
 ### Twilio 相关问题
@@ -713,7 +715,7 @@ testTwilio();
 > **🎯 总结**: 草梅 Auth 现已支持 Spug（国内）和 Twilio（国际）两个短信平台，能够满足不同地区和规模的应用需求。选择合适的服务商，正确配置环境变量，即可快速启用短信验证功能。
 
         })
-
+    
         const resp = await fetch('https://api.new-provider.com/send', {
             method: 'POST',
             headers: {
@@ -722,7 +724,7 @@ testTwilio();
             },
             body,
         })
-
+    
         return resp.json()
     }
     default:
