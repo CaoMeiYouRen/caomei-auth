@@ -95,7 +95,7 @@ Twilio 是一个全球领先的云通信平台，支持全球范围内的短信�
 PHONE_CHANNEL=twilio
 TWILIO_ACCOUNT_SID=你的AccountSID
 TWILIO_AUTH_TOKEN=你的AuthToken
-TWILIO_PHONE_NUMBER=你的Twilio手机号（如+1234567890）
+TWILIO_PHONE_NUMBER=你的Twilio手机号（如+12312345678）
 ```
 
 #### 支持范围
@@ -203,9 +203,9 @@ TENCENT_SMS_TEMPLATE_ID=123456
 ```javascript
 // 支持的格式
 const validFormats = [
-    "13812348888", // 11位数字
-    "+8613812348888", // 国际格式
-    "86-138-1234-8888", // 带分隔符
+    "138****8888", // 11位数字
+    "+86138****8888", // 国际格式
+    "86-138-****-8888", // 带分隔符
 ];
 ```
 
@@ -216,10 +216,10 @@ const validFormats = [
 ```javascript
 // 国际号码格式示例（Twilio 支持）
 const internationalFormats = [
-    "+1-555-123-4567", // 美国
+    "+1-555-123-4567", // 美国（保留，通用测试号码）
     "+44-20-1234-5678", // 英国
     "+81-90-1234-5678", // 日本
-    "+86-138-1234-8888", // 中国
+    "+86-138-****-8888", // 中国
 ];
 ```
 
@@ -509,7 +509,7 @@ echo "手机号: $PHONE_NUMBER"
 # 验证短信服务配置
 curl -X POST https://api.spug.cc/send \
   -H "Content-Type: application/json" \
-  -d '{"phone": "13812348888", "template_id": "123456"}'
+  -d '{"phone": "138****8888", "template_id": "123456"}'
 
 # 注意：目前仅支持中国大陆手机号，国际短信需要等待其他服务商接入
 ```
@@ -555,13 +555,13 @@ PHONE_EXPIRES_IN=600  # 延长到10分钟
 # 测试短信发送API
 curl -X POST http://localhost:3000/api/auth/send-phone-code \
   -H "Content-Type: application/json" \
-  -d '{"phone": "+8613812348888"}'
+  -d '{"phone": "+86138****8888"}'
 
 # 测试手机号登录
 curl -X POST http://localhost:3000/api/auth/sign-in \
   -H "Content-Type: application/json" \
   -d '{
-    "phone": "+8613812348888",
+    "phone": "+86138****8888",
     "password": "password123"
   }'
 ```
@@ -594,7 +594,7 @@ NEW_PROVIDER_SECRET=your-secret
 ### Twilio 相关问题
 
 **Q: Twilio 手机号码格式有什么要求？**
-A: Twilio 要求手机号码必须包含国家代码，格式如 `+8613812345678` 或 `+15551234567`。
+A: Twilio 要求手机号码必须包含国家代码，格式如 `+86138****8888` 或 `+15551234567`。
 
 **Q: 如何获取 Twilio 的 Account SID 和 Auth Token？**
 A:
@@ -661,7 +661,7 @@ NODE_ENV=development
 PHONE_CHANNEL=twilio
 TWILIO_ACCOUNT_SID=your-test-account-sid
 TWILIO_AUTH_TOKEN=your-test-auth-token
-TWILIO_PHONE_NUMBER=+1234567890
+TWILIO_PHONE_NUMBER=+12312345678
 PHONE_DAILY_LIMIT=10
 PHONE_SINGLE_USER_DAILY_LIMIT=5
 ```
@@ -687,7 +687,7 @@ async function testTwilio() {
 
     if (status.isConfigured) {
         try {
-            const result = await sendSms("+8613800138000", "测试短信");
+            const result = await sendSms("+86138****0000", "测试短信");
             console.log("发送成功:", result);
         } catch (error) {
             console.error("发送失败:", error);
