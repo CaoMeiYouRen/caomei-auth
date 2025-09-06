@@ -2,7 +2,7 @@ import { createAuthClient } from 'better-auth/vue'
 import { usernameClient, magicLinkClient, emailOTPClient, inferAdditionalFields, anonymousClient, phoneNumberClient, adminClient, genericOAuthClient, twoFactorClient, oidcClient } from 'better-auth/client/plugins'
 import { ssoClient } from '@better-auth/sso/client'
 import type { auth } from './auth'
-import { AUTH_BASE_URL, MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/utils/env'
+import { AUTH_BASE_URL } from '@/utils/env'
 
 export const authClient = createAuthClient({
     /** 服务器的基础 URL（如果您使用相同域名，则可选） */

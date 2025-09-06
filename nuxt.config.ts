@@ -89,6 +89,7 @@ export default defineNuxtConfig({
             clarityProjectId: process.env.NUXT_PUBLIC_CLARITY_PROJECT_ID,
             baiduAnalyticsId: process.env.NUXT_PUBLIC_BAIDU_ANALYTICS_ID,
             googleAnalyticsId: process.env.NUXT_PUBLIC_GOOGLE_ANALYTICS_ID,
+            passwordStrengthLevel: process.env.NUXT_PUBLIC_PASSWORD_STRENGTH_LEVEL || 'strong',
         },
     },
     primevue: {

@@ -56,7 +56,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    targetStrength: PasswordStrength.STRONG,
+    targetStrength: getDefaultPasswordStrength(), // PasswordStrength.STRONG,
     showStrength: true,
     showScore: false,
     showRequirements: true,

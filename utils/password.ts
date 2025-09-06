@@ -1,5 +1,7 @@
 import isStrongPassword from 'validator/es/lib/isStrongPassword'
 import type { StrongPasswordOptions } from 'validator'
+import { PASSWORD_STRENGTH_LEVEL } from './env'
+
 /**
  * 密码强度级别枚举
  */
@@ -57,6 +59,30 @@ const passwordStrengthPresets: Record<PasswordStrength, PasswordValidatorOptions
 }
 
 /**
+ * 获取默认的密码强度级别（从环境变量读取）
+ *
+ * @returns 密码强度级别
+ */
+export function getDefaultPasswordStrength(): PasswordStrength {
+    const config = useRuntimeConfig().public
+    const level = (config.passwordStrengthLevel || PASSWORD_STRENGTH_LEVEL).toLowerCase()
+    // console.log('level', level)
+    switch (level) {
+        case 'weak':
+            return PasswordStrength.WEAK
+        case 'medium':
+            return PasswordStrength.MEDIUM
+        case 'strong':
+            return PasswordStrength.STRONG
+        case 'very_strong':
+            return PasswordStrength.VERY_STRONG
+        default:
+            // 如果环境变量值无效，默认返回 STRONG
+            return PasswordStrength.STRONG
+    }
+}
+
+/**
  * 验证密码强度（重载：返回布尔值）
  *
  * @param password 要验证的密码
@@ -87,17 +113,20 @@ export function passwordValidator(
  * 验证密码强度
  *
  * @param password 要验证的密码
- * @param options 验证选项或预设强度级别，默认为 STRONG 级别
+ * @param options 验证选项或预设强度级别，默认从环境变量读取强度级别
  * @returns 根据 returnScore 选项返回布尔值或数值得分
  */
 export function passwordValidator(
     password: string,
-    options: PasswordValidatorOptions | PasswordStrength = PasswordStrength.STRONG,
+    options?: PasswordValidatorOptions | PasswordStrength,
 ): boolean | number {
+    // 如果没有提供选项，使用默认的密码强度级别
+    const finalOptionsInput = options || getDefaultPasswordStrength()
+
     // 如果传入的是预设强度级别，则使用对应的配置
-    const finalOptions: PasswordValidatorOptions = typeof options === 'string'
-        ? passwordStrengthPresets[options]
-        : options
+    const finalOptions: PasswordValidatorOptions = typeof finalOptionsInput === 'string'
+        ? passwordStrengthPresets[finalOptionsInput]
+        : finalOptionsInput
 
     // 合并默认选项
     const validatorOptions: StrongPasswordOptions = {
@@ -146,14 +175,15 @@ export function getPasswordStrength(password: string): PasswordStrength {
  * 获取密码强度得分
  *
  * @param password 要评分的密码
- * @param options 评分选项，默认使用强密码标准
+ * @param options 评分选项，默认使用环境变量配置的密码强度标准
  * @returns 密码得分
  */
 export function getPasswordScore(
     password: string,
-    options: PasswordValidatorOptions = passwordStrengthPresets[PasswordStrength.STRONG],
+    options?: PasswordValidatorOptions,
 ): number {
-    return passwordValidator(password, { ...options, returnScore: true }) as number
+    const finalOptions = options || passwordStrengthPresets[getDefaultPasswordStrength()]
+    return passwordValidator(password, { ...finalOptions, returnScore: true }) as number
 }
 
 /**
@@ -201,11 +231,12 @@ export function getPasswordStrengthColor(strength: PasswordStrength): string {
 /**
  * 根据密码强度级别获取详细的要求说明
  *
- * @param strength 目标密码强度级别
+ * @param strength 目标密码强度级别，默认使用环境变量配置的强度级别
  * @returns 密码要求说明
  */
-export function getPasswordRequirements(strength: PasswordStrength = PasswordStrength.STRONG): string {
-    const preset = passwordStrengthPresets[strength]
+export function getPasswordRequirements(strength?: PasswordStrength): string {
+    const targetStrength = strength || getDefaultPasswordStrength()
+    const preset = passwordStrengthPresets[targetStrength]
     const requirements: string[] = []
 
     requirements.push(`至少 ${preset.minLength} 个字符`)
@@ -229,44 +260,47 @@ export function getPasswordRequirements(strength: PasswordStrength = PasswordStr
 /**
  * 获取简化的密码要求说明（用于 tooltip）
  *
- * @param strength 目标密码强度级别
+ * @param strength 目标密码强度级别，默认使用环境变量配置的强度级别
  * @returns 简化的密码要求说明
  */
-export function getPasswordRequirementsShort(strength: PasswordStrength = PasswordStrength.STRONG): string {
-    const preset = passwordStrengthPresets[strength]
+export function getPasswordRequirementsShort(strength?: PasswordStrength): string {
+    const targetStrength = strength || getDefaultPasswordStrength()
 
-    if (strength === PasswordStrength.WEAK) {
+    const preset = passwordStrengthPresets[targetStrength]
+
+    if (targetStrength === PasswordStrength.WEAK) {
         return `至少 ${preset.minLength} 个字符`
     }
 
-    if (strength === PasswordStrength.MEDIUM) {
+    if (targetStrength === PasswordStrength.MEDIUM) {
         return `至少 ${preset.minLength} 个字符，包含字母和数字`
     }
 
-    if (strength === PasswordStrength.STRONG) {
+    if (targetStrength === PasswordStrength.STRONG) {
         return `至少 ${preset.minLength} 个字符，包含大小写字母、数字和特殊字符`
     }
 
-    if (strength === PasswordStrength.VERY_STRONG) {
+    if (targetStrength === PasswordStrength.VERY_STRONG) {
         return `至少 ${preset.minLength} 个字符，包含多个大小写字母、数字和特殊字符`
     }
 
-    return getPasswordRequirements(strength)
+    return getPasswordRequirements(targetStrength)
 }
 
 /**
  * 获取密码验证失败时的友好错误信息
  *
  * @param password 输入的密码
- * @param targetStrength 目标密码强度级别
+ * @param targetStrength 目标密码强度级别，默认使用环境变量配置的强度级别
  * @returns 友好的错误信息
  */
-export function getPasswordValidationError(password: string, targetStrength: PasswordStrength = PasswordStrength.STRONG): string | null {
+export function getPasswordValidationError(password: string, targetStrength?: PasswordStrength): string | null {
     if (!password) {
         return '请输入密码'
     }
 
-    const preset = passwordStrengthPresets[targetStrength]
+    const strength = targetStrength || getDefaultPasswordStrength()
+    const preset = passwordStrengthPresets[strength]
 
     // 检查长度
     if (password.length < (preset.minLength || 8)) {
@@ -274,8 +308,8 @@ export function getPasswordValidationError(password: string, targetStrength: Pas
         return `密码长度至少需要 ${minLength} 个字符，当前为 ${password.length} 个字符`
     }
 
-    if (password.length > 128) {
-        return '密码长度不能超过 128 个字符'
+    if (password.length > 64) {
+        return '密码长度不能超过 64 个字符'
     }
 
     // 检查字符类型
@@ -308,7 +342,6 @@ export function getPasswordValidationError(password: string, targetStrength: Pas
             missingTypes.push(`${preset.minSymbols} 个特殊字符`)
         }
     }
-
     if (missingTypes.length > 0) {
         return `密码还需要包含：${missingTypes.join('、')}`
     }
