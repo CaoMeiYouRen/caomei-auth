@@ -111,6 +111,7 @@ export const auth = betterAuth({
         enabled: true,
         minPasswordLength: 6,
         maxPasswordLength: 64,
+        requireEmailVerification: EMAIL_REQUIRE_VERIFICATION, // 是否要求邮箱验证。若启用，则用户必须在登录前验证他们的邮箱。仅在使用邮箱密码登录时生效。
         sendResetPassword: async ({ user, url, token }, request) => {
             await emailService.sendPasswordResetEmail(user.email, url)
         },
@@ -251,10 +252,10 @@ export const auth = betterAuth({
             // 验证手机号码格式
             phoneNumberValidator: (phoneNumber) => validatePhone(phoneNumber),
             signUpOnVerification: {
-                // 使用雪花算法生成临时电子邮件地址
-                // 生成的电子邮件地址格式为：<snowflake_id>@example.com
+                // 使用随机算法生成临时电子邮件地址
+                // 生成的电子邮件地址格式为：<random_id>@example.com
                 getTempEmail: (_phoneNumber) => getTempEmail(),
-                getTempName: (_phoneNumber) => getTempName(), // 使用雪花算法生成临时用户名
+                getTempName: (_phoneNumber) => getTempName(), // 使用随机算法生成临时用户名
             },
         }),
         admin({

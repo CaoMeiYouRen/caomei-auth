@@ -91,14 +91,16 @@ export const DATABASE_ENTITY_PREFIX = process.env.DATABASE_ENTITY_PREFIX || 'cao
 // Redis 连接地址
 export const REDIS_URL = process.env.REDIS_URL
 
+
+// 是否启用用户名登录功能
+export const USERNAME_ENABLED = process.env.NUXT_PUBLIC_USERNAME_ENABLED === 'true'
+
 /**
  * 短信服务配置
  * 支持 Spug、Twilio 等短信平台，如有需要，可在issue或discussion中提出其他渠道，会看情况适配
  */
 // 是否启用短信发送功能（包含注册、登录、绑定、找回密码等页面）
 export const PHONE_ENABLED = process.env.NUXT_PUBLIC_PHONE_ENABLED || import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
-// 是否启用用户名登录功能
-export const USERNAME_ENABLED = process.env.NUXT_PUBLIC_USERNAME_ENABLED === 'true'
 // 短信发件渠道：spug, twilio
 export const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
 
@@ -126,6 +128,8 @@ export const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN || ''
 // Twilio 发送号码
 export const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER || ''
 
+// 是否要求邮箱验证。若启用，则用户必须在登录前验证他们的邮箱。仅在使用邮箱密码登录时生效。
+export const EMAIL_REQUIRE_VERIFICATION = process.env.EMAIL_REQUIRE_VERIFICATION === 'true'
 /**
  * 邮件服务配置
  * SMTP 服务器配置和邮件发送限制
