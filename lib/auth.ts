@@ -28,7 +28,7 @@ import {
     PHONE_EXPIRES_IN,
     ANONYMOUS_EMAIL_DOMAIN_NAME,
     AUTH_SECRET,
-    ADMIN_USER_IDS as ENV_ADMIN_USER_IDS,
+    ADMIN_USER_IDS,
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
     GOOGLE_CLIENT_ID,
@@ -61,8 +61,6 @@ import { generateRandomString } from '@/server/utils/random'
 import { getTempEmail, getTempName, generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email-service'
 import { getUserLocale } from '@/server/utils/locale'
-
-const ADMIN_USER_IDS = ENV_ADMIN_USER_IDS
 
 // TODO 增加注册验证码
 export const auth = betterAuth({
