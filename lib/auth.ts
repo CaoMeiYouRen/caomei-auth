@@ -54,6 +54,7 @@ import {
     DOUYIN_CLIENT_SECRET,
     AUTH_BASE_URL,
     APP_NAME,
+    EMAIL_REQUIRE_VERIFICATION,
 } from '@/utils/env'
 import type { User } from '@/server/entities/user'
 import { generateRandomString } from '@/server/utils/random'
