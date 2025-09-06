@@ -1,5 +1,34 @@
 # caomei-auth
 
+# [1.6.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.5.0...v1.6.0) (2025-09-06)
+
+
+### ✨ 新功能
+
+* **password:** 添加密码强度组件，优化密码验证逻辑和提示信息 ([1b338b8](https://github.com/CaoMeiYouRen/caomei-auth/commit/1b338b8))
+* **sms:** 添加对 Twilio 短信服务的支持，更新相关配置和文档 ([c1cbb3e](https://github.com/CaoMeiYouRen/caomei-auth/commit/c1cbb3e))
+
+
+### 🐛 Bug 修复
+
+* **auth:** 修复获取用户额外信息的类型声明，支持返回手机号 ([e23cb86](https://github.com/CaoMeiYouRen/caomei-auth/commit/e23cb86))
+* **auth:** 移除不必要的服务器端检查，优化首页路由处理逻辑 ([fa4f10d](https://github.com/CaoMeiYouRen/caomei-auth/commit/fa4f10d))
+* **consent:** 修复返回首页按钮的点击事件，确保导航功能正常 ([582e3de](https://github.com/CaoMeiYouRen/caomei-auth/commit/582e3de))
+* **email-template:** 更新邮件模板，添加联系方式链接 ([97af9b1](https://github.com/CaoMeiYouRen/caomei-auth/commit/97af9b1))
+* **env:** 修改 Spug 的环境变量配置名称和相关文档 ([adaa1fe](https://github.com/CaoMeiYouRen/caomei-auth/commit/adaa1fe))
+* **logger:** 增强短信日志记录，支持 Twilio 特有字段和渠道信息 ([0dfc350](https://github.com/CaoMeiYouRen/caomei-auth/commit/0dfc350))
+* **logger:** 将日志缓存刷新间隔从30秒修改为60秒，以减少高频查询的日志输出 ([eed5a28](https://github.com/CaoMeiYouRen/caomei-auth/commit/eed5a28))
+* **login:** 更新登录按钮提示信息，优化用户体验；添加验证码输入自动提交功能 ([5cdc503](https://github.com/CaoMeiYouRen/caomei-auth/commit/5cdc503))
+
+
+### 📦 代码重构
+
+* **email-template:** 重构邮件模板引擎，简化模板生成逻辑并增强可读性 ([d375f85](https://github.com/CaoMeiYouRen/caomei-auth/commit/d375f85))
+* **phone:** 重构短信发送逻辑，支持 Spug 和 Twilio 渠道，优化手机号验证和错误处理 ([4ca0045](https://github.com/CaoMeiYouRen/caomei-auth/commit/4ca0045))
+* **quick-login:** 更新快速登录页面，优化用户体验和错误提示信息 ([b5bbdc2](https://github.com/CaoMeiYouRen/caomei-auth/commit/b5bbdc2))
+* **styles:** 移除不必要的样式导入，优化组件样式结构 ([5d3991d](https://github.com/CaoMeiYouRen/caomei-auth/commit/5d3991d))
+* 优化密码验证逻辑，移除重复的密码验证函数并调整导入路径 ([3321058](https://github.com/CaoMeiYouRen/caomei-auth/commit/3321058))
+
 # [1.5.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.4.1...v1.5.0) (2025-08-30)
 
 
