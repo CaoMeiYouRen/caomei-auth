@@ -89,7 +89,7 @@
   "devDependencies": {
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/test-utils": "^3.19.2",
-    "@primevue/nuxt-module": "^4.3.7",
+    "@primevue/nuxt-module": "^4.3.9",
     "@types/fs-extra": "^11.0.4",
     "@types/google-libphonenumber": "^7.4.30",
     "@types/lodash-es": "^4.17.12",
