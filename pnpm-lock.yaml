@@ -35,8 +35,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       '@primevue/core':
-        specifier: ^4.3.7
-        version: 4.3.7(vue@3.5.20(typescript@5.9.2))
+        specifier: ^4.3.9
+        version: 4.3.9(vue@3.5.20(typescript@5.9.2))
       '@primevue/forms':
         specifier: ^4.3.7
         version: 4.3.7(vue@3.5.20(typescript@5.9.2))
@@ -2113,6 +2113,12 @@ packages:
 
   '@primevue/core@4.3.7':
     resolution: {integrity: sha512-rYmEZTKs/C2Re+xFluY9R02+n4TcyJshooPPOG6zc23v/bmhrfcqCiS5gNiuXF/lYoOh4y8VTcHF6eZCZW724Q==}
+    engines: {node: '>=12.11.0'}
+    peerDependencies:
+      vue: ^3.5.0
+
+  '@primevue/core@4.3.9':
+    resolution: {integrity: sha512-P08MhVD8WrldbropVuiG25ku6il+v+cKKrspES6RijDc4NE/CrGMAwOlrdpOkpy7pcfTzqC9eIGBx5ifS28S5g==}
     engines: {node: '>=12.11.0'}
     peerDependencies:
       vue: ^3.5.0
@@ -12509,6 +12515,12 @@ snapshots:
       '@primevue/metadata': 4.3.7
 
   '@primevue/core@4.3.7(vue@3.5.20(typescript@5.9.2))':
+    dependencies:
+      '@primeuix/styled': 0.7.2
+      '@primeuix/utils': 0.6.1
+      vue: 3.5.20(typescript@5.9.2)
+
+  '@primevue/core@4.3.9(vue@3.5.20(typescript@5.9.2))':
     dependencies:
       '@primeuix/styled': 0.7.2
       '@primeuix/utils': 0.6.1
