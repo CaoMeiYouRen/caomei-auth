@@ -22,7 +22,29 @@ import {
     DATABASE_CHARSET,
     DATABASE_TIMEZONE,
     DATABASE_ENTITY_PREFIX,
+    DEMO_MODE,
 } from '@/utils/env'
+
+/**
+ * Demo 模式数据预填充函数
+ */
+async function populateDemoData(): Promise<void> {
+    if (!AppDataSource) {
+        throw new Error('Database not initialized')
+    }
+
+    try {
+        logger.info('开始填充Demo模式假数据...')
+
+        // 这里可以添加预填充假数据的逻辑
+        // 目前暂时只记录日志，具体的数据预填充可以在后续实现
+
+        logger.info('Demo模式假数据填充完成')
+    } catch (error: any) {
+        logger.error(`Demo模式数据填充失败: ${error.message}`)
+        throw error
+    }
+}
 
 // 支持的数据库类型
 const SUPPORTED_DATABASE_TYPES = ['sqlite', 'mysql', 'postgres']
@@ -41,25 +63,29 @@ export const initializeDB = async () => {
     // 从环境变量获取数据库类型
     const dbType = DATABASE_TYPE
 
+    // Demo 模式强制使用内存 SQLite 数据库
+    const actualDbType = DEMO_MODE ? 'sqlite' : dbType
+    const isMemoryDB = DEMO_MODE
+
     // 检查数据库类型是否支持
-    if (!SUPPORTED_DATABASE_TYPES.includes(dbType)) {
-        throw new Error(`Unsupported database type: ${dbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
+    if (!SUPPORTED_DATABASE_TYPES.includes(actualDbType)) {
+        throw new Error(`Unsupported database type: ${actualDbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
     }
 
     // 数据库配置
     let options: DataSourceOptions
 
     // 配置数据库连接
-    switch (dbType) {
+    switch (actualDbType) {
         case 'sqlite':
             options = {
                 type: 'sqlite',
-                database: DATABASE_PATH, // 默认 SQLite 数据库路径，测试时可以是 ':memory:'
+                database: isMemoryDB ? ':memory:' : DATABASE_PATH, // Demo 模式使用内存数据库
             }
             break
         case 'mysql':
             options = {
-                type: dbType as any,
+                type: actualDbType as any,
                 url: DATABASE_URL,
                 supportBigNumbers: true, // 处理数据库中的大数字
                 bigNumberStrings: false, // 仅当它们无法用 JavaScript Number 对象准确表示时才会返回大数字作为 String 对象
@@ -71,7 +97,7 @@ export const initializeDB = async () => {
             break
         case 'postgres':
             options = {
-                type: dbType as any,
+                type: actualDbType as any,
                 url: DATABASE_URL,
                 parseInt8: true, // 解析 bigint 为 number。将 64 位整数（int8）解析为 JavaScript 整数
                 ssl: DATABASE_SSL ? { rejectUnauthorized: false } : false, // 是否启用 SSL
@@ -82,7 +108,7 @@ export const initializeDB = async () => {
             }
             break
         default:
-            throw new Error(`Unsupported database type: ${dbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
+            throw new Error(`Unsupported database type: ${actualDbType}. Please use one of: ${SUPPORTED_DATABASE_TYPES.join(', ')}`)
     }
 
     // 检查是否为测试环境
@@ -107,14 +133,19 @@ export const initializeDB = async () => {
         // 更新连接状态
         isInitialized = true
 
+        // Demo 模式下预填充假数据
+        if (DEMO_MODE && isMemoryDB) {
+            await populateDemoData()
+        }
+
         // 测试环境时减少日志输出
         if (!isTestEnv) {
             logger.system.startup({
-                dbType,
+                dbType: actualDbType,
                 env: process.env.NODE_ENV,
                 port: Number(process.env.PORT || process.env.NITRO_PORT || 3000),
             })
-            logger.info(`Database initialized successfully with type: ${dbType}`)
+            logger.info(`Database initialized successfully with type: ${actualDbType}${isMemoryDB ? ' (memory)' : ''}${DEMO_MODE ? ' [DEMO MODE]' : ''}`)
         }
     } catch (error: any) {
         // 测试环境时也需要记录错误，但使用较低级别
@@ -125,7 +156,7 @@ export const initializeDB = async () => {
             logger.database.error({
                 error: error.message,
                 stack: error.stack,
-                query: `database_initialization (${dbType})`,
+                query: `database_initialization (${actualDbType})`,
             })
         }
 

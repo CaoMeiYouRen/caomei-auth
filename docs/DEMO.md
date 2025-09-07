@@ -34,8 +34,7 @@
 **创建新文件：**
 
 1. `server/utils/demo-data-generator.ts` - 假数据生成工具
-2. `server/utils/demo-middleware.ts` - Demo 模式中间件
-3. `types/demo.d.ts` - Demo 模式类型定义
+2. `types/demo.d.ts` - Demo 模式类型定义
 
 **功能包括：**
 

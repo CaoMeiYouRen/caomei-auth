@@ -204,3 +204,11 @@ export const DOUYIN_CLIENT_SECRET = process.env.DOUYIN_CLIENT_SECRET
 // 管理员用户ID列表
 export const ADMIN_USER_IDS = process.env.ADMIN_USER_IDS?.split(',').map((e) => e.trim()).filter(Boolean) || []
 
+/**
+ * Demo 模式配置
+ */
+// 是否启用Demo模式
+export const DEMO_MODE = process.env.DEMO_MODE === 'true'
+// Demo账号密码
+export const DEMO_PASSWORD = process.env.DEMO_PASSWORD || 'Demo@123456'
+
