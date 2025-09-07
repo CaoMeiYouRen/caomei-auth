@@ -2,16 +2,26 @@
 
 ### 0.管理员和用户账号
 
-demo_admin 用于展示 管理员 视角
+#### 管理员
 
-demo_user 用于展示 用户 视角
+用户名：demo_admin
+昵称：演示管理员
+邮箱：demo_admin@example.com
+用途：用于展示 管理员 视角
+
+#### 用户
+
+用户名：demo_user
+昵称：演示用户
+邮箱：demo_user@example.com
+用途：用于展示 用户 视角
 
 ### 1. 环境变量配置
 
 **新增环境变量**
 
 -   `DEMO_MODE` - 启用 Demo 模式
--   `DEMO_ADMIN_USER_EMAIL` - Demo 模式管理员邮箱
+-   `DEMO_PASSWORD` - Demo 账号密码。默认值：`Demo@123456`
 
 **修改文件：**
 
@@ -38,7 +48,7 @@ demo_user 用于展示 用户 视角
 
 **实现思路：**
 
--   Demo 模式下使用内存数据库或专用测试数据库
+-   Demo 模式下使用 sqlite 数据库，路径设置为 `:memory:` 以启用内存模式
 -   拦截所有写操作，防止对真实数据的修改
 -   提供只读的假数据接口
 
@@ -118,6 +128,7 @@ demo_user 用于展示 用户 视角
 -   禁止发送邮件/短信
 -   禁止文件上传
 -   禁止敏感配置修改
+-   禁止注册新用户
 
 ### 9. 实现步骤
 
@@ -150,5 +161,5 @@ demo_user 用于展示 用户 视角
 ```env
 # Demo 模式配置
 DEMO_MODE=true
-DEMO_ADMIN_USER_EMAIL=admin@demo.com
+DEMO_PASSWORD=Demo@123456
 ```
