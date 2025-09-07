@@ -9,6 +9,7 @@ import type {
     DemoStats,
     DemoConfig,
 } from '@/types/demo'
+import { DEMO_PASSWORD } from '@/utils/env'
 
 /**
  * 生成随机ID
@@ -34,7 +35,7 @@ function getRandomDate(daysAgo: number): Date {
 export const demoConfig: DemoConfig = {
     enabled: true,
     adminUser: {
-        id: 'demo_admin_001',
+        // id: 'demo_admin_001',
         name: 'demo_admin',
         email: 'demo_admin@example.com',
         emailVerified: true,
@@ -48,7 +49,7 @@ export const demoConfig: DemoConfig = {
         phoneNumberVerified: true,
     },
     normalUser: {
-        id: 'demo_user_001',
+        // id: 'demo_user_001',
         name: 'demo_user',
         email: 'demo_user@example.com',
         emailVerified: true,
@@ -61,7 +62,7 @@ export const demoConfig: DemoConfig = {
         phoneNumber: '+86 139****9999',
         phoneNumberVerified: true,
     },
-    password: 'Demo@123456',
+    password: DEMO_PASSWORD,
 }
 
 /**
@@ -190,7 +191,7 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
 
         logs.push({
             id: generateId(),
-            userId: user.id,
+            userId: user.id as string,
             userEmail: user.email,
             userName: user.name,
             ip: maskIP(generateRandomIP()),

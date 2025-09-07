@@ -6,7 +6,7 @@
  * 假数据用户信息
  */
 export interface DemoUser {
-    id: string
+    id?: string
     name: string
     email: string
     emailVerified: boolean
