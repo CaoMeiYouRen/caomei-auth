@@ -336,6 +336,7 @@ import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import type { SocialProvider } from '@/types/social'
+
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
 const usernameEnabled = config.usernameEnabled
@@ -608,7 +609,6 @@ async function login() {
                 password: usernamePassword.value,
                 rememberMe: rememberMe.value,
             })
-
             if (result.error) {
                 throw new Error(result.error.message || '登录失败')
             }
@@ -617,16 +617,22 @@ async function login() {
             if (handle2FA(result)) {
                 return
             }
-
+            const { data: session } = await authClient.useSession(useFetch)
             toast.add({
                 severity: 'success',
                 summary: '登录成功',
                 detail: '即将跳转到首页',
                 life: 2000,
             })
+
             setTimeout(() => {
+                const user = session.value?.user
+                if (user?.role?.includes('admin')) { // 如果是管理员，跳转到用户管理页
+                    navigateTo('/admin/users')
+                    return
+                }
                 navigateTo('/profile')
-            }, 1200)
+            }, 200)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
             toast.add({

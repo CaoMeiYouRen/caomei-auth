@@ -207,48 +207,53 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
 }
 
 /**
- * 生成假的 SSO 提供商数据
+ * 生成假的 SSO 提供商数据（连接到草梅 Auth 的应用）
  */
 export function generateDemoSSOProviders(count: number = 10): DemoSSOProvider[] {
-    const providers = [
-        { name: 'GitHub', type: 'oauth2' as const, logo: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png' },
-        { name: 'Google', type: 'oidc' as const, logo: 'https://developers.google.com/identity/images/g-logo.png' },
-        { name: 'Microsoft', type: 'oidc' as const, logo: 'https://docs.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-azure-ad-apps/ms-symbollockup_mssymbol_19.png' },
-        { name: 'Facebook', type: 'oauth2' as const, logo: 'https://en.facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png' },
-        { name: 'Twitter', type: 'oauth2' as const, logo: 'https://abs.twimg.com/responsive-web/client-web/icon-ios.b1fc7275.png' },
-        { name: '微信', type: 'oauth2' as const, logo: 'https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png' },
-        { name: 'QQ', type: 'oauth2' as const, logo: 'https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png' },
-        { name: '钉钉', type: 'oauth2' as const, logo: 'https://img.alicdn.com/imgextra/i1/O1CN01TleQVX1j2x2Y2EUAF_!!6000000004490-2-tps-64-64.png' },
-        { name: '企业微信', type: 'oauth2' as const, logo: 'https://wwcdn.weixin.qq.com/node/wework/images/wxwork_icon.6769e8a8.png' },
-        { name: 'Okta', type: 'saml' as const, logo: 'https://www.okta.com/sites/default/files/media/image/2020-09/Okta_Logo_BrightBlue_Medium.png' },
+    const ssoApps = [
+        { name: '企业办公系统', description: '内部员工办公管理系统' },
+        { name: '人力资源管理', description: 'HR 系统，员工信息管理' },
+        { name: '财务管理系统', description: '企业财务报表和账务管理' },
+        { name: '客户关系管理', description: 'CRM 系统，客户信息管理' },
+        { name: '项目管理平台', description: '团队协作和项目进度管理' },
+        { name: '知识库系统', description: '企业内部知识分享平台' },
+        { name: '销售管理系统', description: '销售流程和业绩管理' },
+        { name: '库存管理系统', description: '仓库和库存信息管理' },
+        { name: '运维监控平台', description: '服务器和应用监控系统' },
+        { name: '企业邮箱系统', description: '内部邮件通讯系统' },
+        { name: '视频会议系统', description: '在线会议和远程协作' },
+        { name: '文档管理系统', description: '企业文档存储和版本管理' },
+        { name: '数据分析平台', description: '业务数据统计和分析' },
+        { name: '培训学习平台', description: '员工培训和学习管理' },
+        { name: '审批流程系统', description: '企业内部审批和工作流' },
     ]
 
     const ssoProviders: DemoSSOProvider[] = []
 
-    for (let i = 0; i < Math.min(count, providers.length); i++) {
-        const provider = providers[i]
+    for (let i = 0; i < Math.min(count, ssoApps.length); i++) {
+        const app = ssoApps[i]
         const id = snowflake.generateId()
+        const appName = app.name.toLowerCase()
         ssoProviders.push({
             id,
-            name: provider.name,
-            type: provider.type,
-            providerId: provider.name.toLowerCase(),
+            name: app.name,
+            type: 'oidc' as const,
+            providerId: `sso_${appName}`,
             clientId: snowflake.generateId(),
             clientSecret: `demo_secret_${randomBytes(16).toString('hex')}`,
-            issuerUrl: provider.type === 'oidc' ? `https://accounts.${provider.name.toLowerCase()}.com` : undefined,
-            authorizationUrl: `https://api.${provider.name.toLowerCase()}.com/oauth/authorize`,
-            tokenUrl: `https://api.${provider.name.toLowerCase()}.com/oauth/token`,
-            userInfoUrl: `https://api.${provider.name.toLowerCase()}.com/user`,
-            scopes: provider.type === 'oauth2' ? ['openid', 'profile', 'email'] : undefined,
-            enabled: Math.random() > 0.3,
-            logo: provider.logo,
-            description: `通过 ${provider.name} 进行单点登录`,
+            issuerUrl: process.env.BASE_URL || 'https://auth.example.com',
+            authorizationUrl: `${process.env.BASE_URL || 'https://auth.example.com'}/oauth/authorize`,
+            tokenUrl: `${process.env.BASE_URL || 'https://auth.example.com'}/oauth/token`,
+            userInfoUrl: `${process.env.BASE_URL || 'https://auth.example.com'}/oauth/userinfo`,
+            scopes: ['openid', 'profile', 'email'],
+            enabled: Math.random() > 0.2,
+            logo: `https://api.dicebear.com/7.x/shapes/svg?seed=${app.name}`,
+            description: app.description,
             createdAt: getRandomDate(100),
             updatedAt: getRandomDate(30),
-            usersCount: Math.floor(Math.random() * 500),
+            usersCount: Math.floor(Math.random() * 800) + 50,
         })
     }
-
     return ssoProviders
 }
 
