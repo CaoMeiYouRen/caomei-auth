@@ -67,15 +67,23 @@ export const VERCEL_BLOB_TOKEN = process.env.VERCEL_BLOB_TOKEN
 export const BLOB_READ_WRITE_TOKEN = process.env.BLOB_READ_WRITE_TOKEN
 
 /**
+ * Demo 模式配置
+ */
+// 是否启用Demo模式
+export const DEMO_MODE = process.env.DEMO_MODE === 'true'
+// Demo账号密码
+export const DEMO_PASSWORD = process.env.DEMO_PASSWORD || 'Demo@123456'
+
+/**
  * 数据库配置
  * 支持 SQLite、MySQL、PostgreSQL
  */
 // 数据库类型：sqlite, mysql, postgres
-export const DATABASE_TYPE = process.env.DATABASE_TYPE || 'sqlite'
+export const DATABASE_TYPE = DEMO_MODE ? 'sqlite' : (process.env.DATABASE_TYPE || 'sqlite')
 // 数据库连接 URL (MySQL和PostgreSQL使用)
 export const DATABASE_URL = process.env.DATABASE_URL
 // SQLite 数据库路径 (仅SQLite使用)
-export const DATABASE_PATH = process.env.DATABASE_PATH || 'database/caomei-auth.sqlite'
+export const DATABASE_PATH = DEMO_MODE ? ':memory:' : (process.env.DATABASE_PATH || 'database/caomei-auth.sqlite')
 // 是否启用 SSL 连接 (true/false)
 export const DATABASE_SSL = process.env.DATABASE_SSL === 'true'
 // 数据库字符集 (仅MySQL使用)
@@ -203,12 +211,4 @@ export const DOUYIN_CLIENT_SECRET = process.env.DOUYIN_CLIENT_SECRET
  */
 // 管理员用户ID列表
 export const ADMIN_USER_IDS = process.env.ADMIN_USER_IDS?.split(',').map((e) => e.trim()).filter(Boolean) || []
-
-/**
- * Demo 模式配置
- */
-// 是否启用Demo模式
-export const DEMO_MODE = process.env.DEMO_MODE === 'true'
-// Demo账号密码
-export const DEMO_PASSWORD = process.env.DEMO_PASSWORD || 'Demo@123456'
 

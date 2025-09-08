@@ -10,13 +10,8 @@ import type {
     DemoConfig,
 } from '@/types/demo'
 import { DEMO_PASSWORD } from '@/utils/env'
+import { formatPhoneNumber } from '@/utils/phone'
 
-/**
- * 生成随机ID
- */
-function generateId(): string {
-    return randomBytes(8).toString('hex')
-}
 
 /**
  * 生成随机日期范围
@@ -36,30 +31,32 @@ export const demoConfig: DemoConfig = {
     enabled: true,
     adminUser: {
         // id: 'demo_admin_001',
-        name: 'demo_admin',
+        username: 'demo_admin',
+        name: '演示管理员',
         email: 'demo_admin@example.com',
         emailVerified: true,
         image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',
-        role: 'admin',
-        status: 'active',
+        role: 'admin' as const,
+        status: 'active' as const,
         createdAt: dayjs().subtract(180, 'day').toDate(),
         updatedAt: dayjs().subtract(1, 'day').toDate(),
         lastLoginAt: dayjs().subtract(1, 'hour').toDate(),
-        phoneNumber: '+86 138****8888',
+        phoneNumber: formatPhoneNumber('+86 188 8888 8888'),
         phoneNumberVerified: true,
     },
     normalUser: {
         // id: 'demo_user_001',
-        name: 'demo_user',
+        username: 'demo_user',
+        name: '演示用户',
         email: 'demo_user@example.com',
         emailVerified: true,
         image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user',
-        role: 'user',
-        status: 'active',
+        role: 'user' as const,
+        status: 'active' as const,
         createdAt: dayjs().subtract(90, 'day').toDate(),
         updatedAt: dayjs().subtract(2, 'day').toDate(),
         lastLoginAt: dayjs().subtract(2, 'hour').toDate(),
-        phoneNumber: '+86 139****9999',
+        phoneNumber: formatPhoneNumber ('+86 199 9999 9999'),
         phoneNumberVerified: true,
     },
     password: DEMO_PASSWORD,
@@ -69,13 +66,13 @@ export const demoConfig: DemoConfig = {
  * 生成假的用户数据
  */
 export function generateDemoUsers(count: number = 50): DemoUser[] {
-    const users: DemoUser[] = [demoConfig.adminUser, demoConfig.normalUser]
+    const users: DemoUser[] = []
 
     const firstNames = ['张', '李', '王', '刘', '陈', '杨', '赵', '黄', '周', '吴', '徐', '孙', '胡', '朱', '高', '林', '何', '郭', '马', '罗']
     const lastNames = ['伟', '芳', '娜', '秀英', '敏', '静', '丽', '强', '磊', '军', '洋', '勇', '艳', '杰', '娟', '涛', '明', '超', '秀兰', '霞']
     const domains = ['example.com', 'demo.com', 'test.org', 'sample.net']
 
-    for (let i = 0; i < count - 2; i++) {
+    for (let i = 0; i < count; i++) {
         const firstName = firstNames[Math.floor(Math.random() * firstNames.length)]
         const lastName = lastNames[Math.floor(Math.random() * lastNames.length)]
         const name = `${firstName}${lastName}${i + 1}`
@@ -92,9 +89,9 @@ export function generateDemoUsers(count: number = 50): DemoUser[] {
         }
 
         users.push({
-            id: generateId(),
+            id: snowflake.generateId(),
             name,
-            email: maskEmail(email),
+            email,
             emailVerified: Math.random() > 0.2,
             image: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
             role: Math.random() > 0.95 ? 'admin' : 'user',
@@ -102,7 +99,7 @@ export function generateDemoUsers(count: number = 50): DemoUser[] {
             createdAt: getRandomDate(365),
             updatedAt: getRandomDate(30),
             lastLoginAt: Math.random() > 0.3 ? getRandomDate(7) : undefined,
-            phoneNumber: Math.random() > 0.4 ? maskPhone(`+86138${Math.floor(Math.random() * 100000000).toString().padStart(8, '0')}`) : undefined,
+            phoneNumber: Math.random() > 0.4 ? `+86199${Math.floor(Math.random() * 100000000).toString().padStart(8, '0')}` : undefined,
             phoneNumberVerified: Math.random() > 0.3,
         })
     }
@@ -133,10 +130,11 @@ export function generateDemoOAuthApps(count: number = 20): DemoOAuthApplication[
 
     for (let i = 0; i < count; i++) {
         const name = appNames[i] || `应用${i + 1}`
+        const id = snowflake.generateId()
         apps.push({
-            id: generateId(),
+            id,
             name,
-            clientId: `demo_client_${generateId()}`,
+            clientId: id,
             clientSecret: `demo_secret_${randomBytes(16).toString('hex')}`,
             redirectUris: [
                 `https://${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.example.com/callback`,
@@ -188,9 +186,9 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
         const user = users[Math.floor(Math.random() * users.length)]
         const method = methods[Math.floor(Math.random() * methods.length)]
         const success = Math.random() > 0.15 // 85% 成功率
-
+        const id = snowflake.generateId()
         logs.push({
-            id: generateId(),
+            id,
             userId: user.id as string,
             userEmail: user.email,
             userName: user.name,
@@ -229,12 +227,13 @@ export function generateDemoSSOProviders(count: number = 10): DemoSSOProvider[] 
 
     for (let i = 0; i < Math.min(count, providers.length); i++) {
         const provider = providers[i]
+        const id = snowflake.generateId()
         ssoProviders.push({
-            id: generateId(),
+            id,
             name: provider.name,
             type: provider.type,
-            providerId: provider.name.toLowerCase().replace(/[^a-z0-9]/g, ''),
-            clientId: `demo_${provider.name.toLowerCase()}_${generateId()}`,
+            providerId: provider.name.toLowerCase(),
+            clientId: snowflake.generateId(),
             clientSecret: `demo_secret_${randomBytes(16).toString('hex')}`,
             issuerUrl: provider.type === 'oidc' ? `https://accounts.${provider.name.toLowerCase()}.com` : undefined,
             authorizationUrl: `https://api.${provider.name.toLowerCase()}.com/oauth/authorize`,

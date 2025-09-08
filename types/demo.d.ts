@@ -8,6 +8,7 @@
 export interface DemoUser {
     id?: string
     name: string
+    username?: string
     email: string
     emailVerified: boolean
     image?: string
