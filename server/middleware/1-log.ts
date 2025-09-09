@@ -21,8 +21,9 @@ export default defineEventHandler(async (event) => {
             headers: event.headers,
         })
         userId = session?.user?.id
-    } catch {
+    } catch (error) {
         // 忽略错误，继续记录请求
+        console.log('获取用户 session 失败，继续记录请求', error)
     }
 
     // 记录请求
