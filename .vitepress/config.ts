@@ -140,7 +140,9 @@ export default defineConfig({
                         { text: '管理员角色', link: '/docs/development/admin-role-sync' },
                         { text: '用户管理', link: '/docs/development/user-management-sorting' },
                         { text: '最佳实践', link: '/docs/development/best-practices' },
-                        { text: '无障碍适配', link: '/docs/development/accessibility' }
+                        { text: '无障碍适配', link: '/docs/development/accessibility' },
+                        { text: '调试构建', link: '/docs/development/debug-build' }
+
                     ]
                 }
             ],
