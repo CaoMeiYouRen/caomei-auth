@@ -1,5 +1,6 @@
 // import { randomBytes } from 'crypto'
 import dayjs from 'dayjs'
+import { generateRandomString } from './random'
 import { maskEmail, maskPhone, maskIP } from '@/utils/privacy'
 import type {
     DemoUser,
@@ -11,7 +12,6 @@ import type {
 } from '@/types/demo'
 import { DEMO_PASSWORD, DEMO_MODE } from '@/utils/env'
 import { formatPhoneNumber } from '@/utils/phone'
-import { generateRandomString } from '@/utils/random'
 
 /**
  * 生成随机日期范围
