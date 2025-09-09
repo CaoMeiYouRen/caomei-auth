@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto'
+// import { randomBytes } from 'crypto'
 import dayjs from 'dayjs'
 import { maskEmail, maskPhone, maskIP } from '@/utils/privacy'
 import type {
@@ -9,9 +9,9 @@ import type {
     DemoStats,
     DemoConfig,
 } from '@/types/demo'
-import { DEMO_PASSWORD } from '@/utils/env'
+import { DEMO_PASSWORD, DEMO_MODE } from '@/utils/env'
 import { formatPhoneNumber } from '@/utils/phone'
-
+import { generateRandomString } from '@/utils/random'
 
 /**
  * 生成随机日期范围
@@ -41,7 +41,7 @@ export const demoConfig: DemoConfig = {
         createdAt: dayjs().subtract(180, 'day').toDate(),
         updatedAt: dayjs().subtract(1, 'day').toDate(),
         lastLoginAt: dayjs().subtract(1, 'hour').toDate(),
-        phoneNumber: formatPhoneNumber('+86 188 8888 8888'),
+        phoneNumber: formatPhoneNumber('+86 199 8888 8888'),
         phoneNumberVerified: true,
     },
     normalUser: {
@@ -135,7 +135,7 @@ export function generateDemoOAuthApps(count: number = 20): DemoOAuthApplication[
             id,
             name,
             clientId: id,
-            clientSecret: `demo_secret_${randomBytes(16).toString('hex')}`,
+            clientSecret: `demo_secret_${generateRandomString(16)}`,
             redirectUris: [
                 `https://${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.example.com/callback`,
                 `https://localhost:3000/auth/callback`,
@@ -240,7 +240,7 @@ export function generateDemoSSOProviders(count: number = 10): DemoSSOProvider[] 
             type: 'oidc' as const,
             providerId: `sso_${appName}`,
             clientId: snowflake.generateId(),
-            clientSecret: `demo_secret_${randomBytes(16).toString('hex')}`,
+            clientSecret: `demo_secret_${generateRandomString(16)}`,
             issuerUrl: process.env.BASE_URL || 'https://auth.example.com',
             authorizationUrl: `${process.env.BASE_URL || 'https://auth.example.com'}/oauth/authorize`,
             tokenUrl: `${process.env.BASE_URL || 'https://auth.example.com'}/oauth/token`,
@@ -286,7 +286,7 @@ export function generateDemoStats(): DemoStats {
  * 检查是否为 Demo 模式
  */
 export function isDemoMode(): boolean {
-    return process.env.DEMO_MODE === 'true'
+    return DEMO_MODE
 }
 
 /**
