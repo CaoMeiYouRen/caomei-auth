@@ -64,8 +64,8 @@ const passwordStrengthPresets: Record<PasswordStrength, PasswordValidatorOptions
  * @returns 密码强度级别
  */
 export function getDefaultPasswordStrength(): PasswordStrength {
-    const config = useRuntimeConfig().public
-    const level = (config.passwordStrengthLevel || PASSWORD_STRENGTH_LEVEL).toLowerCase()
+    // const config = useRuntimeConfig().public
+    const level = PASSWORD_STRENGTH_LEVEL.toLowerCase()
     // console.log('level', level)
     switch (level) {
         case 'weak':

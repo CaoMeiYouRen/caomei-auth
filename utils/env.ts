@@ -35,7 +35,7 @@ export const AXIOM_API_TOKEN = process.env.AXIOM_API_TOKEN
  * 允许通过环境变量设置密码强度要求
  */
 // 密码强度级别：weak, medium, strong, very_strong，默认为 strong
-export const PASSWORD_STRENGTH_LEVEL = import.meta.env.NUXT_PUBLIC_PASSWORD_STRENGTH_LEVEL || 'strong'
+export const PASSWORD_STRENGTH_LEVEL = import.meta.env.NUXT_PUBLIC_PASSWORD_STRENGTH_LEVEL as string || 'strong'
 
 /**
  * 文件上传配置
