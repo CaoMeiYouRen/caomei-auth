@@ -305,7 +305,7 @@ export const initializeDB = async () => {
 
         // Demo 模式下预填充假数据
         if (DEMO_MODE && isMemoryDB) {
-            scheduleDemoDataPopulation()
+            // scheduleDemoDataPopulation()
         }
 
         // 测试环境时减少日志输出
