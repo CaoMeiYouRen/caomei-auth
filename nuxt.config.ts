@@ -137,7 +137,7 @@ export default defineNuxtConfig({
 
         build: {
             // 调试模式下禁用压缩和混淆
-            minify: process.env.DEBUG_BUILD === 'true' ? false : 'terser',
+            minify: process.env.DEBUG_BUILD === 'true' ? false : 'esbuild',
             // 生成 source map
             sourcemap: process.env.DEBUG_BUILD === 'true',
             // 保持函数名和变量名
