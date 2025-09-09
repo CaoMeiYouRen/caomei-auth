@@ -137,21 +137,21 @@ export default defineNuxtConfig({
 
         build: {
             // 调试模式下禁用压缩和混淆
-            minify: process.env.DEBUG_BUILD === 'true' ? false : 'esbuild',
+            // minify: process.env.DEBUG_BUILD === 'true' ? false : 'esbuild',
             // 生成 source map
-            sourcemap: process.env.DEBUG_BUILD === 'true',
+            // sourcemap: process.env.DEBUG_BUILD === 'true',
             // 保持函数名和变量名
-            target: process.env.DEBUG_BUILD === 'true' ? 'esnext' : 'modules',
-            rollupOptions: process.env.DEBUG_BUILD === 'true'
-                ? {
-                    output: {
-                        // 禁用混淆
-                        minifyInternalExports: false,
-                        // 保持函数名
-                        compact: false,
-                    },
-                }
-                : undefined,
+            // target: process.env.DEBUG_BUILD === 'true' ? 'esnext' : 'modules',
+            // rollupOptions: process.env.DEBUG_BUILD === 'true'
+            //     ? {
+            //         output: {
+            //             // 禁用混淆
+            //             minifyInternalExports: false,
+            //             // 保持函数名
+            //             compact: false,
+            //         },
+            //     }
+            //     : undefined,
         },
     },
     devServer: {
@@ -162,9 +162,9 @@ export default defineNuxtConfig({
             options: {
                 target: 'esnext',
                 // 调试模式下禁用压缩
-                minify: process.env.DEBUG_BUILD !== 'true',
+                // minify: process.env.DEBUG_BUILD !== 'true',
                 // 生成 source map
-                sourcemap: process.env.DEBUG_BUILD === 'true',
+                // sourcemap: process.env.DEBUG_BUILD === 'true',
                 tsconfigRaw: {
                     compilerOptions: {
                         experimentalDecorators: true,

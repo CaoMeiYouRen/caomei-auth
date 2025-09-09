@@ -101,6 +101,7 @@ export const typeormAdapter =
             }
 
             function getModelName(model: string): string {
+
                 const modelSchema = schema[model]
                 if (!modelSchema) {
                     throw new Error(`Model ${model} not found in schema`)
@@ -110,6 +111,9 @@ export const typeormAdapter =
                 const entity = dataSource.entityMetadatas.find(
                     (e) => e.name.toLowerCase() === modelName.toLowerCase(),
                 )
+                // const _entity = dataSource.entityMetadatas.find((e) => e.tableName.includes(modelName))!
+                // console.log(_entity.name, _entity.tableName, _entity.targetName)
+                // console.log('modelName', entity?.name || modelName)
                 return entity?.name || modelName
             }
 
