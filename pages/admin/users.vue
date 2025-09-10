@@ -666,7 +666,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { debounce } from 'lodash-es'
@@ -683,7 +682,6 @@ definePageMeta({
     layout: 'admin',
 })
 
-const router = useRouter()
 const toast = useToast()
 const confirm = useConfirm()
 
@@ -828,7 +826,7 @@ const getRoleSeverity = (role: string) => {
 
 // 页面方法
 const goProfile = () => {
-    router.push('/profile')
+    navigateTo('/profile')
 }
 
 const refreshUsers = () => {
