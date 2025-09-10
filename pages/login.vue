@@ -617,7 +617,7 @@ async function login() {
             if (handle2FA(result)) {
                 return
             }
-            const { data: session } = await authClient.useSession(useFetch)
+            // const { data: session } = await authClient.useSession(useFetch)
             toast.add({
                 severity: 'success',
                 summary: '登录成功',
@@ -626,11 +626,11 @@ async function login() {
             })
 
             setTimeout(() => {
-                const user = session.value?.user
-                if (user?.role?.includes('admin')) { // 如果是管理员，跳转到用户管理页
-                    navigateTo('/admin/users')
-                    return
-                }
+                // const user = session.value?.user
+                // if (user?.role?.includes('admin')) { // 如果是管理员，跳转到用户管理页
+                //     navigateTo('/admin/users')
+                //     return
+                // }
                 navigateTo('/profile')
             }, 200)
         } catch (error) {
