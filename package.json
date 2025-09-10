@@ -125,7 +125,7 @@
     "stylelint": "^16.24.0",
     "stylelint-config-cmyr": "1.0.0",
     "typescript": "^5.9.2",
-    "vite": "^7.1.2",
+    "vite": "^6.3.6",
     "vitepress": "^1.6.4",
     "vitest": "^3.2.4"
   },
