@@ -236,20 +236,20 @@
                                 <!-- 已绑定的第三方账号 -->
                                 <Button
                                     v-for="account in userAccounts"
-                                    :key="account.provider"
-                                    v-tooltip.top="privacyMode ? `点击解绑 ${getProviderName(account.provider)} 账号，ID: ${maskUserId(account.accountId)}` : `点击解绑 ${getProviderName(account.provider)} 账号，完整 ID: ${account.accountId}`"
+                                    :key="account.providerId"
+                                    v-tooltip.top="privacyMode ? `点击解绑 ${getProviderName(account.providerId)} 账号，ID: ${maskUserId(account.accountId)}` : `点击解绑 ${getProviderName(account.providerId)} 账号，完整 ID: ${account.accountId}`"
                                     class="social-btn"
-                                    :style="{color: socialProviders.find(p => p.provider === account.provider)?.color}"
-                                    :icon="getProviderIcon(account.provider)"
-                                    :label="privacyMode ? `${getProviderName(account.provider)}(ID: ${maskUserId(account.accountId)})` : `${getProviderName(account.provider)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
+                                    :style="{color: socialProviders.find(p => p.provider === account.providerId)?.color}"
+                                    :icon="getProviderIcon(account.providerId)"
+                                    :label="privacyMode ? `${getProviderName(account.providerId)}(ID: ${maskUserId(account.accountId)})` : `${getProviderName(account.providerId)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
                                     outlined
-                                    @click="confirmUnlink(account.provider, account.accountId)"
+                                    @click="confirmUnlink(account.providerId, account.accountId)"
                                 />
 
                                 <!-- 绑定新账号   -->
                                 <template v-for="provider in enabledProviders">
                                     <Button
-                                        v-if="!userAccounts.some(account => account.provider === provider.provider) && !provider.anonymous"
+                                        v-if="!userAccounts.some(account => account.providerId === provider.provider) && !provider.anonymous"
                                         :key="provider.provider"
                                         class="social-btn"
                                         :style="{color: provider.color}"
@@ -639,7 +639,7 @@ onMounted(async () => {
 
 const userAccounts = ref<{
     id: string
-    provider: string
+    providerId: string
     createdAt: Date
     updatedAt: Date
     accountId: string
@@ -651,7 +651,7 @@ const fetchUserAccounts = async () => {
     try {
         const accounts = await authClient.listAccounts({})
         // 过滤掉邮箱登录的账户
-        userAccounts.value = accounts.data?.filter((account) => account.provider !== 'credential') || []
+        userAccounts.value = accounts.data?.filter((account) => account.providerId !== 'credential') || []
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '获取第三方账号信息失败'
         toast.add({
