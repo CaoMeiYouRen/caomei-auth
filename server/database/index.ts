@@ -288,7 +288,7 @@ export const initializeDB = async () => {
     AppDataSource = new DataSource({
         ...options,
         entities,
-        synchronize: isTestEnv || process.env.NODE_ENV !== 'production', // 测试环境总是同步表结构
+        synchronize: DEMO_MODE || isTestEnv || process.env.NODE_ENV !== 'production', // 测试环境总是同步表结构
         logging: isTestEnv ? false : process.env.NODE_ENV === 'development', // 测试时禁用日志
         logger: isTestEnv ? undefined : new CustomLogger(), // 测试时不使用自定义日志器
         entityPrefix: DATABASE_ENTITY_PREFIX, // 所有表（或集合）加的前缀
