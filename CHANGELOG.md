@@ -1,5 +1,46 @@
 # caomei-auth
 
+# [1.7.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.6.0...v1.7.0) (2025-09-13)
+
+
+### ✨ 新功能
+
+* **auth:** 添加邮箱验证选项，用户需在登录前验证邮箱 ([38d0a1e](https://github.com/CaoMeiYouRen/caomei-auth/commit/38d0a1e))
+* **demo:** 添加 Demo 模式相关类型定义和假数据生成工具 ([19bd41b](https://github.com/CaoMeiYouRen/caomei-auth/commit/19bd41b))
+* **demo:** 添加 Demo 模式配置，更新假数据生成逻辑和相关类型定义 ([6ae3e82](https://github.com/CaoMeiYouRen/caomei-auth/commit/6ae3e82))
+* **password:** 添加密码强度配置，支持通过环境变量设置密码强度要求 ([074779c](https://github.com/CaoMeiYouRen/caomei-auth/commit/074779c))
+* 添加调试构建支持，更新配置和文档 ([6eedb2f](https://github.com/CaoMeiYouRen/caomei-auth/commit/6eedb2f))
+
+
+### 🐛 Bug 修复
+
+* **auth:** 引入邮箱验证配置常量 ([e4d1ce9](https://github.com/CaoMeiYouRen/caomei-auth/commit/e4d1ce9))
+* **auth:** 移除不必要的环境变量引用，简化代码 ([0423fb1](https://github.com/CaoMeiYouRen/caomei-auth/commit/0423fb1))
+* **demo:** 更新 DemoUser 接口，id 字段改为可选 ([2b984fd](https://github.com/CaoMeiYouRen/caomei-auth/commit/2b984fd))
+* **demo:** 更新 SSO 提供商生成逻辑，添加新的应用描述和调整随机用户计数 ([ee51414](https://github.com/CaoMeiYouRen/caomei-auth/commit/ee51414))
+* 修复 better-call 依赖版本错误 ([7f42cc7](https://github.com/CaoMeiYouRen/caomei-auth/commit/7f42cc7))
+* 修复密码强度验证环境变量读取错误 ([f8c147f](https://github.com/CaoMeiYouRen/caomei-auth/commit/f8c147f))
+* 将压缩构建工具从 esbuild 更改为 terser ([d1b4c2f](https://github.com/CaoMeiYouRen/caomei-auth/commit/d1b4c2f))
+* 将构建工具从 terser 更改为 esbuild ([766462b](https://github.com/CaoMeiYouRen/caomei-auth/commit/766462b))
+* 恢复 Demo 模式数据预填充函数，确保初始化时填充假数据 ([3539046](https://github.com/CaoMeiYouRen/caomei-auth/commit/3539046))
+* 捕获并记录获取用户 session 失败的错误信息 ([2f544e9](https://github.com/CaoMeiYouRen/caomei-auth/commit/2f544e9))
+* 更新 nuxt.config.ts 配置文件 ([1d5c164](https://github.com/CaoMeiYouRen/caomei-auth/commit/1d5c164))
+* 更新数据库初始化逻辑，确保在 Demo 模式下同步表结构 ([2df760f](https://github.com/CaoMeiYouRen/caomei-auth/commit/2df760f))
+* 更新演示模式配置，使用常量替代环境变量读取，修复生成的客户端密钥逻辑 ([87fe929](https://github.com/CaoMeiYouRen/caomei-auth/commit/87fe929))
+* 更新用户账户绑定逻辑，使用 providerId 替代 provider ([f08724f](https://github.com/CaoMeiYouRen/caomei-auth/commit/f08724f))
+* 注释掉 Demo 模式下的假数据预填充函数调用 ([f22cdf8](https://github.com/CaoMeiYouRen/caomei-auth/commit/f22cdf8))
+* 注释掉 nuxt.config.ts 中的调试模式配置，添加 typeorm-adapter.ts 中的模型名称获取错误处理 ([293dd00](https://github.com/CaoMeiYouRen/caomei-auth/commit/293dd00))
+* 注释掉登录函数中的会话获取和管理员跳转逻辑 ([c4db9de](https://github.com/CaoMeiYouRen/caomei-auth/commit/c4db9de))
+* 添加 youch 依赖以增强错误处理 ([9569229](https://github.com/CaoMeiYouRen/caomei-auth/commit/9569229))
+* 移除未使用的 Demo 模式数据预填充函数 ([c25dc3e](https://github.com/CaoMeiYouRen/caomei-auth/commit/c25dc3e))
+* 移除未使用的路由器引用并更新用户资料导航方法 ([8e5a0c2](https://github.com/CaoMeiYouRen/caomei-auth/commit/8e5a0c2))
+* 移除重复的随机字符串生成导入，优化代码结构 ([1b36480](https://github.com/CaoMeiYouRen/caomei-auth/commit/1b36480))
+
+
+### 📦 代码重构
+
+* 增强 Demo 模式守卫，阻止危险的管理后台操作和不允许的写操作 ([b91afc2](https://github.com/CaoMeiYouRen/caomei-auth/commit/b91afc2))
+
 # [1.6.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.5.0...v1.6.0) (2025-09-06)
 
 
