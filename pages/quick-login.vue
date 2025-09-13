@@ -9,7 +9,6 @@
                 <p class="auth-subtitle">
                     使用验证码一键完成登录。未注册的账号将自动创建。
                 </p>
-
                 <!-- Tab切换 -->
                 <div class="login-btn mb-4">
                     <div class="card flex justify-center">
@@ -175,6 +174,7 @@ import PhoneInput from '@/components/phone-input.vue'
 import { authClient } from '@/lib/auth-client'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
+import { navigateAfterLoginWithDelay } from '@/utils/navigation'
 
 // SEO 设置
 definePageMeta({
@@ -370,9 +370,7 @@ const loginWithEmail = async () => {
             life: 2000,
         })
 
-        setTimeout(() => {
-            navigateTo('/profile')
-        }, 1200)
+        navigateAfterLoginWithDelay(600)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '登录失败'
         errors.value.emailCode = errorMessage
@@ -420,9 +418,7 @@ const loginWithPhone = async () => {
             life: 2000,
         })
 
-        setTimeout(() => {
-            navigateTo('/profile')
-        }, 1200)
+        navigateAfterLoginWithDelay(600)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '登录失败'
         errors.value.phoneCode = errorMessage

@@ -336,6 +336,7 @@ import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import type { SocialProvider } from '@/types/social'
+import { navigateAfterLoginWithDelay } from '@/utils/navigation'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -518,9 +519,7 @@ const verify2FA = async () => {
             detail: '即将跳转到首页',
             life: 2000,
         })
-        setTimeout(() => {
-            navigateTo('/profile')
-        }, 1200)
+        navigateAfterLoginWithDelay(600)
     } catch (error: any) {
         twoFactorError.value = error.message || '验证失败'
     } finally {
@@ -578,9 +577,7 @@ async function login() {
                 detail: '即将跳转到首页',
                 life: 2000,
             })
-            setTimeout(() => {
-                navigateTo('/profile')
-            }, 1200)
+            navigateAfterLoginWithDelay(600)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
             toast.add({
@@ -625,14 +622,7 @@ async function login() {
                 life: 2000,
             })
 
-            setTimeout(() => {
-                // const user = session.value?.user
-                // if (user?.role?.includes('admin')) { // 如果是管理员，跳转到用户管理页
-                //     navigateTo('/admin/users')
-                //     return
-                // }
-                navigateTo('/profile')
-            }, 200)
+            navigateAfterLoginWithDelay(200)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
             toast.add({
@@ -695,9 +685,7 @@ async function login() {
                 detail: '即将跳转到首页',
                 life: 2000,
             })
-            setTimeout(() => {
-                navigateTo('/profile')
-            }, 1200)
+            navigateAfterLoginWithDelay(600)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
             toast.add({
@@ -751,9 +739,7 @@ async function loginWithSocial(socialProvider: SocialProvider) {
             detail: '即将跳转到登录页',
             life: 2000,
         })
-        setTimeout(() => {
-            navigateTo('/profile')
-        }, 1200)
+        navigateAfterLoginWithDelay(600)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : `${name} 登录时发生未知错误`
         toast.add({
@@ -779,9 +765,7 @@ async function loginAnonymously() {
             detail: '即将跳转到首页',
             life: 2000,
         })
-        setTimeout(() => {
-            navigateTo('/profile')
-        }, 1200)
+        navigateAfterLoginWithDelay(600)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '匿名登录时发生未知错误'
         toast.add({
