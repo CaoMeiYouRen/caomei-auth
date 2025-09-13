@@ -5,7 +5,7 @@
             <i class="banner-icon mdi mdi-information-outline" />
             <div class="banner-text">
                 <strong>演示模式</strong>
-                <span>{{ message || '当前为演示模式，您可以浏览所有功能，但无法进行实际的修改操作。' }}</span>
+                <span>{{ message || '当前为演示模式，您可以浏览所有功能，但无法进行实际的修改操作。如需体验完整功能，请部署您自己的实例。' }}</span>
             </div>
             <button
                 v-if="closable"
@@ -38,12 +38,13 @@ const demoMode = computed(() => config.public.demoMode)
 
 <style lang="scss" scoped>
 .demo-mode-banner {
-    margin-bottom: 1rem;
+    // margin-bottom: 1rem;
     padding: 0.75rem 1rem;
     color: #856404;
     background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
     border: 1px solid #ffeaa7;
-    border-radius: 8px;
+
+    // border-radius: 8px;
     box-shadow: 0 2px 4px rgb(255 234 167 / 0.3);
 }
 

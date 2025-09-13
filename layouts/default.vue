@@ -1,6 +1,8 @@
 <template>
     <div class="layout-default">
         <main class="layout-default__main">
+            <!-- Demo模式横幅 -->
+            <DemoModeBanner />
             <NuxtPage />
         </main>
         <!-- 页脚 -->

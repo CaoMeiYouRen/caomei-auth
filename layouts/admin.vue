@@ -126,11 +126,7 @@
             :class="{'collapsed': isCollapsed}"
         >
             <!-- Demo模式横幅 -->
-            <DemoModeBanner
-                v-if="showBanner"
-                :closable="true"
-                @close="closeBanner"
-            />
+            <DemoModeBanner />
 
             <slot />
             <AppFooter />
