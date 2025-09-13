@@ -90,7 +90,7 @@ export default defineNuxtConfig({
             baiduAnalyticsId: process.env.NUXT_PUBLIC_BAIDU_ANALYTICS_ID,
             googleAnalyticsId: process.env.NUXT_PUBLIC_GOOGLE_ANALYTICS_ID,
             passwordStrengthLevel: process.env.NUXT_PUBLIC_PASSWORD_STRENGTH_LEVEL || 'strong',
-            demoMode: process.env.DEMO_MODE === 'true',
+            demoMode: process.env.NUXT_PUBLIC_DEMO_MODE === 'true',
         },
     },
     primevue: {

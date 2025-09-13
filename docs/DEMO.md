@@ -20,7 +20,7 @@
 
 **新增环境变量**
 
--   `DEMO_MODE` - 启用 Demo 模式
+-   `NUXT_PUBLIC_DEMO_MODE` - 启用 Demo 模式
 -   `DEMO_PASSWORD` - Demo 账号密码。默认值：`Demo@123456`
 
 **修改文件：**
@@ -159,6 +159,6 @@
 
 ```env
 # Demo 模式配置
-DEMO_MODE=true
+NUXT_PUBLIC_DEMO_MODE=true
 DEMO_PASSWORD=Demo@123456
 ```

@@ -70,7 +70,7 @@ export const BLOB_READ_WRITE_TOKEN = process.env.BLOB_READ_WRITE_TOKEN
  * Demo 模式配置
  */
 // 是否启用Demo模式
-export const DEMO_MODE = process.env.DEMO_MODE === 'true'
+export const DEMO_MODE = process.env.NUXT_PUBLIC_DEMO_MODE === 'true' || process.env.DEMO_MODE === 'true' || import.meta.env.NUXT_PUBLIC_DEMO_MODE === 'true'
 // Demo账号密码
 export const DEMO_PASSWORD = process.env.DEMO_PASSWORD || 'Demo@123456'
 
