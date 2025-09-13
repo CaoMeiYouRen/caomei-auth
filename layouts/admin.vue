@@ -125,6 +125,13 @@
             class="admin-main"
             :class="{'collapsed': isCollapsed}"
         >
+            <!-- Demo模式横幅 -->
+            <DemoModeBanner
+                v-if="showBanner"
+                :closable="true"
+                @close="closeBanner"
+            />
+
             <slot />
             <AppFooter />
         </div>
@@ -134,6 +141,9 @@
 <script setup lang="ts">
 // 侧边栏收缩状态管理
 const isCollapsed = ref(false)
+
+// Demo模式横幅管理
+const { showBanner, closeBanner } = useDemoBanner()
 
 // 切换侧边栏状态
 const toggleSidebar = () => {

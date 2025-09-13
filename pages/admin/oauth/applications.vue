@@ -998,7 +998,7 @@ function resetForm() {
 }
 
 function validateForm() {
-    const errors = []
+    const errors: string[] = []
 
     if (!formData.value.client_name.trim()) {
         errors.push('应用名称不能为空')
