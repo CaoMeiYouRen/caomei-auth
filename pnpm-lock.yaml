@@ -142,8 +142,8 @@ importers:
         specifier: ^0.3.25
         version: 0.3.26(better-sqlite3@12.2.0)(ioredis@5.7.0)(mysql2@3.14.4)(pg@8.16.3)(reflect-metadata@0.2.2)(sqlite3@5.1.7)
       ua-parser-js:
-        specifier: ^2.0.4
-        version: 2.0.4(encoding@0.1.13)
+        specifier: ^2.0.5
+        version: 2.0.5
       validator:
         specifier: ^13.15.15
         version: 13.15.15
@@ -2853,9 +2853,6 @@ packages:
 
   '@types/mysql@2.15.27':
     resolution: {integrity: sha512-YfWiV16IY0OeBfBCk8+hXKmdTKrKlwKN1MNKAPBu5JYxLwBEZl7QzeEpGnlZb3VMGJrrGmB84gXiH+ofs/TezA==}
-
-  '@types/node-fetch@2.6.13':
-    resolution: {integrity: sha512-QGpRVpzSaUs30JBSGPjOg4Uveu384erbHBoT1zeONvyCfwQxIkUshLAOqN/k9EjGviPRmWTTe6aH2qySWKTVSw==}
 
   '@types/node@20.19.10':
     resolution: {integrity: sha512-iAFpG6DokED3roLSP0K+ybeDdIX6Bc0Vd3mLW5uDqThPWtNos3E+EqOM11mPQHKzfWHqEBuLjIlsBQQ8CsISmQ==}
@@ -8862,8 +8859,8 @@ packages:
   ua-is-frozen@0.1.2:
     resolution: {integrity: sha512-RwKDW2p3iyWn4UbaxpP2+VxwqXh0jpvdxsYpZ5j/MLLiQOfbsV5shpgQiw93+KMYQPcteeMQ289MaAFzs3G9pw==}
 
-  ua-parser-js@2.0.4:
-    resolution: {integrity: sha512-XiBOnM/UpUq21ZZ91q2AVDOnGROE6UQd37WrO9WBgw4u2eGvUCNOheMmZ3EfEUj7DLHr8tre+Um/436Of/Vwzg==}
+  ua-parser-js@2.0.5:
+    resolution: {integrity: sha512-sZErtx3rhpvZQanWW5umau4o/snfoLqRcQwQIZ54377WtRzIecnIKvjpkd5JwPcSUMglGnbIgcsQBGAbdi3S9Q==}
     hasBin: true
 
   ufo@1.6.1:
@@ -8904,6 +8901,10 @@ packages:
   undici@5.29.0:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
+
+  undici@7.16.0:
+    resolution: {integrity: sha512-QEg3HPMll0o3t2ourKwOeUAZ159Kn9mx5pnzHRQO8+Wixmh88YdZRiIwat0iNzNNXn0yoEtXJqFpyW7eM8BV7g==}
+    engines: {node: '>=20.18.1'}
 
   unenv@2.0.0-rc.20:
     resolution: {integrity: sha512-8tn4tAl9vD5nWoggAAPz28vf0FY8+pQAayhU94qD+ZkIbVKCBAH/E1MWEEmhb9Whn5EgouYVfBJB20RsTLRDdg==}
@@ -13265,11 +13266,6 @@ snapshots:
   '@types/mysql@2.15.27':
     dependencies:
       '@types/node': 24.3.1
-
-  '@types/node-fetch@2.6.13':
-    dependencies:
-      '@types/node': 24.3.0
-      form-data: 4.0.4
 
   '@types/node@20.19.10':
     dependencies:
@@ -20481,15 +20477,12 @@ snapshots:
 
   ua-is-frozen@0.1.2: {}
 
-  ua-parser-js@2.0.4(encoding@0.1.13):
+  ua-parser-js@2.0.5:
     dependencies:
-      '@types/node-fetch': 2.6.13
       detect-europe-js: 0.1.2
       is-standalone-pwa: 0.1.1
-      node-fetch: 2.7.0(encoding@0.1.13)
       ua-is-frozen: 0.1.2
-    transitivePeerDependencies:
-      - encoding
+      undici: 7.16.0
 
   ufo@1.6.1: {}
 
@@ -20526,6 +20519,8 @@ snapshots:
   undici@5.29.0:
     dependencies:
       '@fastify/busboy': 2.1.1
+
+  undici@7.16.0: {}
 
   unenv@2.0.0-rc.20:
     dependencies:
