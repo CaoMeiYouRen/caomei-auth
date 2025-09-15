@@ -168,33 +168,75 @@
     }
 }
 
-// 认证页面扩展暗色模式样式（包含额外元素）
-@mixin auth-page-extended-dark-theme {
-    @include auth-page-dark-theme;
+        // SSO 提供商页面暗色模式
+        .sso-provider-config {
+            background: #{$dark-background-light} !important;
+            border-color: #{$dark-border-color} !important;
 
-    @include dark-mode {
-        .remember-me {
-            color: #{$dark-secondary-light} !important;
-        }
+            .config-section {
+                h4 {
+                    color: #{$dark-secondary} !important;
+                }
 
-        .agreement-notice {
-            color: #{$dark-secondary-light} !important;
-        }
+                .field {
+                    label {
+                        color: #{$dark-secondary} !important;
+                    }
 
-        .checkbox-label {
-            color: #{$dark-secondary} !important;
-        }
+                    .p-inputtext,
+                    .p-textarea {
+                        background: #{$dark-background} !important;
+                        border-color: #{$dark-border-color} !important;
+                        color: #{$dark-secondary} !important;
 
-        .separator {
-            color: #{$dark-secondary-light} !important;
+                        &::placeholder {
+                            color: #{$dark-secondary-light} !important;
+                        }
+                    }
 
-            &::before,
-            &::after {
-                border-bottom-color: #{$dark-border-color} !important;
+                    .p-checkbox .p-checkbox-box {
+                        background: #{$dark-background} !important;
+                        border-color: #{$dark-border-color} !important;
+
+                        .p-checkbox-icon {
+                            color: #{$primary} !important;
+                        }
+                    }
+                }
             }
         }
-    }
-}
+
+        .provider-form {
+            .field {
+                label {
+                    color: #{$dark-secondary} !important;
+                }
+
+                .p-inputtext {
+                    background: #{$dark-background} !important;
+                    border-color: #{$dark-border-color} !important;
+                    color: #{$dark-secondary} !important;
+
+                    &::placeholder {
+                        color: #{$dark-secondary-light} !important;
+                    }
+                }
+
+                .p-checkbox .p-checkbox-box {
+                    background: #{$dark-background} !important;
+                    border-color: #{$dark-border-color} !important;
+
+                    &.p-highlight {
+                        background: #{$primary} !important;
+                        border-color: #{$primary} !important;
+                    }
+                }
+
+                .p-checkbox-label {
+                    color: #{$dark-secondary} !important;
+                }
+            }
+        }
 
 // 文本颜色混合宏
 @mixin dark-text-primary {
@@ -660,6 +702,252 @@
         // 日期信息
         .date-info {
             color: #{$dark-secondary-light} !important;
+        }
+
+        // PrimeVue 对话框暗色模式
+        :deep(.p-dialog) {
+            .p-dialog-header {
+                background: #{$dark-background-light} !important;
+                border-bottom-color: #{$dark-border-color} !important;
+
+                .p-dialog-title {
+                    color: #{$dark-secondary} !important;
+                }
+
+                .p-dialog-header-icon {
+                    color: #{$dark-secondary} !important;
+                }
+            }
+
+            .p-dialog-content {
+                background: #{$dark-background-light} !important;
+                color: #{$dark-secondary} !important;
+            }
+
+            .p-dialog-footer {
+                background: #{$dark-background-light} !important;
+                border-top-color: #{$dark-border-color} !important;
+            }
+        }
+
+        // 对话框内容暗色模式
+        .user-detail {
+            .detail-section {
+                h3 {
+                    color: #{$primary} !important;
+                }
+
+                .detail-item {
+                    label {
+                        color: #{$dark-secondary-light} !important;
+                    }
+
+                    span {
+                        color: #{$dark-secondary} !important;
+                    }
+
+                    .detail-label {
+                        color: #{$dark-secondary-light} !important;
+                    }
+
+                    .detail-value {
+                        color: #{$dark-secondary} !important;
+                    }
+                }
+
+                .verification-status {
+                    display: flex;
+                    gap: 0.5rem;
+                    flex-wrap: wrap;
+                }
+            }
+        }
+
+        // 表单字段暗色模式
+        .create-user-form,
+        .ban-form {
+            .field {
+                label {
+                    color: #{$dark-secondary} !important;
+                }
+
+                small {
+                    color: #{$dark-secondary-light} !important;
+                }
+            }
+
+            .dialog-footer {
+                border-top-color: #{$dark-border-color} !important;
+            }
+        }
+
+        // 通用表单输入框和标签暗色模式
+        .p-dialog {
+            label {
+                color: #{$dark-secondary} !important;
+            }
+
+            .p-inputtext,
+            .p-dropdown,
+            .p-textarea {
+                background: #{$dark-background} !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+
+                &::placeholder {
+                    color: #{$dark-secondary-light} !important;
+                }
+            }
+
+            .p-dropdown-label {
+                color: #{$dark-secondary} !important;
+            }
+
+            .p-dropdown-panel {
+                background: #{$dark-background-light} !important;
+                border-color: #{$dark-border-color} !important;
+
+                .p-dropdown-items .p-dropdown-item {
+                    color: #{$dark-secondary} !important;
+
+                    &.p-highlight {
+                        background: #{$primary} !important;
+                        color: white !important;
+                    }
+
+                    &:hover {
+                        background: #{$dark-border-color} !important;
+                    }
+                }
+            }
+        }
+
+        // 会话详情暗色模式
+        .user-sessions {
+            .sessions-header {
+                border-bottom-color: #{$dark-border-color} !important;
+
+                h4 {
+                    color: #{$primary} !important;
+                }
+            }
+
+            .session-id {
+                background: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+            }
+
+            .device-info {
+                div {
+                    color: #{$dark-secondary} !important;
+                }
+
+                small {
+                    color: #{$dark-secondary-light} !important;
+                }
+            }
+        }
+
+        // 验证标签暗色模式
+        .verification-tags {
+            .p-tag {
+                background: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+            }
+        }
+
+        // 用户状态暗色模式
+        .user-status {
+            .ban-reason,
+            .ban-expires {
+                color: #{$dark-secondary-light} !important;
+            }
+        }
+
+        // 消息和通知组件暗色模式
+        .p-toast {
+            .p-toast-message {
+                background: #{$dark-background-light} !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+
+                .p-toast-message-content {
+                    .p-toast-summary,
+                    .p-toast-detail {
+                        color: #{$dark-secondary} !important;
+                    }
+                }
+
+                &.p-toast-message-success {
+                    background: rgba(74, 222, 128, 0.1) !important;
+                    border-color: rgba(74, 222, 128, 0.3) !important;
+
+                    .p-toast-message-content {
+                        .p-toast-summary,
+                        .p-toast-detail {
+                            color: rgb(74, 222, 128) !important;
+                        }
+                    }
+                }
+
+                &.p-toast-message-error {
+                    background: rgba(239, 68, 68, 0.1) !important;
+                    border-color: rgba(239, 68, 68, 0.3) !important;
+
+                    .p-toast-message-content {
+                        .p-toast-summary,
+                        .p-toast-detail {
+                            color: rgb(239, 68, 68) !important;
+                        }
+                    }
+                }
+
+                &.p-toast-message-warn {
+                    background: rgba(245, 158, 11, 0.1) !important;
+                    border-color: rgba(245, 158, 11, 0.3) !important;
+
+                    .p-toast-message-content {
+                        .p-toast-summary,
+                        .p-toast-detail {
+                            color: rgb(245, 158, 11) !important;
+                        }
+                    }
+                }
+
+                &.p-toast-message-info {
+                    background: rgba(59, 130, 246, 0.1) !important;
+                    border-color: rgba(59, 130, 246, 0.3) !important;
+
+                    .p-toast-message-content {
+                        .p-toast-summary,
+                        .p-toast-detail {
+                            color: rgb(59, 130, 246) !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 确认对话框暗色模式
+        .p-confirm-dialog {
+            background: #{$dark-background-light} !important;
+            border-color: #{$dark-border-color} !important;
+
+            .p-dialog-header {
+                background: #{$dark-background-light} !important;
+                color: #{$dark-secondary} !important;
+                border-bottom-color: #{$dark-border-color} !important;
+            }
+
+            .p-dialog-content {
+                background: #{$dark-background-light} !important;
+                color: #{$dark-secondary} !important;
+            }
+
+            .p-dialog-footer {
+                background: #{$dark-background-light} !important;
+                border-top-color: #{$dark-border-color} !important;
+            }
         }
     }
 }
