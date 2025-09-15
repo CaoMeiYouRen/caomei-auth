@@ -1011,4 +1011,49 @@ async function loginAnonymously() {
     }
 }
 
+// 深色主题下的登录页面优化
+@media (prefers-color-scheme: dark) {
+    .auth-container {
+        background: #{$dark-background} !important;
+    }
+    
+    .auth-card {
+        background-color: #{$dark-background-light} !important;
+        box-shadow: 0 10px 25px rgb(0 0 0 / 0.3) !important;
+    }
+    
+    .auth-title {
+        color: #{$dark-secondary} !important;
+    }
+    
+    .auth-subtitle {
+        color: #{$dark-secondary-light} !important;
+    }
+    
+    .form-label {
+        color: #{$dark-secondary} !important;
+    }
+    
+    .remember-me {
+        color: #{$dark-secondary-light} !important;
+    }
+    
+    .toggle-login {
+        color: #{$dark-secondary-light} !important;
+    }
+    
+    .agreement-notice {
+        color: #{$dark-secondary-light} !important;
+    }
+    
+    .separator {
+        color: #{$dark-secondary-light} !important;
+        
+        &::before,
+        &::after {
+            border-bottom-color: #{$dark-border-color} !important;
+        }
+    }
+}
+
 </style>

@@ -697,4 +697,36 @@ async function register() {
         text-decoration: underline;
     }
 }
+
+// 深色主题下的注册页面优化
+@media (prefers-color-scheme: dark) {
+    .auth-container {
+        background: #{$dark-background} !important;
+    }
+    
+    .auth-card {
+        background-color: #{$dark-background-light} !important;
+        box-shadow: 0 10px 25px rgb(0 0 0 / 0.3) !important;
+    }
+    
+    .auth-title {
+        color: #{$dark-secondary} !important;
+    }
+    
+    .auth-subtitle {
+        color: #{$dark-secondary-light} !important;
+    }
+    
+    .form-label {
+        color: #{$dark-secondary} !important;
+    }
+    
+    .checkbox-label {
+        color: #{$dark-secondary} !important;
+    }
+    
+    .toggle-login {
+        color: #{$dark-secondary-light} !important;
+    }
+}
 </style>

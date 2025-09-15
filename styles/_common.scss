@@ -62,3 +62,27 @@
   color: $secondary-light;
   margin-bottom: 2rem;
 }
+
+// 深色主题支持
+@media (prefers-color-scheme: dark) {
+  .auth-container {
+    background: #{$dark-background} !important;
+  }
+  
+  .auth-card {
+    background-color: #{$dark-background-light} !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .auth-title {
+    color: #{$dark-secondary} !important;
+  }
+  
+  .auth-subtitle {
+    color: #{$dark-secondary-light} !important;
+  }
+  
+  .auth-left {
+    color: #{$dark-secondary} !important;
+  }
+}

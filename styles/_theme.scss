@@ -52,6 +52,14 @@ $background-light: #ffffff;
 $error: #e53e3e;
 $error-dark: #c82333;
 
+// 深色主题颜色变量
+$dark-background: #121212;
+$dark-background-light: #1e1e1e;
+$dark-secondary: #ffffff;
+$dark-secondary-light: #a1a1aa;
+$dark-secondary-bg: #374151;
+$dark-border-color: #374151;
+
 // CSS 变量用于 JavaScript 访问
 :root {
     // 社交平台品牌色
@@ -90,6 +98,35 @@ $error-dark: #c82333;
     // 边框颜色
     --color-border: #{$border-color};
     --border-color: #{$border-color};
+
+    // 背景色
+    --background: #{$background};
+    --background-light: #{$background-light};
+    
+    // 文字颜色
+    --text-primary: #{$secondary};
+    --text-secondary: #{$secondary-light};
+}
+
+// 深色主题支持
+@media (prefers-color-scheme: dark) {
+    :root {
+        // 背景色
+        --background: #{$dark-background};
+        --background-light: #{$dark-background-light};
+        
+        // 文字颜色
+        --text-primary: #{$dark-secondary};
+        --text-secondary: #{$dark-secondary-light};
+        
+        // 边框颜色
+        --border-color: #{$dark-border-color};
+        --color-border: #{$dark-border-color};
+        
+        // 辅助色
+        --color-secondary: #{$dark-secondary};
+        --color-secondary-light: #{$dark-secondary-light};
+    }
 }
 
 // PrimeVue Toast 主题自定义
