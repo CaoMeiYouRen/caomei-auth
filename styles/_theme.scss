@@ -60,6 +60,7 @@ $dark-secondary-light: #a1a1aa;
 $dark-secondary-bg: #374151;
 $dark-border-color: #374151;
 
+
 // CSS 变量用于 JavaScript 访问
 :root {
     // 社交平台品牌色
@@ -102,7 +103,7 @@ $dark-border-color: #374151;
     // 背景色
     --background: #{$background};
     --background-light: #{$background-light};
-    
+
     // 文字颜色
     --text-primary: #{$secondary};
     --text-secondary: #{$secondary-light};
@@ -114,15 +115,15 @@ $dark-border-color: #374151;
         // 背景色
         --background: #{$dark-background};
         --background-light: #{$dark-background-light};
-        
+
         // 文字颜色
         --text-primary: #{$dark-secondary};
         --text-secondary: #{$dark-secondary-light};
-        
+
         // 边框颜色
         --border-color: #{$dark-border-color};
         --color-border: #{$dark-border-color};
-        
+
         // 辅助色
         --color-secondary: #{$dark-secondary};
         --color-secondary-light: #{$dark-secondary-light};

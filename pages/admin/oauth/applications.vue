@@ -1269,7 +1269,6 @@ function goProfile() {
 </script>
 
 <style lang="scss" scoped>
-
 .admin-clients {
     min-height: 100vh;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -1291,7 +1290,7 @@ function goProfile() {
     border-radius: 12px;
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 
-    @media (width <= 768px) {
+    @media (width <=768px) {
         flex-direction: column;
         gap: 1.5rem;
     }
@@ -1316,7 +1315,7 @@ function goProfile() {
     display: flex;
     gap: 1rem;
 
-    @media (width <= 768px) {
+    @media (width <=768px) {
         width: 100%;
 
         :deep(.p-button) {
@@ -1337,7 +1336,7 @@ function goProfile() {
         gap: 1rem;
         align-items: center;
 
-        @media (width <= 768px) {
+        @media (width <=768px) {
             flex-direction: column;
             align-items: stretch;
         }
@@ -1347,7 +1346,7 @@ function goProfile() {
         flex: 1;
         min-width: 300px;
 
-        @media (width <= 768px) {
+        @media (width <=768px) {
             min-width: unset;
         }
     }
@@ -1356,7 +1355,7 @@ function goProfile() {
         display: flex;
         gap: 1rem;
 
-        @media (width <= 768px) {
+        @media (width <=768px) {
             flex-wrap: wrap;
         }
     }
@@ -1442,6 +1441,12 @@ function goProfile() {
         padding: 0.25rem 0.5rem;
         border-radius: 0.25rem;
         font-size: 0.875rem;
+
+        @include dark-mode {
+            background: #{$dark-background-light} !important;
+            border-color: #{$dark-border-color} !important;
+            color: #{$dark-secondary} !important;
+        }
     }
 
     .scope-tags {
@@ -1456,7 +1461,7 @@ function goProfile() {
 }
 
 // 响应式优化
-@media (width <= 768px) {
+@media (width <=768px) {
     .admin-clients {
         padding: 1rem;
     }
@@ -1537,14 +1542,21 @@ function goProfile() {
         gap: 0 1.5rem;
 
         // 重要的或较长的字段占用整行
-        .form-group:nth-child(1),  // 应用名称
-        .form-group:nth-child(2),  // 应用简介
-        .form-group:nth-child(3),  // 重定向 URL
-        .form-group:nth-child(6),  // 授权范围
-        .form-group:nth-child(9),  // 认证方式
-        .form-group:nth-child(10), // 授权类型
-        .form-group:nth-child(11)  // 响应类型
-        {
+        .form-group:nth-child(1),
+        // 应用名称
+        .form-group:nth-child(2),
+        // 应用简介
+        .form-group:nth-child(3),
+        // 重定向 URL
+        .form-group:nth-child(6),
+        // 授权范围
+        .form-group:nth-child(9),
+        // 认证方式
+        .form-group:nth-child(10),
+        // 授权类型
+        .form-group:nth-child(11) // 响应类型
+
+            {
             grid-column: 1 / -1;
         }
 
@@ -1566,7 +1578,7 @@ function goProfile() {
         // 软件ID、软件版本
     }
 
-    @media (width <= 768px) {
+    @media (width <=768px) {
         width: 95vw;
 
         form {
@@ -1869,7 +1881,7 @@ function goProfile() {
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <=768px) {
         width: 95vw;
 
         .api-docs-content {
@@ -1951,6 +1963,11 @@ function goProfile() {
                 border-radius: 8px;
                 padding: 1.5rem;
 
+                @include dark-mode {
+                    background: #{$dark-background} !important;
+                    border: 1px solid #{$dark-border-color} !important;
+                }
+
                 h4 {
                     font-size: 1.1rem;
                     font-weight: 600;
@@ -1958,6 +1975,10 @@ function goProfile() {
                     margin: 0 0 1rem;
                     padding-bottom: 0.5rem;
                     border-bottom: 2px solid #e2e8f0;
+
+                    @include dark-mode {
+                        border-bottom-color: #{$dark-border-color} !important;
+                    }
                 }
 
                 .info-item {
@@ -1973,6 +1994,10 @@ function goProfile() {
                         color: $secondary;
                         margin-bottom: 0.5rem;
                         font-size: 0.875rem;
+
+                        @include dark-mode {
+                            color: #{$dark-secondary} !important;
+                        }
                     }
 
                     .value-with-copy {
@@ -1987,6 +2012,12 @@ function goProfile() {
                             border-radius: 0.25rem;
                             font-size: 0.875rem;
                             border: 1px solid #e2e8f0;
+
+                            @include dark-mode {
+                                background: #{$dark-background-light} !important;
+                                border-color: #{$dark-border-color} !important;
+                                color: #{$dark-secondary} !important;
+                            }
                         }
                     }
 
@@ -2004,7 +2035,8 @@ function goProfile() {
                         }
                     }
 
-                    .scope-tags, .tag-list {
+                    .scope-tags,
+                    .tag-list {
                         display: flex;
                         flex-wrap: wrap;
                         gap: 0.25rem;
@@ -2030,6 +2062,12 @@ function goProfile() {
                                 border: 1px solid #e2e8f0;
                                 display: block;
                                 word-break: break-all;
+
+                                @include dark-mode {
+                                    background: #{$dark-background-light} !important;
+                                    border-color: #{$dark-border-color} !important;
+                                    color: #{$dark-secondary} !important;
+                                }
                             }
                         }
                     }
@@ -2052,7 +2090,7 @@ function goProfile() {
         }
     }
 
-    @media (width <= 768px) {
+    @media (width <=768px) {
         width: 95vw;
 
         .view-content {
