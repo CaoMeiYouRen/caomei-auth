@@ -41,6 +41,22 @@
 -   🌍 **多种部署方式** - Node.js、Docker、Vercel、Cloudflare Workers
 -   📚 **完整文档** - 详细的 API 文档和集成指南
 
+## 🏠 在线体验
+
+-   **演示站点**: [https://auth-demo.cmyr.dev/](https://auth-demo.cmyr.dev/)
+
+    -   可以通过用户名 `demo_admin`，密码`Demo@123456`登录演示用管理员账号。
+
+-   **正式站点**: [https://auth.cmyr.dev/](https://auth.cmyr.dev/)
+
+    -   您可以注册自己的账号查看用户视角。
+
+-   **文档站点**: [https://auth-docs.cmyr.dev/](https://auth-docs.cmyr.dev/)
+
+希望试用基于 `草梅 Auth` 的第三方登录功能？
+
+-   **afdian-linker**: [https://afdian.cmyr.dev/](https://afdian.cmyr.dev/)
+
 **页面截图**
 
 ![image-20250720201256684](https://oss.cmyr.dev/images/20250720201256857.png)
@@ -86,20 +102,6 @@ pnpm build
 # 启动生产服务器
 pnpm preview
 ```
-
-## 🏠 在线体验
-
--   **演示站点**: [https://auth-demo.cmyr.dev/](https://auth-demo.cmyr.dev/)
-    -   可以通过用户名 `demo_admin`，密码`Demo@123456`登录演示用管理员账号。
-
--   **正式站点**: [https://auth.cmyr.dev/](https://auth.cmyr.dev/)
-    -   您可以注册自己的账号查看用户视角。
-
--   **文档站点**: [https://auth-docs.cmyr.dev/](https://auth-docs.cmyr.dev/)
-
-希望试用基于 `草梅 Auth` 的第三方登录功能？
-
--   **afdian-linker**: [https://afdian.cmyr.dev/](https://afdian.cmyr.dev/)
 
 ## 🛠️ 技术栈
 
