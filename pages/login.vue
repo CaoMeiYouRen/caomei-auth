@@ -328,7 +328,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useUrlSearchParams, useDark } from '@vueuse/core'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
@@ -401,20 +401,23 @@ const { data: providersData } = await useFetch('/api/social/providers')
 // 使用 useDark 检测暗色模式
 const isDark = useDark()
 
-const socialProviders = computed(() => {
-    const providers = providersData.value?.providers || []
+const socialProviders = ref<SocialProvider[]>([])
 
-    // 为暗色模式调整颜色，使用 getSocialColor 函数
-    return providers.map((provider) => {
-        const theme = isDark.value ? 'dark' : 'light'
+const changeSocialColor = (darkMode: boolean) => {
+    socialProviders.value = providersData?.value?.providers?.map((provider) => {
+        const theme = darkMode ? 'dark' : 'light'
         const color = getSocialColor(provider.provider, theme)
-
         return {
             ...provider,
             color,
         }
-    })
-})
+    }) || []
+}
+
+watch(isDark, (newVal) => {
+    // 当暗色模式切换时，更新社交按钮颜色
+    changeSocialColor(newVal)
+}, { immediate: true })
 
 const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
@@ -446,6 +449,8 @@ onMounted(() => {
     // 追踪页面访问
     clarity.setTag('page_type', 'login')
     clarity.setTag('initial_login_method', params.mode)
+
+    changeSocialColor(isDark.value)// 由于后端渲染的是默认的浅色主题，所以初始时需要根据当前主题设置颜色
 })
 
 // 切换登录模式并更新 URL
