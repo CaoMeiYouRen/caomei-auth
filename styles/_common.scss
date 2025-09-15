@@ -66,23 +66,23 @@
 // 深色主题支持
 @media (prefers-color-scheme: dark) {
   .auth-container {
-    background: #{$dark-background} !important;
+    background: #{$dark-background};
   }
-  
+
   .auth-card {
-    background-color: #{$dark-background-light} !important;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+    background-color: #{$dark-background-light};
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   }
-  
+
   .auth-title {
-    color: #{$dark-secondary} !important;
+    color: #{$dark-secondary};
   }
-  
+
   .auth-subtitle {
-    color: #{$dark-secondary-light} !important;
+    color: #{$dark-secondary-light};
   }
-  
+
   .auth-left {
-    color: #{$dark-secondary} !important;
+    color: #{$dark-secondary};
   }
 }

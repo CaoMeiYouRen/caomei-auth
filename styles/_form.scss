@@ -30,47 +30,52 @@
 
 // 深色主题下的表单输入框优化
 @media (prefers-color-scheme: dark) {
+    // 使用更具体的选择器来提高优先级，避免过度使用 !important
+    .form-group .form-input,
     .form-input {
-        background-color: #{$dark-background-light} !important;
-        color: #{$dark-secondary} !important;
-        border-color: #{$dark-border-color} !important;
+        background-color: #{$dark-background-light};
+        color: #{$dark-secondary};
+        border-color: #{$dark-border-color};
     }
-    
+
+    .form-group .form-input::placeholder,
     .form-input::placeholder {
-        color: #{$dark-secondary-light} !important;
+        color: #{$dark-secondary-light};
     }
-    
+
+    .form-group .form-input:focus,
     .form-input:focus {
-        border-color: #{$primary} !important;
-        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3) !important;
+        border-color: #{$primary};
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3);
     }
-    
-    // PrimeVue Password 组件优化
-    .p-password-input {
-        background-color: #{$dark-background-light} !important;
-        color: #{$dark-secondary} !important;
-        border-color: #{$dark-border-color} !important;
-    }
-    
-    .p-password-input::placeholder {
-        color: #{$dark-secondary-light} !important;
-    }
-    
-    // 所有输入框类型的优化
-    input[type="text"], 
-    input[type="password"], 
-    input[type="email"], 
+
+    // PrimeVue Password 组件和所有输入框类型的优化（合并重复选择器）
+    .form-group .p-password-input,
+    .p-password-input,
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group input[type="email"],
+    .form-group input[type="tel"],
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
     input[type="tel"] {
-        background-color: #{$dark-background-light} !important;
-        color: #{$dark-secondary} !important;
-        border-color: #{$dark-border-color} !important;
+        background-color: #{$dark-background-light};
+        color: #{$dark-secondary};
+        border-color: #{$dark-border-color};
     }
-    
-    input[type="text"]::placeholder, 
-    input[type="password"]::placeholder, 
-    input[type="email"]::placeholder, 
+
+    .form-group .p-password-input::placeholder,
+    .p-password-input::placeholder,
+    .form-group input[type="text"]::placeholder,
+    .form-group input[type="password"]::placeholder,
+    .form-group input[type="email"]::placeholder,
+    .form-group input[type="tel"]::placeholder,
+    input[type="text"]::placeholder,
+    input[type="password"]::placeholder,
+    input[type="email"]::placeholder,
     input[type="tel"]::placeholder {
-        color: #{$dark-secondary-light} !important;
+        color: #{$dark-secondary-light};
     }
 }
 
@@ -142,21 +147,25 @@
 
 // 深色主题下的其他元素优化
 @media (prefers-color-scheme: dark) {
+    .form-group .form-label,
     .form-label {
-        color: #{$dark-secondary} !important;
+        color: #{$dark-secondary};
     }
-    
+
+    .form-group .social-btn,
     .social-btn {
-        background-color: #{$dark-background-light} !important;
-        border-color: #{$dark-border-color} !important;
-        color: #{$dark-secondary} !important;
+        background-color: #{$dark-background-light};
+        border-color: #{$dark-border-color};
+        color: #{$dark-secondary};
     }
-    
+
+    .form-group .social-btn:hover,
     .social-btn:hover {
-        background-color: #{$dark-border-color} !important;
+        background-color: #{$dark-border-color};
     }
-    
+
+    .form-group .error-message,
     .error-message {
-        color: #{$error} !important;
+        color: #{$error};
     }
 }
