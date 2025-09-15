@@ -239,7 +239,7 @@
                                     :key="account.providerId"
                                     v-tooltip.top="privacyMode ? `点击解绑 ${getProviderName(account.providerId)} 账号，ID: ${maskUserId(account.accountId)}` : `点击解绑 ${getProviderName(account.providerId)} 账号，完整 ID: ${account.accountId}`"
                                     class="social-btn"
-                                    :style="{color: socialProviders.find(p => p.provider === account.providerId)?.color}"
+                                    :style="{color: getProviderColor(account.providerId)}"
                                     :icon="getProviderIcon(account.providerId)"
                                     :label="privacyMode ? `${getProviderName(account.providerId)}(ID: ${maskUserId(account.accountId)})` : `${getProviderName(account.providerId)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
                                     outlined
@@ -449,6 +449,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useDark } from '@vueuse/core'
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
@@ -459,6 +460,7 @@ import { formatPhoneNumberInternational } from '@/utils/phone'
 import type { SocialProvider } from '@/types/social'
 import { maskEmail, maskPhone, maskUserId, maskUsername } from '@/utils/privacy'
 import { shortText } from '@/utils/short-text'
+import { getSocialColor } from '@/utils/social-colors'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -501,7 +503,24 @@ const usernameError = ref('') // 用户名错误信息
 const isSettingUsername = ref(false) // 设置用户名加载状态
 
 const { data: providersData } = await useFetch('/api/social/providers?includeDisabled=true')
-const socialProviders = computed(() => providersData.value?.providers || [])
+
+// 使用 useDark 检测暗色模式
+const isDark = useDark()
+
+const socialProviders = computed(() => {
+    const providers = providersData.value?.providers || []
+
+    // 为暗色模式调整颜色，使用 getSocialColor 函数
+    return providers.map((provider) => {
+        const theme = isDark.value ? 'dark' : 'light'
+        const color = getSocialColor(provider.provider, theme)
+
+        return {
+            ...provider,
+            color,
+        }
+    })
+})
 
 // 获取启用的providers，用于显示绑定按钮
 const enabledProviders = computed(() => socialProviders.value.filter((p) => p.enabled))
@@ -514,6 +533,11 @@ const getProviderName = (provider: string) => {
 const getProviderIcon = (provider: string) => {
     const providerObj = socialProviders.value.find((p) => p.provider === provider)
     return providerObj?.icon || `mdi mdi-${provider}`
+}
+// 根据 provider 获取对应的颜色（考虑暗色模式）
+const getProviderColor = (provider: string) => {
+    const theme = isDark.value ? 'dark' : 'light'
+    return getSocialColor(provider, theme)
 }
 
 const sendPhoneCode = useSendPhoneCode(
