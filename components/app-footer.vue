@@ -217,4 +217,7 @@ const publicSecurityBeianNumber = config.publicSecurityBeianNumber
         }
     }
 }
+
+// 应用暗色模式支持
+@include footer-dark-theme;
 </style>

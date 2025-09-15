@@ -314,3 +314,47 @@
 .social-btn-dark {
     @include dark-social-button;
 }
+
+// Footer 组件暗色模式混合宏
+@mixin footer-dark-theme {
+    @include dark-mode {
+        .app-footer {
+            background: #{$dark-background-light} !important;
+            border-top-color: #{$dark-border-color} !important;
+        }
+
+        .app-footer__left {
+            color: #{$dark-secondary} !important;
+
+            .font-medium {
+                color: #{$dark-secondary} !important;
+            }
+        }
+
+        .app-footer__links {
+            .app-footer__link {
+                color: #{$dark-secondary-light} !important;
+
+                &:hover {
+                    color: #{$primary} !important;
+                }
+            }
+        }
+
+        .app-footer__bottom {
+            .text-gray-500 {
+                color: #{$dark-secondary-light} !important;
+            }
+
+            .app-footer__bottom-links {
+                .app-footer__bottom-link {
+                    color: #{$dark-secondary-light} !important;
+
+                    &:hover {
+                        color: #{$primary} !important;
+                    }
+                }
+            }
+        }
+    }
+}
