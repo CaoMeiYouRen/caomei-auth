@@ -127,6 +127,7 @@ export default defineNuxtConfig({
                     @import "@/styles/theme.scss";
                     @import "@/styles/common.scss";
                     @import "@/styles/form.scss";
+                    @import "@/styles/dark-mode.scss";
                     `,
                 },
             },

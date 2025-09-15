@@ -1,0 +1,316 @@
+// 暗色模式混合宏和通用样式
+// 用于减少重复代码，统一暗色模式样式管理
+
+// 暗色模式媒体查询混合宏
+@mixin dark-mode {
+    @media (prefers-color-scheme: dark) {
+        @content;
+    }
+}
+
+// 认证页面通用样式混合宏
+@mixin auth-page-base-styles {
+    .auth-container {
+        display: flex;
+        flex-direction: column-reverse;
+        background: $background;
+
+        @media (width >= 768px) {
+            flex-direction: row;
+        }
+    }
+
+    .auth-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 20vh;
+        padding: 1rem;
+        color: $background-light;
+        text-align: center;
+
+        .auth-logo img {
+            width: 80%;
+            max-width: 160px;
+        }
+
+        @media (width >= 768px) {
+            width: 50%;
+            min-height: 100vh;
+
+            .auth-logo img {
+                width: 25%;
+                max-width: none;
+            }
+        }
+    }
+
+    .auth-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        padding: 1rem;
+
+        @media (width >= 768px) {
+            width: 50%;
+            min-height: 100vh;
+        }
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 450px;
+        padding: 2rem;
+        background-color: $background-light;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgb(0 0 0 / 0.05);
+    }
+
+    .auth-title {
+        margin-bottom: 1rem;
+        color: $secondary;
+        font-weight: 600;
+        font-size: 2rem;
+    }
+
+    .auth-subtitle {
+        margin-bottom: 2rem;
+        color: $secondary-light;
+    }
+
+    .toggle-login {
+        margin-top: 1.5rem;
+        color: $secondary-light;
+        text-align: center;
+    }
+
+    .toggle-link {
+        color: $primary;
+        font-weight: 500;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .separator {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        margin: 2rem 0;
+        color: $secondary-light;
+
+        &::before,
+        &::after {
+            flex: 1;
+            border-bottom: 1px solid $secondary-bg;
+            content: "";
+        }
+
+        &::before {
+            margin-right: 1rem;
+        }
+
+        &::after {
+            margin-left: 1rem;
+        }
+    }
+
+    .agreement-notice {
+        margin-top: 0.75rem;
+        color: $secondary-light;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+    .agreement-link {
+        color: $primary;
+        font-weight: 500;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// 认证页面通用暗色模式样式混合宏
+@mixin auth-page-dark-theme {
+    @include dark-mode {
+        .auth-container {
+            background: #{$dark-background} !important;
+        }
+
+        .auth-card {
+            background-color: #{$dark-background-light} !important;
+            box-shadow: 0 10px 25px rgb(0 0 0 / 0.3) !important;
+        }
+
+        .auth-title {
+            color: #{$dark-secondary} !important;
+        }
+
+        .auth-subtitle {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        .form-label {
+            color: #{$dark-secondary} !important;
+        }
+
+        .toggle-login {
+            color: #{$dark-secondary-light} !important;
+        }
+    }
+}
+
+// 认证页面扩展暗色模式样式（包含额外元素）
+@mixin auth-page-extended-dark-theme {
+    @include auth-page-dark-theme;
+
+    @include dark-mode {
+        .remember-me {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        .agreement-notice {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        .checkbox-label {
+            color: #{$dark-secondary} !important;
+        }
+
+        .separator {
+            color: #{$dark-secondary-light} !important;
+
+            &::before,
+            &::after {
+                border-bottom-color: #{$dark-border-color} !important;
+            }
+        }
+    }
+}
+
+// 文本颜色混合宏
+@mixin dark-text-primary {
+    @include dark-mode {
+        color: #{$dark-secondary} !important;
+    }
+}
+
+@mixin dark-text-secondary {
+    @include dark-mode {
+        color: #{$dark-secondary-light} !important;
+    }
+}
+
+// 背景色混合宏
+@mixin dark-background-primary {
+    @include dark-mode {
+        background-color: #{$dark-background} !important;
+    }
+}
+
+@mixin dark-background-secondary {
+    @include dark-mode {
+        background-color: #{$dark-background-light} !important;
+    }
+}
+
+// 卡片/容器暗色模式混合宏
+@mixin dark-card {
+    @include dark-mode {
+        background-color: #{$dark-background-light} !important;
+        box-shadow: 0 10px 25px rgb(0 0 0 / 0.3) !important;
+        border-color: #{$dark-border-color} !important;
+    }
+}
+
+// 边框颜色混合宏
+@mixin dark-border {
+    @include dark-mode {
+        border-color: #{$dark-border-color} !important;
+    }
+}
+
+// 表单输入框暗色模式混合宏
+@mixin dark-input {
+    @include dark-mode {
+        background-color: #{$dark-background-light} !important;
+        color: #{$dark-secondary} !important;
+        border-color: #{$dark-border-color} !important;
+
+        &::placeholder {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        &:focus {
+            border-color: #{$primary} !important;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3) !important;
+        }
+    }
+}
+
+// 按钮暗色模式混合宏
+@mixin dark-button-secondary {
+    @include dark-mode {
+        background-color: #{$dark-background-light} !important;
+        border-color: #{$dark-border-color} !important;
+        color: #{$dark-secondary} !important;
+
+        &:hover {
+            background-color: #{$dark-border-color} !important;
+        }
+    }
+}
+
+// 社交登录按钮暗色模式混合宏
+@mixin dark-social-button {
+    @include dark-button-secondary;
+}
+
+// 通用暗色模式工具类
+// 这些类可以直接在 HTML 中使用，无需编写额外的 CSS
+
+// 文本颜色工具类的暗色模式
+.text-primary {
+    @include dark-text-primary;
+}
+
+.text-secondary {
+    @include dark-text-secondary;
+}
+
+// 背景色工具类的暗色模式
+.bg-primary {
+    @include dark-background-primary;
+}
+
+.bg-secondary {
+    @include dark-background-secondary;
+}
+
+// 卡片样式工具类的暗色模式
+.card-dark {
+    @include dark-card;
+}
+
+// 输入框样式工具类的暗色模式
+.input-dark {
+    @include dark-input;
+}
+
+// 按钮样式工具类的暗色模式
+.btn-secondary-dark {
+    @include dark-button-secondary;
+}
+
+// 社交按钮样式工具类的暗色模式
+.social-btn-dark {
+    @include dark-social-button;
+}
