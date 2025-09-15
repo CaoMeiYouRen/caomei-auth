@@ -948,4 +948,161 @@ onMounted(() => {
         max-width: 180px;
     }
 }
+
+// TOTP 设置相关样式
+.totp-setup {
+    .setup-title {
+        color: $secondary;
+        font-size: 1.18rem;
+        font-weight: 600;
+    }
+
+    .setup-steps {
+        color: $secondary-light;
+        padding-left: 1.2rem;
+
+        li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+    }
+
+    .qr-code {
+        display: flex;
+        justify-content: center;
+
+        img {
+            max-width: 200px;
+            border: 1px solid $border-color;
+            border-radius: 8px;
+            padding: 1rem;
+            background: $background-light;
+        }
+    }
+
+    .verification-input {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+}
+
+// 备份码相关样式
+.backup-codes {
+    .backup-title {
+        color: $secondary;
+        font-size: 1.18rem;
+        font-weight: 600;
+    }
+
+    .backup-codes-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.5rem;
+        padding: 1rem;
+        background: $background;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+    }
+
+    .backup-code {
+        padding: 0.5rem;
+        background: $background-light;
+        border: 1px solid $border-color;
+        border-radius: 4px;
+        text-align: center;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+}
+
+// 暗色模式支持
+@include dark-mode {
+    .auth-container {
+        background: #{$dark-background} !important;
+    }
+
+    .auth-card.security-card {
+        background-color: #{$dark-background-light} !important;
+        box-shadow: 0 10px 25px rgb(0 0 0 / 0.3) !important;
+    }
+
+    .auth-title {
+        color: #{$dark-secondary} !important;
+    }
+
+    .auth-subtitle {
+        color: #{$dark-secondary-light} !important;
+    }
+
+    .section-title {
+        color: #{$primary-light} !important;
+    }
+
+    .section-desc {
+        color: #{$dark-secondary-light} !important;
+    }
+
+    .divider {
+        border-color: #{$dark-border-color} !important;
+    }
+
+    .security-device-list {
+        .device-list-header {
+            color: #{$dark-secondary} !important;
+            border-color: #{$dark-border-color} !important;
+        }
+
+        .device-list-row {
+            span {
+                color: #{$dark-secondary-light} !important;
+            }
+        }
+    }
+
+    // TOTP 设置暗色模式
+    .totp-setup {
+        .setup-title {
+            color: #{$dark-secondary} !important;
+        }
+
+        .setup-steps {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        .qr-code img {
+            border-color: #{$dark-border-color} !important;
+            background: #{$dark-background-light} !important;
+        }
+    }
+
+    // 备份码暗色模式
+    .backup-codes {
+        .backup-title {
+            color: #{$dark-secondary} !important;
+        }
+
+        .backup-codes-list {
+            background: #{$dark-background} !important;
+            border-color: #{$dark-border-color} !important;
+        }
+
+        .backup-code {
+            background: #{$dark-background-light} !important;
+            border-color: #{$dark-border-color} !important;
+            color: #{$dark-secondary} !important;
+        }
+    }
+
+    // 状态指示器暗色模式
+    .status {
+        &.success {
+            color: #4ade80 !important; // 暗色模式下使用更亮的绿色
+        }
+
+        &.fail {
+            color: #f87171 !important; // 暗色模式下使用更亮的红色
+        }
+    }
+}
 </style>

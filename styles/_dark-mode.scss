@@ -951,3 +951,107 @@
         }
     }
 }
+
+// 认证页面扩展暗色模式样式混合宏（适用于登录、注册、重置密码等页面）
+@mixin auth-page-extended-dark-theme {
+    @include auth-page-dark-theme;
+
+    @include dark-mode {
+        // 按钮组暗色模式
+        .p-buttongroup {
+            .p-button {
+                background: #{$dark-background-light} !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+
+                &:hover {
+                    background: #{$dark-secondary-bg} !important;
+                }
+
+                &:not(.p-button-outlined) {
+                    background: #{$primary} !important;
+                    border-color: #{$primary} !important;
+                    color: #{$background-light} !important;
+
+                    &:hover {
+                        background: #{$primary-dark} !important;
+                    }
+                }
+            }
+        }
+
+        // 表单标签暗色模式
+        .form-label {
+            color: #{$dark-secondary} !important;
+        }
+
+        // 输入框暗色模式
+        .form-input,
+        .p-inputtext,
+        .p-password-input {
+            background: #{$dark-background-light} !important;
+            border-color: #{$dark-border-color} !important;
+            color: #{$dark-secondary} !important;
+
+            &:focus {
+                border-color: #{$primary} !important;
+                box-shadow: 0 0 0 0.2rem rgba(230, 57, 70, 0.25) !important;
+            }
+
+            &::placeholder {
+                color: #{$dark-secondary-light} !important;
+            }
+        }
+
+        // 密码输入框暗色模式
+        .p-password {
+            .p-password-input {
+                background: #{$dark-background-light} !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+            }
+
+            .p-password-panel {
+                background: #{$dark-background-light} !important;
+                border-color: #{$dark-border-color} !important;
+            }
+        }
+
+        // 验证码输入框暗色模式
+        .code-row {
+            .p-inputtext {
+                background: #{$dark-background-light} !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+            }
+        }
+
+        // 切换按钮暗色模式
+        .switch-btn {
+            .p-button {
+                background: transparent !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary-light} !important;
+
+                &:hover {
+                    background: #{$dark-background-light} !important;
+                    border-color: #{$primary} !important;
+                    color: #{$primary} !important;
+                }
+            }
+        }
+
+        // 协议说明暗色模式
+        .agreement-notice {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        .agreement-link {
+            color: #{$primary-light} !important;
+
+            &:hover {
+                color: #{$primary} !important;
+            }
+        }
+    }
+}
