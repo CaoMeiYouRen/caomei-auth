@@ -106,7 +106,6 @@ watch(() => props.modelValue, (newValue) => {
 </script>
 
 <style scoped lang="scss">
-
 .phone-input {
     display: flex;
     width: 100%;
@@ -134,6 +133,45 @@ watch(() => props.modelValue, (newValue) => {
     .form-dropdown {
         padding: 2px;
         line-height: 1.5;
+    }
+}
+
+// 深色主题下的手机输入组件优化
+@media (prefers-color-scheme: dark) {
+    .phone-input {
+        .region-selector {
+            .p-select,
+            .form-dropdown {
+                background-color: #{$dark-background-light};
+                color: #{$dark-secondary};
+                border-color: #{$dark-border-color};
+            }
+
+            .p-select:focus {
+                border-color: #{$primary};
+                box-shadow: 0 0 0 3px rgb(230 57 70 / 0.3);
+            }
+        }
+
+        .phone-number-input {
+            .p-inputtext,
+            .form-input {
+                background-color: #{$dark-background-light};
+                color: #{$dark-secondary};
+                border-color: #{$dark-border-color};
+            }
+
+            .p-inputtext::placeholder,
+            .form-input::placeholder {
+                color: #{$dark-secondary-light};
+            }
+
+            .p-inputtext:focus,
+            .form-input:focus {
+                border-color: #{$primary};
+                box-shadow: 0 0 0 3px rgb(230 57 70 / 0.3);
+            }
+        }
     }
 }
 </style>
