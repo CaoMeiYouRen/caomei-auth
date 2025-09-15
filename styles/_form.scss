@@ -19,12 +19,59 @@
     font-size: 1rem;
     // overflow: hidden;
     line-height: 1.5;
+    color: $secondary;
 }
 
 .form-input:focus {
     border-color: $primary;
     box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
     outline: none;
+}
+
+// 深色主题下的表单输入框优化
+@media (prefers-color-scheme: dark) {
+    .form-input {
+        background-color: #{$dark-background-light} !important;
+        color: #{$dark-secondary} !important;
+        border-color: #{$dark-border-color} !important;
+    }
+    
+    .form-input::placeholder {
+        color: #{$dark-secondary-light} !important;
+    }
+    
+    .form-input:focus {
+        border-color: #{$primary} !important;
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3) !important;
+    }
+    
+    // PrimeVue Password 组件优化
+    .p-password-input {
+        background-color: #{$dark-background-light} !important;
+        color: #{$dark-secondary} !important;
+        border-color: #{$dark-border-color} !important;
+    }
+    
+    .p-password-input::placeholder {
+        color: #{$dark-secondary-light} !important;
+    }
+    
+    // 所有输入框类型的优化
+    input[type="text"], 
+    input[type="password"], 
+    input[type="email"], 
+    input[type="tel"] {
+        background-color: #{$dark-background-light} !important;
+        color: #{$dark-secondary} !important;
+        border-color: #{$dark-border-color} !important;
+    }
+    
+    input[type="text"]::placeholder, 
+    input[type="password"]::placeholder, 
+    input[type="email"]::placeholder, 
+    input[type="tel"]::placeholder {
+        color: #{$dark-secondary-light} !important;
+    }
 }
 
 .card {
@@ -90,5 +137,26 @@
 
     .p-button-icon {
         margin-right: 0.75rem;
+    }
+}
+
+// 深色主题下的其他元素优化
+@media (prefers-color-scheme: dark) {
+    .form-label {
+        color: #{$dark-secondary} !important;
+    }
+    
+    .social-btn {
+        background-color: #{$dark-background-light} !important;
+        border-color: #{$dark-border-color} !important;
+        color: #{$dark-secondary} !important;
+    }
+    
+    .social-btn:hover {
+        background-color: #{$dark-border-color} !important;
+    }
+    
+    .error-message {
+        color: #{$error} !important;
     }
 }
