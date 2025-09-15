@@ -341,7 +341,7 @@ function goProfile() {
 }
 
 function goDocs() {
-    navigateTo('/docs')
+    openLink('https://auth-docs.cmyr.dev/docs/usage/user-management')
 }
 </script>
 
