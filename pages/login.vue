@@ -329,7 +329,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import { useUrlSearchParams } from '@vueuse/core'
+import { useUrlSearchParams, useDark } from '@vueuse/core'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
@@ -337,6 +337,7 @@ import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import type { SocialProvider } from '@/types/social'
 import { navigateAfterLoginWithDelay } from '@/utils/navigation'
+import { getSocialColor } from '@/utils/social-colors'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -397,7 +398,23 @@ const sendOtp = async () => {
 // 获取启用的社交登录提供商（默认只返回启用的）
 const { data: providersData } = await useFetch('/api/social/providers')
 
-const socialProviders = computed(() => providersData.value?.providers || [])
+// 使用 useDark 检测暗色模式
+const isDark = useDark()
+
+const socialProviders = computed(() => {
+    const providers = providersData.value?.providers || []
+
+    // 为暗色模式调整颜色，使用 getSocialColor 函数
+    return providers.map((provider) => {
+        const theme = isDark.value ? 'dark' : 'light'
+        const color = getSocialColor(provider.provider, theme)
+
+        return {
+            ...provider,
+            color,
+        }
+    })
+})
 
 const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
 const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
@@ -1016,39 +1033,39 @@ async function loginAnonymously() {
     .auth-container {
         background: #{$dark-background} !important;
     }
-    
+
     .auth-card {
         background-color: #{$dark-background-light} !important;
         box-shadow: 0 10px 25px rgb(0 0 0 / 0.3) !important;
     }
-    
+
     .auth-title {
         color: #{$dark-secondary} !important;
     }
-    
+
     .auth-subtitle {
         color: #{$dark-secondary-light} !important;
     }
-    
+
     .form-label {
         color: #{$dark-secondary} !important;
     }
-    
+
     .remember-me {
         color: #{$dark-secondary-light} !important;
     }
-    
+
     .toggle-login {
         color: #{$dark-secondary-light} !important;
     }
-    
+
     .agreement-notice {
         color: #{$dark-secondary-light} !important;
     }
-    
+
     .separator {
         color: #{$dark-secondary-light} !important;
-        
+
         &::before,
         &::after {
             border-bottom-color: #{$dark-border-color} !important;
