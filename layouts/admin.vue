@@ -398,4 +398,7 @@ const toggleSidebar = () => {
         margin-left: 0;
     }
 }
+
+// 应用后台布局暗色模式支持
+@include admin-layout-dark-theme;
 </style>

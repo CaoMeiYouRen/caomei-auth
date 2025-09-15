@@ -1747,4 +1747,7 @@ function formatRelativeTime(date: string | Date) {
     font-size: 0.875rem;
     margin-top: 0.5rem;
 }
+
+// 应用后台页面暗色模式支持
+@include admin-page-dark-theme;
 </style>

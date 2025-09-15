@@ -358,3 +358,308 @@
         }
     }
 }
+
+// 后台管理布局暗色模式混合宏
+@mixin admin-layout-dark-theme {
+    @include dark-mode {
+        .admin-layout {
+            background: #{$dark-background} !important;
+        }
+
+        .admin-sidebar {
+            background: #{$dark-background-light} !important;
+            border-right-color: #{$dark-border-color} !important;
+        }
+
+        .sidebar-header {
+            border-bottom-color: #{$dark-border-color} !important;
+
+            .app-name {
+                color: #{$primary} !important;
+            }
+
+            .collapse-btn {
+                color: #{$dark-secondary} !important;
+
+                &:hover {
+                    color: #{$primary} !important;
+                    background: #{$primary-950} !important;
+                }
+            }
+        }
+
+        .nav-title {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        .nav-item {
+            color: #{$dark-secondary} !important;
+
+            &:hover {
+                color: #{$primary} !important;
+                background: #{$primary-950} !important;
+            }
+
+            &.active {
+                color: #{$primary} !important;
+                background: #{$primary-900} !important;
+            }
+        }
+    }
+}
+
+// 后台管理页面通用暗色模式混合宏
+@mixin admin-page-dark-theme {
+    @include dark-mode {
+        // 页面容器
+        .admin-users,
+        .admin-logs,
+        .admin-clients,
+        .admin-sso {
+            background: linear-gradient(135deg, #{$dark-background} 0%, #{$dark-background-light} 100%) !important;
+        }
+
+        // 头部区域
+        .users-header,
+        .logs-header,
+        .clients-header,
+        .sso-header {
+            background: #{$dark-background-light} !important;
+            box-shadow: 0 2px 8px rgb(0 0 0 / 0.3) !important;
+
+            .users-title,
+            .logs-title,
+            .clients-title,
+            .sso-title {
+                color: #{$dark-secondary} !important;
+            }
+
+            .users-subtitle,
+            .logs-subtitle,
+            .clients-subtitle,
+            .sso-subtitle {
+                color: #{$dark-secondary-light} !important;
+            }
+        }
+
+        // 筛选区域
+        .users-filters,
+        .sso-filters,
+        .clients-filters {
+            background: #{$dark-background-light} !important;
+            box-shadow: 0 2px 8px rgb(0 0 0 / 0.3) !important;
+        }
+
+        // 列表区域
+        .users-list,
+        .logs-detail,
+        .clients-list,
+        .sso-list {
+            background: #{$dark-background-light} !important;
+            box-shadow: 0 2px 8px rgb(0 0 0 / 0.3) !important;
+
+            .table-header {
+                background: linear-gradient(135deg, #{$dark-background} 0%, #{$dark-background-light} 100%) !important;
+                border-bottom-color: #{$dark-border-color} !important;
+
+                .table-title,
+                .users-title,
+                .logs-title,
+                .clients-title,
+                .sso-title {
+                    color: #{$dark-secondary} !important;
+                }
+            }
+        }
+
+        // 统计卡片
+        .stat-card,
+        .period-stats,
+        .provider-stats,
+        .trend-chart {
+            background: #{$dark-background-light} !important;
+            box-shadow: 0 2px 8px rgb(0 0 0 / 0.3) !important;
+
+            .stat-value {
+                color: #{$dark-secondary} !important;
+            }
+
+            .stat-label {
+                color: #{$dark-secondary-light} !important;
+            }
+
+            .section-title {
+                color: #{$primary} !important;
+            }
+
+            .section-header {
+                background: linear-gradient(135deg, #{$dark-background} 0%, #{$dark-background-light} 100%) !important;
+                border-bottom-color: #{$dark-border-color} !important;
+            }
+        }
+
+        // 期间统计卡片
+        .period-card {
+            border-right-color: #{$dark-border-color} !important;
+
+            &:hover {
+                background: #{$dark-background} !important;
+            }
+
+            .period-label {
+                color: #{$dark-secondary-light} !important;
+            }
+
+            .period-value {
+                color: #{$dark-secondary} !important;
+            }
+        }
+
+        // 用户信息
+        .user-details {
+            .user-name {
+                color: #{$dark-secondary} !important;
+            }
+
+            .user-email {
+                color: #{$dark-secondary-light} !important;
+            }
+        }
+
+        // 应用信息
+        .application-info {
+            .application-name {
+                color: #{$dark-secondary} !important;
+            }
+
+            .application-description {
+                color: #{$dark-secondary-light} !important;
+            }
+        }
+
+        // 提供商信息
+        .provider-info {
+            .provider-name {
+                color: #{$dark-secondary} !important;
+            }
+
+            .provider-description {
+                color: #{$dark-secondary-light} !important;
+            }
+        }
+
+        // PrimeVue 表格暗色模式
+        :deep(.p-datatable) {
+            .p-datatable-header {
+                background: #{$dark-background} !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+            }
+
+            .p-datatable-thead > tr > th {
+                background: #{$dark-background} !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+            }
+
+            .p-datatable-tbody > tr {
+                background: #{$dark-background-light} !important;
+                border-color: #{$dark-border-color} !important;
+
+                &:nth-child(even) {
+                    background: #{$dark-background} !important;
+                }
+
+                > td {
+                    border-color: #{$dark-border-color} !important;
+                    color: #{$dark-secondary} !important;
+                }
+            }
+
+            .p-datatable-footer {
+                background: #{$dark-background} !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+            }
+        }
+
+        // PrimeVue 分页器暗色模式
+        :deep(.p-paginator) {
+            background: #{$dark-background} !important;
+            border-color: #{$dark-border-color} !important;
+            color: #{$dark-secondary} !important;
+
+            .p-paginator-pages .p-paginator-page {
+                color: #{$dark-secondary} !important;
+                background: transparent !important;
+
+                &.p-highlight {
+                    background: #{$primary} !important;
+                    color: white !important;
+                }
+
+                &:hover {
+                    background: #{$dark-border-color} !important;
+                }
+            }
+
+            .p-paginator-first,
+            .p-paginator-prev,
+            .p-paginator-next,
+            .p-paginator-last {
+                color: #{$dark-secondary} !important;
+
+                &:hover {
+                    background: #{$dark-border-color} !important;
+                }
+            }
+        }
+
+        // 图表容器
+        .chart-container {
+            background: #{$dark-background-light} !important;
+        }
+
+        // 详情页头部
+        .detail-header {
+            background: linear-gradient(135deg, #{$dark-background} 0%, #{$dark-background-light} 100%) !important;
+            border-bottom-color: #{$dark-border-color} !important;
+        }
+
+        // 文本颜色
+        .text-gray-500 {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        // 设备信息
+        .device-cell {
+            color: #{$dark-secondary} !important;
+        }
+
+        // 用户单元格
+        .user-cell {
+            .user-name {
+                color: #{$dark-secondary} !important;
+            }
+
+            .user-email {
+                color: #{$dark-secondary-light} !important;
+            }
+        }
+
+        // 提供商单元格
+        .provider-cell {
+            color: #{$dark-secondary} !important;
+        }
+
+        // 客户端ID
+        .client-id {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        // 日期信息
+        .date-info {
+            color: #{$dark-secondary-light} !important;
+        }
+    }
+}

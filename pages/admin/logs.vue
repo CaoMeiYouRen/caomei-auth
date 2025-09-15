@@ -1178,4 +1178,7 @@ onMounted(() => {
         }
     }
 }
+
+// 应用后台页面暗色模式支持
+@include admin-page-dark-theme;
 </style>
