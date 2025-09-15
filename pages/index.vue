@@ -183,6 +183,12 @@ function toAdmin() {
     padding: 2rem 1rem;
     background: $background;
 
+    @include dark-mode {
+        background: #{$dark-background-light} !important;
+        border-color: #{$dark-border-color} !important;
+        color: #{$dark-secondary} !important;
+    }
+
     @media (width >= 768px) {
         width: 50%;
         min-height: 100vh;
@@ -278,4 +284,6 @@ function toAdmin() {
         display: none;
     }
 }
+
+@include auth-page-extended-dark-theme;
 </style>

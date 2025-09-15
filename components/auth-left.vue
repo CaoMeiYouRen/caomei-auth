@@ -63,6 +63,10 @@ const props = defineProps({
     font-weight: 700;
     font-size: 2.3rem;
     letter-spacing: 1px;
+
+    @include dark-mode {
+        color: $dark-secondary-light !important;
+    }
 }
 
 .auth-subtitle {
