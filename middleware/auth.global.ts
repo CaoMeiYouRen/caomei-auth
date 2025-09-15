@@ -2,10 +2,9 @@ import { publicPaths } from '@/utils/public-paths'
 import { authClient } from '@/lib/auth-client'
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    // 只在客户端执行，避免SSR重复请求
-    if (to.path === '/') { // 首页路由直接放通
-        return
-    }
+    // if (to.path === '/') { // 首页路由直接放通
+    //     return
+    // }
     // 白名单路径
     if (publicPaths.some((path) => to.path === path)) {
         return true

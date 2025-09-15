@@ -17,6 +17,7 @@
                             to="https://sentry.io"
                             external
                             class="external-link"
+                            target="_blank"
                         >
                             Sentry
                         </NuxtLink> 服务监控系统错误和性能问题，以提高服务稳定性。该服务仅收集技术错误信息，不包含个人敏感数据。
@@ -26,6 +27,7 @@
                             to="https://clarity.microsoft.com"
                             external
                             class="external-link"
+                            target="_blank"
                         >
                             Microsoft Clarity
                         </NuxtLink>分析用户在关键页面的操作行为，以优化用户体验。该工具会自动对用户标识符进行哈希加密处理，确保隐私安全。我们仅在登录、注册、安全设置等关键功能页面收集必要的操作数据，不会记录用户输入的密码、邮箱等敏感信息。
@@ -35,6 +37,7 @@
                             to="https://tongji.baidu.com"
                             external
                             class="external-link"
+                            target="_blank"
                         >
                             百度统计
                         </NuxtLink>服务收集网站访问数据，包括页面访问量、用户来源、访问时长等信息，用于分析网站使用情况和改进服务质量。该服务会收集匿名的访问统计信息，不会获取用户的个人身份信息。您可以通过浏览器设置或安装相关插件来阻止统计代码的执行。
@@ -44,6 +47,7 @@
                             to="https://analytics.google.com"
                             external
                             class="external-link"
+                            target="_blank"
                         >
                             Google Analytics
                         </NuxtLink> 服务分析网站流量和用户行为，以了解用户如何使用我们的服务并改进用户体验。Google Analytics 会收集匿名的使用数据，包括页面访问、用户互动、设备信息和大致地理位置等。这些数据经过匿名化处理，不会直接识别个人身份。Google 会根据其隐私政策处理这些数据。您可以通过安装 Google Analytics 退出插件或调整浏览器设置来选择不被追踪。
@@ -56,6 +60,7 @@
                                     to="https://github.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     GitHub 登录
                                 </NuxtLink>
@@ -65,6 +70,7 @@
                                     to="https://google.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     Google 登录
                                 </NuxtLink>
@@ -74,6 +80,7 @@
                                     to="https://microsoft.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     Microsoft 登录
                                 </NuxtLink>
@@ -83,6 +90,7 @@
                                     to="https://www.apple.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     Apple 登录
                                 </NuxtLink>
@@ -92,6 +100,7 @@
                                     to="https://x.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     Twitter 登录
                                 </NuxtLink>
@@ -101,6 +110,7 @@
                                     to="https://discord.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     Discord 登录
                                 </NuxtLink>
@@ -110,6 +120,7 @@
                                     to="https://weixin.qq.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     微信登录
                                 </NuxtLink>
@@ -119,6 +130,7 @@
                                     to="https://im.qq.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     QQ 登录
                                 </NuxtLink>
@@ -128,6 +140,7 @@
                                     to="https://douyin.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     抖音登录
                                 </NuxtLink>
@@ -137,6 +150,7 @@
                                     to="https://weibo.com"
                                     external
                                     class="external-link"
+                                    target="_blank"
                                 >
                                     微博登录
                                 </NuxtLink>

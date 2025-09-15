@@ -5,7 +5,14 @@
             <i class="banner-icon mdi mdi-information-outline" />
             <div class="banner-text">
                 <strong>演示模式</strong>
-                <span>{{ message || '当前为演示模式，您可以浏览所有功能，但无法进行实际的修改操作。如需体验完整功能，请部署您自己的实例。' }}</span>
+                <span>{{ message || '当前为演示模式，您可以浏览所有功能，但无法进行实际的修改操作。如需体验完整功能，请部署您自己的实例。' }}Demo账号密码详见<NuxtLink
+                    to="https://auth-docs.cmyr.dev/"
+                    external
+                    class="external-link"
+                    target="_blank"
+                >
+                    文档说明
+                </NuxtLink></span>
             </div>
             <button
                 v-if="closable"
@@ -107,6 +114,16 @@ const demoMode = computed(() => config.public.demoMode)
         span {
             font-size: 0.75rem;
         }
+    }
+}
+
+.external-link {
+    color: $primary;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
     }
 }
 </style>
