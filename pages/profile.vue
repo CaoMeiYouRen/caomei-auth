@@ -1126,6 +1126,10 @@ async function onFileSelect(event: FileUploadSelectEvent) {
     font-weight: 500;
     word-break: break-all;
     flex: 1;
+
+    @include dark-mode {
+        color: #{$dark-secondary} !important;
+    }
 }
 
 .privacy-hidden {
@@ -1134,4 +1138,5 @@ async function onFileSelect(event: FileUploadSelectEvent) {
     // font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
     font-weight: 500;
 }
+
 </style>
