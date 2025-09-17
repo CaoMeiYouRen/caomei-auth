@@ -4,13 +4,13 @@
 
 ## 功能特性
 
-- **邮箱密码登录**: 传统的邮箱+密码登录方式
-- **邮箱验证码登录**: 无需密码，通过邮箱验证码登录
-- **邮箱验证**: 新用户注册时邮箱验证
-- **密码重置**: 通过邮箱重置密码
-- **多种邮件服务商支持**: Gmail、腾讯企业邮箱、阿里云邮件推送、Outlook 等
-- **限流保护**: 支持全局和单用户邮件发送频率限制
-- **安全配置**: 密码强度要求、防暴力破解等
+-   **邮箱密码登录**: 传统的邮箱+密码登录方式
+-   **邮箱验证码登录**: 无需密码，通过邮箱验证码登录
+-   **邮箱验证**: 新用户注册时邮箱验证
+-   **密码重置**: 通过邮箱重置密码
+-   **多种邮件服务商支持**: Gmail、腾讯企业邮箱、阿里云邮件推送、Outlook 等
+-   **限流保护**: 支持全局和单用户邮件发送频率限制
+-   **安全配置**: 密码强度要求、防暴力破解等
 
 > **注意**: 目前邮件使用纯文本格式，HTML 邮件模板功能计划在未来版本中实现。
 
@@ -89,9 +89,66 @@ EMAIL_PASS=your-password
 EMAIL_FROM="Your App <your-email@outlook.com>"
 ```
 
-## 邮件模板
+### Resend
 
-> **注意**: 目前系统使用简单的纯文本邮件格式，HTML 邮件模板功能计划在未来版本中支持。
+Resend 是一个现代化的邮件发送服务，专为开发者设计，提供简单的 API 和可靠的邮件投递。
+
+1. 注册 [Resend 账户](https://resend.com)
+2. 创建 API Key
+3. 验证发送域名（可选，但推荐用于生产环境）
+
+```env
+EMAIL_HOST=smtp.resend.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=resend
+EMAIL_PASS=your-resend-api-key
+EMAIL_FROM="Your App <your-email@your-domain.com>"
+```
+
+#### Resend 特性
+
+-   **开发者友好**: 简单的 API 和清晰的文档
+-   **高投递率**: 优秀的邮件投递基础设施
+-   **实时分析**: 详细的发送统计和分析
+-   **域名验证**: 支持自定义域名验证，提高邮件信誉
+-   **模板支持**: 内置 HTML 邮件模板功能
+-   **免费额度**: 每月免费发送 3,000 封邮件
+
+#### 配置步骤
+
+1. **获取 API Key**:
+
+    - 登录 Resend 控制台
+    - 进入 API Keys 页面
+    - 创建新的 API Key
+    - 复制 API Key 用作 `EMAIL_PASS`
+
+2. **域名验证（推荐）**:
+
+    - 在 Resend 控制台添加您的域名
+    - 配置 DNS 记录（SPF、DKIM、DMARC）
+    - 验证域名状态
+    - 使用验证的域名作为发件地址
+
+3. **发件地址配置**:
+
+    ```env
+    # 使用验证的域名
+    EMAIL_FROM="草梅Auth <noreply@yourdomain.com>"
+
+    # 或使用 Resend 提供的测试域名（仅开发环境）
+    EMAIL_FROM="草梅Auth <test@resend.dev>"
+    ```
+
+#### 使用建议
+
+-   **生产环境**: 强烈建议验证自己的域名，以获得更好的投递率和品牌一致性
+-   **开发环境**: 可以使用 Resend 提供的测试域名进行快速测试
+-   **监控**: 利用 Resend 的分析功能监控邮件发送情况
+-   **模板**: 考虑使用 Resend 的模板功能（需要后续集成开发）
+
+## 邮件模板
 
 系统当前发送的邮件类型：
 
@@ -136,54 +193,54 @@ EMAIL_FROM="Your App <your-email@outlook.com>"
 
 ```vue
 <template>
-  <form @submit.prevent="loginWithEmail">
-    <div class="form-group">
-      <label>邮箱地址</label>
-      <input 
-        v-model="email" 
-        type="email" 
-        required 
-        placeholder="请输入邮箱地址"
-      />
-    </div>
-    
-    <div class="form-group">
-      <label>密码</label>
-      <input 
-        v-model="password" 
-        type="password" 
-        required 
-        placeholder="请输入密码"
-      />
-    </div>
-    
-    <button type="submit" :disabled="isLoading">
-      {{ isLoading ? '登录中...' : '登录' }}
-    </button>
-  </form>
+    <form @submit.prevent="loginWithEmail">
+        <div class="form-group">
+            <label>邮箱地址</label>
+            <input
+                v-model="email"
+                type="email"
+                required
+                placeholder="请输入邮箱地址"
+            />
+        </div>
+
+        <div class="form-group">
+            <label>密码</label>
+            <input
+                v-model="password"
+                type="password"
+                required
+                placeholder="请输入密码"
+            />
+        </div>
+
+        <button type="submit" :disabled="isLoading">
+            {{ isLoading ? "登录中..." : "登录" }}
+        </button>
+    </form>
 </template>
 
 <script setup>
-import { authClient } from '@/lib/auth-client'
+import { authClient } from "@/lib/auth-client";
 
-const email = ref('')
-const password = ref('')
-const isLoading = ref(false)
+const email = ref("");
+const password = ref("");
+const isLoading = ref(false);
 
 const loginWithEmail = async () => {
-  isLoading.value = true
-  try {
-    await authClient.signIn.email({
-      email: email.value,
-      password: password.value
-    })
-    await navigateTo('/')
-  } catch (error) {
-    console.error('登录失败:', error)
-  } finally {
-    isLoading.value = false
-  }
-}
+    isLoading.value = true;
+    try {
+        await authClient.signIn.email({
+            email: email.value,
+            password: password.value,
+        });
+        await navigateTo("/");
+    } catch (error) {
+        console.error("登录失败:", error);
+    } finally {
+        isLoading.value = false;
+    }
+};
 </script>
 ```
 
@@ -191,99 +248,95 @@ const loginWithEmail = async () => {
 
 ```vue
 <template>
-  <form @submit.prevent="step === 1 ? sendCode() : loginWithCode()">
-    <div class="form-group">
-      <label>邮箱地址</label>
-      <input 
-        v-model="email" 
-        type="email" 
-        required 
-        :disabled="step === 2"
-        placeholder="请输入邮箱地址"
-      />
-    </div>
-    
-    <div v-if="step === 2" class="form-group">
-      <label>验证码</label>
-      <input 
-        v-model="code" 
-        type="text" 
-        required 
-        placeholder="请输入6位验证码"
-        maxlength="6"
-      />
-    </div>
-    
-    <button type="submit" :disabled="isLoading">
-      {{ buttonText }}
-    </button>
-    
-    <div v-if="step === 2" class="resend-section">
-      <button 
-        type="button" 
-        @click="sendCode" 
-        :disabled="countdown > 0"
-      >
-        {{ countdown > 0 ? `${countdown}秒后重发` : '重新发送' }}
-      </button>
-    </div>
-  </form>
+    <form @submit.prevent="step === 1 ? sendCode() : loginWithCode()">
+        <div class="form-group">
+            <label>邮箱地址</label>
+            <input
+                v-model="email"
+                type="email"
+                required
+                :disabled="step === 2"
+                placeholder="请输入邮箱地址"
+            />
+        </div>
+
+        <div v-if="step === 2" class="form-group">
+            <label>验证码</label>
+            <input
+                v-model="code"
+                type="text"
+                required
+                placeholder="请输入6位验证码"
+                maxlength="6"
+            />
+        </div>
+
+        <button type="submit" :disabled="isLoading">
+            {{ buttonText }}
+        </button>
+
+        <div v-if="step === 2" class="resend-section">
+            <button type="button" @click="sendCode" :disabled="countdown > 0">
+                {{ countdown > 0 ? `${countdown}秒后重发` : "重新发送" }}
+            </button>
+        </div>
+    </form>
 </template>
 
 <script setup>
-import { authClient } from '@/lib/auth-client'
+import { authClient } from "@/lib/auth-client";
 
-const email = ref('')
-const code = ref('')
-const step = ref(1) // 1: 发送验证码, 2: 输入验证码
-const isLoading = ref(false)
-const countdown = ref(0)
+const email = ref("");
+const code = ref("");
+const step = ref(1); // 1: 发送验证码, 2: 输入验证码
+const isLoading = ref(false);
+const countdown = ref(0);
 
 const buttonText = computed(() => {
-  if (isLoading.value) return '处理中...'
-  return step.value === 1 ? '发送验证码' : '登录'
-})
+    if (isLoading.value) return "处理中...";
+    return step.value === 1 ? "发送验证码" : "登录";
+});
 
 const sendCode = async () => {
-  isLoading.value = true
-  try {
-    await $fetch('/api/auth/send-email-code', {
-      method: 'POST',
-      body: { email: email.value }
-    })
-    step.value = 2
-    startCountdown()
-  } catch (error) {
-    console.error('发送验证码失败:', error)
-  } finally {
-    isLoading.value = false
-  }
-}
+    isLoading.value = true;
+    try {
+        await $fetch("/api/auth/send-email-code", {
+            method: "POST",
+            body: { email: email.value },
+        });
+        step.value = 2;
+        startCountdown();
+    } catch (error) {
+        console.error("发送验证码失败:", error);
+    } finally {
+        isLoading.value = false;
+    }
+};
 
 const loginWithCode = async () => {
-  isLoading.value = true
-  try {
-    await authClient.signIn.emailCode({
-      email: email.value,
-      code: code.value
-    })
-    await navigateTo('/')
-  } catch (error) {
-    console.error('登录失败:', error)
-  } finally {
-    isLoading.value = false
-  }
-}
+    isLoading.value = true;
+    try {
+        await authClient.signIn.emailCode({
+            email: email.value,
+            code: code.value,
+        });
+        await navigateTo("/");
+    } catch (error) {
+        console.error("登录失败:", error);
+    } finally {
+        isLoading.value = false;
+    }
+};
 
 const startCountdown = () => {
-  countdown.value = 60
-  const timer = setInterval(() => {
-    countdown.value--
-    if (countdown.value <= 0) {
-      clearInterval(timer)
-    }
-  }, 1000)
-}
+    countdown.value = 60;
+    const timer = setInterval(() => {
+        countdown.value--;
+        if (countdown.value <= 0) {
+            clearInterval(timer);
+        }
+    }, 1000);
+};
 </script>
 ```
 
@@ -339,20 +392,22 @@ curl -X POST http://localhost:3000/api/auth/sign-in \
 
 推荐使用以下工具进行邮件测试：
 
-- **MailHog**: 本地邮件测试服务器
-- **Mailtrap**: 在线邮件测试服务
-- **Gmail**: 使用真实邮箱测试
+-   **MailHog**: 本地邮件测试服务器
+-   **Mailtrap**: 在线邮件测试服务
+-   **Gmail**: 使用真实邮箱测试
 
 ## 常见问题
 
 ### 1. 邮件发送失败
 
 **可能原因**:
-- SMTP 配置错误
-- 邮箱密码错误
-- 邮箱服务商安全限制
+
+-   SMTP 配置错误
+-   邮箱密码错误
+-   邮箱服务商安全限制
 
 **解决方案**:
+
 ```bash
 # 检查 SMTP 连接
 telnet smtp.gmail.com 587
@@ -365,22 +420,25 @@ echo $EMAIL_USER
 ### 2. 邮件被标记为垃圾邮件
 
 **解决方案**:
-- 配置 SPF 记录
-- 配置 DKIM 签名
-- 使用认证的 SMTP 服务
-- 优化邮件内容
+
+-   配置 SPF 记录
+-   配置 DKIM 签名
+-   使用认证的 SMTP 服务
+-   优化邮件内容
 
 ### 3. 验证码不到达
 
 **可能原因**:
-- 邮件被过滤
-- 邮箱地址错误
-- 服务器时间不同步
+
+-   邮件被过滤
+-   邮箱地址错误
+-   服务器时间不同步
 
 **解决方案**:
-- 检查垃圾邮件文件夹
-- 验证邮箱地址格式
-- 同步服务器时间
+
+-   检查垃圾邮件文件夹
+-   验证邮箱地址格式
+-   同步服务器时间
 
 ### 4. Gmail 应用密码配置
 
@@ -397,21 +455,22 @@ echo $EMAIL_USER
 ```javascript
 // 记录邮件发送状态
 console.log({
-  type: 'email_sent',
-  to: email,
-  subject: subject,
-  status: 'success',
-  timestamp: new Date().toISOString()
-})
+    type: "email_sent",
+    to: email,
+    subject: subject,
+    status: "success",
+    timestamp: new Date().toISOString(),
+});
 ```
 
 ### 发送统计
 
 监控邮件发送情况：
-- 发送成功率
-- 发送失败原因
-- 用户验证率
-- 服务商性能
+
+-   发送成功率
+-   发送失败原因
+-   用户验证率
+-   服务商性能
 
 ## 未来规划
 
@@ -420,20 +479,23 @@ console.log({
 计划在未来版本中支持以下功能：
 
 1. **HTML 邮件模板**
-   - 支持自定义 HTML 模板
-   - 模板变量替换功能
-   - 响应式邮件设计
+
+    - 支持自定义 HTML 模板
+    - 模板变量替换功能
+    - 响应式邮件设计
 
 2. **多语言邮件模板**
-   - 根据用户语言偏好发送对应语言的邮件
-   - 支持国际化模板管理
+
+    - 根据用户语言偏好发送对应语言的邮件
+    - 支持国际化模板管理
 
 3. **邮件模板管理界面**
-   - 管理后台可视化编辑邮件模板
-   - 模板预览和测试功能
-   - 模板版本管理
+
+    - 管理后台可视化编辑邮件模板
+    - 模板预览和测试功能
+    - 模板版本管理
 
 4. **高级邮件功能**
-   - 邮件发送统计和分析
-   - 邮件追踪和阅读回执
-   - 自动化邮件工作流
+    - 邮件发送统计和分析
+    - 邮件追踪和阅读回执
+    - 自动化邮件工作流
