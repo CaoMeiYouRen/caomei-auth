@@ -4,7 +4,7 @@
 
 > [!CAUTION]
 >
-> 由于 better-auth 的 OAuth 插件存在问题，目前无法正常通过抖音进行第三方登录，参考 [#8](https://github.com/CaoMeiYouRen/caomei-auth/issues/7) 。
+> 由于 better-auth 的 OAuth 插件存在问题，目前无法正常通过抖音进行第三方登录，参考 [#8](https://github.com/CaoMeiYouRen/caomei-auth/issues/8) 。
 
 ## 前置要求
 
