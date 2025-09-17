@@ -61,6 +61,7 @@ import { generateRandomString } from '@/server/utils/random'
 import { getTempEmail, getTempName, generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email-service'
 import { getUserLocale } from '@/server/utils/locale'
+import { getCaptchaConfig, isCaptchaEnabled } from '@/server/utils/captcha-config'
 
 // TODO 增加注册验证码
 export const auth = betterAuth({
@@ -152,7 +153,6 @@ export const auth = betterAuth({
             clientSecret: MICROSOFT_CLIENT_SECRET as string,
             // 可选配置
             tenantId: 'common',
-            requireSelectAccount: true,
         },
         discord: { // 支持 Discord 登录
             clientId: DISCORD_CLIENT_ID as string,
@@ -680,6 +680,8 @@ export const auth = betterAuth({
                 }
             },
         }),
-    ], // 过滤掉未定义的插件
+        // 动态验证码配置，根据环境变量启用相应的验证码提供商
+        ...(isCaptchaEnabled() ? [captcha(getCaptchaConfig()!)] : []),
+    ], // 动态插件配置
     ...secondaryStorage ? { secondaryStorage } : {},
 })
