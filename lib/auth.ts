@@ -669,8 +669,11 @@ export const auth = betterAuth({
             fallbackLocale: 'default', // 回退到默认语言
             getLocale: (request) => {
                 try {
-                    const userLocale = getUserLocale(request) as any
-                    return userLocale || 'default'
+                    const userLocale = (request ? getUserLocale(request) : undefined)
+                    if (!userLocale) {
+                        return 'default'
+                    }
+                    return userLocale
                 } catch (error) {
                     console.warn('Error detecting locale:', error)
                     return 'default' // 安全回退

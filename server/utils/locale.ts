@@ -4,44 +4,48 @@
  */
 
 import type { H3Event } from 'h3'
+import type { BuiltInLocales } from 'better-auth-localization'
 
 /**
- * 支持的语言列表
- * 基于 better-auth-localization 支持的语言
+ * better-auth 内置支持的语言代码类型
+ * 直接使用 better-auth-localization 的语言代码，避免额外转换
  */
-export const SUPPORTED_LOCALES = [
+export type BetterAuthLocale = BuiltInLocales
+
+/**
+ * 项目支持的语言列表
+ * 直接使用 better-auth-localization 支持的完整语言代码
+ * 避免简化格式和额外的转换层
+ */
+export const SUPPORTED_LOCALES: readonly BetterAuthLocale[] = [
     'zh-Hans', // 简体中文
     'zh-Hant', // 繁体中文
-    'en', // 英语
+    'default', // 默认语言
     'pt-BR', // 巴西葡萄牙语
-    'pt', // 葡萄牙语
-    'es', // 西班牙语
-    'fr', // 法语
-    'de', // 德语
-    'ja', // 日语
-    'ko', // 韩语
-    'ru', // 俄语
-    'ar', // 阿拉伯语
-    'hi', // 印地语
-    'it', // 意大利语
-    'nl', // 荷兰语
-    'sv', // 瑞典语
-    'da', // 丹麦语
-    'no', // 挪威语
-    'fi', // 芬兰语
-    'pl', // 波兰语
-    'tr', // 土耳其语
-    'th', // 泰语
-    'vi', // 越南语
+    'pt-PT', // 葡萄牙语
+    'es-ES', // 西班牙语
+    'fr-FR', // 法语
+    'de-DE', // 德语
+    'ja-JP', // 日语
+    'ko-KR', // 韩语
+    'ru-RU', // 俄语
+    'ar-SA', // 阿拉伯语
+    'hi-HI', // 印地语
+    'it-IT', // 意大利语
+    'nl-NL', // 荷兰语
+    'sv-SE', // 瑞典语
+    'da-DK', // 丹麦语
+    'pl-PL', // 波兰语
+    'tr-TR', // 土耳其语
 ] as const
 
 export type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 
 /**
- * 默认语言设置
+ * 默认语言设置（简体中文）
  */
 export const DEFAULT_LOCALE: SupportedLocale = 'zh-Hans'
-export const FALLBACK_LOCALE: SupportedLocale = 'en'
+export const FALLBACK_LOCALE: SupportedLocale = 'default'
 
 /**
  * 语言代码映射表
@@ -61,49 +65,73 @@ const LOCALE_MAPPING: Record<string, SupportedLocale> = {
     'zh-mo': 'zh-Hant',
     'zh-MO': 'zh-Hant',
 
-    // 英语变体映射
-    'en-US': 'en',
-    'en-GB': 'en',
-    'en-CA': 'en',
-    'en-AU': 'en',
-    'en-NZ': 'en',
-    'en-ZA': 'en',
+    // 英语变体映射（统一映射到 default）
+    en: 'default',
+    'en-US': 'default',
+    'en-GB': 'default',
+    'en-CA': 'default',
+    'en-AU': 'default',
+    'en-NZ': 'default',
+    'en-ZA': 'default',
 
     // 葡萄牙语变体映射
-    'pt-PT': 'pt',
+    pt: 'pt-PT',
+    'pt-PT': 'pt-PT',
 
     // 西班牙语变体映射
-    'es-ES': 'es',
-    'es-MX': 'es',
-    'es-AR': 'es',
-    'es-CO': 'es',
-    'es-CL': 'es',
+    es: 'es-ES',
+    'es-ES': 'es-ES',
+    'es-MX': 'es-ES',
+    'es-AR': 'es-ES',
+    'es-CO': 'es-ES',
+    'es-CL': 'es-ES',
 
     // 法语变体映射
-    'fr-FR': 'fr',
-    'fr-CA': 'fr',
-    'fr-BE': 'fr',
-    'fr-CH': 'fr',
+    fr: 'fr-FR',
+    'fr-FR': 'fr-FR',
+    'fr-CA': 'fr-FR',
+    'fr-BE': 'fr-FR',
+    'fr-CH': 'fr-FR',
 
     // 德语变体映射
-    'de-DE': 'de',
-    'de-AT': 'de',
-    'de-CH': 'de',
+    de: 'de-DE',
+    'de-DE': 'de-DE',
+    'de-AT': 'de-DE',
+    'de-CH': 'de-DE',
 
     // 其他语言映射
-    'ja-JP': 'ja',
-    'ko-KR': 'ko',
-    'ru-RU': 'ru',
-    'it-IT': 'it',
-    'nl-NL': 'nl',
-    'sv-SE': 'sv',
-    'da-DK': 'da',
-    'no-NO': 'no',
-    'fi-FI': 'fi',
-    'pl-PL': 'pl',
-    'tr-TR': 'tr',
-    'th-TH': 'th',
-    'vi-VN': 'vi',
+    ja: 'ja-JP',
+    'ja-JP': 'ja-JP',
+    ko: 'ko-KR',
+    'ko-KR': 'ko-KR',
+    ru: 'ru-RU',
+    'ru-RU': 'ru-RU',
+    it: 'it-IT',
+    'it-IT': 'it-IT',
+    nl: 'nl-NL',
+    'nl-NL': 'nl-NL',
+    sv: 'sv-SE',
+    'sv-SE': 'sv-SE',
+    da: 'da-DK',
+    'da-DK': 'da-DK',
+    pl: 'pl-PL',
+    'pl-PL': 'pl-PL',
+    tr: 'tr-TR',
+    'tr-TR': 'tr-TR',
+    ar: 'ar-SA',
+    'ar-SA': 'ar-SA',
+    hi: 'hi-HI',
+    'hi-HI': 'hi-HI',
+
+    // 不支持的语言映射到最接近的语言或默认语言
+    no: 'da-DK', // 挪威语映射到丹麦语
+    'no-NO': 'da-DK',
+    fi: 'sv-SE', // 芬兰语映射到瑞典语
+    'fi-FI': 'sv-SE',
+    th: 'default', // 泰语使用默认语言
+    'th-TH': 'default',
+    vi: 'default', // 越南语使用默认语言
+    'vi-VN': 'default',
 }
 
 /**
