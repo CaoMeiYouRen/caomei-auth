@@ -666,7 +666,7 @@ export const auth = betterAuth({
         }),
         localization({
             defaultLocale: 'zh-Hans', // 默认为简体中文
-            fallbackLocale: 'default', // 回退到英语
+            fallbackLocale: 'default', // 回退到默认语言
             getLocale: (request) => {
                 try {
                     const userLocale = getUserLocale(request) as any

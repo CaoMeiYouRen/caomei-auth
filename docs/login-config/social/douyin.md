@@ -2,11 +2,15 @@
 
 抖音是字节跳动旗下的短视频平台，在中国和海外都有大量用户，适合内容和娱乐类应用。
 
+> [!CAUTION]
+>
+> 由于 better-auth 的 OAuth 插件存在问题，目前无法正常通过抖音进行第三方登录，参考 [#8](https://github.com/CaoMeiYouRen/caomei-auth/issues/7) 。
+
 ## 前置要求
 
-- 拥有抖音账户
-- 需要在抖音开放平台注册
-- 需要完成开发者认证
+-   拥有抖音账户
+-   需要在抖音开放平台注册
+-   需要完成开发者认证
 
 ## 配置步骤
 
@@ -23,34 +27,34 @@
 2. 选择 **应用管理** > **创建应用**
 3. 选择应用类型：**网站应用**
 4. 填写应用信息：
-   - **应用名称**: `草梅Auth`
-   - **应用简介**: 详细描述应用功能
-   - **应用图标**: 上传应用图标
-   - **应用分类**: 选择合适的应用分类
-   - **网站地址**: `https://yourdomain.com`
+    - **应用名称**: `草梅Auth`
+    - **应用简介**: 详细描述应用功能
+    - **应用图标**: 上传应用图标
+    - **应用分类**: 选择合适的应用分类
+    - **网站地址**: `https://yourdomain.com`
 
 ### 3. 配置登录权限
 
 1. 在应用详情页面，选择 **开发** > **接口权限**
 2. 申请 **登录** 权限：
-   - **user_info**: 获取用户公开信息
-   - **login**: 用户登录授权
+    - **user_info**: 获取用户公开信息
+    - **login**: 用户登录授权
 3. 填写权限申请理由
 4. 提交申请等待审核
 
 ### 4. 设置回调地址
 
 1. 在 **开发设置** 中配置：
-   - **授权回调域**: `yourdomain.com`
-   - **服务器域名**: `yourdomain.com`
+    - **授权回调域**: `yourdomain.com`
+    - **服务器域名**: `yourdomain.com`
 2. 保存配置
 
 ### 5. 获取应用凭据
 
 在应用详情页面获取：
 
-- **Client Key**: 应用的客户端密钥
-- **Client Secret**: 应用的服务端密钥
+-   **Client Key**: 应用的客户端密钥
+-   **Client Secret**: 应用的服务端密钥
 
 ### 6. 配置环境变量
 
@@ -71,31 +75,33 @@ DOUYIN_CLIENT_SECRET=your_douyin_client_secret
 抖音登录可以获取以下用户信息：
 
 ### 基础权限
-- 用户唯一标识 (open_id)
-- 用户昵称
-- 用户头像
-- 用户性别
-- 用户所在地区
+
+-   用户唯一标识 (open_id)
+-   用户昵称
+-   用户头像
+-   用户性别
+-   用户所在地区
 
 ### 扩展权限
-- 用户抖音号
-- 粉丝数量
-- 关注数量
-- 获赞数量
-- 作品数量
+
+-   用户抖音号
+-   粉丝数量
+-   关注数量
+-   获赞数量
+-   作品数量
 
 ## 授权范围说明
 
 ```javascript
 // 可申请的权限范围
 const scopes = [
-  'user_info',        // 获取用户基本信息
-  'video.list',       // 获取用户视频列表
-  'video.data',       // 获取视频数据
-  'fans.list',        // 获取粉丝列表
-  'following.list',   // 获取关注列表
-  'item.comment',     // 视频评论管理
-  'data.external'     // 数据开放服务
+    "user_info", // 获取用户基本信息
+    "video.list", // 获取用户视频列表
+    "video.data", // 获取视频数据
+    "fans.list", // 获取粉丝列表
+    "following.list", // 获取关注列表
+    "item.comment", // 视频评论管理
+    "data.external", // 数据开放服务
 ];
 ```
 
@@ -116,26 +122,29 @@ const scopes = [
 const authUrl = `https://open.douyin.com/platform/oauth/connect/?client_key=${clientKey}&response_type=code&scope=user_info&redirect_uri=${redirectUri}`;
 
 // 2. 用户授权后获取 code
-const code = new URLSearchParams(window.location.search).get('code');
+const code = new URLSearchParams(window.location.search).get("code");
 
 // 3. 使用 code 换取 access_token
-const tokenResponse = await fetch('https://open.douyin.com/oauth/access_token/', {
-  method: 'POST',
-  body: JSON.stringify({
-    client_key: clientKey,
-    client_secret: clientSecret,
-    code: code,
-    grant_type: 'authorization_code'
-  })
-});
+const tokenResponse = await fetch(
+    "https://open.douyin.com/oauth/access_token/",
+    {
+        method: "POST",
+        body: JSON.stringify({
+            client_key: clientKey,
+            client_secret: clientSecret,
+            code: code,
+            grant_type: "authorization_code",
+        }),
+    }
+);
 
 // 4. 使用 access_token 获取用户信息
-const userResponse = await fetch('https://open.douyin.com/oauth/userinfo/', {
-  method: 'POST',
-  body: JSON.stringify({
-    access_token: accessToken,
-    open_id: openId
-  })
+const userResponse = await fetch("https://open.douyin.com/oauth/userinfo/", {
+    method: "POST",
+    body: JSON.stringify({
+        access_token: accessToken,
+        open_id: openId,
+    }),
 });
 ```
 
@@ -146,36 +155,40 @@ const userResponse = await fetch('https://open.douyin.com/oauth/userinfo/', {
 **原因**: 回调域名配置错误
 
 **解决方案**:
-- 检查开发者平台中配置的回调域名
-- 确保域名完全匹配
-- 不要包含协议和端口号
+
+-   检查开发者平台中配置的回调域名
+-   确保域名完全匹配
+-   不要包含协议和端口号
 
 ### 2. invalid_client_key
 
 **原因**: Client Key 错误
 
 **解决方案**:
-- 检查环境变量中的 Client Key
-- 确认应用状态正常
-- 重新生成密钥
 
-### 3. scope权限不足
+-   检查环境变量中的 Client Key
+-   确认应用状态正常
+-   重新生成密钥
+
+### 3. scope 权限不足
 
 **原因**: 申请的权限未通过审核
 
 **解决方案**:
-- 检查权限申请状态
-- 补充权限申请材料
-- 等待审核通过
+
+-   检查权限申请状态
+-   补充权限申请材料
+-   等待审核通过
 
 ### 4. access_token 过期
 
 **原因**: 访问令牌已过期
 
 **解决方案**:
-- 实现 token 刷新机制
-- 使用 refresh_token 获取新的 access_token
-- 妥善处理过期情况
+
+-   实现 token 刷新机制
+-   使用 refresh_token 获取新的 access_token
+-   妥善处理过期情况
 
 ## 用户数据示例
 
@@ -203,9 +216,9 @@ const userResponse = await fetch('https://open.douyin.com/oauth/userinfo/', {
 
 ### 频率限制
 
-- **用户信息接口**: 100次/分钟
-- **数据类接口**: 根据权限等级确定
-- **内容管理接口**: 50次/分钟
+-   **用户信息接口**: 100 次/分钟
+-   **数据类接口**: 根据权限等级确定
+-   **内容管理接口**: 50 次/分钟
 
 ### 权限等级
 
@@ -219,24 +232,24 @@ const userResponse = await fetch('https://open.douyin.com/oauth/userinfo/', {
 
 ```vue
 <template>
-  <div class="douyin-login">
-    <!-- 移动端优化 -->
-    <div v-if="isMobile" class="mobile-login">
-      <button @click="loginWithDouyin" class="douyin-btn">
-        <img src="/icons/douyin.svg" alt="抖音" />
-        抖音登录
-      </button>
-      <p class="tip">将跳转到抖音 APP 进行授权</p>
+    <div class="douyin-login">
+        <!-- 移动端优化 -->
+        <div v-if="isMobile" class="mobile-login">
+            <button @click="loginWithDouyin" class="douyin-btn">
+                <img src="/icons/douyin.svg" alt="抖音" />
+                抖音登录
+            </button>
+            <p class="tip">将跳转到抖音 APP 进行授权</p>
+        </div>
+
+        <!-- PC端显示二维码 -->
+        <div v-else class="qr-login">
+            <div class="qr-code">
+                <img :src="qrCodeUrl" alt="抖音登录二维码" />
+            </div>
+            <p>使用抖音APP扫一扫登录</p>
+        </div>
     </div>
-    
-    <!-- PC端显示二维码 -->
-    <div v-else class="qr-login">
-      <div class="qr-code">
-        <img :src="qrCodeUrl" alt="抖音登录二维码" />
-      </div>
-      <p>使用抖音APP扫一扫登录</p>
-    </div>
-  </div>
 </template>
 ```
 
@@ -247,20 +260,20 @@ const userResponse = await fetch('https://open.douyin.com/oauth/userinfo/', {
 ```javascript
 // 检测是否在抖音 APP 内
 function isDouyinApp() {
-  return /aweme/i.test(navigator.userAgent);
+    return /aweme/i.test(navigator.userAgent);
 }
 
 // 抖音内使用 JSBridge
 if (isDouyinApp()) {
-  // 使用抖音提供的 JSBridge 进行授权
-  tt.login({
-    success: (res) => {
-      // 处理登录成功
-    },
-    fail: (err) => {
-      // 处理登录失败
-    }
-  });
+    // 使用抖音提供的 JSBridge 进行授权
+    tt.login({
+        success: (res) => {
+            // 处理登录成功
+        },
+        fail: (err) => {
+            // 处理登录失败
+        },
+    });
 }
 ```
 
@@ -271,26 +284,26 @@ if (isDouyinApp()) {
 ```javascript
 // Token 安全存储
 class DouyinAuth {
-  constructor() {
-    this.accessToken = null;
-    this.refreshToken = null;
-    this.expiresAt = null;
-  }
-  
-  // 检查 token 是否有效
-  isTokenValid() {
-    return this.accessToken && Date.now() < this.expiresAt;
-  }
-  
-  // 刷新 token
-  async refreshAccessToken() {
-    if (!this.refreshToken) {
-      throw new Error('No refresh token available');
+    constructor() {
+        this.accessToken = null;
+        this.refreshToken = null;
+        this.expiresAt = null;
     }
-    
-    const response = await this.callRefreshAPI(this.refreshToken);
-    this.setTokens(response.access_token, response.refresh_token);
-  }
+
+    // 检查 token 是否有效
+    isTokenValid() {
+        return this.accessToken && Date.now() < this.expiresAt;
+    }
+
+    // 刷新 token
+    async refreshAccessToken() {
+        if (!this.refreshToken) {
+            throw new Error("No refresh token available");
+        }
+
+        const response = await this.callRefreshAPI(this.refreshToken);
+        this.setTokens(response.access_token, response.refresh_token);
+    }
 }
 ```
 
@@ -307,65 +320,75 @@ class DouyinAuth {
 
 如果申请了数据权限，可以获取：
 
-- 用户画像数据
-- 内容偏好分析
-- 互动行为数据
-- 传播效果分析
+-   用户画像数据
+-   内容偏好分析
+-   互动行为数据
+-   传播效果分析
 
 ### 内容管理
 
 支持的内容操作：
 
-- 获取用户视频列表
-- 视频数据统计
-- 评论管理
-- 内容审核
+-   获取用户视频列表
+-   视频数据统计
+-   评论管理
+-   内容审核
 
 ## 品牌使用规范
 
 使用抖音登录时的建议：
 
-- **颜色**: 使用抖音官方红色 `#FE2C55`
-- **图标**: 使用抖音官方音符图标
-- **文案**: "抖音登录" 或 "使用抖音登录"
-- **动效**: 可以添加音符跳动动效
+-   **颜色**: 使用抖音官方红色 `#FE2C55`
+-   **图标**: 使用抖音官方音符图标
+-   **文案**: "抖音登录" 或 "使用抖音登录"
+-   **动效**: 可以添加音符跳动动效
 
 ### 品牌素材
 
 ```scss
 // 抖音登录按钮样式
 .douyin-login-btn {
-  background: linear-gradient(45deg, #FE2C55, #FF4B7A);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 24px;
-  font-size: 16px;
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '♪';
-    position: absolute;
-    right: 10px;
-    animation: bounce 2s infinite;
-  }
-  
-  &:hover {
-    background: linear-gradient(45deg, #E02346, #FF4B7A);
-  }
+    background: linear-gradient(45deg, #fe2c55, #ff4b7a);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "♪";
+        position: absolute;
+        right: 10px;
+        animation: bounce 2s infinite;
+    }
+
+    &:hover {
+        background: linear-gradient(45deg, #e02346, #ff4b7a);
+    }
 }
 
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-5px); }
-  60% { transform: translateY(-3px); }
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
 }
 ```
 
 ## 相关链接
 
-- [抖音开放平台](https://developer.open-douyin.com/)
-- [抖音开放平台文档](https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/account-permission/get-account-open-info)
-- [权限申请指南](https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/permission/list)
-- [API 接口文档](https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/list)
+-   [抖音开放平台](https://developer.open-douyin.com/)
+-   [抖音开放平台文档](https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/account-permission/get-account-open-info)
+-   [权限申请指南](https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/permission/list)
+-   [API 接口文档](https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/list)
