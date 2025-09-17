@@ -461,31 +461,82 @@ watch(() => props.modelValue, (value) => {
 
 ### 格式验证
 
-```javascript
-// 手机号格式验证
-export function validatePhone(phone: string): boolean {
-    // 中国大陆手机号
-    if (phone.startsWith("+86") || phone.length === 11) {
-        const number = phone.replace(/^\+86/, "");
-        return /^1[3-9]\d{9}$/.test(number);
-    }
+项目使用 `google-libphonenumber` 和 `validator` 库进行手机号验证和格式化，提供更准确的国际化支持。
 
-    // 国际号码（简单验证）
-    return /^\+\d{7,15}$/.test(phone);
+```typescript
+import { validatePhone } from "@/utils/validate";
+import {
+    formatPhoneNumber,
+    formatPhoneNumberInternational,
+} from "@/utils/phone";
+
+// 手机号格式验证（使用 validator 库）
+// 支持全球手机号格式，使用严格模式（必须包含国家代码）
+export function validatePhoneNumber(phone: string): boolean {
+    return validatePhone(phone, "any"); // 'any' 表示支持所有国家的手机号格式
 }
 
-// 标准化手机号格式
-export function normalizePhone(phone: string): string {
-    // 移除所有非数字和+号
-    phone = phone.replace(/[^\d+]/g, "");
-
-    // 中国大陆号码添加国家代码
-    if (phone.length === 11 && phone.startsWith("1")) {
-        return "+86" + phone;
-    }
-
-    return phone;
+// 验证特定国家的手机号
+export function validatePhoneByCountry(
+    phone: string,
+    locale: "zh-CN" | "en-US" | "en-GB" | "ja-JP"
+): boolean {
+    return validatePhone(phone, locale);
 }
+
+// 格式化手机号到 E164 格式（用于数据库存储）
+// 例如: +12024561414
+export function formatPhoneForStorage(phone: string, region?: string): string {
+    return formatPhoneNumber(phone, region);
+}
+
+// 格式化手机号到国际格式（用于展示给用户）
+// 例如: +1 202-456-1414
+export function formatPhoneForDisplay(phone: string, region?: string): string {
+    return formatPhoneNumberInternational(phone, region);
+}
+
+// 示例用法
+const phoneNumber = "+86138****8888";
+
+// 验证手机号格式
+if (validatePhoneNumber(phoneNumber)) {
+    // 格式化为存储格式
+    const storageFormat = formatPhoneForStorage(phoneNumber);
+    console.log("存储格式:", storageFormat); // +86138****8888
+
+    // 格式化为显示格式
+    const displayFormat = formatPhoneForDisplay(phoneNumber);
+    console.log("显示格式:", displayFormat); // +86 138 **** 8888
+}
+```
+
+### 实际项目中的用法
+
+参考项目中 `utils/validate.ts` 和 `utils/phone.ts` 的实现：
+
+```typescript
+// 从 utils/validate.ts 导入验证函数
+import { validatePhone } from "@/utils/validate";
+
+// 从 utils/phone.ts 导入格式化函数
+import {
+    formatPhoneNumber,
+    formatPhoneNumberInternational,
+    getRegionCodeForPhoneNumber,
+} from "@/utils/phone";
+
+// 验证手机号（严格模式，必须包含国家代码）
+const isValidPhone = validatePhone("+86138****8888", "any");
+
+// 格式化到 E164 格式（数据库存储）
+const e164Format = formatPhoneNumber("+86138****8888");
+
+// 格式化到国际显示格式
+const internationalFormat = formatPhoneNumberInternational("+86138****8888");
+
+// 获取手机号的区域代码
+const regionCode = getRegionCodeForPhoneNumber("+86138****8888"); // 'CN'
 ```
 
 ## 常见问题
@@ -598,12 +649,14 @@ A: Twilio 要求手机号码必须包含国家代码，格式如 `+86138****8888
 
 **Q: 如何获取 Twilio 的 Account SID 和 Auth Token？**
 A:
+
 1. 登录 [Twilio Console](https://console.twilio.com/)
 2. 在控制台首页可以找到 Account SID
 3. Auth Token 在同一页面，可能需要点击"查看"来显示
 
 **Q: Twilio 手机号码如何获取？**
 A:
+
 1. 在 Twilio Console 中进入 Phone Numbers 页面
 2. 点击 "Buy a number" 购买新号码
 3. 选择支持 SMS 功能的号码
@@ -611,6 +664,7 @@ A:
 
 **Q: Twilio 短信发送失败，如何排查？**
 A:
+
 1. 检查环境变量配置是否完整
 2. 确认 Twilio 账户余额充足
 3. 验证目标手机号码格式正确（包含国家代码）
@@ -620,8 +674,9 @@ A:
 
 **Q: Spug 和 Twilio 哪个更适合？**
 A:
-- 如果只服务中国用户且注重成本，选择 Spug
-- 如果需要国际化支持或更好的稳定性，选择 Twilio
+
+-   如果只服务中国用户且注重成本，选择 Spug
+-   如果需要国际化支持或更好的稳定性，选择 Twilio
 
 **Q: 可以同时配置多个短信服务商吗？**
 A: 目前不支持，只能通过 `PHONE_CHANNEL` 指定一个服务商。如有需求，可以自行扩展实现故障切换功能。
@@ -630,6 +685,7 @@ A: 目前不支持，只能通过 `PHONE_CHANNEL` 指定一个服务商。如有
 
 **Q: 短信验证码没有收到怎么办？**
 A:
+
 1. 检查手机号码格式是否正确
 2. 确认短信服务商配置无误
 3. 查看服务器日志是否有错误信息
@@ -637,11 +693,12 @@ A:
 
 **Q: 如何调整短信发送频率限制？**
 A: 可以通过以下环境变量调整：
+
 ```env
 PHONE_DAILY_LIMIT=100                    # 全局每日限制
 PHONE_SINGLE_USER_DAILY_LIMIT=3         # 单用户每日限制
 PHONE_LIMIT_WINDOW=86400                 # 限制窗口（秒）
-````
+```
 
 **Q: 如何自定义短信内容？**
 A:
@@ -715,7 +772,7 @@ testTwilio();
 > **🎯 总结**: 草梅 Auth 现已支持 Spug（国内）和 Twilio（国际）两个短信平台，能够满足不同地区和规模的应用需求。选择合适的服务商，正确配置环境变量，即可快速启用短信验证功能。
 
         })
-    
+
         const resp = await fetch('https://api.new-provider.com/send', {
             method: 'POST',
             headers: {
@@ -724,7 +781,7 @@ testTwilio();
             },
             body,
         })
-    
+
         return resp.json()
     }
     default:
