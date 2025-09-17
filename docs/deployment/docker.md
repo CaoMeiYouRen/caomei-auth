@@ -6,10 +6,39 @@
 
 -   Docker >= 20.10
 -   Docker Compose >= 2.0
--   至少 1GB RAM
--   至少 2GB 可用存储空间
+-   至少 512MB RAM（推荐 1GB+）
+-   至少 1GB 可用存储空间
+-   支持的数据库：PostgreSQL 12+、MySQL 8+、SQLite 3+（默认）
 
 ## 快速开始
+
+### 简单部署（SQLite）
+
+如果只是测试或小规模部署，可以使用默认的 SQLite 配置：
+
+```yaml
+version: "3.8"
+
+services:
+    app:
+        image: caomeiyouren/caomei-auth
+        ports:
+            - "3000:3000"
+        environment:
+            - NODE_ENV=production
+            - TZ=Asia/Shanghai
+            - NUXT_PUBLIC_AUTH_BASE_URL=http://localhost:3000
+            - AUTH_SECRET=your-super-secret-key-at-least-32-characters
+            # 使用默认 SQLite 配置
+            - DATABASE_TYPE=sqlite
+            - DATABASE_PATH=database/caomei-auth.sqlite
+        restart: unless-stopped
+        volumes:
+            - ./logs:/app/logs
+            - ./database:/app/database
+```
+
+### 生产部署（PostgreSQL + Redis）
 
 ### 使用 Docker Compose
 
@@ -20,24 +49,38 @@ version: "3.8"
 
 services:
     app:
-        build: .
+        image: caomeiyouren/caomei-auth
         ports:
             - "3000:3000"
         environment:
             - NODE_ENV=production
-            - DATABASE_URL=postgresql://caomei_auth:password@db:5432/caomei_auth
+            - TZ=Asia/Shanghai
+            # Better Auth 的基础 URL
+            - NUXT_PUBLIC_AUTH_BASE_URL=http://localhost:3000
+            # 用于加密、签名和哈希的密钥
             - AUTH_SECRET=your-super-secret-key-at-least-32-characters
+            # 数据库配置
+            - DATABASE_TYPE=postgres
+            - DATABASE_URL=postgresql://caomei_auth:password@db:5432/caomei_auth
+            - DATABASE_SSL=false
+            - DATABASE_ENTITY_PREFIX=caomei_auth_
+            # Redis 配置
+            - REDIS_URL=redis://redis:6379
+            # 邮件服务配置
             - EMAIL_HOST=smtp.gmail.com
             - EMAIL_PORT=587
             - EMAIL_USER=your-email@gmail.com
             - EMAIL_PASS=your-app-password
+            - EMAIL_SECURE=false
             - EMAIL_FROM="Your Name <your-email@gmail.com>"
+            - EMAIL_EXPIRES_IN=300
         depends_on:
             - db
             - redis
         restart: unless-stopped
         volumes:
-            - ./uploads:/app/uploads
+            - ./logs:/app/logs
+            - ./database:/app/database
 
     db:
         image: postgres:15
@@ -63,9 +106,11 @@ volumes:
 
 ### 数据库初始化
 
-在启动服务前，您可能需要初始化数据库表结构。
+#### 生产环境手动初始化（推荐）
 
-如果需要手动初始化数据库，可以先启动数据库服务，然后导入表结构：
+在生产环境中，建议手动初始化数据库表结构以确保安全性和可控性：
+
+**步骤 1: 创建数据库**
 
 ```bash
 # 仅启动数据库服务
@@ -73,25 +118,59 @@ docker-compose up -d db
 
 # 等待数据库启动完成
 sleep 10
-
-# 导入数据库表结构
-docker-compose exec db psql -U caomei_auth -d caomei_auth -f /docker-entrypoint-initdb.d/create.sql
 ```
 
-或者，您可以在 `docker-compose.yml` 中添加初始化脚本：
+**步骤 2: 导入表结构**
+
+**PostgreSQL:**
+
+```bash
+# 创建数据库
+docker-compose exec db createdb -U caomei_auth caomei_auth
+
+# 导入表结构
+docker-compose exec -T db psql -U caomei_auth -d caomei_auth < database/postgres/create.sql
+```
+
+**MySQL:**
+
+```bash
+# 创建数据库
+docker-compose exec db mysql -u caomei_auth -p -e "CREATE DATABASE caomei_auth CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# 导入表结构
+docker-compose exec -T db mysql -u caomei_auth -p caomei_auth < database/mysql/create.sql
+```
+
+**SQLite:**
+
+```bash
+# SQLite 会自动创建，或手动导入
+sqlite3 database/caomei-auth.sqlite < database/sqlite/create.sql
+```
+
+**步骤 3: 启动应用**
+
+```bash
+# 启动完整服务
+docker-compose up -d
+
+# 查看启动日志
+docker-compose logs app | grep -E "(数据库|Database)"
+```
+
+#### 开发环境自动初始化
+
+开发环境下，可以设置自动同步表结构（需要在环境变量中设置 `NODE_ENV=development`）：
 
 ```yaml
-db:
-    image: postgres:15
-    environment:
-        POSTGRES_DB: caomei_auth
-        POSTGRES_USER: caomei_auth
-        POSTGRES_PASSWORD: password
-    volumes:
-        - postgres_data:/var/lib/postgresql/data
-        - ./database/postgres/create.sql:/docker-entrypoint-initdb.d/create.sql:ro
-    restart: unless-stopped
+services:
+    app:
+        environment:
+            - NODE_ENV=development # 开发环境会自动同步表结构
 ```
+
+> **注意**: 生产环境中请勿使用自动同步功能，可能导致数据丢失。
 
 ### 启动服务
 
@@ -115,6 +194,7 @@ docker-compose logs db | grep "database system is ready to accept connections"
 
 创建 `.env` 文件：
 
+````env
 ```env
 # 基础配置
 NUXT_PUBLIC_AUTH_BASE_URL=https://your-domain.com
@@ -126,6 +206,10 @@ AUTH_SECRET=your-super-secret-key-at-least-32-characters
 DATABASE_TYPE=postgres
 DATABASE_URL=postgresql://caomei_auth:password@db:5432/caomei_auth
 DATABASE_SSL=false
+DATABASE_ENTITY_PREFIX=caomei_auth_
+
+# Redis 缓存
+REDIS_URL=redis://redis:6379
 
 # 管理员配置
 ADMIN_USER_IDS=1,2,3
@@ -139,9 +223,21 @@ EMAIL_SECURE=false
 EMAIL_FROM="Your Name <your-email@gmail.com>"
 EMAIL_EXPIRES_IN=300
 
-# Redis 缓存
-REDIS_URL=redis://redis:6379
-```
+# 密码强度配置
+NUXT_PUBLIC_PASSWORD_STRENGTH_LEVEL=strong
+
+# 日志配置
+LOGFILES=true
+LOG_LEVEL=http
+LOG_DIR=logs
+
+# 功能开关
+NUXT_PUBLIC_USERNAME_ENABLED=true
+NUXT_PUBLIC_PHONE_ENABLED=true
+EMAIL_REQUIRE_VERIFICATION=false
+````
+
+````
 
 更新 `docker-compose.yml` 使用环境变量文件：
 
@@ -163,7 +259,7 @@ services:
             - ./uploads:/app/uploads
 
     # ... 其他服务配置保持不变
-```
+````
 
 ## 生产环境配置
 
@@ -228,7 +324,7 @@ services:
             - "80:80"
             - "443:443"
         volumes:
-            - ./nginx.conf:/etc/nginx/nginx.conf
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
             - certbot-etc:/etc/letsencrypt
             - certbot-var:/var/lib/letsencrypt
             - web-root:/var/www/certbot
@@ -245,15 +341,24 @@ services:
         command: certonly --webroot --webroot-path=/var/www/certbot --email your-email@domain.com --agree-tos --no-eff-email -d your-domain.com
 
     app:
-        build: .
-        env_file:
-            - .env
+        image: caomeiyouren/caomei-auth
+        environment:
+            - NODE_ENV=production
+            - TZ=Asia/Shanghai
+            - NUXT_PUBLIC_AUTH_BASE_URL=https://your-domain.com
+            - AUTH_SECRET=your-super-secret-key-at-least-32-characters
+            - DATABASE_TYPE=postgres
+            - DATABASE_URL=postgresql://caomei_auth:password@db:5432/caomei_auth
+            - DATABASE_SSL=false
+            - DATABASE_ENTITY_PREFIX=caomei_auth_
+            - REDIS_URL=redis://redis:6379
         depends_on:
             - db
             - redis
         restart: unless-stopped
         volumes:
-            - ./uploads:/app/uploads
+            - ./logs:/app/logs
+            - ./database:/app/database
 
     db:
         image: postgres:15
@@ -329,12 +434,14 @@ services:
     app:
         # ... 其他配置
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+            test: ["CMD", "curl", "-f", "http://localhost:3000/api"]
             interval: 30s
             timeout: 10s
             retries: 3
             start_period: 40s
 ```
+
+> **注意**: 项目的 API 健康检查端点是 `/api`，而不是 `/api/health`。该端点会返回应用的基本状态和版本信息。
 
 ### 日志管理
 
@@ -375,6 +482,16 @@ docker-compose up -d --scale app=3
 ```
 
 ### 更新应用
+
+```bash
+# 拉取最新镜像
+docker-compose pull app
+
+# 重启服务
+docker-compose up -d app
+```
+
+如果需要使用本地构建的镜像：
 
 ```bash
 # 拉取最新代码
@@ -436,6 +553,9 @@ services:
 
     # 检查网络连接
     docker-compose exec app nc -zv db 5432
+
+    # 查看数据库连接日志
+    docker-compose logs app | grep -E "(数据库|Database|连接)"
     ```
 
 3. **端口冲突**
@@ -446,6 +566,16 @@ services:
 
     # 修改端口映射
     # 在 docker-compose.yml 中更改端口
+    ```
+
+4. **数据库表未创建**
+
+    ```bash
+    # 查看数据库初始化日志
+    docker-compose logs app | grep -E "(表|table|schema)"
+
+    # 手动重启服务触发初始化
+    docker-compose restart app
     ```
 
 ### 性能调优
