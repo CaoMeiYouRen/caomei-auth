@@ -4,9 +4,9 @@ Vercel 是一个无服务器部署平台，支持自动扩容和全球 CDN，适
 
 ## 前提条件
 
-- GitHub/GitLab/Bitbucket 账号
-- Vercel 账号
-- 外部数据库（推荐 Supabase、PlanetScale 或 Neon）
+-   GitHub/GitLab/Bitbucket 账号
+-   Vercel 账号
+-   外部数据库（推荐 Supabase、PlanetScale 或 Neon）
 
 ## 快速部署
 
@@ -83,11 +83,11 @@ vercel
 
 ```json
 {
-  "functions": {
-    "server/api/**.ts": {
-      "maxDuration": 30
+    "functions": {
+        "server/api/**.ts": {
+            "maxDuration": 30
+        }
     }
-  }
 }
 ```
 
@@ -112,6 +112,8 @@ vercel --prod
 ## 数据库配置
 
 由于 Vercel 是无服务器环境，需要使用外部数据库服务。
+
+详细的数据库配置指南请参考：**👉 [数据库配置指南](./database)**
 
 ### 推荐的数据库服务
 
@@ -173,14 +175,14 @@ NUXT_PUBLIC_AUTH_BASE_URL=https://your-custom-domain.com
 
 ```json
 {
-  "functions": {
-    "server/api/**.ts": {
-      "maxDuration": 30
-    },
-    "server/api/auth/**.ts": {
-      "maxDuration": 20
+    "functions": {
+        "server/api/**.ts": {
+            "maxDuration": 30
+        },
+        "server/api/auth/**.ts": {
+            "maxDuration": 20
+        }
     }
-  }
 }
 ```
 
@@ -191,12 +193,12 @@ NUXT_PUBLIC_AUTH_BASE_URL=https://your-custom-domain.com
 ```typescript
 // server/api/health.ts
 export default defineEventHandler(async (event) => {
-  return { status: 'ok', timestamp: new Date().toISOString() }
-})
+    return { status: "ok", timestamp: new Date().toISOString() };
+});
 
 export const config = {
-  runtime: 'edge'
-}
+    runtime: "edge",
+};
 ```
 
 ## 环境管理
@@ -209,7 +211,7 @@ Vercel 支持多个环境：
 # 预览环境
 vercel
 
-# 生产环境  
+# 生产环境
 vercel --prod
 
 # 查看部署
@@ -242,18 +244,18 @@ vercel env rm VARIABLE_NAME
 
 ```typescript
 export default defineNuxtConfig({
-  nitro: {
-    // 使用标准预设
-    preset: 'vercel'
-  },
-  
-  // 预渲染优化
-  nitro: {
-    prerender: {
-      routes: ['/login', '/register', '/privacy', '/terms']
-    }
-  }
-})
+    nitro: {
+        // 使用标准预设
+        preset: "vercel",
+    },
+
+    // 预渲染优化
+    nitro: {
+        prerender: {
+            routes: ["/login", "/register", "/privacy", "/terms"],
+        },
+    },
+});
 ```
 
 ## 函数日志
@@ -278,44 +280,44 @@ vercel logs your-project-name --follow
 name: Deploy to Vercel
 
 on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          
-      - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
-        
-      - name: Build project
-        run: pnpm build
-        
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
-          vercel-args: '--prod'
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+
+            - name: Install dependencies
+              run: npm install -g pnpm && pnpm install
+
+            - name: Build project
+              run: pnpm build
+
+            - name: Deploy to Vercel
+              uses: amondnet/vercel-action@v25
+              with:
+                  vercel-token: ${{ secrets.VERCEL_TOKEN }}
+                  vercel-org-id: ${{ secrets.ORG_ID }}
+                  vercel-project-id: ${{ secrets.PROJECT_ID }}
+                  vercel-args: "--prod"
 ```
 
 ## 限制和注意事项
 
 ### 1. 函数限制
 
-- 执行时间限制：Hobby 计划 10 秒，Pro 计划 60 秒
-- 内存限制：最大 1008MB
-- 有效负载限制：请求体最大 4.5MB
+-   执行时间限制：Hobby 计划 10 秒，Pro 计划 60 秒
+-   内存限制：最大 1008MB
+-   有效负载限制：请求体最大 4.5MB
 
 ### 2. 文件上传
 
@@ -327,23 +329,23 @@ jobs:
 
 ```typescript
 // server/utils/db.ts
-import { DataSource } from 'typeorm'
+import { DataSource } from "typeorm";
 
-let dataSource: DataSource | null = null
+let dataSource: DataSource | null = null;
 
 export async function getDataSource() {
-  if (!dataSource) {
-    dataSource = new DataSource({
-      // ... 数据库配置
-      extra: {
-        max: 1, // 最大连接数
-        min: 0, // 最小连接数
-        idleTimeoutMillis: 120000
-      }
-    })
-    await dataSource.initialize()
-  }
-  return dataSource
+    if (!dataSource) {
+        dataSource = new DataSource({
+            // ... 数据库配置
+            extra: {
+                max: 1, // 最大连接数
+                min: 0, // 最小连接数
+                idleTimeoutMillis: 120000,
+            },
+        });
+        await dataSource.initialize();
+    }
+    return dataSource;
 }
 ```
 
@@ -352,43 +354,49 @@ export async function getDataSource() {
 ### 常见问题
 
 1. **构建失败**
-   ```bash
-   # 本地测试构建
-   pnpm build
-   
-   # 检查 Node.js 版本
-   node --version
-   ```
+
+    ```bash
+    # 本地测试构建
+    pnpm build
+
+    # 检查 Node.js 版本
+    node --version
+    ```
 
 2. **函数超时**
-   - 增加函数超时时间
-   - 优化数据库查询
-   - 使用缓存减少计算
+
+    - 增加函数超时时间
+    - 优化数据库查询
+    - 使用缓存减少计算
 
 3. **环境变量未生效**
-   ```bash
-   # 检查环境变量
-   vercel env ls
-   
-   # 重新部署
-   vercel --prod
-   ```
+
+    ```bash
+    # 检查环境变量
+    vercel env ls
+
+    # 重新部署
+    vercel --prod
+    ```
 
 4. **数据库连接失败**
-   - 检查数据库服务状态
-   - 验证连接字符串格式
-   - 确认 SSL 配置
+    - 检查数据库服务状态
+    - 验证连接字符串格式
+    - 确认 SSL 配置
 
 ### 调试技巧
 
 ```typescript
 // 添加调试日志
-console.log('Environment:', process.env.NODE_ENV)
-console.log('Database URL:', process.env.DATABASE_URL?.substring(0, 20) + '...')
+console.log("Environment:", process.env.NODE_ENV);
+console.log(
+    "Database URL:",
+    process.env.DATABASE_URL?.substring(0, 20) + "..."
+);
 
 // 使用 Vercel 日志
 export default defineEventHandler(async (event) => {
-  console.log('API called:', event.node.req.url)
-  // ... 处理逻辑
-})
+    console.log("API called:", event.node.req.url);
+    // ... 处理逻辑
+});
 ```

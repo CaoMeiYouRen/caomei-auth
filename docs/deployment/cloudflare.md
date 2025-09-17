@@ -6,9 +6,9 @@ Cloudflare Workers 提供边缘计算能力，在全球 200+ 个数据中心运�
 
 ## 系统要求
 
-- Cloudflare 账号
-- Wrangler CLI >= 3.0
-- 外部数据库服务（推荐 Cloudflare D1 或 PlanetScale）
+-   Cloudflare 账号
+-   Wrangler CLI >= 3.0
+-   外部数据库服务（推荐 Cloudflare D1 或 PlanetScale）
 
 ## 准备工作
 
@@ -65,29 +65,33 @@ bucket_name = "caomei-auth-uploads"
 ```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
-  nitro: {
-    preset: 'cloudflare-pages',
-    // 或使用 Workers 预设
-    // preset: 'cloudflare'
-  },
-  
-  // 运行时配置
-  runtimeConfig: {
-    authSecret: process.env.AUTH_SECRET,
-    databaseUrl: process.env.DATABASE_URL,
-    emailHost: process.env.EMAIL_HOST,
-    // ... 其他配置
-  },
-  
-  // 禁用 SSR 中不支持的功能
-  ssr: true,
-  experimental: {
-    payloadExtraction: false
-  }
-})
+    nitro: {
+        preset: "cloudflare-pages",
+        // 或使用 Workers 预设
+        // preset: 'cloudflare'
+    },
+
+    // 运行时配置
+    runtimeConfig: {
+        authSecret: process.env.AUTH_SECRET,
+        databaseUrl: process.env.DATABASE_URL,
+        emailHost: process.env.EMAIL_HOST,
+        // ... 其他配置
+    },
+
+    // 禁用 SSR 中不支持的功能
+    ssr: true,
+    experimental: {
+        payloadExtraction: false,
+    },
+});
 ```
 
 ## 数据库配置
+
+Cloudflare Workers 环境需要使用 D1 数据库或外部数据库服务。
+
+详细的数据库配置指南请参考：**👉 [数据库配置指南](./database)**
 
 ### 使用 Cloudflare D1
 
@@ -106,14 +110,14 @@ wrangler d1 execute caomei_auth --file=./database/sqlite/create.sql
 ```typescript
 // server/utils/db.ts
 export async function getDatabase() {
-  // 在 Cloudflare Workers 中使用 D1
-  if (process.env.CLOUDFLARE) {
-    return (globalThis as any).DB
-  }
-  
-  // 本地开发使用 SQLite
-  const { Database } = await import('better-sqlite3')
-  return new Database('database/caomei-auth.sqlite')
+    // 在 Cloudflare Workers 中使用 D1
+    if (process.env.CLOUDFLARE) {
+        return (globalThis as any).DB;
+    }
+
+    // 本地开发使用 SQLite
+    const { Database } = await import("better-sqlite3");
+    return new Database("database/caomei-auth.sqlite");
 }
 ```
 
@@ -148,11 +152,11 @@ wrangler secret put DATABASE_URL --env production
 
 ```json
 {
-  "AUTH_SECRET": "your-super-secret-key",
-  "EMAIL_HOST": "smtp.gmail.com",
-  "EMAIL_USER": "your-email@gmail.com",
-  "EMAIL_PASS": "your-app-password",
-  "DATABASE_URL": "your-database-url"
+    "AUTH_SECRET": "your-super-secret-key",
+    "EMAIL_HOST": "smtp.gmail.com",
+    "EMAIL_USER": "your-email@gmail.com",
+    "EMAIL_PASS": "your-app-password",
+    "DATABASE_URL": "your-database-url"
 }
 ```
 
@@ -200,27 +204,27 @@ wrangler route add "auth.your-domain.com/*" caomei-auth-prod
 ```typescript
 // server/api/file/upload.post.ts
 export default defineEventHandler(async (event) => {
-  const { UPLOADS } = event.context.cloudflare.env
-  
-  const formData = await readMultipartFormData(event)
-  const file = formData?.[0]
-  
-  if (!file) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'No file provided'
-    })
-  }
-  
-  // 上传到 R2
-  await UPLOADS.put(`uploads/${file.filename}`, file.data, {
-    httpMetadata: {
-      contentType: file.type
+    const { UPLOADS } = event.context.cloudflare.env;
+
+    const formData = await readMultipartFormData(event);
+    const file = formData?.[0];
+
+    if (!file) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: "No file provided",
+        });
     }
-  })
-  
-  return { success: true, filename: file.filename }
-})
+
+    // 上传到 R2
+    await UPLOADS.put(`uploads/${file.filename}`, file.data, {
+        httpMetadata: {
+            contentType: file.type,
+        },
+    });
+
+    return { success: true, filename: file.filename };
+});
 ```
 
 ### 会话存储 (KV)
@@ -228,15 +232,15 @@ export default defineEventHandler(async (event) => {
 ```typescript
 // server/utils/session.ts
 export async function getSession(sessionId: string) {
-  const { SESSIONS } = globalThis.CLOUDFLARE_ENV
-  return await SESSIONS.get(sessionId, 'json')
+    const { SESSIONS } = globalThis.CLOUDFLARE_ENV;
+    return await SESSIONS.get(sessionId, "json");
 }
 
 export async function setSession(sessionId: string, data: any) {
-  const { SESSIONS } = globalThis.CLOUDFLARE_ENV
-  await SESSIONS.put(sessionId, JSON.stringify(data), {
-    expirationTtl: 86400 // 24 小时
-  })
+    const { SESSIONS } = globalThis.CLOUDFLARE_ENV;
+    await SESSIONS.put(sessionId, JSON.stringify(data), {
+        expirationTtl: 86400, // 24 小时
+    });
 }
 ```
 
@@ -244,10 +248,10 @@ export async function setSession(sessionId: string, data: any) {
 
 ### 1. 运行时限制
 
-- CPU 时间：最大 50ms (免费)，10 秒 (付费)
-- 内存：128MB
-- 请求大小：100MB
-- 响应大小：100MB
+-   CPU 时间：最大 50ms (免费)，10 秒 (付费)
+-   内存：128MB
+-   请求大小：100MB
+-   响应大小：100MB
 
 ### 2. 不支持的功能
 
@@ -271,19 +275,19 @@ export async function setSession(sessionId: string, data: any) {
 
 // 使用 Workers 兼容的邮件发送
 export async function sendEmail(to: string, subject: string, html: string) {
-  return fetch('https://api.mailgun.net/v3/your-domain/messages', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Basic ${btoa('api:' + MAILGUN_API_KEY)}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      from: 'Your App <noreply@your-domain.com>',
-      to,
-      subject,
-      html
-    })
-  })
+    return fetch("https://api.mailgun.net/v3/your-domain/messages", {
+        method: "POST",
+        headers: {
+            Authorization: `Basic ${btoa("api:" + MAILGUN_API_KEY)}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+            from: "Your App <noreply@your-domain.com>",
+            to,
+            subject,
+            html,
+        }),
+    });
 }
 ```
 
@@ -304,20 +308,20 @@ wrangler tail caomei-auth-prod --format pretty
 ```typescript
 // 添加自定义指标
 export default defineEventHandler(async (event) => {
-  // 记录请求
-  event.context.cloudflare.ctx.waitUntil(
-    fetch('https://analytics.your-domain.com/api/track', {
-      method: 'POST',
-      body: JSON.stringify({
-        path: event.node.req.url,
-        userAgent: getHeader(event, 'user-agent'),
-        timestamp: Date.now()
-      })
-    })
-  )
-  
-  // ... 处理逻辑
-})
+    // 记录请求
+    event.context.cloudflare.ctx.waitUntil(
+        fetch("https://analytics.your-domain.com/api/track", {
+            method: "POST",
+            body: JSON.stringify({
+                path: event.node.req.url,
+                userAgent: getHeader(event, "user-agent"),
+                timestamp: Date.now(),
+            }),
+        })
+    );
+
+    // ... 处理逻辑
+});
 ```
 
 ## CI/CD 配置
@@ -328,31 +332,31 @@ export default defineEventHandler(async (event) => {
 name: Deploy to Cloudflare Workers
 
 on:
-  push:
-    branches: [master]
+    push:
+        branches: [master]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          
-      - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
-        
-      - name: Build
-        run: pnpm build
-        
-      - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          environment: 'production'
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18"
+
+            - name: Install dependencies
+              run: npm install -g pnpm && pnpm install
+
+            - name: Build
+              run: pnpm build
+
+            - name: Deploy to Cloudflare Workers
+              uses: cloudflare/wrangler-action@v3
+              with:
+                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  environment: "production"
 ```
 
 ## 故障排除
@@ -373,6 +377,7 @@ wrangler dev --remote
 ### 2. 常见错误
 
 **依赖不兼容**
+
 ```bash
 # 检查兼容性
 wrangler compatibility-date --help
@@ -383,13 +388,14 @@ compatibility_flags = ["nodejs_compat"]
 ```
 
 **内存超限**
+
 ```typescript
 // 优化内存使用
 export default defineEventHandler(async (event) => {
-  // 避免大对象
-  // 使用流处理大文件
-  // 及时释放引用
-})
+    // 避免大对象
+    // 使用流处理大文件
+    // 及时释放引用
+});
 ```
 
 ### 3. 性能优化
@@ -397,39 +403,39 @@ export default defineEventHandler(async (event) => {
 ```typescript
 // 缓存响应
 export default defineEventHandler(async (event) => {
-  const cache = caches.default
-  const cacheKey = new Request(event.node.req.url)
-  
-  // 检查缓存
-  let response = await cache.match(cacheKey)
-  if (response) {
-    return response
-  }
-  
-  // 生成响应
-  response = new Response(JSON.stringify(data), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'max-age=300'
+    const cache = caches.default;
+    const cacheKey = new Request(event.node.req.url);
+
+    // 检查缓存
+    let response = await cache.match(cacheKey);
+    if (response) {
+        return response;
     }
-  })
-  
-  // 存储到缓存
-  event.context.cloudflare.ctx.waitUntil(
-    cache.put(cacheKey, response.clone())
-  )
-  
-  return response
-})
+
+    // 生成响应
+    response = new Response(JSON.stringify(data), {
+        headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "max-age=300",
+        },
+    });
+
+    // 存储到缓存
+    event.context.cloudflare.ctx.waitUntil(
+        cache.put(cacheKey, response.clone())
+    );
+
+    return response;
+});
 ```
 
 ## 费用优化
 
 ### 1. 免费额度
 
-- 100,000 请求/天
-- 1000 KV 操作/天
-- 1 GB R2 存储
+-   100,000 请求/天
+-   1000 KV 操作/天
+-   1 GB R2 存储
 
 ### 2. 成本控制
 

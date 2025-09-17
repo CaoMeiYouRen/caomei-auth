@@ -59,40 +59,13 @@ EMAIL_EXPIRES_IN=300
 
 ### 3. 数据库初始化
 
-#### 创建数据库
+项目支持 PostgreSQL、MySQL、SQLite 三种数据库。详细的数据库安装、配置和初始化指南请参考：
 
-根据您选择的数据库类型，执行相应的创建命令：
+**👉 [数据库配置指南](./database)**
 
-**PostgreSQL:**
+#### 快速开始
 
-```bash
-# 方式一：使用 createdb 命令
-createdb caomei_auth
-
-# 方式二：登录 PostgreSQL 后执行
-psql -U postgres
-CREATE DATABASE caomei_auth;
-\q
-```
-
-**MySQL:**
-
-```bash
-# 方式一：使用 mysql 命令
-mysql -u root -p -e "CREATE DATABASE caomei_auth CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-
-# 方式二：登录 MySQL 后执行
-mysql -u root -p
-CREATE DATABASE caomei_auth CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-exit;
-```
-
-**SQLite:**
-SQLite 数据库文件会在首次运行时自动创建，无需手动创建。
-
-#### 导入数据库表结构
-
-导入预定义的数据库表结构：
+如果您已经准备好数据库，可以直接导入表结构：
 
 ```bash
 # PostgreSQL
@@ -105,28 +78,7 @@ mysql -u root -p caomei_auth < database/mysql/create.sql
 sqlite3 database/caomei-auth.sqlite < database/sqlite/create.sql
 ```
 
-#### 验证数据库连接
-
-在启动应用前，可以测试数据库连接：
-
-```bash
-# 使用 Node.js 脚本测试连接（可选）
-node -e "
-const { DataSource } = require('typeorm');
-const dataSource = new DataSource({
-  type: process.env.DATABASE_TYPE || 'sqlite',
-  database: process.env.DATABASE_PATH || 'database/caomei-auth.sqlite',
-  url: process.env.DATABASE_URL
-});
-dataSource.initialize().then(() => {
-  console.log('✓ 数据库连接成功');
-  process.exit(0);
-}).catch(err => {
-  console.error('✗ 数据库连接失败:', err.message);
-  process.exit(1);
-});
-"
-```
+> **注意**: 生产环境建议手动初始化数据库，开发环境可设置 `NODE_ENV=development` 启用自动同步表结构。
 
 ### 4. 构建项目
 
