@@ -507,44 +507,224 @@ export class EmailTemplateEngine {
      * 回退到简单HTML模板
      */
     private generateFallbackTemplate(templateName: string, data: EmailTemplateData, options: TemplateOptions): EmailResult {
+        // 记录调试信息
+        logger.info('Using fallback template', {
+            templateName,
+            hasVerificationCode: !!data.verificationCode,
+            hasActionUrl: !!data.actionUrl,
+            message: data.message,
+            verificationCode: data.verificationCode ? '***' : null,
+        })
+
         const primaryColor = '#e63946'
+
+        // 确保数据存在
+        const safeData = {
+            appName: data.appName || '草梅Auth',
+            message: data.message || '邮件内容',
+            verificationCode: data.verificationCode || '',
+            actionUrl: data.actionUrl || '',
+            buttonText: data.buttonText || '点击操作',
+            securityTip: data.securityTip || '',
+            currentYear: data.currentYear || new Date().getFullYear(),
+            footerNote: data.footerNote || '这是一封系统自动发送的邮件，请勿直接回复。',
+            expiresIn: data.expiresIn || 10,
+        }
+
         const html = `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>${options.title}</title>
+    <title>${options.title || '草梅Auth'}</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f8fafc; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { font-size: 24px; font-weight: bold; color: ${primaryColor}; }
-        .content { color: #333; line-height: 1.6; }
-        .button { display: inline-block; padding: 12px 24px; background: ${primaryColor}; color: white; text-decoration: none; border-radius: 4px; margin: 20px 0; }
-        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; text-align: center; }
-        .code-box { background: ${primaryColor}; color: white; font-size: 24px; font-weight: bold; padding: 20px; text-align: center; border-radius: 8px; letter-spacing: 2px; font-family: monospace; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, ${primaryColor} 0%, #ff6b6b 100%);
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+            line-height: 1.6;
+        }
+        .greeting {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+        .message {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #4a5568;
+        }
+        .code-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .code-box {
+            background: linear-gradient(135deg, ${primaryColor} 0%, #ff6b6b 100%);
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            padding: 25px 40px;
+            display: inline-block;
+            border-radius: 12px;
+            letter-spacing: 4px;
+            font-family: 'Courier New', Monaco, Consolas, monospace;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+            margin: 10px 0;
+        }
+        .code-note {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 15px;
+        }
+        .button {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, ${primaryColor} 0%, #ff6b6b 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-1px);
+        }
+        .security-tip {
+            background: linear-gradient(135deg, #e6fffa 0%, #f0fff4 100%);
+            padding: 20px;
+            border-left: 4px solid #38b2ac;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        .security-tip-title {
+            font-weight: 600;
+            color: #234e52;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .security-tip-content {
+            color: #234e52;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+        .footer {
+            background: #f7fafc;
+            padding: 30px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .footer-links {
+            margin-bottom: 20px;
+        }
+        .footer-links a {
+            color: ${primaryColor};
+            text-decoration: none;
+            margin: 0 12px;
+            font-size: 14px;
+        }
+        .footer-copyright {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-bottom: 10px;
+        }
+        .footer-note {
+            font-size: 11px;
+            color: #cbd5e0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">${data.appName}</div>
+            <div class="logo">${safeData.appName}</div>
+            <div class="subtitle">安全 · 便捷 · 统一的身份认证平台</div>
         </div>
         <div class="content">
-            <p>${data.message || '邮件内容'}</p>
-            ${data.verificationCode ? `<div class="code-box">${data.verificationCode}</div>` : ''}
-            ${data.actionUrl ? `<p><a href="${data.actionUrl}" class="button">${data.buttonText || '点击操作'}</a></p>` : ''}
-            ${data.securityTip ? `<div style="background: #e6fffa; padding: 16px; border-left: 4px solid #38b2ac; border-radius: 6px; margin: 20px 0;"><strong>🛡️ 安全提示</strong><br/>${data.securityTip}</div>` : ''}
+            <div class="greeting">您好！</div>
+            <div class="message">${safeData.message}</div>
+
+            ${safeData.verificationCode
+                    ? `
+            <div class="code-section">
+                <div class="code-box">${safeData.verificationCode}</div>
+                ${safeData.expiresIn ? `<div class="code-note">请在 ${safeData.expiresIn} 分钟内使用此验证码</div>` : ''}
+            </div>
+            `
+                    : ''
+            }
+
+            ${safeData.actionUrl
+                    ? `
+            <div style="text-align: center;">
+                <a href="${safeData.actionUrl}" class="button">${safeData.buttonText}</a>
+            </div>
+            <div style="margin-top: 20px; font-size: 14px; color: #4a5568;">
+                <strong>无法点击按钮？</strong>请复制以下链接到浏览器地址栏：<br/>
+                <div style="background: #f7fafc; padding: 10px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 12px; color: #718096; word-break: break-all;">
+                    ${safeData.actionUrl}
+                </div>
+            </div>
+            `
+                    : ''
+            }
+
+            ${safeData.securityTip
+                    ? `
+            <div class="security-tip">
+                <div class="security-tip-title">🛡️ 安全提示</div>
+                <div class="security-tip-content">${safeData.securityTip}</div>
+            </div>
+            `
+                    : ''
+            }
         </div>
         <div class="footer">
-            <p>© ${data.currentYear} ${data.appName}. 保留所有权利。</p>
-            <p>${data.footerNote || '这是一封系统自动发送的邮件，请勿直接回复。'}</p>
+            <div class="footer-links">
+                <a href="mailto:${CONTACT_EMAIL}">联系方式</a>
+                <a href="${AUTH_BASE_URL}/privacy">隐私政策</a>
+                <a href="${AUTH_BASE_URL}/terms">服务条款</a>
+            </div>
+            <div class="footer-copyright">© ${safeData.currentYear} ${safeData.appName}. 保留所有权利。</div>
+            <div class="footer-note">${safeData.footerNote}</div>
         </div>
     </div>
 </body>
 </html>`
 
-        const text = this.generateTextVersion(html, data)
+        const text = this.generateTextVersion(html, safeData)
         return { html, text }
     }
 }
