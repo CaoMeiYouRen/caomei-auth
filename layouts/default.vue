@@ -7,6 +7,8 @@
         </main>
         <!-- 页脚 -->
         <AppFooter />
+        <!-- GitHub 右上角链接 -->
+        <GithubCorner />
     </div>
 </template>
 
