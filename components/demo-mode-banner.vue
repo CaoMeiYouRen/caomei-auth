@@ -5,14 +5,21 @@
             <i class="banner-icon mdi mdi-information-outline" />
             <div class="banner-text">
                 <strong>演示模式</strong>
-                <span>{{ message || '当前为演示模式，您可以浏览所有功能，但无法进行实际的修改操作。如需体验完整功能，请部署您自己的实例。' }}Demo账号密码详见<NuxtLink
-                    to="https://auth-docs.cmyr.dev/"
-                    external
-                    class="external-link"
-                    target="_blank"
-                >
-                    文档说明
-                </NuxtLink></span>
+                <span>
+                    {{ displayMessage }}
+                    <template v-if="showDocLink">
+                        Demo账号密码详见
+                        <NuxtLink
+                            :to="finalDocUrl"
+                            external
+                            class="external-link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {{ docText }}
+                        </NuxtLink>
+                    </template>
+                </span>
             </div>
             <button
                 v-if="closable"
@@ -29,10 +36,15 @@
 interface Props {
     closable?: boolean
     message?: string
+    docUrl?: string
+    docText?: string
+    showDocLink?: boolean
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
     closable: false,
+    showDocLink: true,
+    docText: '文档说明',
 })
 
 defineEmits<{
@@ -41,6 +53,22 @@ defineEmits<{
 
 const config = useRuntimeConfig()
 const demoMode = computed(() => config.public.demoMode)
+
+// 默认消息文本
+const defaultMessage = '当前为演示模式，您可以浏览所有功能，但无法进行实际的修改操作。如需体验完整功能，请部署您自己的实例。'
+
+// 显示的消息（不包含文档链接部分）
+const displayMessage = computed(() => {
+    return props.message || defaultMessage
+})
+
+// 最终的文档链接
+const finalDocUrl = computed(() => {
+    // 优先使用传入的docUrl，否则使用配置中的，最后使用默认值
+    return props.docUrl
+        || config.public.docUrl
+        || 'https://auth-docs.cmyr.dev/'
+})
 </script>
 
 <style lang="scss" scoped>
