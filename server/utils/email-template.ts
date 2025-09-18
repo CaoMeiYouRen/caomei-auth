@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 
 import mjml2html from 'mjml'
@@ -42,6 +42,44 @@ interface EmailResult {
     text: string
 }
 
+/**
+ * 获取模板文件内容 - 支持开发和生产环境
+ */
+function getTemplateContent(relativePath: string): string {
+    // 开发环境路径
+    const devPath = join(process.cwd(), 'server/templates', relativePath)
+    if (existsSync(devPath)) {
+        return readFileSync(devPath, 'utf-8')
+    }
+
+    // 生产环境路径 (Nitro 构建后的路径)
+    const prodPath = join(process.cwd(), '.nuxt/dist/server-templates', relativePath)
+    if (existsSync(prodPath)) {
+        return readFileSync(prodPath, 'utf-8')
+    }
+
+    // 备用路径 1: 相对于当前文件的路径
+    const backupPath1 = join(__dirname, '../templates', relativePath)
+    if (existsSync(backupPath1)) {
+        return readFileSync(backupPath1, 'utf-8')
+    }
+
+    // 备用路径 2: Vercel 等平台的路径
+    const backupPath2 = join('/var/task', 'server/templates', relativePath)
+    if (existsSync(backupPath2)) {
+        return readFileSync(backupPath2, 'utf-8')
+    }
+
+    // 备用路径 3: Docker 容器路径
+    const dockerPath = join('/app', 'server/templates', relativePath)
+    if (existsSync(dockerPath)) {
+        return readFileSync(dockerPath, 'utf-8')
+    }
+
+    // 如果都找不到，抛出错误
+    throw new Error(`Template file not found: ${relativePath}`)
+}
+
 export class EmailTemplateEngine {
     private templateCache = new Map<string, string>()
     private fragmentCache = new Map<string, string>()
@@ -62,8 +100,7 @@ export class EmailTemplateEngine {
         }
 
         try {
-            const fragmentPath = join(process.cwd(), 'server/templates/fragments', `${fragmentName}.mjml`)
-            const fragment = readFileSync(fragmentPath, 'utf-8')
+            const fragment = getTemplateContent(`fragments/${fragmentName}.mjml`)
             this.fragmentCache.set(fragmentName, fragment)
             return fragment
         } catch (error) {
@@ -82,8 +119,7 @@ export class EmailTemplateEngine {
         }
 
         try {
-            const templatePath = join(process.cwd(), 'server/templates', `${templateName}.mjml`)
-            const template = readFileSync(templatePath, 'utf-8')
+            const template = getTemplateContent(`${templateName}.mjml`)
             this.templateCache.set(cacheKey, template)
             return template
         } catch (error) {
