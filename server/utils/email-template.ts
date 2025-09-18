@@ -45,17 +45,31 @@ interface EmailResult {
 /**
  * 获取模板文件内容 - 支持开发和生产环境
  */
-function getTemplateContent(relativePath: string): string {
+async function getTemplateContent(relativePath: string): Promise<string> {
+    try {
+        // 生产环境：使用 Nitro 的存储层 API
+        const storage = useStorage('assets:templates')
+        const content = await storage.getItem(relativePath)
+        if (typeof content === 'string') {
+            return content
+        }
+    } catch (error) {
+        // 如果存储层失败，回退到文件系统
+        logger.warn('Failed to read template from storage, falling back to filesystem', { relativePath, error })
+    }
+
+    // 开发环境回退：直接从文件系统读取
+    return getTemplateContentFromFs(relativePath)
+}
+
+/**
+ * 从文件系统获取模板内容（回退方案）
+ */
+function getTemplateContentFromFs(relativePath: string): string {
     // 开发环境路径
     const devPath = join(process.cwd(), 'server/templates', relativePath)
     if (existsSync(devPath)) {
         return readFileSync(devPath, 'utf-8')
-    }
-
-    // 生产环境路径 (Nitro 构建后的路径)
-    const prodPath = join(process.cwd(), '.nuxt/dist/server-templates', relativePath)
-    if (existsSync(prodPath)) {
-        return readFileSync(prodPath, 'utf-8')
     }
 
     // 备用路径 1: 相对于当前文件的路径
@@ -94,13 +108,13 @@ export class EmailTemplateEngine {
     /**
      * 获取模板片段
      */
-    private getFragment(fragmentName: string): string {
+    private async getFragment(fragmentName: string): Promise<string> {
         if (this.fragmentCache.has(fragmentName)) {
             return this.fragmentCache.get(fragmentName) || ''
         }
 
         try {
-            const fragment = getTemplateContent(`fragments/${fragmentName}.mjml`)
+            const fragment = await getTemplateContent(`fragments/${fragmentName}.mjml`)
             this.fragmentCache.set(fragmentName, fragment)
             return fragment
         } catch (error) {
@@ -112,14 +126,14 @@ export class EmailTemplateEngine {
     /**
      * 获取MJML模板内容
      */
-    private getMjmlTemplate(templateName: string): string {
+    private async getMjmlTemplate(templateName: string): Promise<string> {
         const cacheKey = `mjml_${templateName}`
         if (this.templateCache.has(cacheKey)) {
             return this.templateCache.get(cacheKey) || ''
         }
 
         try {
-            const template = getTemplateContent(`${templateName}.mjml`)
+            const template = await getTemplateContent(`${templateName}.mjml`)
             this.templateCache.set(cacheKey, template)
             return template
         } catch (error) {
@@ -178,17 +192,19 @@ export class EmailTemplateEngine {
     /**
      * 通用模板生成方法
      */
-    private generateTemplate(
+    private async generateTemplate(
         templateName: string,
         fragments: string[],
         templateData: EmailTemplateData,
         options: TemplateOptions,
-    ): EmailResult {
-        const baseTemplate = this.getMjmlTemplate('base-template')
+    ): Promise<EmailResult> {
+        const baseTemplate = await this.getMjmlTemplate('base-template')
 
         // 组合主要内容
-        const mainContent = fragments
-            .map((fragmentName) => this.getFragment(fragmentName))
+        const fragmentContents = await Promise.all(
+            fragments.map((fragmentName) => this.getFragment(fragmentName)),
+        )
+        const mainContent = fragmentContents
             .map((fragment) => this.renderTemplate(fragment, templateData))
             .join('')
 
@@ -212,40 +228,40 @@ export class EmailTemplateEngine {
     /**
      * 生成带操作按钮的邮件模板（如验证邮箱、重置密码等）
      */
-    public generateActionEmailTemplate(
+    public async generateActionEmailTemplate(
         templateConfig: ActionTemplateConfig,
         options: TemplateOptions,
-    ): EmailResult {
+    ): Promise<EmailResult> {
         const templateData = this.buildBaseTemplateData(templateConfig, options)
         const fragments = ['action-message', 'important-reminder', 'security-tip']
 
-        return this.generateTemplate('action-email', fragments, { ...templateData, ...templateConfig }, options)
+        return await this.generateTemplate('action-email', fragments, { ...templateData, ...templateConfig }, options)
     }
 
     /**
      * 生成验证码邮件模板
      */
-    public generateCodeEmailTemplate(
+    public async generateCodeEmailTemplate(
         templateConfig: CodeTemplateConfig,
         options: TemplateOptions,
-    ): EmailResult {
+    ): Promise<EmailResult> {
         const templateData = this.buildBaseTemplateData(templateConfig, options, '这是一封系统自动发送的验证码邮件，请勿直接回复。')
         const fragments = ['verification-code', 'security-tip']
 
-        return this.generateTemplate('code-email', fragments, { ...templateData, ...templateConfig }, options)
+        return await this.generateTemplate('code-email', fragments, { ...templateData, ...templateConfig }, options)
     }
 
     /**
      * 生成简单消息邮件模板
      */
-    public generateSimpleMessageTemplate(
+    public async generateSimpleMessageTemplate(
         templateConfig: SimpleMessageConfig,
         options: TemplateOptions,
-    ): EmailResult {
+    ): Promise<EmailResult> {
         const templateData = this.buildBaseTemplateData(templateConfig, options)
         const fragments = ['simple-message']
 
-        return this.generateTemplate('simple-message', fragments, { ...templateData, ...templateConfig }, options)
+        return await this.generateTemplate('simple-message', fragments, { ...templateData, ...templateConfig }, options)
     }
 
     /**

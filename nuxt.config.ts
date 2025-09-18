@@ -165,9 +165,12 @@ export default defineNuxtConfig({
         port: 3000,
     },
     nitro: {
-        // 将模板文件夹包含到构建输出中 - 使用 bundledStorage
-        bundledStorage: [
-            'server/templates/**/*',
+        // 将模板文件夹包含到构建输出中 - 使用正确的配置
+        serverAssets: [
+            {
+                baseName: 'templates',
+                dir: './server/templates', // 相对于项目根目录
+            },
         ],
         esbuild: {
             options: {

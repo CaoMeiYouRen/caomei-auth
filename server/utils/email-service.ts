@@ -12,7 +12,7 @@ export const emailService = {
      */
     async sendVerificationEmail(email: string, verificationUrl: string): Promise<void> {
         try {
-            const { html, text } = emailTemplateEngine.generateActionEmailTemplate(
+            const { html, text } = await emailTemplateEngine.generateActionEmailTemplate(
                 {
                     headerIcon: '🔐',
                     message: `感谢您注册 <strong>${APP_NAME}</strong>！为了确保您的账户安全，请点击下方按钮验证您的邮箱地址。`,
@@ -50,7 +50,7 @@ export const emailService = {
      */
     async sendPasswordResetEmail(email: string, resetUrl: string): Promise<void> {
         try {
-            const { html, text } = emailTemplateEngine.generateActionEmailTemplate(
+            const { html, text } = await emailTemplateEngine.generateActionEmailTemplate(
                 {
                     headerIcon: '🔑',
                     message: `有人请求重置您的 <strong>${APP_NAME}</strong> 账户密码。如果是您本人操作，请点击下方按钮重置密码：`,
@@ -88,7 +88,7 @@ export const emailService = {
      */
     async sendLoginOTP(email: string, otp: string, expiresInMinutes: number = 5): Promise<void> {
         try {
-            const { html, text } = emailTemplateEngine.generateCodeEmailTemplate(
+            const { html, text } = await emailTemplateEngine.generateCodeEmailTemplate(
                 {
                     headerIcon: '🔓',
                     message: `您正在尝试登录 <strong>${APP_NAME}</strong>。请使用以下验证码完成登录：`,
@@ -125,7 +125,7 @@ export const emailService = {
      */
     async sendMagicLink(email: string, magicUrl: string): Promise<void> {
         try {
-            const { html, text } = emailTemplateEngine.generateActionEmailTemplate(
+            const { html, text } = await emailTemplateEngine.generateActionEmailTemplate(
                 {
                     headerIcon: '✨',
                     message: `点击下方按钮，无需密码即可安全登录您的 <strong>${APP_NAME}</strong> 账户：`,
@@ -163,7 +163,7 @@ export const emailService = {
      */
     async sendEmailChangeVerification(currentEmail: string, newEmail: string, changeUrl: string): Promise<void> {
         try {
-            const { html, text } = emailTemplateEngine.generateActionEmailTemplate(
+            const { html, text } = await emailTemplateEngine.generateActionEmailTemplate(
                 {
                     headerIcon: '📧',
                     message: `您即将修改邮箱地址为：<strong>${newEmail}</strong><br/><br/>如果确认变更，请点击下方按钮：`,
@@ -201,7 +201,7 @@ export const emailService = {
      */
     async sendSecurityNotification(email: string, action: string, details: string): Promise<void> {
         try {
-            const { html, text } = emailTemplateEngine.generateSimpleMessageTemplate(
+            const { html, text } = await emailTemplateEngine.generateSimpleMessageTemplate(
                 {
                     headerIcon: '🛡️',
                     message: `我们检测到您的 <strong>${APP_NAME}</strong> 账户有以下安全活动：<br/><br/><strong>${action}</strong>`,
