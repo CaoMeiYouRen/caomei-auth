@@ -121,6 +121,80 @@ export const emailService = {
     },
 
     /**
+     * 发送邮箱验证码邮件
+     */
+    async sendEmailVerificationOTP(email: string, otp: string, expiresInMinutes: number = 5): Promise<void> {
+        try {
+            const { html, text } = await emailTemplateEngine.generateCodeEmailTemplate(
+                {
+                    headerIcon: '🔐',
+                    message: `感谢您注册 <strong>${APP_NAME}</strong>！请使用以下验证码完成邮箱验证：`,
+                    verificationCode: otp,
+                    expiresIn: expiresInMinutes,
+                    securityTip: '如果您没有注册此账户，请忽略此邮件。',
+                },
+                {
+                    title: `验证您的 ${APP_NAME} 邮箱地址`,
+                    preheader: `您的邮箱验证码是 ${otp}`,
+                },
+            )
+
+            await sendEmail({
+                to: email,
+                subject: `验证您的 ${APP_NAME} 邮箱地址`,
+                html,
+                text,
+            })
+
+            logger.email.sent({ type: 'email-verification-otp', email })
+        } catch (error) {
+            logger.email.failed({
+                type: 'email-verification-otp',
+                email,
+                error: error instanceof Error ? error.message : String(error),
+            })
+            throw error
+        }
+    },
+
+    /**
+     * 发送密码重置验证码邮件
+     */
+    async sendPasswordResetOTP(email: string, otp: string, expiresInMinutes: number = 5): Promise<void> {
+        try {
+            const { html, text } = await emailTemplateEngine.generateCodeEmailTemplate(
+                {
+                    headerIcon: '🔑',
+                    message: `有人请求重置您的 <strong>${APP_NAME}</strong> 账户密码。请使用以下验证码完成密码重置：`,
+                    verificationCode: otp,
+                    expiresIn: expiresInMinutes,
+                    securityTip: '如果不是您本人操作，请忽略此邮件并立即检查您的账户安全。',
+                },
+                {
+                    title: `重置您的 ${APP_NAME} 密码`,
+                    preheader: `您的密码重置验证码是 ${otp}`,
+                },
+            )
+
+            await sendEmail({
+                to: email,
+                subject: `重置您的 ${APP_NAME} 密码`,
+                html,
+                text,
+            })
+
+            logger.email.sent({ type: 'password-reset-otp', email })
+        } catch (error) {
+            logger.email.failed({
+                type: 'password-reset-otp',
+                email,
+                error: error instanceof Error ? error.message : String(error),
+            })
+            throw error
+        }
+    },
+
+    /**
      * 发送Magic Link邮件
      */
     async sendMagicLink(email: string, magicUrl: string): Promise<void> {

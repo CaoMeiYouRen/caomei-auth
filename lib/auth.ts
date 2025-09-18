@@ -227,14 +227,15 @@ export const auth = betterAuth({
                 }
                 if (type === 'email-verification') {
                     // 发送电子邮件验证用的OTP
-                    await emailService.sendLoginOTP(email, otp, expiresInMinutes)
+                    await emailService.sendEmailVerificationOTP(email, otp, expiresInMinutes)
                     return
                 }
                 if (type === 'forget-password') {
                     // 发送密码重置用的OTP
-                    await emailService.sendLoginOTP(email, otp, expiresInMinutes)
+                    await emailService.sendPasswordResetOTP(email, otp, expiresInMinutes)
                     return
                 }
+                // 默认情况使用登录OTP
                 await emailService.sendLoginOTP(email, otp, expiresInMinutes)
             },
         }),
