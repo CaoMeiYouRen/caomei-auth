@@ -1,11 +1,14 @@
 // import { randomBytes } from 'crypto'
 import dayjs from 'dayjs'
 import { generateRandomString } from './random'
+import { snowflake } from './snowflake'
 import { maskEmail, maskPhone, maskIP } from '@/utils/privacy'
+import { parseUserAgent } from '@/utils/useragent'
 import type {
     DemoUser,
     DemoOAuthApplication,
     DemoLoginLog,
+    DemoSession,
     DemoSSOProvider,
     DemoStats,
     DemoConfig,
@@ -280,6 +283,77 @@ export function generateDemoStats(): DemoStats {
         totalSSOProviders,
         activeSSOProviders,
     }
+}
+
+/**
+ * 生成假的会话数据
+ */
+export function generateDemoSessions(count: number = 100): DemoSession[] {
+    const users = generateDemoUsers(20)
+
+    // 生成完整的IP地址
+    const generateRandomIP = () => {
+        const ipRanges = [
+            () => `192.168.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
+            () => `10.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
+            () => `172.${16 + Math.floor(Math.random() * 16)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
+            () => `203.208.60.${Math.floor(Math.random() * 256)}`,
+            () => `114.114.114.${Math.floor(Math.random() * 256)}`,
+        ]
+        return ipRanges[Math.floor(Math.random() * ipRanges.length)]()
+    }
+
+    const userAgents = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+        'Mozilla/5.0 (Linux; Android 14; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15',
+    ]
+
+    const locations = ['北京市', '上海市', '广州市', '深圳市', '杭州市', '南京市', '武汉市', '成都市', '西安市', '重庆市']
+    const providers = ['email', 'oauth', 'sso', 'phone']
+
+    const sessions: DemoSession[] = []
+
+    for (let i = 0; i < count; i++) {
+        const user = users[Math.floor(Math.random() * users.length)]
+        const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)]
+        const parsedUserAgent = parseUserAgent(userAgent)
+        const loginTime = getRandomDate(30)
+        const expiresAt = dayjs(loginTime).add(30, 'day').toDate()
+        const isActive = dayjs(expiresAt).isAfter(dayjs())
+        const sessionId = snowflake.generateId()
+
+        // 扩展设备信息
+        const deviceInfo = {
+            ...parsedUserAgent,
+            device: parsedUserAgent.os.includes('iPhone') || parsedUserAgent.os.includes('Android') ? 'Mobile' : 'Desktop',
+            isMobile: parsedUserAgent.os.includes('iPhone') || parsedUserAgent.os.includes('Android'),
+        }
+
+        sessions.push({
+            id: sessionId,
+            userId: user.id as string,
+            user: {
+                id: user.id as string,
+                name: user.name,
+                email: user.email,
+                image: user.image,
+            },
+            loginTime,
+            expiresAt,
+            isActive,
+            ipAddress: maskIP(generateRandomIP()),
+            location: locations[Math.floor(Math.random() * locations.length)],
+            device: deviceInfo,
+            provider: providers[Math.floor(Math.random() * providers.length)],
+            sessionToken: `demo_session_${generateRandomString(32)}`,
+        })
+    }
+
+    return sessions.sort((a, b) => b.loginTime.getTime() - a.loginTime.getTime())
 }
 
 /**

@@ -58,6 +58,33 @@ export interface DemoLoginLog {
 }
 
 /**
+ * 假数据会话信息
+ */
+export interface DemoSession {
+    id: string
+    userId: string
+    user: {
+        id: string
+        name: string
+        email: string
+        image?: string
+    }
+    loginTime: Date
+    expiresAt: Date
+    isActive: boolean
+    ipAddress: string
+    location: string
+    device: {
+        browser: string
+        os: string
+        device: string
+        isMobile: boolean
+    }
+    provider: string
+    sessionToken: string
+}
+
+/**
  * 假数据 SSO 提供商信息
  */
 export interface DemoSSOProvider {
