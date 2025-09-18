@@ -306,6 +306,7 @@ const confirmPassword = ref('')
 const agreedToTerms = ref(false)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
+const disabled = ref(false)
 
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
@@ -428,14 +429,15 @@ async function register() {
             if (usernameEnabled) {
                 signUpData.username = username.value.trim()
             }
-
+            disabled.value = true
             const { data, error } = await authClient.signUp.email(signUpData)
-
+            disabled.value = false
             if (error) {
                 throw new Error(error.message || '注册失败')
             }
         } else if (params.mode === 'phone') {
             // 验证手机号码
+            disabled.value = true
             const isVerified = await authClient.phoneNumber.verify({
                 phoneNumber: phone.value,
                 code: phoneCode.value,
@@ -456,6 +458,7 @@ async function register() {
             }
 
             const { data, error } = await authClient.updateUser(updateData)
+            disabled.value = false
             if (error) {
                 throw new Error(error.message || '更新用户信息失败')
             }
@@ -469,7 +472,7 @@ async function register() {
         })
         setTimeout(() => {
             navigateTo(`/login?mode=${params.mode}`)
-        }, 1500)
+        }, 500)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '注册过程中发生未知错误'
         toast.add({
@@ -478,6 +481,8 @@ async function register() {
             detail: errorMessage,
             life: 5000,
         })
+    } finally {
+        disabled.value = false
     }
 }
 </script>
