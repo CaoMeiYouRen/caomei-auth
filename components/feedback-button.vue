@@ -97,7 +97,7 @@ const feedbackUrl = computed(() => config.public.feedbackUrl)
 
         .feedback-button {
             border-radius: 50%;
-            padding: 12px;
+            padding: 12px 14px;
 
             .feedback-text {
                 display: none;
