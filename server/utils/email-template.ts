@@ -106,6 +106,9 @@ export class EmailTemplateEngine {
             greeting: '您好！',
             helpText: '需要帮助？联系我们的客服团队',
             footerNote: footerNote || '这是一封系统自动发送的邮件，请勿直接回复。',
+            primaryColor: '#e63946',
+            message: config.message,
+            securityTip: config.securityTip || '• 验证码仅供本次操作使用，请勿泄露给他人\n• 如果您没有进行此操作，请忽略此邮件\n• 请在规定时间内完成验证，过期需重新获取',
             ...options,
         }
     }
@@ -233,6 +236,8 @@ export class EmailTemplateEngine {
     private getFallbackMjmlTemplate(templateName: string): string {
         const fallbackTemplates: Record<string, string> = {
             'email-verification': this.getEmailVerificationFallback(),
+            'action-email': this.getEmailVerificationFallback(),
+            'code-email': this.getCodeEmailFallback(),
             default: this.getDefaultFallback(),
         }
 
@@ -252,15 +257,15 @@ export class EmailTemplateEngine {
       <mj-all font-family="Arial, sans-serif" />
     </mj-attributes>
     <mj-style inline="inline">
-      .primary-color { color: {{primaryColor}} !important; }
-      .primary-bg { background-color: {{primaryColor}} !important; }
+      .primary-color { color: #e63946 !important; }
+      .primary-bg { background-color: #e63946 !important; }
     </mj-style>
   </mj-head>
   <mj-body background-color="#f8fafc">
     <mj-section background-color="#ffffff" padding="0">
       <mj-column>
         <!-- Header -->
-        <mj-section background-color="{{primaryColor}}" padding="40px 20px">
+        <mj-section background-color="#e63946" padding="40px 20px">
           <mj-column>
             <mj-text align="center" color="#ffffff" font-size="28px" font-weight="bold">
               {{appName}}
@@ -277,32 +282,26 @@ export class EmailTemplateEngine {
             <mj-text font-size="18px" color="#2d3748" padding-bottom="20px">
               您好！
             </mj-text>
-            <mj-text font-size="16px" color="#4a5568" line-height="1.6" padding-bottom="30px">
-              感谢您注册 {{appName}}！为了确保您的账户安全，请点击下方按钮验证您的邮箱地址：
+            <mj-text font-size="16px" color="#4a5568" padding-bottom="30px">
+              {{message}}
             </mj-text>
 
             <!-- CTA Button -->
-            <mj-button background-color="{{primaryColor}}" color="#ffffff" font-size="16px" font-weight="600" padding="20px 0" border-radius="8px" href="{{verificationUrl}}">
-              验证邮箱地址
+            <mj-button background-color="#e63946" color="#ffffff" font-size="16px" font-weight="600" padding="20px 0" border-radius="8px" href="{{actionUrl}}">
+              {{buttonText}}
             </mj-button>
 
             <!-- Alternative Link -->
-            <mj-section background-color="#f7fafc" padding="20px" border-left="4px solid {{primaryColor}}">
-              <mj-column>
-                <mj-text font-size="14px" color="#4a5568" padding-bottom="10px">
-                  <strong>无法点击按钮？</strong>请复制以下链接到浏览器地址栏：
-                </mj-text>
-                <mj-text font-size="12px" color="#718096" font-family="monospace" word-break="break-all">
-                  {{verificationUrl}}
-                </mj-text>
-              </mj-column>
-            </mj-section>
+            <mj-text font-size="14px" color="#4a5568" padding="30px 0 10px 0">
+              <strong>无法点击按钮？</strong>请复制以下链接到浏览器地址栏：
+            </mj-text>
+            <mj-text font-size="12px" color="#718096" font-family="monospace" padding="0 0 20px 0" background-color="#f7fafc">
+              {{actionUrl}}
+            </mj-text>
 
-            <mj-text font-size="16px" color="#4a5568" line-height="1.6" padding-top="30px">
+            <mj-text font-size="16px" color="#4a5568" padding-top="30px">
               <strong>重要提醒：</strong><br/>
-              • 此验证链接将在 24 小时后过期<br/>
-              • 如果您没有注册 {{appName}} 账户，请忽略此邮件<br/>
-              • 请勿将此链接分享给他人
+              {{reminderContent}}
             </mj-text>
           </mj-column>
         </mj-section>
@@ -314,12 +313,107 @@ export class EmailTemplateEngine {
               需要帮助？联系我们的客服团队
             </mj-text>
             <mj-text align="center" font-size="14px" padding-bottom="20px">
-              <a href="{{baseUrl}}/docs" class="primary-color" style="text-decoration: none; margin: 0 10px;">帮助中心</a>
-              <a href="{{baseUrl}}/privacy" class="primary-color" style="text-decoration: none; margin: 0 10px;">隐私政策</a>
-              <a href="{{baseUrl}}/terms" class="primary-color" style="text-decoration: none; margin: 0 10px;">服务条款</a>
+              <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 10px;">联系方式</a>
+              <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 10px;">隐私政策</a>
+              <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 10px;">服务条款</a>
             </mj-text>
             <mj-text align="center" font-size="12px" color="#a0aec0">
               © {{currentYear}} {{appName}}. 保留所有权利。
+            </mj-text>
+          </mj-column>
+        </mj-section>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>`
+    }
+
+    /**
+     * 验证码邮件回退模板
+     */
+    private getCodeEmailFallback(): string {
+        return `
+<mjml>
+  <mj-head>
+    <mj-title>{{title}}</mj-title>
+    <mj-preview>{{preheader}}</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      .primary-color { color: #e63946 !important; }
+      .code-highlight {
+        background: linear-gradient(135deg, #e63946 0%, #ff6b6b 100%) !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        padding: 20px 40px !important;
+        border-radius: 12px !important;
+        letter-spacing: 4px !important;
+        font-family: Monaco, Consolas, 'Lucida Console', monospace !important;
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#f8fafc">
+    <mj-section background-color="#ffffff" padding="0">
+      <mj-column>
+        <!-- Header -->
+        <mj-section background-color="#e63946" padding="40px 20px">
+          <mj-column>
+            <mj-text align="center" color="#ffffff" font-size="32px" font-weight="bold">
+              {{appName}}
+            </mj-text>
+            <mj-text align="center" color="rgba(255,255,255,0.9)" font-size="16px" font-weight="400" padding="8px 0 0 0">
+              安全 · 便捷 · 统一的身份认证平台
+            </mj-text>
+          </mj-column>
+        </mj-section>
+
+        <!-- Content -->
+        <mj-section padding="40px 30px">
+          <mj-column>
+            <mj-text font-size="20px" color="#2d3748" font-weight="600" padding="0 0 20px 0">
+              您好！
+            </mj-text>
+            <mj-text font-size="16px" color="#4a5568" padding="0 0 20px 0">
+              {{message}}
+            </mj-text>
+
+            <!-- Verification Code -->
+            <mj-text align="center" padding="20px 0" css-class="code-highlight">
+              {{verificationCode}}
+            </mj-text>
+
+            <!-- Expiry Info -->
+            <mj-text font-size="14px" color="#718096" align="center" padding="0 0 30px 0">
+              请在 {{expiresIn}} 分钟内使用此验证码
+            </mj-text>
+
+            <!-- Security Tips -->
+            <mj-text font-size="14px" color="#234e52" font-weight="600" padding="0 0 8px 0">
+              🛡️ 安全提示
+            </mj-text>
+            <mj-text font-size="14px" color="#234e52" padding="0 0 20px 0">
+              {{securityTip}}
+            </mj-text>
+          </mj-column>
+        </mj-section>
+
+        <!-- Footer -->
+        <mj-section background-color="#f7fafc" padding="30px" border-top="1px solid #e2e8f0">
+          <mj-column>
+            <mj-text align="center" font-size="14px" color="#718096" padding="0 0 15px 0">
+              需要帮助？联系我们的客服团队
+            </mj-text>
+            <mj-text align="center" font-size="14px" padding="0 0 20px 0">
+              <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 12px;">联系方式</a>
+              <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 12px;">隐私政策</a>
+              <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 12px;">服务条款</a>
+            </mj-text>
+            <mj-text align="center" font-size="12px" color="#a0aec0" padding="0">
+              © {{currentYear}} {{appName}}. 保留所有权利。
+            </mj-text>
+            <mj-text align="center" font-size="11px" color="#cbd5e0" padding="10px 0 0 0">
+              {{footerNote}}
             </mj-text>
           </mj-column>
         </mj-section>
@@ -342,11 +436,11 @@ export class EmailTemplateEngine {
   <mj-body background-color="#f8fafc">
     <mj-section background-color="#ffffff" padding="40px">
       <mj-column>
-        <mj-text align="center" font-size="24px" font-weight="bold" color="{{primaryColor}}" padding-bottom="20px">
+        <mj-text align="center" font-size="24px" font-weight="bold" color="#e63946" padding-bottom="20px">
           {{appName}}
         </mj-text>
-        <mj-text font-size="16px" color="#333333" line-height="1.6">
-          {{content}}
+        <mj-text font-size="16px" color="#333333" padding="0 0 20px 0">
+          {{message}}
         </mj-text>
         <mj-text align="center" font-size="12px" color="#666666" padding-top="40px">
           © {{currentYear}} {{appName}}. 保留所有权利。
@@ -376,6 +470,7 @@ export class EmailTemplateEngine {
         .content { color: #333; line-height: 1.6; }
         .button { display: inline-block; padding: 12px 24px; background: ${primaryColor}; color: white; text-decoration: none; border-radius: 4px; margin: 20px 0; }
         .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; text-align: center; }
+        .code-box { background: ${primaryColor}; color: white; font-size: 24px; font-weight: bold; padding: 20px; text-align: center; border-radius: 8px; letter-spacing: 2px; font-family: monospace; }
     </style>
 </head>
 <body>
@@ -384,10 +479,14 @@ export class EmailTemplateEngine {
             <div class="logo">${data.appName}</div>
         </div>
         <div class="content">
-            ${data.content || '邮件内容'}
+            <p>${data.message || '邮件内容'}</p>
+            ${data.verificationCode ? `<div class="code-box">${data.verificationCode}</div>` : ''}
+            ${data.actionUrl ? `<p><a href="${data.actionUrl}" class="button">${data.buttonText || '点击操作'}</a></p>` : ''}
+            ${data.securityTip ? `<div style="background: #e6fffa; padding: 16px; border-left: 4px solid #38b2ac; border-radius: 6px; margin: 20px 0;"><strong>🛡️ 安全提示</strong><br/>${data.securityTip}</div>` : ''}
         </div>
         <div class="footer">
             <p>© ${data.currentYear} ${data.appName}. 保留所有权利。</p>
+            <p>${data.footerNote || '这是一封系统自动发送的邮件，请勿直接回复。'}</p>
         </div>
     </div>
 </body>
