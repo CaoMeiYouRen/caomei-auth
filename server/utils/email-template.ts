@@ -141,8 +141,8 @@ export class EmailTemplateEngine {
                         <mj-text align="center" padding="20px 0"
                                  font-size="36px"
                                  font-weight="bold"
-                                 color="#ffffff"
-                                 background-color="#e63946"
+                                 color="#e63946"
+                                 background-color="#ffffff"
                                  border-radius="12px"
                                  letter-spacing="4px"
                                  font-family="Monaco, Consolas, 'Lucida Console', monospace">
