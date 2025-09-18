@@ -91,6 +91,7 @@ export default defineNuxtConfig({
             googleAnalyticsId: process.env.NUXT_PUBLIC_GOOGLE_ANALYTICS_ID,
             passwordStrengthLevel: process.env.NUXT_PUBLIC_PASSWORD_STRENGTH_LEVEL || 'strong',
             demoMode: process.env.NUXT_PUBLIC_DEMO_MODE === 'true',
+            feedbackUrl: process.env.NUXT_PUBLIC_FEEDBACK_URL,
             // 验证码配置
             captchaProvider: process.env.NUXT_PUBLIC_CAPTCHA_PROVIDER,
             recaptchaSiteKey: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,

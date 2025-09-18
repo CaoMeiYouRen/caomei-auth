@@ -127,7 +127,11 @@
         >
             <!-- Demo模式横幅 -->
             <DemoModeBanner />
-
+            <!-- 反馈入口 -->
+            <FeedbackButton
+                title="反馈"
+                text="反馈"
+            />
             <slot />
             <AppFooter />
         </div>

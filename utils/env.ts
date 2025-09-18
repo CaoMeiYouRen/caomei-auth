@@ -233,3 +233,5 @@ export const TURNSTILE_SITE_KEY = process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || 
 export const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY
 export const HCAPTCHA_SITE_KEY = process.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY || import.meta.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY as string
 
+// 反馈配置
+export const FEEDBACK_URL = process.env.NUXT_PUBLIC_FEEDBACK_URL || import.meta.env.NUXT_PUBLIC_FEEDBACK_URL as string || ''

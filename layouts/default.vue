@@ -9,6 +9,8 @@
         <AppFooter />
         <!-- GitHub 右上角链接 -->
         <GithubCorner v-if="demoMode" />
+        <!-- 反馈按钮 -->
+        <FeedbackButton />
     </div>
 </template>
 

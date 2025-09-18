@@ -24,6 +24,7 @@ interface ImportMetaEnv {
     readonly NUXT_PUBLIC_HCAPTCHA_SITE_KEY: string
     readonly NUXT_PUBLIC_BAIDU_ANALYTICS_ID: string
     readonly NUXT_PUBLIC_GOOGLE_ANALYTICS_ID: string
+    readonly NUXT_PUBLIC_FEEDBACK_URL: string
 }
 
 interface ImportMeta {
