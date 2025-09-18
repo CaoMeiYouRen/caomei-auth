@@ -8,9 +8,14 @@
         <!-- 页脚 -->
         <AppFooter />
         <!-- GitHub 右上角链接 -->
-        <GithubCorner />
+        <GithubCorner v-if="demoMode" />
     </div>
 </template>
+
+<script setup lang="ts">
+const config = useRuntimeConfig()
+const demoMode = computed(() => config.public.demoMode)
+</script>
 
 <style scoped lang="scss">
 
