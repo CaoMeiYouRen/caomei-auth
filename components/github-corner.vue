@@ -129,6 +129,24 @@ const props = withDefaults(defineProps<Props>(), {
     }
 }
 
+// 暗色模式支持
+@media (prefers-color-scheme: dark) {
+    .github-corner {
+        svg {
+            fill: #f0f6fc; // 暗色模式下使用浅色
+            color: #24292f;
+        }
+
+        &:hover svg {
+            fill: #c9d1d9; // 暗色模式悬停效果
+        }
+
+        &:focus {
+            outline-color: #f0f6fc;
+        }
+    }
+}
+
 // 减少动画偏好设置
 @media (prefers-reduced-motion: reduce) {
     .github-corner {

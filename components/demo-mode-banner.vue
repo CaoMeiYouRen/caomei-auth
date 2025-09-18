@@ -154,4 +154,28 @@ const finalDocUrl = computed(() => {
         text-decoration: underline;
     }
 }
+
+// 暗色模式样式
+@media (prefers-color-scheme: dark) {
+    .demo-mode-banner {
+        color: #fbbf24; // 暖黄色文本
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%); // 现代深灰蓝色渐变
+        border: 1px solid #475569;
+        box-shadow: 0 2px 8px rgb(0 0 0 / 0.5);
+    }
+
+    .banner-icon {
+        color: #fbbf24; // 保持温暖的黄色图标
+    }
+
+    .banner-close {
+        color: #cbd5e1;
+
+        &:hover {
+            color: #f1f5f9;
+            background: rgb(148 163 184 / 0.2);
+        }
+    }
+
+}
 </style>
