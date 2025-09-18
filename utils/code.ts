@@ -47,7 +47,7 @@ export function useSendPhoneCode(phone: Ref<string>, type: 'forget-password' | '
             const { data, error } = await (async () => {
                 switch (type) {
                     case 'forget-password':
-                        return authClient.phoneNumber.forgetPassword({
+                        return authClient.phoneNumber.requestPasswordReset({
                             phoneNumber: phone.value,
                         })
                     case 'sign-in': // 允许使用手机号码注册

@@ -6,7 +6,6 @@ import {
     TURNSTILE_SECRET_KEY,
     HCAPTCHA_SECRET_KEY,
     HCAPTCHA_SITE_KEY,
-    CAPTCHA_ENDPOINTS,
 } from '@/utils/env'
 
 // 定义验证码配置类型
@@ -27,9 +26,16 @@ export function getCaptchaConfig(): CaptchaConfig | null {
     const baseConfig = {
         // 验证码保护的端点列表
         endpoints: [
-            '/sign-up/email',
-            '/sign-in/email',
-            '/forget-password',
+            '/sign-up/email', // 通过邮箱注册
+            // '/sign-in/email', // 通过邮箱登录
+            '/forget-password', // 忘记密码
+            '/send-verification-email', // 发送验证邮件
+            '/email-otp/send-verification-otp', // 发送邮箱验证码
+            '/forget-password/email-otp', // 通过邮箱验证码重置密码
+            '/phone-number/send-otp', // 发送手机验证码
+            '/phone-number/forget-password', // 通过手机验证码重置密码
+            '/phone-number/request-password-reset', // 通过手机请求密码重置
+            '/two-factor/send-otp', // 发送两步验证验证码
         ],
     }
 
@@ -73,13 +79,5 @@ export function getCaptchaConfig(): CaptchaConfig | null {
             console.warn(`不支持的验证码提供商: ${CAPTCHA_PROVIDER}`)
             return null
     }
-}
-
-/**
- * 检查是否启用了验证码功能
- * @returns 是否启用验证码
- */
-export function isCaptchaEnabled(): boolean {
-    return getCaptchaConfig() !== null
 }
 
