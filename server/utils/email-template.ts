@@ -118,9 +118,119 @@ export class EmailTemplateEngine {
             this.fragmentCache.set(fragmentName, fragment)
             return fragment
         } catch (error) {
-            logger.warn('Email template fragment not found', { fragmentName })
-            return ''
+            logger.warn('Email template fragment not found, using fallback', { fragmentName })
+
+            // 提供常用片段的回退内容
+            const fallbackFragment = this.getFallbackFragment(fragmentName)
+            this.fragmentCache.set(fragmentName, fallbackFragment)
+            return fallbackFragment
         }
+    }
+
+    /**
+     * 获取片段的回退内容
+     */
+    private getFallbackFragment(fragmentName: string): string {
+        const fallbackFragments: Record<string, string> = {
+            'verification-code': `
+                <mj-section padding="30px 0">
+                    <mj-column>
+                        <mj-text align="center" font-size="18px" color="#2d3748" font-weight="600" padding="0 0 20px 0">
+                            您的验证码
+                        </mj-text>
+                        <mj-text align="center" padding="20px 0"
+                                 font-size="36px"
+                                 font-weight="bold"
+                                 color="#ffffff"
+                                 background-color="#e63946"
+                                 border-radius="12px"
+                                 letter-spacing="4px"
+                                 font-family="Monaco, Consolas, 'Lucida Console', monospace">
+                            {{verificationCode}}
+                        </mj-text>
+                        <mj-text align="center" font-size="14px" color="#718096" padding="15px 0 0 0">
+                            请在 {{expiresIn}} 分钟内使用此验证码
+                        </mj-text>
+                    </mj-column>
+                </mj-section>
+            `,
+            'security-tip': `
+                <mj-section padding="20px 0">
+                    <mj-column>
+                        <mj-text font-size="16px" color="#234e52" font-weight="600" padding="0 0 10px 0">
+                            🛡️ 安全提示
+                        </mj-text>
+                        <mj-text font-size="14px" color="#234e52" padding="0 0 20px 20px"
+                                 background-color="#e6fffa"
+                                 border-left="4px solid #38b2ac"
+                                 border-radius="6px">
+                            {{securityTip}}
+                        </mj-text>
+                    </mj-column>
+                </mj-section>
+            `,
+            'action-message': `
+                <mj-section padding="20px 0">
+                    <mj-column>
+                        <mj-text font-size="16px" color="#4a5568" padding="0 0 30px 0">
+                            {{message}}
+                        </mj-text>
+                        <mj-button background-color="#e63946"
+                                   color="#ffffff"
+                                   font-size="16px"
+                                   font-weight="600"
+                                   padding="15px 0"
+                                   border-radius="8px"
+                                   href="{{actionUrl}}">
+                            {{buttonText}}
+                        </mj-button>
+                    </mj-column>
+                </mj-section>
+            `,
+            'important-reminder': `
+                <mj-section padding="20px 0">
+                    <mj-column>
+                        <mj-text font-size="14px" color="#4a5568" padding="0 0 10px 0">
+                            <strong>无法点击按钮？</strong>请复制以下链接到浏览器地址栏：
+                        </mj-text>
+                        <mj-text font-size="12px"
+                                 color="#718096"
+                                 font-family="monospace"
+                                 padding="10px"
+                                 background-color="#f7fafc"
+                                 border-radius="4px">
+                            {{actionUrl}}
+                        </mj-text>
+                        <mj-text font-size="16px" color="#4a5568" padding="20px 0 0 0">
+                            <strong>重要提醒：</strong><br/>
+                            {{reminderContent}}
+                        </mj-text>
+                    </mj-column>
+                </mj-section>
+            `,
+            'simple-message': `
+                <mj-section padding="20px 0">
+                    <mj-column>
+                        <mj-text font-size="16px" color="#4a5568" padding="0 0 20px 0">
+                            {{message}}
+                        </mj-text>
+                        <mj-text font-size="14px" color="#718096" padding="0 0 20px 0">
+                            {{extraInfo}}
+                        </mj-text>
+                    </mj-column>
+                </mj-section>
+            `,
+        }
+
+        return fallbackFragments[fragmentName] || `
+            <mj-section padding="20px 0">
+                <mj-column>
+                    <mj-text font-size="16px" color="#4a5568">
+                        {{message}}
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+        `
     }
 
     /**
@@ -287,6 +397,7 @@ export class EmailTemplateEngine {
      */
     private getFallbackMjmlTemplate(templateName: string): string {
         const fallbackTemplates: Record<string, string> = {
+            'base-template': this.getBaseTemplateFallback(),
             'email-verification': this.getEmailVerificationFallback(),
             'action-email': this.getEmailVerificationFallback(),
             'code-email': this.getCodeEmailFallback(),
@@ -294,6 +405,85 @@ export class EmailTemplateEngine {
         }
 
         return fallbackTemplates[templateName] || fallbackTemplates.default
+    }
+
+    /**
+     * 基础模板回退
+     */
+    private getBaseTemplateFallback(): string {
+        return `
+<mjml>
+  <mj-head>
+    <mj-title>{{title}}</mj-title>
+    <mj-preview>{{preheader}}</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      .primary-color { color: #e63946 !important; }
+      .primary-bg { background-color: #e63946 !important; }
+      .code-highlight {
+        background: linear-gradient(135deg, #e63946 0%, #ff6b6b 100%) !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        padding: 20px 40px !important;
+        border-radius: 12px !important;
+        letter-spacing: 4px !important;
+        font-family: Monaco, Consolas, 'Lucida Console', monospace !important;
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#f8fafc">
+    <mj-section background-color="#ffffff" padding="0">
+      <mj-column>
+        <!-- Header -->
+        <mj-section background-color="#e63946" padding="40px 20px">
+          <mj-column>
+            <mj-text align="center" color="#ffffff" font-size="32px" font-weight="bold">
+              {{appName}}
+            </mj-text>
+            <mj-text align="center" color="rgba(255,255,255,0.9)" font-size="16px" font-weight="400" padding="8px 0 0 0">
+              {{headerSubtitle}}
+            </mj-text>
+          </mj-column>
+        </mj-section>
+
+        <!-- Content -->
+        <mj-section padding="40px 30px">
+          <mj-column>
+            <mj-text font-size="20px" color="#2d3748" font-weight="600" padding="0 0 20px 0">
+              {{greeting}}
+            </mj-text>
+
+            <!-- Main Content Area -->
+            {{mainContent}}
+
+          </mj-column>
+        </mj-section>
+
+        <!-- Footer -->
+        <mj-section background-color="#f7fafc" padding="30px" border-top="1px solid #e2e8f0">
+          <mj-column>
+            <mj-text align="center" font-size="14px" color="#718096" padding="0 0 15px 0">
+              {{helpText}}
+            </mj-text>
+            <mj-text align="center" font-size="14px" padding="0 0 20px 0">
+              <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 12px;">联系方式</a>
+              <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 12px;">隐私政策</a>
+              <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 12px;">服务条款</a>
+            </mj-text>
+            <mj-text align="center" font-size="12px" color="#a0aec0" padding="0">
+              © {{currentYear}} {{appName}}. 保留所有权利。
+            </mj-text>
+            <mj-text align="center" font-size="11px" color="#cbd5e0" padding="10px 0 0 0">
+              {{footerNote}}
+            </mj-text>
+          </mj-column>
+        </mj-section>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>`
     }
 
     /**
