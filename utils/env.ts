@@ -217,7 +217,7 @@ export const ADMIN_USER_IDS = process.env.ADMIN_USER_IDS?.split(',').map((e) => 
  * 支持 Google reCAPTCHA、Cloudflare Turnstile、hCaptcha
  */
 // 验证码提供商类型，可选值：google-recaptcha, cloudflare-turnstile, hcaptcha
-export const CAPTCHA_PROVIDER = process.env.CAPTCHA_PROVIDER as 'google-recaptcha' | 'cloudflare-turnstile' | 'hcaptcha' | undefined
+export const CAPTCHA_PROVIDER = process.env.NUXT_PUBLIC_CAPTCHA_PROVIDER as 'google-recaptcha' | 'cloudflare-turnstile' | 'hcaptcha' | undefined
 
 // Google reCAPTCHA 配置
 export const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
@@ -231,7 +231,7 @@ export const TURNSTILE_SITE_KEY = process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || 
 
 // hCaptcha 配置
 export const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY
-export const HCAPTCHA_SITE_KEY = process.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY || import.meta.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY as string || process.env.H_CAPTCHA_SITE_KEY
+export const HCAPTCHA_SITE_KEY = process.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY || import.meta.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY as string
 
 // 验证码保护的端点列表，默认保护注册、登录、忘记密码等关键操作
 export const CAPTCHA_ENDPOINTS = process.env.CAPTCHA_ENDPOINTS?.split(',').map((e) => e.trim()).filter(Boolean) || [

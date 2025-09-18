@@ -25,7 +25,12 @@ export function getCaptchaConfig(): CaptchaConfig | null {
 
     // 基础配置
     const baseConfig = {
-        endpoints: CAPTCHA_ENDPOINTS,
+        // 验证码保护的端点列表
+        endpoints: [
+            '/sign-up/email',
+            '/sign-in/email',
+            '/forget-password',
+        ],
     }
 
     switch (CAPTCHA_PROVIDER) {

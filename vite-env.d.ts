@@ -15,6 +15,15 @@ interface ImportMetaEnv {
     readonly NUXT_PUBLIC_CLARITY_PROJECT_ID: string
     readonly NUXT_PUBLIC_CONTACT_EMAIL: string
     readonly NUXT_PUBLIC_APP_NAME: string
+    readonly NUXT_PUBLIC_PASSWORD_STRENGTH_LEVEL: string
+    readonly NUXT_PUBLIC_DEMO_MODE: string
+    readonly NUXT_PUBLIC_USERNAME_ENABLED: string
+    readonly NUXT_PUBLIC_CAPTCHA_PROVIDER: string
+    readonly NUXT_PUBLIC_RECAPTCHA_SITE_KEY: string
+    readonly NUXT_PUBLIC_TURNSTILE_SITE_KEY: string
+    readonly NUXT_PUBLIC_HCAPTCHA_SITE_KEY: string
+    readonly NUXT_PUBLIC_BAIDU_ANALYTICS_ID: string
+    readonly NUXT_PUBLIC_GOOGLE_ANALYTICS_ID: string
 }
 
 interface ImportMeta {
