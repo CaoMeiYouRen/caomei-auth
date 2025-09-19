@@ -215,4 +215,16 @@ CREATE TABLE `caomei_auth_sso_provider` (
     CONSTRAINT `FK_sso_provider_user_id` FOREIGN KEY (`user_id`) REFERENCES `caomei_auth_user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 表: caomei_auth_jwks
+DROP TABLE IF EXISTS `caomei_auth_jwks`;
+
+CREATE TABLE `caomei_auth_jwks` (
+    `id` VARCHAR(36) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `public_key` TEXT NOT NULL,
+    `private_key` TEXT NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 SET FOREIGN_KEY_CHECKS = 1;

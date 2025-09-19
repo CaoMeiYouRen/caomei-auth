@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn } from 'typeorm'
+import { Entity } from 'typeorm'
+import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 
 /**
@@ -11,13 +12,13 @@ export class Jwks extends BaseEntity {
     /**
      * 网络密钥的公共部分
      */
-    @Column('text')
+    @CustomColumn({ type: 'text', nullable: false })
     publicKey: string
 
     /**
      * 网络密钥的私有部分
      */
-    @Column('text')
+    @CustomColumn({ type: 'text', nullable: false })
     privateKey: string
 
 }
