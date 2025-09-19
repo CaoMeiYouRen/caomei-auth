@@ -53,6 +53,8 @@
 
 -   **文档站点**: [https://auth-docs.cmyr.dev/](https://auth-docs.cmyr.dev/)
 
+-   **问题反馈和交流群**：参考[#144](https://github.com/CaoMeiYouRen/caomei-auth/issues/114]
+
 希望试用基于 `草梅 Auth` 的第三方登录功能？
 
 -   **afdian-linker**: [https://afdian.cmyr.dev/](https://afdian.cmyr.dev/)
