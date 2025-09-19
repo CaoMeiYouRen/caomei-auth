@@ -240,3 +240,19 @@ CREATE INDEX "IDX_sso_provider_issuer" ON public.caomei_auth_sso_provider USING 
 CREATE INDEX "IDX_sso_provider_domain" ON public.caomei_auth_sso_provider USING btree (domain);
 CREATE INDEX "IDX_sso_provider_provider_id" ON public.caomei_auth_sso_provider USING btree (provider_id);
 CREATE INDEX "IDX_sso_provider_organization_id" ON public.caomei_auth_sso_provider USING btree (organization_id);
+
+
+-- public.caomei_auth_jwks definition
+
+-- Drop table
+
+-- DROP TABLE public.caomei_auth_jwks;
+
+CREATE TABLE public.caomei_auth_jwks (
+	id varchar(36) NOT NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+	public_key text NOT NULL,
+	private_key text NOT NULL,
+	CONSTRAINT "PK_caomei_auth_jwks" PRIMARY KEY (id)
+);

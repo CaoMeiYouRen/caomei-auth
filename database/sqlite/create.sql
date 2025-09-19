@@ -276,6 +276,17 @@ CREATE TABLE IF NOT EXISTS caomei_auth_sso_provider (
 -- 表：caomei_auth_jwks
 -- DROP TABLE IF EXISTS caomei_auth_jwks;
 
+CREATE TABLE IF NOT EXISTS caomei_auth_jwks (
+    id         VARCHAR (36) PRIMARY KEY
+                            NOT NULL,
+    created_at DATETIME     NOT NULL
+                            DEFAULT (datetime('now') ),
+    updated_at DATETIME     NOT NULL
+                            DEFAULT (datetime('now') ),
+    public_key TEXT         NOT NULL,
+    private_key TEXT        NOT NULL
+);
+
 
 -- 索引：IDX_5537b38a6c06bb652a341fa637
 DROP INDEX IF EXISTS IDX_5537b38a6c06bb652a341fa637;
