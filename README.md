@@ -53,7 +53,7 @@
 
 -   **文档站点**: [https://auth-docs.cmyr.dev/](https://auth-docs.cmyr.dev/)
 
--   **问题反馈和交流群**：参考[#114](https://github.com/CaoMeiYouRen/caomei-auth/issues/114)
+-   **问题反馈和交流群**：请参考该链接中的内容 [#114](https://github.com/CaoMeiYouRen/caomei-auth/issues/114)
 
 希望试用基于 `草梅 Auth` 的第三方登录功能？
 
