@@ -1,5 +1,57 @@
 # caomei-auth
 
+# [1.8.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.7.0...v1.8.0) (2025-09-20)
+
+
+### ✨ 新功能
+
+* 更新隐私政策和服务条款，增强用户信息保护和透明度 ([6ab1815](https://github.com/CaoMeiYouRen/caomei-auth/commit/6ab1815))
+* 添加 GitHub 角落链接组件，增强页面导航 ([7a1631f](https://github.com/CaoMeiYouRen/caomei-auth/commit/7a1631f))
+* 添加反馈按钮组件并配置反馈链接 ([cfdf31e](https://github.com/CaoMeiYouRen/caomei-auth/commit/cfdf31e))
+* 添加演示模式相关组件和逻辑，支持展示提示横幅和对话框 ([f6f223e](https://github.com/CaoMeiYouRen/caomei-auth/commit/f6f223e))
+* 添加验证码配置支持，集成 Google reCAPTCHA、Cloudflare Turnstile 和 hCaptcha ([03831d4](https://github.com/CaoMeiYouRen/caomei-auth/commit/03831d4))
+
+
+### 🐛 Bug 修复
+
+* **login:** 修复登录页暗色模式社交登录按钮颜色错误问题 ([5ecba3f](https://github.com/CaoMeiYouRen/caomei-auth/commit/5ecba3f))
+* 优化暗色模式支持，调整社交登录提供商颜色 ([9c2ae0b](https://github.com/CaoMeiYouRen/caomei-auth/commit/9c2ae0b))
+* 优化演示模式组件，支持动态文档链接和消息文本 ([38e4206](https://github.com/CaoMeiYouRen/caomei-auth/commit/38e4206))
+* 优化邮件模板回退逻辑，增强安全提示和用户体验 ([399d1a1](https://github.com/CaoMeiYouRen/caomei-auth/commit/399d1a1))
+* 修复样式中的空格问题，优化暗色模式下的变量定义 ([711122e](https://github.com/CaoMeiYouRen/caomei-auth/commit/711122e))
+* 修复用户资料页面的暗色模式样式问题 ([b943e73](https://github.com/CaoMeiYouRen/caomei-auth/commit/b943e73))
+* 修复邮件模板文件内容路径错误，支持多种环境路径查找 ([8026f82](https://github.com/CaoMeiYouRen/caomei-auth/commit/8026f82))
+* 修复邮件模板错误 ([fcf338a](https://github.com/CaoMeiYouRen/caomei-auth/commit/fcf338a))
+* 修复首页的暗色模式样式问题，优化用户体验 ([6933043](https://github.com/CaoMeiYouRen/caomei-auth/commit/6933043))
+* 修改邮件模板背景颜色为白色，提升可读性 ([9f15de6](https://github.com/CaoMeiYouRen/caomei-auth/commit/9f15de6))
+* 在演示模式横幅中添加文档链接，优化隐私页面外部链接的打开方式 ([2456491](https://github.com/CaoMeiYouRen/caomei-auth/commit/2456491))
+* 更新 Demo 模式配置，使用 NUXT_PUBLIC_DEMO_MODE 环境变量 ([d5426ae](https://github.com/CaoMeiYouRen/caomei-auth/commit/d5426ae))
+* 更新文档链接，优化用户管理文档访问 ([d9bd648](https://github.com/CaoMeiYouRen/caomei-auth/commit/d9bd648))
+* 更新邮件服务，添加邮箱验证和密码重置验证码发送功能 ([b216029](https://github.com/CaoMeiYouRen/caomei-auth/commit/b216029))
+* 更新邮件模板获取逻辑，支持异步读取和回退机制 ([95bf0d1](https://github.com/CaoMeiYouRen/caomei-auth/commit/95bf0d1))
+* 根据暗色模式调整社交登录提供商颜色 ([7c2760e](https://github.com/CaoMeiYouRen/caomei-auth/commit/7c2760e))
+* 添加 footer 组件暗色模式支持 ([ae16e2b](https://github.com/CaoMeiYouRen/caomei-auth/commit/ae16e2b))
+* 添加 OIDC 支持的 scopes 和 response 类型 ([8a691bc](https://github.com/CaoMeiYouRen/caomei-auth/commit/8a691bc))
+* 添加注册过程中的禁用状态管理，优化用户体验 ([9734f48](https://github.com/CaoMeiYouRen/caomei-auth/commit/9734f48))
+* 添加邮件模板片段回退机制，增强模板内容的可用性和安全性 ([0a895d6](https://github.com/CaoMeiYouRen/caomei-auth/commit/0a895d6))
+* 调整反馈按钮组件的内边距并简化属性传递 ([94897aa](https://github.com/CaoMeiYouRen/caomei-auth/commit/94897aa))
+
+
+### 📦 代码重构
+
+* 优化 Demo 模式下登录日志的逻辑，添加假数据生成 ([aebff99](https://github.com/CaoMeiYouRen/caomei-auth/commit/aebff99))
+* 优化 Demo 模式横幅的展示逻辑，移除不必要的属性 ([d90b150](https://github.com/CaoMeiYouRen/caomei-auth/commit/d90b150))
+* 优化后台布局和页面暗色模式支持 ([3701016](https://github.com/CaoMeiYouRen/caomei-auth/commit/3701016))
+* 优化暗色模式支持，优化认证页面样式 ([d38a90a](https://github.com/CaoMeiYouRen/caomei-auth/commit/d38a90a))
+* 优化演示模式和 GitHub 角落组件的暗色模式样式 ([4df6e59](https://github.com/CaoMeiYouRen/caomei-auth/commit/4df6e59))
+* 优化认证页面扩展暗色模式样式，优化按钮和输入框样式 ([6d93325](https://github.com/CaoMeiYouRen/caomei-auth/commit/6d93325))
+* 优化语言支持和回退逻辑，优化用户语言检测 ([7fb2700](https://github.com/CaoMeiYouRen/caomei-auth/commit/7fb2700))
+* 优化验证码环境变量配置 ([8a46af6](https://github.com/CaoMeiYouRen/caomei-auth/commit/8a46af6))
+* 增强认证页面暗色模式支持，优化表单和对话框样式 ([8b78618](https://github.com/CaoMeiYouRen/caomei-auth/commit/8b78618))
+* 根据演示模式动态显示 GitHub 角落链接组件 ([27a42ae](https://github.com/CaoMeiYouRen/caomei-auth/commit/27a42ae))
+* 统一优化带延迟的登录后跳转逻辑，优化用户体验 ([11e1773](https://github.com/CaoMeiYouRen/caomei-auth/commit/11e1773))
+* 重构验证码相关功能，优化配置和端点列表 ([220b9a4](https://github.com/CaoMeiYouRen/caomei-auth/commit/220b9a4))
+
 # [1.7.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.6.0...v1.7.0) (2025-09-13)
 
 
