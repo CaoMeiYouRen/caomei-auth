@@ -153,6 +153,9 @@ importers:
       vue-router:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.21(typescript@5.9.2))
+      vue-turnstile:
+        specifier: ^1.0.11
+        version: 1.0.11(vue@3.5.21(typescript@5.9.2))
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -9110,6 +9113,11 @@ packages:
     resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
     peerDependencies:
       vue: ^3.2.0
+
+  vue-turnstile@1.0.11:
+    resolution: {integrity: sha512-iaTBoZ5oUqtNRto6bmbn6FQvW0h/sK7mPUJc1Qn4em+cELXN59U2FQTcpWfKssV3OY6lEZzmCpcn/zrb7htK3A==}
+    peerDependencies:
+      vue: ^3.2.45
 
   vue@3.5.21:
     resolution: {integrity: sha512-xxf9rum9KtOdwdRkiApWL+9hZEMWE90FHh8yS1+KJAiWYh+iGWV1FquPjoO9VUHQ+VIhsCXNNyZ5Sf4++RVZBA==}
@@ -20234,6 +20242,10 @@ snapshots:
   vue-router@4.5.1(vue@3.5.21(typescript@5.9.2)):
     dependencies:
       '@vue/devtools-api': 6.6.4
+      vue: 3.5.21(typescript@5.9.2)
+
+  vue-turnstile@1.0.11(vue@3.5.21(typescript@5.9.2)):
+    dependencies:
       vue: 3.5.21(typescript@5.9.2)
 
   vue@3.5.21(typescript@5.9.2):

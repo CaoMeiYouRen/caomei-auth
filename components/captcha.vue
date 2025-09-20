@@ -8,6 +8,17 @@
             @expired="onExpired"
             @error="onError"
         />
+
+        <!-- Cloudflare Turnstile -->
+        <VueTurnstile
+            v-if="provider === 'cloudflare-turnstile'"
+            ref="widget"
+            v-model="token"
+            :site-key="siteKey!"
+            @expired="onExpired"
+            @error="onError"
+            @unsupported="onUnsupported"
+        />
         <!-- 在这里可以为其他提供商添加 v-if，例如 google-recaptcha -->
         <div v-if="error" class="mt-1 p-error text-xs">
             {{ error }}
@@ -17,6 +28,7 @@
 
 <script setup lang="ts">
 import VueHcaptcha from '@hcaptcha/vue3-hcaptcha'
+import VueTurnstile from 'vue-turnstile'
 import { useCaptcha } from '@/composables/use-captcha'
 
 const {
@@ -24,16 +36,18 @@ const {
     provider,
     siteKey,
     widget,
+    token,
     error,
     onVerify,
     onExpired,
     onError,
+    onUnsupported,
     reset,
 } = useCaptcha()
 
 // 暴露 token 和 reset 方法给父组件
 defineExpose({
-    token: computed(() => (widget.value ? widget.value.token : null)),
+    token,
     reset,
 })
 </script>

@@ -2,7 +2,7 @@ import { ref, readonly } from 'vue'
 import { getCaptchaProvider, getCaptchaSiteKey, isCaptchaEnabled } from '@/utils/captcha'
 
 export function useCaptcha() {
-    const token = ref<string | null>(null)
+    const token = ref<string>('')
     const widget = ref<any | null>(null) // 用于存储组件实例
     const error = ref<string | null>(null)
 
@@ -23,7 +23,7 @@ export function useCaptcha() {
      * 验证码过期时调用
      */
     function onExpired() {
-        token.value = null
+        token.value = ''
         error.value = '验证码已过期，请重试。'
     }
 
@@ -32,9 +32,17 @@ export function useCaptcha() {
      * @param err 错误信息
      */
     function onError(err: string) {
-        token.value = null
+        token.value = ''
         error.value = `验证码加载失败: ${err}`
-        console.error('hCaptcha error:', err)
+        console.error('Captcha error:', err)
+    }
+
+    /**
+     * 当浏览器不支持 Turnstile 时调用
+     */
+    function onUnsupported() {
+        token.value = ''
+        error.value = '您的浏览器不支持验证码，请更换浏览器或禁用广告拦截插件。'
     }
 
     /**
@@ -44,7 +52,7 @@ export function useCaptcha() {
         if (widget.value) {
             widget.value.reset()
         }
-        token.value = null
+        token.value = ''
         error.value = null
     }
 
@@ -58,6 +66,7 @@ export function useCaptcha() {
         onVerify,
         onExpired,
         onError,
+        onUnsupported,
         reset,
     }
 }
