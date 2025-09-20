@@ -558,6 +558,16 @@ export const auth = betterAuth({
         oidcProvider({
             metadata: {
                 issuer: AUTH_BASE_URL,
+                scopes_supported: [
+                    'openid',
+                    'profile',
+                    'email',
+                    'offline_access',
+                    'phone',
+                ],
+                response_types_supported: ['code'],
+                response_modes_supported: ['query'],
+                grant_types_supported: ['authorization_code', 'refresh_token'],
             },
             requirePKCE: false, // 是否强制 PKCE
             loginPage: '/login', // 登录页面的路径
