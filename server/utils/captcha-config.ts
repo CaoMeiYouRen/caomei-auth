@@ -1,4 +1,5 @@
 import type { captcha } from 'better-auth/plugins'
+import logger from './logger'
 import {
     CAPTCHA_PROVIDER,
     RECAPTCHA_SECRET_KEY,
@@ -42,7 +43,7 @@ export function getCaptchaConfig(): CaptchaConfig | null {
     switch (CAPTCHA_PROVIDER) {
         case 'google-recaptcha':
             if (!RECAPTCHA_SECRET_KEY) {
-                console.warn('RECAPTCHA_SECRET_KEY 未设置，验证码功能将被禁用')
+                logger.warn('RECAPTCHA_SECRET_KEY 未设置，验证码功能将被禁用')
                 return null
             }
             return {
@@ -54,7 +55,7 @@ export function getCaptchaConfig(): CaptchaConfig | null {
 
         case 'cloudflare-turnstile':
             if (!TURNSTILE_SECRET_KEY) {
-                console.warn('TURNSTILE_SECRET_KEY 未设置，验证码功能将被禁用')
+                logger.warn('TURNSTILE_SECRET_KEY 未设置，验证码功能将被禁用')
                 return null
             }
             return {
@@ -65,7 +66,7 @@ export function getCaptchaConfig(): CaptchaConfig | null {
 
         case 'hcaptcha':
             if (!HCAPTCHA_SECRET_KEY) {
-                console.warn('HCAPTCHA_SECRET_KEY 未设置，验证码功能将被禁用')
+                logger.warn('HCAPTCHA_SECRET_KEY 未设置，验证码功能将被禁用')
                 return null
             }
             return {
@@ -76,7 +77,7 @@ export function getCaptchaConfig(): CaptchaConfig | null {
             } as CaptchaConfig
 
         default:
-            console.warn(`不支持的验证码提供商: ${CAPTCHA_PROVIDER}`)
+            logger.warn(`不支持的验证码提供商: ${CAPTCHA_PROVIDER}`)
             return null
     }
 }
