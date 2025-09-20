@@ -43,12 +43,16 @@ const {
     onError,
     onUnsupported,
     reset,
+    execute,
+    loading,
 } = useCaptcha()
 
 // 暴露 token 和 reset 方法给父组件
 defineExpose({
     token,
     reset,
+    execute,
+    loading,
 })
 </script>
 

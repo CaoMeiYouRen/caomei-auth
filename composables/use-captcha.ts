@@ -1,14 +1,19 @@
 import { ref, readonly } from 'vue'
+import { useReCaptcha } from 'vue-recaptcha-v3'
 import { getCaptchaProvider, getCaptchaSiteKey, isCaptchaEnabled } from '@/utils/captcha'
 
 export function useCaptcha() {
     const token = ref<string>('')
     const widget = ref<any | null>(null) // 用于存储组件实例
     const error = ref<string | null>(null)
+    const loading = ref(false) // 新增 loading 状态
 
     const provider = readonly(ref(getCaptchaProvider()))
     const siteKey = readonly(ref(getCaptchaSiteKey()))
     const enabled = readonly(ref(isCaptchaEnabled()))
+
+    // 获取 reCAPTCHA v3 的实例
+    const recaptchaInstance = provider.value === 'google-recaptcha' ? useReCaptcha() : undefined
 
     /**
      * 验证成功时调用，获取 token
@@ -46,6 +51,31 @@ export function useCaptcha() {
     }
 
     /**
+     * 主动执行验证 (主要用于 reCAPTCHA v3)
+     */
+    async function execute() {
+        if (!enabled.value) {
+            return
+        }
+
+        if (provider.value === 'google-recaptcha' && recaptchaInstance) {
+            loading.value = true
+            error.value = null
+            try {
+                await recaptchaInstance.recaptchaLoaded()
+                const t = await recaptchaInstance.executeRecaptcha('submit') // 'submit' 是 reCAPTCHA 的 action 名称
+                token.value = t
+                onVerify(t)
+            } catch (e: any) {
+                onError(e.message || 'reCAPTCHA v3 execute failed')
+            } finally {
+                loading.value = false
+            }
+        }
+        // 对于 hCaptcha 和 Turnstile，token 是通过 v-model 获取的，无需主动执行
+    }
+
+    /**
      * 重置验证码
      */
     function reset() {
@@ -59,6 +89,7 @@ export function useCaptcha() {
     return {
         token,
         error,
+        loading, // 暴露 loading
         provider,
         siteKey,
         enabled,
@@ -68,5 +99,6 @@ export function useCaptcha() {
         onError,
         onUnsupported,
         reset,
+        execute, // 暴露 execute 方法
     }
 }
