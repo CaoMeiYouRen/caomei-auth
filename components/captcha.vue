@@ -19,7 +19,7 @@
             @error="onError"
             @unsupported="onUnsupported"
         />
-        <!-- 在这里可以为其他提供商添加 v-if，例如 google-recaptcha -->
+        <!-- 在这里可以为其他提供商添加 v-if -->
         <div v-if="error" class="mt-1 p-error text-xs">
             {{ error }}
         </div>
