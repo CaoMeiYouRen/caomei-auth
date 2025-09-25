@@ -540,13 +540,13 @@ const getProviderColor = (provider: string) => {
     return getSocialColor(provider, theme)
 }
 
-const sendPhoneCode = useSendPhoneCode(
+const sendPhoneCode = useSendPhoneCode({
     phone,
-    'phone-verification',
+    type: 'phone-verification',
     validatePhone,
     errors,
-    phoneCodeSending,
-)
+    sending: phoneCodeSending,
+})
 
 // 通过 SSR 渲染
 const { data: session } = await authClient.useSession(useFetch)

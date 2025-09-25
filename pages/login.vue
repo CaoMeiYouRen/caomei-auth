@@ -419,8 +419,8 @@ watch(isDark, (newVal) => {
     changeSocialColor(newVal)
 }, { immediate: true })
 
-const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
-const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
+const sendEmailCode = useSendEmailCode({ email, type: 'sign-in', validateEmail, errors, sending: emailCodeSending })
+const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending })
 
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'username' | 'email' | 'phone' }>('history', { initialValue: { mode: 'username' } })

@@ -213,10 +213,10 @@ const toast = useToast()
 const params = useUrlSearchParams<{ tab: 'email' | 'phone' }>('history', { initialValue: { tab: 'email' } })
 
 // 邮箱验证码发送工具
-const sendEmailCode = useSendEmailCode(email, 'sign-in', validateEmail, errors, emailCodeSending)
+const sendEmailCode = useSendEmailCode({ email, type: 'sign-in', validateEmail, errors, sending: emailCodeSending })
 
 // 手机验证码发送工具
-const sendPhoneCode = useSendPhoneCode(phone, 'sign-in', validatePhone, errors, phoneCodeSending)
+const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending })
 
 // 计算属性
 const canSendEmailCode = computed(() => {
