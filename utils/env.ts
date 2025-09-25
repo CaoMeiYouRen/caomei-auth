@@ -215,6 +215,7 @@ export const ADMIN_USER_IDS = process.env.ADMIN_USER_IDS?.split(',').map((e) => 
 /**
  * 验证码配置
  * 支持 Google reCAPTCHA、Cloudflare Turnstile、hCaptcha
+
  */
 // 验证码提供商类型，可选值：google-recaptcha, cloudflare-turnstile, hcaptcha
 export const CAPTCHA_PROVIDER = (process.env.NUXT_PUBLIC_CAPTCHA_PROVIDER || import.meta.env.NUXT_PUBLIC_CAPTCHA_PROVIDER) as 'google-recaptcha' | 'cloudflare-turnstile' | 'hcaptcha' | undefined

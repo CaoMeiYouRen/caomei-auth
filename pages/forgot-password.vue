@@ -150,6 +150,7 @@
                         @click="resetPassword"
                     />
                 </div>
+                <Captcha ref="captcha" />
                 <div class="toggle-login">
                     已有账号？ <NuxtLink
 
@@ -172,6 +173,7 @@ import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import AuthLeft from '@/components/auth-left.vue'
 import PasswordStrength from '@/components/password-strength.vue'
+import Captcha from '@/components/captcha.vue'
 import { authClient } from '@/lib/auth-client'
 import { getPasswordRequirementsShort } from '@/utils/password'
 import { validatePasswordForm } from '@/utils/password-validator'
@@ -190,6 +192,7 @@ const phoneCodeSending = ref(false)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
 const route = useRoute()
+const captcha = ref<InstanceType<typeof Captcha> | null>(null)
 
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
@@ -211,8 +214,8 @@ onMounted(() => {
     params.mode = activeTab.value
 })
 
-const sendEmailCode = useSendEmailCode(email, 'forget-password', validateEmail, errors, emailCodeSending)
-const sendPhoneCode = useSendPhoneCode(phone, 'forget-password', validatePhone, errors, phoneCodeSending)
+const sendEmailCode = useSendEmailCode({ email, type: 'forget-password', validateEmail, errors, sending: emailCodeSending, captcha })
+const sendPhoneCode = useSendPhoneCode({ phone, type: 'forget-password', validatePhone, errors, sending: phoneCodeSending, captcha })
 
 // 切换找回密码模式并更新 URL
 const changeMode = (mode: 'email' | 'phone') => {
@@ -284,7 +287,7 @@ async function resetPassword() {
         }
         toast.add({ severity: 'success', summary: '密码重置成功', detail: '请使用新密码登录', life: 2500 })
         setTimeout(() => {
-            window.location.href = `/login?mode=${activeTab.value}`
+            navigateTo(`/login?mode=${activeTab.value}`)
         }, 1500)
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '密码重置时发生未知错误'
@@ -294,6 +297,8 @@ async function resetPassword() {
             detail: errorMessage,
             life: 5000,
         })
+    } finally {
+        captcha.value?.reset()
     }
 }
 </script>

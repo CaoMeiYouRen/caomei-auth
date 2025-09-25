@@ -1,4 +1,4 @@
-import { ref, readonly } from 'vue'
+import { ref, readonly, computed } from 'vue'
 import { useReCaptcha } from 'vue-recaptcha-v3'
 import { getCaptchaProvider, getCaptchaSiteKey, isCaptchaEnabled } from '@/utils/captcha'
 
@@ -8,9 +8,24 @@ export function useCaptcha() {
     const error = ref<string | null>(null)
     const loading = ref(false) // 新增 loading 状态
 
-    const provider = readonly(ref(getCaptchaProvider()))
-    const siteKey = readonly(ref(getCaptchaSiteKey()))
-    const enabled = readonly(ref(isCaptchaEnabled()))
+    const config = useRuntimeConfig().public
+
+    const provider = computed(() => config.captchaProvider)
+    const siteKey = computed(() => {
+        switch (config.captchaProvider) {
+            case 'google-recaptcha':
+                return config.recaptchaSiteKey || null
+
+            case 'cloudflare-turnstile':
+                return config.turnstileSiteKey || null
+
+            case 'hcaptcha':
+                return config.hcaptchaSiteKey || null
+            default:
+                return null
+        }
+    })
+    const enabled = computed(() => Boolean(provider.value && siteKey.value))
 
     // 获取 reCAPTCHA v3 的实例
     const recaptchaInstance = provider.value === 'google-recaptcha' ? useReCaptcha() : undefined
