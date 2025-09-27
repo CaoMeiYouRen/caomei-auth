@@ -1,5 +1,26 @@
 # caomei-auth
 
+# [1.9.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.8.0...v1.9.0) (2025-09-27)
+
+
+### ✨ 新功能
+
+* 更新验证码逻辑，支持多种提供商并在重置密码时集成验证码 ([b8b91ee](https://github.com/CaoMeiYouRen/caomei-auth/commit/b8b91ee))
+* 添加 hCaptcha 组件及相关逻辑支持 ([cc9ea94](https://github.com/CaoMeiYouRen/caomei-auth/commit/cc9ea94))
+* 添加 reCAPTCHA v3 支持，新增 execute 方法和 loading 状态 ([4a63938](https://github.com/CaoMeiYouRen/caomei-auth/commit/4a63938))
+* 添加对 Cloudflare Turnstile 的支持并更新相关逻辑 ([7acdb89](https://github.com/CaoMeiYouRen/caomei-auth/commit/7acdb89))
+
+
+### 🐛 Bug 修复
+
+* 使用 logger 替换 console.warn 以统一日志记录 ([452bfd6](https://github.com/CaoMeiYouRen/caomei-auth/commit/452bfd6))
+* 添加 reCAPTCHA 类型定义和社交提供商类型 ([45cc23b](https://github.com/CaoMeiYouRen/caomei-auth/commit/45cc23b))
+
+
+### 📦 代码重构
+
+* 更新验证码发送逻辑，使用对象参数传递信息 ([a5699dc](https://github.com/CaoMeiYouRen/caomei-auth/commit/a5699dc))
+
 # [1.8.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.7.0...v1.8.0) (2025-09-20)
 
 
