@@ -61,7 +61,7 @@
     "primevue": "^4.3.9",
     "qrcode": "^1.5.4",
     "sqlite3": "^5.1.7",
-    "twilio": "5.9.0",
+    "twilio": "5.10.1",
     "typeorm": "^0.3.27",
     "ua-parser-js": "^2.0.4",
     "validator": "^13.15.15",
