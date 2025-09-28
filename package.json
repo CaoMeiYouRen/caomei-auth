@@ -45,7 +45,7 @@
     "google-libphonenumber": "^3.2.43",
     "ioredis": "^5.7.0",
     "lodash-es": "^4.17.21",
-    "lru-cache": "^11.2.1",
+    "lru-cache": "^11.2.2",
     "mime-types": "^3.0.1",
     "mjml": "^4.16.1",
     "ms": "^2.1.3",
