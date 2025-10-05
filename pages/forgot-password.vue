@@ -141,6 +141,7 @@
                         {{ errors.confirmPassword }}
                     </div>
                 </div>
+                <Captcha ref="captcha" />
                 <div class="form-group">
                     <Button
                         v-tooltip.top="'点击提交信息重置密码'"
@@ -150,7 +151,6 @@
                         @click="resetPassword"
                     />
                 </div>
-                <Captcha ref="captcha" />
                 <div class="toggle-login">
                     已有账号？ <NuxtLink
 
