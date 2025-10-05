@@ -192,6 +192,10 @@
                     />
                     <label for="remember">记住我</label>
                 </div>
+                <Captcha ref="captcha" />
+                <div v-if="errors.captcha" class="captcha-error error-message">
+                    {{ errors.captcha }}
+                </div>
                 <Button
                     class="btn btn-primary"
                     label="登录"
@@ -287,6 +291,7 @@
                                 />
                                 <SendCodeButton
                                     :disabled="otpSending"
+                                    :loading="otpSending"
                                     :on-send="sendOtp"
                                     :duration="60"
                                     text="获取验证码"
@@ -338,6 +343,8 @@ import { authClient } from '@/lib/auth-client'
 import type { SocialProvider } from '@/types/social'
 import { navigateAfterLoginWithDelay } from '@/utils/navigation'
 import { getSocialColor } from '@/utils/social-colors'
+import Captcha from '@/components/captcha.vue'
+import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/captcha'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -358,6 +365,7 @@ const emailCodeSending = ref(false)
 const phoneUseCode = ref(false)
 const phoneCode = ref('')
 const phoneCodeSending = ref(false)
+const captcha = ref<CaptchaExpose | null>(null)
 
 // 双因素认证相关状态
 const show2FADialog = ref(false)
@@ -370,9 +378,28 @@ const pendingLoginData = ref<any>(null) // 存储待完成的登录数据
 
 // 发送 OTP 验证码
 const sendOtp = async () => {
+    let captchaContext: ResolvedCaptchaToken | null = null
     try {
         otpSending.value = true
-        const { error } = await authClient.twoFactor.sendOtp()
+        try {
+            captchaContext = await resolveCaptchaToken(captcha)
+            errors.value.captcha = ''
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
+            errors.value.captcha = errorMessage
+            toast.add({
+                severity: 'warn',
+                summary: '需要验证码',
+                detail: errorMessage,
+                life: 2500,
+            })
+            return false
+        }
+        const { error } = await authClient.twoFactor.sendOtp({
+            fetchOptions: {
+                headers: captchaContext ? { 'x-captcha-response': captchaContext.token } : {},
+            },
+        })
         if (error) {
             throw new Error(error.message || '发送验证码失败')
         }
@@ -382,6 +409,7 @@ const sendOtp = async () => {
             detail: '验证码已发送，请检查您的邮箱',
             life: 3000,
         })
+        return true
     } catch (error: any) {
         const errorMessage = error instanceof Error ? error.message : '发送验证码失败'
         toast.add({
@@ -390,8 +418,14 @@ const sendOtp = async () => {
             detail: errorMessage,
             life: 5000,
         })
+        return false
     } finally {
         otpSending.value = false
+        if (captchaContext) {
+            captchaContext.instance.reset()
+        } else {
+            captcha.value?.reset()
+        }
     }
 }
 
@@ -419,8 +453,8 @@ watch(isDark, (newVal) => {
     changeSocialColor(newVal)
 }, { immediate: true })
 
-const sendEmailCode = useSendEmailCode({ email, type: 'sign-in', validateEmail, errors, sending: emailCodeSending })
-const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending })
+const sendEmailCode = useSendEmailCode({ email, type: 'sign-in', validateEmail, errors, sending: emailCodeSending, captcha })
+const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending, captcha })
 
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'username' | 'email' | 'phone' }>('history', { initialValue: { mode: 'username' } })
@@ -467,6 +501,8 @@ const changeMode = (mode: 'username' | 'email' | 'phone') => {
     }
     params.mode = mode
     activeTab.value = mode
+    errors.value.captcha = ''
+    captcha.value?.reset()
 
     // 追踪登录方式切换
     clarity.event('login_method_switch')

@@ -254,6 +254,16 @@
                     </Message>
                 </div>
 
+                <Captcha ref="captcha" />
+                <Message
+                    v-if="errors.captcha"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ errors.captcha }}
+                </Message>
+
                 <Button
                     class="btn btn-primary mt-2"
                     label="注册"
@@ -290,6 +300,8 @@ import PasswordStrength from '@/components/password-strength.vue'
 import { authClient } from '@/lib/auth-client'
 import { getPasswordRequirementsShort } from '@/utils/password'
 import { validatePasswordForm } from '@/utils/password-validator'
+import Captcha from '@/components/captcha.vue'
+import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/captcha'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -307,12 +319,13 @@ const agreedToTerms = ref(false)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
 const disabled = ref(false)
+const captcha = ref<CaptchaExpose | null>(null)
 
 // 使用 useUrlSearchParams 获取 URL 参数
 const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
 const activeTab = ref<'email' | 'phone'>('email')
 
-const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending })
+const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending, captcha })
 
 onMounted(() => {
     // 如果短信功能未启用，强制使用邮箱方式
@@ -332,6 +345,8 @@ onMounted(() => {
 const changeMode = (mode: 'email' | 'phone') => {
     params.mode = mode
     activeTab.value = mode
+    errors.value.captcha = ''
+    captcha.value?.reset()
 }
 
 // 表单验证函数
@@ -408,6 +423,7 @@ async function register() {
 
     // 执行验证
     errors.value = resolver(values)
+    errors.value.captcha = ''
 
     // 检查是否有错误
     const isValid = Object.keys(errors.value).length === 0
@@ -416,8 +432,18 @@ async function register() {
         return
     }
 
+    let captchaContext: ResolvedCaptchaToken | null = null
+
     try {
         if (params.mode === 'email') {
+            try {
+                captchaContext = await resolveCaptchaToken(captcha)
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
+                errors.value.captcha = errorMessage
+                toast.add({ severity: 'warn', summary: '需要验证码', detail: errorMessage, life: 2500 })
+                return
+            }
             // 使用邮箱和昵称注册
             const signUpData: any = {
                 email: email.value,
@@ -430,7 +456,10 @@ async function register() {
                 signUpData.username = username.value.trim()
             }
             disabled.value = true
-            const { data, error } = await authClient.signUp.email(signUpData)
+            const requestOptions = captchaContext
+                ? { headers: { 'x-captcha-response': captchaContext.token } }
+                : undefined
+            const { data, error } = await authClient.signUp.email(signUpData, requestOptions)
             disabled.value = false
             if (error) {
                 throw new Error(error.message || '注册失败')
@@ -483,6 +512,11 @@ async function register() {
         })
     } finally {
         disabled.value = false
+        if (captchaContext) {
+            captchaContext.instance.reset()
+        } else {
+            captcha.value?.reset()
+        }
     }
 }
 </script>

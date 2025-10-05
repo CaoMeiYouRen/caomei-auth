@@ -37,11 +37,18 @@ async function handleSend() {
         return
     }
     try {
-        reset(props.duration) // 重置倒计时
+        const result = await props.onSend()
+        if (!result) {
+            reset(0)
+            hasStarted.value = false
+            return
+        }
+        // 只有在 onSend 成功后才开始倒计时
         start() // 开始倒计时
         hasStarted.value = true // 重置开始状态
-        const result = await props.onSend()
     } catch (error) {
+        reset(0)
+        hasStarted.value = false
         console.error(error)
     }
 }

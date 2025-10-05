@@ -1,3 +1,4 @@
+import { type Ref, isRef } from 'vue'
 import {
     CAPTCHA_PROVIDER,
     RECAPTCHA_SITE_KEY,
@@ -74,4 +75,54 @@ export function getCaptchaSiteKey(): string | null {
  */
 export function isCaptchaProviderEnabled(provider: 'google-recaptcha' | 'cloudflare-turnstile' | 'hcaptcha'): boolean {
     return CAPTCHA_PROVIDER === provider && isCaptchaEnabled()
+}
+
+export interface CaptchaExpose {
+    token: Ref<string> | string
+    reset: () => void
+    execute?: () => Promise<void> | void
+    loading: Ref<boolean> | boolean
+}
+
+export interface ResolvedCaptchaToken {
+    token: string
+    instance: CaptchaExpose
+}
+
+/**
+ * 解析验证码实例并返回 token
+ * @throws Error 当验证码未完成或执行失败时
+ */
+export async function resolveCaptchaToken(
+    captchaRef: Ref<CaptchaExpose | null>,
+    isOptional = false,
+): Promise<ResolvedCaptchaToken | null> {
+    const captchaInstance = captchaRef?.value
+
+    if (!captchaInstance) {
+        if (isOptional) {
+            return null
+        }
+        throw new Error('验证码实例不存在，请先完成验证码验证')
+    }
+
+    try {
+        if (typeof captchaInstance.execute === 'function') {
+            await Promise.resolve(captchaInstance.execute())
+        }
+    } catch (error) {
+        captchaInstance.reset()
+        throw error instanceof Error ? error : new Error('验证码执行失败，请重试')
+    }
+
+    const token = isRef(captchaInstance.token) ? captchaInstance.token.value : captchaInstance.token
+
+    if (!token) {
+        throw new Error('请先完成验证码验证')
+    }
+
+    return {
+        token,
+        instance: captchaInstance,
+    }
 }

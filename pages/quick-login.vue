@@ -128,6 +128,11 @@
                     />
                 </div>
 
+                <Captcha ref="captcha" />
+                <div v-if="errors.captcha" class="captcha-error error-message">
+                    {{ errors.captcha }}
+                </div>
+
                 <!-- 其他登录方式 -->
                 <div class="toggle-login">
                     <NuxtLink to="/login" class="toggle-link">
@@ -175,6 +180,8 @@ import { authClient } from '@/lib/auth-client'
 import { validateEmail, validatePhone } from '@/utils/validate'
 import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
 import { navigateAfterLoginWithDelay } from '@/utils/navigation'
+import Captcha from '@/components/captcha.vue'
+import type { CaptchaExpose } from '@/utils/captcha'
 
 // SEO 设置
 definePageMeta({
@@ -205,6 +212,7 @@ const errors = ref<Record<string, string>>({})
 // 发送验证码状态
 const emailCodeSending = ref(false)
 const phoneCodeSending = ref(false)
+const captcha = ref<CaptchaExpose | null>(null)
 
 // 组件
 const toast = useToast()
@@ -213,10 +221,10 @@ const toast = useToast()
 const params = useUrlSearchParams<{ tab: 'email' | 'phone' }>('history', { initialValue: { tab: 'email' } })
 
 // 邮箱验证码发送工具
-const sendEmailCode = useSendEmailCode({ email, type: 'sign-in', validateEmail, errors, sending: emailCodeSending })
+const sendEmailCode = useSendEmailCode({ email, type: 'sign-in', validateEmail, errors, sending: emailCodeSending, captcha })
 
 // 手机验证码发送工具
-const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending })
+const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending, captcha })
 
 // 计算属性
 const canSendEmailCode = computed(() => {
@@ -245,37 +253,40 @@ const changeTab = (tab: 'email' | 'phone') => {
 
     // 清除错误状态
     errors.value = {}
+    captcha.value?.reset()
 }
 
 const sendEmailVerificationCode = async () => {
-    try {
-        errors.value.email = ''
+    errors.value.email = ''
 
-        if (!validateEmail(email.value)) {
-            throw new Error('请输入有效的邮箱地址')
-        }
+    if (!validateEmail(email.value)) {
+        const message = '请输入有效的邮箱地址'
+        errors.value.email = message
+        toast.add({
+            severity: 'error',
+            summary: '发送失败',
+            detail: message,
+            life: 5000,
+        })
+        return false
+    }
 
-        const result = await sendEmailCode()
+    const success = await sendEmailCode()
 
+    if (success) {
         toast.add({
             severity: 'success',
             summary: '验证码已发送',
             detail: '验证码已发送到您的邮箱，请注意查收',
             life: 3000,
         })
-
-        return result
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '验证码发送失败'
-        errors.value.email = errorMessage
-        toast.add({
-            severity: 'error',
-            summary: '发送失败',
-            detail: errorMessage,
-            life: 5000,
-        })
-        throw error
+        return true
     }
+
+    if (!errors.value.email) {
+        errors.value.email = errors.value.captcha || '验证码发送失败'
+    }
+    return false
 }
 
 const handleEmailCodeInput = () => {
@@ -307,34 +318,36 @@ const handlePhoneCodeInput = () => {
 }
 
 const sendPhoneVerificationCode = async () => {
-    try {
-        errors.value.phone = ''
+    errors.value.phone = ''
 
-        if (!validatePhone(phone.value)) {
-            throw new Error('请输入有效的手机号')
-        }
+    if (!validatePhone(phone.value)) {
+        const message = '请输入有效的手机号'
+        errors.value.phone = message
+        toast.add({
+            severity: 'error',
+            summary: '发送失败',
+            detail: message,
+            life: 5000,
+        })
+        return false
+    }
 
-        const result = await sendPhoneCode()
+    const success = await sendPhoneCode()
 
+    if (success) {
         toast.add({
             severity: 'success',
             summary: '验证码已发送',
             detail: '验证码已发送到您的手机，请注意查收',
             life: 3000,
         })
-
-        return result
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '验证码发送失败'
-        errors.value.phone = errorMessage
-        toast.add({
-            severity: 'error',
-            summary: '发送失败',
-            detail: errorMessage,
-            life: 5000,
-        })
-        throw error
+        return true
     }
+
+    if (!errors.value.phone) {
+        errors.value.phone = errors.value.captcha || '验证码发送失败'
+    }
+    return false
 }
 
 const loginWithEmail = async () => {

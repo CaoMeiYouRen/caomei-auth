@@ -297,6 +297,15 @@
                     placeholder="请输入新邮箱"
                 />
             </div>
+            <Captcha ref="emailCaptcha" />
+            <Message
+                v-if="emailCaptchaError"
+                severity="error"
+                size="small"
+                variant="simple"
+            >
+                {{ emailCaptchaError }}
+            </Message>
             <div class="form-group">
                 <Button
                     v-tooltip.top="'点击发送验证链接到新邮箱'"
@@ -346,6 +355,15 @@
                     resend-text="重新发送"
                 />
             </div>
+            <Captcha ref="phoneCaptcha" />
+            <Message
+                v-if="errors.captcha"
+                severity="error"
+                size="small"
+                variant="simple"
+            >
+                {{ errors.captcha }}
+            </Message>
             <div class="form-group">
                 <Button
                     v-tooltip.top="'点击确认修改手机号信息'"
@@ -448,7 +466,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { useDark } from '@vueuse/core'
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload'
 import SendCodeButton from '@/components/send-code-button.vue'
@@ -461,6 +479,8 @@ import type { SocialProvider } from '@/types/social'
 import { maskEmail, maskPhone, maskUserId, maskUsername } from '@/utils/privacy'
 import { shortText } from '@/utils/short-text'
 import { getSocialColor } from '@/utils/social-colors'
+import Captcha from '@/components/captcha.vue'
+import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/captcha'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = config.phoneEnabled
@@ -490,6 +510,9 @@ const errors = ref<Record<string, string>>({})
 const phoneCodeSending = ref(false)
 const bindingEmail = ref(false)
 const bindingPhone = ref(false)
+const emailCaptcha = ref<CaptchaExpose | null>(null)
+const phoneCaptcha = ref<CaptchaExpose | null>(null)
+const emailCaptchaError = ref('')
 // 解绑确认对话框显示状态
 const showUnlinkConfirm = ref(false)
 // 选中要解绑的提供商
@@ -546,6 +569,7 @@ const sendPhoneCode = useSendPhoneCode({
     validatePhone,
     errors,
     sending: phoneCodeSending,
+    captcha: phoneCaptcha,
 })
 
 // 通过 SSR 渲染
@@ -585,19 +609,42 @@ function openEmailModal() {
     if (!user.emailVerified) { // 如果未验证，则默认填写当前邮箱
         email.value = user.email
     }
+    emailCaptchaError.value = ''
+    emailCaptcha.value?.reset()
 }
+
+watch(showEmailModal, () => {
+    emailCaptcha.value?.reset()
+    emailCaptchaError.value = ''
+})
+
+watch(showPhoneModal, () => {
+    phoneCaptcha.value?.reset()
+    errors.value.captcha = ''
+})
 
 async function bindEmail() {
     if (!validateEmail(email.value)) {
         toast.add({ severity: 'warn', summary: '请输入有效的邮箱地址', life: 2000 })
         return
     }
+    let captchaContext: ResolvedCaptchaToken | null = null
+    try {
+        captchaContext = await resolveCaptchaToken(emailCaptcha)
+        emailCaptchaError.value = ''
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
+        emailCaptchaError.value = errorMessage
+        toast.add({ severity: 'warn', summary: '需要验证码', detail: errorMessage, life: 2500 })
+        return
+    }
     bindingEmail.value = true
     try {
+        const requestOptions = captchaContext ? { headers: { 'x-captcha-response': captchaContext.token } } : undefined
         await authClient.changeEmail({
             newEmail: email.value,
             callbackURL: '/profile', // 验证后重定向
-        })
+        }, requestOptions)
         if (user.emailVerified) {
             toast.add({ severity: 'info', summary: '验证链接已发送到当前邮箱，请查收', life: 2000 })
             return
@@ -616,6 +663,11 @@ async function bindEmail() {
         })
     } finally {
         bindingEmail.value = false
+        if (captchaContext) {
+            captchaContext.instance.reset()
+        } else {
+            emailCaptcha.value?.reset()
+        }
     }
 }
 
@@ -654,6 +706,8 @@ async function bindPhone() {
         bindingPhone.value = false
         phone.value = ''
         phoneCode.value = ''
+        errors.value.captcha = ''
+        phoneCaptcha.value?.reset()
     }
 }
 
