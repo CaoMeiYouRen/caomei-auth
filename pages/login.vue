@@ -192,7 +192,7 @@
                     />
                     <label for="remember">记住我</label>
                 </div>
-                <Captcha ref="captcha" />
+                <Captcha v-show="(activeTab === 'email' && emailUseCode) || (activeTab === 'phone' && phoneUseCode)" ref="captcha" />
                 <div v-if="errors.captcha" class="captcha-error error-message">
                     {{ errors.captcha }}
                 </div>
