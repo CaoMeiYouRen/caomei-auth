@@ -44,8 +44,8 @@ importers:
         specifier: ^4.3.9
         version: 4.3.9(vue@3.5.22(typescript@5.9.3))
       '@primevue/forms':
-        specifier: ^4.3.9
-        version: 4.3.9(vue@3.5.22(typescript@5.9.3))
+        specifier: ^4.4.0
+        version: 4.4.0(vue@3.5.22(typescript@5.9.3))
       '@sentry/nuxt':
         specifier: ^10.12.0
         version: 10.15.0(encoding@0.1.13)(magicast@0.3.5)(nuxt@4.1.2(@parcel/watcher@2.5.1)(@types/node@24.5.2)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(db0@0.3.2(mysql2@3.15.1)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.36.0(jiti@2.5.1))(ioredis@5.8.0)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.1)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.5.2)(jiti@2.5.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1))(pinia@3.0.3(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3)))(rollup@4.50.1)(vue@3.5.22(typescript@5.9.3))
@@ -2165,10 +2165,6 @@ packages:
     engines: {node: '>=12.11.0'}
     peerDependencies:
       vue: ^3.5.0
-
-  '@primevue/forms@4.3.9':
-    resolution: {integrity: sha512-j/GGxFwpfzP3kdxpfxezmsWohmFjoiNHTZlDxGwrNBGrXfb9GExghgoPPKc0K4OeAX5enufS+g8YGqcglABHAQ==}
-    engines: {node: '>=12.11.0'}
 
   '@primevue/forms@4.4.0':
     resolution: {integrity: sha512-mI/T4N3NcUXPcA/QnQ2j0mNim4+3Zt2vkSiMk/yhfNVCq+mGwWf5PJIvV5EV6NKhXs2OgJ4VSws9DwWK7ounDQ==}
@@ -12306,14 +12302,6 @@ snapshots:
       '@primeuix/styled': 0.7.4
       '@primeuix/utils': 0.6.1
       vue: 3.5.22(typescript@5.9.3)
-
-  '@primevue/forms@4.3.9(vue@3.5.22(typescript@5.9.3))':
-    dependencies:
-      '@primeuix/forms': 0.1.0
-      '@primeuix/utils': 0.6.1
-      '@primevue/core': 4.3.9(vue@3.5.22(typescript@5.9.3))
-    transitivePeerDependencies:
-      - vue
 
   '@primevue/forms@4.4.0(vue@3.5.22(typescript@5.9.3))':
     dependencies:
