@@ -54,7 +54,7 @@
     "nodemailer": "^7.0.6",
     "normalize.css": "^8.0.1",
     "nuxt": "^4.1.2",
-    "p-queue": "^8.1.1",
+    "p-queue": "^9.0.0",
     "pg": "^8.16.3",
     "pinia": "^3.0.3",
     "primelocale": "^2.1.7",
