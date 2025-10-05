@@ -174,8 +174,8 @@ importers:
         specifier: ^3.19.2
         version: 3.19.2(@vue/test-utils@2.4.6)(happy-dom@18.0.1)(magicast@0.3.5)(playwright-core@1.55.1)(typescript@5.9.2)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@18.0.1)(jiti@2.5.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))
       '@primevue/nuxt-module':
-        specifier: ^4.3.9
-        version: 4.3.9(@babel/parser@7.28.4)(magicast@0.3.5)(vue@3.5.22(typescript@5.9.2))
+        specifier: ^4.4.0
+        version: 4.4.0(@babel/parser@7.28.4)(magicast@0.3.5)(vue@3.5.22(typescript@5.9.2))
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -2133,8 +2133,15 @@ packages:
     resolution: {integrity: sha512-qAzefzODuYZRaEh2b2uTJCtaT+qUMAt1WPCZhYgkbLUVQ8qt7hFL5BjTsqqCaiBWZCZtDkGmKhP19SRIL6hAlQ==}
     engines: {node: '>=12.11.0'}
 
+  '@primeuix/styled@0.7.4':
+    resolution: {integrity: sha512-QSO/NpOQg8e9BONWRBx9y8VGMCMYz0J/uKfNJEya/RGEu7ARx0oYW0ugI1N3/KB1AAvyGxzKBzGImbwg0KUiOQ==}
+    engines: {node: '>=12.11.0'}
+
   '@primeuix/styles@1.2.3':
     resolution: {integrity: sha512-+KwmQsLTYgVAqFADmO252btz40lstPML6r4QMNjxz4gLNCKVW3kPR0/aCouQx6/21+boXG1P68tu8Zk3FAKr2w==}
+
+  '@primeuix/styles@1.2.5':
+    resolution: {integrity: sha512-nypFRct/oaaBZqP4jinT0puW8ZIfs4u+l/vqUFmJEPU332fl5ePj6DoOpQgTLzo3OfmvSmz5a5/5b4OJJmmi7Q==}
 
   '@primeuix/themes@1.2.5':
     resolution: {integrity: sha512-n3YkwJrHQaEESc/D/A/iD815sxp8cKnmzscA6a8Tm8YvMtYU32eCahwLLe6h5rywghVwxASWuG36XBgISYOIjQ==}
@@ -2143,8 +2150,8 @@ packages:
     resolution: {integrity: sha512-tQL/ZOPgCdD+NTimlUmhyD0ey8J1XmpZE4hDHM+/fnuBicVVmlKOd5HpS748LcOVRUKbWjmEPdHX4hi5XZoC1Q==}
     engines: {node: '>=12.11.0'}
 
-  '@primevue/auto-import-resolver@4.3.9':
-    resolution: {integrity: sha512-3zC5cmJSWFFWm376wgJ4Ntq0xXE2T6zPtfUwEf6XlAF65bRhq+9YTM/rgoArJd2OY9jOGgDcwOt7/Np37hVGiA==}
+  '@primevue/auto-import-resolver@4.4.0':
+    resolution: {integrity: sha512-M4+st5ZFNMoD2mqB4xJbW0ET1eCvqXsS4VQ+R7yVuaRHc7k5AUel5kdO/WBmU/UPQgWkHl1R88h+eguNM/F7uw==}
     engines: {node: '>=12.11.0'}
 
   '@primevue/core@4.3.9':
@@ -2153,20 +2160,34 @@ packages:
     peerDependencies:
       vue: ^3.5.0
 
+  '@primevue/core@4.4.0':
+    resolution: {integrity: sha512-ZlPupIFdsyP8uaSMl+FlqKR9IJriJm2dzH4bPyTt0E50Y4EQF2eZR2nKrwrCkLQYKHAngiCQey0RTLOEu+4QoA==}
+    engines: {node: '>=12.11.0'}
+    peerDependencies:
+      vue: ^3.5.0
+
   '@primevue/forms@4.3.9':
     resolution: {integrity: sha512-j/GGxFwpfzP3kdxpfxezmsWohmFjoiNHTZlDxGwrNBGrXfb9GExghgoPPKc0K4OeAX5enufS+g8YGqcglABHAQ==}
+    engines: {node: '>=12.11.0'}
+
+  '@primevue/forms@4.4.0':
+    resolution: {integrity: sha512-mI/T4N3NcUXPcA/QnQ2j0mNim4+3Zt2vkSiMk/yhfNVCq+mGwWf5PJIvV5EV6NKhXs2OgJ4VSws9DwWK7ounDQ==}
     engines: {node: '>=12.11.0'}
 
   '@primevue/icons@4.3.9':
     resolution: {integrity: sha512-7EaVz7yS4KlAWppPsFEl9r2ia94LZStNjO2qiXolz0lvRYjZu6W66Or96sTr7GJhIIoE+qRnn3T9A/LeUmke6Q==}
     engines: {node: '>=12.11.0'}
 
-  '@primevue/metadata@4.3.9':
-    resolution: {integrity: sha512-Xt4mQNzdhz71hN+go53iCzE2vloKwTUkLpunzHup344ivJTZUYSlsszYFDGv4DEnqfkfRHHPBP3ZzHzgzE89jQ==}
+  '@primevue/icons@4.4.0':
+    resolution: {integrity: sha512-BDi9dACZIDopfepaRAuAfNwTVN0w+ZZVFu6RsnOQyrJM7FOJc9rs35Ig1MAyyknuINhPjLJ6lzOGGVycFQVb+w==}
     engines: {node: '>=12.11.0'}
 
-  '@primevue/nuxt-module@4.3.9':
-    resolution: {integrity: sha512-hS9WAE1Mq3yVra2WzL5B3ZLtfFaTHiZZXmyYEn2577uUeURktIFd6KNxljGAIjvU9f9pSfKdPAvsUnAQmGx6Vg==}
+  '@primevue/metadata@4.4.0':
+    resolution: {integrity: sha512-t046KQcMKDK+RRGwelbD8gIiiV1qKUXfmpvout1mP0/BwHLvpJTv3+dPq6S6zHnuyU/VhHzU12kmPY1Z8gxGow==}
+    engines: {node: '>=12.11.0'}
+
+  '@primevue/nuxt-module@4.4.0':
+    resolution: {integrity: sha512-u5DkSovoFNArQtChdCPWmVPZc7HhGURVIQn4hbcGwhFi07gUpReL3j4PD8tgbv4LIn3IPZgqvljmJsUwL66kOQ==}
     engines: {node: '>=12.11.0'}
 
   '@prisma/instrumentation@6.15.0':
@@ -3824,6 +3845,14 @@ packages:
       magicast:
         optional: true
 
+  c12@3.3.0:
+    resolution: {integrity: sha512-K9ZkuyeJQeqLEyqldbYLG3wjqwpw4BVaAqvmxq3GYKK0b1A/yYQdIcJxkzAOWcNVWhJpRXAPfZFueekiY/L8Dw==}
+    peerDependencies:
+      magicast: ^0.3.5
+    peerDependenciesMeta:
+      magicast:
+        optional: true
+
   cac@6.7.14:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
@@ -4587,6 +4616,10 @@ packages:
 
   dotenv@17.2.2:
     resolution: {integrity: sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==}
+    engines: {node: '>=12'}
+
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -5911,6 +5944,10 @@ packages:
 
   jiti@2.5.1:
     resolution: {integrity: sha512-twQoecYPiVA5K/h6SxtORw/Bs3ar+mLUtoPSc7iMXzQzK8d7eJ/R09wmTwAjiamETn1cXYPGfNnu7DMoHgu12w==}
+    hasBin: true
+
+  jiti@2.6.1:
+    resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
   jose@5.10.0:
@@ -7688,6 +7725,10 @@ packages:
     resolution: {integrity: sha512-qEAm/ZwtfBJAxHBhmXxsZ4NM6StRDeMVg8146HBn1xZ+0wiYhhJXH4uEttBTBhUgRhmZ00n6bANiL+ib9ylNjg==}
     engines: {node: '>=12.11.0'}
 
+  primevue@4.4.0:
+    resolution: {integrity: sha512-SscTQg1UxFzUCOk058pv9kVjLsC/RSIxltxKGrHIOJzDOaqr9BfxPSxjo/ipecZx1hB10k+jzGApG0iWL84zsg==}
+    engines: {node: '>=12.11.0'}
+
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
 
@@ -8407,6 +8448,9 @@ packages:
   strip-literal@3.0.0:
     resolution: {integrity: sha512-TcccoMhJOM3OebGhSBEmp3UZ2SfDMZUEBdRA/9ynfLi8yYajyWX3JiXArcJt4Umh4vISpspkQIY8ZZoCqjbviA==}
 
+  strip-literal@3.1.0:
+    resolution: {integrity: sha512-8r3mkIM/2+PpjHoOtiAW8Rg3jJLHaV7xPwG+YRGrv6FP0wwk/toTpATxWYOW0BKdWwl82VT2tFYi5DlROa0Mxg==}
+
   strnum@2.1.1:
     resolution: {integrity: sha512-7ZvoFTiCnGxBtDqJ//Cu6fWtZtc7Y3x+QOirG15wztbdngGSkht27o2pyGWrVy0b4WAy3jbKmnoK6g5VlVNUUw==}
 
@@ -8889,6 +8933,10 @@ packages:
 
   unimport@5.2.0:
     resolution: {integrity: sha512-bTuAMMOOqIAyjV4i4UH7P07pO+EsVxmhOzQ2YJ290J6mkLUdozNhb5I/YoOEheeNADC03ent3Qj07X0fWfUpmw==}
+    engines: {node: '>=18.12.0'}
+
+  unimport@5.4.1:
+    resolution: {integrity: sha512-wMZ2JKUCleCK2zfRHeWcbrUHKXOC3SVBYkyn/wTGzh0THX6sT4hSjuKXxKANN4/WMbT6ZPM4JzcDcnhD2x9Bpg==}
     engines: {node: '>=18.12.0'}
 
   unique-filename@1.1.1:
@@ -11454,14 +11502,14 @@ snapshots:
 
   '@nuxt/kit@3.19.2(magicast@0.3.5)':
     dependencies:
-      c12: 3.2.0(magicast@0.3.5)
+      c12: 3.3.0(magicast@0.3.5)
       consola: 3.4.2
       defu: 6.1.4
       destr: 2.0.5
       errx: 0.1.0
       exsolve: 1.0.7
       ignore: 7.0.5
-      jiti: 2.5.1
+      jiti: 2.6.1
       klona: 2.0.6
       knitwork: 1.2.0
       mlly: 1.8.0
@@ -11475,7 +11523,7 @@ snapshots:
       tinyglobby: 0.2.15
       ufo: 1.6.1
       unctx: 2.4.1
-      unimport: 5.2.0
+      unimport: 5.4.1
       untyped: 2.0.0
     transitivePeerDependencies:
       - magicast
@@ -12284,9 +12332,17 @@ snapshots:
     dependencies:
       '@primeuix/utils': 0.6.1
 
+  '@primeuix/styled@0.7.4':
+    dependencies:
+      '@primeuix/utils': 0.6.1
+
   '@primeuix/styles@1.2.3':
     dependencies:
-      '@primeuix/styled': 0.7.3
+      '@primeuix/styled': 0.7.4
+
+  '@primeuix/styles@1.2.5':
+    dependencies:
+      '@primeuix/styled': 0.7.4
 
   '@primeuix/themes@1.2.5':
     dependencies:
@@ -12294,13 +12350,19 @@ snapshots:
 
   '@primeuix/utils@0.6.1': {}
 
-  '@primevue/auto-import-resolver@4.3.9':
+  '@primevue/auto-import-resolver@4.4.0':
     dependencies:
-      '@primevue/metadata': 4.3.9
+      '@primevue/metadata': 4.4.0
 
   '@primevue/core@4.3.9(vue@3.5.22(typescript@5.9.2))':
     dependencies:
       '@primeuix/styled': 0.7.2
+      '@primeuix/utils': 0.6.1
+      vue: 3.5.22(typescript@5.9.2)
+
+  '@primevue/core@4.4.0(vue@3.5.22(typescript@5.9.2))':
+    dependencies:
+      '@primeuix/styled': 0.7.4
       '@primeuix/utils': 0.6.1
       vue: 3.5.22(typescript@5.9.2)
 
@@ -12312,6 +12374,14 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
+  '@primevue/forms@4.4.0(vue@3.5.22(typescript@5.9.2))':
+    dependencies:
+      '@primeuix/forms': 0.1.0
+      '@primeuix/utils': 0.6.1
+      '@primevue/core': 4.4.0(vue@3.5.22(typescript@5.9.2))
+    transitivePeerDependencies:
+      - vue
+
   '@primevue/icons@4.3.9(vue@3.5.22(typescript@5.9.2))':
     dependencies:
       '@primeuix/utils': 0.6.1
@@ -12319,18 +12389,25 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
-  '@primevue/metadata@4.3.9': {}
+  '@primevue/icons@4.4.0(vue@3.5.22(typescript@5.9.2))':
+    dependencies:
+      '@primeuix/utils': 0.6.1
+      '@primevue/core': 4.4.0(vue@3.5.22(typescript@5.9.2))
+    transitivePeerDependencies:
+      - vue
 
-  '@primevue/nuxt-module@4.3.9(@babel/parser@7.28.4)(magicast@0.3.5)(vue@3.5.22(typescript@5.9.2))':
+  '@primevue/metadata@4.4.0': {}
+
+  '@primevue/nuxt-module@4.4.0(@babel/parser@7.28.4)(magicast@0.3.5)(vue@3.5.22(typescript@5.9.2))':
     dependencies:
       '@nuxt/kit': 3.19.2(magicast@0.3.5)
-      '@primeuix/styled': 0.7.2
+      '@primeuix/styled': 0.7.4
       '@primeuix/utils': 0.6.1
-      '@primevue/auto-import-resolver': 4.3.9
-      '@primevue/forms': 4.3.9(vue@3.5.22(typescript@5.9.2))
-      '@primevue/metadata': 4.3.9
+      '@primevue/auto-import-resolver': 4.4.0
+      '@primevue/forms': 4.4.0(vue@3.5.22(typescript@5.9.2))
+      '@primevue/metadata': 4.4.0
       pathe: 1.1.2
-      primevue: 4.3.9(vue@3.5.22(typescript@5.9.2))
+      primevue: 4.4.0(vue@3.5.22(typescript@5.9.2))
       unplugin-vue-components: 28.4.1(@babel/parser@7.28.4)(@nuxt/kit@3.19.2(magicast@0.3.5))(vue@3.5.22(typescript@5.9.2))
     transitivePeerDependencies:
       - '@babel/parser'
@@ -14364,6 +14441,23 @@ snapshots:
     optionalDependencies:
       magicast: 0.3.5
 
+  c12@3.3.0(magicast@0.3.5):
+    dependencies:
+      chokidar: 4.0.3
+      confbox: 0.2.2
+      defu: 6.1.4
+      dotenv: 17.2.3
+      exsolve: 1.0.7
+      giget: 2.0.0
+      jiti: 2.6.1
+      ohash: 2.0.11
+      pathe: 2.0.3
+      perfect-debounce: 2.0.0
+      pkg-types: 2.3.0
+      rc9: 2.1.2
+    optionalDependencies:
+      magicast: 0.3.5
+
   cac@6.7.14: {}
 
   cacache@15.3.0:
@@ -14802,7 +14896,7 @@ snapshots:
     dependencies:
       '@types/node': 24.5.2
       cosmiconfig: 9.0.0(typescript@5.9.2)
-      jiti: 2.5.1
+      jiti: 2.6.1
       typescript: 5.9.2
 
   cosmiconfig@9.0.0(typescript@5.9.2):
@@ -15139,6 +15233,8 @@ snapshots:
   dotenv@16.6.1: {}
 
   dotenv@17.2.2: {}
+
+  dotenv@17.2.3: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -16695,6 +16791,8 @@ snapshots:
   java-properties@1.0.2: {}
 
   jiti@2.5.1: {}
+
+  jiti@2.6.1: {}
 
   jose@5.10.0: {}
 
@@ -18989,6 +19087,16 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
+  primevue@4.4.0(vue@3.5.22(typescript@5.9.2)):
+    dependencies:
+      '@primeuix/styled': 0.7.4
+      '@primeuix/styles': 1.2.5
+      '@primeuix/utils': 0.6.1
+      '@primevue/core': 4.4.0(vue@3.5.22(typescript@5.9.2))
+      '@primevue/icons': 4.4.0(vue@3.5.22(typescript@5.9.2))
+    transitivePeerDependencies:
+      - vue
+
   process-nextick-args@2.0.1: {}
 
   process@0.11.10: {}
@@ -19882,6 +19990,10 @@ snapshots:
     dependencies:
       js-tokens: 9.0.1
 
+  strip-literal@3.1.0:
+    dependencies:
+      js-tokens: 9.0.1
+
   strnum@2.1.1: {}
 
   strtok3@10.3.4:
@@ -20419,6 +20531,23 @@ snapshots:
       tinyglobby: 0.2.15
       unplugin: 2.3.10
       unplugin-utils: 0.2.5
+
+  unimport@5.4.1:
+    dependencies:
+      acorn: 8.15.0
+      escape-string-regexp: 5.0.0
+      estree-walker: 3.0.3
+      local-pkg: 1.1.2
+      magic-string: 0.30.19
+      mlly: 1.8.0
+      pathe: 2.0.3
+      picomatch: 4.0.3
+      pkg-types: 2.3.0
+      scule: 1.3.0
+      strip-literal: 3.1.0
+      tinyglobby: 0.2.15
+      unplugin: 2.3.10
+      unplugin-utils: 0.3.0
 
   unique-filename@1.1.1:
     dependencies:
