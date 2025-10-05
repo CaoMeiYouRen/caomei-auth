@@ -69,7 +69,7 @@
     "vue-recaptcha-v3": "^2.0.1",
     "vue-router": "^4.5.1",
     "vue-turnstile": "^1.0.11",
-    "winston": "^3.17.0",
+    "winston": "^3.18.3",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "pnpm": {
