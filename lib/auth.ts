@@ -64,7 +64,6 @@ import { getUserLocale } from '@/server/utils/locale'
 import { getCaptchaConfig } from '@/server/utils/captcha-config'
 import { isCaptchaEnabled } from '@/utils/captcha'
 
-// TODO 增加注册验证码
 export const auth = betterAuth({
     appName: APP_NAME, // 应用名称。它将被用作发行者。
     // 数据库适配器
