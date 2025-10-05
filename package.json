@@ -29,7 +29,7 @@
     "@mdi/font": "^7.4.47",
     "@microsoft/clarity": "^1.0.0",
     "@primeuix/themes": "^1.2.5",
-    "@primevue/core": "^4.3.9",
+    "@primevue/core": "^4.4.0",
     "@primevue/forms": "^4.4.0",
     "@sentry/nuxt": "^10.12.0",
     "@vercel/blob": "^2.0.0",
