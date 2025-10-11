@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import VueHcaptcha from '@hcaptcha/vue3-hcaptcha'
+import VueHcaptcha from '@hcaptcha/vue3-hcaptcha/dist/hcaptcha-vue3.es.js'
 import VueTurnstile from 'vue-turnstile'
 import { useCaptcha } from '@/composables/use-captcha'
 
