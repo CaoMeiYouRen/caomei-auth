@@ -1,5 +1,17 @@
 # caomei-auth
 
+# [1.10.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.9.0...v1.10.0) (2025-10-11)
+
+
+### ✨ 新功能
+
+* 添加验证码功能并整合至注册、登录、发送验证码流程 ([71b6f47](https://github.com/CaoMeiYouRen/caomei-auth/commit/71b6f47))
+
+
+### 🐛 Bug 修复
+
+* 优化验证码组件显示逻辑，仅在需要时渲染 ([747b788](https://github.com/CaoMeiYouRen/caomei-auth/commit/747b788))
+
 # [1.9.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.8.0...v1.9.0) (2025-09-27)
 
 
