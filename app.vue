@@ -8,12 +8,11 @@
 </template>
 
 <script setup lang="ts">
-import { useRecaptchaProvider } from 'vue-recaptcha'
-
 const runtimeConfig = useRuntimeConfig()
 const publicConfig = runtimeConfig.public
 
-if (publicConfig.captchaProvider === 'google-recaptcha' && publicConfig.recaptchaSiteKey) {
+if (import.meta.client && publicConfig.captchaProvider === 'google-recaptcha' && publicConfig.recaptchaSiteKey) {
+    const { useRecaptchaProvider } = await import('vue-recaptcha')
     useRecaptchaProvider()
 }
 </script>
