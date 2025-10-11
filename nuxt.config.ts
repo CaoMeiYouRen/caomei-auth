@@ -47,6 +47,7 @@ export default defineNuxtConfig({
         '@primevue/nuxt-module',
         '@sentry/nuxt/module',
         '@nuxt/eslint',
+        'vue-recaptcha/nuxt',
     ],
     build: {
         // 使用 Babel 转译不兼容的包
@@ -204,5 +205,9 @@ export default defineNuxtConfig({
     },
     sentry: {
         autoInjectServerSentry: 'top-level-import',
+    },
+    recaptcha: {
+        enterprise: false,
+        installPlugin: false,
     },
 })
