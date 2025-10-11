@@ -50,7 +50,7 @@ export default defineNuxtConfig({
     ],
     build: {
         // 使用 Babel 转译不兼容的包
-        transpile: ['sqlite3', (ctx) => !ctx.isDev && 'google-libphonenumber', (ctx) => !ctx.isDev && 'vue-recaptcha-v3'],
+        transpile: ['sqlite3', (ctx) => !ctx.isDev && 'google-libphonenumber'],
     },
     eslint: {
         config: {

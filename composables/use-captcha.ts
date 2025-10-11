@@ -1,6 +1,5 @@
-import { ref, readonly, computed } from 'vue'
-import { useReCaptcha } from 'vue-recaptcha-v3'
-import { getCaptchaProvider, getCaptchaSiteKey, isCaptchaEnabled } from '@/utils/captcha'
+import { ref, computed } from 'vue'
+import { useChallengeV3, type UseChallengeV3Return } from 'vue-recaptcha'
 
 export function useCaptcha() {
     const token = ref<string>('')
@@ -27,8 +26,11 @@ export function useCaptcha() {
     })
     const enabled = computed(() => Boolean(provider.value && siteKey.value))
 
-    // 获取 reCAPTCHA v3 的实例
-    const recaptchaInstance = provider.value === 'google-recaptcha' ? useReCaptcha() : undefined
+    let challengeV3: UseChallengeV3Return | null = null
+
+    if (config.captchaProvider === 'google-recaptcha') {
+        challengeV3 = useChallengeV3('submit')
+    }
 
     /**
      * 验证成功时调用，获取 token
@@ -51,9 +53,10 @@ export function useCaptcha() {
      * 发生错误时调用
      * @param err 错误信息
      */
-    function onError(err: string) {
+    function onError(err: unknown) {
+        const message = err instanceof Error ? err.message : String(err ?? '')
         token.value = ''
-        error.value = `验证码加载失败: ${err}`
+        error.value = `验证码加载失败: ${message}`
         console.error('Captcha error:', err)
     }
 
@@ -73,16 +76,15 @@ export function useCaptcha() {
             return
         }
 
-        if (provider.value === 'google-recaptcha' && recaptchaInstance) {
+        if (provider.value === 'google-recaptcha' && challengeV3) {
             loading.value = true
             error.value = null
             try {
-                await recaptchaInstance.recaptchaLoaded()
-                const t = await recaptchaInstance.executeRecaptcha('submit') // 'submit' 是 reCAPTCHA 的 action 名称
+                const t = await challengeV3.execute()
                 token.value = t
                 onVerify(t)
             } catch (e: any) {
-                onError(e.message || 'reCAPTCHA v3 execute failed')
+                onError(e ?? 'reCAPTCHA v3 execute failed')
             } finally {
                 loading.value = false
             }
@@ -99,6 +101,9 @@ export function useCaptcha() {
         }
         token.value = ''
         error.value = null
+        if (challengeV3) {
+            challengeV3.response.value = undefined
+        }
     }
 
     return {

@@ -1,5 +1,5 @@
 // plugins/recaptcha.client.ts
-import { VueReCaptcha } from 'vue-recaptcha-v3'
+import VueRecaptchaPlugin from 'vue-recaptcha'
 
 export default defineNuxtPlugin((nuxtApp) => {
     const config = useRuntimeConfig()
@@ -8,11 +8,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     // 仅当提供商是 google-recaptcha 且 siteKey 存在时才加载
     if (provider === 'google-recaptcha' && siteKey) {
-        nuxtApp.vueApp.use(VueReCaptcha, {
-            siteKey,
-            loaderOptions: {
-                autoHideBadge: true, // 自动隐藏右下角的 reCAPTCHA 徽章
-            },
+        nuxtApp.vueApp.use(VueRecaptchaPlugin, {
+            v3SiteKey: siteKey,
         })
     }
 })
