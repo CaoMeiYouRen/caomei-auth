@@ -121,7 +121,7 @@
     "eslint-plugin-vue": "^10.5.0",
     "happy-dom": "^20.0.0",
     "husky": "^9.0.11",
-    "lint-staged": "^16.2.3",
+    "lint-staged": "^16.2.4",
     "pkg-types": "^2.3.0",
     "playwright-core": "^1.55.1",
     "postcss": "^8.5.6",
