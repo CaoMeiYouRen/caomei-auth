@@ -26,8 +26,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       '@better-auth/sso':
-        specifier: ^1.3.26
-        version: 1.3.26(better-auth@1.3.26(vue@3.5.22(typescript@5.9.3)))
+        specifier: ^1.3.27
+        version: 1.3.27(better-auth@1.3.27(vue@3.5.22(typescript@5.9.3)))
       '@hcaptcha/vue3-hcaptcha':
         specifier: ^1.3.0
         version: 1.3.0(vue@3.5.22(typescript@5.9.3))
@@ -62,11 +62,11 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1
       better-auth:
-        specifier: ^1.3.26
-        version: 1.3.26(vue@3.5.22(typescript@5.9.3))
+        specifier: ^1.3.27
+        version: 1.3.27(vue@3.5.22(typescript@5.9.3))
       better-auth-localization:
         specifier: ^2.1.8
-        version: 2.1.8(better-auth@1.3.26(vue@3.5.22(typescript@5.9.3)))
+        version: 2.1.8(better-auth@1.3.27(vue@3.5.22(typescript@5.9.3)))
       better-bytes:
         specifier: ^1.2.4
         version: 1.2.4
@@ -738,13 +738,13 @@ packages:
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
 
-  '@better-auth/core@1.3.26':
-    resolution: {integrity: sha512-S5ooXaOcn9eLV3/JayfbMsAB5PkfoTRaRrtpb5djwvI/UAJOgLyjqhd+rObsBycovQ/nPQvMKjzyM/G1oBKngA==}
+  '@better-auth/core@1.3.27':
+    resolution: {integrity: sha512-3Sfdax6MQyronY+znx7bOsfQHI6m1SThvJWb0RDscFEAhfqLy95k1sl+/PgGyg0cwc2cUXoEiAOSqYdFYrg3vA==}
 
-  '@better-auth/sso@1.3.26':
-    resolution: {integrity: sha512-Zjtmu0vq1kx7Txmj/Hb06FPlBqFuAcOQpT6bMK+lXYEcpCOsUxuxuvxJc7ad6EENa9qJ4jrUBtHooQTqRHxbOg==}
+  '@better-auth/sso@1.3.27':
+    resolution: {integrity: sha512-a/dnm3kQS58H69XYZCD0yp0Zo7G5ndMPBH9AbLl9uaodPJ2qqtmIWjZcT0/5EtRp8VGLucK6ajxNUlIzYrgLZQ==}
     peerDependencies:
-      better-auth: 1.3.26
+      better-auth: 1.3.27
 
   '@better-auth/utils@0.3.0':
     resolution: {integrity: sha512-W+Adw6ZA6mgvnSnhOki270rwJ42t4XzSK6YWGF//BbVXL6SwCLWfyzBc1lN2m/4RM28KubdBKQ4X5VMoLRNPQw==}
@@ -3668,8 +3668,8 @@ packages:
     peerDependencies:
       better-auth: ^1.3.4
 
-  better-auth@1.3.26:
-    resolution: {integrity: sha512-umaOGmv29yF4sD6o2zlW6B0Oayko5yD/A8mKJOFDDEIoVP/pR7nJ/2KsqKy+xvBpnDsKdrZseqA8fmczPviUHw==}
+  better-auth@1.3.27:
+    resolution: {integrity: sha512-SwiGAJ7yU6dBhNg0NdV1h5M8T5sa7/AszZVc4vBfMDrLLmvUfbt9JoJ0uRUJUEdKRAAxTyl9yA+F3+GhtAD80w==}
     peerDependencies:
       '@lynx-js/react': '*'
       '@sveltejs/kit': '*'
@@ -6044,8 +6044,8 @@ packages:
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
 
-  kysely@0.28.7:
-    resolution: {integrity: sha512-u/cAuTL4DRIiO2/g4vNGRgklEKNIj5Q3CG7RoUB5DV5SfEC2hMvPxKi0GWPmnzwL2ryIeud2VTcEEmqzTzEPNw==}
+  kysely@0.28.8:
+    resolution: {integrity: sha512-QUOgl5ZrS9IRuhq5FvOKFSsD/3+IA6MLE81/bOOTRA/YQpKDza2sFdN5g6JCB9BOpqMJDGefLCQ9F12hRS13TA==}
     engines: {node: '>=20.0.0'}
 
   launch-editor@2.11.1:
@@ -9570,8 +9570,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod@4.1.11:
-    resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -10663,20 +10663,20 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@better-auth/core@1.3.26':
+  '@better-auth/core@1.3.27':
     dependencies:
       better-call: 1.0.19
-      zod: 4.1.11
+      zod: 4.1.12
 
-  '@better-auth/sso@1.3.26(better-auth@1.3.26(vue@3.5.22(typescript@5.9.3)))':
+  '@better-auth/sso@1.3.27(better-auth@1.3.27(vue@3.5.22(typescript@5.9.3)))':
     dependencies:
       '@better-fetch/fetch': 1.1.18
-      better-auth: 1.3.26(vue@3.5.22(typescript@5.9.3))
+      better-auth: 1.3.27(vue@3.5.22(typescript@5.9.3))
       fast-xml-parser: 5.3.0
       jose: 6.1.0
       oauth2-mock-server: 7.2.1
       samlify: 2.10.1
-      zod: 4.1.11
+      zod: 4.1.12
     transitivePeerDependencies:
       - supports-color
 
@@ -14185,13 +14185,13 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-auth-localization@2.1.8(better-auth@1.3.26(vue@3.5.22(typescript@5.9.3))):
+  better-auth-localization@2.1.8(better-auth@1.3.27(vue@3.5.22(typescript@5.9.3))):
     dependencies:
-      better-auth: 1.3.26(vue@3.5.22(typescript@5.9.3))
+      better-auth: 1.3.27(vue@3.5.22(typescript@5.9.3))
 
-  better-auth@1.3.26(vue@3.5.22(typescript@5.9.3)):
+  better-auth@1.3.27(vue@3.5.22(typescript@5.9.3)):
     dependencies:
-      '@better-auth/core': 1.3.26
+      '@better-auth/core': 1.3.27
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.18
       '@noble/ciphers': 2.0.1
@@ -14201,9 +14201,9 @@ snapshots:
       better-call: 1.0.19
       defu: 6.1.4
       jose: 6.1.0
-      kysely: 0.28.7
+      kysely: 0.28.8
       nanostores: 1.0.1
-      zod: 4.1.11
+      zod: 4.1.12
     optionalDependencies:
       vue: 3.5.22(typescript@5.9.3)
 
@@ -16813,7 +16813,7 @@ snapshots:
 
   kuler@2.0.0: {}
 
-  kysely@0.28.7: {}
+  kysely@0.28.8: {}
 
   launch-editor@2.11.1:
     dependencies:
@@ -21239,6 +21239,6 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.7.0
 
-  zod@4.1.11: {}
+  zod@4.1.12: {}
 
   zwitch@2.0.4: {}
