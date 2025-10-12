@@ -123,7 +123,7 @@
     "husky": "^9.0.11",
     "lint-staged": "^16.2.4",
     "pkg-types": "^2.3.0",
-    "playwright-core": "^1.55.1",
+    "playwright-core": "^1.56.0",
     "postcss": "^8.5.6",
     "sass": "^1.93.2",
     "semantic-release": "^24.2.9",
