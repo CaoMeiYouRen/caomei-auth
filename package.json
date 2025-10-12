@@ -44,7 +44,7 @@
     "file-type": "^21.0.0",
     "fs-extra": "^11.3.2",
     "google-libphonenumber": "^3.2.43",
-    "ioredis": "^5.8.0",
+    "ioredis": "^5.8.1",
     "lodash-es": "^4.17.21",
     "lru-cache": "^11.2.2",
     "mime-types": "^3.0.1",
