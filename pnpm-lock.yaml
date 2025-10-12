@@ -146,8 +146,8 @@ importers:
         specifier: ^0.3.27
         version: 0.3.27(ioredis@5.8.0)(mysql2@3.15.1)(pg@8.16.3)(reflect-metadata@0.2.2)(sqlite3@5.1.7)
       ua-parser-js:
-        specifier: ^2.0.4
-        version: 2.0.5
+        specifier: ^2.0.6
+        version: 2.0.6
       validator:
         specifier: ^13.15.15
         version: 13.15.15
@@ -8831,8 +8831,8 @@ packages:
   ua-is-frozen@0.1.2:
     resolution: {integrity: sha512-RwKDW2p3iyWn4UbaxpP2+VxwqXh0jpvdxsYpZ5j/MLLiQOfbsV5shpgQiw93+KMYQPcteeMQ289MaAFzs3G9pw==}
 
-  ua-parser-js@2.0.5:
-    resolution: {integrity: sha512-sZErtx3rhpvZQanWW5umau4o/snfoLqRcQwQIZ54377WtRzIecnIKvjpkd5JwPcSUMglGnbIgcsQBGAbdi3S9Q==}
+  ua-parser-js@2.0.6:
+    resolution: {integrity: sha512-EmaxXfltJaDW75SokrY4/lXMrVyXomE/0FpIIqP2Ctic93gK7rlme55Cwkz8l3YZ6gqf94fCU7AnIkidd/KXPg==}
     hasBin: true
 
   ufo@1.6.1:
@@ -8879,10 +8879,6 @@ packages:
   undici@5.29.0:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
-
-  undici@7.16.0:
-    resolution: {integrity: sha512-QEg3HPMll0o3t2ourKwOeUAZ159Kn9mx5pnzHRQO8+Wixmh88YdZRiIwat0iNzNNXn0yoEtXJqFpyW7eM8BV7g==}
-    engines: {node: '>=20.18.1'}
 
   unenv@2.0.0-rc.21:
     resolution: {integrity: sha512-Wj7/AMtE9MRnAXa6Su3Lk0LNCfqDYgfwVjwRFVum9U7wsto1imuHqk4kTm7Jni+5A0Hn7dttL6O/zjvUvoo+8A==}
@@ -20342,12 +20338,11 @@ snapshots:
 
   ua-is-frozen@0.1.2: {}
 
-  ua-parser-js@2.0.5:
+  ua-parser-js@2.0.6:
     dependencies:
       detect-europe-js: 0.1.2
       is-standalone-pwa: 0.1.1
       ua-is-frozen: 0.1.2
-      undici: 7.16.0
 
   ufo@1.6.1: {}
 
@@ -20388,8 +20383,6 @@ snapshots:
   undici@5.29.0:
     dependencies:
       '@fastify/busboy': 2.1.1
-
-  undici@7.16.0: {}
 
   unenv@2.0.0-rc.21:
     dependencies:
