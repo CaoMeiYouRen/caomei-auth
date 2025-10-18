@@ -1,5 +1,17 @@
 # caomei-auth
 
+## [1.10.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.10.0...v1.10.1) (2025-10-18)
+
+
+### 🐛 Bug 修复
+
+* **captcha:** 更新验证码组件以支持新的 vue-recaptcha 插件 ([94120d4](https://github.com/CaoMeiYouRen/caomei-auth/commit/94120d4))
+* **captcha:** 更新验证码组件导入路径 ([4af00c9](https://github.com/CaoMeiYouRen/caomei-auth/commit/4af00c9))
+* **config:** 更新构建配置 ([2a60bf8](https://github.com/CaoMeiYouRen/caomei-auth/commit/2a60bf8))
+* **nuxt:** 修复 vue-recaptcha-v3 的转译条件 ([eaeec9c](https://github.com/CaoMeiYouRen/caomei-auth/commit/eaeec9c))
+* **recaptcha:** 优化 Google reCAPTCHA 插件的加载逻辑 ([e92a48d](https://github.com/CaoMeiYouRen/caomei-auth/commit/e92a48d))
+* **recaptcha:** 添加 vue-recaptcha 插件到 Nuxt 配置并设置相关选项 ([fb8bebc](https://github.com/CaoMeiYouRen/caomei-auth/commit/fb8bebc))
+
 # [1.10.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.9.0...v1.10.0) (2025-10-11)
 
 
