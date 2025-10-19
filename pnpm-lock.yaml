@@ -26,8 +26,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       '@better-auth/sso':
-        specifier: ^1.3.27
-        version: 1.3.27(better-auth@1.3.27(vue@3.5.22(typescript@5.9.3)))
+        specifier: ^1.3.28
+        version: 1.3.28(better-auth@1.3.28(better-sqlite3@12.4.1)(vue@3.5.22(typescript@5.9.3)))
       '@hcaptcha/vue3-hcaptcha':
         specifier: ^1.3.0
         version: 1.3.0(vue@3.5.22(typescript@5.9.3))
@@ -51,7 +51,7 @@ importers:
         version: 4.4.1(vue@3.5.22(typescript@5.9.3))
       '@sentry/nuxt':
         specifier: ^10.19.0
-        version: 10.19.0(encoding@0.1.13)(magicast@0.3.5)(nuxt@4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(db0@0.3.2(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1))(pinia@3.0.3(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3)))(rollup@4.50.1)(vue@3.5.22(typescript@5.9.3))
+        version: 10.19.0(encoding@0.1.13)(magicast@0.3.5)(nuxt@4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(better-sqlite3@12.4.1)(db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1))(pinia@3.0.3(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3)))(rollup@4.50.1)(vue@3.5.22(typescript@5.9.3))
       '@vercel/blob':
         specifier: ^2.0.0
         version: 2.0.0
@@ -62,11 +62,11 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1
       better-auth:
-        specifier: ^1.3.27
-        version: 1.3.27(vue@3.5.22(typescript@5.9.3))
+        specifier: ^1.3.28
+        version: 1.3.28(better-sqlite3@12.4.1)(vue@3.5.22(typescript@5.9.3))
       better-auth-localization:
         specifier: ^2.1.9
-        version: 2.1.9(better-auth@1.3.27(vue@3.5.22(typescript@5.9.3)))
+        version: 2.1.9(better-auth@1.3.28(better-sqlite3@12.4.1)(vue@3.5.22(typescript@5.9.3)))
       better-bytes:
         specifier: ^1.2.4
         version: 1.2.4
@@ -117,7 +117,7 @@ importers:
         version: 8.0.1
       nuxt:
         specifier: ^4.1.3
-        version: 4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(db0@0.3.2(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1)
+        version: 4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(better-sqlite3@12.4.1)(db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1)
       p-queue:
         specifier: ^9.0.0
         version: 9.0.0
@@ -144,7 +144,7 @@ importers:
         version: 5.10.3
       typeorm:
         specifier: ^0.3.27
-        version: 0.3.27(ioredis@5.8.1)(mysql2@3.15.2)(pg@8.16.3)(reflect-metadata@0.2.2)(sqlite3@5.1.7)
+        version: 0.3.27(better-sqlite3@12.4.1)(ioredis@5.8.1)(mysql2@3.15.2)(pg@8.16.3)(reflect-metadata@0.2.2)(sqlite3@5.1.7)
       ua-parser-js:
         specifier: ^2.0.6
         version: 2.0.6
@@ -778,13 +778,24 @@ packages:
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
 
-  '@better-auth/core@1.3.27':
-    resolution: {integrity: sha512-3Sfdax6MQyronY+znx7bOsfQHI6m1SThvJWb0RDscFEAhfqLy95k1sl+/PgGyg0cwc2cUXoEiAOSqYdFYrg3vA==}
-
-  '@better-auth/sso@1.3.27':
-    resolution: {integrity: sha512-a/dnm3kQS58H69XYZCD0yp0Zo7G5ndMPBH9AbLl9uaodPJ2qqtmIWjZcT0/5EtRp8VGLucK6ajxNUlIzYrgLZQ==}
+  '@better-auth/core@1.3.28':
+    resolution: {integrity: sha512-iZOGKlXaNEIEj0Q3z7+REE94I89YUJ0sel/1pvm1qqdHkm59G+ToTysHtyTcLYby3+UtAeJRKyFAY0nwJH0H7A==}
     peerDependencies:
-      better-auth: 1.3.27
+      '@better-auth/utils': 0.3.0
+      '@better-fetch/fetch': 1.1.18
+      better-call: ^1.0.18
+      better-sqlite3: ^12.4.1
+      jose: ^6.1.0
+      kysely: ^0.28.5
+      nanostores: ^1.0.1
+
+  '@better-auth/sso@1.3.28':
+    resolution: {integrity: sha512-BeuQFB/tWKR3Nx89fiD6e0Ei5VoKmman0VDBkoOIu+P3PGdSSzvbmBUTZi8aao+tAPoD6/Z5gje+oiQBDAnp4w==}
+    peerDependencies:
+      better-auth: 1.3.28
+
+  '@better-auth/telemetry@1.3.28':
+    resolution: {integrity: sha512-qZtV82IFuyQZc2c37VkiDgO/qfqPnJuWIyeC/iFK1AA5N8RSuC2+CVIH1sNDytPXUAthbYeOzcOCW2YEkgz1Ow==}
 
   '@better-auth/utils@0.3.0':
     resolution: {integrity: sha512-W+Adw6ZA6mgvnSnhOki270rwJ42t4XzSK6YWGF//BbVXL6SwCLWfyzBc1lN2m/4RM28KubdBKQ4X5VMoLRNPQw==}
@@ -3708,8 +3719,8 @@ packages:
     peerDependencies:
       better-auth: ^1.3.4
 
-  better-auth@1.3.27:
-    resolution: {integrity: sha512-SwiGAJ7yU6dBhNg0NdV1h5M8T5sa7/AszZVc4vBfMDrLLmvUfbt9JoJ0uRUJUEdKRAAxTyl9yA+F3+GhtAD80w==}
+  better-auth@1.3.28:
+    resolution: {integrity: sha512-fSaeRsTSkzCSSKREFsm7z7TsTMC8ghGrwCN+mumxCZiyc8Fh/UThUwURlTJmsR0YVB0DMR8ejQH+c38WhdQslQ==}
     peerDependencies:
       '@lynx-js/react': '*'
       '@sveltejs/kit': '*'
@@ -3741,8 +3752,12 @@ packages:
     resolution: {integrity: sha512-lA8ZltmVDd7ThuUtZgZxKMsb2I7qLZYHsaT+CkuMZeHLIXxiCxqgqokNNG+1WKTccs+ybFjeAW6+pc3gnKdoRg==}
     engines: {node: '>=16'}
 
-  better-call@1.0.19:
-    resolution: {integrity: sha512-sI3GcA1SCVa3H+CDHl8W8qzhlrckwXOTKhqq3OOPXjgn5aTOMIqGY34zLY/pHA6tRRMjTUC3lz5Mi7EbDA24Kw==}
+  better-call@1.0.24:
+    resolution: {integrity: sha512-iGqL29cstPp4xLD2MjKL1EmyAqQHjYS+cBMt4W27rPs3vf+kuqkVPA0NYaf7JciBOzVsJdNj4cbZWXC5TardWQ==}
+
+  better-sqlite3@12.4.1:
+    resolution: {integrity: sha512-3yVdyZhklTiNrtg+4WqHpJpFDd+WHTg2oM7UcR80GqL05AOV0xEJzc6qNvFYoEtE+hRp1n9MpN6/+4yhlGkDXQ==}
+    engines: {node: 20.x || 22.x || 23.x || 24.x}
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -10806,15 +10821,21 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@better-auth/core@1.3.27':
+  '@better-auth/core@1.3.28(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.18)(better-call@1.0.24)(better-sqlite3@12.4.1)(jose@6.1.0)(kysely@0.28.8)(nanostores@1.0.1)':
     dependencies:
-      better-call: 1.0.19
+      '@better-auth/utils': 0.3.0
+      '@better-fetch/fetch': 1.1.18
+      better-call: 1.0.24
+      better-sqlite3: 12.4.1
+      jose: 6.1.0
+      kysely: 0.28.8
+      nanostores: 1.0.1
       zod: 4.1.12
 
-  '@better-auth/sso@1.3.27(better-auth@1.3.27(vue@3.5.22(typescript@5.9.3)))':
+  '@better-auth/sso@1.3.28(better-auth@1.3.28(better-sqlite3@12.4.1)(vue@3.5.22(typescript@5.9.3)))':
     dependencies:
       '@better-fetch/fetch': 1.1.18
-      better-auth: 1.3.27(vue@3.5.22(typescript@5.9.3))
+      better-auth: 1.3.28(better-sqlite3@12.4.1)(vue@3.5.22(typescript@5.9.3))
       fast-xml-parser: 5.3.0
       jose: 6.1.0
       oauth2-mock-server: 7.2.1
@@ -10822,6 +10843,18 @@ snapshots:
       zod: 4.1.12
     transitivePeerDependencies:
       - supports-color
+
+  '@better-auth/telemetry@1.3.28(better-call@1.0.24)(better-sqlite3@12.4.1)(jose@6.1.0)(kysely@0.28.8)(nanostores@1.0.1)':
+    dependencies:
+      '@better-auth/core': 1.3.28(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.18)(better-call@1.0.24)(better-sqlite3@12.4.1)(jose@6.1.0)(kysely@0.28.8)(nanostores@1.0.1)
+      '@better-auth/utils': 0.3.0
+      '@better-fetch/fetch': 1.1.18
+    transitivePeerDependencies:
+      - better-call
+      - better-sqlite3
+      - jose
+      - kysely
+      - nanostores
 
   '@better-auth/utils@0.3.0': {}
 
@@ -12950,7 +12983,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@sentry/nuxt@10.19.0(encoding@0.1.13)(magicast@0.3.5)(nuxt@4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(db0@0.3.2(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1))(pinia@3.0.3(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3)))(rollup@4.50.1)(vue@3.5.22(typescript@5.9.3))':
+  '@sentry/nuxt@10.19.0(encoding@0.1.13)(magicast@0.3.5)(nuxt@4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(better-sqlite3@12.4.1)(db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1))(pinia@3.0.3(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3)))(rollup@4.50.1)(vue@3.5.22(typescript@5.9.3))':
     dependencies:
       '@nuxt/kit': 3.19.3(magicast@0.3.5)
       '@sentry/browser': 10.19.0
@@ -12960,7 +12993,7 @@ snapshots:
       '@sentry/rollup-plugin': 4.4.0(encoding@0.1.13)(rollup@4.50.1)
       '@sentry/vite-plugin': 4.4.0(encoding@0.1.13)
       '@sentry/vue': 10.19.0(pinia@3.0.3(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3)))(vue@3.5.22(typescript@5.9.3))
-      nuxt: 4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(db0@0.3.2(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1)
+      nuxt: 4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(better-sqlite3@12.4.1)(db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1)
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
       - encoding
@@ -14347,20 +14380,21 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-auth-localization@2.1.9(better-auth@1.3.27(vue@3.5.22(typescript@5.9.3))):
+  better-auth-localization@2.1.9(better-auth@1.3.28(better-sqlite3@12.4.1)(vue@3.5.22(typescript@5.9.3))):
     dependencies:
-      better-auth: 1.3.27(vue@3.5.22(typescript@5.9.3))
+      better-auth: 1.3.28(better-sqlite3@12.4.1)(vue@3.5.22(typescript@5.9.3))
 
-  better-auth@1.3.27(vue@3.5.22(typescript@5.9.3)):
+  better-auth@1.3.28(better-sqlite3@12.4.1)(vue@3.5.22(typescript@5.9.3)):
     dependencies:
-      '@better-auth/core': 1.3.27
+      '@better-auth/core': 1.3.28(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.18)(better-call@1.0.24)(better-sqlite3@12.4.1)(jose@6.1.0)(kysely@0.28.8)(nanostores@1.0.1)
+      '@better-auth/telemetry': 1.3.28(better-call@1.0.24)(better-sqlite3@12.4.1)(jose@6.1.0)(kysely@0.28.8)(nanostores@1.0.1)
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.18
       '@noble/ciphers': 2.0.1
       '@noble/hashes': 2.0.1
       '@simplewebauthn/browser': 13.2.2
       '@simplewebauthn/server': 13.2.2
-      better-call: 1.0.19
+      better-call: 1.0.24
       defu: 6.1.4
       jose: 6.1.0
       kysely: 0.28.8
@@ -14368,18 +14402,25 @@ snapshots:
       zod: 4.1.12
     optionalDependencies:
       vue: 3.5.22(typescript@5.9.3)
+    transitivePeerDependencies:
+      - better-sqlite3
 
   better-bytes@1.2.4:
     dependencies:
       tslib: 2.8.1
 
-  better-call@1.0.19:
+  better-call@1.0.24:
     dependencies:
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.18
       rou3: 0.5.1
       set-cookie-parser: 2.7.1
       uncrypto: 0.1.3
+
+  better-sqlite3@12.4.1:
+    dependencies:
+      bindings: 1.5.0
+      prebuild-install: 7.1.3
 
   binary-extensions@2.3.0: {}
 
@@ -15132,8 +15173,9 @@ snapshots:
 
   dayjs@1.11.18: {}
 
-  db0@0.3.2(mysql2@3.15.2)(sqlite3@5.1.7):
+  db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7):
     optionalDependencies:
+      better-sqlite3: 12.4.1
       mysql2: 3.15.2
       sqlite3: 5.1.7
 
@@ -18131,7 +18173,7 @@ snapshots:
       fast-safe-stringify: 2.1.1
       winston: 3.18.3
 
-  nitropack@2.12.6(@vercel/blob@2.0.0)(encoding@0.1.13)(mysql2@3.15.2)(sqlite3@5.1.7):
+  nitropack@2.12.6(@vercel/blob@2.0.0)(better-sqlite3@12.4.1)(encoding@0.1.13)(mysql2@3.15.2)(sqlite3@5.1.7):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.0
       '@rollup/plugin-alias': 5.1.1(rollup@4.50.1)
@@ -18152,7 +18194,7 @@ snapshots:
       cookie-es: 2.0.0
       croner: 9.1.0
       crossws: 0.3.5
-      db0: 0.3.2(mysql2@3.15.2)(sqlite3@5.1.7)
+      db0: 0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7)
       defu: 6.1.4
       destr: 2.0.5
       dot-prop: 9.0.0
@@ -18198,7 +18240,7 @@ snapshots:
       unenv: 2.0.0-rc.21
       unimport: 5.4.1
       unplugin-utils: 0.3.1
-      unstorage: 1.17.1(@vercel/blob@2.0.0)(db0@0.3.2(mysql2@3.15.2)(sqlite3@5.1.7))(ioredis@5.8.1)
+      unstorage: 1.17.1(@vercel/blob@2.0.0)(db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7))(ioredis@5.8.1)
       untyped: 2.0.0
       unwasm: 0.3.11
       youch: 4.1.0-beta.11
@@ -18344,7 +18386,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt@4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(db0@0.3.2(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1):
+  nuxt@4.1.3(@parcel/watcher@2.5.1)(@types/node@24.8.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.22)(better-sqlite3@12.4.1)(db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.2)(optionator@0.9.4)(rollup@4.50.1)(sass@1.93.2)(sqlite3@5.1.7)(stylelint@16.25.0(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@6.3.6(@types/node@24.8.1)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1):
     dependencies:
       '@nuxt/cli': 3.29.3(magicast@0.3.5)
       '@nuxt/devalue': 2.0.2
@@ -18379,7 +18421,7 @@ snapshots:
       mlly: 1.8.0
       mocked-exports: 0.1.1
       nanotar: 0.2.0
-      nitropack: 2.12.6(@vercel/blob@2.0.0)(encoding@0.1.13)(mysql2@3.15.2)(sqlite3@5.1.7)
+      nitropack: 2.12.6(@vercel/blob@2.0.0)(better-sqlite3@12.4.1)(encoding@0.1.13)(mysql2@3.15.2)(sqlite3@5.1.7)
       nypm: 0.6.2
       ofetch: 1.4.1
       ohash: 2.0.11
@@ -18403,7 +18445,7 @@ snapshots:
       unimport: 5.4.1
       unplugin: 2.3.10
       unplugin-vue-router: 0.15.0(@vue/compiler-sfc@3.5.22)(typescript@5.9.3)(vue-router@4.6.3(vue@3.5.22(typescript@5.9.3)))(vue@3.5.22(typescript@5.9.3))
-      unstorage: 1.17.1(@vercel/blob@2.0.0)(db0@0.3.2(mysql2@3.15.2)(sqlite3@5.1.7))(ioredis@5.8.1)
+      unstorage: 1.17.1(@vercel/blob@2.0.0)(db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7))(ioredis@5.8.1)
       untyped: 2.0.0
       vue: 3.5.22(typescript@5.9.3)
       vue-bundle-renderer: 2.2.0
@@ -20483,7 +20525,7 @@ snapshots:
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
 
-  typeorm@0.3.27(ioredis@5.8.1)(mysql2@3.15.2)(pg@8.16.3)(reflect-metadata@0.2.2)(sqlite3@5.1.7):
+  typeorm@0.3.27(better-sqlite3@12.4.1)(ioredis@5.8.1)(mysql2@3.15.2)(pg@8.16.3)(reflect-metadata@0.2.2)(sqlite3@5.1.7):
     dependencies:
       '@sqltools/formatter': 1.2.5
       ansis: 3.17.0
@@ -20501,6 +20543,7 @@ snapshots:
       uuid: 11.1.0
       yargs: 17.7.2
     optionalDependencies:
+      better-sqlite3: 12.4.1
       ioredis: 5.8.1
       mysql2: 3.15.2
       pg: 8.16.3
@@ -20786,7 +20829,7 @@ snapshots:
       '@unrs/resolver-binding-win32-ia32-msvc': 1.11.1
       '@unrs/resolver-binding-win32-x64-msvc': 1.11.1
 
-  unstorage@1.17.1(@vercel/blob@2.0.0)(db0@0.3.2(mysql2@3.15.2)(sqlite3@5.1.7))(ioredis@5.8.1):
+  unstorage@1.17.1(@vercel/blob@2.0.0)(db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7))(ioredis@5.8.1):
     dependencies:
       anymatch: 3.1.3
       chokidar: 4.0.3
@@ -20798,7 +20841,7 @@ snapshots:
       ufo: 1.6.1
     optionalDependencies:
       '@vercel/blob': 2.0.0
-      db0: 0.3.2(mysql2@3.15.2)(sqlite3@5.1.7)
+      db0: 0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.2)(sqlite3@5.1.7)
       ioredis: 5.8.1
 
   untun@0.1.3:
