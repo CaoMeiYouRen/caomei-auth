@@ -140,8 +140,8 @@ importers:
         specifier: ^5.1.7
         version: 5.1.7
       twilio:
-        specifier: 5.10.2
-        version: 5.10.2
+        specifier: 5.10.3
+        version: 5.10.3
       typeorm:
         specifier: ^0.3.27
         version: 0.3.27(ioredis@5.8.1)(mysql2@3.15.2)(pg@8.16.3)(reflect-metadata@0.2.2)(sqlite3@5.1.7)
@@ -8781,8 +8781,8 @@ packages:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
 
-  twilio@5.10.2:
-    resolution: {integrity: sha512-pkMdXK0PJHR0elu3GmaDlYt4DDWPkkmuJLVUQjnctehu01IgbAp+VZ2ctbUSh1anDuqKqimAIuMnW9xmKith6w==}
+  twilio@5.10.3:
+    resolution: {integrity: sha512-msve3uADprpG+LRlthOxBUJWZDczGe+mdzotG7Wluaf8nn8fSIK0n2fX3INR26Xedeea/azmAdLK0c2rJhIHpQ==}
     engines: {node: '>=14.0'}
 
   type-check@0.4.0:
@@ -20423,7 +20423,7 @@ snapshots:
 
   tunnel@0.0.6: {}
 
-  twilio@5.10.2:
+  twilio@5.10.3:
     dependencies:
       axios: 1.12.2
       dayjs: 1.11.18
