@@ -39,7 +39,7 @@
     "better-auth": "^1.3.27",
     "better-auth-localization": "^2.1.8",
     "better-bytes": "^1.2.4",
-    "chart.js": "^4.5.0",
+    "chart.js": "^4.5.1",
     "dayjs": "^1.11.18",
     "file-type": "^21.0.0",
     "fs-extra": "^11.3.2",
