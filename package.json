@@ -84,7 +84,7 @@
       "vue-demi"
     ],
     "overrides": {
-      "vite": "^6.2.6",
+      "vite": "$vite",
       "parse-git-config": "^3.0.0",
       "esbuild": "^0.25.0",
       "postcss": "^8.5.0",
