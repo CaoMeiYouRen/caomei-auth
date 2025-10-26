@@ -24,7 +24,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.917.0",
     "@axiomhq/winston": "^1.3.1",
-    "@better-auth/sso": "^1.3.28",
+    "@better-auth/sso": "^1.3.32",
     "@hcaptcha/vue3-hcaptcha": "^1.3.0",
     "@mdi/font": "^7.4.47",
     "@microsoft/clarity": "^1.0.0",
@@ -36,7 +36,7 @@
     "@vercel/blob": "^2.0.0",
     "@vueuse/core": "^14.0.0",
     "animate.css": "^4.1.1",
-    "better-auth": "^1.3.28",
+    "better-auth": "^1.3.32",
     "better-auth-localization": "^2.1.9",
     "better-bytes": "^1.2.4",
     "chart.js": "^4.5.1",
