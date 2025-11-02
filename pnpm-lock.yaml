@@ -65,8 +65,8 @@ importers:
         specifier: ^1.3.32
         version: 1.3.32(vue@3.5.22(typescript@5.9.3))
       better-auth-localization:
-        specifier: ^2.1.10
-        version: 2.1.10(better-auth@1.3.32(vue@3.5.22(typescript@5.9.3)))
+        specifier: ^2.2.1
+        version: 2.2.1(better-auth@1.3.32(vue@3.5.22(typescript@5.9.3)))
       better-bytes:
         specifier: ^1.2.4
         version: 1.2.4
@@ -460,6 +460,7 @@ packages:
   '@aws-sdk/credential-provider-web-identity@3.917.0':
     resolution: {integrity: sha512-pZncQhFbwW04pB0jcD5OFv3x2gAddDYCVxyJVixgyhSw7bKCYxqu6ramfq1NxyVpmm+qsw+ijwi/3cCmhUHF/A==}
     engines: {node: '>=18.0.0'}
+    deprecated: This version contains a compilation TypeScript error https://github.com/aws/aws-sdk-js-v3/issues/7457 - please use @aws-sdk/credential-providers@3.918.0 or higher
 
   '@aws-sdk/middleware-bucket-endpoint@3.914.0':
     resolution: {integrity: sha512-mHLsVnPPp4iq3gL2oEBamfpeETFV0qzxRHmcnCfEP3hualV8YF8jbXGmwPCPopUPQDpbYDBHYtXaoClZikCWPQ==}
@@ -3653,10 +3654,10 @@ packages:
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
 
-  better-auth-localization@2.1.10:
-    resolution: {integrity: sha512-PhM4/vcWMAVuEC/Zlqz9Cnl8MY16g+mSq5R3JlfXzWPs8bWW58naMwFXziGd4GFPGo6EBGuawxCfBgEnhuX6Sg==}
+  better-auth-localization@2.2.1:
+    resolution: {integrity: sha512-cp3juO2FdAoFMub8Hhy4Cat1iOBGEMILaAdXNFRti2lCg4VDwmyLzkg2qgBamRSGJnX9kN9xbzEh9opJHLIL+A==}
     peerDependencies:
-      better-auth: ^1.3.4
+      better-auth: ^1.3.27
 
   better-auth@1.3.32:
     resolution: {integrity: sha512-BHz/Ci0oiLe7PA922i+WqqoyW/fj5F1iax7DlUKmixFtyVQ2BJUDXcOROONARCtYScCDDoPLcW3ZrPXPbq/1Bg==}
@@ -14135,7 +14136,7 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-auth-localization@2.1.10(better-auth@1.3.32(vue@3.5.22(typescript@5.9.3))):
+  better-auth-localization@2.2.1(better-auth@1.3.32(vue@3.5.22(typescript@5.9.3))):
     dependencies:
       better-auth: 1.3.32(vue@3.5.22(typescript@5.9.3))
 
