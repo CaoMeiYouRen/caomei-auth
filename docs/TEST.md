@@ -1,272 +1,158 @@
-## 项目测试现状分析
-
-**当前测试：**
-
--   仅有一个端到端测试：api-index.spec.ts - 测试 API 根路径返回信息
--   使用 Vitest + @nuxt/test-utils 作为测试框架
-
-## 建议添加的测试用例
-
-### 1. 单元测试 (Unit Tests)
-
-#### 工具函数测试 (`/tests/unit/utils/`)
-
-1. **validate.ts 测试**
-
-    - `validateEmail()` - 测试各种邮箱格式（有效/无效）
-    - `validatePhone()` - 测试不同国家手机号格式验证
-    - `validateUrl()` - 测试 URL 格式验证
-    - `validatePassword()` - 测试密码强度验证
-    - `validateUsername()` - 测试用户名格式验证
-
-2. **privacy.ts 测试**
-
-    - `maskEmail()` - 测试邮箱脱敏功能
-    - `maskPhone()` - 测试手机号脱敏功能
-    - `maskUserId()` - 测试用户 ID 脱敏功能
-    - `maskIP()` - 测试 IP 地址脱敏功能
-
-3. **phone.ts 测试**
-
-    - 手机号格式化功能
-    - 国际手机号处理功能
-
-4. **code.ts 测试**
-    - 验证码生成和验证逻辑
-
-#### 服务器端工具函数测试 (`/tests/unit/server/utils/`)
-
-1. **random.ts 测试**
-
-    - 随机字符串生成
-    - 随机数生成
-
-2. **snowflake.ts 测试**
-
-    - 雪花 ID 生成算法
-    - ID 唯一性验证
-
-3. **rate-limit.ts 测试**
-
-    - 速率限制逻辑
-    - 不同时间窗口的限制策略
-
-4. **email-template.ts 测试**
-
-    - 邮件模板渲染
-    - 不同类型邮件内容生成
-
-5. **logger.ts 测试**
-    - 日志记录功能
-    - 不同日志级别处理
-
-### 2. 组件测试 (Component Tests) - `/tests/unit/components/`
-
-1. **phone-input.vue 测试**
-
-    - 手机号输入格式化
-    - 国家代码选择功能
-    - 输入验证反馈
-
-2. **send-code-button.vue 测试**
-
-    - 发送验证码按钮状态管理
-    - 倒计时功能
-    - 防重复点击机制
-
-3. **auth-left.vue 测试**
-
-    - 认证页面左侧组件渲染
-    - 响应式布局适配
-
-4. **app-footer.vue 测试**
-    - 页脚信息显示
-    - 链接跳转功能
-
-### 3. API 集成测试 (Integration Tests) - `/tests/integration/api/`
-
-#### 认证相关 API
-
-1. **[...all].ts 测试**
-
-    - 登录流程测试（邮箱、用户名、手机号）
-    - 注册流程测试
-    - 密码重置流程测试
-    - JWT Token 验证
-    - Session 管理
-
-2. **OAuth API 测试**
-    - consents.get.ts - 获取授权同意列表
-    - revoke-consent.post.ts - 撤销授权同意
-    - [id].get.ts - 获取 OAuth 客户端信息
-
-#### 管理后台 API
-
-1. **用户管理 API**
-
-    - `/api/admin/users/*` - 用户 CRUD 操作
-    - 用户状态管理（启用/禁用）
-
-2. **应用管理 API**
-
-    - `/api/admin/oauth/applications/*` - OAuth 应用 CRUD
-    - 应用密钥生成和管理
-
-3. **SSO 提供商管理**
-
-    - `/api/admin/sso/providers/*` - SSO 提供商配置管理
-
-4. **日志统计 API**
-    - stats.get.ts - 登录统计数据
-    - sessions.get.ts - 会话日志
-
-#### 文件上传 API
-
-1. **upload.post.ts 测试**
-    - 头像上传功能
-    - 文件格式验证
-    - 文件大小限制
-
-### 4. 页面端到端测试 (E2E Tests) - `/tests/e2e/pages/`
-
-#### 认证流程
-
-1. **login.vue 测试**
-
-    - 邮箱登录流程
-    - 用户名登录流程
-    - 手机号登录流程
-    - 验证码登录流程
-    - 社交媒体登录流程
-    - 记住登录状态功能
-    - 错误处理和提示
-
-2. **register.vue 测试**
-
-    - 邮箱注册流程
-    - 手机号注册流程
-    - 用户名注册流程
-    - 表单验证和错误提示
-    - 验证码发送和验证
-
-3. **forgot-password.vue 测试**
-    - 忘记密码流程
-    - 邮箱/手机号找回
-    - 验证码验证
-    - 密码重置
-
-#### 用户功能页面
-
-1. **profile.vue 测试**
-
-    - 个人信息展示
-    - 头像上传功能
-    - 个人信息修改
-    - 表单验证
-
-2. **security.vue 测试**
-
-    - 多因子认证设置
-    - 登录日志查看
-    - 设备管理功能
-
-3. **change-password.vue 测试**
-    - 密码修改流程
-    - 当前密码验证
-    - 新密码强度检测
-
-#### OAuth 功能
-
-1. **consent.vue 测试**
-
-    - OAuth 授权同意页面
-    - 权限范围展示
-    - 同意/拒绝流程
-
-2. **clients.vue 测试**
-    - 已授权应用列表
-    - 撤销授权功能
-
-#### 管理后台
-
-1. **users.vue 测试**
-
-    - 用户列表展示
-    - 用户搜索和筛选
-    - 用户编辑功能
-    - 用户状态管理
-
-2. **applications.vue 测试**
-
-    - OAuth 应用管理
-    - 应用创建和编辑
-    - 密钥管理
-
-3. **logs.vue 测试**
-    - 登录日志展示
-    - 统计数据图表
-    - 日志筛选和搜索
-
-### 5. 数据库测试 (Database Tests) - `/tests/integration/database/`
-
-1. **用户实体测试**
-
-    - 用户创建、查询、更新、删除
-    - 用户关系测试（会话、OAuth 授权等）
-
-2. **OAuth 客户端测试**
-
-    - OAuth 应用 CRUD 操作
-    - 授权码和令牌管理
-
-3. **会话管理测试**
-    - 会话创建和验证
-    - 会话过期处理
-
-### 6. 中间件测试 (Middleware Tests) - `/tests/unit/middleware/`
-
-1. **auth.global.ts 测试**
-    - 路由权限验证
-    - 未认证用户重定向
-    - 管理员权限检查
-
-### 7. 性能测试 (Performance Tests) - `/tests/performance/`
-
-1. **API 性能测试**
-
-    - 登录 API 响应时间
-    - 批量用户操作性能
-    - 数据库查询性能
-
-2. **页面加载性能**
-    - 首页加载时间
-    - 登录页面加载性能
-    - 管理后台页面性能
-
-### 8. 安全测试 (Security Tests) - `/tests/security/`
-
-1. **身份验证安全测试**
-
-    - SQL 注入防护
-    - XSS 攻击防护
-    - CSRF 保护
-    - 密码暴力破解防护
-
-2. **权限测试**
-    - 越权访问防护
-    - 管理员权限验证
-    - API 授权检查
-
-## 测试优先级建议
-
-**高优先级：**
-
-1. 核心工具函数单元测试（validate.ts, privacy.ts）
-2. 认证 API 集成测试
-3. 登录/注册页面 E2E 测试
-
-**中优先级：** 4. 组件单元测试 5. 管理后台 API 测试 6. 用户功能页面 E2E 测试
-
-**低优先级：** 7. 性能测试 8. 安全测试 9. 数据库集成测试
-
-这样的测试体系可以确保项目的稳定性、安全性和可维护性，覆盖从单元到集成再到端到端的完整测试链路。
+## 当前测试现状
+
+-   仅存在一份端到端测试：`tests/e2e/api-index.spec.ts`，且通过 `describe.skip` 被跳过，实际不会执行。
+-   未发现任何 `tests/unit`、`tests/integration` 等目录的实现文件，意味着单元、组件、集成层面完全空缺。
+-   当前测试脚本通过 `pnpm test` 执行 `vitest run`，但由于测试资产缺失，命令始终以 0 用例结束，容易产生“假绿”。
+
+### 测试工具链能力
+
+-   `vitest.config.ts` 已预置两个 Project：
+    -   `unit`：面向 `tests/{e2e,unit}`，默认 node 环境。
+    -   `nuxt`：面向 `tests/nuxt`，使用 `@nuxt/test-utils` 的 nuxt 环境，可模拟应用实例。
+-   依赖中已包含 `@vue/test-utils`、`happy-dom`、`playwright-core` 等，可分别支撑组件单测和端到端测试；无需额外安装即可落地。
+-   E2E 模板使用 `@nuxt/test-utils/e2e`，借助内存 SQLite (`DATABASE_PATH=':memory:'`) 与环境变量，具备跑通基础后台 API 的条件。
+
+## 风险评估与优先级
+
+1. **认证与安全链路缺乏验证**：`server/api/auth/[...all].ts` 直接暴露 better-auth handler，未做任何黑盒验证；若配置变更或回归 bug，将无法提前发现。
+2. **核心工具函数无人兜底**：`utils/validate.ts`、`utils/privacy.ts`、`utils/password-validator.ts`、`utils/password.ts` 等承担输入校验与脱敏逻辑，对生产安全影响大，必须优先补齐单测。
+3. **短信/邮件验证码流程复杂**：`utils/code.ts` 依赖外部客户端与验证码，通过率受限于多个分支，现状无测试覆盖。
+4. **管理后台与 OAuth API 面向第三方集成，环境故障风险高**：`server/api/admin/*`、`server/api/oauth/*` 缺少最小集成验证。
+5. **前端交互与组件回归风险**：如 `components/phone-input.vue`、`components/send-code-button.vue` 涉及格式化、倒计时与状态切换，回归成本大；建议中优先。
+
+## 分阶段建设路线图
+
+### 阶段 P0（1-2 天）：测试基础设施
+
+-   取消 `describe.skip`，并为 `tests/e2e/api-index.spec.ts` 引入固定断言，验证 `/api` 健康度。
+-   新建 `tests/setup/vitest.setup.ts`，统一初始化 `happy-dom`、Mock `logger`，并在 `vitest.config.ts` 中通过 `setupFiles` 引入。
+-   约定目录结构：
+    -   `tests/unit/utils/**`
+    -   `tests/unit/server/**`
+    -   `tests/unit/components/**`
+    -   `tests/integration/api/**`
+    -   `tests/e2e/pages/**`
+-   为数据库相关集成测试封装 `tests/fixtures/database.ts`，利用 TypeORM + SQLite 内存库建表、清表。
+
+### 阶段 P1（3-4 天）：核心工具函数单测
+
+-   `utils/validate.ts`
+    -   `validateEmail`：有效邮箱（含 UTF-8 本地部分）、无 TLD、IP 域名、含下划线等负例。
+    -   `validatePhone`：`+8613812345678`、`+12025550123` 正例；缺少国家码、不符合规则的负例；自定义 locale。
+    -   `validateUrl`：必须带协议、禁止 IP、末尾点的负例；开发域名（无 TLD）正例。
+    -   `validateUsername` 与 `usernameValidator`：长度边界、邮箱/手机号伪装、禁止字符测试。
+    -   `nicknameValidator`：控制字符（`\u0008`）、空格、过短/过长场景。
+-   `utils/privacy.ts`
+    -   `maskEmail`：短用户名、包含特殊字符的域名、异常输入（非字符串）。
+    -   `maskPhone`：E.164 与本地格式、异常号码、`getRegionCodeForPhoneNumber` 的容错（捕获 warning 分支）。
+    -   `maskUserId`、`maskUsername`、`maskIP`：长度边界、IPv6 缩写、无效 IP。
+-   `utils/password.ts` 与 `utils/password-validator.ts`
+    -   `passwordValidator`：强度枚举、`returnScore` 分支及自定义配置覆盖。
+    -   `getPasswordStrength`、`getPasswordScore`、`getPasswordRequirements*`：不同预设、环境变量影响。
+    -   `validatePassword`、`validatePasswordForm`：确认密码不一致、强度不足、缺少当前密码等。
+
+### 阶段 P2（4-5 天）：Server 层与 API 集成
+
+-   单测
+    -   `server/utils/random.ts`：长度、字符集、随机性（统计分布）。
+    -   `server/utils/rate-limit.ts`：通过 Stub `limiterStorage` 验证超限抛错；模拟不同 IP、路径组合。
+    -   `server/utils/email-template`（若存在多个模板函数）：Mock `mjml` 渲染失败路径。
+-   集成测试（使用内存 SQLite、`auth` stub）
+    -   认证 API：
+        -   `/api/auth/[...all]`：模拟登录（邮箱/手机号）、注册、`authClient` 错误分支。
+        -   密码重置流程：校验 email / phone OTP 的发送与验证接口。
+    -   OAuth API：
+        -   `/api/oauth/consents.get`、`/api/oauth/revoke-consent.post`、`/api/oauth/[id].get`：覆盖授权列表、撤销、查询失败。
+    -   管理后台 API：
+        -   `/api/admin/users/*`：创建/更新/禁用用户。
+        -   `/api/admin/oauth/applications/*`：CRUD 与秘钥轮换。
+        -   `/api/admin/logs/stats.get`、`/sessions.get`：返回结构与分页。
+    -   文件上传 `/api/file/upload.post`：验证 MIME、size 限制、鉴权失败。
+-   需要的夹具
+    -   `tests/fixtures/auth.ts`：基于 better-auth 提供虚拟用户/令牌。
+    -   `tests/fixtures/storage.ts`：封装 Redis/Limiter mock，避免真实连接。
+
+### 阶段 P3（4-5 天）：前端组件与页面
+
+-   组件测试（`@vue/test-utils` + `happy-dom`）
+    -   `components/phone-input.vue`：国家码选择、格式化展示、`validatePhone` 交互。
+    -   `components/send-code-button.vue`：倒计时、禁用状态、`useSendEmailCode`/`useSendPhoneCode` 回调。
+    -   `components/password-strength.vue`：不同强度颜色与提示文本。
+    -   `components/demo-mode-dialog.vue`：对外事件、关闭逻辑。
+-   页面级测试（`tests/nuxt` 或 `tests/e2e/pages`）
+    -   `/login`：邮箱/手机号登录流程，验证码失败提示，`useDemoMode` 下的禁用状态。
+    -   `/register`：表单验证、密码强度反馈、验证码发送拒绝。
+    -   `/forgot-password`：流程跳转、成功提示。
+    -   `/profile`、`/security`：需通过模拟已登录状态，验证数据拉取与错误流程。
+    -   `/admin/users`、`/admin/oauth/clients`：基于 Mock API，验证表格渲染、筛选、操作按钮灰度。
+-   建议对复杂表单使用 `@testing-library/vue`（与 `@vue/test-utils` 兼容），提升语义化断言。
+
+### 阶段 P4（长期）：专项测试
+
+-   性能：使用 Playwright Trace 或 Lighthouse CI 记录 `/login`、`/admin` 页面首屏指标。
+-   安全：引入安全测试用例（SQL 注入、XSS、CSRF Token 丢失）模拟，重点验证服务端校验与前端过滤。
+-   数据库：针对 `server/entities` 的 TypeORM Repository 编写集成测试，验证关系映射、级联删除。
+
+## 详细测试设计
+
+### 单元测试目录规划
+
+```
+
+├─ unit/
+│  ├─ utils/
+│  │  ├─ validate.spec.ts
+│  │  ├─ privacy.spec.ts
+│  │  ├─ password.spec.ts
+│  │  └─ code.spec.ts
+│  ├─ server/
+│  │  ├─ rate-limit.spec.ts
+│  │  └─ random.spec.ts
+│  └─ components/
+│     ├─ phone-input.spec.ts
+│     └─ send-code-button.spec.ts
+├─ integration/
+│  └─ api/
+│     ├─ auth.spec.ts
+│     ├─ oauth.spec.ts
+│     └─ admin-users.spec.ts
+└─ e2e/
+   ├─ api-index.spec.ts
+   └─ pages/
+      ├─ login.spec.ts
+      └─ register.spec.ts
+```
+
+### 关键用例补充说明
+
+-   `utils/code.ts`
+    -   Mock `authClient` 与 `resolveCaptchaToken`，覆盖验证码成功/失败、重复发送冷却逻辑，验证 `errors` 与 Toast 调用（可通过 spy）。
+-   `utils/navigation.ts`（如存在条件重定向）：模拟不同 `navigateTo` 参数，验证返回值。
+-   `server/middleware/auth.global.ts`：构造事件对象（带/不带 Session），断言重定向目标与状态码。
+-   `server/api/index.ts`：Mock `fs.readJSON` 抛错路径，确认 logger 捕获。
+
+### 测试夹具与 Mock 策略
+
+-   建议在 `tests/mocks/logger.ts` 中导出与生产 `logger` 同名对象（`info|error|warn|business`），集中断言日志输出。
+-   借助 `vi.mock` 伪造第三方服务：
+    -   `twilio`、`nodemailer`：返回固定消息 ID。
+    -   `@aws-sdk/client-s3`、`@vercel/blob`：避免真实网络调用。
+-   集成测试前后通过 `beforeAll/afterAll` 启动/关闭内存数据库；每个 `it` 使用事务或清表保障隔离。
+
+### 覆盖率与质量门槛
+
+-   目标：阶段 P2 结束后达到 **语句 70% / 分支 60% / 函数 70%**；阶段 P3 完成后提升到 **80%+**。
+-   在 `vitest.config.ts` 的 `test.coverage` 中配置阈值与 `reporters: ['text', 'lcov']`，供 CI 与 Sonar 使用。
+
+## CI 与持续集成建议
+
+-   在 CI 流程中添加 `pnpm test --run` 与 `pnpm test:coverage`，若使用 GitHub Actions，可拆分为并行 Job（unit / integration / e2e）。
+-   对 E2E Job 启用可选触发（仅在相关目录改动或手动 dispatch 时运行），降低耗时。
+-   结合 `pnpm lint` 结果，阻断未覆盖的高风险改动。
+
+## 后续迭代建议
+
+1. 建立 `tests/README.md`，记录运行命令、夹具使用方法、常见问题。
+2. 在 `docs/PLAN.md` 的“当前待办”中同步测试里程碑，便于团队跟踪。
+3. 引入 `@playwright/test` 或 `@nuxt/test-utils/playwright`，在阶段 P3 之后扩展跨浏览器端到端测试。
+4. 依据业务优先级持续回顾测试空白，例如多语言、Demo 模式、日志审计等模块。
