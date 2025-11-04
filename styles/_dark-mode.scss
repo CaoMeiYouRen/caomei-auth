@@ -1,12 +1,6 @@
 // 暗色模式混合宏和通用样式
 // 用于减少重复代码，统一暗色模式样式管理
-
-// 暗色模式媒体查询混合宏
-@mixin dark-mode {
-    @media (prefers-color-scheme: dark) {
-        @content;
-    }
-}
+// 基础 mixin 定义见 styles/_mixins.scss
 
 // 认证页面通用样式混合宏
 @mixin auth-page-base-styles {

@@ -156,7 +156,7 @@ const finalDocUrl = computed(() => {
 }
 
 // 暗色模式样式
-@media (prefers-color-scheme: dark) {
+@include dark-mode {
     .demo-mode-banner {
         color: #fbbf24; // 暖黄色文本
         background: linear-gradient(135deg, #1e293b 0%, #334155 100%); // 现代深灰蓝色渐变

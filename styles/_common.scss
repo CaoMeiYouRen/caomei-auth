@@ -64,7 +64,7 @@
 }
 
 // 深色主题支持
-@media (prefers-color-scheme: dark) {
+@include dark-mode {
   .auth-container {
     background: #{$dark-background};
   }

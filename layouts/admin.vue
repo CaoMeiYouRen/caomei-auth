@@ -129,6 +129,8 @@
             <DemoModeBanner />
             <!-- 反馈入口 -->
             <FeedbackButton />
+            <!-- 主题切换按钮 -->
+            <ThemeToggle />
             <slot />
             <AppFooter />
         </div>

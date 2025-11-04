@@ -1,0 +1,16 @@
+// 全局混合宏定义
+// 提供基础暗色模式混合宏供所有 SCSS 文件复用
+
+// 暗色模式媒体查询混合宏
+// 统一通过这个混合宏判断暗色模式：支持系统偏好 (@media) 和手动在 HTML 上添加 class (html.dark)
+@mixin dark-mode {
+    // 当 html 上存在 .dark 类时生效（例如 useDark 将在 <html> 上添加 class）
+    html.dark {
+        @content;
+    }
+
+    // 系统偏好：prefers-color-scheme
+    @media (prefers-color-scheme: dark) {
+        @content;
+    }
+}

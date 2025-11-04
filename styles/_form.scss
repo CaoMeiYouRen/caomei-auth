@@ -29,7 +29,7 @@
 }
 
 // 深色主题下的表单输入框优化
-@media (prefers-color-scheme: dark) {
+@include dark-mode {
     // 使用更具体的选择器来提高优先级，避免过度使用 !important
     .form-group .form-input,
     .form-input {
@@ -146,7 +146,7 @@
 }
 
 // 深色主题下的其他元素优化
-@media (prefers-color-scheme: dark) {
+@include dark-mode {
     .form-group .form-label,
     .form-label {
         color: #{$dark-secondary};

@@ -130,7 +130,7 @@ const props = withDefaults(defineProps<Props>(), {
 }
 
 // 暗色模式支持
-@media (prefers-color-scheme: dark) {
+@include dark-mode {
     .github-corner {
         svg {
             fill: #f0f6fc; // 暗色模式下使用浅色

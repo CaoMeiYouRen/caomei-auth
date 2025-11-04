@@ -11,6 +11,8 @@
         <GithubCorner v-if="demoMode" />
         <!-- 反馈按钮 -->
         <FeedbackButton />
+        <!-- 主题切换按钮 -->
+        <ThemeToggle />
     </div>
 </template>
 

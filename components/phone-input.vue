@@ -137,7 +137,7 @@ watch(() => props.modelValue, (newValue) => {
 }
 
 // 深色主题下的手机输入组件优化
-@media (prefers-color-scheme: dark) {
+@include dark-mode {
     .phone-input {
         .region-selector {
             .p-select,

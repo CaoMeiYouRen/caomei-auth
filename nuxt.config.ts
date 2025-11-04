@@ -106,6 +106,10 @@ export default defineNuxtConfig({
         options: {
             theme: {
                 preset: AppPreset,
+                // 当应用使用 html 上的 .dark 类来控制暗色模式时，告诉 PrimeVue 使用该选择器以便自动应用暗色主题
+                options: {
+                    darkModeSelector: 'html.dark',
+                },
             },
             locale: zh_CN,
         },
@@ -131,6 +135,7 @@ export default defineNuxtConfig({
                     silenceDeprecations: ['import', 'legacy-js-api'], // 忽略警告
                     // 自动在每个 .scss 文件中注入这些内容
                     additionalData: `
+                    @import "@/styles/mixins.scss";
                     @import "@/styles/theme.scss";
                     @import "@/styles/common.scss";
                     @import "@/styles/form.scss";
