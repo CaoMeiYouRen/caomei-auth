@@ -49,6 +49,13 @@ export const socialColors: Record<string, SocialColor> = {
         color: '#fe2c55',
         source: '抖音开放平台品牌指南',
     },
+    facebook: {
+        provider: 'facebook',
+        name: 'Facebook',
+        color: '#1877f2',
+        darkColor: '#ffffff',
+        source: 'Meta Brand Guidelines 2024',
+    },
     github: {
         provider: 'github',
         name: 'GitHub',

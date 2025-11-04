@@ -54,6 +54,7 @@ function getDefaultIcon(provider: string): string {
         apple: 'mdi mdi-apple',
         twitter: 'mdi mdi-twitter',
         discord: 'iconfont icon-discord-simple',
+        facebook: 'mdi mdi-facebook',
         wechat: 'mdi mdi-wechat',
         qq: 'mdi mdi-qqchat',
         douyin: 'iconfont icon-douyin',

@@ -12,6 +12,7 @@ import {
     QQ_CLIENT_ID,
     WECHAT_CLIENT_ID,
     DOUYIN_CLIENT_ID,
+    FACEBOOK_CLIENT_ID,
 } from '@/utils/env'
 
 // 所有第三方登录的元数据
@@ -65,6 +66,14 @@ const allProviders: SocialProvider[] = [
         social: true,
         icon: 'mdi mdi-twitter',
         enabled: !!TWITTER_CLIENT_ID,
+    },
+    {
+        name: 'Facebook',
+        provider: 'facebook',
+        color: getSocialColor('facebook'),
+        social: true,
+        icon: 'mdi mdi-facebook',
+        enabled: !!FACEBOOK_CLIENT_ID,
     },
     {
         name: 'Discord',

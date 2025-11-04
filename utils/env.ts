@@ -184,6 +184,12 @@ export const MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET
 // Discord 配置
 export const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID
 export const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET
+// Facebook 配置
+export const FACEBOOK_CLIENT_ID = process.env.FACEBOOK_CLIENT_ID
+export const FACEBOOK_CLIENT_SECRET = process.env.FACEBOOK_CLIENT_SECRET
+export const FACEBOOK_SCOPES = process.env.FACEBOOK_SCOPES?.split(',').map((e) => e.trim()).filter(Boolean) || []
+export const FACEBOOK_FIELDS = process.env.FACEBOOK_FIELDS?.split(',').map((e) => e.trim()).filter(Boolean) || []
+export const FACEBOOK_CONFIG_ID = process.env.FACEBOOK_CONFIG_ID
 // 微博配置
 export const WEIBO_CLIENT_ID = process.env.WEIBO_CLIENT_ID
 export const WEIBO_CLIENT_SECRET = process.env.WEIBO_CLIENT_SECRET

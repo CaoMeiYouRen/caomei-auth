@@ -33,6 +33,8 @@ $color-microsoft: #0078d4; // Microsoft
 $color-discord: #5865f2; // Discord - Discord Brand Guidelines 2024
 $color-apple: #000000; // Apple
 $color-apple-dark: #ffffff; // Apple (Dark Theme)
+$color-facebook: #1877f2; // Facebook - Meta Brand Guidelines 2024
+$color-facebook-dark: #ffffff; // Facebook (Dark Theme)
 $color-twitter: #1da1f2; // Twitter(X) - Twitter Brand Guidelines（历史版本）
 $color-wechat: #07c160; // 微信
 $color-qq: #ea1c26; // QQ - QQ 红 - QQ 互联平台品牌指南
@@ -69,6 +71,7 @@ $dark-border-color: #374151;
     --color-microsoft: #{$color-microsoft};
     --color-discord: #{$color-discord};
     --color-apple: #{$color-apple};
+    --color-facebook: #{$color-facebook};
     --color-twitter: #{$color-twitter};
     --color-wechat: #{$color-wechat};
     --color-qq: #{$color-qq};
@@ -79,6 +82,7 @@ $dark-border-color: #374151;
     // 暗色主题的社交平台颜色
     --color-apple-dark: #{$color-apple-dark};
     --color-github-dark: #{$color-apple-dark}; // GitHub 在暗色主题下也使用白色
+    --color-facebook-dark: #{$color-facebook-dark};
 
     // 主题色
     --color-primary: #{$primary};

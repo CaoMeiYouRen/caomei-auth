@@ -31,6 +31,7 @@
 -   [Google](./social/google) - 最广泛使用的社交登录
 -   [Microsoft](./social/microsoft) - 企业级应用集成
 -   [Discord](./social/discord) - 游戏和社区应用
+-   [Facebook](./social/facebook) - 覆盖全球的社交平台
 -   [Apple](./social/apple) - iOS 生态集成
 -   [Twitter](./social/twitter) - 社交媒体集成
 
@@ -98,6 +99,10 @@ GITHUB_CLIENT_SECRET=your-github-client-secret
 # Google
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Facebook
+FACEBOOK_CLIENT_ID=your-facebook-client-id
+FACEBOOK_CLIENT_SECRET=your-facebook-client-secret
 
 # Microsoft
 MICROSOFT_CLIENT_ID=your-microsoft-client-id

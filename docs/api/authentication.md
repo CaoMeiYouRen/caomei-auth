@@ -49,6 +49,7 @@
     - Google
     - Microsoft
     - Discord
+    - Facebook
     - Apple
     - Twitter
     - 微博
@@ -133,6 +134,7 @@ GITHUB_CLIENT_SECRET=your-github-client-secret
 
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
+
 ```
 
 ### 可选的环境变量

@@ -8,7 +8,7 @@
     "release": "semantic-release",
     "build": "nuxt build",
     "build:debug": "cross-env DEBUG_BUILD=true nuxt build",
-    "dev": "nuxt dev -o --host",
+    "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "generate:debug": "cross-env DEBUG_BUILD=true nuxt generate",
     "preview": "nuxt preview",

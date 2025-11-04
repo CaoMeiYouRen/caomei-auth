@@ -1,4 +1,4 @@
-import { betterAuth, type SecondaryStorage } from 'better-auth'
+import { betterAuth } from 'better-auth'
 import {
     username,
     anonymous,
@@ -37,6 +37,11 @@ import {
     MICROSOFT_CLIENT_SECRET,
     DISCORD_CLIENT_ID,
     DISCORD_CLIENT_SECRET,
+    FACEBOOK_CLIENT_ID,
+    FACEBOOK_CLIENT_SECRET,
+    FACEBOOK_SCOPES,
+    FACEBOOK_FIELDS,
+    FACEBOOK_CONFIG_ID,
     APPLE_CLIENT_ID,
     APPLE_CLIENT_SECRET,
     APPLE_APP_BUNDLE_IDENTIFIER,
@@ -157,6 +162,13 @@ export const auth = betterAuth({
         discord: { // 支持 Discord 登录
             clientId: DISCORD_CLIENT_ID as string,
             clientSecret: DISCORD_CLIENT_SECRET as string,
+        },
+        facebook: { // 支持 Facebook 登录
+            clientId: FACEBOOK_CLIENT_ID as string,
+            clientSecret: FACEBOOK_CLIENT_SECRET as string,
+            scopes: ['email', 'public_profile', ...FACEBOOK_SCOPES],
+            fields: ['id', 'name', 'email', 'picture', ...FACEBOOK_FIELDS],
+            configId: FACEBOOK_CONFIG_ID,
         },
         apple: { // 支持 Apple 登录
             clientId: APPLE_CLIENT_ID as string,
