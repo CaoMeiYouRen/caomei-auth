@@ -190,4 +190,6 @@ const contactEmailLink = `mailto:${config.contactEmail}`
         font-size: 1.3rem;
     }
 }
+
+@include auth-page-dark-theme
 </style>

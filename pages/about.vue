@@ -188,4 +188,6 @@
         font-size: 1.3rem;
     }
 }
+
+@include auth-page-dark-theme
 </style>

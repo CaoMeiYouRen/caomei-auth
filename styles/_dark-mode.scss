@@ -9,7 +9,7 @@
         flex-direction: column-reverse;
         background: $background;
 
-        @media (width >= 768px) {
+        @media (width >=768px) {
             flex-direction: row;
         }
     }
@@ -28,7 +28,7 @@
             max-width: 160px;
         }
 
-        @media (width >= 768px) {
+        @media (width >=768px) {
             width: 50%;
             min-height: 100vh;
 
@@ -46,7 +46,7 @@
         min-height: 60vh;
         padding: 1rem;
 
-        @media (width >= 768px) {
+        @media (width >=768px) {
             width: 50%;
             min-height: 100vh;
         }
@@ -152,6 +152,15 @@
             color: #{$dark-secondary-light} !important;
         }
 
+        .auth-section {
+            color: #{$secondary-light} !important;
+            ul {
+                li {
+                    color: #{$secondary-light} !important;
+                }
+            }
+        }
+
         .form-label {
             color: #{$dark-secondary} !important;
         }
@@ -162,75 +171,75 @@
     }
 }
 
-        // SSO 提供商页面暗色模式
-        .sso-provider-config {
-            background: #{$dark-background-light} !important;
+// SSO 提供商页面暗色模式
+.sso-provider-config {
+    background: #{$dark-background-light} !important;
+    border-color: #{$dark-border-color} !important;
+
+    .config-section {
+        h4 {
+            color: #{$dark-secondary} !important;
+        }
+
+        .field {
+            label {
+                color: #{$dark-secondary} !important;
+            }
+
+            .p-inputtext,
+            .p-textarea {
+                background: #{$dark-background} !important;
+                border-color: #{$dark-border-color} !important;
+                color: #{$dark-secondary} !important;
+
+                &::placeholder {
+                    color: #{$dark-secondary-light} !important;
+                }
+            }
+
+            .p-checkbox .p-checkbox-box {
+                background: #{$dark-background} !important;
+                border-color: #{$dark-border-color} !important;
+
+                .p-checkbox-icon {
+                    color: #{$primary} !important;
+                }
+            }
+        }
+    }
+}
+
+.provider-form {
+    .field {
+        label {
+            color: #{$dark-secondary} !important;
+        }
+
+        .p-inputtext {
+            background: #{$dark-background} !important;
+            border-color: #{$dark-border-color} !important;
+            color: #{$dark-secondary} !important;
+
+            &::placeholder {
+                color: #{$dark-secondary-light} !important;
+            }
+        }
+
+        .p-checkbox .p-checkbox-box {
+            background: #{$dark-background} !important;
             border-color: #{$dark-border-color} !important;
 
-            .config-section {
-                h4 {
-                    color: #{$dark-secondary} !important;
-                }
-
-                .field {
-                    label {
-                        color: #{$dark-secondary} !important;
-                    }
-
-                    .p-inputtext,
-                    .p-textarea {
-                        background: #{$dark-background} !important;
-                        border-color: #{$dark-border-color} !important;
-                        color: #{$dark-secondary} !important;
-
-                        &::placeholder {
-                            color: #{$dark-secondary-light} !important;
-                        }
-                    }
-
-                    .p-checkbox .p-checkbox-box {
-                        background: #{$dark-background} !important;
-                        border-color: #{$dark-border-color} !important;
-
-                        .p-checkbox-icon {
-                            color: #{$primary} !important;
-                        }
-                    }
-                }
+            &.p-highlight {
+                background: #{$primary} !important;
+                border-color: #{$primary} !important;
             }
         }
 
-        .provider-form {
-            .field {
-                label {
-                    color: #{$dark-secondary} !important;
-                }
-
-                .p-inputtext {
-                    background: #{$dark-background} !important;
-                    border-color: #{$dark-border-color} !important;
-                    color: #{$dark-secondary} !important;
-
-                    &::placeholder {
-                        color: #{$dark-secondary-light} !important;
-                    }
-                }
-
-                .p-checkbox .p-checkbox-box {
-                    background: #{$dark-background} !important;
-                    border-color: #{$dark-border-color} !important;
-
-                    &.p-highlight {
-                        background: #{$primary} !important;
-                        border-color: #{$primary} !important;
-                    }
-                }
-
-                .p-checkbox-label {
-                    color: #{$dark-secondary} !important;
-                }
-            }
+        .p-checkbox-label {
+            color: #{$dark-secondary} !important;
         }
+    }
+}
 
 // 文本颜色混合宏
 @mixin dark-text-primary {
@@ -447,6 +456,7 @@
 // 后台管理页面通用暗色模式混合宏
 @mixin admin-page-dark-theme {
     @include dark-mode {
+
         // 页面容器
         .admin-users,
         .admin-logs,
@@ -592,13 +602,13 @@
                 color: #{$dark-secondary} !important;
             }
 
-            .p-datatable-thead > tr > th {
+            .p-datatable-thead>tr>th {
                 background: #{$dark-background} !important;
                 border-color: #{$dark-border-color} !important;
                 color: #{$dark-secondary} !important;
             }
 
-            .p-datatable-tbody > tr {
+            .p-datatable-tbody>tr {
                 background: #{$dark-background-light} !important;
                 border-color: #{$dark-border-color} !important;
 
@@ -606,7 +616,7 @@
                     background: #{$dark-background} !important;
                 }
 
-                > td {
+                >td {
                     border-color: #{$dark-border-color} !important;
                     color: #{$dark-secondary} !important;
                 }
@@ -852,6 +862,7 @@
 
         // 用户状态暗色模式
         .user-status {
+
             .ban-reason,
             .ban-expires {
                 color: #{$dark-secondary-light} !important;
@@ -866,6 +877,7 @@
                 color: #{$dark-secondary} !important;
 
                 .p-toast-message-content {
+
                     .p-toast-summary,
                     .p-toast-detail {
                         color: #{$dark-secondary} !important;
@@ -877,6 +889,7 @@
                     border-color: rgba(74, 222, 128, 0.3) !important;
 
                     .p-toast-message-content {
+
                         .p-toast-summary,
                         .p-toast-detail {
                             color: rgb(74, 222, 128) !important;
@@ -889,6 +902,7 @@
                     border-color: rgba(239, 68, 68, 0.3) !important;
 
                     .p-toast-message-content {
+
                         .p-toast-summary,
                         .p-toast-detail {
                             color: rgb(239, 68, 68) !important;
@@ -901,6 +915,7 @@
                     border-color: rgba(245, 158, 11, 0.3) !important;
 
                     .p-toast-message-content {
+
                         .p-toast-summary,
                         .p-toast-detail {
                             color: rgb(245, 158, 11) !important;
@@ -913,6 +928,7 @@
                     border-color: rgba(59, 130, 246, 0.3) !important;
 
                     .p-toast-message-content {
+
                         .p-toast-summary,
                         .p-toast-detail {
                             color: rgb(59, 130, 246) !important;
@@ -951,6 +967,7 @@
     @include auth-page-dark-theme;
 
     @include dark-mode {
+
         // 按钮组暗色模式
         .p-buttongroup {
             .p-button {

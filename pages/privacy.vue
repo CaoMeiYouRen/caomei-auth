@@ -162,6 +162,16 @@
                             </li>
                             <li>
                                 <NuxtLink
+                                    to="https://facebook.com"
+                                    external
+                                    class="external-link"
+                                    target="_blank"
+                                >
+                                    Facebook 登录
+                                </NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink
                                     to="https://discord.com"
                                     external
                                     class="external-link"
@@ -360,4 +370,6 @@ const contactEmailLink = `mailto:${config.contactEmail}`
         font-size: 1.3rem;
     }
 }
+
+@include auth-page-dark-theme
 </style>
