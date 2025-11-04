@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useDark, useToggle } from '@vueuse/core'
+import { useDark, usePreferredDark, useToggle } from '@vueuse/core'
 
 const isDark = useDark({})
 const toggleDark = () => isDark.value = !isDark.value
@@ -26,13 +26,11 @@ const toggleDark = () => isDark.value = !isDark.value
 const buttonLabel = computed(() => (isDark.value ? '切换为亮色模式' : '切换为暗色模式'))
 const iconClass = computed(() => (isDark.value ? 'mdi-weather-night' : 'mdi-white-balance-sunny'))
 
-watch(isDark, (newVal) => {
-    console.log('isDark', isDark.value)
-    // if (newVal) {
-    //     document.documentElement.classList.add('dark')
-    // } else {
-    //     document.documentElement.classList.remove('dark')
-    // }
+const preferredDark = usePreferredDark()
+
+// 同步系统偏好设置的暗色模式状态
+watch(preferredDark, (newVal) => {
+    isDark.value = newVal
 }, { immediate: true })
 </script>
 
