@@ -36,6 +36,7 @@ export function validateUrl(url: string): boolean {
         allow_trailing_dot: false, // 不允许结尾有点号
         allow_query_components: true, // 允许查询组件
         allow_fragments: true, // 允许片段标识符
+        // host_blacklist: [/^\d{1,3}(?:\.\d{1,3}){3}$/], // 阻止纯 IPv4 地址
     })
 }
 
