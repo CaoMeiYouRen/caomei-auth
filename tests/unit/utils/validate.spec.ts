@@ -14,6 +14,10 @@ describe('utils/validate', () => {
         it('rejects email containing underscore in domain', () => {
             expect(validateEmail('user@exa_mple.com')).toBe(false)
         })
+
+        it('rejects email that uses IP address domain', () => {
+            expect(validateEmail('user@192.168.0.1')).toBe(false)
+        })
     })
 
     describe('validatePhone', () => {
@@ -32,6 +36,10 @@ describe('utils/validate', () => {
         it('rejects malformed phone number', () => {
             expect(validatePhone('+123')).toBe(false)
         })
+
+        it('accepts numbers when locale array includes matching region', () => {
+            expect(validatePhone('+447911123456', ['en-GB', 'zh-CN'])).toBe(true)
+        })
     })
 
     describe('validateUrl', () => {
@@ -46,6 +54,14 @@ describe('utils/validate', () => {
         it('rejects URLs ending with a trailing dot', () => {
             expect(validateUrl('https://example.com.')).toBe(false)
         })
+
+        it('rejects URLs without protocol prefix', () => {
+            expect(validateUrl('example.com')).toBe(false)
+        })
+
+        it('rejects URLs using unsupported protocols', () => {
+            expect(validateUrl('ftp://example.com')).toBe(false)
+        })
     })
 
     describe('validateUsername & usernameValidator', () => {
@@ -56,6 +72,14 @@ describe('utils/validate', () => {
         it('rejects usernames that are too short or contain spaces', () => {
             expect(validateUsername('u')).toBe(false)
             expect(validateUsername('user name')).toBe(false)
+        })
+
+        it('enforces maximum length boundary', () => {
+            const maxLengthName = 'a'.repeat(36)
+            const overflowName = 'a'.repeat(37)
+
+            expect(validateUsername(maxLengthName)).toBe(true)
+            expect(validateUsername(overflowName)).toBe(false)
         })
 
         it('blocks usernames that look like email addresses', () => {
@@ -85,6 +109,14 @@ describe('utils/validate', () => {
 
             expect(nicknameValidator(withControlCharacter)).toBe(false)
             expect(nicknameValidator('包含 空格')).toBe(false)
+        })
+
+        it('validates upper length boundary correctly', () => {
+            const maxLengthNickname = '好'.repeat(36)
+            const overflowNickname = '好'.repeat(37)
+
+            expect(nicknameValidator(maxLengthNickname)).toBe(true)
+            expect(nicknameValidator(overflowNickname)).toBe(false)
         })
     })
 })

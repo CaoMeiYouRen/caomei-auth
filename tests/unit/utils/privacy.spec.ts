@@ -19,6 +19,10 @@ describe('utils/privacy', () => {
         it('returns original value when email is invalid', () => {
             expect(maskEmail('not-an-email')).toBe('not-an-email')
         })
+
+        it('ignores non-string values gracefully', () => {
+            expect(maskEmail(undefined as unknown as string)).toBe(undefined)
+        })
     })
 
     describe('maskPhone', () => {
@@ -74,6 +78,10 @@ describe('utils/privacy', () => {
             expect(maskIP('2001:0db8:85a3:0000:0000:8a2e:0370:7334')).toBe('2001:0db8:85a3:0000:0000:8a2e:***:***')
         })
 
+        it('handles compressed IPv6 formats', () => {
+            expect(maskIP('2001:db8::7334')).toBe('2001:db8:***:***')
+        })
+
         it('returns original string when format is not recognised', () => {
             expect(maskIP('not-an-ip')).toBe('not-an-ip')
         })
@@ -90,6 +98,10 @@ describe('utils/privacy', () => {
 
         it('supports custom prefix and suffix lengths', () => {
             expect(maskString('abcdef', 1, 1)).toBe('a***f')
+        })
+
+        it('returns non-string input without modification', () => {
+            expect(maskString(undefined as unknown as string)).toBe(undefined)
         })
     })
 })
