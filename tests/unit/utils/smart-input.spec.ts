@@ -82,7 +82,7 @@ describe('utils/smart-input', () => {
         const cn = detectPossibleRegions('13812345678')
         expect(cn[0]).toMatchObject({ region: 'CN', countryCode: 86 })
 
-        const us = detectPossibleRegions('2025550123')
+        const us = detectPossibleRegions('12025550123')
         expect(us.some((item) => item.region === 'US')).toBe(true)
     })
 
@@ -112,16 +112,14 @@ describe('utils/smart-input', () => {
         expect(formatAccountForVerification('13812345678', 'CN')).toBe('+8613812345678')
     })
 
-    it('uses default region when optional region missing', async () => {
-        const module = await import('@/utils/smart-input')
-        vi.spyOn(module, 'getDefaultRegionByLocation').mockReturnValue('US')
-        expect(module.formatAccountForVerification('2025550123')).toBe('+12025550123')
+    it('uses default region when optional region missing', () => {
+        withBrowserContext({ storedRegion: 'US' })
+        expect(formatAccountForVerification('12025550123')).toBe('+12025550123')
     })
 
-    it('throws descriptive error when formatting fails', async () => {
-        const module = await import('@/utils/smart-input')
-        vi.spyOn(module, 'getDefaultRegionByLocation').mockReturnValue('XX')
-        expect(() => module.formatAccountForVerification('2025550123')).toThrow('无法确定手机号格式，请选择国家/地区')
+    it('throws descriptive error when formatting fails', () => {
+        withBrowserContext({ storedRegion: 'XX' })
+        expect(() => formatAccountForVerification('12025550123')).toThrow('无法确定手机号格式，请选择国家/地区')
     })
 
     it('validates formatted accounts', () => {

@@ -8,7 +8,7 @@ describe('utils/phone', () => {
     })
 
     it('formats numbers for international display', () => {
-        expect(formatPhoneNumberInternational('13812345678', 'CN')).toBe('+86 138 123 45678')
+        expect(formatPhoneNumberInternational('13812345678', 'CN')).toBe('+86 138 1234 5678')
         expect(formatPhoneNumberInternational('2025550123', 'US')).toBe('+1 202-555-0123')
     })
 

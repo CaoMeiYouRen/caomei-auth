@@ -59,11 +59,11 @@ describe('utils/admin-role-client', () => {
     })
 
     it('batchSyncAdminRole aggregates results', async () => {
-        const module = await import('@/utils/admin-role-client')
-        vi.spyOn(module, 'syncAdminRole')
-            .mockResolvedValueOnce({ success: true, message: 'ok' } as any)
+        fetchMock
+            .mockResolvedValueOnce({ success: true, message: 'ok' })
             .mockRejectedValueOnce(new Error('fail'))
 
+        const module = await import('@/utils/admin-role-client')
         const results = await module.batchSyncAdminRole(['a', 'b'])
 
         expect(results).toEqual([
