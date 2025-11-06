@@ -1,14 +1,12 @@
 ## 当前测试现状
 
--   仅存在一份端到端测试：`tests/e2e/api-index.spec.ts`，且通过 `describe.skip` 被跳过，实际不会执行。
+-   现有一份端到端测试：`tests/e2e/api-index.nuxt.spec.ts`，已覆盖 `/api` 健康检查并默认参与运行。
 -   未发现任何 `tests/unit`、`tests/integration` 等目录的实现文件，意味着单元、组件、集成层面完全空缺。
 -   当前测试脚本通过 `pnpm test` 执行 `vitest run`，但由于测试资产缺失，命令始终以 0 用例结束，容易产生“假绿”。
 
 ### 测试工具链能力
 
--   `vitest.config.ts` 已预置两个 Project：
-    -   `unit`：面向 `tests/{e2e,unit}`，默认 node 环境。
-    -   `nuxt`：面向 `tests/nuxt`，使用 `@nuxt/test-utils` 的 nuxt 环境，可模拟应用实例。
+-   `vitest.config.ts` 默认运行在 Nuxt 环境，并通过 `tests/setup/vitest.setup.ts` 注入统一的 Mock 及时区设置；后续可基于既定目录拆分出 unit/nuxt 项目。
 -   依赖中已包含 `@vue/test-utils`、`happy-dom`、`playwright-core` 等，可分别支撑组件单测和端到端测试；无需额外安装即可落地。
 -   E2E 模板使用 `@nuxt/test-utils/e2e`，借助内存 SQLite (`DATABASE_PATH=':memory:'`) 与环境变量，具备跑通基础后台 API 的条件。
 
@@ -24,15 +22,15 @@
 
 ### 阶段 P0（1-2 天）：测试基础设施
 
--   取消 `describe.skip`，并为 `tests/e2e/api-index.spec.ts` 引入固定断言，验证 `/api` 健康度。
--   新建 `tests/setup/vitest.setup.ts`，统一初始化 `happy-dom`、Mock `logger`，并在 `vitest.config.ts` 中通过 `setupFiles` 引入。
--   约定目录结构：
+-   [x] 取消 `describe.skip`，并为 `tests/e2e/api-index.nuxt.spec.ts` 引入固定断言，验证 `/api` 健康度。
+-   [x] 新建 `tests/setup/vitest.setup.ts`，统一初始化测试依赖（含 logger Mock），并在 `vitest.config.ts` 中通过 `setupFiles` 引入。
+-   [x] 约定并创建基础目录结构：
     -   `tests/unit/utils/**`
     -   `tests/unit/server/**`
     -   `tests/unit/components/**`
     -   `tests/integration/api/**`
     -   `tests/e2e/pages/**`
--   为数据库相关集成测试封装 `tests/fixtures/database.ts`，利用 TypeORM + SQLite 内存库建表、清表。
+-   [x] 为数据库相关集成测试封装 `tests/fixtures/database.ts`，利用 TypeORM + SQLite 内存库建表、清表。
 
 ### 阶段 P1（3-4 天）：核心工具函数单测
 
@@ -117,7 +115,7 @@
 │     ├─ oauth.spec.ts
 │     └─ admin-users.spec.ts
 └─ e2e/
-   ├─ api-index.spec.ts
+    ├─ api-index.nuxt.spec.ts
    └─ pages/
       ├─ login.spec.ts
       └─ register.spec.ts
@@ -133,7 +131,7 @@
 
 ### 测试夹具与 Mock 策略
 
--   建议在 `tests/mocks/logger.ts` 中导出与生产 `logger` 同名对象（`info|error|warn|business`），集中断言日志输出。
+-   已在 `tests/mocks/logger.ts` 中导出与生产 `logger` 同名对象（`info|error|warn|business`），集中断言日志输出。
 -   借助 `vi.mock` 伪造第三方服务：
     -   `twilio`、`nodemailer`：返回固定消息 ID。
     -   `@aws-sdk/client-s3`、`@vercel/blob`：避免真实网络调用。
