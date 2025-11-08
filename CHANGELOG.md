@@ -1,5 +1,19 @@
 # caomei-auth
 
+# [1.11.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.10.1...v1.11.0) (2025-11-08)
+
+
+### ✨ 新功能
+
+* **auth:** 添加 Facebook 登录支持及相关配置 ([2c8fd4a](https://github.com/CaoMeiYouRen/caomei-auth/commit/2c8fd4a))
+* **theme:** 添加对系统偏好设置的暗色模式同步支持 ([1dfef24](https://github.com/CaoMeiYouRen/caomei-auth/commit/1dfef24))
+* **theme:** 添加暗色模式支持及主题切换功能 ([df18369](https://github.com/CaoMeiYouRen/caomei-auth/commit/df18369))
+
+
+### 🐛 Bug 修复
+
+* **style:** 优化暗色模式样式，统一媒体查询格式 ([1c88ecf](https://github.com/CaoMeiYouRen/caomei-auth/commit/1c88ecf))
+
 ## [1.10.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.10.0...v1.10.1) (2025-10-18)
 
 
