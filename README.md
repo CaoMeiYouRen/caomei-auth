@@ -13,6 +13,9 @@
   <a href="https://hub.docker.com/r/caomeiyouren/caomei-auth" target="_blank">
     <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/caomeiyouren/caomei-auth">
   </a>
+    <a href="https://app.codecov.io/gh/CaoMeiYouRen/caomei-auth" target="_blank">
+     <img alt="Codecov" src="https://img.shields.io/codecov/c/github/CaoMeiYouRen/caomei-auth">
+  </a>
   <a href="https://github.com/CaoMeiYouRen/caomei-auth/actions?query=workflow%3ARelease" target="_blank">
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/CaoMeiYouRen/caomei-auth/release.yml?branch=master">
   </a>

@@ -23,3 +23,8 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run build
       - run: pnpm run test
+      - run: pnpm run test:coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
