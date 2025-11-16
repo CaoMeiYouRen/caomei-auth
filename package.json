@@ -41,7 +41,7 @@
     "better-bytes": "^1.2.4",
     "chart.js": "^4.5.1",
     "dayjs": "^1.11.19",
-    "file-type": "^21.0.0",
+    "file-type": "^21.1.0",
     "fs-extra": "^11.3.2",
     "google-libphonenumber": "^3.2.43",
     "ioredis": "^5.8.2",
