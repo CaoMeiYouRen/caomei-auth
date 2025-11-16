@@ -12,11 +12,11 @@
 
 ## 风险评估与优先级
 
-1. **认证与安全链路缺乏验证**：`server/api/auth/[...all].ts` 直接暴露 better-auth handler，未做任何黑盒验证；若配置变更或回归 bug，将无法提前发现。
-2. **核心工具函数无人兜底**：`utils/validate.ts`、`utils/privacy.ts`、`utils/password-validator.ts`、`utils/password.ts` 等承担输入校验与脱敏逻辑，对生产安全影响大，必须优先补齐单测。
-3. **短信/邮件验证码流程复杂**：`utils/code.ts` 依赖外部客户端与验证码，通过率受限于多个分支，现状无测试覆盖。
+1. **纯函数缺乏验证导致输入校验风险**：`utils/validate.ts`、`utils/privacy.ts`、`utils/password-validator.ts`、`utils/password.ts`、`utils/navigation.ts` 等均为可复用的纯函数（无 I/O 副作用），一旦出错会在所有入口级联；这些必须成为首批测试目标。
+2. **纯函数化的验证码/代码逻辑复杂**：`utils/code.ts`、`utils/smart-input.ts` 等虽然会被外层 Hook 调用，但其内部大部分逻辑与分支仍为纯计算，当前完全未覆盖。
+3. **认证与安全链路缺乏验证**：`server/api/auth/[...all].ts` 直接暴露 better-auth handler，缺少黑盒验证；排在纯函数之后，作为紧随其后的高风险环节。
 4. **管理后台与 OAuth API 面向第三方集成，环境故障风险高**：`server/api/admin/*`、`server/api/oauth/*` 缺少最小集成验证。
-5. **前端交互与组件回归风险**：如 `components/phone-input.vue`、`components/send-code-button.vue` 涉及格式化、倒计时与状态切换，回归成本大；建议中优先。
+5. **前端交互与组件回归风险**：如 `components/phone-input.vue`、`components/send-code-button.vue` 涉及格式化、倒计时与状态切换，回归成本大；在纯函数和核心 API 稳定后推进。
 
 ## 分阶段建设路线图
 
@@ -32,7 +32,9 @@
     -   `tests/e2e/pages/**`
 -   [x] 为数据库相关集成测试封装 `tests/fixtures/database.ts`，利用 TypeORM + SQLite 内存库建表、清表。
 
-### 阶段 P1（3-4 天）：核心工具函数单测
+### 阶段 P1（3-4 天）：纯函数优先覆盖
+
+目标：在最短时间内为所有纯函数/确定性计算提供稳定的单测网，立即提升整体语句覆盖率，并为后续有副作用的模块提供可信依赖。
 
 -   `utils/validate.ts`
     -   `validateEmail`：有效邮箱（含 UTF-8 本地部分）、无 TLD、IP 域名、含下划线等负例。
@@ -48,27 +50,23 @@
     -   `passwordValidator`：强度枚举、`returnScore` 分支及自定义配置覆盖。
     -   `getPasswordStrength`、`getPasswordScore`、`getPasswordRequirements*`：不同预设、环境变量影响。
     -   `validatePassword`、`validatePasswordForm`：确认密码不一致、强度不足、缺少当前密码等。
+-   其他纯函数：`utils/navigation.ts`（外链检测、hash 处理）、`utils/smart-input.ts`（自动补全策略）、`utils/short-text.ts`（截断规则）等，全部纳入同批次测试以保持纯函数覆盖一致性。
+-   纯函数化的 server util：`server/utils/random.ts`、`server/utils/locale.ts`、`server/utils/snowflake.ts`，通过统计/固定种子保证 determinism，继续归入此阶段。
 
-### 阶段 P2（4-5 天）：Server 层与 API 集成
+### 阶段 P2（4-5 天）：副作用轻量模块与集成准备
 
--   单测
-    -   `server/utils/random.ts`：长度、字符集、随机性（统计分布）。
+-   继续补齐「近似纯函数」或副作用可完全 mock 的模块：
     -   `server/utils/rate-limit.ts`：通过 Stub `limiterStorage` 验证超限抛错；模拟不同 IP、路径组合。
     -   `server/utils/email-template`（若存在多个模板函数）：Mock `mjml` 渲染失败路径。
--   集成测试（使用内存 SQLite、`auth` stub）
-    -   认证 API：
-        -   `/api/auth/[...all]`：模拟登录（邮箱/手机号）、注册、`authClient` 错误分支。
-        -   密码重置流程：校验 email / phone OTP 的发送与验证接口。
-    -   OAuth API：
-        -   `/api/oauth/consents.get`、`/api/oauth/revoke-consent.post`、`/api/oauth/[id].get`：覆盖授权列表、撤销、查询失败。
-    -   管理后台 API：
-        -   `/api/admin/users/*`：创建/更新/禁用用户。
-        -   `/api/admin/oauth/applications/*`：CRUD 与秘钥轮换。
-        -   `/api/admin/logs/stats.get`、`/sessions.get`：返回结构与分页。
-    -   文件上传 `/api/file/upload.post`：验证 MIME、size 限制、鉴权失败。
--   需要的夹具
+    -   `utils/code.ts`：利用 `vi.mock` 注入 fake `authClient` 与 `resolveCaptchaToken`，覆盖验证码成功/失败、冷却策略。
+-   为后续集成测试搭建可复用夹具：
     -   `tests/fixtures/auth.ts`：基于 better-auth 提供虚拟用户/令牌。
     -   `tests/fixtures/storage.ts`：封装 Redis/Limiter mock，避免真实连接。
+-   随后进入集成测试：
+    -   `/api/auth/[...all]`：模拟登录（邮箱/手机号）、注册、`authClient` 错误分支。
+    -   `/api/oauth/consents.get`、`/api/oauth/revoke-consent.post`、`/api/oauth/[id].get`：覆盖授权列表、撤销、查询失败。
+    -   `/api/admin/users/*`、`/api/admin/oauth/applications/*`、`/api/admin/logs/stats.get`、`/sessions.get`：CRUD、分页、错误路径。
+    -   `/api/file/upload.post`：验证 MIME、size 限制、鉴权失败。
 
 ### 阶段 P3（4-5 天）：前端组件与页面
 
@@ -123,6 +121,7 @@
 
 ### 关键用例补充说明
 
+-   **纯函数优先**：所有 utils 层（`validate`/`privacy`/`password`/`navigation`/`smart-input` 等）必须优先交付测试，其中每个函数都需要覆盖主流程与异常路径，作为后续测试的稳定基座。
 -   `utils/code.ts`
     -   Mock `authClient` 与 `resolveCaptchaToken`，覆盖验证码成功/失败、重复发送冷却逻辑，验证 `errors` 与 Toast 调用（可通过 spy）。
 -   `utils/navigation.ts`（如存在条件重定向）：模拟不同 `navigateTo` 参数，验证返回值。
