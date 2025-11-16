@@ -4,3 +4,4 @@
 *.js
 *.ts
 _*
+/coverage
