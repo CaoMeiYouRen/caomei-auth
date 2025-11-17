@@ -108,7 +108,8 @@ export const USERNAME_ENABLED = process.env.NUXT_PUBLIC_USERNAME_ENABLED === 'tr
  * 支持 Spug、Twilio 等短信平台，如有需要，可在issue或discussion中提出其他渠道，会看情况适配
  */
 // 是否启用短信发送功能（包含注册、登录、绑定、找回密码等页面）
-export const PHONE_ENABLED = process.env.NUXT_PUBLIC_PHONE_ENABLED || import.meta.env.NUXT_PUBLIC_PHONE_ENABLED === 'true'
+const phoneEnabledSource = process.env.NUXT_PUBLIC_PHONE_ENABLED ?? import.meta.env.NUXT_PUBLIC_PHONE_ENABLED as string | undefined
+export const PHONE_ENABLED = phoneEnabledSource === 'true'
 // 短信发件渠道：spug, twilio
 export const PHONE_CHANNEL = process.env.PHONE_CHANNEL || ''
 
