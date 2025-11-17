@@ -15,11 +15,6 @@ const useFetchMock = vi.fn()
 let consoleWarnSpy: ReturnType<typeof vi.spyOn>
 let navigation: typeof import('@/utils/navigation')
 
-vi.mock('#imports', () => ({
-    navigateTo: navigateToMock,
-    useFetch: useFetchMock,
-}))
-
 beforeAll(() => {
     consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
@@ -36,14 +31,21 @@ afterAll(() => {
 beforeEach(() => {
     useSessionMock.mockReset()
     navigateToMock.mockReset()
+    useFetchMock.mockReset()
     consoleWarnSpy.mockClear()
+
+    navigation.setNavigationDependencies({
+        navigate: navigateToMock,
+        useFetch: useFetchMock,
+    })
 })
 
 afterEach(() => {
+    navigation.resetNavigationDependencies()
     vi.useRealTimers()
 })
 
-describe.skip('utils/navigation (temporarily skipped: flakey in Nuxt env)', () => {
+describe('utils/navigation', () => {
     describe('navigateAfterLogin', () => {
         it('redirects administrators to the admin users page', async () => {
             useSessionMock.mockResolvedValueOnce({
@@ -96,15 +98,21 @@ describe.skip('utils/navigation (temporarily skipped: flakey in Nuxt env)', () =
     describe('navigateAfterLoginWithDelay', () => {
         it('invokes navigateAfterLogin after the specified delay', async () => {
             vi.useFakeTimers()
-            const spy = vi.spyOn(navigation, 'navigateAfterLogin').mockResolvedValue()
+            useSessionMock.mockResolvedValueOnce({
+                data: {
+                    value: {
+                        user: {
+                            role: 'user',
+                        },
+                    },
+                },
+            })
 
             navigation!.navigateAfterLoginWithDelay(500)
 
-            expect(spy).not.toHaveBeenCalled()
+            expect(navigateToMock).not.toHaveBeenCalled()
             await vi.advanceTimersByTimeAsync(500)
-            expect(spy).toHaveBeenCalledTimes(1)
-
-            spy.mockRestore()
+            expect(navigateToMock).toHaveBeenCalledTimes(1)
         })
     })
 })
