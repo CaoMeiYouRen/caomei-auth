@@ -1,19 +1,20 @@
-import nodemailer from 'nodemailer'
+import type { Transporter } from 'nodemailer'
 import logger from './logger'
+import { createDefaultMailer, type MailerFactory } from '@/utils/factory/mailer'
 import { limiterStorage } from '@/server/database/storage'
 import {
     EMAIL_DAILY_LIMIT,
     EMAIL_SINGLE_USER_DAILY_LIMIT,
     EMAIL_LIMIT_WINDOW,
-    EMAIL_HOST,
-    EMAIL_PORT,
-    EMAIL_SECURE,
-    EMAIL_USER,
-    EMAIL_PASS,
     EMAIL_FROM,
+    EMAIL_HOST,
+    EMAIL_USER,
 } from '@/utils/env'
 
 const EMAIL_LIMIT_KEY = 'email_global_limit'
+
+type LimiterStorage = typeof limiterStorage
+type EmailLogger = typeof logger
 
 export interface EmailOptions {
     /**
@@ -40,61 +41,95 @@ export interface EmailOptions {
     html?: string
 }
 
-const transporter = nodemailer.createTransport({
-    host: EMAIL_HOST, // SMTP 服务器地址
-    port: EMAIL_PORT || 587, // SMTP 服务器端口
-    secure: EMAIL_SECURE, // 如果使用 SSL/TLS 加密，设置 secure 为 true
-    auth: {
-        user: EMAIL_USER, // 用户名
-        pass: EMAIL_PASS, // 密码
-    },
-})
+let mailerFactory: MailerFactory = createDefaultMailer
+let limiter: LimiterStorage = limiterStorage
+let emailLogger: EmailLogger = logger
+let cachedTransporter: Transporter | null = null
+let transporterVerified = false
+
+export function injectEmailDeps(deps: {
+    createMailer?: MailerFactory
+    limiter?: LimiterStorage
+    logger?: EmailLogger
+} = {}) {
+    if (deps.createMailer) {
+        mailerFactory = deps.createMailer
+        cachedTransporter = null
+        transporterVerified = false
+    }
+    if (deps.limiter) {
+        limiter = deps.limiter
+    }
+    if (deps.logger) {
+        emailLogger = deps.logger
+    }
+}
+
+export function resetEmailDeps() {
+    mailerFactory = createDefaultMailer
+    limiter = limiterStorage
+    emailLogger = logger
+    cachedTransporter = null
+    transporterVerified = false
+}
+
+async function getTransporter() {
+    if (!cachedTransporter) {
+        cachedTransporter = mailerFactory()
+        transporterVerified = false
+    }
+
+    if (!transporterVerified) {
+        const verified = await cachedTransporter.verify()
+        if (!verified) {
+            emailLogger.error('Email transporter verification failed', {
+                host: EMAIL_HOST,
+                user: EMAIL_USER ? `${EMAIL_USER.substring(0, 3)}***` : undefined,
+            })
+            throw new Error('Email transporter configuration is invalid')
+        }
+        transporterVerified = true
+    }
+
+    return cachedTransporter
+}
+
+async function ensureWithinLimit(options: EmailOptions) {
+    const globalCount = await limiter.increment(
+        EMAIL_LIMIT_KEY,
+        EMAIL_LIMIT_WINDOW,
+    )
+    if (globalCount > EMAIL_DAILY_LIMIT) {
+        emailLogger.email.rateLimited({
+            limitType: 'global',
+            email: options.to,
+            remainingTime: EMAIL_LIMIT_WINDOW,
+        })
+        throw new Error('今日邮箱发送次数已达全局上限')
+    }
+
+    const singleUserLimitKey = `email_single_user_limit:${options.to}`
+    const singleUserCount = await limiter.increment(
+        singleUserLimitKey,
+        EMAIL_LIMIT_WINDOW,
+    )
+    if (singleUserCount > EMAIL_SINGLE_USER_DAILY_LIMIT) {
+        emailLogger.email.rateLimited({
+            limitType: 'user',
+            email: options.to,
+            remainingTime: EMAIL_LIMIT_WINDOW,
+        })
+        throw new Error('您的邮箱今日发送次数已达上限')
+    }
+}
 
 export async function sendEmail(options: EmailOptions) {
     try {
-        // 验证邮件传输配置
-        if (!await transporter.verify()) {
-            const error = 'Email transporter configuration is invalid'
-            logger.error('Email transporter verification failed', {
-                host: EMAIL_HOST,
-                port: EMAIL_PORT,
-                user: EMAIL_USER ? `${EMAIL_USER.substring(0, 3)}***` : undefined,
-            })
-            throw new Error(error)
-        }
+        await ensureWithinLimit(options)
 
-        // 检查全局限流
-        const globalCount = await limiterStorage.increment(
-            EMAIL_LIMIT_KEY,
-            EMAIL_LIMIT_WINDOW,
-        )
-        if (globalCount > EMAIL_DAILY_LIMIT) {
-            logger.email.rateLimited({
-                limitType: 'global',
-                email: options.to,
-                remainingTime: EMAIL_LIMIT_WINDOW,
-            })
-            throw new Error('今日邮箱发送次数已达全局上限')
-        }
-
-        // 检查单个邮箱限流
-        const singleUserLimitKey = `email_single_user_limit:${options.to}`
-        const singleUserCount = await limiterStorage.increment(
-            singleUserLimitKey,
-            EMAIL_LIMIT_WINDOW,
-        )
-        if (singleUserCount > EMAIL_SINGLE_USER_DAILY_LIMIT) {
-            logger.email.rateLimited({
-                limitType: 'user',
-                email: options.to,
-                remainingTime: EMAIL_LIMIT_WINDOW,
-            })
-            throw new Error('您的邮箱今日发送次数已达上限')
-        }
-
-        // 发送邮件
+        const transporter = await getTransporter()
         const mailOptions = {
-            from: options.from || EMAIL_FROM, // 发件人
+            from: options.from || EMAIL_FROM,
             to: options.to,
             subject: options.subject,
             text: options.text,
@@ -103,8 +138,7 @@ export async function sendEmail(options: EmailOptions) {
 
         const result = await transporter.sendMail(mailOptions)
 
-        // 记录发送成功
-        logger.email.sent({
+        emailLogger.email.sent({
             type: 'general',
             email: options.to,
             success: true,
@@ -112,8 +146,7 @@ export async function sendEmail(options: EmailOptions) {
 
         return result
     } catch (error) {
-        // 记录发送失败
-        logger.email.failed({
+        emailLogger.email.failed({
             type: 'general',
             email: options.to,
             error: error instanceof Error ? error.message : String(error),
