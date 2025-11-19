@@ -34,14 +34,14 @@ beforeEach(() => {
     useFetchMock.mockReset()
     consoleWarnSpy.mockClear()
 
-    navigation.setNavigationDependencies({
+    navigation.injectNavigationDeps({
         navigate: navigateToMock,
         useFetch: useFetchMock,
     })
 })
 
 afterEach(() => {
-    navigation.resetNavigationDependencies()
+    navigation.resetNavigationDeps()
     vi.useRealTimers()
 })
 

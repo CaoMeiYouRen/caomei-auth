@@ -7,7 +7,7 @@ type UseFetchHandler = typeof useFetch
 let navigateHandler: NavigateHandler = navigateTo
 let useFetchHandler: UseFetchHandler = useFetch
 
-export function setNavigationDependencies(deps: {
+export function injectNavigationDeps(deps: {
     navigate?: NavigateHandler
     useFetch?: UseFetchHandler
 } = {}) {
@@ -20,7 +20,7 @@ export function setNavigationDependencies(deps: {
     }
 }
 
-export function resetNavigationDependencies() {
+export function resetNavigationDeps() {
     navigateHandler = navigateTo
     useFetchHandler = useFetch
 }
