@@ -25,7 +25,7 @@
     -   Vue 组件和 composable 仅调用副作用层或纯逻辑层，禁止直接深入 server util。
 -   **技术措施**：
     -   建立 `@/utils/factory/*` 用于创建带副作用的实例（如 Twilio、Nodemailer），便于在测试中 mock。
-    -   使用 `setNavigationDependencies` / `provide/inject` 方案隔离 Nuxt auto-import 对测试的影响。
+    -   使用 `injectNavigationDeps` / `provide/inject` 方案隔离 Nuxt auto-import 对测试的影响。
 -   **验收**：关键模块（邮件、短信、验证码、auth flows）均具备纯函数单测与副作用集成测；代码依赖图无循环引用。
 
 #### G1 现状诊断
@@ -33,14 +33,14 @@
 -   **服务器侧副作用混杂**：`server/utils/email.ts` 与 `server/utils/phone.ts` 同时承担限流、模板拼装、第三方 SDK 初始化和失败兜底，导致 nodemailer/twilio/Spug 等实例在函数内部硬编码，任何测试都必须真连外部服务。限流逻辑在两个文件中重复一遍（`limiterStorage.increment` + 日志记录），且和文案耦合，阻碍后续新增渠道。
 -   **前端页面直接处理鉴权流程**：`pages/login.vue`（1076 行）、`pages/register.vue`（743 行）和 `pages/security.vue`（1109 行）在 `<script setup>` 内完成 form state、字段校验、验证码解析、`authClient` 调用、toast 提示与导航逻辑，缺少 composable 或 service 层。任何副作用（如 `resolveCaptchaToken`、`authClient.phoneNumber.sendOtp`）都直接耦合在页面，导致页面无法在单元测试里被 mock。
 -   **通用流程未抽象**：`utils/code.ts` 既访问 UI 组件（`useToast`、`CaptchaExpose`）又直接消费 `authClient`，缺乏依赖注入。即便页面想接入别的验证码提供商，也只能复制整段逻辑。
--   **依赖倒置尚未形成体系**：目前唯一采用 DI 的模块是 `utils/navigation.ts`（`setNavigationDependencies`），其余模块仍直接引用 Nuxt auto-import 或第三方实例。要落实 G1，需要把 factory/dependency pattern 下沉到邮件、短信、日志等关键路径。
+-   **依赖倒置尚未形成体系**：目前唯一采用 DI 的模块是 `utils/navigation.ts`（`injectNavigationDeps`），其余模块仍直接引用 Nuxt auto-import 或第三方实例。要落实 G1，需要把 factory/dependency pattern 下沉到邮件、短信、日志等关键路径。
 
 #### G1 拆解要点
 
 1. **建立副作用工厂**：在 `utils/factory/mailer.ts`、`utils/factory/sms.ts` 中集中创建 nodemailer/twilio/spug 客户端，并暴露可 Mock 的工厂方法。`server/utils/email.ts`、`server/utils/phone.ts` 仅负责 orchestrate（限流结果 + provider 调度）。
 2. **抽离纯逻辑**：将限流 key 生成、错误文案、验证码有效期计算等纯函数放入 `utils/shared/rate-limit.ts`、`utils/shared/otp.ts`，供 server 和 client 复用，避免在不同副作用文件中复制。所有纯函数先补单测，再被 service 层引用。
 3. **前端流程模块化**：为登录/注册/安全页面创建 `composables/useLoginForm.ts`, `useRegisterFlow.ts`, `useSecuritySettings.ts`，由 composable 管理 `authClient` 调用、captcha token、toast，而页面仅聚焦 UI。`utils/code.ts` 应拆成纯逻辑（组装请求参数）+ UI hook（注入 toast、captcha）。
-4. **引入依赖注入约定**：扩展 `setNavigationDependencies` 模式到验证码、authClient 调用，约定所有涉及外部 I/O 的模块必须导出 `set*Dependencies`，默认实现引用 Nuxt auto-import，在测试中可替换。
+4. **引入依赖注入约定**：扩展 `injectNavigationDeps` 模式到验证码、authClient 调用，约定所有涉及外部 I/O 的模块必须导出 `inject*Deps`（或类似 `injectSmsDeps`、`injectCaptchaDeps`）的 API，默认实现引用 Nuxt auto-import，在测试中可替换。
 5. **配套测试策略**：在 service 拆分完成后，为 rate-limit 纯函数和 provider 调度写 Vitest，mock nodemailer/twilio 工厂以验证错误路径，确保验收指标（关键模块都有纯函数 & 集成测）可量化。
 
 #### G1 优先改造文件清单（按优先级）
