@@ -1,166 +1,42 @@
-import twilio from 'twilio'
 import logger from './logger'
 import { limiterStorage } from '@/server/database/storage'
-import { validatePhone } from '@/utils/validate'
 import {
     PHONE_DAILY_LIMIT,
     PHONE_SINGLE_USER_DAILY_LIMIT,
     PHONE_LIMIT_WINDOW,
     PHONE_CHANNEL,
-    SPUG_TEMPLATE_ID,
-    PHONE_SENDER_NAME,
     PHONE_EXPIRES_IN,
-    TWILIO_ACCOUNT_SID,
-    TWILIO_AUTH_TOKEN,
-    TWILIO_PHONE_NUMBER,
 } from '@/utils/env'
+import { resolveSmsProvider, type SmsProvider } from '@/utils/providers/sms'
+import { RATE_LIMIT_KEYS, getRateLimitError } from '@/utils/shared/rate-limit'
 
-const PHONE_LIMIT_KEY = 'phone_global_limit'
+type LimiterStorage = typeof limiterStorage
+type PhoneLogger = typeof logger
 
-/**
- * 短信发送结果
- */
-export interface SmsResult {
-    success: boolean
-    message: string
-    sid?: string
-    code?: number
-    // Twilio 特有字段
-    status?: string
-    direction?: string
-    numSegments?: string
-    price?: string
-    priceUnit?: string
-    errorCode?: number
-    errorMessage?: string
-}
+let limiter: LimiterStorage = limiterStorage
+let phoneLogger: PhoneLogger = logger
+let smsProviderFactory = resolveSmsProvider
 
-/**
- * 短信发送渠道接口
- */
-export interface SmsProvider {
-    /**
-     * 发送短信验证码
-     * @param phoneNumber 手机号码
-     * @param code 验证码
-     * @param expiresInMinutes 过期时间（分钟）
-     * @returns 发送结果
-     */
-    sendOtp(phoneNumber: string, code: string, expiresInMinutes: number): Promise<SmsResult>
-
-    /**
-     * 验证手机号格式
-     * @param phoneNumber 手机号码
-     * @returns 是否有效
-     */
-    validatePhoneNumber(phoneNumber: string): boolean
-}
-
-/**
- * Spug 短信平台实现
- */
-class SpugSmsProvider implements SmsProvider {
-    validatePhoneNumber(phoneNumber: string): boolean {
-        // Spug 平台只支持中国大陆手机号
-        return validatePhone(phoneNumber, 'zh-CN')
+export function injectSmsDeps(deps: {
+    limiter?: LimiterStorage
+    logger?: PhoneLogger
+    resolveProvider?: typeof resolveSmsProvider
+} = {}) {
+    if (deps.limiter) {
+        limiter = deps.limiter
     }
-
-    async sendOtp(phoneNumber: string, code: string, expiresInMinutes: number): Promise<SmsResult> {
-        if (!SPUG_TEMPLATE_ID) {
-            throw new Error('Spug 配置不完整，请检查 SPUG_TEMPLATE_ID')
-        }
-
-        // Spug 平台不用国家或地区代码，所以去除开头的 +86
-        const cleanPhoneNumber = phoneNumber.replace(/^\+86/, '')
-
-        // 请在 Spug 平台中选择下文的短信模板
-        // ${key1}欢迎您，您的验证码为${key2}，${key3}分钟内有效，如非本人操作请忽略。
-        const body = JSON.stringify({
-            key1: PHONE_SENDER_NAME, // 短信发件人名称
-            key2: code, // 验证码
-            key3: expiresInMinutes, // 验证码有效时间(分钟)
-            targets: cleanPhoneNumber,
-        })
-
-        const resp = await fetch(`https://push.spug.cc/send/${SPUG_TEMPLATE_ID}`, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body,
-        })
-
-        // {"code": 200, "msg": "请求成功"}
-        const result = await resp.json() as { code: number, msg: string, request_id: string }
-
-        if (result.code === 200) {
-            return {
-                success: true,
-                message: result.msg,
-                code: result.code,
-                sid: result.request_id,
-            }
-        }
-        throw new Error(`短信发送失败: ${result.msg}`)
+    if (deps.logger) {
+        phoneLogger = deps.logger
+    }
+    if (deps.resolveProvider) {
+        smsProviderFactory = deps.resolveProvider
     }
 }
 
-/**
- * Twilio 短信平台实现
- */
-class TwilioSmsProvider implements SmsProvider {
-    validatePhoneNumber(phoneNumber: string): boolean {
-        return validatePhone(phoneNumber)
-    }
-
-    async sendOtp(phoneNumber: string, code: string, expiresInMinutes: number): Promise<SmsResult> {
-        // 验证必要配置
-        if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
-            throw new Error('Twilio 配置不完整，请检查 TWILIO_ACCOUNT_SID、TWILIO_AUTH_TOKEN、TWILIO_PHONE_NUMBER')
-        }
-
-        const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-
-        // 构建短信内容
-        const messageBody = `${PHONE_SENDER_NAME}欢迎您，您的验证码为${code}，${expiresInMinutes}分钟内有效，如非本人操作请忽略。`
-
-        // 发送短信
-        const message = await client.messages.create({
-            body: messageBody,
-            from: TWILIO_PHONE_NUMBER,
-            to: phoneNumber,
-        })
-
-        return {
-            success: true,
-            sid: message.sid,
-            message: '短信发送成功',
-            // 返回额外的Twilio字段用于日志记录
-            status: message.status,
-            direction: message.direction,
-            numSegments: message.numSegments,
-            price: message.price,
-            priceUnit: message.priceUnit,
-            errorCode: message.errorCode,
-            errorMessage: message.errorMessage,
-        }
-    }
-}
-
-/**
- * 获取短信发送渠道实例
- * @param channel 渠道名称
- * @returns 短信发送实例
- */
-function getSmsProvider(channel: string): SmsProvider {
-    switch (channel.toLowerCase()) {
-        case 'spug':
-            return new SpugSmsProvider()
-        case 'twilio':
-            return new TwilioSmsProvider()
-        default:
-            throw new Error(`未知的短信发送渠道: ${channel}`)
-    }
+export function resetSmsDeps() {
+    limiter = limiterStorage
+    phoneLogger = logger
+    smsProviderFactory = resolveSmsProvider
 }
 
 /**
@@ -184,7 +60,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
     }
 
     // 获取短信发送实例
-    const smsProvider = getSmsProvider(PHONE_CHANNEL)
+    const smsProvider = smsProviderFactory(PHONE_CHANNEL)
 
     // 验证手机号格式
     if (!smsProvider.validatePhoneNumber(phoneNumber)) {
@@ -192,24 +68,24 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
     }
 
     // 检查全局限流
-    const globalCount = await limiterStorage.increment(
-        PHONE_LIMIT_KEY,
+    const globalCount = await limiter.increment(
+        RATE_LIMIT_KEYS.GLOBAL_PHONE,
         PHONE_LIMIT_WINDOW,
     )
     if (globalCount > PHONE_DAILY_LIMIT) {
-        logger.phone.rateLimited({ limitType: 'global', remainingTime: PHONE_DAILY_LIMIT })
-        throw new Error('今日短信验证码发送次数已达全局上限')
+        phoneLogger.phone.rateLimited({ limitType: 'global', remainingTime: PHONE_DAILY_LIMIT })
+        throw new Error(getRateLimitError('global', 'phone'))
     }
 
     // 检查单个手机号限流
-    const singleUserLimitKey = `phone_single_user_limit:${phoneNumber}`
-    const singleUserCount = await limiterStorage.increment(
+    const singleUserLimitKey = RATE_LIMIT_KEYS.SINGLE_PHONE(phoneNumber)
+    const singleUserCount = await limiter.increment(
         singleUserLimitKey,
         PHONE_LIMIT_WINDOW,
     )
     if (singleUserCount > PHONE_SINGLE_USER_DAILY_LIMIT) {
-        logger.phone.rateLimited({ phone: phoneNumber, limitType: 'user', remainingTime: PHONE_DAILY_LIMIT })
-        throw new Error('您的手机号今日验证码发送次数已达上限')
+        phoneLogger.phone.rateLimited({ phone: phoneNumber, limitType: 'user', remainingTime: PHONE_DAILY_LIMIT })
+        throw new Error(getRateLimitError('user', 'phone'))
     }
 
     try {
@@ -217,7 +93,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
         const result = await smsProvider.sendOtp(phoneNumber, code, expiresInMinutes)
 
         // 记录成功日志
-        logger.phone.sent({
+        phoneLogger.phone.sent({
             type: 'verification',
             phone: phoneNumber,
             success: true,
@@ -236,7 +112,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
         return result
     } catch (error) {
         // 记录失败日志
-        logger.phone.failed({
+        phoneLogger.phone.failed({
             type: 'verification',
             phone: phoneNumber,
             error: error instanceof Error ? error.message : String(error),
