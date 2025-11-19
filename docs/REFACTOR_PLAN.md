@@ -28,6 +28,34 @@
     -   使用 `setNavigationDependencies` / `provide/inject` 方案隔离 Nuxt auto-import 对测试的影响。
 -   **验收**：关键模块（邮件、短信、验证码、auth flows）均具备纯函数单测与副作用集成测；代码依赖图无循环引用。
 
+#### G1 现状诊断
+
+-   **服务器侧副作用混杂**：`server/utils/email.ts` 与 `server/utils/phone.ts` 同时承担限流、模板拼装、第三方 SDK 初始化和失败兜底，导致 nodemailer/twilio/Spug 等实例在函数内部硬编码，任何测试都必须真连外部服务。限流逻辑在两个文件中重复一遍（`limiterStorage.increment` + 日志记录），且和文案耦合，阻碍后续新增渠道。
+-   **前端页面直接处理鉴权流程**：`pages/login.vue`（1076 行）、`pages/register.vue`（743 行）和 `pages/security.vue`（1109 行）在 `<script setup>` 内完成 form state、字段校验、验证码解析、`authClient` 调用、toast 提示与导航逻辑，缺少 composable 或 service 层。任何副作用（如 `resolveCaptchaToken`、`authClient.phoneNumber.sendOtp`）都直接耦合在页面，导致页面无法在单元测试里被 mock。
+-   **通用流程未抽象**：`utils/code.ts` 既访问 UI 组件（`useToast`、`CaptchaExpose`）又直接消费 `authClient`，缺乏依赖注入。即便页面想接入别的验证码提供商，也只能复制整段逻辑。
+-   **依赖倒置尚未形成体系**：目前唯一采用 DI 的模块是 `utils/navigation.ts`（`setNavigationDependencies`），其余模块仍直接引用 Nuxt auto-import 或第三方实例。要落实 G1，需要把 factory/dependency pattern 下沉到邮件、短信、日志等关键路径。
+
+#### G1 拆解要点
+
+1. **建立副作用工厂**：在 `utils/factory/mailer.ts`、`utils/factory/sms.ts` 中集中创建 nodemailer/twilio/spug 客户端，并暴露可 Mock 的工厂方法。`server/utils/email.ts`、`server/utils/phone.ts` 仅负责 orchestrate（限流结果 + provider 调度）。
+2. **抽离纯逻辑**：将限流 key 生成、错误文案、验证码有效期计算等纯函数放入 `utils/shared/rate-limit.ts`、`utils/shared/otp.ts`，供 server 和 client 复用，避免在不同副作用文件中复制。所有纯函数先补单测，再被 service 层引用。
+3. **前端流程模块化**：为登录/注册/安全页面创建 `composables/useLoginForm.ts`, `useRegisterFlow.ts`, `useSecuritySettings.ts`，由 composable 管理 `authClient` 调用、captcha token、toast，而页面仅聚焦 UI。`utils/code.ts` 应拆成纯逻辑（组装请求参数）+ UI hook（注入 toast、captcha）。
+4. **引入依赖注入约定**：扩展 `setNavigationDependencies` 模式到验证码、authClient 调用，约定所有涉及外部 I/O 的模块必须导出 `set*Dependencies`，默认实现引用 Nuxt auto-import，在测试中可替换。
+5. **配套测试策略**：在 service 拆分完成后，为 rate-limit 纯函数和 provider 调度写 Vitest，mock nodemailer/twilio 工厂以验证错误路径，确保验收指标（关键模块都有纯函数 & 集成测）可量化。
+
+#### G1 优先改造文件清单（按优先级）
+
+| 文件                    | 当前症状                                                                                                                                                             | 计划动作                                                                                                                                                                       | 优先级   |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| `server/utils/email.ts` | 发送流程同时创建 transporter、读取 env、做限流和日志，`transporter.verify()` 每次调用都会触发真实网络；限流逻辑与短信模块重复。                                      | 拆分为 `emailRateLimit` 纯函数 + `createMailer` 工厂；`sendEmail` 保留 orchestrator 角色，引入依赖注入以便在测试 / Worker 环境替换实现。                                       | Critical |
+| `server/utils/phone.ts` | 单文件内嵌 Spug/Twilio class、限流与日志混杂；`fetch` 和 `twilio()` 直接在运行期执行，难以 mock；手机格式校验与 provider 强耦合。                                    | 将 provider 定义移动到 `utils/providers/sms/*`; 抽出 `resolveSmsProvider(channel)` 与限流工具；向外暴露 `setSmsDependencies` 注入 fetch/twilio client。                        | Critical |
+| `pages/login.vue`       | 1076 行脚本包含表单状态、校验、验证码解析、OTP 发送、2FA 对话框等所有副作用，无法在其他入口复用；与 `pages/register.vue`、`pages/forgot-password.vue` 逻辑高度重复。 | 新建 `composables/useLoginFlow.ts`（集中管理 captcha/OTP/authClient 调用）和 UI 子组件；页面仅绑定 composable 的响应式 state。                                                 | Critical |
+| `utils/code.ts`         | hook 内部直接引用 `useToast`、`authClient`、`setTimeout`，既包含业务流程也包含 UI 提示，无法在 SSR/测试中注入替代实现。                                              | 拆分为 `useOtpDispatcher`（仅处理 UI toast）+ `createOtpService`（纯函数，接受 `sendOtp`/`captchaResolver`）并提供依赖注入，供登录/注册/安全页面共享。                         | High     |
+| `pages/register.vue`    | 与登录页共享 70% 表单/验证码/错误提示逻辑，但目前复制粘贴；直接触发 `authClient` 和验证码，违背“页面不直接触达副作用层”的目标。                                      | 复用 `useRegisterFlow` composable，重构成 UI-only 页面，并与登录页面共享 OTP/校验逻辑模块。                                                                                    | High     |
+| `pages/security.vue`    | 1109 行脚本内直接处理 2FA、备份码、会话撤销（`authClient.session.revoke*`）、二维码生成（`QRCode`）等副作用，逻辑与 UI 紧耦合。                                      | 拆成 `useSecuritySettings` composable + 若干 presentational 组件 (`SecurityTwoFactorPanel`, `SecuritySessionTable`)，二维码生成/备份码下载放到 util/service 层，方便独立测试。 | High     |
+
+> 其余文件（如 `server/utils/admin-role-sync.ts`, `lib/auth-client.ts`）在完成上述关键改造后再按依赖链推进，避免一次性大改造成风险。
+
 ### 2. 控制文件长度（G2）
 
 -   **基线扫描**：使用 `npx eshw max-lines --ts 500 --vue 1000`（或自写脚本）生成超标文件列表，纳入 issue。
