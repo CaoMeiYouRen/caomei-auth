@@ -471,7 +471,7 @@ import { useDark } from '@vueuse/core'
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
-import { useSendPhoneCode } from '@/utils/code'
+import { usePhoneOtp } from '@/composables/use-otp'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/phone'
@@ -507,7 +507,7 @@ const email = ref('')
 const phone = ref('')
 const phoneCode = ref('')
 const errors = ref<Record<string, string>>({})
-const phoneCodeSending = ref(false)
+// const phoneCodeSending = ref(false) // Replaced by usePhoneOtp
 const bindingEmail = ref(false)
 const bindingPhone = ref(false)
 const emailCaptcha = ref<CaptchaExpose | null>(null)
@@ -563,14 +563,17 @@ const getProviderColor = (provider: string) => {
     return getSocialColor(provider, theme)
 }
 
-const sendPhoneCode = useSendPhoneCode({
-    phone,
-    type: 'phone-verification',
-    validatePhone,
-    errors,
-    sending: phoneCodeSending,
-    captcha: phoneCaptcha,
-})
+const { send: sendPhoneOtp, sending: phoneCodeSending } = usePhoneOtp()
+
+const sendPhoneCode = async () => {
+    return await sendPhoneOtp(
+        phone.value,
+        'phone-verification',
+        phoneCaptcha,
+        () => validatePhone(phone.value),
+        (field, msg) => { errors.value[field] = msg },
+    )
+}
 
 // 通过 SSR 渲染
 const { data: session } = await authClient.useSession(useFetch)
