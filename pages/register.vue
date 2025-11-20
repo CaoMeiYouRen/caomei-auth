@@ -283,242 +283,40 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { useUrlSearchParams } from '@vueuse/core'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Message from 'primevue/message'
 import Checkbox from 'primevue/checkbox'
-import { useToast } from 'primevue/usetoast'
 import ButtonGroup from 'primevue/buttongroup'
-import { validateEmail, validatePhone, nicknameValidator, usernameValidator } from '@/utils/validate'
-import { useSendPhoneCode } from '@/utils/code'
+import { validatePhone } from '@/utils/validate'
 import SendCodeButton from '@/components/send-code-button.vue'
 import AuthLeft from '@/components/auth-left.vue'
 import PasswordStrength from '@/components/password-strength.vue'
-import { authClient } from '@/lib/auth-client'
 import { getPasswordRequirementsShort } from '@/utils/password'
-import { validatePasswordForm } from '@/utils/password-validator'
 import Captcha from '@/components/captcha.vue'
-import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/captcha'
+import { useRegisterFlow } from '@/composables/use-register-flow'
 
-const config = useRuntimeConfig().public
-const phoneEnabled = config.phoneEnabled
-const usernameEnabled = config.usernameEnabled
-
-const nickname = ref('')
-const username = ref('')
-const email = ref('')
-const phone = ref('')
-const phoneCode = ref('')
-const phoneCodeSending = ref(false)
-const password = ref('')
-const confirmPassword = ref('')
-const agreedToTerms = ref(false)
-const errors = ref<Record<string, string>>({})
-const toast = useToast()
-const disabled = ref(false)
-const captcha = ref<CaptchaExpose | null>(null)
-
-// 使用 useUrlSearchParams 获取 URL 参数
-const params = useUrlSearchParams<{ mode: 'email' | 'phone' }>('history', { initialValue: { mode: 'email' } })
-const activeTab = ref<'email' | 'phone'>('email')
-
-const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending, captcha })
-
-onMounted(() => {
-    // 如果短信功能未启用，强制使用邮箱方式
-    if (!phoneEnabled) {
-        activeTab.value = 'email'
-        params.mode = 'email'
-        return
-    }
-    // 确保默认值
-    if (!['email', 'phone'].includes(params.mode as string)) {
-        params.mode = 'email'
-    }
-    activeTab.value = params.mode
-})
-
-// 切换注册模式并更新 URL
-const changeMode = (mode: 'email' | 'phone') => {
-    params.mode = mode
-    activeTab.value = mode
-    errors.value.captcha = ''
-    captcha.value?.reset()
-}
-
-// 表单验证函数
-const resolver = (values: {
-    nickname: string
-    username?: string
-    email?: string
-    phone?: string
-    phoneCode?: string
-    password?: string
-    confirmPassword?: string
-    agreedToTerms?: boolean
-}) => {
-    const newErrors: Record<string, string> = {}
-
-    if (!values.nickname) {
-        newErrors.nickname = '请输入昵称'
-    } else if (!nicknameValidator(values.nickname)) {
-        newErrors.nickname = '昵称长度为2到36个字符，不能包含特殊字符'
-    }
-
-    // 验证用户名（如果启用用户名功能则为必填项）
-    if (usernameEnabled) {
-        if (!values.username || !values.username.trim()) {
-            newErrors.username = '请输入用户名'
-        } else if (!usernameValidator(values.username)) {
-            newErrors.username = '用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符，且不能是邮箱或手机号格式'
-        }
-    }
-
-    if (params.mode === 'email') {
-        if (!values.email) {
-            newErrors.email = '请输入邮箱'
-        } else if (!validateEmail(values.email)) {
-            newErrors.email = '请输入有效的邮箱地址'
-        }
-
-        // 使用新的密码验证工具函数
-        const passwordErrors = validatePasswordForm({
-            password: values.password,
-            confirmPassword: values.confirmPassword,
-        })
-        Object.assign(newErrors, passwordErrors)
-    } else if (params.mode === 'phone') {
-        if (!values.phone) {
-            newErrors.phone = '请输入手机号'
-        } else if (!validatePhone(values.phone)) {
-            newErrors.phone = '请输入有效的手机号'
-        }
-        if (!values.phoneCode) {
-            newErrors.phoneCode = '请输入短信验证码'
-        }
-    }
-
-    // 验证用户协议同意
-    if (!values.agreedToTerms) {
-        newErrors.agreement = '请阅读并同意服务条款和隐私政策'
-    }
-
-    return newErrors
-}
-
-async function register() {
-    const values = {
-        nickname: nickname.value,
-        username: username.value,
-        email: email.value,
-        phone: phone.value,
-        phoneCode: phoneCode.value,
-        password: password.value,
-        confirmPassword: confirmPassword.value,
-        agreedToTerms: agreedToTerms.value,
-    }
-
-    // 执行验证
-    errors.value = resolver(values)
-    errors.value.captcha = ''
-
-    // 检查是否有错误
-    const isValid = Object.keys(errors.value).length === 0
-
-    if (!isValid) {
-        return
-    }
-
-    let captchaContext: ResolvedCaptchaToken | null = null
-
-    try {
-        if (params.mode === 'email') {
-            try {
-                captchaContext = await resolveCaptchaToken(captcha)
-            } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
-                errors.value.captcha = errorMessage
-                toast.add({ severity: 'warn', summary: '需要验证码', detail: errorMessage, life: 2500 })
-                return
-            }
-            // 使用邮箱和昵称注册
-            const signUpData: any = {
-                email: email.value,
-                password: password.value,
-                name: nickname.value,
-            }
-
-            // 如果启用了用户名功能，则包含用户名
-            if (usernameEnabled) {
-                signUpData.username = username.value.trim()
-            }
-            disabled.value = true
-            const requestOptions = captchaContext
-                ? { headers: { 'x-captcha-response': captchaContext.token } }
-                : undefined
-            const { data, error } = await authClient.signUp.email(signUpData, requestOptions)
-            disabled.value = false
-            if (error) {
-                throw new Error(error.message || '注册失败')
-            }
-        } else if (params.mode === 'phone') {
-            // 验证手机号码
-            disabled.value = true
-            const isVerified = await authClient.phoneNumber.verify({
-                phoneNumber: phone.value,
-                code: phoneCode.value,
-            })
-
-            if (!isVerified.data?.status) {
-                throw new Error('手机号码验证失败')
-            }
-
-            // 验证手机号之后就自动注册了，所以这里更新昵称和用户名
-            const updateData: any = {
-                name: nickname.value,
-            }
-
-            // 如果启用了用户名功能，则包含用户名
-            if (usernameEnabled) {
-                updateData.username = username.value.trim()
-            }
-
-            const { data, error } = await authClient.updateUser(updateData)
-            disabled.value = false
-            if (error) {
-                throw new Error(error.message || '更新用户信息失败')
-            }
-        }
-
-        toast.add({
-            severity: 'success',
-            summary: '注册成功',
-            detail: params.mode === 'email' ? '验证邮件已发送，请前往邮箱激活账号' : '注册成功，请登录',
-            life: 2500,
-        })
-        setTimeout(() => {
-            navigateTo(`/login?mode=${params.mode}`)
-        }, 500)
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '注册过程中发生未知错误'
-        toast.add({
-            severity: 'error',
-            summary: '注册失败',
-            detail: errorMessage,
-            life: 5000,
-        })
-    } finally {
-        disabled.value = false
-        if (captchaContext) {
-            captchaContext.instance.reset()
-        } else {
-            captcha.value?.reset()
-        }
-    }
-}
+const {
+    nickname,
+    username,
+    email,
+    phone,
+    phoneCode,
+    password,
+    confirmPassword,
+    agreedToTerms,
+    errors,
+    loading,
+    captcha,
+    activeTab,
+    phoneCodeSending,
+    phoneEnabled,
+    usernameEnabled,
+    changeMode,
+    sendPhoneCode,
+    register,
+} = useRegisterFlow()
 </script>
 
 <style scoped lang="scss">

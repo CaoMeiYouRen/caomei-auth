@@ -170,7 +170,7 @@ import { ref, onMounted } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import SendCodeButton from '@/components/send-code-button.vue'
 import { validateEmail, validatePhone } from '@/utils/validate'
-import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
+import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import AuthLeft from '@/components/auth-left.vue'
 import PasswordStrength from '@/components/password-strength.vue'
 import Captcha from '@/components/captcha.vue'
@@ -187,8 +187,6 @@ const emailCode = ref('')
 const phoneCode = ref('')
 const newPassword = ref('')
 const confirmPassword = ref('')
-const emailCodeSending = ref(false)
-const phoneCodeSending = ref(false)
 const errors = ref<Record<string, string>>({})
 const toast = useToast()
 const route = useRoute()
@@ -214,8 +212,44 @@ onMounted(() => {
     params.mode = activeTab.value
 })
 
-const sendEmailCode = useSendEmailCode({ email, type: 'forget-password', validateEmail, errors, sending: emailCodeSending, captcha })
-const sendPhoneCode = useSendPhoneCode({ phone, type: 'forget-password', validatePhone, errors, sending: phoneCodeSending, captcha })
+const { send: sendEmailOtp, sending: emailCodeSending } = useEmailOtp()
+const { send: sendPhoneOtp, sending: phoneCodeSending } = usePhoneOtp()
+
+const sendEmailCode = async () => {
+    await sendEmailOtp(
+        email.value,
+        'forget-password',
+        captcha,
+        () => {
+            if (!validateEmail(email.value)) {
+                errors.value.email = '请输入有效的邮箱地址'
+                return false
+            }
+            return true
+        },
+        (field, msg) => {
+            errors.value[field] = msg
+        },
+    )
+}
+
+const sendPhoneCode = async () => {
+    await sendPhoneOtp(
+        phone.value,
+        'forget-password',
+        captcha,
+        () => {
+            if (!validatePhone(phone.value)) {
+                errors.value.phone = '请输入有效的手机号'
+                return false
+            }
+            return true
+        },
+        (field, msg) => {
+            errors.value[field] = msg
+        },
+    )
+}
 
 // 切换找回密码模式并更新 URL
 const changeMode = (mode: 'email' | 'phone') => {

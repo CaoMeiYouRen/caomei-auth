@@ -178,7 +178,7 @@ import SendCodeButton from '@/components/send-code-button.vue'
 import PhoneInput from '@/components/phone-input.vue'
 import { authClient } from '@/lib/auth-client'
 import { validateEmail, validatePhone } from '@/utils/validate'
-import { useSendEmailCode, useSendPhoneCode } from '@/utils/code'
+import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import { navigateAfterLoginWithDelay } from '@/utils/navigation'
 import Captcha from '@/components/captcha.vue'
 import type { CaptchaExpose } from '@/utils/captcha'
@@ -210,8 +210,6 @@ const isPhoneLoggingIn = ref(false)
 const errors = ref<Record<string, string>>({})
 
 // 发送验证码状态
-const emailCodeSending = ref(false)
-const phoneCodeSending = ref(false)
 const captcha = ref<CaptchaExpose | null>(null)
 
 // 组件
@@ -221,10 +219,44 @@ const toast = useToast()
 const params = useUrlSearchParams<{ tab: 'email' | 'phone' }>('history', { initialValue: { tab: 'email' } })
 
 // 邮箱验证码发送工具
-const sendEmailCode = useSendEmailCode({ email, type: 'sign-in', validateEmail, errors, sending: emailCodeSending, captcha })
+const { send: sendEmailOtp, sending: emailCodeSending } = useEmailOtp()
+const sendEmailCode = async () => {
+    return await sendEmailOtp(
+        email.value,
+        'sign-in',
+        captcha,
+        () => {
+            if (!validateEmail(email.value)) {
+                errors.value.email = '请输入有效的邮箱地址'
+                return false
+            }
+            return true
+        },
+        (field, msg) => {
+            errors.value[field] = msg
+        },
+    )
+}
 
 // 手机验证码发送工具
-const sendPhoneCode = useSendPhoneCode({ phone, type: 'sign-in', validatePhone, errors, sending: phoneCodeSending, captcha })
+const { send: sendPhoneOtp, sending: phoneCodeSending } = usePhoneOtp()
+const sendPhoneCode = async () => {
+    return await sendPhoneOtp(
+        phone.value,
+        'sign-in',
+        captcha,
+        () => {
+            if (!validatePhone(phone.value)) {
+                errors.value.phone = '请输入有效的手机号'
+                return false
+            }
+            return true
+        },
+        (field, msg) => {
+            errors.value[field] = msg
+        },
+    )
+}
 
 // 计算属性
 const canSendEmailCode = computed(() => {
