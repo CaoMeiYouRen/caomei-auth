@@ -47,8 +47,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.25(typescript@5.9.3))
       '@primevue/forms':
-        specifier: ^4.4.1
-        version: 4.4.1(vue@3.5.25(typescript@5.9.3))
+        specifier: ^4.5.0
+        version: 4.5.0(vue@3.5.25(typescript@5.9.3))
       '@sentry/nuxt':
         specifier: ^10.27.0
         version: 10.27.0(encoding@0.1.13)(magicast@0.3.5)(nuxt@4.1.3(@parcel/watcher@2.5.1)(@types/node@24.10.1)(@vercel/blob@2.0.0)(@vue/compiler-sfc@3.5.25)(better-sqlite3@12.4.1)(db0@0.3.2(better-sqlite3@12.4.1)(mysql2@3.15.3)(sqlite3@5.1.7))(encoding@0.1.13)(eslint@9.39.1(jiti@2.6.1))(ioredis@5.8.2)(magicast@0.3.5)(meow@13.2.0)(mysql2@3.15.3)(optionator@0.9.4)(rollup@4.50.1)(sass@1.94.2)(sqlite3@5.1.7)(stylelint@16.26.1(typescript@5.9.3))(terser@5.44.0)(typescript@5.9.3)(vite@7.1.12(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1))(pinia@3.0.4(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3)))(rollup@4.50.1)(vue@3.5.25(typescript@5.9.3))
@@ -2301,10 +2301,6 @@ packages:
   '@primeuix/themes@2.0.1':
     resolution: {integrity: sha512-kw+EPdklf3g2E9saGiKVIwhYelLs0wMu3CHMOlU2XkoIA07ncmRx3k1/5qrmRMRY5wiX29MEySkj64yyJTeVbQ==}
 
-  '@primeuix/utils@0.6.1':
-    resolution: {integrity: sha512-tQL/ZOPgCdD+NTimlUmhyD0ey8J1XmpZE4hDHM+/fnuBicVVmlKOd5HpS748LcOVRUKbWjmEPdHX4hi5XZoC1Q==}
-    engines: {node: '>=12.11.0'}
-
   '@primeuix/utils@0.6.3':
     resolution: {integrity: sha512-/SLNQSKQ73WbBIsflKVqbpVjCfFYvQO3Sf1LMheXyxh8JqxO4M63dzP56wwm9OPGuCQ6MYOd2AHgZXz+g7PZcg==}
     engines: {node: '>=12.11.0'}
@@ -2313,21 +2309,11 @@ packages:
     resolution: {integrity: sha512-jjUh7ffPmUsgQeuE3QPWt5rv9Il46r/qzI7A/cbU+HaCS64/nEqIbOCJOADWBvsbe3yHVcHvLHpBm1CYU2h0qw==}
     engines: {node: '>=12.11.0'}
 
-  '@primevue/core@4.4.1':
-    resolution: {integrity: sha512-RG56iDKIJT//EtntjQzOiWOHZZJczw/qWWtdL5vFvw8/QDS9DPKn8HLpXK7N5Le6KK1MLXUsxoiGTZK+poUFUg==}
-    engines: {node: '>=12.11.0'}
-    peerDependencies:
-      vue: ^3.5.0
-
   '@primevue/core@4.5.0':
     resolution: {integrity: sha512-1wEmhoLg8IsgRuER8Ytxtk3C1RQCfcdjAww3sKamQkqTkWvPm/psn54LzQbnn6u2njvQF66pio3EzrLK3IllNw==}
     engines: {node: '>=12.11.0'}
     peerDependencies:
       vue: ^3.5.0
-
-  '@primevue/forms@4.4.1':
-    resolution: {integrity: sha512-wdTVbHG6r+Msq5Cr/8r8cswWH4RdRj0eiiLYcK9S8d+nIcRnQlt/DO0o+hkgzpRVR3DvczEhodGOxUP7gkuq0g==}
-    engines: {node: '>=12.11.0'}
 
   '@primevue/forms@4.5.0':
     resolution: {integrity: sha512-TGby9SuDqdhcqJMxybngkUsypMe3TqVMLuQlr3ZhgwjN6mpaXTniauSGxmA/RP9TDw50Vt7SEXFv0Tty1lh0YQ==}
@@ -12695,33 +12681,17 @@ snapshots:
     dependencies:
       '@primeuix/styled': 0.7.4
 
-  '@primeuix/utils@0.6.1': {}
-
   '@primeuix/utils@0.6.3': {}
 
   '@primevue/auto-import-resolver@4.5.0':
     dependencies:
       '@primevue/metadata': 4.5.0
 
-  '@primevue/core@4.4.1(vue@3.5.25(typescript@5.9.3))':
-    dependencies:
-      '@primeuix/styled': 0.7.4
-      '@primeuix/utils': 0.6.3
-      vue: 3.5.25(typescript@5.9.3)
-
   '@primevue/core@4.5.0(vue@3.5.25(typescript@5.9.3))':
     dependencies:
       '@primeuix/styled': 0.7.4
       '@primeuix/utils': 0.6.3
       vue: 3.5.25(typescript@5.9.3)
-
-  '@primevue/forms@4.4.1(vue@3.5.25(typescript@5.9.3))':
-    dependencies:
-      '@primeuix/forms': 0.1.0
-      '@primeuix/utils': 0.6.1
-      '@primevue/core': 4.4.1(vue@3.5.25(typescript@5.9.3))
-    transitivePeerDependencies:
-      - vue
 
   '@primevue/forms@4.5.0(vue@3.5.25(typescript@5.9.3))':
     dependencies:
