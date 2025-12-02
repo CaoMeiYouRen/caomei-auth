@@ -66,8 +66,8 @@
 -   **目标**：单文件长度 ≤ 800 行（基于 ESLint 配置）。
 -   **基线扫描**（2025-12-03）：
 
-    -   `pages/admin/oauth/applications.vue` (2121 行)
-    -   `pages/admin/users.vue` (1868 行)
+    -   `pages/admin/oauth/applications.vue` (2121 行) -> ✅ 已拆分 (2025-12-03)
+    -   `pages/admin/users.vue` (1868 行) -> ✅ 已拆分 (2025-12-03)
     -   `pages/admin/sso/providers.vue` (1753 行)
     -   `pages/profile.vue` (1199 行)
     -   `pages/admin/logs.vue` (1184 行)
