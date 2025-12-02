@@ -1,5 +1,5 @@
 import logger from './logger'
-import { dataSource } from '@/server/database'
+// import { dataSource } from '@/server/database'
 import { User } from '@/server/entities/user'
 import { ADMIN_USER_IDS } from '@/utils/env'
 
@@ -10,6 +10,7 @@ import { ADMIN_USER_IDS } from '@/utils/env'
  */
 export async function checkAndSyncAdminRole(userId: string): Promise<boolean> {
     try {
+        const { dataSource } = await import('@/server/database')
         // 获取用户信息
         const userRepo = dataSource.getRepository(User)
         const user = await userRepo.findOne({ where: { id: userId } })
@@ -52,6 +53,7 @@ export async function checkAndSyncAdminRoleWithUser(user: User): Promise<boolean
                 user.role = currentRoles.join(',')
 
                 // 保存到数据库
+                const { dataSource } = await import('@/server/database')
                 const userRepo = dataSource.getRepository(User)
                 await userRepo.save(user)
                 logger.business.userRegistered({
@@ -108,6 +110,7 @@ export function isUserAdmin(user: { role?: string | null }, userId: string): boo
  */
 export async function setUserAdminRole(userId: string): Promise<boolean> {
     try {
+        const { dataSource } = await import('@/server/database')
         const userRepo = dataSource.getRepository(User)
         const user = await userRepo.findOne({ where: { id: userId } })
 
@@ -164,6 +167,7 @@ export async function removeUserAdminRole(userId: string, currentUserId?: string
             return false
         }
 
+        const { dataSource } = await import('@/server/database')
         const userRepo = dataSource.getRepository(User)
         const user = await userRepo.findOne({ where: { id: userId } })
 
