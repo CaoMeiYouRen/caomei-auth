@@ -91,11 +91,11 @@ export function getDefaultPasswordStrength(): PasswordStrength {
  */
 export function passwordValidator(
     password: string,
-    options?: PasswordValidatorOptions & { returnScore?: false }
+    options?: PasswordValidatorOptions & { returnScore?: false },
 ): boolean
 export function passwordValidator(
     password: string,
-    options?: PasswordStrength
+    options?: PasswordStrength,
 ): boolean
 /**
  * 验证密码强度（重载：返回得分）
@@ -106,7 +106,7 @@ export function passwordValidator(
  */
 export function passwordValidator(
     password: string,
-    options: PasswordValidatorOptions & { returnScore: true }
+    options: PasswordValidatorOptions & { returnScore: true },
 ): number
 
 /**
