@@ -63,14 +63,58 @@
 
 ### 2. 控制文件长度（G2）
 
--   **基线扫描**：使用 `npx eshw max-lines --ts 500 --vue 1000`（或自写脚本）生成超标文件列表，纳入 issue。
+-   **目标**：单文件长度 ≤ 800 行（基于 ESLint 配置）。
+-   **基线扫描**（2025-12-03）：
+
+    -   `pages/admin/oauth/applications.vue` (2121 行)
+    -   `pages/admin/users.vue` (1868 行)
+    -   `pages/admin/sso/providers.vue` (1753 行)
+    -   `pages/profile.vue` (1199 行)
+    -   `pages/admin/logs.vue` (1184 行)
+    -   `server/utils/email-template.ts` (922 行)
+
 -   **拆分策略**：
-    -   Vue 大文件拆分为 `components/` 子组件或 `composables/`；将复杂逻辑迁往脚本模块。
-    -   TS 大文件按功能域拆分，如 `server/api/auth/[...all].ts` 拆为 handler + service + validator。
+
+    1.  **管理后台页面 (`pages/admin/**`)\*\*：
+        -   **现象**：表格列定义、表单验证规则、CRUD 逻辑、UI 模版堆积。
+        -   **对策**：
+            -   提取表格列配置到 `composables/admin/use-*-columns.ts`。
+            -   提取表单逻辑到 `composables/admin/use-*-form.ts`。
+            -   将弹窗（Dialog/Drawer）拆分为独立组件（如 `components/admin/user-edit-dialog.vue`）。
+    2.  **个人中心 (`pages/profile.vue`)**：
+        -   **现象**：包含基本资料、安全设置、社交绑定等多个板块。
+        -   **对策**：按 Tab 拆分为子组件 `components/profile/basic-info.vue`, `components/profile/social-binding.vue` 等。
+    3.  **邮件模板 (`server/utils/email-template.ts`)**：
+        -   **现象**：硬编码了大量 HTML 字符串。
+        -   **对策**：将 HTML 模板移至 `server/templates/` 目录，或拆分为多个模板生成函数文件 `server/utils/templates/*.ts`。
+
 -   **静态规则**：
-    -   在 `eslint.config.js` 增加 `max-lines` 与 `max-lines-per-function`，自定义豁免（如 entity 定义）。
-    -   在 PR 模板与 CI 中加入提示（若脚本输出超标则失败）。
--   **验收**：扫描输出为空；新文件默认遵守限制。
+
+    -   `eslint.config.js` 已配置 `'max-lines': [1, { max: 800 }]`。
+    -   CI 阶段运行 `npm run lint` 确保无新增超标文件。
+
+-   **验收**：`npm run lint` 结果中无 `max-lines` 警告。
+
+#### G2 现状诊断与拆解
+
+-   **诊断结果**（2025-12-03）：
+
+    -   `lib/auth.ts` (681 行)：核心认证配置，包含大量插件配置、OAuth 提供商配置和环境变量引用，严重违反单一职责原则。
+    -   `composables/use-login-flow.ts` (505 行)：登录流程逻辑略微超标，混合了表单处理、验证码、2FA 和社交登录逻辑。
+
+-   **拆解计划**：
+    1.  **重构 `lib/auth.ts`**：
+        -   新建 `lib/auth/` 目录。
+        -   `lib/auth/providers.ts`：提取所有 OAuth/Social Providers 配置。
+        -   `lib/auth/plugins.ts`：提取 better-auth 插件配置（username, emailOTP, phone 等）。
+        -   `lib/auth/rate-limit.ts`：提取限流规则配置。
+        -   `lib/auth/index.ts`：作为入口，组装上述配置。
+    2.  **重构 `composables/use-login-flow.ts`**：
+        -   `composables/auth/use-social-login.ts`：提取社交登录相关状态和方法。
+        -   `composables/auth/use-two-factor.ts`：提取 2FA 验证与弹窗逻辑。
+        -   原文件保留核心表单状态与提交逻辑。
+    3.  **ESLint 规则落地**：
+        -   在 `eslint.config.js` 中正式启用 `max-lines` 规则（TS: 500, Vue: 1000），并为遗留文件（如 Entity 定义）添加豁免。
 
 ### 3. 提升代码复用（G3）
 
