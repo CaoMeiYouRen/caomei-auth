@@ -178,6 +178,7 @@ export const auth = betterAuth({
         twitter: { // 支持 Twitter 登录
             clientId: TWITTER_CLIENT_ID as string,
             clientSecret: TWITTER_CLIENT_SECRET as string,
+            scopes: ['user.email', 'users.read'], // users.email 用于获取邮箱，users.read 用于获取基本用户信息
         },
     },
     session: {
