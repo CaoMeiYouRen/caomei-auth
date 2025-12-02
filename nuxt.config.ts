@@ -169,6 +169,7 @@ export default defineNuxtConfig({
     },
     devServer: {
         port: 3000,
+        // host: '0.0.0.0',
     },
     nitro: {
         // 将模板文件夹包含到构建输出中 - 使用正确的配置
