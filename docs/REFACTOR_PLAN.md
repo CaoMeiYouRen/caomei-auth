@@ -69,7 +69,7 @@
     -   `pages/admin/oauth/applications.vue` (2121 行) -> ✅ 已拆分 (2025-12-03)
     -   `pages/admin/users.vue` (1868 行) -> ✅ 已拆分 (2025-12-03)
     -   `pages/admin/sso/providers.vue` (1753 行) -> ✅ 已拆分 (2025-12-03)
-    -   `pages/profile.vue` (1199 行)
+    -   `pages/profile.vue` (1199 行) -> ✅ 已拆分 (2025-12-03)
     -   `pages/admin/logs.vue` (1184 行)
     -   `server/utils/email-template.ts` (922 行) -> ✅ 已拆分至 278 行 (2025-12-03)
 
