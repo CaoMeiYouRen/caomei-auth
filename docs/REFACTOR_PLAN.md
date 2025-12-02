@@ -71,7 +71,7 @@
     -   `pages/admin/sso/providers.vue` (1753 行)
     -   `pages/profile.vue` (1199 行)
     -   `pages/admin/logs.vue` (1184 行)
-    -   `server/utils/email-template.ts` (922 行)
+    -   `server/utils/email-template.ts` (922 行) -> ✅ 已拆分至 278 行 (2025-12-03)
 
 -   **拆分策略**：
 
@@ -94,27 +94,6 @@
     -   CI 阶段运行 `npm run lint` 确保无新增超标文件。
 
 -   **验收**：`npm run lint` 结果中无 `max-lines` 警告。
-
-#### G2 现状诊断与拆解
-
--   **诊断结果**（2025-12-03）：
-
-    -   `lib/auth.ts` (681 行)：核心认证配置，包含大量插件配置、OAuth 提供商配置和环境变量引用，严重违反单一职责原则。
-    -   `composables/use-login-flow.ts` (505 行)：登录流程逻辑略微超标，混合了表单处理、验证码、2FA 和社交登录逻辑。
-
--   **拆解计划**：
-    1.  **重构 `lib/auth.ts`**：
-        -   新建 `lib/auth/` 目录。
-        -   `lib/auth/providers.ts`：提取所有 OAuth/Social Providers 配置。
-        -   `lib/auth/plugins.ts`：提取 better-auth 插件配置（username, emailOTP, phone 等）。
-        -   `lib/auth/rate-limit.ts`：提取限流规则配置。
-        -   `lib/auth/index.ts`：作为入口，组装上述配置。
-    2.  **重构 `composables/use-login-flow.ts`**：
-        -   `composables/auth/use-social-login.ts`：提取社交登录相关状态和方法。
-        -   `composables/auth/use-two-factor.ts`：提取 2FA 验证与弹窗逻辑。
-        -   原文件保留核心表单状态与提交逻辑。
-    3.  **ESLint 规则落地**：
-        -   在 `eslint.config.js` 中正式启用 `max-lines` 规则（TS: 500, Vue: 1000），并为遗留文件（如 Entity 定义）添加豁免。
 
 ### 3. 提升代码复用（G3）
 
