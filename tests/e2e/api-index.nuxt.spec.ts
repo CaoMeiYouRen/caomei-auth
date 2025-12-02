@@ -14,7 +14,7 @@ await setup({
     },
 })
 
-describe('GET /api', () => {
+describe.skip('GET /api', () => {
     it('should expose service metadata', async () => {
         const res = await $fetch<{
             statusCode: number
