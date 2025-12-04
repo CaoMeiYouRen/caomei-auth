@@ -113,7 +113,7 @@ export class User extends BaseEntity {
         cascade: true,
         onDelete: 'CASCADE',
     })
-    accounts?: Account[]
+    account?: Account[]
 
     /**
      * 用户的会话（一对多关系）
