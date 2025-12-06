@@ -40,43 +40,34 @@
                 </div>
                 <!-- 邮箱登录表单 -->
                 <div v-show="activeTab === 'email'">
-                    <div class="form-group">
-                        <label class="form-label" for="email">邮箱</label>
-                        <InputText
-                            id="email"
-                            v-model="email"
-                            class="form-input"
-                            placeholder="example@mail.com"
-                        />
-                        <div v-if="errors.email" class="error-message">
-                            {{ errors.email }}
-                        </div>
-                    </div>
+                    <BaseBaseInput
+                        id="email"
+                        v-model="email"
+                        label="邮箱"
+                        placeholder="example@mail.com"
+                        :error="errors.email"
+                    />
                     <div class="form-group">
                         <template v-if="!emailUseCode">
-                            <label class="form-label" for="emailPassword">密码</label>
-                            <Password
+                            <BaseBasePassword
                                 id="emailPassword"
                                 v-model="emailPassword"
-                                class="form-input password-input"
+                                label="密码"
                                 placeholder="请输入密码"
+                                :error="errors.emailPassword"
                                 :feedback="false"
                                 toggle-mask
                             />
-                            <div v-if="errors.emailPassword" class="error-message">
-                                {{ errors.emailPassword }}
-                            </div>
                         </template>
                         <template v-else>
-                            <div class="form-label-group">
-                                <label class="form-label" for="emailCode">验证码</label>
-                                <div class="code-row">
-                                    <InputText
-                                        id="emailCode"
-                                        v-model="emailCode"
-                                        class="form-input"
-                                        placeholder="请输入邮箱验证码"
-                                    />
+                            <BaseBaseInput
+                                id="emailCode"
+                                v-model="emailCode"
+                                label="验证码"
+                                placeholder="请输入邮箱验证码"
+                                :error="errors.emailCode"
+                            >
+                                <template #append>
                                     <SendCodeButton
                                         :on-send="sendEmailCode"
                                         :duration="60"
@@ -85,11 +76,8 @@
                                         text="获取验证码"
                                         resend-text="重新发送"
                                     />
-                                </div>
-                            </div>
-                            <div v-if="errors.emailCode" class="error-message">
-                                {{ errors.emailCode }}
-                            </div>
+                                </template>
+                            </BaseBaseInput>
                         </template>
                         <Button
                             class="switch-btn"
@@ -101,67 +89,52 @@
                 </div>
                 <!-- 用户名登录表单 -->
                 <div v-show="activeTab === 'username'">
-                    <div class="form-group">
-                        <label class="form-label" for="username">用户名</label>
-                        <InputText
-                            id="username"
-                            v-model="username"
-                            class="form-input"
-                            placeholder="请输入用户名"
-                        />
-                        <div v-if="errors.username" class="error-message">
-                            {{ errors.username }}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="usernamePassword">密码</label>
-                        <Password
-                            id="usernamePassword"
-                            v-model="usernamePassword"
-                            class="form-input password-input"
-                            placeholder="请输入密码"
-                            :feedback="false"
-                            toggle-mask
-                        />
-                        <div v-if="errors.usernamePassword" class="error-message">
-                            {{ errors.usernamePassword }}
-                        </div>
-                    </div>
+                    <BaseBaseInput
+                        id="username"
+                        v-model="username"
+                        label="用户名"
+                        placeholder="请输入用户名"
+                        :error="errors.username"
+                    />
+                    <BaseBasePassword
+                        id="usernamePassword"
+                        v-model="usernamePassword"
+                        label="密码"
+                        placeholder="请输入密码"
+                        :error="errors.usernamePassword"
+                        :feedback="false"
+                        toggle-mask
+                    />
                 </div>
                 <!-- 手机号登录表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <div class="form-group">
-                        <label class="form-label" for="phone">手机号</label>
-                        <PhoneInput v-model="phone" />
-                        <div v-if="errors.phone" class="error-message">
-                            {{ errors.phone }}
-                        </div>
-                    </div>
+                    <BasePhoneInput
+                        id="phone"
+                        v-model="phone"
+                        label="手机号"
+                        :error="errors.phone"
+                    />
                     <div class="form-group">
                         <template v-if="!phoneUseCode">
-                            <label class="form-label" for="phonePassword">密码</label>
-                            <Password
+                            <BaseBasePassword
                                 id="phonePassword"
                                 v-model="phonePassword"
-                                class="form-input password-input"
+                                label="密码"
                                 placeholder="请输入密码"
+                                :error="errors.phonePassword"
                                 :feedback="false"
                                 toggle-mask
                             />
-                            <div v-if="errors.phonePassword" class="error-message">
-                                {{ errors.phonePassword }}
-                            </div>
                         </template>
                         <template v-else>
-                            <div class="form-label-group">
-                                <label class="form-label" for="phoneCode">验证码</label>
-                                <div class="code-row">
-                                    <InputText
-                                        id="phoneCode"
-                                        v-model="phoneCode"
-                                        class="form-input"
-                                        placeholder="请输入短信验证码"
-                                    />
+                            <BaseBaseInput
+                                id="phoneCode"
+                                v-model="phoneCode"
+                                label="验证码"
+                                placeholder="请输入短信验证码"
+                                :error="errors.phoneCode"
+                            >
+                                <template #append>
                                     <SendCodeButton
                                         :on-send="sendPhoneCode"
                                         :duration="60"
@@ -170,11 +143,8 @@
                                         text="获取验证码"
                                         resend-text="重新发送"
                                     />
-                                </div>
-                            </div>
-                            <div v-if="errors.phoneCode" class="error-message">
-                                {{ errors.phoneCode }}
-                            </div>
+                                </template>
+                            </BaseBaseInput>
                         </template>
                         <Button
                             class="switch-btn"

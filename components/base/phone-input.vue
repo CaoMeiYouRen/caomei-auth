@@ -1,29 +1,44 @@
 <template>
-    <div class="phone-input">
-        <div class="region-selector">
-            <Dropdown
-                v-model="selectedRegion"
-                class="form-dropdown"
-                :options="options"
-                option-label="label"
-                :option-value="(option) => option"
-                placeholder="选择区域"
-                @change="handleRegionChange"
-            />
-        </div>
-        <div class="phone-number-input">
-            <InputText
-                v-model="phoneNumber"
-                class="form-input"
-                :placeholder="placeholder"
-                @input="formatPhone"
-            />
-        </div>
-        <input
-            type="hidden"
-            :value="formattedPhoneNumber"
-            @input="onInput"
+    <div class="form-group">
+        <label
+            v-if="label"
+            :for="id"
+            class="form-label"
         >
+            {{ label }}
+            <span v-if="required" style="color: #e63946;">*</span>
+        </label>
+        <div class="phone-input">
+            <div class="region-selector">
+                <Dropdown
+                    v-model="selectedRegion"
+                    class="form-dropdown"
+                    :options="options"
+                    option-label="label"
+                    :option-value="(option) => option"
+                    placeholder="选择区域"
+                    @change="handleRegionChange"
+                />
+            </div>
+            <div class="phone-number-input">
+                <InputText
+                    :id="id"
+                    v-model="phoneNumber"
+                    class="form-input"
+                    :class="{'p-invalid': !!error}"
+                    :placeholder="placeholder"
+                    @input="formatPhone"
+                />
+            </div>
+            <input
+                type="hidden"
+                :value="formattedPhoneNumber"
+                @input="onInput"
+            >
+        </div>
+        <div v-if="error" class="error-message">
+            {{ error }}
+        </div>
     </div>
 </template>
 
@@ -33,7 +48,23 @@ import pkg from 'google-libphonenumber'
 const { PhoneNumberFormat } = pkg
 import { SUPPORTED_REGIONS, formatPhoneNumber, phoneUtil } from '@/utils/phone'
 
+defineOptions({
+    inheritAttrs: false,
+})
+
 const props = defineProps({
+    id: {
+        type: String,
+        default: '',
+    },
+    label: {
+        type: String,
+        default: '',
+    },
+    error: {
+        type: String,
+        default: '',
+    },
     modelValue: {
         type: String,
         default: '',
@@ -45,6 +76,10 @@ const props = defineProps({
     defaultRegion: {
         type: String,
         default: 'CN',
+    },
+    required: {
+        type: Boolean,
+        default: false,
     },
 })
 

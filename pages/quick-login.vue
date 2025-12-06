@@ -33,45 +33,34 @@
 
                 <!-- 邮箱验证码登录 -->
                 <div v-show="activeTab === 'email'">
-                    <div class="form-group">
-                        <label class="form-label" for="email">邮箱地址</label>
-                        <InputText
-                            id="email"
-                            v-model="email"
-                            class="form-input"
-                            placeholder="example@mail.com"
-                        />
-                        <div v-if="errors.email" class="error-message">
-                            {{ errors.email }}
-                        </div>
-                    </div>
+                    <BaseBaseInput
+                        id="email"
+                        v-model="email"
+                        label="邮箱地址"
+                        placeholder="example@mail.com"
+                        :error="errors.email"
+                    />
 
-                    <div class="form-group">
-                        <div class="form-label-group">
-                            <label class="form-label" for="emailCode">验证码</label>
-                            <div class="code-row">
-                                <InputText
-                                    id="emailCode"
-                                    v-model="emailCode"
-                                    class="form-input"
-                                    placeholder="请输入邮箱验证码"
-                                    maxlength="6"
-                                    @input="handleEmailCodeInput"
-                                />
-                                <SendCodeButton
-                                    :on-send="sendEmailVerificationCode"
-                                    :duration="60"
-                                    :disabled="emailCodeSending || !validateEmail(email)"
-                                    :loading="emailCodeSending"
-                                    text="获取验证码"
-                                    resend-text="重新发送"
-                                />
-                            </div>
-                        </div>
-                        <div v-if="errors.emailCode" class="error-message">
-                            {{ errors.emailCode }}
-                        </div>
-                    </div>
+                    <BaseBaseInput
+                        id="emailCode"
+                        v-model="emailCode"
+                        label="验证码"
+                        placeholder="请输入邮箱验证码"
+                        :error="errors.emailCode"
+                        maxlength="6"
+                        @input="handleEmailCodeInput"
+                    >
+                        <template #append>
+                            <SendCodeButton
+                                :on-send="sendEmailVerificationCode"
+                                :duration="60"
+                                :disabled="emailCodeSending || !validateEmail(email)"
+                                :loading="emailCodeSending"
+                                text="获取验证码"
+                                resend-text="重新发送"
+                            />
+                        </template>
+                    </BaseBaseInput>
 
                     <!-- 邮箱登录按钮 -->
                     <Button
@@ -84,40 +73,33 @@
 
                 <!-- 手机验证码登录 -->
                 <div v-show="activeTab === 'phone'">
-                    <div class="form-group">
-                        <label class="form-label" for="phone">手机号</label>
-                        <PhoneInput v-model="phone" />
-                        <div v-if="errors.phone" class="error-message">
-                            {{ errors.phone }}
-                        </div>
-                    </div>
+                    <BasePhoneInput
+                        id="phone"
+                        v-model="phone"
+                        label="手机号"
+                        :error="errors.phone"
+                    />
 
-                    <div class="form-group">
-                        <div class="form-label-group">
-                            <label class="form-label" for="phoneCode">验证码</label>
-                            <div class="code-row">
-                                <InputText
-                                    id="phoneCode"
-                                    v-model="phoneCode"
-                                    class="form-input"
-                                    placeholder="请输入短信验证码"
-                                    maxlength="6"
-                                    @input="handlePhoneCodeInput"
-                                />
-                                <SendCodeButton
-                                    :on-send="sendPhoneVerificationCode"
-                                    :duration="60"
-                                    :disabled="phoneCodeSending || !validatePhone(phone)"
-                                    :loading="phoneCodeSending"
-                                    text="获取验证码"
-                                    resend-text="重新发送"
-                                />
-                            </div>
-                        </div>
-                        <div v-if="errors.phoneCode" class="error-message">
-                            {{ errors.phoneCode }}
-                        </div>
-                    </div>
+                    <BaseBaseInput
+                        id="phoneCode"
+                        v-model="phoneCode"
+                        label="验证码"
+                        placeholder="请输入短信验证码"
+                        :error="errors.phoneCode"
+                        maxlength="6"
+                        @input="handlePhoneCodeInput"
+                    >
+                        <template #append>
+                            <SendCodeButton
+                                :on-send="sendPhoneVerificationCode"
+                                :duration="60"
+                                :disabled="phoneCodeSending || !validatePhone(phone)"
+                                :loading="phoneCodeSending"
+                                text="获取验证码"
+                                resend-text="重新发送"
+                            />
+                        </template>
+                    </BaseBaseInput>
 
                     <!-- 手机登录按钮 -->
                     <Button

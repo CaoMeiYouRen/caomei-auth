@@ -30,29 +30,23 @@
                 </div>
                 <!-- 邮箱找回密码表单 -->
                 <div v-show="activeTab === 'email'">
-                    <div class="form-group">
-                        <label class="form-label" for="email">邮箱</label>
-                        <InputText
-                            id="email"
-                            v-model="email"
-                            v-tooltip.top="'请输入注册时使用的邮箱地址'"
-                            class="form-input"
-                            placeholder="请输入邮箱"
-                        />
-                        <div v-if="errors.email" class="error-message">
-                            {{ errors.email }}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="emailCode">邮箱验证码</label>
-                        <div class="code-row">
-                            <InputText
-                                id="emailCode"
-                                v-model="emailCode"
-                                v-tooltip.top="'请输入发送到您邮箱的验证码'"
-                                class="form-input"
-                                placeholder="请输入邮箱验证码"
-                            />
+                    <BaseBaseInput
+                        id="email"
+                        v-model="email"
+                        v-tooltip.top="'请输入注册时使用的邮箱地址'"
+                        label="邮箱"
+                        placeholder="请输入邮箱"
+                        :error="errors.email"
+                    />
+                    <BaseBaseInput
+                        id="emailCode"
+                        v-model="emailCode"
+                        v-tooltip.top="'请输入发送到您邮箱的验证码'"
+                        label="邮箱验证码"
+                        placeholder="请输入邮箱验证码"
+                        :error="errors.emailCode"
+                    >
+                        <template #append>
                             <SendCodeButton
                                 v-tooltip.top="'点击获取验证码，验证码将发送到您输入的邮箱'"
                                 :on-send="sendEmailCode"
@@ -62,34 +56,27 @@
                                 text="获取验证码"
                                 resend-text="重新发送"
                             />
-                        </div>
-                        <div v-if="errors.emailCode" class="error-message">
-                            {{ errors.emailCode }}
-                        </div>
-                    </div>
+                        </template>
+                    </BaseBaseInput>
                 </div>
                 <!-- 手机号找回密码表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <div class="form-group">
-                        <label class="form-label" for="phone">手机号</label>
-                        <PhoneInput
-                            v-model="phone"
-                            v-tooltip.top="'请输入注册时使用的手机号'"
-                        />
-                        <div v-if="errors.phone" class="error-message">
-                            {{ errors.phone }}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="phoneCode">短信验证码</label>
-                        <div class="code-row">
-                            <InputText
-                                id="phoneCode"
-                                v-model="phoneCode"
-                                v-tooltip.top="'请输入发送到您手机的短信验证码'"
-                                class="form-input"
-                                placeholder="请输入短信验证码"
-                            />
+                    <BasePhoneInput
+                        id="phone"
+                        v-model="phone"
+                        v-tooltip.top="'请输入注册时使用的手机号'"
+                        label="手机号"
+                        :error="errors.phone"
+                    />
+                    <BaseBaseInput
+                        id="phoneCode"
+                        v-model="phoneCode"
+                        v-tooltip.top="'请输入发送到您手机的短信验证码'"
+                        label="短信验证码"
+                        placeholder="请输入短信验证码"
+                        :error="errors.phoneCode"
+                    >
+                        <template #append>
                             <SendCodeButton
                                 v-tooltip.top="'点击获取短信验证码，验证码将发送到您输入的手机号'"
                                 :on-send="sendPhoneCode"
@@ -99,11 +86,8 @@
                                 text="获取验证码"
                                 resend-text="重新发送"
                             />
-                        </div>
-                        <div v-if="errors.phoneCode" class="error-message">
-                            {{ errors.phoneCode }}
-                        </div>
-                    </div>
+                        </template>
+                    </BaseBaseInput>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="newPassword">新密码</label>

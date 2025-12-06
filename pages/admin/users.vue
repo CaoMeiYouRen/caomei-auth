@@ -63,18 +63,12 @@
 
             <!-- 用户列表 -->
             <div class="users-list">
-                <DataTable
+                <BaseBaseTable
                     v-model:selection="selectedUsers"
-                    :value="users"
+                    :data="users"
                     :loading="loading"
-                    :paginator="true"
                     :rows="pageSize"
                     :total-records="totalUsers"
-                    :lazy="true"
-                    paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                    current-page-report-template="{first} 到 {last} 共 {totalRecords} 条"
-                    :rows-per-page-options="[10, 25, 50]"
-                    sortable
                     :sort-field="sortField === 'createdAt' ? 'createdAt' : sortField"
                     :sort-order="sortOrder === 'asc' ? 1 : -1"
                     selection-mode="multiple"
@@ -233,7 +227,7 @@
                             </div>
                         </template>
                     </Column>
-                </DataTable>
+                </BaseBaseTable>
             </div>
         </div>
 

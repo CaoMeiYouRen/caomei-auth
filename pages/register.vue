@@ -30,171 +30,108 @@
 
                 <!-- 邮箱注册表单 -->
                 <div v-show="activeTab === 'email'">
-                    <div class="form-group">
-                        <label class="form-label" for="nickname">昵称 <span style="color: #e63946;">*</span></label>
-                        <InputText
-                            id="nickname"
-                            v-model="nickname"
-                            v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊控制字符。\n昵称将用于展示'"
-                            class="form-input"
-                            placeholder="请输入昵称"
-                        />
-                        <Message
-                            v-if="errors.nickname"
-                            severity="error"
-                            size="small"
-                            variant="simple"
-                        >
-                            {{ errors.nickname }}
-                        </Message>
-                    </div>
-                    <div v-if="usernameEnabled" class="form-group">
-                        <label class="form-label" for="username">用户名 <span style="color: #e63946;">*</span></label>
-                        <InputText
+                    <BaseBaseInput
+                        id="nickname"
+                        v-model="nickname"
+                        v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊控制字符。\n昵称将用于展示'"
+                        label="昵称"
+                        placeholder="请输入昵称"
+                        :error="errors.nickname"
+                        required
+                    />
+                    <div v-if="usernameEnabled">
+                        <BaseBaseInput
                             id="username"
                             v-model="username"
                             v-tooltip.top="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。\n用户名将用于登录'"
-                            class="form-input"
+                            label="用户名"
                             placeholder="请输入用户名"
+                            :error="errors.username"
+                            required
                         />
-                        <Message
-                            v-if="errors.username"
-                            severity="error"
-                            size="small"
-                            variant="simple"
-                        >
-                            {{ errors.username }}
-                        </Message>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="email">邮箱 <span style="color: #e63946;">*</span></label>
-                        <InputText
-                            id="email"
-                            v-model="email"
-                            v-tooltip.top="'请输入有效的邮箱地址，用于接收验证邮件'"
-                            class="form-input"
-                            placeholder="example@mail.com"
-                        />
-                        <Message
-                            v-if="errors.email"
-                            severity="error"
-                            size="small"
-                            variant="simple"
-                        >
-                            {{ errors.email }}
-                        </Message>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="password">密码 <span style="color: #e63946;">*</span></label>
-                        <Password
-                            id="password"
-                            v-model="password"
-                            v-tooltip.top="getPasswordRequirementsShort()"
-                            class="form-input password-input"
-                            placeholder="请输入密码"
-                            :feedback="false"
-                            toggle-mask
-                        />
-                        <PasswordStrength
-                            :show-strength="!!password"
-                            :password="password"
-                            :show-score="false"
-                            :min-length-for-display="1"
-                        />
-                        <Message
-                            v-if="errors.password"
-                            severity="error"
-                            size="small"
-                            variant="simple"
-                        >
-                            {{ errors.password }}
-                        </Message>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="confirmPassword">确认密码 <span style="color: #e63946;">*</span></label>
-                        <Password
-                            id="confirmPassword"
-                            v-model="confirmPassword"
-                            v-tooltip.top="'请再次输入相同的密码以确认'"
-                            class="form-input password-input"
-                            placeholder="请再次输入密码"
-                            :feedback="false"
-                            toggle-mask
-                        />
-                        <Message
-                            v-if="errors.confirmPassword"
-                            severity="error"
-                            size="small"
-                            variant="simple"
-                        >
-                            {{ errors.confirmPassword }}
-                        </Message>
-                    </div>
+                    <BaseBaseInput
+                        id="email"
+                        v-model="email"
+                        v-tooltip.top="'请输入有效的邮箱地址，用于接收验证邮件'"
+                        label="邮箱"
+                        placeholder="example@mail.com"
+                        :error="errors.email"
+                        required
+                    />
+                    <BaseBasePassword
+                        id="password"
+                        v-model="password"
+                        v-tooltip.top="getPasswordRequirementsShort()"
+                        label="密码"
+                        placeholder="请输入密码"
+                        :error="errors.password"
+                        required
+                        :feedback="false"
+                        toggle-mask
+                    >
+                        <template #append>
+                            <PasswordStrength
+                                :show-strength="!!password"
+                                :password="password"
+                                :show-score="false"
+                                :min-length-for-display="1"
+                            />
+                        </template>
+                    </BaseBasePassword>
+                    <BaseBasePassword
+                        id="confirmPassword"
+                        v-model="confirmPassword"
+                        v-tooltip.top="'请再次输入相同的密码以确认'"
+                        label="确认密码"
+                        placeholder="请再次输入密码"
+                        :error="errors.confirmPassword"
+                        required
+                        :feedback="false"
+                        toggle-mask
+                    />
                 </div>
 
                 <!-- 手机号注册表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <div class="form-group">
-                        <label class="form-label" for="nickname">昵称 <span style="color: #e63946;">*</span></label>
-                        <InputText
-                            id="nickname"
-                            v-model="nickname"
-                            v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊字符。\n昵称将用于展示'"
-                            class="form-input"
-                            placeholder="请输入昵称"
-                        />
-                        <Message
-                            v-if="errors.nickname"
-                            severity="error"
-                            size="small"
-                            variant="simple"
-                        >
-                            {{ errors.nickname }}
-                        </Message>
-                    </div>
-                    <div v-if="usernameEnabled" class="form-group">
-                        <label class="form-label" for="username">用户名 <span style="color: #e63946;">*</span></label>
-                        <InputText
+                    <BaseBaseInput
+                        id="nickname"
+                        v-model="nickname"
+                        v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊字符。\n昵称将用于展示'"
+                        label="昵称"
+                        placeholder="请输入昵称"
+                        :error="errors.nickname"
+                        required
+                    />
+                    <div v-if="usernameEnabled">
+                        <BaseBaseInput
                             id="username"
                             v-model="username"
                             v-tooltip.top="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。\n用户名将用于登录'"
-                            class="form-input"
+                            label="用户名"
                             placeholder="请输入用户名"
+                            :error="errors.username"
+                            required
                         />
-                        <Message
-                            v-if="errors.username"
-                            severity="error"
-                            size="small"
-                            variant="simple"
-                        >
-                            {{ errors.username }}
-                        </Message>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="phone">手机号 <span style="color: #e63946;">*</span></label>
-                        <PhoneInput
-                            v-model="phone"
-                            v-tooltip.top="'请输入有效的手机号，用于接收短信验证码'"
-                        />
-                        <Message
-                            v-if="errors.phone"
-                            severity="error"
-                            size="small"
-                            variant="simple"
-                        >
-                            {{ errors.phone }}
-                        </Message>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="phoneCode">短信验证码 <span style="color: #e63946;">*</span></label>
-                        <div class="code-row">
-                            <InputText
-                                id="phoneCode"
-                                v-model="phoneCode"
-                                v-tooltip.top="'请输入发送到您手机的短信验证码'"
-                                class="form-input"
-                                placeholder="请输入短信验证码"
-                            />
+                    <BasePhoneInput
+                        id="phone"
+                        v-model="phone"
+                        v-tooltip.top="'请输入有效的手机号，用于接收短信验证码'"
+                        label="手机号"
+                        :error="errors.phone"
+                        required
+                    />
+                    <BaseBaseInput
+                        id="phoneCode"
+                        v-model="phoneCode"
+                        v-tooltip.top="'请输入发送到您手机的短信验证码'"
+                        label="短信验证码"
+                        placeholder="请输入短信验证码"
+                        :error="errors.phoneCode"
+                        required
+                    >
+                        <template #append>
                             <SendCodeButton
                                 v-tooltip.top="'点击获取短信验证码，验证码将发送到您输入的手机号'"
                                 :on-send="sendPhoneCode"
@@ -204,16 +141,8 @@
                                 text="获取验证码"
                                 resend-text="重新发送"
                             />
-                        </div>
-                        <Message
-                            v-if="errors.phoneCode"
-                            severity="error"
-                            size="small"
-                            variant="simple"
-                        >
-                            {{ errors.phoneCode }}
-                        </Message>
-                    </div>
+                        </template>
+                    </BaseBaseInput>
                 </div>
 
                 <!-- 用户协议和隐私政策 -->
