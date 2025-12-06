@@ -55,6 +55,32 @@ export function useApplicationManagement() {
         }
     }
 
+    const deleteApplication = async (id: string) => {
+        try {
+            await $fetch(`/api/admin/oauth/applications/${id}`, {
+                method: 'DELETE',
+            })
+
+            toast.add({
+                severity: 'success',
+                summary: '删除成功',
+                detail: '应用已删除',
+                life: 3000,
+            })
+
+            await refreshApplications()
+            return true
+        } catch (error: any) {
+            toast.add({
+                severity: 'error',
+                summary: '删除失败',
+                detail: error.message || '删除失败',
+                life: 3000,
+            })
+            return false
+        }
+    }
+
     return {
         loading,
         applications,
@@ -63,5 +89,6 @@ export function useApplicationManagement() {
         refreshApplications,
         handleRefreshApplications,
         toggleApplicationStatus,
+        deleteApplication,
     }
 }

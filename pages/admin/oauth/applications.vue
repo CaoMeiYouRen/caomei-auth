@@ -204,12 +204,6 @@
             :application="newApplication"
         />
 
-        <DeleteApplicationDialog
-            v-model:visible="showDeleteDialog"
-            :application="deletingApplication"
-            @deleted="onApplicationDeleted"
-        />
-
         <ApiDocsDialog
             v-model:visible="showApiDocsDialog"
         />
@@ -218,16 +212,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useConfirm } from 'primevue/useconfirm'
 import { useApplicationManagement } from '@/composables/admin/use-application-management'
 import CreateApplicationDialog from '@/components/admin/oauth/create-application-dialog.vue'
 import ApplicationSecretDialog from '@/components/admin/oauth/application-secret-dialog.vue'
-import DeleteApplicationDialog from '@/components/admin/oauth/delete-application-dialog.vue'
 import ApiDocsDialog from '@/components/admin/oauth/api-docs-dialog.vue'
 
 definePageMeta({
     layout: 'admin',
 })
 
+const confirm = useConfirm()
 const {
     loading,
     filteredApplications,
@@ -235,17 +230,16 @@ const {
     refreshApplications,
     handleRefreshApplications,
     toggleApplicationStatus,
+    deleteApplication,
 } = useApplicationManagement()
 
 // Dialog states
 const showCreateDialog = ref(false)
 const showSecretDialog = ref(false)
-const showDeleteDialog = ref(false)
 const showApiDocsDialog = ref(false)
 
 const editingApplication = ref<any>(null)
 const newApplication = ref<any>(null)
-const deletingApplication = ref<any>(null)
 
 // Actions
 const openCreateDialog = () => {
@@ -259,8 +253,18 @@ const editApplication = (app: any) => {
 }
 
 const confirmDelete = (app: any) => {
-    deletingApplication.value = app
-    showDeleteDialog.value = true
+    confirm.require({
+        message: `确定要删除应用 "${app.name}" 吗？此操作无法撤销。`,
+        header: '确认删除',
+        icon: 'mdi mdi-alert-circle',
+        rejectLabel: '取消',
+        acceptLabel: '删除',
+        rejectClass: 'p-button-secondary p-button-text',
+        acceptClass: 'p-button-danger',
+        accept: () => {
+            deleteApplication(app.id)
+        },
+    })
 }
 
 // Event handlers
@@ -271,10 +275,6 @@ const onApplicationCreated = (app: any) => {
 }
 
 const onApplicationUpdated = () => {
-    refreshApplications()
-}
-
-const onApplicationDeleted = () => {
     refreshApplications()
 }
 </script>

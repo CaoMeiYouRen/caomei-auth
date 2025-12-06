@@ -198,18 +198,13 @@
         />
 
         <!-- 确认删除对话框 -->
-        <AdminSsoDeleteProviderDialog
-            v-model:visible="showDeleteDialog"
-            :provider="selectedProvider"
-            :loading="deleting"
-            @confirm="handleDelete"
-        />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import { useConfirm } from 'primevue/useconfirm'
 import { formatDateLocale } from '@/utils/date'
 import { useSsoProviders } from '@/composables/admin/use-sso-providers'
 
@@ -234,6 +229,7 @@ useHead({
 })
 
 const toast = useToast()
+const confirm = useConfirm()
 const {
     providers,
     loading,
@@ -261,9 +257,7 @@ const statusOptions = [
 // 对话框状态
 const showCreateDialog = ref(false)
 const showViewDialog = ref(false)
-const showDeleteDialog = ref(false)
 const selectedProvider = ref<any>(null)
-const deleting = ref(false)
 const togglingId = ref<string | null>(null)
 
 // 计算属性：过滤后的提供商列表
@@ -333,8 +327,18 @@ function openViewDialog(provider: any) {
 
 // 打开删除对话框
 function openDeleteDialog(provider: any) {
-    selectedProvider.value = provider
-    showDeleteDialog.value = true
+    confirm.require({
+        message: `确定要删除 SSO 提供商 "${provider.name || provider.providerId}" 吗？此操作不可撤销。`,
+        header: '确认删除',
+        icon: 'mdi mdi-alert-circle',
+        rejectLabel: '取消',
+        acceptLabel: '删除',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'p-button-danger',
+        accept: async () => {
+            await deleteProvider(provider.id)
+        },
+    })
 }
 
 // 处理创建成功
@@ -345,20 +349,6 @@ function handleCreated() {
 // 处理更新成功
 function handleUpdated() {
     refreshProviders()
-}
-
-// 处理删除
-async function handleDelete(provider: any) {
-    try {
-        deleting.value = true
-        const success = await deleteProvider(provider.id)
-        if (success) {
-            showDeleteDialog.value = false
-            selectedProvider.value = null
-        }
-    } finally {
-        deleting.value = false
-    }
 }
 
 // 处理状态切换

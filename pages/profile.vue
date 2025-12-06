@@ -7,7 +7,7 @@
                     v-model:privacy-mode="privacyMode"
                     @go-o-auth-clients="goOAuthClients"
                     @go-security="goSecurity"
-                    @logout="showLogoutConfirm = true"
+                    @logout="handleLogout"
                 />
 
                 <div class="profile-section">
@@ -65,19 +65,6 @@
             v-model:visible="showSetUsernameDialog"
             v-model:user="user"
         />
-
-        <UnlinkConfirmDialog
-            v-model:visible="showUnlinkConfirm"
-            :provider-name="getProviderName(selectedProvider)"
-            :account-id="selectedAccountId"
-            @confirm="unlinkSelectedAccount"
-        />
-
-        <LogoutConfirmDialog
-            v-model:visible="showLogoutConfirm"
-            :loading="loggingOut"
-            @confirm="confirmLogout"
-        />
     </div>
 </template>
 
@@ -85,6 +72,7 @@
 import { ref, reactive, onMounted, watch, computed } from 'vue'
 import { useDark } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
+import { useConfirm } from 'primevue/useconfirm'
 import AuthLeft from '@/components/auth-left.vue'
 import { authClient } from '@/lib/auth-client'
 import { nicknameValidator } from '@/utils/validate'
@@ -101,14 +89,13 @@ import ProfileFooterActions from '@/components/profile/profile-footer-actions.vu
 import EditEmailDialog from '@/components/profile/dialogs/edit-email-dialog.vue'
 import EditPhoneDialog from '@/components/profile/dialogs/edit-phone-dialog.vue'
 import SetUsernameDialog from '@/components/profile/dialogs/set-username-dialog.vue'
-import UnlinkConfirmDialog from '@/components/profile/dialogs/unlink-confirm-dialog.vue'
-import LogoutConfirmDialog from '@/components/profile/dialogs/logout-confirm-dialog.vue'
 
 const config = useRuntimeConfig().public
 const phoneEnabled = !!config.phoneEnabled
 
 const toast = useToast()
-const user = reactive({
+const confirm = useConfirm()
+const user = ref({
     id: '',
     username: '',
     nickname: '',
@@ -123,12 +110,6 @@ const saving = ref(false)
 const showEmailModal = ref(false)
 const showPhoneModal = ref(false)
 const showSetUsernameDialog = ref(false)
-const showUnlinkConfirm = ref(false)
-const showLogoutConfirm = ref(false)
-const loggingOut = ref(false)
-
-const selectedProvider = ref('')
-const selectedAccountId = ref('')
 
 const { data: providersData } = await useFetch('/api/social/providers?includeDisabled=true')
 const isDark = useDark()
@@ -158,7 +139,7 @@ watch(
     async () => {
         const newUser = session.value?.user
         if (newUser) {
-            Object.assign(user, {
+            Object.assign(user.value, {
                 id: newUser.id,
                 username: newUser.username || '',
                 nickname: newUser.name || '',
@@ -250,50 +231,56 @@ async function linkSocialAccount(socialProvider: SocialProvider) {
 }
 
 function confirmUnlink(provider: string, accountId: string) {
-    selectedProvider.value = provider
-    selectedAccountId.value = accountId
-    showUnlinkConfirm.value = true
+    const providerName = getProviderName(provider)
+    confirm.require({
+        message: `确定要解绑 ${providerName} 平台，ID 为 ${accountId} 的账号吗？`,
+        header: '确认解绑',
+        icon: 'mdi mdi-alert',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'p-button-primary',
+        accept: async () => {
+            await unlinkAccount(provider, accountId)
+        },
+    })
 }
 
-async function unlinkSelectedAccount() {
+async function unlinkAccount(provider: string, accountId: string) {
     try {
         const result = await authClient.unlinkAccount({
-            providerId: selectedProvider.value,
-            accountId: selectedAccountId.value,
+            providerId: provider,
+            accountId: accountId,
         })
         if (result.error) {
-            throw new Error(result.error.message || `${selectedProvider.value} 解绑失败`)
+            throw new Error(result.error.message || `${provider} 解绑失败`)
         }
         await fetchUserAccounts()
         toast.add({
             severity: 'success',
-            summary: `已解绑${selectedProvider.value}`,
+            summary: `已解绑${provider}`,
             life: 2000,
         })
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : `${selectedProvider.value} 解绑时发生未知错误`
+        const errorMessage = error instanceof Error ? error.message : `${provider} 解绑时发生未知错误`
         toast.add({
             severity: 'error',
-            summary: `${selectedProvider.value} 解绑失败`,
+            summary: `${provider} 解绑失败`,
             detail: errorMessage,
             life: 5000,
         })
-    } finally {
-        showUnlinkConfirm.value = false
     }
 }
 
 // Profile Actions
 async function saveProfile() {
-    if (!nicknameValidator(user.nickname)) {
+    if (!nicknameValidator(user.value.nickname)) {
         toast.add({ severity: 'warn', summary: '昵称格式有误', detail: '昵称长度需在 2 - 36 个字符之间，仅允许中英文、数字和常见标点符号。', life: 5000 })
         return
     }
     saving.value = true
     try {
         const result = await authClient.updateUser({
-            image: user.avatar,
-            name: user.nickname,
+            image: user.value.avatar,
+            name: user.value.nickname,
         })
         if (result.error) {
             throw new Error(result.error.message || '资料保存失败')
@@ -324,12 +311,23 @@ function goSecurity() {
     navigateTo('/security')
 }
 
-async function confirmLogout() {
-    loggingOut.value = true
+function handleLogout() {
+    confirm.require({
+        message: '确定要退出登录吗？退出后需要重新登录才能访问您的账户。',
+        header: '确认退出',
+        icon: 'mdi mdi-logout',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'p-button-primary',
+        accept: async () => {
+            await performLogout()
+        },
+    })
+}
+
+async function performLogout() {
     try {
         await authClient.signOut({})
         toast.add({ severity: 'success', summary: '登出成功', life: 2000 })
-        showLogoutConfirm.value = false
         navigateTo('/login')
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '登出时发生未知错误'
@@ -339,8 +337,6 @@ async function confirmLogout() {
             detail: errorMessage,
             life: 5000,
         })
-    } finally {
-        loggingOut.value = false
     }
 }
 

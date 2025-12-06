@@ -1,6 +1,7 @@
 <template>
     <div>
         <Toast />
+        <ConfirmDialog />
         <NuxtLayout>
             <NuxtPage />
         </NuxtLayout>
