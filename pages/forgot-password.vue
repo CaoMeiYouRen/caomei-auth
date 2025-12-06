@@ -89,42 +89,33 @@
                         </template>
                     </BaseInput>
                 </div>
-                <div class="form-group">
-                    <label class="form-label" for="newPassword">新密码</label>
-                    <Password
-                        id="newPassword"
-                        v-model="newPassword"
-                        v-tooltip.top="getPasswordRequirementsShort()"
-                        class="form-input password-input"
-                        placeholder="请输入新密码"
-                        :feedback="false"
-                        toggle-mask
-                    />
-                    <PasswordStrength
-                        :show-strength="!!newPassword"
-                        :password="newPassword"
-                        :show-score="false"
-                        :min-length-for-display="1"
-                    />
-                    <div v-if="errors.newPassword" class="error-message">
-                        {{ errors.newPassword }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="confirmPassword">确认新密码</label>
-                    <Password
-                        id="confirmPassword"
-                        v-model="confirmPassword"
-                        v-tooltip.top="'请再次输入相同的新密码以确认'"
-                        class="form-input password-input"
-                        placeholder="请再次输入新密码"
-                        :feedback="false"
-                        toggle-mask
-                    />
-                    <div v-if="errors.confirmPassword" class="error-message">
-                        {{ errors.confirmPassword }}
-                    </div>
-                </div>
+                <BasePassword
+                    id="newPassword"
+                    v-model="newPassword"
+                    v-tooltip.top="getPasswordRequirementsShort()"
+                    label="新密码"
+                    placeholder="请输入新密码"
+                    :feedback="false"
+                    :error="errors.newPassword"
+                >
+                    <template #append>
+                        <PasswordStrength
+                            :show-strength="!!newPassword"
+                            :password="newPassword"
+                            :show-score="false"
+                            :min-length-for-display="1"
+                        />
+                    </template>
+                </BasePassword>
+                <BasePassword
+                    id="confirmPassword"
+                    v-model="confirmPassword"
+                    v-tooltip.top="'请再次输入相同的新密码以确认'"
+                    label="确认新密码"
+                    placeholder="请再次输入新密码"
+                    :feedback="false"
+                    :error="errors.confirmPassword"
+                />
                 <Captcha ref="captcha" />
                 <div class="form-group">
                     <Button
