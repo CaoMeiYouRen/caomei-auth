@@ -113,8 +113,9 @@
         -   ✅ `password.vue`：已完成。封装了密码输入、显隐切换。
         -   ✅ `phone-input.vue`：已完成。封装了国际区号选择、手机号格式化。
         -   ✅ `table.vue`：已完成。封装了 PrimeVue DataTable，统一分页器、Loading 态、空状态展示。
-        -   ⬜ `select.vue`：待开发。
-        -   ⬜ `dialog.vue` / `drawer.vue`：待开发。统一弹窗动画、遮罩、关闭逻辑。
+        -   ⬜ `form-group.vue`：待开发。封装 Label、Error Message 布局，用于包裹 Select、Checkbox 等无需深度封装的组件，替代 `BaseSelect`。
+        -   ⬜ `base-dialog.vue`：待开发。封装 PrimeVue Dialog，统一 Header/Footer 布局、Loading 状态、宽度响应式。
+        -   ⬜ **移除冗余 Dialog**：引入 PrimeVue `ConfirmService`，将 `logout-confirm-dialog`, `delete-*-dialog` 等纯确认类组件替换为 `useConfirm()` 调用，减少文件数量。
         -   ⬜ `status-badge.vue`：待开发。统一状态颜色映射（Active/Inactive/Banned）。
     -   **行动**：
         1. ✅ 创建 `components/base` 目录。
