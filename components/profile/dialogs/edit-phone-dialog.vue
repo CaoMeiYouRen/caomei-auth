@@ -7,7 +7,7 @@
         :style="{width: '450px'}"
     >
         <div class="form-group">
-            <PhoneInput
+            <BasePhoneInput
                 v-model="phone"
                 v-tooltip.top="'输入新的手机号'"
                 placeholder="请输入新手机号"
@@ -66,7 +66,6 @@ import { authClient } from '@/lib/auth-client'
 import { validatePhone } from '@/utils/validate'
 import { usePhoneOtp } from '@/composables/use-otp'
 import Captcha from '@/components/captcha.vue'
-import PhoneInput from '@/components/phone-input.vue'
 import SendCodeButton from '@/components/send-code-button.vue'
 import type { CaptchaExpose } from '@/utils/captcha'
 
@@ -126,13 +125,13 @@ async function bindPhone() {
         if (result.error) {
             throw new Error(result.error.message || '手机号验证失败')
         }
-        
+
         emit('update:user', {
             ...props.user,
             phone: phone.value,
             phoneVerified: true,
         })
-        
+
         visible.value = false
         toast.add({
             severity: 'success',
