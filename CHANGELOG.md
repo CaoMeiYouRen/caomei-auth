@@ -1,5 +1,31 @@
 # caomei-auth
 
+## [1.11.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.11.0...v1.11.1) (2025-12-06)
+
+
+### 🐛 Bug 修复
+
+* **admin-role-sync:** 优化管理员角色同步功能的数据源加载方式 ([95f4ef6](https://github.com/CaoMeiYouRen/caomei-auth/commit/95f4ef6))
+* **auth:** 添加 Twitter 登录所需的 scopes ([9531c32](https://github.com/CaoMeiYouRen/caomei-auth/commit/9531c32))
+* **refactor:** 调整 ESLint 规则，将最大行数限制修改为 800 行 ([63af3ab](https://github.com/CaoMeiYouRen/caomei-auth/commit/63af3ab))
+
+
+### 📦 代码重构
+
+* **email-template:** 重构邮件模板引擎，提取回退模板到独立模块 ([3274512](https://github.com/CaoMeiYouRen/caomei-auth/commit/3274512))
+* **email:** 引入依赖注入和限流机制，重构邮件发送逻辑 ([c1b897c](https://github.com/CaoMeiYouRen/caomei-auth/commit/c1b897c))
+* **env:** 优化手机功能启用逻辑，使用空值合并运算符处理环境变量 ([a2ca144](https://github.com/CaoMeiYouRen/caomei-auth/commit/a2ca144))
+* **navigation:** 引入导航依赖注入机制，优化登录后跳转逻辑 ([2d747ba](https://github.com/CaoMeiYouRen/caomei-auth/commit/2d747ba))
+* **navigation:** 重命名依赖注入函数以提高一致性 ([8cf3cb5](https://github.com/CaoMeiYouRen/caomei-auth/commit/8cf3cb5))
+* **profile:** 替换手机号验证码发送逻辑为 usePhoneOtp 组合式函数 ([632bacd](https://github.com/CaoMeiYouRen/caomei-auth/commit/632bacd))
+* **profile:** 重构用户个人资料组件和对话框 ([f1e034c](https://github.com/CaoMeiYouRen/caomei-auth/commit/f1e034c))
+* **profile:** 重构管理员日志页面 ([6da2abc](https://github.com/CaoMeiYouRen/caomei-auth/commit/6da2abc))
+* **sms:** 重构短信发送逻辑，增加依赖注入和限流机制，支持多渠道发送 ([382579c](https://github.com/CaoMeiYouRen/caomei-auth/commit/382579c))
+* **typeorm-adapter:** 增强适配器功能，支持关系处理和事务管理 ([03a395a](https://github.com/CaoMeiYouRen/caomei-auth/commit/03a395a))
+* 用专门的 provider 对话框替换对话框组件，并简化提供者管理逻辑 ([a49ec79](https://github.com/CaoMeiYouRen/caomei-auth/commit/a49ec79))
+* 重构 user 和 application 模块 ([3b5eef9](https://github.com/CaoMeiYouRen/caomei-auth/commit/3b5eef9))
+* 重构安全设置页面为组合式函数和组件化架构 ([fc468e7](https://github.com/CaoMeiYouRen/caomei-auth/commit/fc468e7))
+
 # [1.11.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.10.1...v1.11.0) (2025-11-08)
 
 
