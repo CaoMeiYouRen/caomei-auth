@@ -97,17 +97,60 @@
 
 ### 3. 提升代码复用（G3）
 
--   **候选清单**：
-    -   表单输入、验证码发送、密码强度等组件现有高度重复逻辑（多页面/多组件内拷贝）。
-    -   API 调用与错误处理：集中到 `utils/api-client.ts` 或 `useApiRequest` composable。
-    -   校验逻辑：统一收敛至 `utils/validate.ts`、`utils/privacy.ts` 等纯函数。
--   **实施步骤**：
-    1. 建立 `packages/shared` 或 `lib/shared` 目录放置跨端逻辑；或继续使用 `utils/**`。
-    2. 对重复组件创建基础组件（如 `BaseFormField`, `FormActionFooter`），并提供样式 mixin。
-    3. 对重复 API 模式封装 `createResourceClient`，接受 baseURL、路径配置。
--   **量化指标**：通过 `ts-prune`/`depcruise` 对比重构前后模块引用数，重复代码块减少 ≥ 70%。
+-   **现状分析**：
 
-### 4. utils 分层与复用策略（G3 补充）
+    -   **UI 组件重复**：多个管理后台页面（`admin/users`, `admin/oauth/*`）重复实现表格分页、搜索、加载状态逻辑；登录/注册页面重复实现表单字段布局和错误显示。
+    -   **逻辑重复**：API 请求的错误处理（Toast 提示、401 跳转）散落在各个页面；表单校验规则（如手机号、密码强度）在前端组件和后端 DTO 中可能存在不一致。
+    -   **样式重复**：SCSS 中存在多处硬编码的颜色和间距，未完全利用 `_variables.scss` 和 `_mixins.scss`。
+
+-   **实施方案**：
+
+    #### 3.1 建立基础组件库 (`components/base`)
+
+    -   **目标**：构建一套与业务解耦的原子组件，统一 UI 交互与样式。
+    -   **组件清单**：
+        -   `BaseInput.vue` / `BaseSelect.vue`：封装 Label、Error Message、v-model 绑定。
+        -   `BaseDialog.vue` / `BaseDrawer.vue`：统一弹窗动画、遮罩、关闭逻辑。
+        -   `BaseTable.vue`：封装 Element/PrimeVue 等底层表格，统一分页器、Loading 态、空状态展示。
+        -   `BaseStatusBadge.vue`：统一状态颜色映射（Active/Inactive/Banned）。
+    -   **行动**：
+        1. 创建 `components/base` 目录。
+        2. 提取 `admin/users.vue` 中的表格逻辑为 `BaseTable`。
+        3. 提取 `login.vue` 中的输入框为 `BaseInput`。
+
+    #### 3.2 提取通用 Composables (`composables/core`)
+
+    -   **目标**：将状态逻辑从 UI 组件中剥离。
+    -   **核心 Composables**：
+        -   `useDataTable<T>(fetcher)`：管理分页 (`page`, `limit`)、排序 (`sort`)、过滤 (`query`)、加载状态 (`pending`)。
+        -   `useForm<T>(schema)`：集成 `zod` 或 `valibot`，管理表单状态、校验错误信息、提交状态 (`submitting`)。
+        -   `useApi<T>(url, options)`：封装 `useFetch`，统一处理全局错误（如网络异常、Token 过期自动刷新）。
+    -   **行动**：
+        1. 改造所有 Admin 列表页使用 `useDataTable`。
+        2. 改造 Auth 相关表单使用 `useForm`（或继续优化 G1 中的 `useLoginFlow`）。
+
+    #### 3.3 统一校验与工具 (`utils/shared`)
+
+    -   **目标**：实现前后端校验逻辑同构，避免逻辑双维护。
+    -   **行动**：
+        1. 建立 `utils/shared/validators.ts`：存放 Zod Schema（如 `emailSchema`, `passwordSchema`, `phoneSchema`）。
+        2. 前端表单直接 import Schema 进行校验。
+        3. 后端 API DTO (`server/utils/validation.ts`) 复用同一套 Schema。
+
+-   **执行计划**：
+
+    | 阶段   | 任务         | 验收标准                                                               |
+    | :----- | :----------- | :--------------------------------------------------------------------- |
+    | **P1** | 基础组件抽象 | `login.vue`, `register.vue` 代码行数减少 30%，不再包含底层 HTML 标签。 |
+    | **P2** | 表格逻辑统一 | 所有 Admin 列表页移除分页/加载手动维护代码，接入 `useDataTable`。      |
+    | **P3** | 校验规则同构 | 前后端使用同一份 Zod Schema，修改一处规则两端同时生效。                |
+
+-   **量化验证**：
+    -   **工具**：引入 `jscpd` (JavaScript Copy/Paste Detector) 进行代码重复率检测。
+    -   **指标**：全项目代码重复率（Duplication Rate）降低至 **5%** 以下（当前需先测定基线）。
+    -   **CI 集成**：在 CI 流程中增加 `jscpd` 检查，超过阈值报警。
+
+#### utils 分层与复用策略（G3 补充）
 
 -   **目录规划**：
     -   `utils/shared/**`（或 `lib/shared/**`）：不依赖 Nuxt/Node 的纯函数与常量，可直接被前后端复用。
