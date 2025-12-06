@@ -126,7 +126,7 @@
                         <template #body="{data}">
                             <BaseStatusBadge
                                 variant="enabled"
-                                :value="data.enabled"
+                                :status="data.enabled"
                             />
                         </template>
                     </Column>

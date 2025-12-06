@@ -107,7 +107,7 @@
                     <template #body="{data}">
                         <BaseStatusBadge
                             variant="session"
-                            :value="data.isActive"
+                            :status="data.isActive"
                         />
                     </template>
                 </Column>

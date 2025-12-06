@@ -144,7 +144,7 @@
                         <template #body="{data}">
                             <BaseStatusBadge
                                 variant="role"
-                                :value="data.role"
+                                :status="data.role"
                             />
                         </template>
                     </Column>
@@ -158,7 +158,7 @@
                         <template #body="{data}">
                             <BaseStatusBadge
                                 variant="banned"
-                                :value="data.banned"
+                                :status="data.banned"
                             />
                         </template>
                     </Column>
