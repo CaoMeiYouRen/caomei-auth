@@ -15,8 +15,16 @@
         @page="$emit('page', $event)"
         @sort="$emit('sort', $event)"
     >
-        <template v-for="(_, name) in $slots" #[name]="slotData">
-            <slot :name="name" v-bind="slotData" />
+        <slot />
+        <template
+            v-for="name in Object.keys($slots).filter(k => k !== 'default')"
+            :key="name"
+            #[name]="slotData"
+        >
+            <slot
+                :name="name"
+                v-bind="slotData"
+            />
         </template>
     </DataTable>
 </template>
