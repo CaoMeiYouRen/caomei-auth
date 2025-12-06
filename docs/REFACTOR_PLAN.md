@@ -116,7 +116,7 @@
         -   ✅ `form-group.vue`：已完成。封装 Label、Error Message 布局，用于包裹 Select、Checkbox 等无需深度封装的组件，替代 `BaseSelect`。
         -   ✅ `base-dialog.vue`：已完成。封装 PrimeVue Dialog，统一 Header/Footer 布局、Loading 状态、宽度响应式。
         -   ⬜ **移除冗余 Dialog**：引入 PrimeVue `ConfirmService`，将 `logout-confirm-dialog`, `delete-*-dialog` 等纯确认类组件替换为 `useConfirm()` 调用，减少文件数量。
-        -   ⬜ `status-badge.vue`：待开发。消除硬编码的三元表达式（如 `enabled ? 'success' : 'danger'`），统一管理 User/App/Session 等不同实体的状态颜色与文案映射。
+        -   ✅ `status-badge.vue`：已完成。消除硬编码的三元表达式（如 `enabled ? 'success' : 'danger'`），统一管理 User/App/Session 等不同实体的状态颜色与文案映射。
     -   **行动**：
         1. ✅ 创建 `components/base` 目录。
         2. ✅ 提取 `admin/users.vue` 中的表格逻辑为 `BaseTable`。
