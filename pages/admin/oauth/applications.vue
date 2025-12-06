@@ -244,8 +244,8 @@ const {
     onSearch,
 } = useApplicationManagement()
 
-const onSearchInput = debounce((value: string) => {
-    searchQuery.value = value
+const onSearchInput = debounce((value: string | undefined) => {
+    searchQuery.value = value || ''
     onSearch()
 }, 300)
 
