@@ -1,4 +1,5 @@
-import { defineEventHandler } from 'h3'
+import { defineEventHandler, getQuery } from 'h3'
+import { Like } from 'typeorm'
 import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
@@ -6,15 +7,39 @@ import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
+    const query = getQuery(event)
+
+    const page = Number(query.page) || 0
+    const limit = Number(query.limit) || 10
+    const search = (query.search as string) || ''
+    const sortField = (query.sortField as string) || 'createdAt'
+    const sortOrder = (query.sortOrder as string) || 'DESC'
 
     try {
-        const applications = await dataSource
+        let where: any = {}
+        if (search) {
+            where = [
+                { name: Like(`%${search}%`) },
+                { description: Like(`%${search}%`) },
+                { clientId: Like(`%${search}%`) },
+            ]
+        }
+
+        const [applications, total] = await dataSource
             .getRepository(OAuthApplication)
-            .find()
+            .findAndCount({
+                where,
+                skip: page * limit,
+                take: limit,
+                order: {
+                    [sortField]: sortOrder.toUpperCase(),
+                },
+            })
 
         return {
             status: 200,
             success: true,
+            total,
             data: applications.map((app) => ({
                 id: app.id,
                 clientId: app.clientId,

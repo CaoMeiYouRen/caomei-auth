@@ -48,19 +48,18 @@
         </div>
 
         <div class="sessions-list">
-            <DataTable
-                :value="sessions"
+            <BaseTable
+                :data="sessions"
                 :loading="loading"
-                :rows="20"
                 :total-records="totalRecords"
-                lazy
-                paginator
+                :rows="pageSize"
+                :first="page * pageSize"
+                :sort-field="sortField"
+                :sort-order="sortOrder === 'asc' ? 1 : -1"
                 striped-rows
                 responsive-layout="scroll"
-                paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                current-page-report-template="{first} 到 {last} 共 {totalRecords} 条"
-                :rows-per-page-options="[10, 20, 50]"
-                @page="onPageChange"
+                @page="$emit('page', $event)"
+                @sort="$emit('sort', $event)"
             >
                 <template #header>
                     <div class="table-header">
@@ -127,7 +126,7 @@
                         </div>
                     </template>
                 </Column>
-            </DataTable>
+            </BaseTable>
         </div>
     </div>
 </template>
@@ -142,12 +141,17 @@ const props = defineProps<{
     loading: boolean
     totalRecords: number
     revokingSession: string
+    page: number
+    pageSize: number
+    sortField?: string
+    sortOrder?: 'asc' | 'desc'
 }>()
 
 const emit = defineEmits<{
     (e: 'refresh'): void
     (e: 'revoke', session: any): void
-    (e: 'page-change', event: any): void
+    (e: 'page', event: any): void
+    (e: 'sort', event: any): void
     (e: 'filter-change'): void
 }>()
 
@@ -167,10 +171,6 @@ const onSearch = debounce(() => {
 
 const onFilterChange = () => {
     emit('filter-change')
-}
-
-const onPageChange = (event: any) => {
-    emit('page-change', event)
 }
 </script>
 

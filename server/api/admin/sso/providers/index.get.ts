@@ -1,3 +1,5 @@
+import { defineEventHandler, getQuery } from 'h3'
+import { Like } from 'typeorm'
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
@@ -5,14 +7,48 @@ import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
+    const query = getQuery(event)
+
+    const page = Number(query.page) || 0
+    const limit = Number(query.limit) || 10
+    const search = (query.search as string) || ''
+    const type = (query.type as string) || ''
+    const enabled = query.enabled as string
+    const sortField = (query.sortField as string) || 'createdAt'
+    const sortOrder = (query.sortOrder as string) || 'DESC'
 
     try {
         // 获取 SSO 提供商列表
         const ssoProviderRepository = dataSource.getRepository(SSOProvider)
 
-        const providers = await ssoProviderRepository.find({
+        let where: any[] = []
+        if (search) {
+            where = [
+                { name: Like(`%${search}%`) },
+                { providerId: Like(`%${search}%`) },
+                { domain: Like(`%${search}%`) },
+                { issuer: Like(`%${search}%`) },
+            ]
+        } else {
+            where = [{}]
+        }
+
+        where = where.map((cond) => {
+            if (type) {
+                cond.type = type
+            }
+            if (enabled !== undefined && enabled !== '') {
+                cond.enabled = enabled === 'true'
+            }
+            return cond
+        })
+
+        const [providers, total] = await ssoProviderRepository.findAndCount({
+            where,
+            skip: page * limit,
+            take: limit,
             order: {
-                createdAt: 'DESC',
+                [sortField]: sortOrder.toUpperCase(),
             },
             relations: ['user'],
         })
@@ -65,6 +101,7 @@ export default defineEventHandler(async (event) => {
         return {
             success: true,
             data: sanitizedProviders,
+            total,
         }
     } catch (error: any) {
         logger.error('Failed to get SSO providers list', {

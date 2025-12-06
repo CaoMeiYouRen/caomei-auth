@@ -1,95 +1,80 @@
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { debounce } from 'lodash-es'
+import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 
 export function useSsoProviders() {
     const toast = useToast()
-    const searchQuery = ref('')
     const typeFilter = ref('')
-    const statusFilter = ref('')
+    const statusFilter = ref<boolean | ''>('')
 
-    // 使用 useFetch 进行 SSR 优化的数据获取
-    const { data: providersResponse, pending: loading, refresh: refreshProviders, error: fetchError } = useFetch('/api/admin/sso/providers', {
-        default: () => ({ success: false, data: [] }),
-        server: true, // 确保在服务端执行
-        key: 'sso-providers', // 缓存键
-        transform: (response: any) => response,
-        onResponseError({ response }) {
-            console.error('[SSO Providers] Fetch error:', response.status, response.statusText)
-        },
+    const fetcher = async (params: DataTableFetchParams) => {
+        const query: any = {
+            page: params.page,
+            limit: params.limit,
+            sortField: params.sortField,
+            sortOrder: params.sortOrder,
+            type: typeFilter.value,
+            enabled: statusFilter.value === '' ? '' : String(statusFilter.value),
+        }
+
+        if (params.searchQuery) {
+            query.search = params.searchQuery
+        }
+
+        const response = await $fetch<any>('/api/admin/sso/providers', {
+            query,
+        })
+
+        if (response.success) {
+            return {
+                data: response.data,
+                total: response.total || response.data.length,
+            }
+        }
+
+        return { data: [], total: 0 }
+    }
+
+    const {
+        loading,
+        data: providers,
+        total,
+        page,
+        pageSize,
+        sortField,
+        sortOrder,
+        searchQuery,
+        load: loadProviders,
+        onPage,
+        onSort,
+        onSearch,
+    } = useDataTable({
+        fetcher,
+        defaultSortField: 'createdAt',
+        defaultSortOrder: 'desc',
     })
 
-    // 响应式的提供商列表
-    const providers = computed(() => (providersResponse.value?.success ? providersResponse.value.data : []))
-
-    // 监听获取错误
-    watch(fetchError, (error) => {
-        if (error) {
-            console.error('[SSO Providers] Data fetch error:', error)
-            toast.add({
-                severity: 'error',
-                summary: '数据加载失败',
-                detail: '无法获取SSO提供商列表，请刷新页面重试',
-                life: 5000,
-            })
-        }
-    }, { immediate: true })
-
-    // 计算属性：过滤后的提供商列表
-    const filteredProviders = computed(() => {
-        let result = [...providers.value]
-
-        // 搜索过滤
-        if (searchQuery.value) {
-            const query = searchQuery.value.toLowerCase()
-            result = result.filter((provider: any) => provider.name?.toLowerCase().includes(query)
-                || provider.providerId?.toLowerCase().includes(query)
-                || provider.domain?.toLowerCase().includes(query)
-                || provider.issuer?.toLowerCase().includes(query),
-            )
-        }
-
-        // 类型过滤
-        if (typeFilter.value) {
-            result = result.filter((provider: any) => provider.type === typeFilter.value)
-        }
-
-        // 状态过滤
-        if (statusFilter.value !== '' && statusFilter.value !== null) {
-            result = result.filter((provider: any) => provider.enabled === statusFilter.value)
-        }
-
-        return result
+    // Watch filters to reload
+    watch([typeFilter, statusFilter], () => {
+        page.value = 0
+        loadProviders()
     })
 
-    // 防抖搜索
-    const debouncedSearch = debounce(() => {
-        // 搜索逻辑已通过计算属性实现
-    }, 300)
+    const refreshProviders = async () => {
+        await loadProviders()
+    }
 
-    // 刷新提供商列表的处理函数
     const handleRefreshProviders = async () => {
-        try {
-            searchQuery.value = ''
-            typeFilter.value = ''
-            statusFilter.value = ''
-            await refreshProviders()
-
-            toast.add({
-                severity: 'success',
-                summary: '刷新成功',
-                detail: 'SSO提供商列表已刷新',
-                life: 2000,
-            })
-        } catch (error: any) {
-            console.error('刷新提供商列表失败:', error)
-            toast.add({
-                severity: 'error',
-                summary: '刷新失败',
-                detail: '无法刷新提供商列表，请检查网络连接',
-                life: 3000,
-            })
-        }
+        searchQuery.value = ''
+        typeFilter.value = ''
+        statusFilter.value = ''
+        await refreshProviders()
+        toast.add({
+            severity: 'success',
+            summary: '刷新成功',
+            detail: 'SSO提供商列表已刷新',
+            life: 2000,
+        })
     }
 
     const toggleProviderStatus = async (provider: any) => {
@@ -160,14 +145,20 @@ export function useSsoProviders() {
     return {
         loading,
         providers,
-        filteredProviders,
+        total,
+        page,
+        pageSize,
+        sortField,
+        sortOrder,
         searchQuery,
         typeFilter,
         statusFilter,
         refreshProviders,
         handleRefreshProviders,
-        debouncedSearch,
         toggleProviderStatus,
         deleteProvider,
+        onPage,
+        onSort,
+        onSearch,
     }
 }

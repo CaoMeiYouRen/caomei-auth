@@ -31,8 +31,9 @@
                         <IconField icon-position="left">
                             <InputIcon class="mdi mdi-magnify" />
                             <InputText
-                                v-model="searchQuery"
+                                :model-value="searchQuery"
                                 placeholder="搜索提供商名称、域名或 Provider ID..."
+                                @update:model-value="onSearchInput"
                             />
                         </IconField>
                     </div>
@@ -66,23 +67,23 @@
 
             <!-- SSO 提供商列表 -->
             <div class="sso-list">
-                <DataTable
-                    :key="providers.length"
-                    :value="filteredProviders"
-                    :paginator="true"
-                    :rows="10"
+                <BaseTable
+                    :data="providers"
+                    :total-records="total"
                     :loading="loading"
-                    paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                    current-page-report-template="{first} 到 {last} 共 {totalRecords} 条"
-                    :rows-per-page-options="[10, 25, 50]"
-                    sortable
+                    :rows="pageSize"
+                    :first="page * pageSize"
+                    :sort-field="sortField"
+                    :sort-order="sortOrder === 'asc' ? 1 : -1"
                     empty-message="暂无 SSO 提供商"
                     responsive-layout="scroll"
+                    @page="onPage"
+                    @sort="onSort"
                 >
                     <template #header>
                         <div class="table-header">
                             <div class="table-title">
-                                SSO 提供商列表 ({{ filteredProviders.length }})
+                                SSO 提供商列表 ({{ total }})
                             </div>
                         </div>
                     </template>
@@ -179,7 +180,7 @@
                             </div>
                         </template>
                     </Column>
-                </DataTable>
+                </BaseTable>
             </div>
         </div>
 
@@ -205,6 +206,7 @@
 import { ref, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
+import { debounce } from 'lodash-es'
 import { formatDateLocale } from '@/utils/date'
 import { useSsoProviders } from '@/composables/admin/use-sso-providers'
 
@@ -233,15 +235,27 @@ const confirm = useConfirm()
 const {
     providers,
     loading,
+    total,
+    page,
+    pageSize,
+    sortField,
+    sortOrder,
     searchQuery,
+    typeFilter,
+    statusFilter,
     refreshProviders,
+    handleRefreshProviders,
     deleteProvider,
     toggleProviderStatus,
+    onPage,
+    onSort,
+    onSearch,
 } = useSsoProviders()
 
-// 筛选状态
-const typeFilter = ref('')
-const statusFilter = ref<boolean | ''>('')
+const onSearchInput = debounce((value: string | undefined) => {
+    searchQuery.value = value || ''
+    onSearch()
+}, 300)
 
 // 筛选选项
 const typeOptions = [
@@ -259,53 +273,6 @@ const showCreateDialog = ref(false)
 const showViewDialog = ref(false)
 const selectedProvider = ref<any>(null)
 const togglingId = ref<string | null>(null)
-
-// 计算属性：过滤后的提供商列表
-const filteredProviders = computed(() => {
-    let result = [...providers.value]
-
-    // 搜索过滤
-    if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase()
-        result = result.filter((provider: any) => provider.name?.toLowerCase().includes(query)
-            || provider.providerId?.toLowerCase().includes(query)
-            || provider.domain?.toLowerCase().includes(query)
-            || provider.issuer?.toLowerCase().includes(query),
-        )
-    }
-
-    // 类型过滤
-    if (typeFilter.value) {
-        result = result.filter((provider: any) => provider.type === typeFilter.value)
-    }
-
-    // 状态过滤
-    if (statusFilter.value !== '' && statusFilter.value !== null) {
-        result = result.filter((provider: any) => provider.enabled === statusFilter.value)
-    }
-
-    return result
-})
-
-// 刷新提供商列表
-const handleRefreshProviders = async () => {
-    try {
-        await refreshProviders()
-        toast.add({
-            severity: 'success',
-            summary: '刷新成功',
-            detail: 'SSO提供商列表已刷新',
-            life: 2000,
-        })
-    } catch (error: any) {
-        toast.add({
-            severity: 'error',
-            summary: '刷新失败',
-            detail: '无法刷新提供商列表',
-            life: 3000,
-        })
-    }
-}
 
 // 打开创建对话框
 function openCreateDialog() {

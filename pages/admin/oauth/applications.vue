@@ -37,8 +37,9 @@
                         <IconField icon-position="left">
                             <InputIcon class="mdi mdi-magnify" />
                             <InputText
-                                v-model="searchQuery"
+                                :model-value="searchQuery"
                                 placeholder="搜索应用（名称、描述、Client ID）"
+                                @update:model-value="onSearchInput"
                             />
                         </IconField>
                     </div>
@@ -55,20 +56,21 @@
 
             <!-- 应用列表 -->
             <div class="clients-list">
-                <DataTable
-                    :value="filteredApplications"
-                    :paginator="true"
-                    :rows="10"
+                <BaseTable
+                    :data="applications"
+                    :total-records="total"
                     :loading="loading"
-                    paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                    current-page-report-template="{first} 到 {last} 共 {totalRecords} 条"
-                    :rows-per-page-options="[10, 25, 50]"
-                    sortable
+                    :rows="pageSize"
+                    :first="page * pageSize"
+                    :sort-field="sortField"
+                    :sort-order="sortOrder === 'asc' ? 1 : -1"
+                    @page="onPage"
+                    @sort="onSort"
                 >
                     <template #header>
                         <div class="table-header">
                             <div class="table-title">
-                                应用列表 ({{ filteredApplications.length }})
+                                应用列表 ({{ total }})
                             </div>
                         </div>
                     </template>
@@ -187,7 +189,7 @@
                             </div>
                         </template>
                     </Column>
-                </DataTable>
+                </BaseTable>
             </div>
         </div>
 
@@ -213,6 +215,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
+import { debounce } from 'lodash-es'
 import { useApplicationManagement } from '@/composables/admin/use-application-management'
 import CreateApplicationDialog from '@/components/admin/oauth/create-application-dialog.vue'
 import ApplicationSecretDialog from '@/components/admin/oauth/application-secret-dialog.vue'
@@ -225,13 +228,26 @@ definePageMeta({
 const confirm = useConfirm()
 const {
     loading,
-    filteredApplications,
+    applications,
+    total,
+    page,
+    pageSize,
+    sortField,
+    sortOrder,
     searchQuery,
     refreshApplications,
     handleRefreshApplications,
     toggleApplicationStatus,
     deleteApplication,
+    onPage,
+    onSort,
+    onSearch,
 } = useApplicationManagement()
+
+const onSearchInput = debounce((value: string) => {
+    searchQuery.value = value
+    onSearch()
+}, 300)
 
 // Dialog states
 const showCreateDialog = ref(false)

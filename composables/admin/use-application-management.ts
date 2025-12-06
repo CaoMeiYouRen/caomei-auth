@@ -1,27 +1,57 @@
-import { ref, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 
 export function useApplicationManagement() {
     const toast = useToast()
-    const searchQuery = ref('')
 
-    const { data: applicationsResponse, pending: loading, refresh: refreshApplications } = useFetch('/api/admin/oauth/applications', {
-        default: () => ({ success: false, data: [] }),
-        transform: (response: any) => response,
-    })
-
-    const applications = computed(() => (applicationsResponse.value?.success ? applicationsResponse.value.data : []))
-
-    const filteredApplications = computed(() => {
-        if (!searchQuery.value) {
-            return applications.value
+    const fetcher = async (params: DataTableFetchParams) => {
+        const query: any = {
+            page: params.page,
+            limit: params.limit,
+            sortField: params.sortField,
+            sortOrder: params.sortOrder,
         }
 
-        const query = searchQuery.value.toLowerCase()
-        return applications.value.filter((app: any) => app.name?.toLowerCase().includes(query)
-            || app.description?.toLowerCase().includes(query)
-            || app.clientId?.toLowerCase().includes(query))
+        if (params.searchQuery) {
+            query.search = params.searchQuery
+        }
+
+        const response = await $fetch<any>('/api/admin/oauth/applications', {
+            query,
+        })
+
+        if (response.success) {
+            return {
+                data: response.data,
+                total: response.total || response.data.length,
+            }
+        }
+
+        return { data: [], total: 0 }
+    }
+
+    const {
+        loading,
+        data: applications,
+        total,
+        page,
+        pageSize,
+        sortField,
+        sortOrder,
+        searchQuery,
+        load: loadApplications,
+        onPage,
+        onSort,
+        onSearch,
+    } = useDataTable({
+        fetcher,
+        defaultSortField: 'createdAt',
+        defaultSortOrder: 'desc',
     })
+
+    const refreshApplications = async () => {
+        await loadApplications()
+    }
 
     const handleRefreshApplications = () => {
         searchQuery.value = ''
@@ -84,11 +114,18 @@ export function useApplicationManagement() {
     return {
         loading,
         applications,
-        filteredApplications,
+        total,
+        page,
+        pageSize,
+        sortField,
+        sortOrder,
         searchQuery,
         refreshApplications,
         handleRefreshApplications,
         toggleApplicationStatus,
         deleteApplication,
+        onPage,
+        onSort,
+        onSearch,
     }
 }
