@@ -114,7 +114,7 @@
         -   ✅ `phone-input.vue`：已完成。封装了国际区号选择、手机号格式化。
         -   ✅ `table.vue`：已完成。封装了 PrimeVue DataTable，统一分页器、Loading 态、空状态展示。
         -   ✅ `form-group.vue`：已完成。封装 Label、Error Message 布局，用于包裹 Select、Checkbox 等无需深度封装的组件，替代 `BaseSelect`。
-        -   ⬜ `base-dialog.vue`：待开发。封装 PrimeVue Dialog，统一 Header/Footer 布局、Loading 状态、宽度响应式。
+        -   ✅ `base-dialog.vue`：已完成。封装 PrimeVue Dialog，统一 Header/Footer 布局、Loading 状态、宽度响应式。
         -   ⬜ **移除冗余 Dialog**：引入 PrimeVue `ConfirmService`，将 `logout-confirm-dialog`, `delete-*-dialog` 等纯确认类组件替换为 `useConfirm()` 调用，减少文件数量。
         -   ⬜ `status-badge.vue`：待开发。消除硬编码的三元表达式（如 `enabled ? 'success' : 'danger'`），统一管理 User/App/Session 等不同实体的状态颜色与文案映射。
     -   **行动**：
