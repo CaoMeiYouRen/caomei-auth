@@ -25,22 +25,6 @@ export function useUserTable() {
         return labelMap[field] || field
     }
 
-    const getRoleLabel = (role: string) => {
-        const roleMap: Record<string, string> = {
-            user: '用户',
-            admin: '管理员',
-        }
-        return roleMap[role] || role
-    }
-
-    const getRoleSeverity = (role: string) => {
-        const severityMap: Record<string, string> = {
-            user: 'info',
-            admin: 'danger',
-        }
-        return severityMap[role] || 'secondary'
-    }
-
     const roleOptions = [
         { label: '用户', value: 'user' },
         { label: '管理员', value: 'admin' },
@@ -50,10 +34,6 @@ export function useUserTable() {
         { label: '正常', value: 'active' },
         { label: '已禁用', value: 'banned' },
     ]
-
-    const getStatusLabel = (banned: boolean) => banned ? '已禁用' : '正常'
-
-    const getStatusSeverity = (banned: boolean) => banned ? 'danger' : 'success'
 
     const formatDate = (date: string | Date) => {
         if (!date) { return '-' }
@@ -69,10 +49,6 @@ export function useUserTable() {
     return {
         getSortField,
         getSortFieldLabel,
-        getRoleLabel,
-        getRoleSeverity,
-        getStatusLabel,
-        getStatusSeverity,
         formatDate,
         roleOptions,
         statusOptions,

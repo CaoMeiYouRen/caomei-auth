@@ -142,9 +142,9 @@
                         sortable
                     >
                         <template #body="{data}">
-                            <Tag
-                                :value="data.disabled ? '已禁用' : '已启用'"
-                                :severity="data.disabled ? 'danger' : 'success'"
+                            <BaseStatusBadge
+                                variant="disabled"
+                                :value="data.disabled"
                             />
                         </template>
                     </Column>

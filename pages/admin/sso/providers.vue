@@ -124,7 +124,10 @@
                         sortable
                     >
                         <template #body="{data}">
-                            <Tag :value="data.enabled ? '启用' : '禁用'" :severity="data.enabled ? 'success' : 'danger'" />
+                            <BaseStatusBadge
+                                variant="enabled"
+                                :value="data.enabled"
+                            />
                         </template>
                     </Column>
 

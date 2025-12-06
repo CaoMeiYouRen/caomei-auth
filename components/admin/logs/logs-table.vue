@@ -105,9 +105,9 @@
                 </Column>
                 <Column field="isActive" header="状态">
                     <template #body="{data}">
-                        <Tag
-                            :value="data.isActive ? '活跃' : '已过期'"
-                            :severity="data.isActive ? 'success' : 'secondary'"
+                        <BaseStatusBadge
+                            variant="session"
+                            :value="data.isActive"
                         />
                     </template>
                 </Column>

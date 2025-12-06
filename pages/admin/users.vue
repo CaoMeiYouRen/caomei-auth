@@ -142,9 +142,9 @@
                         style="width: 120px"
                     >
                         <template #body="{data}">
-                            <Tag
-                                :value="getRoleLabel(data.role)"
-                                :severity="getRoleSeverity(data.role)"
+                            <BaseStatusBadge
+                                variant="role"
+                                :value="data.role"
                             />
                         </template>
                     </Column>
@@ -156,9 +156,9 @@
                         style="width: 100px"
                     >
                         <template #body="{data}">
-                            <Tag
-                                :value="getStatusLabel(data.banned)"
-                                :severity="getStatusSeverity(data.banned)"
+                            <BaseStatusBadge
+                                variant="banned"
+                                :value="data.banned"
                             />
                         </template>
                     </Column>
@@ -301,10 +301,6 @@ const {
 const {
     roleOptions,
     statusOptions,
-    getRoleLabel,
-    getRoleSeverity,
-    getStatusLabel,
-    getStatusSeverity,
     formatDate,
     getSortFieldLabel,
 } = useUserTable()
