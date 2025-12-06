@@ -125,14 +125,14 @@
     #### 3.2 提取通用 Composables (`composables/core`)
 
     -   **目标**：将状态逻辑从 UI 组件中剥离。
-    -   **进度**：⬜ 未开始
+    -   **进度**：🚧 进行中
     -   **核心 Composables**：
-        -   `useDataTable<T>(fetcher)`：管理分页 (`page`, `limit`)、排序 (`sort`)、过滤 (`query`)、加载状态 (`pending`)。
-        -   `useForm<T>(schema)`：集成 `zod` 或 `valibot`，管理表单状态、校验错误信息、提交状态 (`submitting`)。
-        -   `useApi<T>(url, options)`：封装 `useFetch`，统一处理全局错误（如网络异常、Token 过期自动刷新）。
+        -   ✅ `useDataTable<T>(fetcher)`：管理分页 (`page`, `limit`)、排序 (`sort`)、过滤 (`query`)、加载状态 (`pending`)。
+        -   ⬜ `useForm<T>(schema)`：集成 `zod` 或 `valibot`，管理表单状态、校验错误信息、提交状态 (`submitting`)。
+        -   ⬜ `useApi<T>(url, options)`：封装 `useFetch`，统一处理全局错误（如网络异常、Token 过期自动刷新）。
     -   **行动**：
-        1. 改造所有 Admin 列表页使用 `useDataTable`。
-        2. 改造 Auth 相关表单使用 `useForm`（或继续优化 G1 中的 `useLoginFlow`）。
+        1. ✅ 改造 `composables/admin/use-user-management.ts` 使用 `useDataTable`。
+        2. ⬜ 改造 Auth 相关表单使用 `useForm`（或继续优化 G1 中的 `useLoginFlow`）。
 
     #### 3.3 统一校验与工具 (`utils/shared`)
 

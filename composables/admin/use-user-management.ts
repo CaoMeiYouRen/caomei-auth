@@ -1,7 +1,8 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { debounce } from 'lodash-es'
+import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import { useUserTable } from './use-user-table'
 import { authClient } from '@/lib/auth-client'
 import { validateEmail } from '@/utils/validate'
@@ -12,106 +13,110 @@ export function useUserManagement() {
     const confirm = useConfirm()
     const { getSortField } = useUserTable()
 
-    // 响应式数据
-    const loading = ref(false)
-    const users = ref<any[]>([])
-    const totalUsers = ref(0)
-    const pageSize = ref(10)
-    const currentPage = ref(0)
-    const searchQuery = ref('')
+    // 筛选状态 (Specific to this view)
     const selectedRole = ref(null)
     const selectedStatus = ref(null)
     const selectedUsers = ref<any[]>([])
 
-    // 排序相关状态
-    const sortField = ref<string>('createdAt') // 默认按创建时间排序
-    const sortOrder = ref<'asc' | 'desc'>('desc') // 默认倒序
+    const fetcher = async (params: DataTableFetchParams) => {
+        const query: any = {
+            limit: params.limit,
+            offset: params.page * params.limit,
+        }
 
-    // API 调用方法
-    const loadUsers = async () => {
-        try {
-            loading.value = true
-
-            const query: any = {
-                limit: pageSize.value,
-                offset: currentPage.value * pageSize.value,
+        // 添加搜索条件 - 智能搜索多个字段
+        if (params.searchQuery) {
+            const query_value = params.searchQuery.trim()
+            // 如果以@开头，搜索用户名（由于API限制，用email字段代替）
+            if (query_value.startsWith('@')) {
+                // 注意：API不支持username搜索，这里使用name字段搜索
+                query.searchField = 'name'
+                query.searchValue = query_value.substring(1) // 移除@符号
+            } else if (validateEmail(query_value)) {
+                // 如果是有效的邮箱格式，搜索邮箱
+                query.searchField = 'email'
+                query.searchValue = query_value
+            } else {
+                // 否则搜索姓名
+                query.searchField = 'name'
+                query.searchValue = query_value
             }
+            query.searchOperator = 'contains'
+        }
 
-            // 添加搜索条件 - 智能搜索多个字段
-            if (searchQuery.value) {
-                const query_value = searchQuery.value.trim()
-                // 如果以@开头，搜索用户名（由于API限制，用email字段代替）
-                if (query_value.startsWith('@')) {
-                    // 注意：API不支持username搜索，这里使用name字段搜索
-                    query.searchField = 'name'
-                    query.searchValue = query_value.substring(1) // 移除@符号
-                } else if (validateEmail(query_value)) {
-                    // 如果是有效的邮箱格式，搜索邮箱
-                    query.searchField = 'email'
-                    query.searchValue = query_value
-                } else {
-                    // 否则搜索姓名
-                    query.searchField = 'name'
-                    query.searchValue = query_value
-                }
-                query.searchOperator = 'contains'
-            }
+        // 添加筛选条件
+        const filters: any[] = []
 
-            // 添加筛选条件
-            const filters: any[] = []
-
-            // 添加角色筛选
-            if (selectedRole.value) {
-                filters.push({
-                    field: 'role',
-                    operator: 'eq',
-                    value: selectedRole.value,
-                })
-            }
-
-            // 添加状态筛选
-            if (selectedStatus.value) {
-                filters.push({
-                    field: 'banned',
-                    operator: 'eq',
-                    value: selectedStatus.value === 'banned',
-                })
-            }
-
-            // 如果有多个筛选条件，使用数组；否则使用单个条件
-            if (filters.length > 1) {
-                query.filters = filters
-            } else if (filters.length === 1) {
-                query.filterField = filters[0].field
-                query.filterOperator = filters[0].operator
-                query.filterValue = filters[0].value
-            }
-
-            // 添加排序参数
-            if (sortField.value) {
-                query.sortBy = sortField.value
-                query.sortDirection = sortOrder.value
-            }
-
-            const response = await authClient.admin.listUsers({ query })
-
-            users.value = response.data?.users || []
-            totalUsers.value = response.data?.total || 0
-        } catch (error: any) {
-            console.error('加载用户列表失败:', error)
-            toast.add({
-                severity: 'error',
-                summary: '加载失败',
-                detail: error.message || '加载用户列表失败',
-                life: 3000,
+        // 添加角色筛选
+        if (selectedRole.value) {
+            filters.push({
+                field: 'role',
+                operator: 'eq',
+                value: selectedRole.value,
             })
-        } finally {
-            loading.value = false
+        }
+
+        // 添加状态筛选
+        if (selectedStatus.value) {
+            filters.push({
+                field: 'banned',
+                operator: 'eq',
+                value: selectedStatus.value === 'banned',
+            })
+        }
+
+        // 如果有多个筛选条件，使用数组；否则使用单个条件
+        if (filters.length > 1) {
+            query.filters = filters
+        } else if (filters.length === 1) {
+            query.filterField = filters[0].field
+            query.filterOperator = filters[0].operator
+            query.filterValue = filters[0].value
+        }
+
+        // 添加排序参数
+        if (params.sortField) {
+            query.sortBy = getSortField(params.sortField)
+            query.sortDirection = params.sortOrder
+        }
+
+        const response = await authClient.admin.listUsers({ query })
+
+        return {
+            data: response.data?.users || [],
+            total: response.data?.total || 0,
         }
     }
 
+    const {
+        loading,
+        data: users,
+        total: totalUsers,
+        page: currentPage,
+        pageSize,
+        sortField,
+        sortOrder,
+        searchQuery,
+        load: loadUsers,
+        onPage: onPageChange,
+        onSort,
+        onFilter,
+        onSearch,
+    } = useDataTable({
+        fetcher,
+        defaultPageSize: 10,
+        defaultSortField: 'createdAt',
+        defaultSortOrder: 'desc',
+        immediate: true,
+    })
+
+    // Watchers for external filters
+    watch([selectedRole, selectedStatus], () => {
+        onFilter()
+    })
+
     const debouncedSearch = debounce(() => {
-        loadUsers()
+        onSearch()
     }, 500)
 
     const refreshUsers = () => {
@@ -122,26 +127,6 @@ export function useUserManagement() {
         sortOrder.value = 'desc'
         currentPage.value = 0
         loadUsers()
-    }
-
-    const onPageChange = (event: any) => {
-        currentPage.value = event.page
-        pageSize.value = event.rows
-        loadUsers()
-    }
-
-    const onSort = (event: any) => {
-        // event 包含 sortField 和 sortOrder 信息
-        if (event.sortField) {
-            sortField.value = getSortField(event.sortField)
-            sortOrder.value = event.sortOrder === 1 ? 'asc' : 'desc'
-
-            // 重置到第一页
-            currentPage.value = 0
-
-            // 重新加载数据
-            loadUsers()
-        }
     }
 
     // 单个用户操作
