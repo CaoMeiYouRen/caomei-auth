@@ -12,7 +12,8 @@
             :id="id"
             v-bind="$attrs"
             :model-value="modelValue"
-            :class="['form-input', 'password-input', {'p-invalid': !!error}]"
+            class="password-wrapper"
+            :input-class="['form-input', {'p-invalid': !!error}]"
             :placeholder="placeholder"
             :disabled="disabled"
             :feedback="feedback"
@@ -55,3 +56,14 @@ defineEmits<{
     (e: 'update:modelValue', value: string): void
 }>()
 </script>
+
+<style lang="scss" scoped>
+.password-wrapper {
+    width: 100%;
+
+    :deep(.p-password-input) {
+        width: 100%;
+        padding-right: 2.5rem;
+    }
+}
+</style>
