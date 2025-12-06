@@ -33,7 +33,7 @@
 
                 <!-- 邮箱验证码登录 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseBaseInput
+                    <BaseInput
                         id="email"
                         v-model="email"
                         label="邮箱地址"
@@ -41,7 +41,7 @@
                         :error="errors.email"
                     />
 
-                    <BaseBaseInput
+                    <BaseInput
                         id="emailCode"
                         v-model="emailCode"
                         label="验证码"
@@ -60,7 +60,7 @@
                                 resend-text="重新发送"
                             />
                         </template>
-                    </BaseBaseInput>
+                    </BaseInput>
 
                     <!-- 邮箱登录按钮 -->
                     <Button
@@ -80,7 +80,7 @@
                         :error="errors.phone"
                     />
 
-                    <BaseBaseInput
+                    <BaseInput
                         id="phoneCode"
                         v-model="phoneCode"
                         label="验证码"
@@ -99,7 +99,7 @@
                                 resend-text="重新发送"
                             />
                         </template>
-                    </BaseBaseInput>
+                    </BaseInput>
 
                     <!-- 手机登录按钮 -->
                     <Button

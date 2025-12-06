@@ -109,14 +109,14 @@
 
     -   **目标**：构建一套与业务解耦的原子组件，统一 UI 交互与样式。
     -   **组件清单**：
-        -   `base-input.vue` / `base-select.vue`：封装 Label、Error Message、v-model 绑定。
-        -   `base-dialog.vue` / `base-drawer.vue`：统一弹窗动画、遮罩、关闭逻辑。
-        -   `base-table.vue`：封装 Element/PrimeVue 等底层表格，统一分页器、Loading 态、空状态展示。
-        -   `base-status-badge.vue`：统一状态颜色映射（Active/Inactive/Banned）。
+        -   `input.vue` / `select.vue`：封装 Label、Error Message、v-model 绑定。
+        -   `dialog.vue` / `drawer.vue`：统一弹窗动画、遮罩、关闭逻辑。
+        -   `table.vue`：封装 Element/PrimeVue 等底层表格，统一分页器、Loading 态、空状态展示。
+        -   `status-badge.vue`：统一状态颜色映射（Active/Inactive/Banned）。
     -   **行动**：
         1. 创建 `components/base` 目录。
-        2. 提取 `admin/users.vue` 中的表格逻辑为 `base-table.vue`。
-        3. 提取 `login.vue` 中的输入框为 `base-input.vue`。
+        2. 提取 `admin/users.vue` 中的表格逻辑为 `table.vue`。
+        3. 提取 `login.vue` 中的输入框为 `input.vue`。
 
     #### 3.2 提取通用 Composables (`composables/core`)
 

@@ -40,7 +40,7 @@
                 </div>
                 <!-- 邮箱登录表单 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseBaseInput
+                    <BaseInput
                         id="email"
                         v-model="email"
                         label="邮箱"
@@ -49,7 +49,7 @@
                     />
                     <div class="form-group">
                         <template v-if="!emailUseCode">
-                            <BaseBasePassword
+                            <BasePassword
                                 id="emailPassword"
                                 v-model="emailPassword"
                                 label="密码"
@@ -60,7 +60,7 @@
                             />
                         </template>
                         <template v-else>
-                            <BaseBaseInput
+                            <BaseInput
                                 id="emailCode"
                                 v-model="emailCode"
                                 label="验证码"
@@ -77,7 +77,7 @@
                                         resend-text="重新发送"
                                     />
                                 </template>
-                            </BaseBaseInput>
+                            </BaseInput>
                         </template>
                         <Button
                             class="switch-btn"
@@ -89,14 +89,14 @@
                 </div>
                 <!-- 用户名登录表单 -->
                 <div v-show="activeTab === 'username'">
-                    <BaseBaseInput
+                    <BaseInput
                         id="username"
                         v-model="username"
                         label="用户名"
                         placeholder="请输入用户名"
                         :error="errors.username"
                     />
-                    <BaseBasePassword
+                    <BasePassword
                         id="usernamePassword"
                         v-model="usernamePassword"
                         label="密码"
@@ -116,7 +116,7 @@
                     />
                     <div class="form-group">
                         <template v-if="!phoneUseCode">
-                            <BaseBasePassword
+                            <BasePassword
                                 id="phonePassword"
                                 v-model="phonePassword"
                                 label="密码"
@@ -127,7 +127,7 @@
                             />
                         </template>
                         <template v-else>
-                            <BaseBaseInput
+                            <BaseInput
                                 id="phoneCode"
                                 v-model="phoneCode"
                                 label="验证码"
@@ -144,7 +144,7 @@
                                         resend-text="重新发送"
                                     />
                                 </template>
-                            </BaseBaseInput>
+                            </BaseInput>
                         </template>
                         <Button
                             class="switch-btn"

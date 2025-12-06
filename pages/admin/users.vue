@@ -63,7 +63,7 @@
 
             <!-- 用户列表 -->
             <div class="users-list">
-                <BaseBaseTable
+                <BaseTable
                     v-model:selection="selectedUsers"
                     :data="users"
                     :loading="loading"
@@ -227,7 +227,7 @@
                             </div>
                         </template>
                     </Column>
-                </BaseBaseTable>
+                </BaseTable>
             </div>
         </div>
 

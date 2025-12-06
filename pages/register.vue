@@ -30,7 +30,7 @@
 
                 <!-- 邮箱注册表单 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseBaseInput
+                    <BaseInput
                         id="nickname"
                         v-model="nickname"
                         v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊控制字符。\n昵称将用于展示'"
@@ -40,7 +40,7 @@
                         required
                     />
                     <div v-if="usernameEnabled">
-                        <BaseBaseInput
+                        <BaseInput
                             id="username"
                             v-model="username"
                             v-tooltip.top="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。\n用户名将用于登录'"
@@ -50,7 +50,7 @@
                             required
                         />
                     </div>
-                    <BaseBaseInput
+                    <BaseInput
                         id="email"
                         v-model="email"
                         v-tooltip.top="'请输入有效的邮箱地址，用于接收验证邮件'"
@@ -59,7 +59,7 @@
                         :error="errors.email"
                         required
                     />
-                    <BaseBasePassword
+                    <BasePassword
                         id="password"
                         v-model="password"
                         v-tooltip.top="getPasswordRequirementsShort()"
@@ -78,8 +78,8 @@
                                 :min-length-for-display="1"
                             />
                         </template>
-                    </BaseBasePassword>
-                    <BaseBasePassword
+                    </BasePassword>
+                    <BasePassword
                         id="confirmPassword"
                         v-model="confirmPassword"
                         v-tooltip.top="'请再次输入相同的密码以确认'"
@@ -94,7 +94,7 @@
 
                 <!-- 手机号注册表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <BaseBaseInput
+                    <BaseInput
                         id="nickname"
                         v-model="nickname"
                         v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊字符。\n昵称将用于展示'"
@@ -104,7 +104,7 @@
                         required
                     />
                     <div v-if="usernameEnabled">
-                        <BaseBaseInput
+                        <BaseInput
                             id="username"
                             v-model="username"
                             v-tooltip.top="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。\n用户名将用于登录'"
@@ -122,7 +122,7 @@
                         :error="errors.phone"
                         required
                     />
-                    <BaseBaseInput
+                    <BaseInput
                         id="phoneCode"
                         v-model="phoneCode"
                         v-tooltip.top="'请输入发送到您手机的短信验证码'"
@@ -142,7 +142,7 @@
                                 resend-text="重新发送"
                             />
                         </template>
-                    </BaseBaseInput>
+                    </BaseInput>
                 </div>
 
                 <!-- 用户协议和隐私政策 -->

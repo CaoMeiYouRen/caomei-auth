@@ -30,7 +30,7 @@
                 </div>
                 <!-- 邮箱找回密码表单 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseBaseInput
+                    <BaseInput
                         id="email"
                         v-model="email"
                         v-tooltip.top="'请输入注册时使用的邮箱地址'"
@@ -38,7 +38,7 @@
                         placeholder="请输入邮箱"
                         :error="errors.email"
                     />
-                    <BaseBaseInput
+                    <BaseInput
                         id="emailCode"
                         v-model="emailCode"
                         v-tooltip.top="'请输入发送到您邮箱的验证码'"
@@ -57,7 +57,7 @@
                                 resend-text="重新发送"
                             />
                         </template>
-                    </BaseBaseInput>
+                    </BaseInput>
                 </div>
                 <!-- 手机号找回密码表单 -->
                 <div v-show="activeTab === 'phone'">
@@ -68,7 +68,7 @@
                         label="手机号"
                         :error="errors.phone"
                     />
-                    <BaseBaseInput
+                    <BaseInput
                         id="phoneCode"
                         v-model="phoneCode"
                         v-tooltip.top="'请输入发送到您手机的短信验证码'"
@@ -87,7 +87,7 @@
                                 resend-text="重新发送"
                             />
                         </template>
-                    </BaseBaseInput>
+                    </BaseInput>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="newPassword">新密码</label>
