@@ -108,19 +108,23 @@
     #### 3.1 建立基础组件库 (`components/base`)
 
     -   **目标**：构建一套与业务解耦的原子组件，统一 UI 交互与样式。
-    -   **组件清单**：
-        -   `input.vue` / `select.vue`：封装 Label、Error Message、v-model 绑定。
-        -   `dialog.vue` / `drawer.vue`：统一弹窗动画、遮罩、关闭逻辑。
-        -   `table.vue`：封装 Element/PrimeVue 等底层表格，统一分页器、Loading 态、空状态展示。
-        -   `status-badge.vue`：统一状态颜色映射（Active/Inactive/Banned）。
-    -   **行动**：
+    -   **进度**：
+        -   ✅ `input.vue`：已完成。封装了 Label、Error Message、v-model 绑定。
+        -   ✅ `password.vue`：已完成。封装了密码输入、显隐切换。
+        -   ✅ `phone-input.vue`：已完成。封装了国际区号选择、手机号格式化。
+        -   ✅ `table.vue`：已完成。封装了 PrimeVue DataTable，统一分页器、Loading 态、空状态展示。
+        -   ⬜ `select.vue`：待开发。
+        -   ⬜ `dialog.vue` / `drawer.vue`：待开发。统一弹窗动画、遮罩、关闭逻辑。
+        -   ⬜ `status-badge.vue`：待开发。统一状态颜色映射（Active/Inactive/Banned）。
+    -   **已完成行动**：
         1. 创建 `components/base` 目录。
-        2. 提取 `admin/users.vue` 中的表格逻辑为 `table.vue`。
-        3. 提取 `login.vue` 中的输入框为 `input.vue`。
+        2. 提取 `admin/users.vue` 中的表格逻辑为 `BaseTable`。
+        3. 提取 `login.vue`, `register.vue`, `forgot-password.vue`, `quick-login.vue` 中的输入框为 `BaseInput`, `BasePassword`, `BasePhoneInput`。
 
     #### 3.2 提取通用 Composables (`composables/core`)
 
     -   **目标**：将状态逻辑从 UI 组件中剥离。
+    -   **进度**：⬜ 未开始
     -   **核心 Composables**：
         -   `useDataTable<T>(fetcher)`：管理分页 (`page`, `limit`)、排序 (`sort`)、过滤 (`query`)、加载状态 (`pending`)。
         -   `useForm<T>(schema)`：集成 `zod` 或 `valibot`，管理表单状态、校验错误信息、提交状态 (`submitting`)。
@@ -132,6 +136,7 @@
     #### 3.3 统一校验与工具 (`utils/shared`)
 
     -   **目标**：实现前后端校验逻辑同构，避免逻辑双维护。
+    -   **进度**：⬜ 未开始
     -   **行动**：
         1. 建立 `utils/shared/validators.ts`：存放 Zod Schema（如 `emailSchema`, `passwordSchema`, `phoneSchema`）。
         2. 前端表单直接 import Schema 进行校验。
