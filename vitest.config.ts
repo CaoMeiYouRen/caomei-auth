@@ -16,5 +16,10 @@ export default defineVitestConfig({
         setupFiles: ['tests/setup/vitest.setup.ts'],
         include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
         exclude: ['**/node_modules/**', '**/.nuxt/**', '**/dist/**'],
+        server: {
+            deps: {
+                inline: ['primevue'],
+            },
+        },
     },
 })

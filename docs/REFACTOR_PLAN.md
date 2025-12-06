@@ -129,7 +129,7 @@
     -   **核心 Composables**：
         -   ✅ `useDataTable<T>(fetcher)`：管理分页 (`page`, `limit`)、排序 (`sort`)、过滤 (`query`)、加载状态 (`pending`)。
         -   ✅ `useForm<T>(schema)`：集成 `zod` 或 `valibot`，管理表单状态、校验错误信息、提交状态 (`submitting`)。
-        -   ⬜ `useApi<T>(url, options)`：封装 `useFetch`，统一处理全局错误（如网络异常、Token 过期自动刷新）。
+        -   ✅ `useApi<T>(url, options)`：封装 `useFetch`，统一处理全局错误（如网络异常、Token 过期自动刷新）。
     -   **行动**：
         1. ✅ 改造 `composables/admin/use-user-management.ts` 使用 `useDataTable`。
         2. ⬜ 改造 Auth 相关表单使用 `useForm`（或继续优化 G1 中的 `useLoginFlow`）。
