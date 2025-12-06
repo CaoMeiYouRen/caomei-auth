@@ -44,9 +44,12 @@ export function useLogsManagement() {
         total,
         page,
         pageSize,
+        sortField,
+        sortOrder,
         searchQuery,
         load: loadSessions,
         onPage,
+        onSort,
         onSearch,
     } = useDataTable({
         fetcher,
@@ -97,6 +100,8 @@ export function useLogsManagement() {
         total,
         page,
         pageSize,
+        sortField,
+        sortOrder,
         searchQuery,
         selectedStatus,
         dateRange,
@@ -104,6 +109,7 @@ export function useLogsManagement() {
         refreshSessions,
         revokeSession,
         onPage,
+        onSort,
         onSearch,
     }
 }

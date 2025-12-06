@@ -28,10 +28,15 @@
                 :loading="sessionsLoading"
                 :total-records="totalRecords"
                 :revoking-session="revokingSession"
+                :page="page"
+                :page-size="pageSize"
+                :sort-field="sortField"
+                :sort-order="sortOrder"
                 @refresh="refreshSessions"
                 @revoke="revokeSession"
-                @page-change="onPageChange"
-                @filter-change="onFilterChange"
+                @page="onPage"
+                @sort="onSort"
+                @filter-change="onSearch"
             />
         </div>
     </div>
