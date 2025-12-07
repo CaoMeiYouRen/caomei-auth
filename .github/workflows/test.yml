@@ -24,7 +24,12 @@ jobs:
       - run: pnpm run build
       - run: pnpm run test
       - run: pnpm run test:coverage
+
+      # 上传代码覆盖率报告到 Codecov
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+        # 检查代码重复率
+      - run: pnpm run lint:duplicate

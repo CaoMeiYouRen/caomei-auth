@@ -1,0 +1,29 @@
+{
+    "threshold": 5,
+    "reporters": [
+        "html",
+        "console",
+        "json"
+    ],
+    "output": "./jscpd-report",
+    "ignore": [
+        "**/node_modules/**",
+        "**/.vercel/**",
+        "**/.vitepress/**",
+        "**/.nuxt/**",
+        "**/.output/**",
+        "**/dist/**",
+        "**/coverage/**",
+        "**/public/**",
+        "**/logs/**",
+        "**/*.d.ts",
+        "**/*.min.js",
+        "**/*.map"
+    ],
+    "minLines": 5,
+    "minTokens": 50,
+    "absolute": true,
+    "path": [
+        "."
+    ]
+}

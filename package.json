@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "lint:css": "stylelint ./**/*.{css,scss,sass,vue} --fix",
+    "lint:duplicate": "jscpd .",
     "lint": "cross-env NODE_ENV=production eslint . --fix && npm run lint:css",
     "release": "semantic-release",
     "build": "nuxt build",
@@ -126,6 +127,7 @@
     "eslint-plugin-vue": "^10.6.2",
     "happy-dom": "^20.0.11",
     "husky": "^9.1.7",
+    "jscpd": "^4.0.5",
     "lint-staged": "^16.2.7",
     "pkg-types": "^2.3.0",
     "playwright-core": "^1.57.0",
