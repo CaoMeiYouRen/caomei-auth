@@ -20,7 +20,8 @@
     "test:coverage": "vitest run --coverage",
     "docs:dev": "vitepress dev --open",
     "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview"
+    "docs:preview": "vitepress preview",
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.940.0",
@@ -140,7 +141,8 @@
     "typescript": "^5.9.3",
     "vite": "7.2.6",
     "vitepress": "^1.6.4",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vue-tsc": "^3.1.7"
   },
   "author": "CaoMeiYouRen",
   "description": "草梅 Auth 是一个基于 Nuxt 全栈框架的统一登录平台。支持 OAuth2.0 协议，集成邮箱、用户名、手机号、验证码、社交媒体等多种登录注册方式。",
