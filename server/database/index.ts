@@ -1,4 +1,3 @@
-import path from 'path'
 import ms from 'ms'
 import { DataSource, DataSourceOptions } from 'typeorm'
 import { Account } from '../entities/account'
@@ -90,7 +89,7 @@ async function populateDemoDataAsync(): Promise<void> {
         })
 
         // 使用 better-auth API 创建普通用户
-        const normalUser = await auth.api.createUser({
+        await auth.api.createUser({
             body: {
                 name: demoConfig.normalUser.name,
                 email: demoConfig.normalUser.email,

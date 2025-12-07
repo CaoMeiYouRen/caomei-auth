@@ -5,7 +5,7 @@
   "scripts": {
     "lint:css": "stylelint ./**/*.{css,scss,sass,vue} --fix",
     "lint:duplicate": "jscpd .",
-    "lint": "cross-env NODE_ENV=production eslint . --fix && npm run lint:css",
+    "lint": "cross-env NODE_ENV=production eslint . --fix",
     "release": "semantic-release",
     "build": "nuxt build",
     "build:debug": "cross-env DEBUG_BUILD=true nuxt build",
@@ -183,7 +183,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog-cmyr"
+      "path": "cz-conventional-changelog-cmyr"
     }
   },
   "changelog": {

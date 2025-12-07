@@ -16,7 +16,7 @@ let consoleWarnSpy: ReturnType<typeof vi.spyOn>
 let navigation: typeof import('@/utils/navigation')
 
 beforeAll(() => {
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 })
 
 beforeAll(async () => {

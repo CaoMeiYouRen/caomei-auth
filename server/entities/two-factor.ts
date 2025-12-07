@@ -1,4 +1,4 @@
-import { Entity, OneToOne, JoinColumn } from 'typeorm'
+import { Entity, OneToOne } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 import { User } from './user'

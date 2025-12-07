@@ -301,7 +301,7 @@ export function formatAccountForVerification(account: string, region?: string): 
         if (region) {
             try {
                 return formatPhoneNumber(cleanAccount, region as any)
-            } catch (error) {
+            } catch {
                 throw new Error('手机号格式化失败，请检查输入或选择正确的国家/地区')
             }
         }
@@ -310,7 +310,7 @@ export function formatAccountForVerification(account: string, region?: string): 
         const defaultRegion = getDefaultRegionByLocation()
         try {
             return formatPhoneNumber(cleanAccount, defaultRegion as any)
-        } catch (error) {
+        } catch {
             throw new Error('无法确定手机号格式，请选择国家/地区')
         }
     }

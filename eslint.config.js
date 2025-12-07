@@ -1,6 +1,6 @@
 // eslint.config.js
 import cmyrConfig from 'eslint-config-cmyr/nuxt'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import { globalIgnores } from 'eslint/config'
 import withNuxt from './.nuxt/eslint.config.mjs'
 
 export default withNuxt(cmyrConfig,

@@ -3,7 +3,7 @@
  * 用于统一处理社交平台的显示名称、图标、颜色等信息
  */
 
-import { getSocialColor, socialColors } from './social-colors'
+import { socialColors } from './social-colors'
 
 /**
  * 社交平台提供商信息映射

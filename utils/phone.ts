@@ -52,7 +52,7 @@ export function getRegionCodeForPhoneNumber(phoneNumber: string): RegionCode | R
     try {
         const countryCode = phoneUtil.parse(phoneNumber).getCountryCodeOrDefault() || 86
         return phoneUtil.getRegionCodeForCountryCode(countryCode)
-    } catch (error) {
+    } catch {
         return 'CN'
     }
 }

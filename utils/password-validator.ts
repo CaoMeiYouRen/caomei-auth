@@ -1,4 +1,4 @@
-import { PasswordStrength, getPasswordValidationError, passwordValidator } from './password'
+import { PasswordStrength, getPasswordValidationError } from './password'
 
 /**
  * 密码验证结果接口

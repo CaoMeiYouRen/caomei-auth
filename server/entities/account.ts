@@ -1,4 +1,4 @@
-import { Entity, Index, ManyToOne, JoinColumn } from 'typeorm'
+import { Entity, ManyToOne } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 import { User } from './user'
@@ -41,7 +41,7 @@ export class Account extends BaseEntity {
     /**
      * 关联的用户（多对一关系）
      */
-    @ManyToOne(() => User, (user) => user.accounts, {
+    @ManyToOne(() => User, (user) => user.account, {
         onDelete: 'CASCADE',
         nullable: false,
     })

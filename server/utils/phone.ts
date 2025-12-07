@@ -7,7 +7,7 @@ import {
     PHONE_CHANNEL,
     PHONE_EXPIRES_IN,
 } from '@/utils/env'
-import { resolveSmsProvider, type SmsProvider } from '@/utils/providers/sms'
+import { resolveSmsProvider } from '@/utils/providers/sms'
 import { RATE_LIMIT_KEYS, getRateLimitError } from '@/utils/shared/rate-limit'
 
 type LimiterStorage = typeof limiterStorage

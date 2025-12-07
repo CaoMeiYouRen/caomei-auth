@@ -1,7 +1,7 @@
 import { publicPaths } from '@/utils/public-paths'
 import { authClient } from '@/lib/auth-client'
 
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
     // if (to.path === '/') { // 首页路由直接放通
     //     return
     // }

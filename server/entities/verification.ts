@@ -1,5 +1,4 @@
 import { Entity, Index } from 'typeorm'
-import { getDateType } from '../database/type'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 

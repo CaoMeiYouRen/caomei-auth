@@ -1,4 +1,4 @@
-import { Entity, Index, OneToOne, OneToMany } from 'typeorm'
+import { Entity, OneToOne, OneToMany } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 import { TwoFactor } from './two-factor'

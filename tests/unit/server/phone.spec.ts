@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { sendPhoneOtp, injectSmsDeps, resetSmsDeps } from '@/server/utils/phone'
-import { PHONE_CHANNEL } from '@/utils/env'
 
 // Mock dependencies
 const mockLimiter = {

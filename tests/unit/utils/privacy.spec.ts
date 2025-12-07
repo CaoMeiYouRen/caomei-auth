@@ -34,7 +34,7 @@ describe('utils/privacy', () => {
             vi.spyOn(phoneUtil, 'parse').mockImplementation(() => {
                 throw new Error('parse error')
             })
-            const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+            const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
             expect(maskPhone('13812345678')).toBe('138****5678')
             expect(warnSpy).toHaveBeenCalled()
         })

@@ -82,7 +82,7 @@ export const auth = betterAuth({
         database: {
             // 自定义 ID 生成逻辑
             // 通过雪花算法 生成一个 16 进制的 ID
-            generateId: (options) => snowflake.generateId(),
+            generateId: () => snowflake.generateId(),
         },
     },
     rateLimit: {
@@ -117,7 +117,7 @@ export const auth = betterAuth({
         minPasswordLength: 6,
         maxPasswordLength: 64,
         requireEmailVerification: EMAIL_REQUIRE_VERIFICATION, // 是否要求邮箱验证。若启用，则用户必须在登录前验证他们的邮箱。仅在使用邮箱密码登录时生效。
-        sendResetPassword: async ({ user, url, token }, request) => {
+        sendResetPassword: async ({ user, url }) => {
             await emailService.sendPasswordResetEmail(user.email, url)
         },
     },
@@ -125,7 +125,7 @@ export const auth = betterAuth({
         sendOnSignUp: true, // 注册时发送验证邮件
         autoSignInAfterVerification: true, // 验证后自动登录
         // 发送验证邮件
-        sendVerificationEmail: async ({ user, url, token }, request) => {
+        sendVerificationEmail: async ({ user, url }) => {
             await emailService.sendVerificationEmail(user.email, url)
         },
     },
@@ -133,7 +133,7 @@ export const auth = betterAuth({
         changeEmail: {
             enabled: true, // 启用更改邮箱功能
             // 发送更改邮箱验证邮件
-            sendChangeEmailVerification: async ({ user, newEmail, url, token }, request) => {
+            sendChangeEmailVerification: async ({ user, newEmail, url }) => {
                 await emailService.sendEmailChangeVerification(user.email, newEmail, url)
             },
         },
@@ -208,7 +208,7 @@ export const auth = betterAuth({
         anonymous({
             // 支持匿名登录
             emailDomainName: ANONYMOUS_EMAIL_DOMAIN_NAME, // 匿名用户的默认电子邮件域名
-            onLinkAccount: async ({ anonymousUser, newUser }) => {
+            onLinkAccount: async () => {
                 // 执行操作，如将购物车项目从匿名用户移动到新用户
                 // console.log('Linking anonymous user to new user:', anonymousUser, newUser)
                 // 手动将匿名用户的数据关联到新用户
@@ -218,7 +218,7 @@ export const auth = betterAuth({
             expiresIn: EMAIL_EXPIRES_IN, // 链接有效期（秒）
             disableSignUp: false, // 当用户未注册时是否阻止自动注册
             // 支持一次性链接登录
-            sendMagicLink: async ({ email, token, url }, request) => {
+            sendMagicLink: async ({ email, url }) => {
                 await emailService.sendMagicLink(email, url)
             },
         }),
@@ -256,10 +256,10 @@ export const auth = betterAuth({
             expiresIn: PHONE_EXPIRES_IN, // OTP 验证码有效期（秒）
             allowedAttempts: 3, // 允许的 OTP 验证尝试次数
             requireVerification: true, // 是否要求手机号码验证，启用后，用户在验证手机号码之前无法使用手机号码登录。
-            sendOTP: async ({ phoneNumber, code }, request) => {
+            sendOTP: async ({ phoneNumber, code }) => {
                 await sendPhoneOtp(phoneNumber, code)
             },
-            callbackOnVerification: async ({ phoneNumber, user }, request) => {
+            callbackOnVerification: async () => {
                 // 实现手机号码验证后的回调
             },
             // 验证手机号码格式
@@ -267,8 +267,8 @@ export const auth = betterAuth({
             signUpOnVerification: {
                 // 使用随机算法生成临时电子邮件地址
                 // 生成的电子邮件地址格式为：<random_id>@example.com
-                getTempEmail: (_phoneNumber) => getTempEmail(),
-                getTempName: (_phoneNumber) => getTempName(), // 使用随机算法生成临时用户名
+                getTempEmail: () => getTempEmail(),
+                getTempName: () => getTempName(), // 使用随机算法生成临时用户名
             },
         }),
         admin({
@@ -288,7 +288,7 @@ export const auth = betterAuth({
             },
             otpOptions: {
                 period: 60, // 验证码有效期（秒）
-                async sendOTP(data, request) {
+                async sendOTP(data) {
                     const { otp } = data
                     const user = data.user as User
                     // 向用户发送 otp
@@ -638,7 +638,7 @@ export const auth = betterAuth({
         }), // 支持 JWT 认证
         sso({
             // 用户自动注册函数，当用户通过 SSO 提供商登录时运行
-            provisionUser: async ({ user, userInfo, token, provider }) => {
+            provisionUser: async ({ user, provider }) => {
                 // 记录 SSO 登录日志
                 console.log(`用户 ${user.email} 通过 SSO 提供商 ${provider.providerId} 登录`)
 
@@ -656,7 +656,7 @@ export const auth = betterAuth({
                 disabled: false, // 启用组织自动配置
                 defaultRole: 'member', // 新成员的默认角色
                 // 根据 SSO 属性动态分配角色
-                getRole: async ({ user, userInfo, provider }) => {
+                getRole: async ({ userInfo }) => {
                     // 可以根据 SSO 提供商返回的用户信息分配不同角色
                     // 例如：根据部门、职位等信息分配管理员角色
                     const department = userInfo.attributes?.department

@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 import { generateRandomString } from './random'
 import { snowflake } from './snowflake'
-import { maskEmail, maskPhone, maskIP } from '@/utils/privacy'
+import { maskIP } from '@/utils/privacy'
 import { parseUserAgent } from '@/utils/useragent'
 import type {
     DemoUser,

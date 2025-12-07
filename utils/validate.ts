@@ -1,6 +1,5 @@
 import isEmail from 'validator/es/lib/isEmail'
 import isMobilePhone from 'validator/es/lib/isMobilePhone'
-import isStrongPassword from 'validator/es/lib/isStrongPassword'
 import isURL from 'validator/es/lib/isURL'
 
 // 判断是否为邮箱。

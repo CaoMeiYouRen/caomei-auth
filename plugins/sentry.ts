@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/nuxt'
 
-export default defineNuxtPlugin((app) => {
+export default defineNuxtPlugin(() => {
     const config = useRuntimeConfig()
     const sentryDsn = config.public.sentryDsn as string
     if (sentryDsn) {

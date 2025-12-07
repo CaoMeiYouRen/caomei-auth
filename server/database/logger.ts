@@ -1,6 +1,5 @@
 import { Logger, QueryRunner } from 'typeorm'
 import logger, { type ExtendedLogger } from '../utils/logger'
-import { createSafeLogData } from '../utils/privacy'
 
 // 判断是否为开发环境
 const isDevelopment = () => process.env.NODE_ENV === 'development'
@@ -160,7 +159,7 @@ export class CustomLogger implements Logger {
         // 生产环境的SELECT查询和敏感查询不记录详细信息
     }
 
-    logQueryError(error: string | Error, query: string, parameters?: any[]): any {
+    logQueryError(error: string | Error, query: string): any {
         this.queryStats.errors++
 
         const queryType = getQueryType(query)

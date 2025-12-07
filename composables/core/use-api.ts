@@ -24,13 +24,13 @@ export function useApi<T = any>(url: string | (() => string), options: UseFetchO
         key: typeof url === 'function' ? url() : url,
 
         // 请求拦截
-        onRequest({ options: requestOptions }) {
+        onRequest() {
             // 可以在这里添加 Authorization 头等
             // requestOptions.headers = requestOptions.headers || {}
         },
 
         // 响应拦截
-        onResponse({ response }) {
+        onResponse() {
             // 可以在这里处理统一的响应数据结构
         },
 

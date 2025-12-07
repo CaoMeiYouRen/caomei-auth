@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
                 }
 
                 sanitizedProvider.oidcConfig = JSON.stringify(oidcConfig)
-            } catch (error) {
+            } catch {
                 // 忽略解析错误
             }
         }
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
                 }
 
                 sanitizedProvider.samlConfig = JSON.stringify(samlConfig)
-            } catch (error) {
+            } catch {
                 // 忽略解析错误
             }
         }

@@ -184,7 +184,7 @@ describe('composables/use-otp', () => {
         })
 
         it('handles captcha errors when sending phone code', async () => {
-            const { send, sending } = usePhoneOtp()
+            const { send } = usePhoneOtp()
             const phone = '13500000000'
             const errors = ref<Record<string, string>>({})
             resolveCaptchaTokenMock.mockRejectedValueOnce(new Error('Captcha missing'))

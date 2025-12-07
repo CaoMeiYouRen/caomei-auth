@@ -12,10 +12,9 @@ export const getTempEmail = (): string => `${generateRandomString(8)}@${TEMP_EMA
 /**
  * 生成临时用户名
  * 使用8位随机字符作为用户名后缀
- * @param phoneNumber 手机号（可选参数，用于兼容原有接口）
  * @returns {string} 临时用户名
  */
-export const getTempName = (phoneNumber?: string): string => `user-${generateRandomString(8)}`
+export const getTempName = (): string => `user-${generateRandomString(8)}`
 
 /**
  * 生成OAuth客户端ID

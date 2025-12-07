@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 
-interface ViteTypeOptions {
+// interface ViteTypeOptions {
 
-    // strictImportMetaEnv: unknown
-}
+//     // strictImportMetaEnv: unknown
+// }
 
 interface ImportMetaEnv {
     readonly NUXT_PUBLIC_AUTH_BASE_URL: string

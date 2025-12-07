@@ -1,5 +1,4 @@
-import { Entity, Index, ManyToOne, JoinColumn } from 'typeorm'
-import { getDateType } from '../database/type'
+import { Entity, ManyToOne } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 import { User } from './user'
