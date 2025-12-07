@@ -61,7 +61,7 @@
     "pg": "^8.16.3",
     "pinia": "^3.0.4",
     "primelocale": "^2.2.3",
-    "primevue": "^4.5.0",
+    "primevue": "^4.5.1",
     "qrcode": "^1.5.4",
     "sqlite3": "^5.1.7",
     "twilio": "5.10.7",
