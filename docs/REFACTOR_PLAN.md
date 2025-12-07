@@ -160,7 +160,6 @@
         1. 统计当前 `utils/**` 中的通用逻辑（如 `validate`, `privacy`, `password`, `smart-input`），优先迁入 `shared`。
         2. 将仅 server 依赖（fs, node:crypto, TypeORM）的 util 放入 `server/utils` 并提供纯逻辑 + 副作用拆分。
         3. Web 端 hooks/composables 若仅依赖浏览器，统一放入 `utils/web` 或 `composables/shared`。
-        4. 在 `tsconfig`/`paths` 中增加 `@/shared/*`, `@/web-utils/*`, `@/server-utils/*` 别名，提升可读性。
     -   **复用收益衡量**：统计前后端重复实现的函数数量（基线 vs 重构后），重复实现清零；通过 `pnpm depcruise --config .dependency-cruise.cjs` 生成依赖图验证引用层级正确。
 
 -   **执行计划**：
