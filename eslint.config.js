@@ -46,7 +46,7 @@ export default withNuxt(cmyrConfig,
                 VariableDeclarator: 1,
             }],
             '@stylistic/no-trailing-spaces': [1, { skipBlankLines: true, ignoreComments: false }],
-            'max-lines': [1, { max: 800 }], // 强制文件的最大行数
+            'max-lines': [1, { max: 600 }], // 强制文件的最大行数
             'max-lines-per-function': [0, { max: 150 }], // 强制函数最大行数
         },
     },
