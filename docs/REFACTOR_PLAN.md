@@ -121,7 +121,7 @@
         1. ✅ 创建 `components/base` 目录。
         2. ✅ 提取 `admin/users.vue` 中的表格逻辑为 `BaseTable`。
         3. ✅ 提取 `login.vue`, `register.vue`, `forgot-password.vue`, `quick-login.vue` 中的输入框为 `BaseInput`, `BasePassword`, `BasePhoneInput`。
-        4. ⬜ **全量推广**：检查所有页面（如 `profile.vue`, `admin/**`），将剩余的硬编码组件替换为 Base 组件。
+        4. ✅ **全量推广**：检查所有页面（如 `profile.vue`, `admin/**`），将剩余的硬编码组件替换为 Base 组件。
 
     #### 3.2 提取通用 Composables (`composables/core`)
 

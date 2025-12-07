@@ -1,9 +1,9 @@
 <template>
-    <Dialog
+    <BaseDialog
         :visible="visible"
-        modal
-        header="用户详情"
-        :style="{width: '600px'}"
+        title="用户详情"
+        width="600px"
+        :show-footer="false"
         @update:visible="$emit('update:visible', $event)"
     >
         <div v-if="user" class="user-detail">
@@ -32,23 +32,29 @@
                     </div>
                     <div class="detail-item">
                         <label>角色</label>
-                        <Tag
-                            :value="getRoleLabel(user.role)"
-                            :severity="getRoleSeverity(user.role)"
+                        <BaseStatusBadge
+                            variant="role"
+                            :status="user.role"
                         />
                     </div>
                     <div class="detail-item">
                         <label>验证状态</label>
                         <div class="verification-status">
-                            <Tag
-                                :value="user.emailVerified ? '邮箱已验证' : '邮箱未验证'"
-                                :severity="user.emailVerified ? 'success' : 'warning'"
-                                size="small"
+                            <BaseStatusBadge
+                                variant="yes-no"
+                                :status="user.emailVerified"
+                                true-label="邮箱已验证"
+                                false-label="邮箱未验证"
+                                true-severity="success"
+                                false-severity="warning"
                             />
-                            <Tag
-                                :value="user.phoneNumberVerified ? '手机已验证' : '手机未验证'"
-                                :severity="user.phoneNumberVerified ? 'success' : 'warning'"
-                                size="small"
+                            <BaseStatusBadge
+                                variant="yes-no"
+                                :status="user.phoneNumberVerified"
+                                true-label="手机已验证"
+                                false-label="手机未验证"
+                                true-severity="success"
+                                false-severity="warning"
                             />
                         </div>
                     </div>
@@ -60,9 +66,9 @@
                 <div class="detail-grid">
                     <div class="detail-item">
                         <label>状态</label>
-                        <Tag
-                            :value="user.banned ? '已禁用' : '正常'"
-                            :severity="user.banned ? 'danger' : 'success'"
+                        <BaseStatusBadge
+                            variant="banned"
+                            :status="user.banned"
                         />
                     </div>
                     <div v-if="user.banned" class="detail-item">
@@ -157,7 +163,7 @@
                 />
             </div>
         </div>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">

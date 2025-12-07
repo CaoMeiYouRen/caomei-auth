@@ -1,27 +1,17 @@
 <template>
-    <Dialog
+    <BaseDialog
         v-model:visible="visible"
-        modal
-        header="设置用户名"
-        :closable="true"
-        :style="{width: '450px'}"
+        title="设置用户名"
+        width="450px"
+        :show-footer="false"
     >
-        <div class="form-group">
-            <InputText
-                v-model="newUsername"
-                v-tooltip.top="'输入新的用户名，用于用户名密码登录'"
-                class="form-input"
-                placeholder="请输入新用户名"
-            />
-            <Message
-                v-if="usernameError"
-                severity="error"
-                size="small"
-                variant="simple"
-            >
-                {{ usernameError }}
-            </Message>
-        </div>
+        <BaseInput
+            id="newUsername"
+            v-model="newUsername"
+            v-tooltip.top="'输入新的用户名，用于用户名密码登录'"
+            placeholder="请输入新用户名"
+            :error="usernameError"
+        />
         <div class="form-group">
             <Button
                 v-tooltip.top="'点击确认设置新的用户名'"
@@ -31,7 +21,7 @@
                 @click="setUsername"
             />
         </div>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">
@@ -51,7 +41,7 @@ const emit = defineEmits<{
     (e: 'update:user', user: any): void
 }>()
 
-const visible = defineModel<boolean>('visible')
+const visible = defineModel<boolean>('visible', { required: true })
 
 const toast = useToast()
 const newUsername = ref('')
@@ -79,12 +69,12 @@ async function setUsername() {
         if (result.error) {
             throw new Error(result.error.message || '设置用户名失败')
         }
-        
+
         emit('update:user', {
             ...props.user,
             username: newUsername.value,
         })
-        
+
         visible.value = false
         toast.add({
             severity: 'success',

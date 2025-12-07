@@ -1,29 +1,21 @@
 <template>
-    <Dialog
+    <BaseDialog
         v-model:visible="visible"
-        :header="isEditing ? '编辑应用' : '创建新应用'"
-        :modal="true"
+        :title="isEditing ? '编辑应用' : '创建新应用'"
+        width="600px"
+        :show-footer="false"
         class="create-app-dialog"
-        :style="{width: '600px'}"
     >
         <div class="create-form">
-            <div class="form-group">
-                <label for="client_name">
-                    应用名称 <span class="required">*</span>
-                </label>
-                <InputText
-                    id="client_name"
-                    v-model="formData.client_name"
-                    class="w-full"
-                    :invalid="!formData.client_name.trim()"
-                    placeholder="例如：我的博客应用"
-                />
-                <small v-if="!formData.client_name.trim()" class="error-text">
-                    应用名称为必填项
-                </small>
-            </div>
-            <div class="form-group">
-                <label for="description">应用描述</label>
+            <BaseInput
+                id="client_name"
+                v-model="formData.client_name"
+                label="应用名称"
+                placeholder="例如：我的博客应用"
+                required
+                :error="!formData.client_name.trim() ? '应用名称为必填项' : ''"
+            />
+            <BaseFormGroup label="应用描述" for="description">
                 <Textarea
                     id="description"
                     v-model="formData.description"
@@ -31,11 +23,13 @@
                     class="w-full"
                     placeholder="简要描述您的应用功能和用途"
                 />
-            </div>
-            <div class="form-group">
-                <label for="redirectURLs">
-                    重定向 URL <span class="required">*</span>
-                </label>
+            </BaseFormGroup>
+            <BaseFormGroup
+                label="重定向 URL"
+                for="redirectURLs"
+                required
+                :error="formData.redirect_uris.length === 0 ? '至少需要一个重定向URL' : ''"
+            >
                 <InputText
                     id="redirectURLs"
                     v-model="redirectUrlsInput"
@@ -44,13 +38,9 @@
                     placeholder="https://example.com/callback"
                     @blur="updateRedirectUris"
                 />
-                <small v-if="formData.redirect_uris.length === 0" class="error-text">
-                    至少需要一个重定向URL
-                </small>
-                <small v-else class="helper-text">多个URL请用逗号分隔</small>
-            </div>
-            <div class="form-group">
-                <label for="client_uri">应用主页</label>
+                <small class="helper-text">多个URL请用逗号分隔</small>
+            </BaseFormGroup>
+            <BaseFormGroup label="应用主页" for="client_uri">
                 <InputText
                     id="client_uri"
                     v-model="formData.client_uri"
@@ -58,9 +48,8 @@
                     class="w-full"
                 />
                 <small class="helper-text">应用的官方网站地址</small>
-            </div>
-            <div class="form-group">
-                <label for="logo_uri">应用Logo</label>
+            </BaseFormGroup>
+            <BaseFormGroup label="应用Logo" for="logo_uri">
                 <InputText
                     id="logo_uri"
                     v-model="formData.logo_uri"
@@ -68,11 +57,13 @@
                     class="w-full"
                 />
                 <small class="helper-text">应用图标的URL地址</small>
-            </div>
-            <div class="form-group">
-                <label for="scope">
-                    授权范围 <span class="required">*</span>
-                </label>
+            </BaseFormGroup>
+            <BaseFormGroup
+                label="授权范围"
+                for="scope"
+                required
+                :error="!formData.scope.trim() ? '授权范围为必填项' : ''"
+            >
                 <InputText
                     id="scope"
                     v-model="formData.scope"
@@ -80,13 +71,9 @@
                     class="w-full"
                     :invalid="!formData.scope.trim()"
                 />
-                <small v-if="!formData.scope.trim()" class="error-text">
-                    授权范围为必填项
-                </small>
-                <small v-else class="helper-text">多个范围用空格分隔，如：openid profile email</small>
-            </div>
-            <div class="form-group">
-                <label for="contacts">联系邮箱</label>
+                <small class="helper-text">多个范围用空格分隔，如：openid profile email</small>
+            </BaseFormGroup>
+            <BaseFormGroup label="联系邮箱" for="contacts">
                 <InputText
                     id="contacts"
                     v-model="contactsInput"
@@ -95,11 +82,12 @@
                     @blur="updateContacts"
                 />
                 <small class="helper-text">应用管理员的联系邮箱，多个邮箱请用逗号分隔</small>
-            </div>
-            <div class="form-group">
-                <label for="token_endpoint_auth_method">
-                    认证方式 <span class="required">*</span>
-                </label>
+            </BaseFormGroup>
+            <BaseFormGroup
+                label="认证方式"
+                for="token_endpoint_auth_method"
+                required
+            >
                 <Dropdown
                     id="token_endpoint_auth_method"
                     v-model="formData.token_endpoint_auth_method"
@@ -113,11 +101,12 @@
                     class="w-full"
                 />
                 <small class="helper-text">客户端向令牌端点进行身份验证的方法（支持 OIDC 标准方法）</small>
-            </div>
-            <div class="form-group">
-                <label for="grant_types">
-                    授权类型 <span class="required">*</span>
-                </label>
+            </BaseFormGroup>
+            <BaseFormGroup
+                label="授权类型"
+                for="grant_types"
+                required
+            >
                 <MultiSelect
                     id="grant_types"
                     v-model="formData.grant_types"
@@ -134,39 +123,37 @@
                     display="chip"
                 />
                 <small class="helper-text">应用允许使用的 OAuth 2.0 授权类型</small>
-            </div>
-            <div class="form-group">
-                <label for="tos_uri">服务条款链接</label>
+            </BaseFormGroup>
+            <BaseFormGroup label="服务条款链接" for="tos_uri">
                 <InputText
                     id="tos_uri"
                     v-model="formData.tos_uri"
                     placeholder="https://example.com/terms"
                     class="w-full"
                 />
-            </div>
-            <div class="form-group">
-                <label for="policy_uri">隐私政策链接</label>
+            </BaseFormGroup>
+            <BaseFormGroup label="隐私政策链接" for="policy_uri">
                 <InputText
                     id="policy_uri"
                     v-model="formData.policy_uri"
                     placeholder="https://example.com/privacy"
                     class="w-full"
                 />
+            </BaseFormGroup>
+            <div class="dialog-footer">
+                <Button
+                    label="取消"
+                    severity="secondary"
+                    @click="visible = false"
+                />
+                <Button
+                    :label="isEditing ? '保存修改' : '创建应用'"
+                    :loading="submitting"
+                    @click="submitApplication"
+                />
             </div>
         </div>
-        <template #footer>
-            <Button
-                label="取消"
-                class="p-button-text"
-                @click="visible = false"
-            />
-            <Button
-                :label="isEditing ? '保存修改' : '创建应用'"
-                :loading="submitting"
-                @click="submitApplication"
-            />
-        </template>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">

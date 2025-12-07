@@ -1,9 +1,9 @@
 <template>
-    <Dialog
+    <BaseDialog
         :visible="visible"
-        modal
-        header="用户会话"
-        :style="{width: '700px'}"
+        title="用户会话"
+        width="700px"
+        :show-footer="false"
         @update:visible="$emit('update:visible', $event)"
     >
         <div v-if="user" class="user-sessions">
@@ -61,7 +61,7 @@
                 </Column>
             </DataTable>
         </div>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">

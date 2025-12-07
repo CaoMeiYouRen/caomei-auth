@@ -1,10 +1,10 @@
 <template>
-    <Dialog
+    <BaseDialog
         v-model:visible="visible"
-        header="SSO 提供商详情"
+        title="SSO 提供商详情"
+        width="800px"
+        :show-footer="false"
         class="view-dialog"
-        modal
-        :style="{width: '90vw', maxWidth: '800px'}"
     >
         <div v-if="provider" class="view-content">
             <div class="detail-section">
@@ -35,9 +35,11 @@
                     </div>
                     <div class="detail-item">
                         <span class="label">状态:</span>
-                        <Tag
-                            :value="provider.enabled ? '启用' : '禁用'"
-                            :severity="provider.enabled ? 'success' : 'danger'"
+                        <BaseStatusBadge
+                            variant="yes-no"
+                            :status="provider.enabled"
+                            true-label="启用"
+                            false-label="禁用"
                         />
                     </div>
                     <div v-if="provider.organizationId" class="detail-item">
@@ -98,7 +100,7 @@
                 </div>
             </div>
         </div>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">

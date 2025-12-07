@@ -1,10 +1,9 @@
 <template>
-    <Dialog
+    <BaseDialog
         v-model:visible="visible"
-        modal
-        :header="user.phoneVerified ? '修改手机号' : '绑定手机号'"
-        :closable="true"
-        :style="{width: '450px'}"
+        :title="user.phoneVerified ? '修改手机号' : '绑定手机号'"
+        width="450px"
+        :show-footer="false"
     >
         <div class="form-group">
             <BasePhoneInput
@@ -21,23 +20,24 @@
                 {{ errors.phone }}
             </Message>
         </div>
-        <div class="flex-row form-group">
-            <InputText
-                v-model="phoneCode"
-                v-tooltip.top="'输入收到的短信验证码'"
-                class="form-input"
-                placeholder="验证码"
-            />
-            <SendCodeButton
-                v-tooltip.top="'点击发送验证码到新手机号'"
-                :on-send="sendPhoneCode"
-                :duration="60"
-                :disabled="phoneCodeSending || !validatePhone(phone)"
-                :loading="phoneCodeSending"
-                text="发送验证码"
-                resend-text="重新发送"
-            />
-        </div>
+        <BaseInput
+            id="phoneCode"
+            v-model="phoneCode"
+            v-tooltip.top="'输入收到的短信验证码'"
+            placeholder="验证码"
+        >
+            <template #append>
+                <SendCodeButton
+                    v-tooltip.top="'点击发送验证码到新手机号'"
+                    :on-send="sendPhoneCode"
+                    :duration="60"
+                    :disabled="phoneCodeSending || !validatePhone(phone)"
+                    :loading="phoneCodeSending"
+                    text="发送验证码"
+                    resend-text="重新发送"
+                />
+            </template>
+        </BaseInput>
         <Captcha ref="phoneCaptcha" />
         <Message
             v-if="errors.captcha"
@@ -56,7 +56,7 @@
                 @click="bindPhone"
             />
         </div>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">
@@ -80,7 +80,7 @@ const emit = defineEmits<{
     (e: 'update:user', user: any): void
 }>()
 
-const visible = defineModel<boolean>('visible')
+const visible = defineModel<boolean>('visible', { required: true })
 
 const toast = useToast()
 const phone = ref('')

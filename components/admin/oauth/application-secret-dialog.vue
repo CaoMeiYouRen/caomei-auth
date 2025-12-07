@@ -1,9 +1,8 @@
 <template>
-    <Dialog
+    <BaseDialog
         v-model:visible="visible"
-        header="应用创建成功"
-        :modal="true"
-        :closable="false"
+        title="应用创建成功"
+        :show-footer="false"
         class="secret-dialog"
     >
         <div class="secret-content">
@@ -41,11 +40,11 @@
                 <i class="mdi mdi-alert" />
                 <span>请务必保存这些凭据，关闭此对话框后将无法再次查看 Client Secret。</span>
             </div>
+            <div class="dialog-footer" style="justify-content: center; margin-top: 1rem;">
+                <Button label="我已保存" @click="visible = false" />
+            </div>
         </div>
-        <template #footer>
-            <Button label="我已保存" @click="visible = false" />
-        </template>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">

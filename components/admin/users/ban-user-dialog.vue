@@ -1,26 +1,25 @@
 <template>
-    <Dialog
+    <BaseDialog
         :visible="visible"
-        modal
-        header="禁用用户"
-        :style="{width: '400px'}"
+        title="禁用用户"
+        width="400px"
+        :show-footer="false"
         @update:visible="$emit('update:visible', $event)"
     >
         <div v-if="user" class="ban-form">
             <p>确定要禁用用户 <strong>{{ user.name || user.email }}</strong> 吗？</p>
 
-            <div class="field">
-                <label for="banReason">禁用原因</label>
+            <BaseFormGroup label="禁用原因" for="banReason">
                 <Textarea
                     id="banReason"
                     v-model="banForm.reason"
                     placeholder="请输入禁用原因"
                     rows="3"
+                    class="w-full"
                 />
-            </div>
+            </BaseFormGroup>
 
-            <div class="field">
-                <label for="banDuration">禁用时长</label>
+            <BaseFormGroup label="禁用时长" for="banDuration">
                 <Select
                     id="banDuration"
                     v-model="banForm.duration"
@@ -28,8 +27,9 @@
                     option-label="label"
                     option-value="value"
                     placeholder="选择禁用时长"
+                    class="w-full"
                 />
-            </div>
+            </BaseFormGroup>
 
             <div class="dialog-footer">
                 <Button
@@ -45,7 +45,7 @@
                 />
             </div>
         </div>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">

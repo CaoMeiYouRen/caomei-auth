@@ -1,10 +1,10 @@
 <template>
-    <Dialog
+    <BaseDialog
         v-model:visible="visible"
-        header="OIDC API 端点文档"
-        :modal="true"
+        title="OIDC API 端点文档"
+        width="800px"
+        :show-footer="false"
         class="api-docs-dialog"
-        :style="{width: '800px'}"
     >
         <div class="api-docs-content">
             <Accordion :value="['0', '1', '2']" multiple>
@@ -141,7 +141,7 @@
         <template #footer>
             <Button label="关闭" @click="visible = false" />
         </template>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">

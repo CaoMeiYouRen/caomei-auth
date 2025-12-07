@@ -1,19 +1,16 @@
 <template>
-    <Dialog
+    <BaseDialog
         v-model:visible="visible"
-        modal
-        :header="user.emailVerified ? '修改邮箱' : '绑定邮箱'"
-        :closable="true"
-        :style="{minWidth: '450px'}"
+        :title="user.emailVerified ? '修改邮箱' : '绑定邮箱'"
+        width="450px"
+        :show-footer="false"
     >
-        <div class="form-group">
-            <InputText
-                v-model="email"
-                v-tooltip.top="'输入新的邮箱地址'"
-                class="form-input"
-                placeholder="请输入新邮箱"
-            />
-        </div>
+        <BaseInput
+            id="email"
+            v-model="email"
+            v-tooltip.top="'输入新的邮箱地址'"
+            placeholder="请输入新邮箱"
+        />
         <Captcha ref="emailCaptcha" />
         <Message
             v-if="emailCaptchaError"
@@ -32,7 +29,7 @@
                 @click="bindEmail"
             />
         </div>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">
@@ -54,7 +51,7 @@ const emit = defineEmits<{
     (e: 'update:user', user: any): void
 }>()
 
-const visible = defineModel<boolean>('visible')
+const visible = defineModel<boolean>('visible', { required: true })
 
 const toast = useToast()
 const email = ref('')
@@ -98,14 +95,14 @@ async function bindEmail() {
             toast.add({ severity: 'info', summary: '验证链接已发送到当前邮箱，请查收', life: 2000 })
             return
         }
-        
+
         // Update user locally
         emit('update:user', {
             ...props.user,
             email: email.value,
             emailVerified: false,
         })
-        
+
         visible.value = false
         toast.add({ severity: 'success', summary: '邮箱已更新', life: 2000 })
     } catch (error) {

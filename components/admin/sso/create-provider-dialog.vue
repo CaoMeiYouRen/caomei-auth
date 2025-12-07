@@ -1,10 +1,10 @@
 <template>
-    <Dialog
+    <BaseDialog
         v-model:visible="visible"
-        :header="isEditing ? '编辑 SSO 提供商' : '添加 SSO 提供商'"
+        :title="isEditing ? '编辑 SSO 提供商' : '添加 SSO 提供商'"
+        width="900px"
+        :show-footer="false"
         class="create-dialog"
-        modal
-        :style="{width: '90vw', maxWidth: '900px'}"
     >
         <div class="form-header">
             <p>{{ isEditing ? '修改 SSO 提供商配置' : '配置新的 SSO 提供商，支持 OIDC 和 SAML 协议' }}</p>
@@ -15,8 +15,11 @@
             <div class="form-section">
                 <h4>基本信息</h4>
 
-                <div class="form-group">
-                    <label for="providerType">协议类型 *</label>
+                <BaseFormGroup
+                    label="协议类型"
+                    for="providerType"
+                    required
+                >
                     <Dropdown
                         id="providerType"
                         v-model="formData.type"
@@ -28,11 +31,15 @@
                         option-value="value"
                         placeholder="选择协议类型"
                         :disabled="isEditing"
+                        class="w-full"
                     />
-                </div>
+                </BaseFormGroup>
 
-                <div class="form-group">
-                    <label for="providerId">Provider ID *</label>
+                <BaseFormGroup
+                    label="Provider ID"
+                    for="providerId"
+                    required
+                >
                     <InputText
                         id="providerId"
                         v-model="formData.providerId"
@@ -43,20 +50,16 @@
                     <small class="text-muted">
                         唯一标识符，用于生成回调 URL。编辑时不可修改。
                     </small>
-                </div>
+                </BaseFormGroup>
 
-                <div class="form-group">
-                    <label for="name">显示名称</label>
-                    <InputText
-                        id="name"
-                        v-model="formData.name"
-                        placeholder="例如：公司 SSO、Google Workspace"
-                        class="w-full"
-                    />
-                </div>
+                <BaseInput
+                    id="name"
+                    v-model="formData.name"
+                    label="显示名称"
+                    placeholder="例如：公司 SSO、Google Workspace"
+                />
 
-                <div class="form-group">
-                    <label for="description">描述</label>
+                <BaseFormGroup label="描述" for="description">
                     <Textarea
                         id="description"
                         v-model="formData.description"
@@ -64,20 +67,21 @@
                         rows="3"
                         class="w-full"
                     />
-                </div>
+                </BaseFormGroup>
 
-                <div class="form-group">
-                    <label for="issuer">发行者 URL *</label>
-                    <InputText
-                        id="issuer"
-                        v-model="formData.issuer"
-                        placeholder="例如：https://accounts.google.com、https://company.okta.com"
-                        class="w-full"
-                    />
-                </div>
+                <BaseInput
+                    id="issuer"
+                    v-model="formData.issuer"
+                    label="发行者 URL"
+                    placeholder="例如：https://accounts.google.com、https://company.okta.com"
+                    required
+                />
 
-                <div class="form-group">
-                    <label for="domain">域名 *</label>
+                <BaseFormGroup
+                    label="域名"
+                    for="domain"
+                    required
+                >
                     <InputText
                         id="domain"
                         v-model="formData.domain"
@@ -87,17 +91,14 @@
                     <small class="text-muted">
                         用于域名匹配，用户邮箱域名与此匹配时会使用此 SSO 提供商
                     </small>
-                </div>
+                </BaseFormGroup>
 
-                <div class="form-group">
-                    <label for="organizationId">关联组织 ID</label>
-                    <InputText
-                        id="organizationId"
-                        v-model="formData.organizationId"
-                        placeholder="可选：关联到特定组织"
-                        class="w-full"
-                    />
-                </div>
+                <BaseInput
+                    id="organizationId"
+                    v-model="formData.organizationId"
+                    label="关联组织 ID"
+                    placeholder="可选：关联到特定组织"
+                />
 
                 <div class="form-group">
                     <div class="field-checkbox">
@@ -143,7 +144,7 @@
                 />
             </div>
         </form>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">

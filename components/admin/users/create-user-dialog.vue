@@ -1,56 +1,45 @@
 <template>
-    <Dialog
+    <BaseDialog
         :visible="visible"
-        modal
-        header="创建用户"
-        :style="{width: '500px'}"
+        title="创建用户"
+        width="500px"
+        :show-footer="false"
         @update:visible="$emit('update:visible', $event)"
     >
         <form class="create-user-form" @submit.prevent="createUser">
-            <div class="field">
-                <label for="createName">昵称</label>
-                <InputText
-                    id="createName"
-                    v-model="createForm.name"
-                    placeholder="请输入用户昵称"
-                    required
-                />
-            </div>
+            <BaseInput
+                id="createName"
+                v-model="createForm.name"
+                label="昵称"
+                placeholder="请输入用户昵称"
+                required
+            />
 
-            <div class="field">
-                <label for="createEmail">邮箱</label>
-                <InputText
-                    id="createEmail"
-                    v-model="createForm.email"
-                    type="email"
-                    placeholder="请输入邮箱地址"
-                    required
-                />
-            </div>
+            <BaseInput
+                id="createEmail"
+                v-model="createForm.email"
+                label="邮箱"
+                type="email"
+                placeholder="请输入邮箱地址"
+                required
+            />
 
-            <div class="field">
-                <label for="createUsername">用户名</label>
-                <InputText
-                    id="createUsername"
-                    v-model="createForm.username"
-                    placeholder="请输入用户名（可选）"
-                />
-            </div>
+            <BaseInput
+                id="createUsername"
+                v-model="createForm.username"
+                label="用户名"
+                placeholder="请输入用户名（可选）"
+            />
 
-            <div class="field">
-                <label for="createPassword">密码</label>
-                <Password
-                    id="createPassword"
-                    v-model="createForm.password"
-                    placeholder="请输入密码"
-                    :feedback="false"
-                    toggle-mask
-                    required
-                />
-            </div>
+            <BasePassword
+                id="createPassword"
+                v-model="createForm.password"
+                label="密码"
+                placeholder="请输入密码"
+                required
+            />
 
-            <div class="field">
-                <label for="createRole">角色</label>
+            <BaseFormGroup label="角色" for="createRole">
                 <Select
                     id="createRole"
                     v-model="createForm.role"
@@ -58,8 +47,9 @@
                     option-label="label"
                     option-value="value"
                     placeholder="选择用户角色"
+                    class="w-full"
                 />
-            </div>
+            </BaseFormGroup>
 
             <div class="dialog-footer">
                 <Button
@@ -74,7 +64,7 @@
                 />
             </div>
         </form>
-    </Dialog>
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">
