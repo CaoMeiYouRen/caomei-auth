@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { shortText } from '@/utils/short-text'
+import { shortText } from '@/utils/shared/short-text'
 
 describe('utils/short-text', () => {
     it('returns empty string when value missing', () => {

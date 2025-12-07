@@ -5,7 +5,7 @@ import { debounce } from 'lodash-es'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import { useUserTable } from './use-user-table'
 import { authClient } from '@/lib/auth-client'
-import { validateEmail } from '@/utils/validate'
+import { validateEmail } from '@/utils/shared/validate'
 import { syncAdminRole } from '@/utils/admin-role-client'
 
 export function useUserManagement() {

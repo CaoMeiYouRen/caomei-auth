@@ -1,4 +1,4 @@
-import { AUTH_BASE_URL, CONTACT_EMAIL } from '@/utils/env'
+import { AUTH_BASE_URL, CONTACT_EMAIL } from '@/utils/shared/env'
 
 export function getFallbackFragment(fragmentName: string): string {
     const fallbackFragments: Record<string, string> = {

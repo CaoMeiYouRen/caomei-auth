@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
-import { validatePasswordForm } from '@/utils/password-validator'
+import { validatePasswordForm } from '@/utils/shared/password-validator'
 
 export function useChangePasswordFlow() {
     const currentPassword = ref('')

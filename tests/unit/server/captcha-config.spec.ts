@@ -11,7 +11,7 @@ const baseEnv = {
 
 async function importModule(envOverrides: Partial<typeof baseEnv>) {
     vi.resetModules()
-    vi.doMock('@/utils/env', () => ({
+    vi.doMock('@/utils/shared/env', () => ({
         ...baseEnv,
         ...envOverrides,
     }))

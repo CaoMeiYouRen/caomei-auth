@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { validateUrl } from '@/utils/validate'
+import { validateUrl } from '@/utils/shared/validate'
 import OidcConfigForm from './oidc-config-form.vue'
 import SamlConfigForm from './saml-config-form.vue'
 import AttributeMappingForm from './attribute-mapping-form.vue'

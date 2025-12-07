@@ -6,7 +6,7 @@ import {
     PHONE_LIMIT_WINDOW,
     PHONE_CHANNEL,
     PHONE_EXPIRES_IN,
-} from '@/utils/env'
+} from '@/utils/shared/env'
 import { resolveSmsProvider } from '@/utils/providers/sms'
 import { RATE_LIMIT_KEYS, getRateLimitError } from '@/utils/shared/rate-limit'
 

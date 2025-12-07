@@ -20,7 +20,7 @@ import { typeormAdapter } from '@/server/database/typeorm-adapter'
 import { sendEmail } from '@/server/utils/email'
 import { snowflake } from '@/server/utils/snowflake'
 import { dataSource } from '@/server/database'
-import { usernameValidator, validatePhone } from '@/utils/validate'
+import { usernameValidator, validatePhone } from '@/utils/shared/validate'
 import { sendPhoneOtp } from '@/server/utils/phone'
 import { secondaryStorage } from '@/server/database/storage'
 import {
@@ -60,14 +60,14 @@ import {
     AUTH_BASE_URL,
     APP_NAME,
     EMAIL_REQUIRE_VERIFICATION,
-} from '@/utils/env'
+} from '@/utils/shared/env'
 import type { User } from '@/server/entities/user'
 import { generateRandomString } from '@/server/utils/random'
 import { getTempEmail, getTempName, generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email-service'
 import { getUserLocale } from '@/server/utils/locale'
 import { getCaptchaConfig } from '@/server/utils/captcha-config'
-import { isCaptchaEnabled } from '@/utils/captcha'
+import { isCaptchaEnabled } from '@/utils/web/captcha'
 
 export const auth = betterAuth({
     appName: APP_NAME, // 应用名称。它将被用作发行者。

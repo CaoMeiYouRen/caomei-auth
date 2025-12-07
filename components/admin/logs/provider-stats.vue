@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { getProviderIcon, getProviderColor, getProviderName } from '@/utils/social-provider-helpers'
+import { getProviderIcon, getProviderColor, getProviderName } from '@/utils/web/social-provider-helpers'
 
 const props = defineProps<{
     providerStats: any[]

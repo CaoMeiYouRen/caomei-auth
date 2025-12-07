@@ -1,7 +1,7 @@
 import { ref, type Ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { resolveCaptchaToken, type CaptchaExpose } from '@/utils/captcha'
-import { sendEmailOtpService, sendPhoneOtpService } from '@/utils/otp-service'
+import { resolveCaptchaToken, type CaptchaExpose } from '@/utils/web/captcha'
+import { sendEmailOtpService, sendPhoneOtpService } from '@/utils/web/otp-service'
 
 export function useEmailOtp() {
     const toast = useToast()

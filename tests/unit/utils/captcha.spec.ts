@@ -10,11 +10,11 @@ const baseEnv = {
 
 async function importCaptcha(overrides: Partial<typeof baseEnv> = {}) {
     vi.resetModules()
-    vi.doMock('@/utils/env', () => ({
+    vi.doMock('@/utils/shared/env', () => ({
         ...baseEnv,
         ...overrides,
     }))
-    return import('@/utils/captcha')
+    return import('@/utils/web/captcha')
 }
 
 describe('utils/captcha', () => {

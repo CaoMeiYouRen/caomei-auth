@@ -69,8 +69,8 @@ import { ref, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { authClient } from '@/lib/auth-client'
-import { parseUserAgent } from '@/utils/useragent'
-import { formatDateTime } from '@/utils/date'
+import { parseUserAgent } from '@/utils/shared/useragent'
+import { formatDateTime } from '@/utils/shared/date'
 
 const props = defineProps<{
     visible: boolean

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import type { Transporter } from 'nodemailer'
 
 import { sendEmail, injectEmailDeps, resetEmailDeps } from '@/server/utils/email'
-import { EMAIL_DAILY_LIMIT } from '@/utils/env'
+import { EMAIL_DAILY_LIMIT } from '@/utils/shared/env'
 
 type LimiterDeps = NonNullable<Parameters<typeof injectEmailDeps>[0]>['limiter']
 

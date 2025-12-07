@@ -1,7 +1,7 @@
 import { sendEmail } from './email'
 import { emailTemplateEngine } from './email-template'
 import logger from './logger'
-import { APP_NAME } from '@/utils/env'
+import { APP_NAME } from '@/utils/shared/env'
 
 /**
  * 邮件验证服务

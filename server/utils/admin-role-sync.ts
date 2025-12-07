@@ -1,7 +1,7 @@
 import logger from './logger'
 // import { dataSource } from '@/server/database'
 import { User } from '@/server/entities/user'
-import { ADMIN_USER_IDS } from '@/utils/env'
+import { ADMIN_USER_IDS } from '@/utils/shared/env'
 
 /**
  * 检查用户是否为管理员，并自动同步角色信息

@@ -27,8 +27,7 @@ async function loadEnvModule(options: {
             }
         })
     }
-
-    return import('@/utils/env')
+    return import('@/utils/shared/env')
 }
 
 afterEach(() => {

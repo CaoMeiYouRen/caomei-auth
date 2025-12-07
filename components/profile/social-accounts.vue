@@ -34,8 +34,8 @@
 
 <script setup lang="ts">
 import { useDark } from '@vueuse/core'
-import { maskUserId } from '@/utils/privacy'
-import { getSocialColor } from '@/utils/social-colors'
+import { maskUserId } from '@/utils/shared/privacy'
+import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
 
 const props = defineProps<{

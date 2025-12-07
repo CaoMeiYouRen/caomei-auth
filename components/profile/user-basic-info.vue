@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { maskUserId, maskUsername } from '@/utils/privacy'
+import { maskUserId, maskUsername } from '@/utils/shared/privacy'
 
 const props = defineProps<{
     privacyMode: boolean

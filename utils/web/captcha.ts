@@ -4,7 +4,7 @@ import {
     RECAPTCHA_SITE_KEY,
     TURNSTILE_SITE_KEY,
     HCAPTCHA_SITE_KEY,
-} from '@/utils/env'
+} from '@/utils/shared/env'
 
 /**
  * 检查验证码是否启用（前端版本）

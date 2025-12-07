@@ -1,5 +1,5 @@
 import { emailSchema, phoneSchema } from '@/utils/shared/validators'
-import { formatPhoneNumber } from '@/utils/phone'
+import { formatPhoneNumber } from '@/utils/shared/phone'
 
 export type InputType = 'email' | 'phone' | 'unknown'
 

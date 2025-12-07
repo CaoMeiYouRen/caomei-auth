@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getBrowser, getOs, parseUserAgent } from '@/utils/useragent'
+import { getBrowser, getOs, parseUserAgent } from '@/utils/shared/useragent'
 
 describe('utils/useragent', () => {
     const sampleUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'

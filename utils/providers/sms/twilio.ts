@@ -1,7 +1,7 @@
 import twilio from 'twilio'
 import type { SmsProvider, SmsResult } from './types'
 import { phoneSchema } from '@/utils/shared/validators'
-import { PHONE_SENDER_NAME, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER } from '@/utils/env'
+import { PHONE_SENDER_NAME, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER } from '@/utils/shared/env'
 
 export class TwilioSmsProvider implements SmsProvider {
     validatePhoneNumber(phoneNumber: string): boolean {

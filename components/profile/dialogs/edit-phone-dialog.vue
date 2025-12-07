@@ -63,11 +63,11 @@
 import { ref, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
-import { validatePhone } from '@/utils/validate'
+import { validatePhone } from '@/utils/shared/validate'
 import { usePhoneOtp } from '@/composables/use-otp'
 import Captcha from '@/components/captcha.vue'
 import SendCodeButton from '@/components/send-code-button.vue'
-import type { CaptchaExpose } from '@/utils/captcha'
+import type { CaptchaExpose } from '@/utils/web/captcha'
 
 const props = defineProps<{
     user: {

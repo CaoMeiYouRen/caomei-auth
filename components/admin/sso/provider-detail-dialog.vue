@@ -106,7 +106,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { formatDateLocale } from '@/utils/date'
+import { formatDateLocale } from '@/utils/shared/date'
 
 const props = defineProps<{
     visible: boolean

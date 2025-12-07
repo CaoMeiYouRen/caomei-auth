@@ -15,7 +15,7 @@ import {
     UPLOAD_SINGLE_USER_DAILY_LIMIT,
     STORAGE_TYPE,
     BUCKET_PREFIX,
-} from '@/utils/env'
+} from '@/utils/shared/env'
 
 export default defineEventHandler(async (event): Promise<{
     status: number

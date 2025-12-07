@@ -2,10 +2,10 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 
 const importPasswordModule = async (level: string = 'strong') => {
     vi.resetModules()
-    vi.doMock('@/utils/env', () => ({
+    vi.doMock('@/utils/shared/env', () => ({
         PASSWORD_STRENGTH_LEVEL: level,
     }))
-    return import('@/utils/password')
+    return import('@/utils/shared/password')
 }
 
 afterEach(() => {

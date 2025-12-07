@@ -2,8 +2,8 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 
 import loggerMock, { resetLoggerMock } from '../../mocks/logger'
 
-vi.mock('@/utils/env', async () => {
-    const actual = await vi.importActual<typeof import('@/utils/env')>('@/utils/env')
+vi.mock('@/utils/shared/env', async () => {
+    const actual = await vi.importActual<typeof import('@/utils/shared/env')>('@/utils/shared/env')
     return {
         ...actual,
         DEMO_MODE: true,

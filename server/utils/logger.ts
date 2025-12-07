@@ -5,7 +5,7 @@ import DailyRotateFile from 'winston-daily-rotate-file'
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
 import { WinstonTransport as AxiomTransport } from '@axiomhq/winston'
 import { createSafeLogData, maskEmail, maskPhone } from './privacy'
-import { LOG_LEVEL, LOGFILES, AXIOM_DATASET_NAME, AXIOM_API_TOKEN, LOG_DIR } from '@/utils/env'
+import { LOG_LEVEL, LOGFILES, AXIOM_DATASET_NAME, AXIOM_API_TOKEN, LOG_DIR } from '@/utils/shared/env'
 
 // 日志目录路径
 const logDir = path.isAbsolute(LOG_DIR) ? LOG_DIR : path.join(process.cwd(), LOG_DIR)

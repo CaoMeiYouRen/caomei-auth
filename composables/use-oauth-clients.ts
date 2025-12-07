@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { formatDateTime } from '@/utils/date'
+import { formatDateTime } from '@/utils/shared/date'
 
 interface AuthorizedApp {
     id: string

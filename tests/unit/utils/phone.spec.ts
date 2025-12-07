@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatPhoneNumber, formatPhoneNumberInternational, getRegionCodeForPhoneNumber } from '@/utils/phone'
+import { formatPhoneNumber, formatPhoneNumberInternational, getRegionCodeForPhoneNumber } from '@/utils/shared/phone'
 
 describe('utils/phone', () => {
     it('formats numbers to E164', () => {

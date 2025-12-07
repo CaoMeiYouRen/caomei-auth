@@ -28,7 +28,7 @@
 import { ref, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
-import { validateUsername } from '@/utils/validate'
+import { validateUsername } from '@/utils/shared/validate'
 
 const props = defineProps<{
     user: {

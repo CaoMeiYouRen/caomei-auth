@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { maskEmail, maskPhone, maskUserId, maskUsername, maskIP, maskString } from '@/utils/privacy'
-import { phoneUtil } from '@/utils/phone'
+import { maskEmail, maskPhone, maskUserId, maskUsername, maskIP, maskString } from '@/utils/shared/privacy'
+import { phoneUtil } from '@/utils/shared/phone'
 
 afterEach(() => {
     vi.restoreAllMocks()

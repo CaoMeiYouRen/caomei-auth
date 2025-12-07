@@ -22,7 +22,7 @@ const mockSmsProvider = {
 const mockResolveProvider = vi.fn().mockReturnValue(mockSmsProvider)
 
 // Mock env
-vi.mock('@/utils/env', async (importOriginal) => {
+vi.mock('@/utils/shared/env', async (importOriginal) => {
     const actual = await importOriginal<any>()
     return {
         ...actual,

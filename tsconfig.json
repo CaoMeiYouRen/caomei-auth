@@ -9,5 +9,16 @@
         "useDefineForClassFields": false,
         "allowSyntheticDefaultImports": true, // 允许默认导入非模块
         "esModuleInterop": true, // 允许与 CommonJS 模块互操作
+        "paths": {
+            "@/shared/*": [
+                "./utils/shared/*"
+            ],
+            "@/web/*": [
+                "./utils/web/*"
+            ],
+            "@/server-utils/*": [
+                "./server/utils/*"
+            ]
+        }
     }
 }

@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { dataSource } from '@/server/database'
 import { Session } from '@/server/entities/session'
 import { checkAdmin } from '@/server/utils/check-admin'
-import { parseUserAgent } from '@/utils/useragent'
+import { parseUserAgent } from '@/utils/shared/useragent'
 import { isDemoMode, generateDemoSessions } from '@/server/utils/demo-data-generator'
 import logger from '@/server/utils/logger'
 

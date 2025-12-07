@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import { generateRandomString } from './random'
-import { TEMP_EMAIL_DOMAIN_NAME } from '@/utils/env'
+import { TEMP_EMAIL_DOMAIN_NAME } from '@/utils/shared/env'
 
 /**
  * 生成临时邮箱地址

@@ -1,7 +1,7 @@
 import type { H3Event } from 'h3'
 import { getUserSession } from './get-user-session'
 import { getDemoConfig } from './demo-data-generator'
-import { DEMO_MODE } from '@/utils/env'
+import { DEMO_MODE } from '@/utils/shared/env'
 
 export async function checkAdmin(event: H3Event) {
     const session = await getUserSession(event)

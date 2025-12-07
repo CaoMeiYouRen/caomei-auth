@@ -9,7 +9,7 @@ import {
     EMAIL_FROM,
     EMAIL_HOST,
     EMAIL_USER,
-} from '@/utils/env'
+} from '@/utils/shared/env'
 
 const EMAIL_LIMIT_KEY = 'email_global_limit'
 

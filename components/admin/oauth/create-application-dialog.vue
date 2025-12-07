@@ -159,7 +159,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { validateEmail, validateUrl } from '@/utils/validate'
+import { validateEmail, validateUrl } from '@/utils/shared/validate'
 
 const props = defineProps<{
     visible: boolean

@@ -46,7 +46,7 @@
 import { ref, watch } from 'vue'
 import pkg from 'google-libphonenumber'
 const { PhoneNumberFormat } = pkg
-import { SUPPORTED_REGIONS, formatPhoneNumber, phoneUtil } from '@/utils/phone'
+import { SUPPORTED_REGIONS, formatPhoneNumber, phoneUtil } from '@/utils/shared/phone'
 
 defineOptions({
     inheritAttrs: false,

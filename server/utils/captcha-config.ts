@@ -7,7 +7,7 @@ import {
     TURNSTILE_SECRET_KEY,
     HCAPTCHA_SECRET_KEY,
     HCAPTCHA_SITE_KEY,
-} from '@/utils/env'
+} from '@/utils/shared/env'
 
 // 定义验证码配置类型
 type CaptchaConfig = Parameters<typeof captcha>[0]

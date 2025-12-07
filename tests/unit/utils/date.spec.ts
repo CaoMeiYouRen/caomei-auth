@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { formatDateTime, formatDate, formatDateLocale, formatRelativeTime, formatCustomDate } from '@/utils/date'
+import { formatDateTime, formatDate, formatDateLocale, formatRelativeTime, formatCustomDate } from '@/utils/shared/date'
 
 afterEach(() => {
     vi.useRealTimers()

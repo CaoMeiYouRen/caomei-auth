@@ -207,7 +207,7 @@ import { ref, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { debounce } from 'lodash-es'
-import { formatDateLocale } from '@/utils/date'
+import { formatDateLocale } from '@/utils/shared/date'
 import { useSsoProviders } from '@/composables/admin/use-sso-providers'
 
 definePageMeta({

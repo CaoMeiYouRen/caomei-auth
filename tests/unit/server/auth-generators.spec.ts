@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('@/utils/env', () => ({
+vi.mock('@/utils/shared/env', () => ({
     TEMP_EMAIL_DOMAIN_NAME: 'temp.local',
 }))
 

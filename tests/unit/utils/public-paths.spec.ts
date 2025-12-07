@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { publicPaths } from '@/utils/public-paths'
+import { publicPaths } from '@/utils/shared/public-paths'
 
 describe('utils/public-paths', () => {
     it('contains key anonymous access paths', () => {

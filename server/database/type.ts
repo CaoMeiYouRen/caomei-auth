@@ -1,4 +1,4 @@
-import { DATABASE_TYPE } from '@/utils/env'
+import { DATABASE_TYPE } from '@/utils/shared/env'
 
 export const getDateType = (dbType?: string) => {
     // 如果没有传入数据库类型，则使用环境变量（考虑Demo模式的强制类型）

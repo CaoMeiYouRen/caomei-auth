@@ -1,32 +1,33 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
-    validateEmailMock: vi.fn(),
-    validatePhoneMock: vi.fn(),
+    emailSchemaSafeParseMock: vi.fn(),
+    phoneSchemaSafeParseMock: vi.fn(),
     formatPhoneNumberMock: vi.fn(),
 }))
 
-vi.mock('@/utils/validate', () => ({
-    validateEmail: mocks.validateEmailMock,
-    validatePhone: mocks.validatePhoneMock,
+vi.mock('@/utils/shared/validators', () => ({
+    emailSchema: { safeParse: mocks.emailSchemaSafeParseMock },
+    phoneSchema: { safeParse: mocks.phoneSchemaSafeParseMock },
 }))
 
-vi.mock('@/utils/phone', () => ({
+vi.mock('@/utils/shared/phone', () => ({
+    getRegionCodeForPhoneNumber: vi.fn(),
     formatPhoneNumber: mocks.formatPhoneNumberMock,
 }))
 
-let smartInput: typeof import('@/utils/smart-input')
+let smartInput: typeof import('@/utils/shared/smart-input')
 
 beforeAll(async () => {
-    smartInput = await import('@/utils/smart-input')
+    smartInput = await import('@/utils/shared/smart-input')
 })
 
 beforeEach(() => {
-    mocks.validateEmailMock.mockReset()
-    mocks.validatePhoneMock.mockReset()
+    mocks.emailSchemaSafeParseMock.mockReset()
+    mocks.phoneSchemaSafeParseMock.mockReset()
     mocks.formatPhoneNumberMock.mockReset()
-    mocks.validateEmailMock.mockReturnValue(false)
-    mocks.validatePhoneMock.mockReturnValue(false)
+    mocks.emailSchemaSafeParseMock.mockReturnValue({ success: false })
+    mocks.phoneSchemaSafeParseMock.mockReturnValue({ success: false })
 })
 
 afterEach(() => {
@@ -63,15 +64,15 @@ describe('utils/smart-input (logic-focused)', () => {
         })
 
         it('identifies valid email inputs via validator', () => {
-            mocks.validateEmailMock.mockReturnValue(true)
+            mocks.emailSchemaSafeParseMock.mockReturnValue({ success: true })
             expect(smartInput.detectInputType(' user@example.com ')).toBe('email')
-            expect(mocks.validateEmailMock).toHaveBeenCalledWith('user@example.com')
+            expect(mocks.emailSchemaSafeParseMock).toHaveBeenCalledWith('user@example.com')
         })
 
         it('identifies valid international phone numbers via validator', () => {
-            mocks.validatePhoneMock.mockReturnValue(true)
+            mocks.phoneSchemaSafeParseMock.mockReturnValue({ success: true })
             expect(smartInput.detectInputType('+12025550123')).toBe('phone')
-            expect(mocks.validatePhoneMock).toHaveBeenCalledWith('+12025550123')
+            expect(mocks.phoneSchemaSafeParseMock).toHaveBeenCalledWith('+12025550123')
         })
 
         it('falls back to region heuristics for local numbers', () => {
@@ -85,7 +86,7 @@ describe('utils/smart-input (logic-focused)', () => {
 
     describe('getInputSuggestion', () => {
         it('returns email suggestions when detectInputType resolves to email', () => {
-            mocks.validateEmailMock.mockReturnValue(true)
+            mocks.emailSchemaSafeParseMock.mockReturnValue({ success: true })
             const result = smartInput.getInputSuggestion('user@example.com')
 
             expect(result).toMatchObject({ type: 'email', needConfirm: false })
@@ -93,7 +94,7 @@ describe('utils/smart-input (logic-focused)', () => {
         })
 
         it('returns an international phone suggestion for + prefixed numbers', () => {
-            mocks.validatePhoneMock.mockReturnValue(true)
+            mocks.phoneSchemaSafeParseMock.mockReturnValue({ success: true })
             const result = smartInput.getInputSuggestion('+12025550123')
 
             expect(result).toMatchObject({ type: 'phone', needConfirm: false, confidence: 0.95 })
@@ -133,7 +134,7 @@ describe('utils/smart-input (logic-focused)', () => {
 
     describe('formatAccountForVerification', () => {
         it('normalises email addresses to lowercase', () => {
-            mocks.validateEmailMock.mockReturnValue(true)
+            mocks.emailSchemaSafeParseMock.mockReturnValue({ success: true })
             expect(smartInput.formatAccountForVerification(' User@Example.COM ')).toBe('user@example.com')
         })
 
@@ -210,15 +211,15 @@ describe('utils/smart-input (logic-focused)', () => {
 
     describe('validateFormattedAccount', () => {
         it('delegates to validateEmail for values containing @', () => {
-            mocks.validateEmailMock.mockReturnValue(true)
+            mocks.emailSchemaSafeParseMock.mockReturnValue({ success: true })
             expect(smartInput.validateFormattedAccount('user@example.com')).toBe(true)
-            expect(mocks.validateEmailMock).toHaveBeenCalledWith('user@example.com')
+            expect(mocks.emailSchemaSafeParseMock).toHaveBeenCalledWith('user@example.com')
         })
 
         it('delegates to validatePhone for E.164 numbers', () => {
-            mocks.validatePhoneMock.mockReturnValue(true)
+            mocks.phoneSchemaSafeParseMock.mockReturnValue({ success: true })
             expect(smartInput.validateFormattedAccount('+8613812345678')).toBe(true)
-            expect(mocks.validatePhoneMock).toHaveBeenCalledWith('+8613812345678')
+            expect(mocks.phoneSchemaSafeParseMock).toHaveBeenCalledWith('+8613812345678')
         })
 
         it('returns false for unsupported formats', () => {

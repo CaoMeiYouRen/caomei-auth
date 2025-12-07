@@ -16,7 +16,7 @@ vi.mock('@/server/utils/demo-data-generator', () => ({
     getDemoConfig: getDemoConfigMock,
 }))
 
-vi.mock('@/utils/env', () => ({
+vi.mock('@/utils/shared/env', () => ({
     get DEMO_MODE() {
         return demoModeRef.value
     },

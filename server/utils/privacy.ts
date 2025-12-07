@@ -9,7 +9,7 @@ import {
     maskUserId as baseMaskUserId,
     maskIP as baseMaskIP,
     maskString as baseMaskString,
-} from '../../utils/privacy'
+} from '../../utils/shared/privacy'
 
 /**
  * 判断是否为开发环境

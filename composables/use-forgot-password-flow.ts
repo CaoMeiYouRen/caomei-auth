@@ -3,9 +3,9 @@ import { useUrlSearchParams } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
 import { emailSchema, phoneSchema } from '@/utils/shared/validators'
-import { validatePasswordForm } from '@/utils/password-validator'
+import { validatePasswordForm } from '@/utils/shared/password-validator'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
-import type { CaptchaExpose } from '@/utils/captcha'
+import type { CaptchaExpose } from '@/utils/web/captcha'
 
 export function useForgotPasswordFlow() {
     const config = useRuntimeConfig().public

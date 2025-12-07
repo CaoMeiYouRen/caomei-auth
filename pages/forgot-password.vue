@@ -145,7 +145,7 @@ import AuthLeft from '@/components/auth-left.vue'
 import SendCodeButton from '@/components/send-code-button.vue'
 import PasswordStrength from '@/components/password-strength.vue'
 import Captcha from '@/components/captcha.vue'
-import { getPasswordRequirementsShort } from '@/utils/password'
+import { getPasswordRequirementsShort } from '@/utils/shared/password'
 import { useForgotPasswordFlow } from '@/composables/use-forgot-password-flow'
 
 const {

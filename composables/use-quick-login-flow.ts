@@ -2,10 +2,10 @@ import { ref, computed } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
-import { validateEmail, validatePhone } from '@/utils/validate'
+import { validateEmail, validatePhone } from '@/utils/shared/validate'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
-import { navigateAfterLoginWithDelay } from '@/utils/navigation'
-import type { CaptchaExpose } from '@/utils/captcha'
+import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
+import type { CaptchaExpose } from '@/utils/web/captcha'
 
 export function useQuickLoginFlow() {
     // 配置

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateEmail, validatePhone, validateUrl, validateUsername, usernameValidator, nicknameValidator } from '@/utils/validate'
+import { validateEmail, validatePhone, validateUrl, validateUsername, usernameValidator, nicknameValidator } from '@/utils/shared/validate'
 
 describe('utils/validate', () => {
     describe('validateEmail', () => {

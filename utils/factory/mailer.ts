@@ -5,7 +5,7 @@ import {
     EMAIL_SECURE,
     EMAIL_USER,
     EMAIL_PASS,
-} from '@/utils/env'
+} from '@/utils/shared/env'
 
 export type MailerFactory = () => Transporter
 

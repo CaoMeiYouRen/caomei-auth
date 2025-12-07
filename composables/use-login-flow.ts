@@ -3,10 +3,10 @@ import { useToast } from 'primevue/usetoast'
 import { useUrlSearchParams, useDark } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
 import { emailSchema, phoneSchema } from '@/utils/shared/validators'
-import { navigateAfterLoginWithDelay } from '@/utils/navigation'
-import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/captcha'
+import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
+import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
-import { getSocialColor } from '@/utils/social-colors'
+import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
 
 export function useLoginFlow() {

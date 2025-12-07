@@ -133,7 +133,7 @@
 
 <script setup lang="ts">
 import { debounce } from 'lodash-es'
-import { formatDateTime } from '@/utils/date'
+import { formatDateTime } from '@/utils/shared/date'
 import { getDeviceIcon, formatDevice } from '@/utils/device'
 
 const props = defineProps<{

@@ -86,8 +86,8 @@
 
 <script setup lang="ts">
 import { useToast } from 'primevue/usetoast'
-import { maskEmail, maskPhone } from '@/utils/privacy'
-import { formatPhoneNumberInternational } from '@/utils/phone'
+import { maskEmail, maskPhone } from '@/utils/shared/privacy'
+import { formatPhoneNumberInternational } from '@/utils/shared/phone'
 
 const props = defineProps<{
     privacyMode: boolean

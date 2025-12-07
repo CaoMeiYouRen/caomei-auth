@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 
 import logger from './logger'
 import { getFallbackFragment, getFallbackMjmlTemplate, generateFallbackHtml } from './email-templates-fallback'
-import { APP_NAME, AUTH_BASE_URL, CONTACT_EMAIL } from '@/utils/env'
+import { APP_NAME, AUTH_BASE_URL, CONTACT_EMAIL } from '@/utils/shared/env'
 
 interface EmailTemplateData {
     [key: string]: string | number | boolean

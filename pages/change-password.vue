@@ -94,7 +94,7 @@
 <script lang="ts" setup>
 import AuthLeft from '@/components/auth-left.vue'
 import PasswordStrength from '@/components/password-strength.vue'
-import { getPasswordRequirementsShort } from '@/utils/password'
+import { getPasswordRequirementsShort } from '@/utils/shared/password'
 import { useChangePasswordFlow } from '@/composables/use-change-password-flow'
 
 const {

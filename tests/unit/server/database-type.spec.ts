@@ -3,11 +3,11 @@ import { getDateType } from '@/server/database/type'
 
 const importGetDateTypeWithEnv = async (mockDbType: string) => {
     vi.resetModules()
-    vi.doMock('@/utils/env', () => ({
+    vi.doMock('@/utils/shared/env', () => ({
         DATABASE_TYPE: mockDbType,
     }))
     const module = await import('@/server/database/type')
-    vi.doUnmock('@/utils/env')
+    vi.doUnmock('@/utils/shared/env')
     return module.getDateType
 }
 

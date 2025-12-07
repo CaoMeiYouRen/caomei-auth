@@ -1,5 +1,5 @@
 import { auth } from '@/lib/auth'
-import { publicPaths } from '@/utils/public-paths'
+import { publicPaths } from '@/utils/shared/public-paths'
 import { checkAndSyncAdminRoleWithUser, isUserAdmin } from '@/server/utils/admin-role-sync'
 import logger from '@/server/utils/logger'
 

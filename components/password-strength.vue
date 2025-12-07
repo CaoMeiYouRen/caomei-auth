@@ -38,7 +38,7 @@ import {
     getPasswordValidationError,
     getPasswordScore,
     PasswordStrength,
-} from '@/utils/password'
+} from '@/utils/shared/password'
 
 interface Props {
     /** 密码值 */

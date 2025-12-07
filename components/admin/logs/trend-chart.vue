@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import dayjs from 'dayjs'
-import { formatDate } from '@/utils/date'
+import { formatDate } from '@/utils/shared/date'
 import { useDemoMode } from '@/composables/use-demo-mode'
 
 const props = defineProps<{

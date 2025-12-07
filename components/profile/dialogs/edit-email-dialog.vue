@@ -36,9 +36,9 @@
 import { ref, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
-import { validateEmail } from '@/utils/validate'
+import { validateEmail } from '@/utils/shared/validate'
 import Captcha from '@/components/captcha.vue'
-import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/captcha'
+import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 
 const props = defineProps<{
     user: {

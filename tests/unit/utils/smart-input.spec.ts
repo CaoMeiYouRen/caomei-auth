@@ -7,7 +7,7 @@ import {
     getInputSuggestion,
     formatAccountForVerification,
     validateFormattedAccount,
-} from '@/utils/smart-input'
+} from '@/utils/shared/smart-input'
 
 interface BrowserOptions {
     storedRegion?: string | null

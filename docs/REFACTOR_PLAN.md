@@ -146,7 +146,7 @@
         3. ✅ 改造 `useRegisterFlow`, `useLoginFlow`, `useForgotPasswordFlow` 使用 Zod Schema。
         4. ✅ 改造 `utils/smart-input.ts` 和 SMS Providers 使用 Zod Schema。
 
-    #### 3.4 utils 分层与复用策略（G3 补充）
+    #### 3.4 utils 分层与复用策略（G3 补充） ✅ 已完成 (2025-12-08)
 
     -   **目录规划**：
         -   `utils/shared/**`（或 `lib/shared/**`）：不依赖 Nuxt/Node 的纯函数与常量，可直接被前后端复用。

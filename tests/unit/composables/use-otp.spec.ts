@@ -21,12 +21,12 @@ vi.mock('primevue/usetoast', () => ({
     useToast: () => toastStub,
 }))
 
-vi.mock('@/utils/otp-service', () => ({
+vi.mock('@/utils/web/otp-service', () => ({
     sendEmailOtpService: emailOtpServiceMock,
     sendPhoneOtpService: phoneOtpServiceMock,
 }))
 
-vi.mock('@/utils/captcha', () => ({
+vi.mock('@/utils/web/captcha', () => ({
     resolveCaptchaToken: resolveCaptchaTokenMock,
 }))
 

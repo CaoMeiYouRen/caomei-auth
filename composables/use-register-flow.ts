@@ -4,8 +4,8 @@ import { useToast } from 'primevue/usetoast'
 import { emailSchema, phoneSchema, nicknameSchema, usernameSchema } from '@/utils/shared/validators'
 import { usePhoneOtp } from '@/composables/use-otp'
 import { authClient } from '@/lib/auth-client'
-import { validatePasswordForm } from '@/utils/password-validator'
-import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/captcha'
+import { validatePasswordForm } from '@/utils/shared/password-validator'
+import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 
 export function useRegisterFlow() {
     const config = useRuntimeConfig().public

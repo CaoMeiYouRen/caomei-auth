@@ -20,7 +20,7 @@ beforeAll(() => {
 })
 
 beforeAll(async () => {
-    navigation = await import('@/utils/navigation')
+    navigation = await import('@/utils/web/navigation')
 })
 
 afterAll(() => {

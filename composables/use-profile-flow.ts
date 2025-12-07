@@ -3,8 +3,8 @@ import { useDark } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { authClient } from '@/lib/auth-client'
-import { nicknameValidator } from '@/utils/validate'
-import { getSocialColor } from '@/utils/social-colors'
+import { nicknameValidator } from '@/utils/shared/validate'
+import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
 
 export async function useProfileFlow() {

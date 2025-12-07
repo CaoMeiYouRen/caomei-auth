@@ -1,7 +1,7 @@
 import { SecondaryStorage } from 'better-auth'
 import { Redis } from 'ioredis'
 import { LRUCache } from 'lru-cache'
-import { REDIS_URL } from '@/utils/env'
+import { REDIS_URL } from '@/utils/shared/env'
 
 // 定义基础存储接口，包含 increment 方法
 interface BaseStorage {

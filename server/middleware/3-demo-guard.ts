@@ -4,7 +4,7 @@
  */
 
 import logger from '@/server/utils/logger'
-import { DEMO_MODE } from '@/utils/env'
+import { DEMO_MODE } from '@/utils/shared/env'
 
 /**
  * 检查是否为 Demo 模式

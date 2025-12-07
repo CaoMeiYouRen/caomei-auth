@@ -1,5 +1,5 @@
 import { SocialProvider } from '@/types/social'
-import { getSocialColor } from '@/utils/social-colors'
+import { getSocialColor } from '@/utils/web/social-colors'
 import {
     ANONYMOUS_LOGIN_ENABLED,
     GITHUB_CLIENT_ID,
@@ -13,7 +13,7 @@ import {
     WECHAT_CLIENT_ID,
     DOUYIN_CLIENT_ID,
     FACEBOOK_CLIENT_ID,
-} from '@/utils/env'
+} from '@/utils/shared/env'
 
 // 所有第三方登录的元数据
 const allProviders: SocialProvider[] = [

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getSocialColor, getSocialColorCSSVars, getSocialColorSCSS, isValidHexColor, DEFAULT_SOCIAL_COLOR, socialColors } from '@/utils/social-colors'
+import { getSocialColor, getSocialColorCSSVars, getSocialColorSCSS, isValidHexColor, DEFAULT_SOCIAL_COLOR, socialColors } from '@/utils/web/social-colors'
 
 describe('utils/social-colors', () => {
     it('returns brand colors with theme awareness', () => {

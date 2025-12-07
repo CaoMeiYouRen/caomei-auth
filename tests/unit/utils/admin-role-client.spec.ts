@@ -17,7 +17,7 @@ describe('utils/admin-role-client', () => {
 
     it('syncAdminRole sends sync action payload', async () => {
         fetchMock.mockResolvedValue({ success: true })
-        const module = await import('@/utils/admin-role-client')
+        const module = await import('@/utils/web/admin-role-client')
         const result = await module.syncAdminRole('user-1')
 
         expect(fetchMock).toHaveBeenCalledWith('/api/admin/sync-admin-role', {
@@ -32,7 +32,7 @@ describe('utils/admin-role-client', () => {
 
     it('addAdminRole requests add action', async () => {
         fetchMock.mockResolvedValue({ success: true })
-        const module = await import('@/utils/admin-role-client')
+        const module = await import('@/utils/web/admin-role-client')
         await module.addAdminRole('user-2')
 
         expect(fetchMock).toHaveBeenCalledWith('/api/admin/sync-admin-role', {
@@ -46,7 +46,7 @@ describe('utils/admin-role-client', () => {
 
     it('removeAdminRole requests remove action', async () => {
         fetchMock.mockResolvedValue({ success: true })
-        const module = await import('@/utils/admin-role-client')
+        const module = await import('@/utils/web/admin-role-client')
         await module.removeAdminRole('user-3')
 
         expect(fetchMock).toHaveBeenCalledWith('/api/admin/sync-admin-role', {
@@ -63,7 +63,7 @@ describe('utils/admin-role-client', () => {
             .mockResolvedValueOnce({ success: true, message: 'ok' })
             .mockRejectedValueOnce(new Error('fail'))
 
-        const module = await import('@/utils/admin-role-client')
+        const module = await import('@/utils/web/admin-role-client')
         const results = await module.batchSyncAdminRole(['a', 'b'])
 
         expect(results).toEqual([

@@ -1,6 +1,6 @@
 import { Column, ColumnOptions, Index } from 'typeorm'
 import { applyDecorators } from './apply-decorators'
-import { DATABASE_TYPE } from '@/utils/env'
+import { DATABASE_TYPE } from '@/utils/shared/env'
 
 const dbType = DATABASE_TYPE
 

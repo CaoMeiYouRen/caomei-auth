@@ -59,7 +59,7 @@ export class Snowflake {
 }
 
 // 机器 ID 。默认为进程 ID 对 1024 取余数。可以从环境变量中获取机器 ID
-import { MACHINE_ID } from '@/utils/env'
+import { MACHINE_ID } from '@/utils/shared/env'
 
 export const snowflake = new Snowflake(MACHINE_ID)
 

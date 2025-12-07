@@ -9,8 +9,8 @@ const { adminUserIds, getRepositoryMock, saveMock } = vi.hoisted(() => ({
     saveMock: vi.fn(),
 }))
 
-vi.mock('@/utils/env', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('@/utils/env')>()
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
     return {
         ...actual,
         ADMIN_USER_IDS: adminUserIds,

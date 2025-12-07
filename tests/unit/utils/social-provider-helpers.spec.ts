@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getProviderName, getProviderIcon, getProviderColor, getProviderInfo, isSocialProvider, getAllProviders } from '@/utils/social-provider-helpers'
+import { getProviderName, getProviderIcon, getProviderColor, getProviderInfo, isSocialProvider, getAllProviders } from '@/utils/web/social-provider-helpers'
 
 describe('utils/social-provider-helpers', () => {
     it('returns configured provider metadata', () => {

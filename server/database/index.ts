@@ -22,7 +22,7 @@ import {
     DATABASE_TIMEZONE,
     DATABASE_ENTITY_PREFIX,
     DEMO_MODE,
-} from '@/utils/env'
+} from '@/utils/shared/env'
 
 /**
  * Demo 模式数据预填充函数 - 异步执行以避免死锁

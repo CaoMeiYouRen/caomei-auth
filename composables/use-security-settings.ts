@@ -3,8 +3,8 @@ import { useToast } from 'primevue/usetoast'
 import dayjs from 'dayjs'
 import type { Prettify } from 'better-auth'
 import { authClient } from '@/lib/auth-client'
-import { generateQRCode } from '@/utils/qrcode'
-import { getBrowser, getOs } from '@/utils/useragent'
+import { generateQRCode } from '@/utils/shared/qrcode'
+import { getBrowser, getOs } from '@/utils/shared/useragent'
 
 export function useSecuritySettings() {
     const toast = useToast()

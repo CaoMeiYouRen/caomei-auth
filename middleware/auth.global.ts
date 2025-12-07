@@ -1,4 +1,4 @@
-import { publicPaths } from '@/utils/public-paths'
+import { publicPaths } from '@/utils/shared/public-paths'
 import { authClient } from '@/lib/auth-client'
 
 export default defineNuxtRouteMiddleware(async (to) => {

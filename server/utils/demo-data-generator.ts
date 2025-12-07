@@ -2,8 +2,8 @@
 import dayjs from 'dayjs'
 import { generateRandomString } from './random'
 import { snowflake } from './snowflake'
-import { maskIP } from '@/utils/privacy'
-import { parseUserAgent } from '@/utils/useragent'
+import { maskIP } from '@/utils/shared/privacy'
+import { parseUserAgent } from '@/utils/shared/useragent'
 import type {
     DemoUser,
     DemoOAuthApplication,
@@ -13,8 +13,8 @@ import type {
     DemoStats,
     DemoConfig,
 } from '@/types/demo'
-import { DEMO_PASSWORD, DEMO_MODE } from '@/utils/env'
-import { formatPhoneNumber } from '@/utils/phone'
+import { DEMO_PASSWORD, DEMO_MODE } from '@/utils/shared/env'
+import { formatPhoneNumber } from '@/utils/shared/phone'
 
 /**
  * 生成随机日期范围

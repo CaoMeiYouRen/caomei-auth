@@ -1,6 +1,6 @@
 import type { SmsProvider, SmsResult } from './types'
 import { cnPhoneSchema } from '@/utils/shared/validators'
-import { PHONE_SENDER_NAME, SPUG_TEMPLATE_ID } from '@/utils/env'
+import { PHONE_SENDER_NAME, SPUG_TEMPLATE_ID } from '@/utils/shared/env'
 
 export class SpugSmsProvider implements SmsProvider {
     validatePhoneNumber(phoneNumber: string): boolean {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { PasswordStrength } from '@/utils/password'
-import * as passwordModule from '@/utils/password'
-import { validatePassword, validatePasswordForm } from '@/utils/password-validator'
+import { PasswordStrength } from '@/utils/shared/password'
+import * as passwordModule from '@/utils/shared/password'
+import { validatePassword, validatePasswordForm } from '@/utils/shared/password-validator'
 
 afterEach(() => {
     vi.restoreAllMocks()
