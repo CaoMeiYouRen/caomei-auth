@@ -170,7 +170,8 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
             () => `203.208.60.${Math.floor(Math.random() * 256)}`,
             () => `114.114.114.${Math.floor(Math.random() * 256)}`,
         ]
-        return ipRanges[Math.floor(Math.random() * ipRanges.length)]()
+        const generator = ipRanges[Math.floor(Math.random() * ipRanges.length)]
+        return generator ? generator() : '127.0.0.1'
     }
     const userAgents = [
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -186,8 +187,8 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
     const logs: DemoLoginLog[] = []
 
     for (let i = 0; i < count; i++) {
-        const user = users[Math.floor(Math.random() * users.length)]
-        const method = methods[Math.floor(Math.random() * methods.length)]
+        const user = users[Math.floor(Math.random() * users.length)]!
+        const method = methods[Math.floor(Math.random() * methods.length)]!
         const success = Math.random() > 0.15 // 85% 成功率
         const id = snowflake.generateId()
         logs.push({
@@ -196,8 +197,8 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
             userEmail: user.email,
             userName: user.name,
             ip: maskIP(generateRandomIP()),
-            userAgent: userAgents[Math.floor(Math.random() * userAgents.length)],
-            location: locations[Math.floor(Math.random() * locations.length)],
+            userAgent: userAgents[Math.floor(Math.random() * userAgents.length)] || 'Unknown',
+            location: locations[Math.floor(Math.random() * locations.length)] || 'Unknown',
             loginMethod: method,
             provider: method === 'oauth' ? providers[Math.floor(Math.random() * providers.length)] : undefined,
             success,
@@ -234,7 +235,7 @@ export function generateDemoSSOProviders(count: number = 10): DemoSSOProvider[] 
     const ssoProviders: DemoSSOProvider[] = []
 
     for (let i = 0; i < Math.min(count, ssoApps.length); i++) {
-        const app = ssoApps[i]
+        const app = ssoApps[i]!
         const id = snowflake.generateId()
         const appName = app.name.toLowerCase()
         ssoProviders.push({
@@ -300,7 +301,8 @@ export function generateDemoSessions(count: number = 100): DemoSession[] {
             () => `203.208.60.${Math.floor(Math.random() * 256)}`,
             () => `114.114.114.${Math.floor(Math.random() * 256)}`,
         ]
-        return ipRanges[Math.floor(Math.random() * ipRanges.length)]()
+        const generator = ipRanges[Math.floor(Math.random() * ipRanges.length)]
+        return generator ? generator() : '127.0.0.1'
     }
 
     const userAgents = [
@@ -318,8 +320,8 @@ export function generateDemoSessions(count: number = 100): DemoSession[] {
     const sessions: DemoSession[] = []
 
     for (let i = 0; i < count; i++) {
-        const user = users[Math.floor(Math.random() * users.length)]
-        const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)]
+        const user = users[Math.floor(Math.random() * users.length)]!
+        const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)] || 'Unknown'
         const parsedUserAgent = parseUserAgent(userAgent)
         const loginTime = getRandomDate(30)
         const expiresAt = dayjs(loginTime).add(30, 'day').toDate()
@@ -346,9 +348,9 @@ export function generateDemoSessions(count: number = 100): DemoSession[] {
             expiresAt,
             isActive,
             ipAddress: maskIP(generateRandomIP()),
-            location: locations[Math.floor(Math.random() * locations.length)],
+            location: locations[Math.floor(Math.random() * locations.length)] || 'Unknown',
             device: deviceInfo,
-            provider: providers[Math.floor(Math.random() * providers.length)],
+            provider: providers[Math.floor(Math.random() * providers.length)] || 'email',
             sessionToken: `demo_session_${generateRandomString(32)}`,
         })
     }

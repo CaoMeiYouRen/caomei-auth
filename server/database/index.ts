@@ -1,5 +1,5 @@
 import ms from 'ms'
-import { DataSource, DataSourceOptions } from 'typeorm'
+import { DataSource, type DataSourceOptions } from 'typeorm'
 import { Account } from '../entities/account'
 import { Session } from '../entities/session'
 import { User } from '../entities/user'

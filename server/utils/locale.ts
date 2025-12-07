@@ -185,9 +185,11 @@ export function parseAcceptLanguage(acceptLanguage: string): SupportedLocale[] {
     const languages = acceptLanguage
         .split(',')
         .map((lang) => {
-            const [locale, qValue] = lang.trim().split(';q=')
+            const parts = lang.trim().split(';q=')
+            const locale = parts[0]
+            const qValue = parts[1]
             return {
-                locale: locale.trim(),
+                locale: locale ? locale.trim() : '',
                 q: qValue ? parseFloat(qValue) : 1.0,
             }
         })
@@ -345,7 +347,9 @@ export function getUserLocale(request: Request): SupportedLocale {
                 .split(';')
                 .map((cookie) => cookie.trim().split('='))
                 .reduce((acc, [key, value]) => {
-                    acc[key] = decodeURIComponent(value)
+                    if (key && value) {
+                        acc[key] = decodeURIComponent(value)
+                    }
                     return acc
                 }, {} as Record<string, string>)
 

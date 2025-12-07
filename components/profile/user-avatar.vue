@@ -67,6 +67,8 @@ import { ref, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload'
 
+import { MAX_UPLOAD_SIZE, MAX_UPLOAD_SIZE_TEXT } from '@/utils/shared/env'
+
 const props = defineProps<{
     user: {
         avatar: string

@@ -1,6 +1,6 @@
-import { S3Env, S3Storage } from './s3'
-import { VercelBlobStorage, VercelEnv } from './vercel-blob'
-import { Storage } from './type'
+import { type S3Env, S3Storage } from './s3'
+import { VercelBlobStorage, type VercelEnv } from './vercel-blob'
+import type { Storage } from './type'
 
 export type FileStorageEnv = S3Env & VercelEnv
 

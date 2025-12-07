@@ -1,4 +1,4 @@
-import { SocialProvider } from '@/types/social'
+import type { SocialProvider } from '@/types/social'
 import { getSocialColor } from '@/utils/web/social-colors'
 import {
     ANONYMOUS_LOGIN_ENABLED,

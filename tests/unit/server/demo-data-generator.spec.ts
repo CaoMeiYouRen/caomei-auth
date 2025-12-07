@@ -61,7 +61,7 @@ describe('server/utils/demo-data-generator', () => {
             expect(log.createdAt).toBeInstanceOf(Date)
         })
         for (let i = 1; i < logs.length; i += 1) {
-            expect(logs[i - 1].createdAt.getTime()).toBeGreaterThanOrEqual(logs[i].createdAt.getTime())
+            expect(logs[i - 1]!.createdAt.getTime()).toBeGreaterThanOrEqual(logs[i]!.createdAt.getTime())
         }
     })
 
@@ -76,7 +76,7 @@ describe('server/utils/demo-data-generator', () => {
             expect(typeof session.device.isMobile).toBe('boolean')
         })
         for (let i = 1; i < sessions.length; i += 1) {
-            expect(sessions[i - 1].loginTime.getTime()).toBeGreaterThanOrEqual(sessions[i].loginTime.getTime())
+            expect(sessions[i - 1]!.loginTime.getTime()).toBeGreaterThanOrEqual(sessions[i]!.loginTime.getTime())
         }
     })
 

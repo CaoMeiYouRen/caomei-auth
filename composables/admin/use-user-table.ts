@@ -48,11 +48,29 @@ export function useUserTable() {
         })
     }
 
+    const getRoleLabel = (role: string) => {
+        const map: Record<string, string> = {
+            user: '用户',
+            admin: '管理员',
+        }
+        return map[role] || role
+    }
+
+    const getRoleSeverity = (role: string) => {
+        const map: Record<string, string> = {
+            user: 'info',
+            admin: 'danger',
+        }
+        return map[role] || 'info'
+    }
+
     return {
         getSortField,
         getSortFieldLabel,
         formatDate,
         roleOptions,
         statusOptions,
+        getRoleLabel,
+        getRoleSeverity,
     }
 }

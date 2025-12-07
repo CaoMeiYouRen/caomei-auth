@@ -386,7 +386,7 @@ export function getFallbackMjmlTemplate(templateName: string): string {
         default: getDefaultFallback(),
     }
 
-    return fallbackTemplates[templateName] || fallbackTemplates.default
+    return fallbackTemplates[templateName] || fallbackTemplates.default || ''
 }
 
 export function generateFallbackHtml(title: string, safeData: any): string {

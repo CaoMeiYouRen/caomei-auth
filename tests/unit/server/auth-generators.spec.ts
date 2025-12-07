@@ -24,7 +24,7 @@ describe('server/utils/auth-generators', () => {
     it('creates temp names ignoring optional phone parameter', () => {
         const spy = vi.spyOn(random, 'generateRandomString').mockReturnValueOnce('NAMEBITS')
 
-        const name = getTempName('+8613800000000')
+        const name = getTempName()
         expect(name).toBe('user-NAMEBITS')
         expect(spy).toHaveBeenCalledWith(8)
     })
@@ -39,7 +39,7 @@ describe('server/utils/auth-generators', () => {
 
     it('returns url-safe base64 secrets produced from 24 random bytes', () => {
         const buffer = Buffer.from('abcdefghijklmnopqrstuvwx') // 24 chars
-        const randomSpy = vi.spyOn(crypto, 'randomBytes').mockReturnValue(buffer)
+        const randomSpy = vi.spyOn(crypto, 'randomBytes').mockReturnValue(buffer as any)
 
         const secret = generateClientSecret()
         expect(secret).toBe(buffer.toString('base64url'))

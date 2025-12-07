@@ -16,7 +16,7 @@ export const getFileType = async (buffer: Buffer) => {
  * @param contentType content-type
  * @returns 文件后缀名
  */
-export function getFileExtension(contentType: string | null): string {
+export function getFileExtension(contentType: string | null): string | undefined {
     if (!contentType) {
         throw new Error('Content-Type is required')
     }

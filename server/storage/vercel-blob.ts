@@ -1,5 +1,5 @@
 import { put } from '@vercel/blob'
-import { Storage } from './type'
+import type { Storage } from './type'
 
 export type VercelEnv = {
     // Vercel Blob 令牌

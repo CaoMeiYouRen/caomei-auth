@@ -1,4 +1,4 @@
-import { SecondaryStorage } from 'better-auth'
+import type { SecondaryStorage } from 'better-auth'
 import { Redis } from 'ioredis'
 import { LRUCache } from 'lru-cache'
 import { REDIS_URL } from '@/utils/shared/env'

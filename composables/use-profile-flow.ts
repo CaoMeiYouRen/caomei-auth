@@ -4,6 +4,7 @@ import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { authClient } from '@/lib/auth-client'
 import { nicknameValidator } from '@/utils/shared/validate'
+import { AUTH_BASE_URL } from '@/utils/shared/env'
 import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
 

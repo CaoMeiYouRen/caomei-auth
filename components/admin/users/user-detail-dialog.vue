@@ -173,7 +173,7 @@ import { useConfirm } from 'primevue/useconfirm'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/shared/phone'
 import { formatDateTime } from '@/utils/shared/date'
-import { syncAdminRole, addAdminRole, removeAdminRole } from '@/utils/admin-role-client'
+import { syncAdminRole, addAdminRole, removeAdminRole } from '@/utils/web/admin-role-client'
 import { useUserTable } from '@/composables/admin/use-user-table'
 
 const props = defineProps<{

@@ -13,7 +13,7 @@ vi.mock('@/lib/auth-client', () => ({
 const navigateToMock = vi.fn()
 const useFetchMock = vi.fn()
 let consoleWarnSpy: ReturnType<typeof vi.spyOn>
-let navigation: typeof import('@/utils/navigation')
+let navigation: typeof import('@/utils/web/navigation')
 
 beforeAll(() => {
     consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)

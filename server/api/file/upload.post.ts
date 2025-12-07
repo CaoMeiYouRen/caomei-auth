@@ -1,7 +1,7 @@
 import path from 'path'
 import { defineEventHandler, readMultipartFormData } from 'h3'
 import dayjs from 'dayjs'
-import { FileStorageEnv, getFileStorage } from '@/server/storage/factory'
+import { type FileStorageEnv, getFileStorage } from '@/server/storage/factory'
 import { getFileExtension, getFileType } from '@/server/utils/file'
 import { auth } from '@/lib/auth'
 import { limiterStorage } from '@/server/database/storage'

@@ -1,4 +1,4 @@
-import { Logger, QueryRunner } from 'typeorm'
+import { type Logger, type QueryRunner } from 'typeorm'
 import logger, { type ExtendedLogger } from '../utils/logger'
 
 // 判断是否为开发环境

@@ -12,7 +12,7 @@ import {
     Not,
     In,
 } from 'typeorm'
-import { BetterAuthError, DBFieldAttributeConfig, DBFieldType, generateId } from 'better-auth'
+import { BetterAuthError, type DBFieldAttributeConfig, type DBFieldType, generateId } from 'better-auth'
 import { getAuthTables } from 'better-auth/db'
 import type { DBAdapter, BetterAuthOptions, Where, DBTransactionAdapter } from 'better-auth/types'
 
@@ -60,7 +60,7 @@ export const typeormAdapter =
                     throw new Error(`Model ${model} not found in schema`)
                 }
                 const f = modelSchema.fields[field]
-                return f.fieldName || field
+                return f?.fieldName || field
             }
 
             function convertOperatorToTypeORM(operator: string, value: unknown) {
@@ -238,12 +238,15 @@ export const typeormAdapter =
                     const fields = modelSchema.fields
                     for (const field in fields) {
                         const value = data[field]
-                        if (value === undefined && (!fields[field].defaultValue || action === 'update')) {
+                        const fieldConfig = fields[field]
+                        if (!fieldConfig) { continue }
+
+                        if (value === undefined && (!fieldConfig.defaultValue || action === 'update')) {
                             continue
                         }
-                        transformedData[fields[field].fieldName || field] = withApplyDefault(
+                        transformedData[fieldConfig.fieldName || field] = withApplyDefault(
                             value,
-                            fields[field],
+                            fieldConfig,
                             action,
                         )
                     }

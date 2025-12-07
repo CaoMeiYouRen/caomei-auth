@@ -134,7 +134,7 @@
 <script setup lang="ts">
 import { debounce } from 'lodash-es'
 import { formatDateTime } from '@/utils/shared/date'
-import { getDeviceIcon, formatDevice } from '@/utils/device'
+import { getDeviceIcon, formatDevice } from '@/utils/web/device'
 
 const props = defineProps<{
     sessions: any[]

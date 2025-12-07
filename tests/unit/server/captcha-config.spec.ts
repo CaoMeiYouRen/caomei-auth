@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
 
 const baseEnv = {
-    CAPTCHA_PROVIDER: undefined,
-    RECAPTCHA_SECRET_KEY: undefined,
+    CAPTCHA_PROVIDER: undefined as string | undefined,
+    RECAPTCHA_SECRET_KEY: undefined as string | undefined,
     RECAPTCHA_MIN_SCORE: 0.5,
-    TURNSTILE_SECRET_KEY: undefined,
-    HCAPTCHA_SECRET_KEY: undefined,
-    HCAPTCHA_SITE_KEY: undefined,
+    TURNSTILE_SECRET_KEY: undefined as string | undefined,
+    HCAPTCHA_SECRET_KEY: undefined as string | undefined,
+    HCAPTCHA_SITE_KEY: undefined as string | undefined,
 }
 
 async function importModule(envOverrides: Partial<typeof baseEnv>) {

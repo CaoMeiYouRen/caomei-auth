@@ -1,5 +1,5 @@
-import { S3Client, PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3'
-import { Storage } from './type'
+import { S3Client, PutObjectCommand, type PutObjectCommandInput } from '@aws-sdk/client-s3'
+import type { Storage } from './type'
 
 export type S3Env = {
     // S3 基础 URL
