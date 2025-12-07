@@ -36,7 +36,9 @@ export function useUserTable() {
     ]
 
     const formatDate = (date: string | Date) => {
-        if (!date) { return '-' }
+        if (!date) {
+            return '-'
+        }
         return new Date(date).toLocaleString('zh-CN', {
             year: 'numeric',
             month: '2-digit',
