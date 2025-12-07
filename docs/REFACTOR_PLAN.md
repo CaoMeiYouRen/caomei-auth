@@ -138,11 +138,29 @@
     #### 3.3 统一校验与工具 (`utils/shared`)
 
     -   **目标**：实现前后端校验逻辑同构，避免逻辑双维护。
+    -   **分析与决策**：详见 [统一校验方案分析与决策](./architecture/validation.md)。引入 Zod 以解决当前 `validator` + 正则模式的类型缺失和逻辑重复问题。
     -   **进度**：⬜ 未开始
     -   **行动**：
         1. 建立 `utils/shared/validators.ts`：存放 Zod Schema（如 `emailSchema`, `passwordSchema`, `phoneSchema`）。
         2. 前端表单直接 import Schema 进行校验。
         3. 后端 API DTO (`server/utils/validation.ts`) 复用同一套 Schema。
+
+    #### 3.4 utils 分层与复用策略（G3 补充）
+
+    -   **目录规划**：
+        -   `utils/shared/**`（或 `lib/shared/**`）：不依赖 Nuxt/Node 的纯函数与常量，可直接被前后端复用。
+        -   `utils/web/**`：只在客户端使用的逻辑（浏览器 API、窗口状态、组件 helper）。
+        -   `server/utils/**`：仅服务端可用的逻辑（数据库、文件系统、第三方服务）。
+        -   通过 `barrel` 文件（index.ts）暴露统一入口，避免跨层误引用。
+    -   **依赖约束**：
+        -   `shared` 不得引用 `web`/`server`，`web` 可以引用 `shared`，`server` 可以引用 `shared`，但禁止反向依赖。
+        -   配置 `eslint-plugin-boundaries` 或自定义 lint 规则，在 CI 阻止错误引用。
+    -   **迁移步骤**：
+        1. 统计当前 `utils/**` 中的通用逻辑（如 `validate`, `privacy`, `password`, `smart-input`），优先迁入 `shared`。
+        2. 将仅 server 依赖（fs, node:crypto, TypeORM）的 util 放入 `server/utils` 并提供纯逻辑 + 副作用拆分。
+        3. Web 端 hooks/composables 若仅依赖浏览器，统一放入 `utils/web` 或 `composables/shared`。
+        4. 在 `tsconfig`/`paths` 中增加 `@/shared/*`, `@/web-utils/*`, `@/server-utils/*` 别名，提升可读性。
+    -   **复用收益衡量**：统计前后端重复实现的函数数量（基线 vs 重构后），重复实现清零；通过 `pnpm depcruise --config .dependency-cruise.cjs` 生成依赖图验证引用层级正确。
 
 -   **执行计划**：
 
@@ -157,24 +175,7 @@
     -   **指标**：全项目代码重复率（Duplication Rate）降低至 **5%** 以下（当前需先测定基线）。
     -   **CI 集成**：在 CI 流程中增加 `jscpd` 检查，超过阈值报警。
 
-#### utils 分层与复用策略（G3 补充）
-
--   **目录规划**：
-    -   `utils/shared/**`（或 `lib/shared/**`）：不依赖 Nuxt/Node 的纯函数与常量，可直接被前后端复用。
-    -   `utils/web/**`：只在客户端使用的逻辑（浏览器 API、窗口状态、组件 helper）。
-    -   `server/utils/**`：仅服务端可用的逻辑（数据库、文件系统、第三方服务）。
-    -   通过 `barrel` 文件（index.ts）暴露统一入口，避免跨层误引用。
--   **依赖约束**：
-    -   `shared` 不得引用 `web`/`server`，`web` 可以引用 `shared`，`server` 可以引用 `shared`，但禁止反向依赖。
-    -   配置 `eslint-plugin-boundaries` 或自定义 lint 规则，在 CI 阻止错误引用。
--   **迁移步骤**：
-    1. 统计当前 `utils/**` 中的通用逻辑（如 `validate`, `privacy`, `password`, `smart-input`），优先迁入 `shared`。
-    2. 将仅 server 依赖（fs, node:crypto, TypeORM）的 util 放入 `server/utils` 并提供纯逻辑 + 副作用拆分。
-    3. Web 端 hooks/composables 若仅依赖浏览器，统一放入 `utils/web` 或 `composables/shared`。
-    4. 在 `tsconfig`/`paths` 中增加 `@/shared/*`, `@/web-utils/*`, `@/server-utils/*` 别名，提升可读性。
--   **复用收益衡量**：统计前后端重复实现的函数数量（基线 vs 重构后），重复实现清零；通过 `pnpm depcruise --config .dependency-cruise.cjs` 生成依赖图验证引用层级正确。
-
-### 5. 覆盖率 ≥ 60%（G4）
+### 4. 覆盖率 ≥ 60%（G4）
 
 -   **阶段化推进**：
     1. **P1**：纯函数/确定性逻辑（已完成大部分，继续覆盖新增 util）。
@@ -189,7 +190,7 @@
     -   `server/api/*` 关键路由（auth、admin、oauth）——走黑盒，用 fixtures。
     -   新拆出的 composable / Base 组件。
 
-### 6. 文档同步（G5）
+### 5. 文档同步（G5）
 
 -   **新增文档**：
     -   本文件 `docs/REFACTOR_PLAN.md`。
@@ -201,7 +202,7 @@
     -   `CHANGELOG.md`：在对应 release 中列出重构与测试提升。
 -   **流程约束**：PR 模板新增 “文档同步” 复选框；缺失时 reviewer 可直接拒绝。
 
-### 7. Lint 要求（ESLint & Stylelint）
+### 6. Lint 要求（ESLint & Stylelint）
 
 -   **目标**：
     -   CI 中 `pnpm lint`、`pnpm stylelint` 必须 0 error；warning 数量逐 Sprint 下降，最终目标控制在 0-5 以内。
@@ -212,7 +213,7 @@
     3. Stylelint 同步配置 `--max-warnings=0` 并统一 SCSS 变量/混入使用；对老旧样式逐步整改。
 -   **验收**：CI 通过时无 lint error，warning 数按计划下降；PR 模板要求附上 lint 结果（或 CI 链接）。
 
-### 8. 原子修改与测试闭环
+### 7. 原子修改与测试闭环
 
 -   **规定**：每次修改时只改一项内容，并需要完成测试。
 -   **执行**：
@@ -220,7 +221,7 @@
     -   修改完成后，必须运行对应的单元测试或集成测试，确保不破坏现有功能。
     -   若修改模块缺乏测试，必须先补充测试。
 
-### 9. 类型安全
+### 8. 类型安全
 
 -   **目标**：所有修改和新增代码必须通过 TypeScript 类型检查。
 -   **执行**：
