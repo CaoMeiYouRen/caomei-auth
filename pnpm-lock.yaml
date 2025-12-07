@@ -112,7 +112,7 @@ importers:
         version: 3.15.3
       nest-winston:
         specifier: ^1.10.2
-        version: 1.10.2(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(winston@3.18.3)
+        version: 1.10.2(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(winston@3.19.0)
       nodemailer:
         specifier: ^7.0.11
         version: 7.0.11
@@ -168,11 +168,11 @@ importers:
         specifier: ^1.0.11
         version: 1.0.11(vue@3.5.25(typescript@5.9.3))
       winston:
-        specifier: ^3.18.3
-        version: 3.18.3
+        specifier: ^3.19.0
+        version: 3.19.0
       winston-daily-rotate-file:
         specifier: ^5.0.0
-        version: 5.0.0(winston@3.18.3)
+        version: 5.0.0(winston@3.19.0)
       zod:
         specifier: ^4.1.13
         version: 4.1.13
@@ -9419,8 +9419,8 @@ packages:
     resolution: {integrity: sha512-8drMJ4rkgaPo1Me4zD/3WLfI/zPdA9o2IipKODunnGDcuqbHwjsbB79ylv04LCGGzU0xQ6vTznOMpQGaLhhm6A==}
     engines: {node: '>= 12.0.0'}
 
-  winston@3.18.3:
-    resolution: {integrity: sha512-NoBZauFNNWENgsnC9YpgyYwOVrl2m58PpQ8lNHjV3kosGs7KJ7Npk9pCUE+WJlawVSe8mykWDKWFSVfs3QO9ww==}
+  winston@3.19.0:
+    resolution: {integrity: sha512-LZNJgPzfKR+/J3cHkxcpHKpKKvGfDZVPS4hfJCc4cCG0CgYzvlD6yE/S3CIL/Yt91ak327YCpiF/0MyeZHEHKA==}
     engines: {node: '>= 12.0.0'}
 
   with@7.0.2:
@@ -17694,11 +17694,11 @@ snapshots:
 
   nerf-dart@1.0.0: {}
 
-  nest-winston@1.10.2(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(winston@3.18.3):
+  nest-winston@1.10.2(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(winston@3.19.0):
     dependencies:
       '@nestjs/common': 11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)
       fast-safe-stringify: 2.1.1
-      winston: 3.18.3
+      winston: 3.19.0
 
   nitropack@2.12.9(@vercel/blob@2.0.0)(better-sqlite3@12.4.1)(encoding@0.1.13)(mysql2@3.15.3)(sqlite3@5.1.7):
     dependencies:
@@ -20851,12 +20851,12 @@ snapshots:
       string-width: 4.2.3
     optional: true
 
-  winston-daily-rotate-file@5.0.0(winston@3.18.3):
+  winston-daily-rotate-file@5.0.0(winston@3.19.0):
     dependencies:
       file-stream-rotator: 0.6.1
       object-hash: 3.0.0
       triple-beam: 1.4.1
-      winston: 3.18.3
+      winston: 3.19.0
       winston-transport: 4.9.0
 
   winston-transport@4.9.0:
@@ -20865,7 +20865,7 @@ snapshots:
       readable-stream: 3.6.2
       triple-beam: 1.4.1
 
-  winston@3.18.3:
+  winston@3.19.0:
     dependencies:
       '@colors/colors': 1.6.0
       '@dabh/diagnostics': 2.0.8
