@@ -2,7 +2,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
-import { validateEmail, validatePhone } from '@/utils/validate'
+import { emailSchema, phoneSchema } from '@/utils/shared/validators'
 import { validatePasswordForm } from '@/utils/password-validator'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import type { CaptchaExpose } from '@/utils/captcha'
@@ -44,9 +44,9 @@ export function useForgotPasswordFlow() {
     const { send: sendEmailOtp, sending: emailCodeSending } = useEmailOtp()
     const { send: sendPhoneOtp, sending: phoneCodeSending } = usePhoneOtp()
 
-    const canSendEmailCode = computed(() => !!(email.value.trim() && validateEmail(email.value) && !errors.value.email))
+    const canSendEmailCode = computed(() => !!(email.value.trim() && emailSchema.safeParse(email.value).success && !errors.value.email))
 
-    const canSendPhoneCode = computed(() => !!(phone.value.trim() && validatePhone(phone.value) && !errors.value.phone))
+    const canSendPhoneCode = computed(() => !!(phone.value.trim() && phoneSchema.safeParse(phone.value).success && !errors.value.phone))
 
     const sendEmailCode = async () => {
         await sendEmailOtp(
@@ -54,8 +54,9 @@ export function useForgotPasswordFlow() {
             'forget-password',
             captcha,
             () => {
-                if (!validateEmail(email.value)) {
-                    errors.value.email = '请输入有效的邮箱地址'
+                const res = emailSchema.safeParse(email.value)
+                if (!res.success) {
+                    errors.value.email = res.error.issues[0]?.message || '请输入有效的邮箱地址'
                     return false
                 }
                 return true
@@ -72,8 +73,9 @@ export function useForgotPasswordFlow() {
             'forget-password',
             captcha,
             () => {
-                if (!validatePhone(phone.value)) {
-                    errors.value.phone = '请输入有效的手机号'
+                const res = phoneSchema.safeParse(phone.value)
+                if (!res.success) {
+                    errors.value.phone = res.error.issues[0]?.message || '请输入有效的手机号'
                     return false
                 }
                 return true
@@ -98,8 +100,9 @@ export function useForgotPasswordFlow() {
                 errors.value.email = '请输入邮箱'
                 return
             }
-            if (!validateEmail(email.value)) {
-                errors.value.email = '请输入有效的邮箱地址'
+            const emailValidation = emailSchema.safeParse(email.value)
+            if (!emailValidation.success) {
+                errors.value.email = emailValidation.error.issues[0]?.message || '请输入有效的邮箱地址'
                 return
             }
             if (!emailCode.value) {
@@ -111,8 +114,9 @@ export function useForgotPasswordFlow() {
                 errors.value.phone = '请输入手机号'
                 return
             }
-            if (!validatePhone(phone.value)) {
-                errors.value.phone = '请输入有效的手机号'
+            const phoneValidation = phoneSchema.safeParse(phone.value)
+            if (!phoneValidation.success) {
+                errors.value.phone = phoneValidation.error.issues[0]?.message || '请输入有效的手机号'
                 return
             }
             if (!phoneCode.value) {

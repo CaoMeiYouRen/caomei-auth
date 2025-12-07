@@ -1,11 +1,11 @@
 import twilio from 'twilio'
 import type { SmsProvider, SmsResult } from './types'
-import { validatePhone } from '@/utils/validate'
+import { phoneSchema } from '@/utils/shared/validators'
 import { PHONE_SENDER_NAME, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER } from '@/utils/env'
 
 export class TwilioSmsProvider implements SmsProvider {
     validatePhoneNumber(phoneNumber: string): boolean {
-        return validatePhone(phoneNumber)
+        return phoneSchema.safeParse(phoneNumber).success
     }
 
     async sendOtp(phoneNumber: string, code: string, expiresInMinutes: number): Promise<SmsResult> {

@@ -1,11 +1,11 @@
 import type { SmsProvider, SmsResult } from './types'
-import { validatePhone } from '@/utils/validate'
+import { cnPhoneSchema } from '@/utils/shared/validators'
 import { PHONE_SENDER_NAME, SPUG_TEMPLATE_ID } from '@/utils/env'
 
 export class SpugSmsProvider implements SmsProvider {
     validatePhoneNumber(phoneNumber: string): boolean {
         // Spug 平台只支持中国大陆手机号
-        return validatePhone(phoneNumber, 'zh-CN')
+        return cnPhoneSchema.safeParse(phoneNumber).success
     }
 
     async sendOtp(phoneNumber: string, code: string, expiresInMinutes: number): Promise<SmsResult> {

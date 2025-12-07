@@ -139,11 +139,12 @@
 
     -   **目标**：实现前后端校验逻辑同构，避免逻辑双维护。
     -   **分析与决策**：详见 [统一校验方案分析与决策](./architecture/validation.md)。引入 Zod 以解决当前 `validator` + 正则模式的类型缺失和逻辑重复问题。
-    -   **进度**：⬜ 未开始
+    -   **进度**：✅ 已完成 (2025-12-08)
     -   **行动**：
-        1. 建立 `utils/shared/validators.ts`：存放 Zod Schema（如 `emailSchema`, `passwordSchema`, `phoneSchema`）。
-        2. 前端表单直接 import Schema 进行校验。
-        3. 后端 API DTO (`server/utils/validation.ts`) 复用同一套 Schema。
+        1. ✅ 建立 `utils/shared/validators.ts`：存放 Zod Schema（如 `emailSchema`, `passwordSchema`, `phoneSchema`）。
+        2. ✅ 改造 `composables/core/use-form.ts` 支持 Zod Schema。
+        3. ✅ 改造 `useRegisterFlow`, `useLoginFlow`, `useForgotPasswordFlow` 使用 Zod Schema。
+        4. ✅ 改造 `utils/smart-input.ts` 和 SMS Providers 使用 Zod Schema。
 
     #### 3.4 utils 分层与复用策略（G3 补充）
 

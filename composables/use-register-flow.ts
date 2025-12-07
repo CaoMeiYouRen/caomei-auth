@@ -1,7 +1,7 @@
 import { ref, onMounted } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
-import { validateEmail, validatePhone, nicknameValidator, usernameValidator } from '@/utils/validate'
+import { emailSchema, phoneSchema, nicknameSchema, usernameSchema } from '@/utils/shared/validators'
 import { usePhoneOtp } from '@/composables/use-otp'
 import { authClient } from '@/lib/auth-client'
 import { validatePasswordForm } from '@/utils/password-validator'
@@ -37,8 +37,9 @@ export function useRegisterFlow() {
             'sign-in',
             captcha,
             () => {
-                if (!validatePhone(phone.value)) {
-                    errors.value.phone = '请输入有效的手机号'
+                const res = phoneSchema.safeParse(phone.value)
+                if (!res.success) {
+                    errors.value.phone = res.error.issues[0]?.message || '请输入有效的手机号'
                     return false
                 }
                 return true
@@ -71,25 +72,22 @@ export function useRegisterFlow() {
     const validateForm = () => {
         const newErrors: Record<string, string> = {}
 
-        if (!nickname.value) {
-            newErrors.nickname = '请输入昵称'
-        } else if (!nicknameValidator(nickname.value)) {
-            newErrors.nickname = '昵称长度为2到36个字符，不能包含特殊字符'
+        const nicknameValidation = nicknameSchema.safeParse(nickname.value)
+        if (!nicknameValidation.success) {
+            newErrors.nickname = nicknameValidation.error!.issues[0]?.message || '请输入有效的昵称'
         }
 
         if (usernameEnabled) {
-            if (!username.value || !username.value.trim()) {
-                newErrors.username = '请输入用户名'
-            } else if (!usernameValidator(username.value)) {
-                newErrors.username = '用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符，且不能是邮箱或手机号格式'
+            const usernameValidation = usernameSchema.safeParse(username.value)
+            if (!usernameValidation.success) {
+                newErrors.username = usernameValidation.error!.issues[0]?.message || '请输入有效的用户名'
             }
         }
 
         if (activeTab.value === 'email') {
-            if (!email.value) {
-                newErrors.email = '请输入邮箱'
-            } else if (!validateEmail(email.value)) {
-                newErrors.email = '请输入有效的邮箱地址'
+            const emailValidation = emailSchema.safeParse(email.value)
+            if (!emailValidation.success) {
+                newErrors.email = emailValidation.error!.issues[0]?.message || '请输入有效的邮箱'
             }
 
             const passwordErrors = validatePasswordForm({
@@ -98,10 +96,9 @@ export function useRegisterFlow() {
             })
             Object.assign(newErrors, passwordErrors)
         } else if (activeTab.value === 'phone') {
-            if (!phone.value) {
-                newErrors.phone = '请输入手机号'
-            } else if (!validatePhone(phone.value)) {
-                newErrors.phone = '请输入有效的手机号'
+            const phoneValidation = phoneSchema.safeParse(phone.value)
+            if (!phoneValidation.success) {
+                newErrors.phone = phoneValidation.error!.issues[0]?.message || '请输入有效的手机号'
             }
             if (!phoneCode.value) {
                 newErrors.phoneCode = '请输入短信验证码'

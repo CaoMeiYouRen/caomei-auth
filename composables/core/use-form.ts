@@ -1,35 +1,54 @@
 import { ref, reactive, computed, type Ref } from 'vue'
+import { type ZodSchema } from 'zod'
 
 export type ValidatorFn<T> = (values: T) => Promise<Record<string, string> | null> | Record<string, string> | null
 
 export interface UseFormOptions<T> {
     initialValues: T
     validate?: ValidatorFn<T>
+    zodSchema?: ZodSchema<T>
     validateOnChange?: boolean
 }
 
 export function useForm<T extends Record<string, any> = Record<string, any>>(options: UseFormOptions<T>) {
-    const { initialValues, validate, validateOnChange = false } = options
+    const { initialValues, validate, zodSchema, validateOnChange = false } = options
 
     const values = reactive({ ...(initialValues as object) }) as T
     const errors: Ref<Record<string, string>> = ref({})
     const submitting = ref(false)
 
     async function runValidation(): Promise<boolean> {
-        if (!validate) {
-            errors.value = {}
-            return true
+        errors.value = {}
+
+        if (zodSchema) {
+            const result = zodSchema.safeParse(values)
+            if (!result.success) {
+                const zodErrors: Record<string, string> = {}
+                result.error.issues.forEach((err) => {
+                    const path = err.path.join('.')
+                    if (path) {
+                        zodErrors[path] = err.message
+                    } else {
+                        zodErrors._form = err.message
+                    }
+                })
+                errors.value = zodErrors
+            }
         }
 
-        try {
-            const res = await validate(values)
-            errors.value = res || {}
-            return !res || Object.keys(res).length === 0
-        } catch (err) {
-            // If validator throws, consider it a failure and map to _form error
-            errors.value = { _form: (err instanceof Error ? err.message : String(err)) }
-            return false
+        if (validate) {
+            try {
+                const res = await validate(values)
+                if (res) {
+                    errors.value = { ...errors.value, ...res }
+                }
+            } catch (err) {
+                // If validator throws, consider it a failure and map to _form error
+                errors.value = { ...errors.value, _form: (err instanceof Error ? err.message : String(err)) }
+            }
         }
+
+        return Object.keys(errors.value).length === 0
     }
 
     async function handleSubmit(onSubmit: (vals: T) => Promise<void> | void) {

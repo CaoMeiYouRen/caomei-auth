@@ -2,7 +2,7 @@ import { ref, watch, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useUrlSearchParams, useDark } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
-import { validateEmail, validatePhone } from '@/utils/validate'
+import { emailSchema, phoneSchema } from '@/utils/shared/validators'
 import { navigateAfterLoginWithDelay } from '@/utils/navigation'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/captcha'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
@@ -210,8 +210,9 @@ export function useLoginFlow() {
                 errors.value.email = '请输入邮箱'
                 return
             }
-            if (!validateEmail(email.value)) {
-                errors.value.email = '请输入有效的邮箱地址'
+            const emailValidation = emailSchema.safeParse(email.value)
+            if (!emailValidation.success) {
+                errors.value.email = emailValidation.error.issues[0]?.message || '请输入有效的邮箱地址'
                 return
             }
 
@@ -312,8 +313,9 @@ export function useLoginFlow() {
                 errors.value.phone = '请输入手机号'
                 return
             }
-            if (!validatePhone(phone.value)) {
-                errors.value.phone = '请输入有效的手机号'
+            const phoneValidation = phoneSchema.safeParse(phone.value)
+            if (!phoneValidation.success) {
+                errors.value.phone = phoneValidation.error.issues[0]?.message || '请输入有效的手机号'
                 return
             }
 

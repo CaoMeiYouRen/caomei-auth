@@ -1,4 +1,4 @@
-import { validateEmail, validatePhone } from '@/utils/validate'
+import { emailSchema, phoneSchema } from '@/utils/shared/validators'
 import { formatPhoneNumber } from '@/utils/phone'
 
 export type InputType = 'email' | 'phone' | 'unknown'
@@ -139,12 +139,12 @@ export function detectInputType(input: string): InputType {
 
     // 1. 明确的邮箱格式（包含@符号）
     if (cleanInput.includes('@')) {
-        return validateEmail(cleanInput) ? 'email' : 'unknown'
+        return emailSchema.safeParse(cleanInput).success ? 'email' : 'unknown'
     }
 
     // 2. 明确的国际手机号格式（+开头）
     if (cleanInput.startsWith('+')) {
-        return validatePhone(cleanInput) ? 'phone' : 'unknown'
+        return phoneSchema.safeParse(cleanInput).success ? 'phone' : 'unknown'
     }
 
     // 3. 纯数字，可能是本地手机号
@@ -323,11 +323,11 @@ export function formatAccountForVerification(account: string, region?: string): 
  */
 export function validateFormattedAccount(account: string): boolean {
     if (account.includes('@')) {
-        return validateEmail(account)
+        return emailSchema.safeParse(account).success
     }
 
     if (account.startsWith('+')) {
-        return validatePhone(account)
+        return phoneSchema.safeParse(account).success
     }
 
     return false
