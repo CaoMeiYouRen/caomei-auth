@@ -1,8 +1,12 @@
+import { ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import { useConfirm } from 'primevue/useconfirm'
+import { debounce } from 'lodash-es'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 
 export function useApplicationManagement() {
     const toast = useToast()
+    const confirm = useConfirm()
 
     const fetcher = async (params: DataTableFetchParams) => {
         const query: any = {
@@ -111,6 +115,56 @@ export function useApplicationManagement() {
         }
     }
 
+    // Dialog states
+    const showCreateDialog = ref(false)
+    const showSecretDialog = ref(false)
+    const showApiDocsDialog = ref(false)
+
+    const editingApplication = ref<any>(null)
+    const newApplication = ref<any>(null)
+
+    // Actions
+    const openCreateDialog = () => {
+        editingApplication.value = null
+        showCreateDialog.value = true
+    }
+
+    const editApplication = (app: any) => {
+        editingApplication.value = app
+        showCreateDialog.value = true
+    }
+
+    const confirmDelete = (app: any) => {
+        confirm.require({
+            message: `确定要删除应用 "${app.name}" 吗？此操作无法撤销。`,
+            header: '确认删除',
+            icon: 'mdi mdi-alert-circle',
+            rejectLabel: '取消',
+            acceptLabel: '删除',
+            rejectClass: 'p-button-secondary p-button-text',
+            acceptClass: 'p-button-danger',
+            accept: () => {
+                deleteApplication(app.id)
+            },
+        })
+    }
+
+    // Event handlers
+    const onApplicationCreated = (app: any) => {
+        newApplication.value = app
+        showSecretDialog.value = true
+        refreshApplications()
+    }
+
+    const onApplicationUpdated = () => {
+        refreshApplications()
+    }
+
+    const onSearchInput = debounce((value: string | undefined) => {
+        searchQuery.value = value || ''
+        onSearch()
+    }, 300)
+
     return {
         loading,
         applications,
@@ -127,5 +181,17 @@ export function useApplicationManagement() {
         onPage,
         onSort,
         onSearch,
+        // Dialogs & Actions
+        showCreateDialog,
+        showSecretDialog,
+        showApiDocsDialog,
+        editingApplication,
+        newApplication,
+        openCreateDialog,
+        editApplication,
+        confirmDelete,
+        onApplicationCreated,
+        onApplicationUpdated,
+        onSearchInput,
     }
 }

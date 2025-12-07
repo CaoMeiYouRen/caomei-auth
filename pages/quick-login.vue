@@ -54,7 +54,7 @@
                             <SendCodeButton
                                 :on-send="sendEmailVerificationCode"
                                 :duration="60"
-                                :disabled="emailCodeSending || !validateEmail(email)"
+                                :disabled="!canSendEmailCode"
                                 :loading="emailCodeSending"
                                 text="获取验证码"
                                 resend-text="重新发送"
@@ -93,7 +93,7 @@
                             <SendCodeButton
                                 :on-send="sendPhoneVerificationCode"
                                 :duration="60"
-                                :disabled="phoneCodeSending || !validatePhone(phone)"
+                                :disabled="!canSendPhoneCode"
                                 :loading="phoneCodeSending"
                                 text="获取验证码"
                                 resend-text="重新发送"
@@ -153,16 +153,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
-import { useUrlSearchParams } from '@vueuse/core'
 import AuthLeft from '@/components/auth-left.vue'
 import SendCodeButton from '@/components/send-code-button.vue'
-import { authClient } from '@/lib/auth-client'
-import { validateEmail, validatePhone } from '@/utils/validate'
-import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
-import { navigateAfterLoginWithDelay } from '@/utils/navigation'
 import Captcha from '@/components/captcha.vue'
-import type { CaptchaExpose } from '@/utils/captcha'
+import { useQuickLoginFlow } from '@/composables/use-quick-login-flow'
 
 // SEO 设置
 definePageMeta({
@@ -170,309 +164,29 @@ definePageMeta({
     description: '使用验证码一键完成登录注册，安全便捷',
 })
 
-// 配置
-const config = useRuntimeConfig().public
-const phoneEnabled = config.phoneEnabled
-
-// 响应式数据
-const activeTab = ref<'email' | 'phone'>('email')
-
-// 邮箱相关
-const email = ref('')
-const emailCode = ref('')
-const isEmailLoggingIn = ref(false)
-
-// 手机相关
-const phone = ref('')
-const phoneCode = ref('')
-const isPhoneLoggingIn = ref(false)
-
-// 错误状态
-const errors = ref<Record<string, string>>({})
-
-// 发送验证码状态
-const captcha = ref<CaptchaExpose | null>(null)
-
-// 组件
-const toast = useToast()
-
-// 使用 URL 参数
-const params = useUrlSearchParams<{ tab: 'email' | 'phone' }>('history', { initialValue: { tab: 'email' } })
-
-// 邮箱验证码发送工具
-const { send: sendEmailOtp, sending: emailCodeSending } = useEmailOtp()
-const sendEmailCode = async () => {
-    return await sendEmailOtp(
-        email.value,
-        'sign-in',
-        captcha,
-        () => {
-            if (!validateEmail(email.value)) {
-                errors.value.email = '请输入有效的邮箱地址'
-                return false
-            }
-            return true
-        },
-        (field, msg) => {
-            errors.value[field] = msg
-        },
-    )
-}
-
-// 手机验证码发送工具
-const { send: sendPhoneOtp, sending: phoneCodeSending } = usePhoneOtp()
-const sendPhoneCode = async () => {
-    return await sendPhoneOtp(
-        phone.value,
-        'sign-in',
-        captcha,
-        () => {
-            if (!validatePhone(phone.value)) {
-                errors.value.phone = '请输入有效的手机号'
-                return false
-            }
-            return true
-        },
-        (field, msg) => {
-            errors.value[field] = msg
-        },
-    )
-}
-
-// 计算属性
-const canSendEmailCode = computed(() => {
-    return email.value.trim() && validateEmail(email.value) && !errors.value.email
-})
-
-const canSendPhoneCode = computed(() => {
-    return phone.value.trim() && validatePhone(phone.value) && !errors.value.phone
-})
-
-// 方法
-const changeTab = (tab: 'email' | 'phone') => {
-    // 如果短信功能未启用且尝试切换到手机登录，提示错误并阻止切换
-    if (tab === 'phone' && !phoneEnabled) {
-        toast.add({
-            severity: 'error',
-            summary: '功能未启用',
-            detail: '短信功能未启用，请使用邮箱验证码登录',
-            life: 3000,
-        })
-        return
-    }
-
-    params.tab = tab
-    activeTab.value = tab
-
-    // 清除错误状态
-    errors.value = {}
-    captcha.value?.reset()
-}
-
-const sendEmailVerificationCode = async () => {
-    errors.value.email = ''
-
-    if (!validateEmail(email.value)) {
-        const message = '请输入有效的邮箱地址'
-        errors.value.email = message
-        toast.add({
-            severity: 'error',
-            summary: '发送失败',
-            detail: message,
-            life: 5000,
-        })
-        return false
-    }
-
-    const success = await sendEmailCode()
-
-    if (success) {
-        toast.add({
-            severity: 'success',
-            summary: '验证码已发送',
-            detail: '验证码已发送到您的邮箱，请注意查收',
-            life: 3000,
-        })
-        return true
-    }
-
-    if (!errors.value.email) {
-        errors.value.email = errors.value.captcha || '验证码发送失败'
-    }
-    return false
-}
-
-const handleEmailCodeInput = () => {
-    errors.value.emailCode = ''
-
-    // 自动提交（当输入6位数字时）
-    if (emailCode.value.length === 6 && /^\d{6}$/.test(emailCode.value)) {
-        // 延迟一下再自动登录，给用户反应时间
-        setTimeout(() => {
-            if (emailCode.value.length === 6 && !isEmailLoggingIn.value) {
-                loginWithEmail()
-            }
-        }, 500)
-    }
-}
-
-const handlePhoneCodeInput = () => {
-    errors.value.phoneCode = ''
-
-    // 自动提交（当输入6位数字时）
-    if (phoneCode.value.length === 6 && /^\d{6}$/.test(phoneCode.value)) {
-        // 延迟一下再自动登录，给用户反应时间
-        setTimeout(() => {
-            if (phoneCode.value.length === 6 && !isPhoneLoggingIn.value) {
-                loginWithPhone()
-            }
-        }, 500)
-    }
-}
-
-const sendPhoneVerificationCode = async () => {
-    errors.value.phone = ''
-
-    if (!validatePhone(phone.value)) {
-        const message = '请输入有效的手机号'
-        errors.value.phone = message
-        toast.add({
-            severity: 'error',
-            summary: '发送失败',
-            detail: message,
-            life: 5000,
-        })
-        return false
-    }
-
-    const success = await sendPhoneCode()
-
-    if (success) {
-        toast.add({
-            severity: 'success',
-            summary: '验证码已发送',
-            detail: '验证码已发送到您的手机，请注意查收',
-            life: 3000,
-        })
-        return true
-    }
-
-    if (!errors.value.phone) {
-        errors.value.phone = errors.value.captcha || '验证码发送失败'
-    }
-    return false
-}
-
-const loginWithEmail = async () => {
-    try {
-        isEmailLoggingIn.value = true
-        errors.value.emailCode = ''
-
-        if (!emailCode.value || emailCode.value.length !== 6) {
-            errors.value.emailCode = '请输入6位验证码'
-            return
-        }
-
-        if (!/^\d{6}$/.test(emailCode.value)) {
-            errors.value.emailCode = '验证码格式不正确'
-            return
-        }
-
-        // 使用authClient进行邮箱验证码登录
-        const result = await authClient.signIn.emailOtp({
-            email: email.value,
-            otp: emailCode.value,
-        })
-
-        if (result.error) {
-            throw new Error(result.error.message || '登录失败')
-        }
-
-        // 成功登录
-        toast.add({
-            severity: 'success',
-            summary: '登录成功',
-            detail: '即将跳转到个人中心',
-            life: 2000,
-        })
-
-        navigateAfterLoginWithDelay(600)
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '登录失败'
-        errors.value.emailCode = errorMessage
-        toast.add({
-            severity: 'error',
-            summary: '登录失败',
-            detail: errorMessage,
-            life: 5000,
-        })
-    } finally {
-        isEmailLoggingIn.value = false
-    }
-}
-
-const loginWithPhone = async () => {
-    try {
-        isPhoneLoggingIn.value = true
-        errors.value.phoneCode = ''
-
-        if (!phoneCode.value || phoneCode.value.length !== 6) {
-            errors.value.phoneCode = '请输入6位验证码'
-            return
-        }
-
-        if (!/^\d{6}$/.test(phoneCode.value)) {
-            errors.value.phoneCode = '验证码格式不正确'
-            return
-        }
-
-        // 使用authClient进行手机验证码登录
-        const result = await authClient.phoneNumber.verify({
-            phoneNumber: phone.value,
-            code: phoneCode.value,
-        })
-
-        if (result.error) {
-            throw new Error(result.error.message || '登录失败')
-        }
-
-        // 成功登录
-        toast.add({
-            severity: 'success',
-            summary: '登录成功',
-            detail: '即将跳转到个人中心',
-            life: 2000,
-        })
-
-        navigateAfterLoginWithDelay(600)
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '登录失败'
-        errors.value.phoneCode = errorMessage
-        toast.add({
-            severity: 'error',
-            summary: '登录失败',
-            detail: errorMessage,
-            life: 5000,
-        })
-    } finally {
-        isPhoneLoggingIn.value = false
-    }
-}
-
-// 初始化
-onMounted(() => {
-    // 确保默认值
-    if (!['email', 'phone'].includes(params.tab as string)) {
-        params.tab = 'email'
-    }
-
-    // 如果手机登录未启用但URL参数是phone，则切换到email
-    if (params.tab === 'phone' && !phoneEnabled) {
-        params.tab = 'email'
-    }
-
-    activeTab.value = params.tab
-})
+const {
+    activeTab,
+    email,
+    emailCode,
+    isEmailLoggingIn,
+    phone,
+    phoneCode,
+    isPhoneLoggingIn,
+    errors,
+    captcha,
+    emailCodeSending,
+    phoneCodeSending,
+    phoneEnabled,
+    canSendEmailCode,
+    canSendPhoneCode,
+    changeTab,
+    sendEmailVerificationCode,
+    sendPhoneVerificationCode,
+    loginWithEmail,
+    loginWithPhone,
+    handleEmailCodeInput,
+    handlePhoneCodeInput,
+} = useQuickLoginFlow()
 </script>
 
 <style scoped lang="scss">

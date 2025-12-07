@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { debounce } from 'lodash-es'
@@ -12,6 +12,9 @@ export function useUserManagement() {
     const toast = useToast()
     const confirm = useConfirm()
     const { getSortField } = useUserTable()
+
+    const sessionState = authClient.useSession()
+    const session = computed(() => sessionState.value?.data)
 
     // 筛选状态 (Specific to this view)
     const selectedRole = ref(null)
@@ -362,6 +365,60 @@ export function useUserManagement() {
         })
     }
 
+    // Dialog 状态
+    const showCreateDialog = ref(false)
+    const showBanDialog = ref(false)
+    const showSessionsDialog = ref(false)
+    const showDetailDialog = ref(false)
+    const currentUser = ref<any>(null)
+
+    // 批量操作菜单
+    const batchMenu = ref()
+    const batchMenuItems = [
+        {
+            label: '禁用选中用户',
+            icon: 'mdi mdi-block-helper',
+            command: () => batchBanUsers(),
+        },
+        {
+            label: '解禁选中用户',
+            icon: 'mdi mdi-check-circle',
+            command: () => batchUnbanUsers(),
+        },
+        {
+            label: '删除选中用户',
+            icon: 'mdi mdi-delete',
+            command: () => batchDeleteUsers(),
+        },
+    ]
+
+    const toggleBatchMenu = (event: any) => {
+        batchMenu.value.toggle(event)
+    }
+
+    // Dialog 操作
+    const openBanDialog = (user: any) => {
+        currentUser.value = user
+        showBanDialog.value = true
+    }
+
+    const openSessionsDialog = (user: any) => {
+        currentUser.value = user
+        showSessionsDialog.value = true
+    }
+
+    const openDetailDialog = (user: any) => {
+        currentUser.value = user
+        showDetailDialog.value = true
+    }
+
+    const isCurrentUser = (userId: string) => session.value?.user?.id === userId
+
+    // 初始化
+    onMounted(() => {
+        loadUsers()
+    })
+
     return {
         loading,
         users,
@@ -385,5 +442,18 @@ export function useUserManagement() {
         batchBanUsers,
         batchUnbanUsers,
         batchDeleteUsers,
+        // Dialogs & Actions
+        showCreateDialog,
+        showBanDialog,
+        showSessionsDialog,
+        showDetailDialog,
+        currentUser,
+        batchMenu,
+        batchMenuItems,
+        toggleBatchMenu,
+        openBanDialog,
+        openSessionsDialog,
+        openDetailDialog,
+        isCurrentUser,
     }
 }

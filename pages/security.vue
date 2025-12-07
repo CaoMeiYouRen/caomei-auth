@@ -103,11 +103,8 @@ const {
     revokeOtherSessions,
     confirmRevokeAllSessions,
     revokeAllSessions,
+    goProfile,
 } = useSecuritySettings()
-
-function goProfile() {
-    navigateTo('/profile')
-}
 </script>
 
 <style scoped lang="scss">

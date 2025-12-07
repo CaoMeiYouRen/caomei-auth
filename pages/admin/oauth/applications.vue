@@ -213,9 +213,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useConfirm } from 'primevue/useconfirm'
-import { debounce } from 'lodash-es'
 import { useApplicationManagement } from '@/composables/admin/use-application-management'
 import CreateApplicationDialog from '@/components/admin/oauth/create-application-dialog.vue'
 import ApplicationSecretDialog from '@/components/admin/oauth/application-secret-dialog.vue'
@@ -225,7 +222,6 @@ definePageMeta({
     layout: 'admin',
 })
 
-const confirm = useConfirm()
 const {
     loading,
     applications,
@@ -235,64 +231,23 @@ const {
     sortField,
     sortOrder,
     searchQuery,
-    refreshApplications,
     handleRefreshApplications,
     toggleApplicationStatus,
-    deleteApplication,
     onPage,
     onSort,
-    onSearch,
+    // Dialogs & Actions
+    showCreateDialog,
+    showSecretDialog,
+    showApiDocsDialog,
+    editingApplication,
+    newApplication,
+    openCreateDialog,
+    editApplication,
+    confirmDelete,
+    onApplicationCreated,
+    onApplicationUpdated,
+    onSearchInput,
 } = useApplicationManagement()
-
-const onSearchInput = debounce((value: string | undefined) => {
-    searchQuery.value = value || ''
-    onSearch()
-}, 300)
-
-// Dialog states
-const showCreateDialog = ref(false)
-const showSecretDialog = ref(false)
-const showApiDocsDialog = ref(false)
-
-const editingApplication = ref<any>(null)
-const newApplication = ref<any>(null)
-
-// Actions
-const openCreateDialog = () => {
-    editingApplication.value = null
-    showCreateDialog.value = true
-}
-
-const editApplication = (app: any) => {
-    editingApplication.value = app
-    showCreateDialog.value = true
-}
-
-const confirmDelete = (app: any) => {
-    confirm.require({
-        message: `确定要删除应用 "${app.name}" 吗？此操作无法撤销。`,
-        header: '确认删除',
-        icon: 'mdi mdi-alert-circle',
-        rejectLabel: '取消',
-        acceptLabel: '删除',
-        rejectClass: 'p-button-secondary p-button-text',
-        acceptClass: 'p-button-danger',
-        accept: () => {
-            deleteApplication(app.id)
-        },
-    })
-}
-
-// Event handlers
-const onApplicationCreated = (app: any) => {
-    newApplication.value = app
-    showSecretDialog.value = true
-    refreshApplications()
-}
-
-const onApplicationUpdated = () => {
-    refreshApplications()
-}
 </script>
 
 <style lang="scss" scoped>

@@ -281,6 +281,10 @@ export function useSecuritySettings() {
         }
     }
 
+    const goProfile = () => {
+        navigateTo('/profile')
+    }
+
     onMounted(() => {
         listSessions()
     })
@@ -322,5 +326,6 @@ export function useSecuritySettings() {
         revokeOtherSessions,
         confirmRevokeAllSessions,
         revokeAllSessions,
+        goProfile,
     }
 }

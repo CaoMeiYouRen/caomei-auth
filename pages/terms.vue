@@ -75,9 +75,12 @@
 </template>
 
 <script setup lang="ts">
-const config = useRuntimeConfig().public
-const contactEmail = config.contactEmail
-const contactEmailLink = `mailto:${config.contactEmail}`
+import { useStaticPageFlow } from '@/composables/use-static-page-flow'
+
+const {
+    contactEmail,
+    contactEmailLink,
+} = useStaticPageFlow()
 </script>
 
 <style scoped lang="scss">

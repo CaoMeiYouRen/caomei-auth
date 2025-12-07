@@ -257,10 +257,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
 import { useUserManagement } from '@/composables/admin/use-user-management'
 import { useUserTable } from '@/composables/admin/use-user-table'
-import { authClient } from '@/lib/auth-client'
 import CreateUserDialog from '@/components/admin/users/create-user-dialog.vue'
 import BanUserDialog from '@/components/admin/users/ban-user-dialog.vue'
 import UserSessionsDialog from '@/components/admin/users/user-sessions-dialog.vue'
@@ -270,16 +268,12 @@ definePageMeta({
     layout: 'admin',
 })
 
-const sessionState = authClient.useSession()
-const session = computed(() => sessionState.value?.data)
-
 // 使用 Composables
 const {
     loading,
     users,
     totalUsers,
     pageSize,
-    currentPage,
     searchQuery,
     selectedRole,
     selectedStatus,
@@ -296,6 +290,19 @@ const {
     batchBanUsers,
     batchUnbanUsers,
     batchDeleteUsers,
+    // Dialogs & Actions
+    showCreateDialog,
+    showBanDialog,
+    showSessionsDialog,
+    showDetailDialog,
+    currentUser,
+    batchMenu,
+    batchMenuItems,
+    toggleBatchMenu,
+    openBanDialog,
+    openSessionsDialog,
+    openDetailDialog,
+    isCurrentUser,
 } = useUserManagement()
 
 const {
@@ -304,60 +311,6 @@ const {
     formatDate,
     getSortFieldLabel,
 } = useUserTable()
-
-// Dialog 状态
-const showCreateDialog = ref(false)
-const showBanDialog = ref(false)
-const showSessionsDialog = ref(false)
-const showDetailDialog = ref(false)
-const currentUser = ref<any>(null)
-
-// 批量操作菜单
-const batchMenu = ref()
-const batchMenuItems = [
-    {
-        label: '禁用选中用户',
-        icon: 'mdi mdi-block-helper',
-        command: () => batchBanUsers(),
-    },
-    {
-        label: '解禁选中用户',
-        icon: 'mdi mdi-check-circle',
-        command: () => batchUnbanUsers(),
-    },
-    {
-        label: '删除选中用户',
-        icon: 'mdi mdi-delete',
-        command: () => batchDeleteUsers(),
-    },
-]
-
-const toggleBatchMenu = (event: any) => {
-    batchMenu.value.toggle(event)
-}
-
-// Dialog 操作
-const openBanDialog = (user: any) => {
-    currentUser.value = user
-    showBanDialog.value = true
-}
-
-const openSessionsDialog = (user: any) => {
-    currentUser.value = user
-    showSessionsDialog.value = true
-}
-
-const openDetailDialog = (user: any) => {
-    currentUser.value = user
-    showDetailDialog.value = true
-}
-
-const isCurrentUser = (userId: string) => session.value?.user?.id === userId
-
-// 初始化
-onMounted(() => {
-    loadUsers()
-})
 </script>
 
 <style lang="scss" scoped>

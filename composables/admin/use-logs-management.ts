@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import { authClient } from '@/lib/auth-client'
@@ -94,6 +94,44 @@ export function useLogsManagement() {
         }
     }
 
+    // 统计数据
+    const statsData = ref<any>(null)
+    const statsLoading = ref(false)
+
+    // 计算属性
+    const providerStatsData = computed(() => (statsData.value?.providers || []).sort((a: any, b: any) => b.count - a.count))
+    const trendData = computed(() => statsData.value?.trend || [])
+
+    // 加载统计数据
+    const loadStats = async () => {
+        try {
+            statsLoading.value = true
+            const { data } = await $fetch<any>('/api/admin/logs/stats')
+            statsData.value = data
+        } catch (error: any) {
+            console.error('加载统计数据失败:', error)
+            toast.add({
+                severity: 'error',
+                summary: '加载失败',
+                detail: error.message || '加载统计数据失败',
+                life: 3000,
+            })
+        } finally {
+            statsLoading.value = false
+        }
+    }
+
+    // 刷新数据
+    const refreshData = async () => {
+        await loadStats()
+    }
+
+    // 初始化
+    onMounted(() => {
+        // 加载数据
+        loadStats()
+    })
+
     return {
         loading,
         sessions,
@@ -111,5 +149,12 @@ export function useLogsManagement() {
         onPage,
         onSort,
         onSearch,
+        // Stats
+        statsData,
+        statsLoading,
+        providerStatsData,
+        trendData,
+        loadStats,
+        refreshData,
     }
 }

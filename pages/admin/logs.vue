@@ -43,9 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
-import { useConfirm } from 'primevue/useconfirm'
 import { useLogsManagement } from '@/composables/admin/use-logs-management'
 
 // Components
@@ -61,9 +58,6 @@ definePageMeta({
     title: '登录统计 - 草梅 Auth',
     layout: 'admin',
 })
-
-const toast = useToast()
-const confirm = useConfirm()
 
 const {
     loading: sessionsLoading,
@@ -82,45 +76,13 @@ const {
     onPage,
     onSort,
     onSearch,
+    // Stats
+    statsData,
+    statsLoading,
+    providerStatsData,
+    trendData,
+    refreshData,
 } = useLogsManagement()
-
-// 统计数据
-const statsData = ref<any>(null)
-const statsLoading = ref(false)
-
-// 计算属性
-const providerStatsData = computed(() => (statsData.value?.providers || []).sort((a: any, b: any) => b.count - a.count))
-const trendData = computed(() => statsData.value?.trend || [])
-
-// 加载统计数据
-const loadStats = async () => {
-    try {
-        statsLoading.value = true
-        const { data } = await $fetch('/api/admin/logs/stats')
-        statsData.value = data
-    } catch (error: any) {
-        console.error('加载统计数据失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '加载失败',
-            detail: error.message || '加载统计数据失败',
-            life: 3000,
-        })
-    } finally {
-        statsLoading.value = false
-    }
-}
-
-// 刷新数据
-const refreshData = async () => {
-    await loadStats()
-}
-
-// 初始化
-onMounted(() => {
-    // 加载数据
-    loadStats()
-})
 </script>
 
 <style lang="scss" scoped>
