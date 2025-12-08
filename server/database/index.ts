@@ -1,4 +1,4 @@
-import ms from 'ms'
+import { ms } from 'ms'
 import { DataSource, type DataSourceOptions } from 'typeorm'
 import { Account } from '../entities/account'
 import { Session } from '../entities/session'

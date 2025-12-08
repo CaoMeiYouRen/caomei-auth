@@ -1,5 +1,5 @@
 import { parse } from 'better-bytes'
-import ms from 'ms'
+import { ms } from 'ms'
 /**
  * 基础配置
  * 包含服务器基本设置、备案信息等

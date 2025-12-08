@@ -14,7 +14,7 @@ import {
     jwt,
 } from 'better-auth/plugins'
 import { sso } from '@better-auth/sso'
-import ms from 'ms'
+import { ms } from 'ms'
 import { localization } from 'better-auth-localization'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
 import { sendEmail } from '@/server/utils/email'
