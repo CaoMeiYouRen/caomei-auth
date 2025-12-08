@@ -8,8 +8,8 @@ describe('useForm', () => {
             initialValues: { name: 'test', age: 18 },
         })
 
-        expect(values.name).toBe('test')
-        expect(values.age).toBe(18)
+        expect(values.value.name).toBe('test')
+        expect(values.value.age).toBe(18)
         expect(errors.value).toEqual({})
         expect(isValid.value).toBe(true)
     })
@@ -32,7 +32,7 @@ describe('useForm', () => {
         expect(errors.value.name).toBe('Required')
         expect(isValid.value).toBe(false)
 
-        values.name = 'ok'
+        values.value.name = 'ok'
         const valid2 = await runValidation()
         expect(valid2).toBe(true)
         expect(errors.value).toEqual({})
@@ -60,10 +60,10 @@ describe('useForm', () => {
         expect(submitting.value).toBe(false)
 
         // Pass validation
-        values.name = 'yes'
+        values.value.name = 'yes'
         const result2 = await handleSubmit(onSubmit)
         expect(result2).toBe(true)
-        expect(onSubmit).toHaveBeenCalledWith(values)
+        expect(onSubmit).toHaveBeenCalledWith(values.value)
         expect(submitting.value).toBe(false)
     })
 
@@ -73,10 +73,10 @@ describe('useForm', () => {
         })
 
         setField('count', 5)
-        expect(values.count).toBe(5)
+        expect(values.value.count).toBe(5)
 
         reset()
-        expect(values.count).toBe(0)
+        expect(values.value.count).toBe(0)
     })
 
     it('resets form to new values', () => {
@@ -85,7 +85,7 @@ describe('useForm', () => {
         })
 
         reset({ count: 10 })
-        expect(values.count).toBe(10)
+        expect(values.value.count).toBe(10)
     })
 
     it('validates on change if enabled', async () => {

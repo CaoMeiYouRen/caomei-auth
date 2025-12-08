@@ -1,4 +1,4 @@
-import { ref, reactive, computed, type Ref } from 'vue'
+import { ref, computed, type Ref } from 'vue'
 import { type ZodSchema } from 'zod'
 
 export type ValidatorFn<T> = (values: T) => Promise<Record<string, string> | null> | Record<string, string> | null
@@ -13,7 +13,7 @@ export interface UseFormOptions<T> {
 export function useForm<T extends Record<string, any> = Record<string, any>>(options: UseFormOptions<T>) {
     const { initialValues, validate, zodSchema, validateOnChange = false } = options
 
-    const values = reactive({ ...(initialValues as object) }) as T
+    const values = ref({ ...initialValues }) as Ref<T>
     const errors: Ref<Record<string, string>> = ref({})
     const submitting = ref(false)
 
@@ -21,7 +21,7 @@ export function useForm<T extends Record<string, any> = Record<string, any>>(opt
         errors.value = {}
 
         if (zodSchema) {
-            const result = zodSchema.safeParse(values)
+            const result = zodSchema.safeParse(values.value)
             if (!result.success) {
                 const zodErrors: Record<string, string> = {}
                 result.error.issues.forEach((err) => {
@@ -38,7 +38,7 @@ export function useForm<T extends Record<string, any> = Record<string, any>>(opt
 
         if (validate) {
             try {
-                const res = await validate(values)
+                const res = await validate(values.value)
                 if (res) {
                     errors.value = { ...errors.value, ...res }
                 }
@@ -58,7 +58,7 @@ export function useForm<T extends Record<string, any> = Record<string, any>>(opt
             if (!ok) {
                 return false
             }
-            await onSubmit(values)
+            await onSubmit(values.value)
             return true
         } finally {
             submitting.value = false
@@ -68,14 +68,12 @@ export function useForm<T extends Record<string, any> = Record<string, any>>(opt
     function reset(newValues?: Partial<T>) {
         // reset values to initial or provided
         const base = newValues ? { ...initialValues, ...newValues } : initialValues
-        Object.keys(base).forEach((k) => {
-            (values as any)[k] = (base as any)[k]
-        })
+        values.value = { ...base } as T
         errors.value = {}
     }
 
     function setField<K extends keyof T>(key: K, value: T[K]) {
-        values[key] = value
+        values.value[key] = value
         if (validateOnChange) {
             // fire-and-forget
             void runValidation()
