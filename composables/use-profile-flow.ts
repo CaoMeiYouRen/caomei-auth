@@ -29,9 +29,24 @@ export async function useProfileFlow() {
     const showEmailModal = ref(false)
     const showPhoneModal = ref(false)
     const showSetUsernameDialog = ref(false)
+    // Privacy Mode
+    const privacyMode = ref(false)
+
+    onMounted(async () => {
+        await fetchUserAccounts()
+
+        if (import.meta.client) {
+            const savedPrivacyMode = localStorage.getItem('caomei-auth-privacy-mode')
+            if (savedPrivacyMode !== null) {
+                privacyMode.value = savedPrivacyMode === 'true'
+            }
+        }
+    })
+
 
     const { data: providersData } = await useFetch<{ providers: SocialProvider[] }>('/api/social/providers?includeDisabled=true')
     const isDark = useDark()
+
 
     const socialProviders = computed(() => {
         const providers = providersData.value?.providers || []
@@ -48,6 +63,7 @@ export async function useProfileFlow() {
         const providerObj = socialProviders.value.find((p) => p.provider === provider)
         return providerObj ? providerObj.name : provider
     }
+
 
     // Session handling
     const { data: session } = await authClient.useSession(useFetch)
@@ -91,6 +107,7 @@ export async function useProfileFlow() {
     const fetchUserAccounts = async () => {
         try {
             const accounts = await authClient.listAccounts({})
+            console.log('accounts', accounts.data)
             userAccounts.value = accounts.data?.filter((account) => account.providerId !== 'credential') || []
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '获取第三方账号信息失败'
@@ -258,20 +275,6 @@ export async function useProfileFlow() {
             },
         })
     }
-
-    // Privacy Mode
-    const privacyMode = ref(false)
-
-    onMounted(async () => {
-        await fetchUserAccounts()
-
-        if (import.meta.client) {
-            const savedPrivacyMode = localStorage.getItem('caomei-auth-privacy-mode')
-            if (savedPrivacyMode !== null) {
-                privacyMode.value = savedPrivacyMode === 'true'
-            }
-        }
-    })
 
     if (import.meta.client) {
         watch(privacyMode, (newValue) => {
