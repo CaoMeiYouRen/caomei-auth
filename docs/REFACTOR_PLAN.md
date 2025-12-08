@@ -131,9 +131,16 @@
         -   ✅ `useDataTable<T>(fetcher)`：管理分页 (`page`, `limit`)、排序 (`sort`)、过滤 (`query`)、加载状态 (`pending`)。
         -   ✅ `useForm<T>(schema)`：集成 `zod` 或 `valibot`，管理表单状态、校验错误信息、提交状态 (`submitting`)。
         -   ✅ `useApi<T>(url, options)`：封装 `useFetch`，统一处理全局错误（如网络异常、Token 过期自动刷新）。
+    -   **新增规划 (2025-12-08)**：
+        -   ⬜ `useClipboard`：封装 `navigator.clipboard` 与 Toast 提示，统一复制交互。
+        -   ⬜ `useConfirmAction`：封装 `useConfirm`，预设删除、登出等常用场景配置。
+        -   ⬜ `usePageMeta`：统一 SEO 标题格式与 Open Graph 标签生成。
+        -   ⬜ `useLogout`：统一登出逻辑与状态管理。
+        -   ⬜ `useStorage`：响应式本地存储封装（替代直接调用 `localStorage`）--采用 VueUse。
     -   **行动**：
         1. ✅ 改造 `composables/admin/use-user-management.ts` 使用 `useDataTable`。
         2. ⬜ 改造 Auth 相关表单使用 `useForm`（或继续优化 G1 中的 `useLoginFlow`）。
+        3. ⬜ 实现上述新增 Composables 并替换现有硬编码逻辑。
 
     #### 3.3 统一校验与工具 (`utils/shared`)
 
