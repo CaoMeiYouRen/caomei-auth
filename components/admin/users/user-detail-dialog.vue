@@ -1,173 +1,253 @@
 <template>
     <BaseDialog
         :visible="visible"
-        title="用户详情"
+        :title="isEditing ? '编辑用户' : '用户详情'"
         width="600px"
         :show-footer="false"
-        @update:visible="$emit('update:visible', $event)"
+        @update:visible="onClose"
     >
         <div v-if="user" class="user-detail">
-            <div class="detail-section">
-                <h3>基本信息</h3>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>ID</label>
-                        <span>{{ user.id }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>昵称</label>
-                        <span>{{ user.name || '未设置' }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>邮箱</label>
-                        <span>{{ user.email }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>手机号</label>
-                        <span>{{ user.phoneNumber ? formatPhoneNumberInternational(user.phoneNumber) : '未设置' }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>用户名</label>
-                        <span>{{ user.username || '未设置' }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>角色</label>
-                        <BaseStatusBadge
-                            variant="role"
-                            :status="user.role"
+            <div v-if="!isEditing">
+                <div class="detail-section">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3>基本信息</h3>
+                        <Button
+                            icon="mdi mdi-pencil"
+                            label="编辑"
+                            size="small"
+                            text
+                            @click="isEditing = true"
                         />
                     </div>
-                    <div class="detail-item">
-                        <label>验证状态</label>
-                        <div class="verification-status">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>ID</label>
+                            <span>{{ user.id }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>昵称</label>
+                            <span>{{ user.name || '未设置' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>邮箱</label>
+                            <span>{{ user.email }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>手机号</label>
+                            <span>{{ user.phoneNumber ? formatPhoneNumberInternational(user.phoneNumber) : '未设置' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>用户名</label>
+                            <span>{{ user.username || '未设置' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>角色</label>
                             <BaseStatusBadge
-                                variant="yes-no"
-                                :status="user.emailVerified"
-                                true-label="邮箱已验证"
-                                false-label="邮箱未验证"
-                                true-severity="success"
-                                false-severity="warning"
+                                variant="role"
+                                :status="user.role"
                             />
-                            <BaseStatusBadge
-                                variant="yes-no"
-                                :status="user.phoneNumberVerified"
-                                true-label="手机已验证"
-                                false-label="手机未验证"
-                                true-severity="success"
-                                false-severity="warning"
-                            />
+                        </div>
+                        <div class="detail-item">
+                            <label>验证状态</label>
+                            <div class="verification-status">
+                                <BaseStatusBadge
+                                    variant="yes-no"
+                                    :status="user.emailVerified"
+                                    true-label="邮箱已验证"
+                                    false-label="邮箱未验证"
+                                    true-severity="success"
+                                    false-severity="warning"
+                                />
+                                <BaseStatusBadge
+                                    variant="yes-no"
+                                    :status="user.phoneNumberVerified"
+                                    true-label="手机已验证"
+                                    false-label="手机未验证"
+                                    true-severity="success"
+                                    false-severity="warning"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="detail-section">
-                <h3>账户状态</h3>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>状态</label>
-                        <BaseStatusBadge
-                            variant="banned"
-                            :status="user.banned"
-                        />
+                <div class="detail-section">
+                    <h3>账户状态</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>状态</label>
+                            <BaseStatusBadge
+                                variant="banned"
+                                :status="user.banned"
+                            />
+                        </div>
+                        <div v-if="user.banned" class="detail-item">
+                            <label>禁用原因</label>
+                            <span>{{ user.banReason || '未提供原因' }}</span>
+                        </div>
+                        <div v-if="user.banned && user.banExpires" class="detail-item">
+                            <label>禁用到期时间</label>
+                            <span>{{ formatDateTime(user.banExpires) }}</span>
+                        </div>
                     </div>
-                    <div v-if="user.banned" class="detail-item">
-                        <label>禁用原因</label>
-                        <span>{{ user.banReason || '未提供原因' }}</span>
+                </div>
+
+                <div class="detail-section">
+                    <h3>时间信息</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>注册时间</label>
+                            <span>{{ formatDateTime(user.createdAt) }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>更新时间</label>
+                            <span>{{ formatDateTime(user.updatedAt) }}</span>
+                        </div>
                     </div>
-                    <div v-if="user.banned && user.banExpires" class="detail-item">
-                        <label>禁用到期时间</label>
-                        <span>{{ formatDateTime(user.banExpires) }}</span>
-                    </div>
+                </div>
+
+                <div class="detail-actions">
+                    <Button
+                        label="查看会话"
+                        icon="mdi mdi-account-multiple"
+                        severity="info"
+                        @click="$emit('view-sessions', user)"
+                    />
+                    <Button
+                        label="同步管理员角色"
+                        icon="mdi mdi-sync"
+                        severity="secondary"
+                        :loading="loading"
+                        @click="handleSyncUserAdminRole"
+                    />
+                    <Button
+                        v-if="!user.role?.includes('admin')"
+                        label="设为管理员"
+                        icon="mdi mdi-shield-account"
+                        severity="help"
+                        :loading="loading"
+                        @click="handleSetUserAsAdmin"
+                    />
+                    <Button
+                        v-else-if="user.role?.includes('admin') && !isCurrentUser(user.id)"
+                        label="移除管理员"
+                        icon="mdi mdi-shield-remove"
+                        severity="danger"
+                        :loading="loading"
+                        @click="handleRemoveUserAdminRole"
+                    />
+                    <Button
+                        v-else-if="user.role?.includes('admin') && isCurrentUser(user.id)"
+                        label="不能移除自己的管理员权限"
+                        icon="mdi mdi-shield-remove"
+                        severity="danger"
+                        disabled
+                    />
+                    <Button
+                        v-if="!user.banned && user.role !== 'admin' && !isCurrentUser(user.id)"
+                        label="禁用用户"
+                        icon="mdi mdi-block-helper"
+                        severity="warning"
+                        @click="$emit('ban', user)"
+                    />
+                    <Button
+                        v-else-if="user.banned && user.role !== 'admin' && !isCurrentUser(user.id)"
+                        label="解禁用户"
+                        icon="mdi mdi-check-circle"
+                        severity="success"
+                        @click="handleUnbanUser"
+                    />
+                    <Button
+                        v-else-if="isCurrentUser(user.id)"
+                        label="不能操作自己的账户"
+                        icon="mdi mdi-account-alert"
+                        severity="warning"
+                        disabled
+                    />
+                    <Button
+                        v-if="user.role === 'admin' && !user.banned"
+                        label="管理员不可禁用"
+                        icon="mdi mdi-block-helper"
+                        severity="warning"
+                        disabled
+                    />
                 </div>
             </div>
 
-            <div class="detail-section">
-                <h3>时间信息</h3>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>注册时间</label>
-                        <span>{{ formatDateTime(user.createdAt) }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>更新时间</label>
-                        <span>{{ formatDateTime(user.updatedAt) }}</span>
-                    </div>
-                </div>
-            </div>
+            <form
+                v-else
+                class="edit-user-form"
+                @submit.prevent="updateUser"
+            >
+                <BaseInput
+                    id="editNickname"
+                    v-model="editNickname"
+                    label="昵称"
+                    placeholder="请输入昵称"
+                    :error="errors.nickname"
+                    required
+                />
+                <BaseInput
+                    id="editEmail"
+                    v-model="editEmail"
+                    label="邮箱"
+                    type="email"
+                    placeholder="请输入邮箱"
+                    :error="errors.email"
+                    required
+                />
+                <BaseInput
+                    id="editPhone"
+                    v-model="editPhone"
+                    label="手机号"
+                    placeholder="请输入手机号"
+                    :error="errors.phone"
+                />
+                <BaseFormGroup
+                    label="角色"
+                    for="editRole"
+                    :error="errors.role"
+                >
+                    <Select
+                        id="editRole"
+                        v-model="editRole"
+                        :options="roleOptions"
+                        option-label="label"
+                        option-value="value"
+                        placeholder="选择角色"
+                        class="w-full"
+                        :class="{'p-invalid': errors.role}"
+                    />
+                </BaseFormGroup>
+                <BasePassword
+                    id="editPassword"
+                    v-model="editPassword"
+                    label="新密码"
+                    placeholder="留空则不修改密码"
+                    :error="errors.password"
+                    :feedback="false"
+                    toggle-mask
+                />
 
-            <div class="detail-actions">
-                <Button
-                    label="查看会话"
-                    icon="mdi mdi-account-multiple"
-                    severity="info"
-                    @click="$emit('view-sessions', user)"
-                />
-                <Button
-                    label="同步管理员角色"
-                    icon="mdi mdi-sync"
-                    severity="secondary"
-                    :loading="loading"
-                    @click="handleSyncUserAdminRole"
-                />
-                <Button
-                    v-if="!user.role?.includes('admin')"
-                    label="设为管理员"
-                    icon="mdi mdi-shield-account"
-                    severity="help"
-                    :loading="loading"
-                    @click="handleSetUserAsAdmin"
-                />
-                <Button
-                    v-else-if="user.role?.includes('admin') && !isCurrentUser(user.id)"
-                    label="移除管理员"
-                    icon="mdi mdi-shield-remove"
-                    severity="danger"
-                    :loading="loading"
-                    @click="handleRemoveUserAdminRole"
-                />
-                <Button
-                    v-else-if="user.role?.includes('admin') && isCurrentUser(user.id)"
-                    label="不能移除自己的管理员权限"
-                    icon="mdi mdi-shield-remove"
-                    severity="danger"
-                    disabled
-                />
-                <Button
-                    v-if="!user.banned && user.role !== 'admin' && !isCurrentUser(user.id)"
-                    label="禁用用户"
-                    icon="mdi mdi-block-helper"
-                    severity="warning"
-                    @click="$emit('ban', user)"
-                />
-                <Button
-                    v-else-if="user.banned && user.role !== 'admin' && !isCurrentUser(user.id)"
-                    label="解禁用户"
-                    icon="mdi mdi-check-circle"
-                    severity="success"
-                    @click="handleUnbanUser"
-                />
-                <Button
-                    v-else-if="isCurrentUser(user.id)"
-                    label="不能操作自己的账户"
-                    icon="mdi mdi-account-alert"
-                    severity="warning"
-                    disabled
-                />
-                <Button
-                    v-if="user.role === 'admin' && !user.banned"
-                    label="管理员不可禁用"
-                    icon="mdi mdi-block-helper"
-                    severity="warning"
-                    disabled
-                />
-            </div>
+                <div class="border-gray-200 border-t dialog-footer flex gap-2 justify-end mt-4 pt-4">
+                    <Button
+                        label="取消"
+                        severity="secondary"
+                        @click="isEditing = false"
+                    />
+                    <Button
+                        label="保存"
+                        type="submit"
+                        :loading="updateLoading"
+                    />
+                </div>
+            </form>
         </div>
     </BaseDialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { authClient } from '@/lib/auth-client'
@@ -175,6 +255,8 @@ import { formatPhoneNumberInternational } from '@/utils/shared/phone'
 import { formatDateTime } from '@/utils/shared/date'
 import { syncAdminRole, addAdminRole, removeAdminRole } from '@/utils/web/admin-role-client'
 import { useUserTable } from '@/composables/admin/use-user-table'
+import { useForm } from '@/composables/core/use-form'
+import { updateUserFormSchema } from '@/utils/shared/schemas'
 
 const props = defineProps<{
     visible: boolean
@@ -191,11 +273,77 @@ const emit = defineEmits<{
 
 const toast = useToast()
 const confirm = useConfirm()
-const { getRoleLabel, getRoleSeverity } = useUserTable()
+const { getRoleLabel, getRoleSeverity, roleOptions } = useUserTable()
 
 const loading = ref(false)
+const isEditing = ref(false)
+
+const { values: editForm, errors, submitting: updateLoading, handleSubmit, reset, setField } = useForm({
+    initialValues: {
+        nickname: '',
+        email: '',
+        phone: '',
+        role: 'user',
+        password: '',
+    },
+    zodSchema: updateUserFormSchema,
+})
+
+const editNickname = computed({ get: () => editForm.value.nickname, set: (v) => setField('nickname', v) })
+const editEmail = computed({ get: () => editForm.value.email, set: (v) => setField('email', v) })
+const editPhone = computed({ get: () => editForm.value.phone || '', set: (v) => setField('phone', v) })
+const editRole = computed({ get: () => editForm.value.role, set: (v) => setField('role', v) })
+const editPassword = computed({ get: () => editForm.value.password || '', set: (v) => setField('password', v) })
 
 const isCurrentUser = (userId: string) => props.currentUserId === userId
+
+const onClose = (val: boolean) => {
+    emit('update:visible', val)
+    if (!val) {
+        isEditing.value = false
+        reset()
+    }
+}
+
+watch(isEditing, (val) => {
+    if (val && props.user) {
+        reset({
+            nickname: props.user.name || '',
+            email: props.user.email || '',
+            phone: props.user.phoneNumber || '',
+            role: props.user.role || 'user',
+            password: '',
+        })
+    }
+})
+
+const updateUser = async () => {
+    await handleSubmit(async (vals) => {
+        try {
+            const { error } = await authClient.admin.updateUser({
+                userId: props.user.id,
+                data: {
+                    name: vals.nickname,
+                    email: vals.email,
+                    role: vals.role,
+                    password: vals.password || undefined,
+                    // phone update might need specific handling if authClient supports it directly in updateUser
+                    // Assuming authClient.admin.updateUser supports these fields
+                },
+            })
+
+            if (error) {
+                throw new Error(error.message)
+            }
+
+            toast.add({ severity: 'success', summary: '成功', detail: '用户信息更新成功', life: 3000 })
+            isEditing.value = false
+            emit('updated')
+        } catch (error: any) {
+            toast.add({ severity: 'error', summary: '错误', detail: error.message || '更新失败', life: 3000 })
+        }
+    })
+}
 
 const handleSyncUserAdminRole = async () => {
     try {

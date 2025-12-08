@@ -139,12 +139,12 @@
         -   ✅ `useStorage`：响应式本地存储封装（替代直接调用 `localStorage`）--采用 VueUse（已实现于 `composables/utils/use-storage.ts`）。
     -   **行动**：
         1. ✅ 改造 `composables/admin/use-user-management.ts` 使用 `useDataTable`。
-        2. ⬜ 改造 Auth 相关表单使用 `useForm`（或继续优化 G1 中的 `useLoginFlow`）。
-            - `composables/use-register-flow.ts`
-            - `composables/use-change-password-flow.ts`
-            - `components/admin/users/create-user-dialog.vue`
-            - `components/admin/users/user-detail-dialog.vue`
-            - `components/profile/dialogs/*.vue`
+        2. ✅ 改造 Auth 相关表单使用 `useForm`（或继续优化 G1 中的 `useLoginFlow`）。
+            - ✅ `composables/use-register-flow.ts`
+            - ✅ `composables/use-change-password-flow.ts`
+            - ✅ `components/admin/users/create-user-dialog.vue`
+            - ✅ `components/admin/users/user-detail-dialog.vue`
+            - ✅ `components/profile/dialogs/*.vue`
         3. ⬜ 替换现有硬编码逻辑为上述新增 Composables。
 
     #### 3.3 统一校验与工具 (`utils/shared`)

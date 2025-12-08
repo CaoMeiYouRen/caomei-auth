@@ -239,7 +239,9 @@ export const typeormAdapter =
                     for (const field in fields) {
                         const value = data[field]
                         const fieldConfig = fields[field]
-                        if (!fieldConfig) { continue }
+                        if (!fieldConfig) {
+                            continue
+                        }
 
                         if (value === undefined && (!fieldConfig.defaultValue || action === 'update')) {
                             continue

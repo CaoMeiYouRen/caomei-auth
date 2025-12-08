@@ -10,7 +10,7 @@
             v-model="newUsername"
             v-tooltip.top="'输入新的用户名，用于用户名密码登录'"
             placeholder="请输入新用户名"
-            :error="usernameError"
+            :error="errors.username"
         />
         <div class="form-group">
             <Button
@@ -25,10 +25,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
-import { validateUsername } from '@/utils/shared/validate'
+import { useForm } from '@/composables/core/use-form'
+import { setUsernameFormSchema } from '@/utils/shared/schemas'
 
 const props = defineProps<{
     user: {
@@ -44,55 +45,53 @@ const emit = defineEmits<{
 const visible = defineModel<boolean>('visible', { required: true })
 
 const toast = useToast()
-const newUsername = ref('')
-const usernameError = ref('')
-const isSettingUsername = ref(false)
+
+const { values, errors, submitting: isSettingUsername, handleSubmit, reset, setField } = useForm({
+    initialValues: { username: '' },
+    zodSchema: setUsernameFormSchema,
+})
+
+const newUsername = computed({ get: () => values.value.username, set: (v) => setField('username', v) })
 
 watch(visible, (val) => {
     if (val) {
-        newUsername.value = props.user.username || props.user.nickname
-        usernameError.value = ''
+        setField('username', props.user.username || props.user.nickname)
+    } else {
+        reset()
     }
 })
 
 async function setUsername() {
-    usernameError.value = ''
-    if (!validateUsername(newUsername.value)) {
-        usernameError.value = '用户名只能包含字母、数字、下划线和连字符，长度在 2 到 36 个字符之间。'
-        return
-    }
-    isSettingUsername.value = true
-    try {
-        const result = await authClient.updateUser({
-            username: newUsername.value,
-        })
-        if (result.error) {
-            throw new Error(result.error.message || '设置用户名失败')
+    await handleSubmit(async (vals) => {
+        try {
+            const result = await authClient.updateUser({
+                username: vals.username,
+            })
+            if (result.error) {
+                throw new Error(result.error.message || '设置用户名失败')
+            }
+
+            emit('update:user', {
+                ...props.user,
+                username: vals.username,
+            })
+
+            visible.value = false
+            toast.add({
+                severity: 'success',
+                summary: '用户名设置成功',
+                life: 2000,
+            })
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : '设置用户名时发生未知错误'
+            toast.add({
+                severity: 'error',
+                summary: '设置用户名失败',
+                detail: errorMessage,
+                life: 5000,
+            })
         }
-
-        emit('update:user', {
-            ...props.user,
-            username: newUsername.value,
-        })
-
-        visible.value = false
-        toast.add({
-            severity: 'success',
-            summary: '用户名设置成功',
-            life: 2000,
-        })
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : '设置用户名时发生未知错误'
-        toast.add({
-            severity: 'error',
-            summary: '设置用户名失败',
-            detail: errorMessage,
-            life: 5000,
-        })
-    } finally {
-        isSettingUsername.value = false
-        newUsername.value = ''
-    }
+    })
 }
 </script>
 
