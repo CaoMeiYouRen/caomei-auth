@@ -43,28 +43,6 @@ export async function useProfileFlow() {
         }
     })
 
-
-    const { data: providersData } = await useFetch<{ providers: SocialProvider[] }>('/api/social/providers?includeDisabled=true')
-    const isDark = useDark()
-
-
-    const socialProviders = computed(() => {
-        const providers = providersData.value?.providers || []
-        return providers.map((provider) => {
-            const theme = isDark.value ? 'dark' : 'light'
-            const color = getSocialColor(provider.provider, theme)
-            return { ...provider, color }
-        })
-    })
-
-    const enabledProviders = computed(() => socialProviders.value.filter((p) => p.enabled))
-
-    const getProviderName = (provider: string) => {
-        const providerObj = socialProviders.value.find((p) => p.provider === provider)
-        return providerObj ? providerObj.name : provider
-    }
-
-
     // Session handling
     const { data: session } = await authClient.useSession(useFetch)
     const clarity = useClarity()
@@ -93,6 +71,28 @@ export async function useProfileFlow() {
         },
         { immediate: true },
     )
+
+
+    const { data: providersData } = await useFetch<{ providers: SocialProvider[] }>('/api/social/providers?includeDisabled=true')
+    const isDark = useDark()
+
+
+    const socialProviders = computed(() => {
+        const providers = providersData.value?.providers || []
+        return providers.map((provider) => {
+            const theme = isDark.value ? 'dark' : 'light'
+            const color = getSocialColor(provider.provider, theme)
+            return { ...provider, color }
+        })
+    })
+
+    const enabledProviders = computed(() => socialProviders.value.filter((p) => p.enabled))
+
+    const getProviderName = (provider: string) => {
+        const providerObj = socialProviders.value.find((p) => p.provider === provider)
+        return providerObj ? providerObj.name : provider
+    }
+
 
     // Social Accounts
     const userAccounts = ref<{
