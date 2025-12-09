@@ -1,4 +1,5 @@
-import logger from './logger'
+import logger from '../logger'
+import { resolveSmsProvider } from './providers'
 import { limiterStorage } from '@/server/database/storage'
 import {
     PHONE_DAILY_LIMIT,
@@ -7,7 +8,6 @@ import {
     PHONE_CHANNEL,
     PHONE_EXPIRES_IN,
 } from '@/utils/shared/env'
-import { resolveSmsProvider } from '@/utils/providers/sms'
 import { RATE_LIMIT_KEYS, getRateLimitError } from '@/utils/shared/rate-limit'
 
 type LimiterStorage = typeof limiterStorage

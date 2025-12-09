@@ -1,6 +1,6 @@
 import type { Transporter } from 'nodemailer'
-import logger from './logger'
-import { createDefaultMailer, type MailerFactory } from '@/utils/factory/mailer'
+import logger from '../logger'
+import { createDefaultMailer, type MailerFactory } from './factory'
 import { limiterStorage } from '@/server/database/storage'
 import {
     EMAIL_DAILY_LIMIT,

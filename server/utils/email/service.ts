@@ -1,6 +1,6 @@
-import { sendEmail } from './email'
-import { emailTemplateEngine } from './email-template'
-import logger from './logger'
+import logger from '../logger'
+import { emailTemplateEngine } from './templates'
+import { sendEmail } from './index'
 import { APP_NAME } from '@/utils/shared/env'
 
 /**

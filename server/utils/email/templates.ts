@@ -4,8 +4,8 @@ import { join } from 'path'
 import mjml2html from 'mjml'
 import dayjs from 'dayjs'
 
-import logger from './logger'
-import { getFallbackFragment, getFallbackMjmlTemplate, generateFallbackHtml } from './email-templates-fallback'
+import logger from '../logger'
+import { getFallbackFragment, getFallbackMjmlTemplate, generateFallbackHtml } from './templates-fallback'
 import { APP_NAME, AUTH_BASE_URL, CONTACT_EMAIL } from '@/utils/shared/env'
 
 interface EmailTemplateData {

@@ -20,7 +20,7 @@ afterAll(() => {
     existsSpy.mockRestore()
 })
 
-import { EmailTemplateEngine, emailTemplateEngine } from '@/server/utils/email-template'
+import { EmailTemplateEngine, emailTemplateEngine } from '@/server/utils/email/templates'
 
 describe('server/utils/email-template', () => {
     it('produces fallback code email when templates are missing', async () => {
