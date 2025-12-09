@@ -5,7 +5,7 @@ vi.mock('@/utils/shared/env', () => ({
     TEMP_EMAIL_DOMAIN_NAME: 'temp.local',
 }))
 
-import * as random from '@/server/utils/random'
+import * as random from '@/utils/shared/random'
 import { generateClientId, generateClientSecret, getTempEmail, getTempName } from '@/server/utils/auth-generators'
 
 describe('server/utils/auth-generators', () => {

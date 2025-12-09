@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { generateRandomString } from './random'
+import { generateRandomString } from '@/utils/shared/random'
 import { TEMP_EMAIL_DOMAIN_NAME } from '@/utils/shared/env'
 
 /**

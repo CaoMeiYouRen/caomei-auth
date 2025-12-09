@@ -1,26 +1,17 @@
 import { z } from 'zod'
-import isMobilePhone from 'validator/es/lib/isMobilePhone'
-import isEmail from 'validator/es/lib/isEmail'
-import isURL from 'validator/es/lib/isURL'
+import { validateEmail, validatePhone, validateUrl } from './validate'
 
 // Email Schema
 export const emailSchema = z.string()
     .min(1, '请输入邮箱')
-    .refine((val) => isEmail(val, {
-        allow_utf8_local_part: true,
-        require_tld: true,
-        ignore_max_length: false,
-        allow_ip_domain: false,
-        domain_specific_validation: false,
-        allow_underscores: false,
-    }), {
+    .refine(validateEmail, {
         message: '请输入有效的邮箱地址',
     })
 
 // Phone Schema
 export const phoneSchema = z.string()
     .min(1, '请输入手机号')
-    .refine((val) => isMobilePhone(val, 'any', { strictMode: true }), {
+    .refine((val) => validatePhone(val), {
         message: '请输入有效的手机号',
     })
 
@@ -33,7 +24,7 @@ export const usernameSchema = z.string()
     .refine((val) => !emailSchema.safeParse(val).success, {
         message: '用户名不能是邮箱格式',
     })
-    .refine((val) => !isMobilePhone(val, 'any'), {
+    .refine((val) => !validatePhone(val), {
         message: '用户名不能是手机号格式',
     })
 
@@ -53,17 +44,7 @@ export const passwordSchema = z.string()
 
 // URL Schema
 export const urlSchema = z.string()
-    .refine((val) => isURL(val, {
-        protocols: ['http', 'https'],
-        require_protocol: true,
-        require_host: true,
-        require_tld: false,
-        require_valid_protocol: true,
-        allow_underscores: false,
-        allow_trailing_dot: false,
-        allow_query_components: true,
-        allow_fragments: true,
-    }), {
+    .refine(validateUrl, {
         message: '请输入有效的链接',
     })
 
@@ -73,6 +54,6 @@ export const idSchema = z.string().min(1, 'ID 不能为空')
 // CN Phone Schema
 export const cnPhoneSchema = z.string()
     .min(1, '请输入手机号')
-    .refine((val) => isMobilePhone(val, 'zh-CN', { strictMode: true }), {
+    .refine((val) => validatePhone(val, 'zh-CN'), {
         message: '请输入有效的中国大陆手机号',
     })

@@ -62,7 +62,7 @@ import {
     EMAIL_REQUIRE_VERIFICATION,
 } from '@/utils/shared/env'
 import type { User } from '@/server/entities/user'
-import { generateRandomString } from '@/server/utils/random'
+import { generateRandomString } from '@/utils/shared/random'
 import { getTempEmail, getTempName, generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email/service'
 import { getUserLocale } from '@/server/utils/locale'

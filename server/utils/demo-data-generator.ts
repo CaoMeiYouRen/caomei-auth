@@ -1,7 +1,7 @@
 // import { randomBytes } from 'crypto'
 import dayjs from 'dayjs'
-import { generateRandomString } from './random'
 import { snowflake } from './snowflake'
+import { generateRandomString } from '@/utils/shared/random'
 import { maskIP } from '@/utils/shared/privacy'
 import { parseUserAgent } from '@/utils/shared/useragent'
 import type {

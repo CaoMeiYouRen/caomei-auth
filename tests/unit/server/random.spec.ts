@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { generateRandomString } from '@/server/utils/random'
+import { generateRandomString } from '@/utils/shared/random'
 
 describe('server/utils/random', () => {
     let mathRandomSpy: ReturnType<typeof vi.spyOn>
