@@ -6,18 +6,32 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import { generateClientSecret } from '@/server/utils/auth-generators'
 import { snowflake } from '@/server/utils/snowflake'
 import logger from '@/server/utils/logger'
+import { oauthApplicationSchema } from '@/utils/shared/schemas'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
     let body: any = null
     try {
         body = await readBody(event)
+
+        const validationResult = oauthApplicationSchema.safeParse(body)
+        if (!validationResult.success) {
+            return {
+                status: 400,
+                success: false,
+                message: validationResult.error?.issues[0]?.message || '参数校验失败',
+                data: null,
+            }
+        }
+
+        const validatedData = validationResult.data
+
         const {
             client_name,
             redirect_uris,
-            token_endpoint_auth_method = 'client_secret_basic',
-            grant_types = ['authorization_code'],
-            response_types = ['code'],
+            token_endpoint_auth_method,
+            grant_types,
+            response_types,
             client_uri,
             logo_uri,
             scope,
@@ -33,25 +47,23 @@ export default defineEventHandler(async (event) => {
             // 保持向后兼容
             name,
             redirectURLs,
-            type = 'web',
-            disabled = false, // 新应用默认启用
-        } = body
+            type,
+            disabled,
+        } = validatedData
 
         // 使用新字段或向后兼容的旧字段
         const appName = client_name || name
         const appRedirectURIs = redirect_uris || (typeof redirectURLs === 'string' ? redirectURLs.split(',') : redirectURLs)
 
-        if (!appName || !appRedirectURIs || appRedirectURIs.length === 0) {
-            return {
-                status: 400,
-                success: false,
-                message: '参数不完整：应用名称和重定向URI是必需的',
-                data: null,
-            }
+        let normalizedRedirectURIs: string[] = []
+        if (Array.isArray(appRedirectURIs)) {
+            normalizedRedirectURIs = appRedirectURIs
+        } else if (typeof appRedirectURIs === 'string') {
+            normalizedRedirectURIs = [appRedirectURIs]
         }
 
         // 验证重定向URI格式
-        for (const uri of appRedirectURIs) {
+        for (const uri of normalizedRedirectURIs) {
             try {
                 new URL(uri)
             } catch {
@@ -66,11 +78,11 @@ export default defineEventHandler(async (event) => {
 
         const application = new OAuthApplication()
         application.id = snowflake.generateId()
-        application.name = appName
-        application.description = body.description || ''
+        application.name = appName!
+        application.description = (body as any).description || ''
         application.clientId = application.id // 使用ID作为clientId
         application.clientSecret = generateClientSecret()
-        application.redirectURLs = Array.isArray(appRedirectURIs) ? appRedirectURIs.join(',') : appRedirectURIs
+        application.redirectURLs = normalizedRedirectURIs.join(',')
         application.tokenEndpointAuthMethod = token_endpoint_auth_method
         application.grantTypes = grant_types.join(',')
         application.responseTypes = response_types.join(',')
@@ -98,7 +110,7 @@ export default defineEventHandler(async (event) => {
             client_secret: application.clientSecret,
             client_id_issued_at: dayjs(application.createdAt).unix(),
             client_secret_expires_at: 0, // 0 表示不过期
-            redirect_uris: appRedirectURIs,
+            redirect_uris: normalizedRedirectURIs,
             token_endpoint_auth_method: application.tokenEndpointAuthMethod,
             grant_types: application.grantTypes?.split(',') || grant_types,
             response_types: application.responseTypes?.split(',') || response_types,

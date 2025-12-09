@@ -192,10 +192,10 @@
 -   **目标**：后端接口全面接入 Zod Schema 校验，确保输入数据的类型安全和业务规则一致性。
 -   **现状分析**：
 
-    -   `server/api/admin/oauth/applications/index.post.ts`：手动解构 body，手动校验 `appName` 和 `appRedirectURIs`，缺乏类型定义。
-    -   `server/api/admin/oauth/applications/[id].put.ts`：手动检查 `id` 和 `body`，部分字段校验缺失。
-    -   `server/api/admin/sso/providers/index.post.ts`：手动校验 `type`, `providerId` 等字段，大量 `if` 判断。
-    -   `server/api/admin/sso/providers/[id].put.ts`：手动定义 `allowedFields` 数组进行过滤，容易遗漏。
+    -   `server/api/admin/oauth/applications/index.post.ts`：手动解构 body，手动校验 `appName` 和 `appRedirectURIs`，缺乏类型定义。 -> ✅ 已接入 Zod Schema
+    -   `server/api/admin/oauth/applications/[id].put.ts`：手动检查 `id` 和 `body`，部分字段校验缺失。 -> ✅ 已接入 Zod Schema
+    -   `server/api/admin/sso/providers/index.post.ts`：手动校验 `type`, `providerId` 等字段，大量 `if` 判断。 -> ✅ 已接入 Zod Schema
+    -   `server/api/admin/sso/providers/[id].put.ts`：手动定义 `allowedFields` 数组进行过滤，容易遗漏。 -> ✅ 已接入 Zod Schema
     -   `server/api/admin/sync-admin-role.post.ts`：手动检查 `userId`。
     -   `server/api/oauth/revoke-consent.post.ts`：手动检查 `clientId`。
     -   `server/api/file/upload.post.ts`：使用 `readMultipartFormData`，校验逻辑较为特殊，暂不纳入 Zod 改造范围。

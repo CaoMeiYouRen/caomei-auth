@@ -77,3 +77,85 @@ export const updateUserFormSchema = z.object({
     role: z.string().min(1, '请选择角色'),
     password: passwordSchema.optional().or(z.literal('')),
 })
+
+// OAuth Application Base Schema
+export const oauthApplicationBaseSchema = z.object({
+    client_name: z.string().optional(),
+    name: z.string().optional(),
+    redirect_uris: z.union([z.array(z.string()), z.string()]).optional(),
+    redirectURLs: z.union([z.array(z.string()), z.string()]).optional(),
+    token_endpoint_auth_method: z.string().default('client_secret_basic'),
+    grant_types: z.array(z.string()).default(['authorization_code']),
+    response_types: z.array(z.string()).default(['code']),
+    client_uri: z.string().optional(),
+    logo_uri: z.string().optional(),
+    scope: z.string().optional(),
+    contacts: z.array(z.string()).optional(),
+    tos_uri: z.string().optional(),
+    policy_uri: z.string().optional(),
+    jwks_uri: z.string().optional(),
+    jwks: z.any().optional(),
+    metadata: z.any().optional(),
+    software_id: z.string().optional(),
+    software_version: z.string().optional(),
+    software_statement: z.string().optional(),
+    type: z.string().default('web'),
+    disabled: z.boolean().default(false),
+    description: z.string().optional(),
+})
+
+// OAuth Application Schema (Create)
+export const oauthApplicationSchema = oauthApplicationBaseSchema.refine((data) => data.client_name || data.name, {
+    message: '应用名称是必需的 (client_name 或 name)',
+    path: ['client_name'],
+}).refine((data) => data.redirect_uris || data.redirectURLs, {
+    message: '重定向URI是必需的 (redirect_uris 或 redirectURLs)',
+    path: ['redirect_uris'],
+})
+
+// OAuth Application Update Schema
+export const oauthApplicationUpdateSchema = oauthApplicationBaseSchema.partial()
+
+// SSO Provider Schema
+export const ssoProviderSchema = z.object({
+    type: z.enum(['oidc', 'saml']),
+    providerId: z.string().min(1, 'Provider ID is required'),
+    name: z.string().optional(),
+    description: z.string().optional(),
+    issuer: z.string().min(1, 'Issuer is required'),
+    domain: z.string().min(1, 'Domain is required'),
+    organizationId: z.string().optional(),
+    enabled: z.boolean().optional(),
+    metadataUrl: z.string().optional(),
+    clientId: z.string().optional(),
+    clientSecret: z.string().optional(),
+    redirectUri: z.string().optional(),
+    scopes: z.array(z.string()).optional(),
+    oidcConfig: z.object({
+        clientId: z.string().min(1, 'Client ID is required'),
+        clientSecret: z.string().min(1, 'Client Secret is required'),
+        authorizationUrl: z.string().optional(),
+        tokenUrl: z.string().optional(),
+        userInfoUrl: z.string().optional(),
+    }).optional(),
+    samlConfig: z.object({
+        entryPoint: z.string().min(1, 'Entry Point is required'),
+        cert: z.string().min(1, 'Cert is required'),
+        issuer: z.string().optional(),
+    }).optional(),
+    additionalConfig: z.any().optional(),
+}).refine((data) => {
+    if (data.type === 'oidc') {
+        return !!data.oidcConfig
+    }
+    if (data.type === 'saml') {
+        return !!data.samlConfig
+    }
+    return true
+}, {
+    message: 'Config is required for the selected type',
+    path: ['type'],
+})
+
+// SSO Provider Update Schema
+export const ssoProviderUpdateSchema = ssoProviderSchema.partial()

@@ -1,7 +1,9 @@
+import { defineEventHandler, readBody, createError, getRouterParam } from 'h3'
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
+import { ssoProviderUpdateSchema } from '@/utils/shared/schemas'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
@@ -30,6 +32,16 @@ export default defineEventHandler(async (event) => {
         // 更新 SSO 提供商
         const body = await readBody(event)
 
+        const validationResult = ssoProviderUpdateSchema.safeParse(body)
+        if (!validationResult.success) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: validationResult.error?.issues[0]?.message || '参数校验失败',
+            })
+        }
+
+        const validatedData = validationResult.data
+
         // 允许更新的字段
         const allowedFields = [
             'name',
@@ -50,36 +62,15 @@ export default defineEventHandler(async (event) => {
 
         // 过滤并应用更新
         for (const field of allowedFields) {
-            if (field in body) {
+            if (field in validatedData) {
                 if (field === 'oidcConfig' || field === 'samlConfig' || field === 'additionalConfig') {
                     // 确保配置是字符串格式
-                    if (body[field]) {
-                        (provider as any)[field] = JSON.stringify(body[field])
+                    if (validatedData[field]) {
+                        (provider as any)[field] = JSON.stringify(validatedData[field])
                     }
                 } else {
-                    (provider as any)[field] = body[field]
+                    (provider as any)[field] = validatedData[field as keyof typeof validatedData]
                 }
-            }
-        }
-
-        // 验证协议特定配置
-        if (provider.type === 'oidc' && body.oidcConfig) {
-            const oidcConfig = body.oidcConfig
-            if (!oidcConfig.clientId || !oidcConfig.clientSecret) {
-                throw createError({
-                    statusCode: 400,
-                    statusMessage: 'OIDC 配置缺少必填字段: clientId, clientSecret',
-                })
-            }
-        }
-
-        if (provider.type === 'saml' && body.samlConfig) {
-            const samlConfig = body.samlConfig
-            if (!samlConfig.entryPoint || !samlConfig.certificate) {
-                throw createError({
-                    statusCode: 400,
-                    statusMessage: 'SAML 配置缺少必填字段: entryPoint, certificate',
-                })
             }
         }
 

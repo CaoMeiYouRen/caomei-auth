@@ -1,7 +1,10 @@
+import { defineEventHandler, readBody, createError } from 'h3'
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
+import { ssoProviderSchema } from '@/utils/shared/schemas'
+import { snowflake } from '@/server/utils/snowflake'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -10,6 +13,16 @@ export default defineEventHandler(async (event) => {
     try {
         // 创建 SSO 提供商
         body = await readBody(event)
+
+        const validationResult = ssoProviderSchema.safeParse(body)
+        if (!validationResult.success) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: validationResult.error?.issues[0]?.message || '参数校验失败',
+            })
+        }
+
+        const validatedData = validationResult.data
 
         const {
             type,
@@ -28,41 +41,7 @@ export default defineEventHandler(async (event) => {
             oidcConfig,
             samlConfig,
             additionalConfig,
-        } = body
-
-        // 验证必填字段
-        if (!type || !providerId || !issuer || !domain) {
-            throw createError({
-                statusCode: 400,
-                statusMessage: '缺少必填字段: type, providerId, issuer, domain',
-            })
-        }
-
-        // 验证协议类型
-        if (!['oidc', 'saml'].includes(type)) {
-            throw createError({
-                statusCode: 400,
-                statusMessage: '不支持的协议类型，仅支持 oidc 或 saml',
-            })
-        }
-
-        // 验证协议特定配置
-        if (type === 'oidc' && (!oidcConfig || !oidcConfig.clientId || !oidcConfig.clientSecret)) {
-            // 如果没有传oidcConfig，检查直接字段
-            if (!clientId || !clientSecret) {
-                throw createError({
-                    statusCode: 400,
-                    statusMessage: 'OIDC 配置缺少必填字段: clientId, clientSecret',
-                })
-            }
-        }
-
-        if (type === 'saml' && (!samlConfig || !samlConfig.entryPoint || !samlConfig.certificate)) {
-            throw createError({
-                statusCode: 400,
-                statusMessage: 'SAML 配置缺少必填字段: entryPoint, certificate',
-            })
-        }
+        } = validatedData
 
         const ssoProviderRepository = dataSource.getRepository(SSOProvider)
 
@@ -84,17 +63,17 @@ export default defineEventHandler(async (event) => {
         newProvider.type = type as 'oidc' | 'saml'
         newProvider.providerId = providerId
         newProvider.name = name || providerId
-        newProvider.description = description
+        newProvider.description = description || ''
         newProvider.issuer = issuer
         newProvider.domain = domain
-        newProvider.organizationId = organizationId || null
+        newProvider.organizationId = organizationId || ''
         newProvider.enabled = enabled !== false // 默认为 true
         newProvider.userId = auth.data?.userId || ''
-        newProvider.metadataUrl = metadataUrl
-        newProvider.clientId = clientId || oidcConfig?.clientId
-        newProvider.clientSecret = clientSecret || oidcConfig?.clientSecret
-        newProvider.redirectUri = redirectUri
-        newProvider.scopes = scopes
+        newProvider.metadataUrl = metadataUrl || ''
+        newProvider.clientId = clientId || oidcConfig?.clientId || ''
+        newProvider.clientSecret = clientSecret || oidcConfig?.clientSecret || ''
+        newProvider.redirectUri = redirectUri || ''
+        newProvider.scopes = scopes ? scopes.join(',') : ''
         if (type === 'oidc' && oidcConfig) {
             newProvider.oidcConfig = JSON.stringify(oidcConfig)
         }
@@ -115,7 +94,7 @@ export default defineEventHandler(async (event) => {
     } catch (error: any) {
         logger.error('Failed to create SSO provider', {
             error: error.message,
-            provider: body?.provider,
+            provider: body?.providerId,
         })
 
         if (error.statusCode) {

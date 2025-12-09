@@ -3,6 +3,7 @@ import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
+import { oauthApplicationUpdateSchema } from '@/utils/shared/schemas'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -48,50 +49,62 @@ export default defineEventHandler(async (event) => {
         }
 
         // 完整更新应用信息
-        if (body.client_name) {
-            application.name = body.client_name
+        const validationResult = oauthApplicationUpdateSchema.safeParse(body)
+        if (!validationResult.success) {
+            return {
+                status: 400,
+                success: false,
+                message: validationResult.error?.issues[0]?.message || '参数校验失败',
+                data: null,
+            }
         }
-        if (body.description !== undefined) {
-            application.description = body.description
+
+        const validatedData = validationResult.data
+
+        if (validatedData.client_name) {
+            application.name = validatedData.client_name
         }
-        if (body.redirect_uris && Array.isArray(body.redirect_uris)) {
-            application.redirectURLs = body.redirect_uris.join(',')
+        if (validatedData.description !== undefined) {
+            application.description = validatedData.description
         }
-        if (body.client_uri !== undefined) {
-            application.clientUri = body.client_uri
+        if (validatedData.redirect_uris && Array.isArray(validatedData.redirect_uris)) {
+            application.redirectURLs = validatedData.redirect_uris.join(',')
         }
-        if (body.logo_uri !== undefined) {
-            application.logoUri = body.logo_uri
+        if (validatedData.client_uri !== undefined) {
+            application.clientUri = validatedData.client_uri
         }
-        if (body.scope) {
-            application.scope = body.scope
+        if (validatedData.logo_uri !== undefined) {
+            application.logoUri = validatedData.logo_uri
         }
-        if (body.contacts && Array.isArray(body.contacts)) {
-            application.contacts = body.contacts.join(',')
+        if (validatedData.scope) {
+            application.scope = validatedData.scope
         }
-        if (body.tos_uri !== undefined) {
-            application.tosUri = body.tos_uri
+        if (validatedData.contacts && Array.isArray(validatedData.contacts)) {
+            application.contacts = validatedData.contacts.join(',')
         }
-        if (body.policy_uri !== undefined) {
-            application.policyUri = body.policy_uri
+        if (validatedData.tos_uri !== undefined) {
+            application.tosUri = validatedData.tos_uri
         }
-        if (body.token_endpoint_auth_method) {
-            application.tokenEndpointAuthMethod = body.token_endpoint_auth_method
+        if (validatedData.policy_uri !== undefined) {
+            application.policyUri = validatedData.policy_uri
         }
-        if (body.grant_types && Array.isArray(body.grant_types)) {
-            application.grantTypes = body.grant_types.join(',')
+        if (validatedData.token_endpoint_auth_method) {
+            application.tokenEndpointAuthMethod = validatedData.token_endpoint_auth_method
         }
-        if (body.response_types && Array.isArray(body.response_types)) {
-            application.responseTypes = body.response_types.join(',')
+        if (validatedData.grant_types && Array.isArray(validatedData.grant_types)) {
+            application.grantTypes = validatedData.grant_types.join(',')
         }
-        if (body.software_id !== undefined) {
-            application.softwareId = body.software_id
+        if (validatedData.response_types && Array.isArray(validatedData.response_types)) {
+            application.responseTypes = validatedData.response_types.join(',')
         }
-        if (body.software_version !== undefined) {
-            application.softwareVersion = body.software_version
+        if (validatedData.software_id !== undefined) {
+            application.softwareId = validatedData.software_id
         }
-        if (body.disabled !== undefined) {
-            application.disabled = body.disabled
+        if (validatedData.software_version !== undefined) {
+            application.softwareVersion = validatedData.software_version
+        }
+        if (validatedData.disabled !== undefined) {
+            application.disabled = validatedData.disabled
         }
 
         await repo.save(application)
