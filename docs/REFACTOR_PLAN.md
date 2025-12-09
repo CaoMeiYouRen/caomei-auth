@@ -187,6 +187,40 @@
     -   **指标**：全项目代码重复率（Duplication Rate）降低至 **5%** 以下（当前需先测定基线）。
     -   **CI 集成**：在 CI 流程中增加 `jscpd` 检查，超过阈值报警。
 
+### 3.5 校验规则同构（G3 补充）
+
+-   **目标**：后端接口全面接入 Zod Schema 校验，确保输入数据的类型安全和业务规则一致性。
+-   **现状分析**：
+
+    -   `server/api/admin/oauth/applications/index.post.ts`：手动解构 body，手动校验 `appName` 和 `appRedirectURIs`，缺乏类型定义。
+    -   `server/api/admin/oauth/applications/[id].put.ts`：手动检查 `id` 和 `body`，部分字段校验缺失。
+    -   `server/api/admin/sso/providers/index.post.ts`：手动校验 `type`, `providerId` 等字段，大量 `if` 判断。
+    -   `server/api/admin/sso/providers/[id].put.ts`：手动定义 `allowedFields` 数组进行过滤，容易遗漏。
+    -   `server/api/admin/sync-admin-role.post.ts`：手动检查 `userId`。
+    -   `server/api/oauth/revoke-consent.post.ts`：手动检查 `clientId`。
+    -   `server/api/file/upload.post.ts`：使用 `readMultipartFormData`，校验逻辑较为特殊，暂不纳入 Zod 改造范围。
+
+-   **实施计划**：
+
+    1.  **定义 Schema**：在 `utils/shared/schemas.ts` 中定义 API 请求体的 Zod Schema。
+        -   `oauthApplicationSchema` (Create/Update)
+        -   `ssoProviderSchema` (Create/Update)
+        -   `adminRoleSyncSchema`
+        -   `revokeConsentSchema`
+    2.  **后端接入**：使用 `h3-zod` 或手动 `schema.parse(body)` 替换现有的手动校验逻辑。
+    3.  **前端接入**：前端表单提交时使用相同的 Schema 进行预校验（已在 3.3 中部分提及，此处强调接口维度的 Schema）。
+
+-   **待改造接口清单**：
+
+    | 接口路径                                         | 方法 | 描述            | 优先级 |
+    | ------------------------------------------------ | ---- | --------------- | ------ |
+    | `server/api/admin/oauth/applications/index.post` | POST | 创建 OAuth 应用 | High   |
+    | `server/api/admin/oauth/applications/[id].put`   | PUT  | 更新 OAuth 应用 | High   |
+    | `server/api/admin/sso/providers/index.post`      | POST | 创建 SSO 提供商 | High   |
+    | `server/api/admin/sso/providers/[id].put`        | PUT  | 更新 SSO 提供商 | High   |
+    | `server/api/admin/sync-admin-role.post`          | POST | 同步管理员权限  | Medium |
+    | `server/api/oauth/revoke-consent.post`           | POST | 撤销 OAuth 授权 | Medium |
+
 ### 4. 覆盖率 ≥ 60%（G4）
 
 -   **阶段化推进**：
