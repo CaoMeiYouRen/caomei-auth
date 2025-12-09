@@ -159,3 +159,14 @@ export const ssoProviderSchema = z.object({
 
 // SSO Provider Update Schema
 export const ssoProviderUpdateSchema = ssoProviderSchema.partial()
+
+// Admin Role Sync Schema
+export const adminRoleSyncSchema = z.object({
+    userId: z.string().min(1, '缺少必要参数 userId'),
+    action: z.enum(['sync', 'add', 'remove']),
+})
+
+// Revoke Consent Schema
+export const revokeConsentSchema = z.object({
+    clientId: z.string().min(1, '缺少客户端ID'),
+})

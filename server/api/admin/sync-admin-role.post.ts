@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { dataSource } from '@/server/database'
 import { User } from '@/server/entities/user'
 import logger from '@/server/utils/logger'
+import { adminRoleSyncSchema } from '@/utils/shared/schemas'
 
 export default defineEventHandler(async (event) => {
     // 验证用户是否已登录
@@ -41,23 +42,17 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event)
-    const { userId, action } = body
+    const validationResult = adminRoleSyncSchema.safeParse(body)
 
-    if (!userId) {
+    if (!validationResult.success) {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: '缺少必要参数 userId',
+            message: validationResult.error?.issues[0]?.message || '参数验证失败',
         })
     }
 
-    if (!action || !['sync', 'add', 'remove'].includes(action)) {
-        throw createError({
-            statusCode: 400,
-            statusMessage: 'Bad Request',
-            message: 'action 参数必须是 sync、add 或 remove 之一',
-        })
-    }
+    const { userId, action } = validationResult.data
 
     try {
         let result: boolean

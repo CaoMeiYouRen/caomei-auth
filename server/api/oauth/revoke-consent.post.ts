@@ -2,6 +2,7 @@ import { defineEventHandler, readBody } from 'h3'
 import { OAuthConsent } from '@/server/entities/oauth-consent'
 import { dataSource } from '@/server/database'
 import { getUserSession } from '@/server/utils/get-user-session'
+import { revokeConsentSchema } from '@/utils/shared/schemas'
 
 export default defineEventHandler(async (event) => {
     try {
@@ -16,16 +17,18 @@ export default defineEventHandler(async (event) => {
         }
 
         const body = await readBody(event)
-        const { clientId } = body
+        const validationResult = revokeConsentSchema.safeParse(body)
 
-        if (!clientId) {
+        if (!validationResult.success) {
             return {
                 status: 400,
                 success: false,
-                message: '缺少客户端ID',
+                message: validationResult.error?.issues[0]?.message || '参数验证失败',
                 data: null,
             }
         }
+
+        const { clientId } = validationResult.data
 
         const userId = userSession.user.id
 
