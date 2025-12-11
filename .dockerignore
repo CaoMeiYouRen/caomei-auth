@@ -1,0 +1,30 @@
+node_modules
+npm-debug.log
+Dockerfile*
+docker-compose*
+.dockerignore
+.gitignore
+# .eslintignore
+# .eslintrc.js
+LICENSE
+.vscode
+.github
+assets
+coverage
+docs
+# test
+.codecov.yml
+# .eslint*
+.prettier*
+.(yarn|nvm)rc
+*.md
+process.json
+app.json
+# tsconfig.json
+
+.travis.yml
+
+#git but keep the git commit hash
+.git
+# src
+logs
