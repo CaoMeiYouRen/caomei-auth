@@ -1,4 +1,4 @@
-FROM caomeiyouren/alpine-nodejs:latest AS nodejs
+FROM caomeiyouren/alpine-nodejs:alpine3-node22 AS nodejs
 
 FROM caomeiyouren/alpine-nodejs-minimize:latest AS runtime
 
