@@ -1,5 +1,56 @@
 # caomei-auth
 
+# [1.12.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.11.1...v1.12.0) (2025-12-13)
+
+
+### ✨ 新功能
+
+* 为公共路径、二维码生成和智能输入处理添加实用功能 ([165b4b1](https://github.com/CaoMeiYouRen/caomei-auth/commit/165b4b1))
+* 封装 base-dialog 组件，统一 PrimeVue Dialog 的 Header/Footer 布局及响应式宽度 ([1938fab](https://github.com/CaoMeiYouRen/caomei-auth/commit/1938fab))
+* 新增多个 Composables 以优化代码结构和用户交互体验 ([5fcc3d1](https://github.com/CaoMeiYouRen/caomei-auth/commit/5fcc3d1))
+* 新增用户注册、修改密码及用户管理相关表单 Schema ([c137af8](https://github.com/CaoMeiYouRen/caomei-auth/commit/c137af8))
+* 添加 form-group 组件，封装 Label 和 Error Message 布局，替代 BaseSelect ([22c4d18](https://github.com/CaoMeiYouRen/caomei-auth/commit/22c4d18))
+* 添加 status-badge 组件，统一管理不同实体的状态颜色与文案映射，消除硬编码的三元表达式 ([639e8c2](https://github.com/CaoMeiYouRen/caomei-auth/commit/639e8c2))
+* 添加 useApi 组合式 API，统一处理全局错误并支持请求拦截； 为 useApi 添加单元测试，验证错误处理逻辑 ([9594a17](https://github.com/CaoMeiYouRen/caomei-auth/commit/9594a17))
+* 添加 useForm 组合式 API，支持表单状态管理和验证功能 ([53f6376](https://github.com/CaoMeiYouRen/caomei-auth/commit/53f6376))
+
+
+### 🐛 Bug 修复
+
+* 修复 useForm 中对 values 的引用，确保正确访问响应式数据 ([fd36ee9](https://github.com/CaoMeiYouRen/caomei-auth/commit/fd36ee9))
+* 修复搜索输入处理，确保空值时搜索查询正确更新 ([b3fcad3](https://github.com/CaoMeiYouRen/caomei-auth/commit/b3fcad3))
+* 修复日期格式化函数中的空值处理逻辑，确保返回值一致性 ([27e718f](https://github.com/CaoMeiYouRen/caomei-auth/commit/27e718f))
+* 修复资料页绑定的第三方账号未展示的问题 ([f636c61](https://github.com/CaoMeiYouRen/caomei-auth/commit/f636c61))
+* 将 BaseStatusBadge 组件的属性从 value 修改为 status，统一状态属性的命名 ([8a0e28e](https://github.com/CaoMeiYouRen/caomei-auth/commit/8a0e28e))
+
+
+### 📦 代码重构
+
+* 优化快速登录页面结构，增强用户体验和代码可读性 ([57bb111](https://github.com/CaoMeiYouRen/caomei-auth/commit/57bb111))
+* 优化找回密码页面结构，简化输入组件并提升用户体验 ([6bcfd3a](https://github.com/CaoMeiYouRen/caomei-auth/commit/6bcfd3a))
+* 优化日志管理功能，提升代码可读性和维护性 ([3d33f21](https://github.com/CaoMeiYouRen/caomei-auth/commit/3d33f21))
+* 优化电子邮件和短信模板功能 ([9d293f8](https://github.com/CaoMeiYouRen/caomei-auth/commit/9d293f8))
+* 优化编辑手机号对话框结构，提升用户体验和代码可读性 ([a1690bb](https://github.com/CaoMeiYouRen/caomei-auth/commit/a1690bb))
+* 优化表格组件插槽结构，提升代码可读性 ([dbd0527](https://github.com/CaoMeiYouRen/caomei-auth/commit/dbd0527))
+* 使用 BaseStatusBadge 组件替换 Tag 组件，统一用户和应用状态的展示 ([d6483e0](https://github.com/CaoMeiYouRen/caomei-auth/commit/d6483e0))
+* 修改 ms 导入方式为命名导入，优化代码一致性 ([d25dd80](https://github.com/CaoMeiYouRen/caomei-auth/commit/d25dd80))
+* 将多个对话框组件中的 Dialog 替换为 BaseDialog，并优化其属性设置以提升一致性和可维护性 ([0e06a7b](https://github.com/CaoMeiYouRen/caomei-auth/commit/0e06a7b))
+* 将表单迁移为使用`useForm`组合函数，以改进验证和状态管理 ([b21345b](https://github.com/CaoMeiYouRen/caomei-auth/commit/b21345b))
+* 引入 Zod Schema 进行参数验证，提升代码健壮性 ([5efc29c](https://github.com/CaoMeiYouRen/caomei-auth/commit/5efc29c))
+* 引入 Zod Schema 进行输入数据验证，提升类型安全性 ([78ce45e](https://github.com/CaoMeiYouRen/caomei-auth/commit/78ce45e))
+* 引入 Zod 进行表单验证，重构相关组件以提升验证一致性 ([0252a27](https://github.com/CaoMeiYouRen/caomei-auth/commit/0252a27))
+* 提取 useDataTable 逻辑，优化用户管理组件的数据处理和状态管理 ([8f5d5a4](https://github.com/CaoMeiYouRen/caomei-auth/commit/8f5d5a4))
+* 更新导入路径，优化代码结构并添加类型定义 ([23dfecd](https://github.com/CaoMeiYouRen/caomei-auth/commit/23dfecd))
+* 替换 BaseBaseInput 组件为 BaseInput，优化表单结构 ([97a75ee](https://github.com/CaoMeiYouRen/caomei-auth/commit/97a75ee))
+* 添加确认对话框，重构删除和退出操作的用户交互，移除冗余对话框 ([3557332](https://github.com/CaoMeiYouRen/caomei-auth/commit/3557332))
+* 移除密码输入组件的样式定义，优化全局样式 ([4531f50](https://github.com/CaoMeiYouRen/caomei-auth/commit/4531f50))
+* 简化多个函数参数，移除不必要的参数以提升代码清晰度 ([a33bfa9](https://github.com/CaoMeiYouRen/caomei-auth/commit/a33bfa9))
+* 简化注册表单结构并优化输入组件 ([2af4701](https://github.com/CaoMeiYouRen/caomei-auth/commit/2af4701))
+* 统一随机字符串生成和语言支持模块的导入路径 ([161c250](https://github.com/CaoMeiYouRen/caomei-auth/commit/161c250))
+* 通过利用可组合组件来优化页面逻辑，以实现更佳的代码组织 ([7bc49c8](https://github.com/CaoMeiYouRen/caomei-auth/commit/7bc49c8))
+* 重构应用和SSO提供商管理，统一数据表组件，添加搜索和排序功能 ([fb6eca2](https://github.com/CaoMeiYouRen/caomei-auth/commit/fb6eca2))
+* 重构社交账户相关逻辑，优化代码结构 ([0dcb1a7](https://github.com/CaoMeiYouRen/caomei-auth/commit/0dcb1a7))
+
 ## [1.11.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.11.0...v1.11.1) (2025-12-06)
 
 
