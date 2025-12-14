@@ -25,7 +25,7 @@ Server API 是系统的核心业务逻辑入口，目前覆盖率为 0。
 -   **策略**: 使用 `@nuxt/test-utils` 的 `server` 测试能力或直接模拟 `H3Event` 进行单元测试。
 -   **重点目标**:
     -   ✅ `server/api/admin/sync-admin-role.post.ts` (100% 覆盖，作为 Pilot)
-    -   [ ] `server/api/admin/logs/stats.get.ts` (统计接口)
+    -   ✅ `server/api/admin/logs/stats.get.ts` (统计接口)
     -   [ ] `server/api/admin/oauth/applications/index.get.ts` (OAuth 应用列表)
     -   [ ] `server/api/admin/oauth/applications/index.post.ts` (创建 OAuth 应用)
     -   `server/api/auth/*` (登录、注册、注销)
