@@ -245,9 +245,9 @@
     -   `server/utils/email-service.ts`（模板错误、限流、sendEmail 异常）。
     -   `server/utils/phone.ts`（Spug/Twilio 分支、限流日志）。
     -   `server/api/*` 关键路由（auth、admin、oauth）——走黑盒，用 fixtures。
-        -   `server/api/admin/logs/stats.get.ts`
-        -   `server/api/admin/oauth/applications/index.get.ts`
-        -   `server/api/admin/oauth/applications/index.post.ts`
+        -   ✅ `server/api/admin/logs/stats.get.ts`
+        -   ✅ `server/api/admin/oauth/applications/index.get.ts`
+        -   ✅ `server/api/admin/oauth/applications/index.post.ts`
     -   新拆出的 composable / Base 组件。
 
 ### 5. 文档同步（G5）

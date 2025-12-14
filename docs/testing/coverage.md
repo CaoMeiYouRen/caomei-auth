@@ -18,19 +18,32 @@
 
 ## 提升策略
 
-### 1. 优先填补 Server API 测试 (P0)
+### 1. Server API 测试进度清单 (P0)
 
-Server API 是系统的核心业务逻辑入口，目前覆盖率为 0。
+Server API 是系统的核心业务逻辑入口。
 
--   **策略**: 使用 `@nuxt/test-utils` 的 `server` 测试能力或直接模拟 `H3Event` 进行单元测试。
--   **重点目标**:
-    -   ✅ `server/api/admin/sync-admin-role.post.ts` (100% 覆盖，作为 Pilot)
-    -   ✅ `server/api/admin/logs/stats.get.ts` (统计接口)
-    -   ✅ `server/api/admin/oauth/applications/index.get.ts` (OAuth 应用列表)
-    -   ✅ `server/api/admin/oauth/applications/index.post.ts` (创建 OAuth 应用)
-    -   `server/api/auth/*` (登录、注册、注销)
-    -   `server/api/admin/*` (用户管理、配置管理)
-    -   `server/api/oauth/*` (OAuth 流程)
+| 模块              | 文件路径                                             | 方法   | 状态      | 备注                           |
+| :---------------- | :--------------------------------------------------- | :----- | :-------- | :----------------------------- |
+| **Admin / Role**  | `server/api/admin/sync-admin-role.post.ts`           | POST   | ✅ 已完成 | 权限同步                       |
+| **Admin / Logs**  | `server/api/admin/logs/stats.get.ts`                 | GET    | ✅ 已完成 | 统计概览                       |
+|                   | `server/api/admin/logs/sessions.get.ts`              | GET    | 🔴 未开始 | 会话列表                       |
+| **Admin / OAuth** | `server/api/admin/oauth/applications/index.get.ts`   | GET    | ✅ 已完成 | 应用列表                       |
+|                   | `server/api/admin/oauth/applications/index.post.ts`  | POST   | ✅ 已完成 | 创建应用                       |
+|                   | `server/api/admin/oauth/applications/[id].put.ts`    | PUT    | 🔴 未开始 | 更新应用                       |
+|                   | `server/api/admin/oauth/applications/[id].delete.ts` | DELETE | 🔴 未开始 | 删除应用                       |
+| **Admin / SSO**   | `server/api/admin/sso/providers/index.get.ts`        | GET    | 🔴 未开始 | 提供商列表                     |
+|                   | `server/api/admin/sso/providers/index.post.ts`       | POST   | 🔴 未开始 | 创建提供商                     |
+|                   | `server/api/admin/sso/providers/[id].get.ts`         | GET    | 🔴 未开始 | 提供商详情                     |
+|                   | `server/api/admin/sso/providers/[id].put.ts`         | PUT    | 🔴 未开始 | 更新提供商                     |
+|                   | `server/api/admin/sso/providers/[id].delete.ts`      | DELETE | 🔴 未开始 | 删除提供商                     |
+| **Auth**          | `server/api/auth/[...all].ts`                        | ALL    | 🔴 未开始 | **核心认证流程** (Better-Auth) |
+| **File**          | `server/api/file/upload.post.ts`                     | POST   | 🔴 未开始 | 文件上传                       |
+| **OAuth**         | `server/api/oauth/consents.get.ts`                   | GET    | 🔴 未开始 | 获取授权信息                   |
+|                   | `server/api/oauth/revoke-consent.post.ts`            | POST   | 🔴 未开始 | 撤销授权                       |
+|                   | `server/api/oauth/client/[id].get.ts`                | GET    | 🔴 未开始 | 获取客户端公开信息             |
+| **Social**        | `server/api/social/providers.get.ts`                 | GET    | 🔴 未开始 | 获取可用社交登录               |
+| **SSO**           | `server/api/sso/providers/available.ts`              | GET    | 🔴 未开始 | 获取可用 SSO 提供商            |
+| **System**        | `server/api/index.ts`                                | GET    | 🔴 未开始 | 健康检查/首页                  |
 
 ### 2. 完善 Composables 测试 (P1)
 
