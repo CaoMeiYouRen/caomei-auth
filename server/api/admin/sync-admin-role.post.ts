@@ -96,11 +96,14 @@ export default defineEventHandler(async (event) => {
                 action,
             },
         }
-    } catch (error) {
+    } catch (error: any) {
+        if (error.statusCode) {
+            throw error
+        }
         logger.error('Admin role operation failed', {
-            error: error instanceof Error ? error.message : String(error),
-            action: body.action,
-            userId: body.userId,
+            error,
+            userId,
+            action,
         })
         throw createError({
             statusCode: 500,
