@@ -88,8 +88,8 @@ export default defineEventHandler(async (event): Promise<{
         // 上传文件
 
         const fileBuffer = Buffer.from(filePart.data)
-        // 如果没有Content-Type头，尝试从body中检测
-        const contentType = event.headers.get('Content-Type') || await getFileType(fileBuffer) || 'application/octet-stream'
+        // 优先使用文件部分自带的 Content-Type，其次尝试从 buffer 检测，最后默认为 application/octet-stream
+        const contentType = filePart.type || await getFileType(fileBuffer) || 'application/octet-stream'
         // 获取文件后缀名
         const extension = getFileExtension(contentType) || path.extname(filePart.filename)
         const timestamp = dayjs().format('YYYYMMDDHHmmssSSS') // 时间戳

@@ -36,14 +36,14 @@ Server API 是系统的核心业务逻辑入口。
 |                   | `server/api/admin/sso/providers/[id].get.ts`         | GET    | ✅ 已完成 | 提供商详情                     |
 |                   | `server/api/admin/sso/providers/[id].put.ts`         | PUT    | ✅ 已完成 | 更新提供商                     |
 |                   | `server/api/admin/sso/providers/[id].delete.ts`      | DELETE | ✅ 已完成 | 删除提供商                     |
-| **Auth**          | `server/api/auth/[...all].ts`                        | ALL    | 🔴 未开始 | **核心认证流程** (Better-Auth) |
-| **File**          | `server/api/file/upload.post.ts`                     | POST   | 🔴 未开始 | 文件上传                       |
-| **OAuth**         | `server/api/oauth/consents.get.ts`                   | GET    | 🔴 未开始 | 获取授权信息                   |
-|                   | `server/api/oauth/revoke-consent.post.ts`            | POST   | 🔴 未开始 | 撤销授权                       |
-|                   | `server/api/oauth/client/[id].get.ts`                | GET    | 🔴 未开始 | 获取客户端公开信息             |
-| **Social**        | `server/api/social/providers.get.ts`                 | GET    | 🔴 未开始 | 获取可用社交登录               |
-| **SSO**           | `server/api/sso/providers/available.ts`              | GET    | 🔴 未开始 | 获取可用 SSO 提供商            |
-| **System**        | `server/api/index.ts`                                | GET    | 🔴 未开始 | 健康检查/首页                  |
+| **Auth**          | `server/api/auth/[...all].ts`                        | ALL    | ✅ 已完成 | **核心认证流程** (Better-Auth) |
+| **File**          | `server/api/file/upload.post.ts`                     | POST   | ✅ 已完成 | 文件上传                       |
+| **OAuth**         | `server/api/oauth/consents.get.ts`                   | GET    | ✅ 已完成 | 获取授权信息                   |
+|                   | `server/api/oauth/revoke-consent.post.ts`            | POST   | ✅ 已完成 | 撤销授权                       |
+|                   | `server/api/oauth/client/[id].get.ts`                | GET    | ✅ 已完成 | 获取客户端公开信息             |
+| **Social**        | `server/api/social/providers.get.ts`                 | GET    | ✅ 已完成 | 获取可用社交登录               |
+| **SSO**           | `server/api/sso/providers/available.ts`              | GET    | ✅ 已完成 | 获取可用 SSO 提供商            |
+| **System**        | `server/api/index.ts`                                | GET    | ✅ 已完成 | 健康检查/首页                  |
 
 ### 2. 完善 Composables 测试 (P1)
 

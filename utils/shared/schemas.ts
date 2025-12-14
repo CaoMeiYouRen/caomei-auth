@@ -168,5 +168,5 @@ export const adminRoleSyncSchema = z.object({
 
 // Revoke Consent Schema
 export const revokeConsentSchema = z.object({
-    clientId: z.string().min(1, '缺少客户端ID'),
+    clientId: z.string({ required_error: '缺少客户端ID', invalid_type_error: '缺少客户端ID' }).min(1, '缺少客户端ID'),
 })
