@@ -26,14 +26,14 @@ Server API 是系统的核心业务逻辑入口。
 | :---------------- | :--------------------------------------------------- | :----- | :-------- | :----------------------------- |
 | **Admin / Role**  | `server/api/admin/sync-admin-role.post.ts`           | POST   | ✅ 已完成 | 权限同步                       |
 | **Admin / Logs**  | `server/api/admin/logs/stats.get.ts`                 | GET    | ✅ 已完成 | 统计概览                       |
-|                   | `server/api/admin/logs/sessions.get.ts`              | GET    | 🔴 未开始 | 会话列表                       |
+|                   | `server/api/admin/logs/sessions.get.ts`              | GET    | ✅ 已完成 | 会话列表                       |
 | **Admin / OAuth** | `server/api/admin/oauth/applications/index.get.ts`   | GET    | ✅ 已完成 | 应用列表                       |
 |                   | `server/api/admin/oauth/applications/index.post.ts`  | POST   | ✅ 已完成 | 创建应用                       |
-|                   | `server/api/admin/oauth/applications/[id].put.ts`    | PUT    | 🔴 未开始 | 更新应用                       |
-|                   | `server/api/admin/oauth/applications/[id].delete.ts` | DELETE | 🔴 未开始 | 删除应用                       |
-| **Admin / SSO**   | `server/api/admin/sso/providers/index.get.ts`        | GET    | 🔴 未开始 | 提供商列表                     |
-|                   | `server/api/admin/sso/providers/index.post.ts`       | POST   | 🔴 未开始 | 创建提供商                     |
-|                   | `server/api/admin/sso/providers/[id].get.ts`         | GET    | 🔴 未开始 | 提供商详情                     |
+|                   | `server/api/admin/oauth/applications/[id].put.ts`    | PUT    | ✅ 已完成 | 更新应用                       |
+|                   | `server/api/admin/oauth/applications/[id].delete.ts` | DELETE | ✅ 已完成 | 删除应用                       |
+| **Admin / SSO**   | `server/api/admin/sso/providers/index.get.ts`        | GET    | ✅ 已完成 | 提供商列表                     |
+|                   | `server/api/admin/sso/providers/index.post.ts`       | POST   | ✅ 已完成 | 创建提供商                     |
+|                   | `server/api/admin/sso/providers/[id].get.ts`         | GET    | ✅ 已完成 | 提供商详情                     |
 |                   | `server/api/admin/sso/providers/[id].put.ts`         | PUT    | 🔴 未开始 | 更新提供商                     |
 |                   | `server/api/admin/sso/providers/[id].delete.ts`      | DELETE | 🔴 未开始 | 删除提供商                     |
 | **Auth**          | `server/api/auth/[...all].ts`                        | ALL    | 🔴 未开始 | **核心认证流程** (Better-Auth) |
