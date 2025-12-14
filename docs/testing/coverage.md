@@ -7,14 +7,14 @@
 
 ### 覆盖率分布
 
-| 模块           | 覆盖率 (Lines) | 状态                      |
-| :------------- | :------------- | :------------------------ |
-| `utils/shared` | ~80%           | ✅ 良好                   |
-| `server/utils` | ~48%           | ⚠️ 需提升 (Email, Logger) |
-| `composables`  | ~5%            | ❌ 严重不足               |
-| `server/api`   | 0%             | ❌ 严重不足               |
-| `components`   | ~26%           | ❌ 严重不足               |
-| `pages`        | 0%             | ❌ 严重不足               |
+| 模块           | 覆盖率 (Lines) | 状态                               |
+| :------------- | :------------- | :--------------------------------- |
+| `utils/shared` | ~80%           | ✅ 良好                            |
+| `server/utils` | ~48%           | ⚠️ 需提升 (Email, Logger)          |
+| `composables`  | ~5%            | ❌ 严重不足                        |
+| `server/api`   | ~1%            | ⚠️ 启动中 (`sync-admin-role` 100%) |
+| `components`   | ~26%           | ❌ 严重不足                        |
+| `pages`        | 0%             | ❌ 严重不足                        |
 
 ## 提升策略
 
@@ -24,6 +24,7 @@ Server API 是系统的核心业务逻辑入口，目前覆盖率为 0。
 
 -   **策略**: 使用 `@nuxt/test-utils` 的 `server` 测试能力或直接模拟 `H3Event` 进行单元测试。
 -   **重点目标**:
+    -   ✅ `server/api/admin/sync-admin-role.post.ts` (100% 覆盖，作为 Pilot)
     -   `server/api/auth/*` (登录、注册、注销)
     -   `server/api/admin/*` (用户管理、配置管理)
     -   `server/api/oauth/*` (OAuth 流程)
@@ -93,6 +94,15 @@ export default defineVitestConfig({
                 "**/*.d.ts",
                 "**/*.config.ts",
                 "tests/**",
+                "coverage/**",
+                "public/**",
+                "assets/**",
+                "scripts/**",
+                "virtual:**",
+                "**/*.mjs",
+                ".output/**",
+                ".vercel/**",
+                ".vitepress/**",
             ],
         },
     },

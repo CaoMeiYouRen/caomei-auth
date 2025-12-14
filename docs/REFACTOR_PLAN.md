@@ -226,7 +226,8 @@
 -   **当前状态 (2025-12-14)**：
 
     -   总体覆盖率：~17.65%
-    -   主要缺口：`server/api` (0%), `composables` (~5%), `components` (~26%)。
+    -   主要缺口：`server/api` (~1%), `composables` (~5%), `components` (~26%)。
+    -   进展：`server/api/admin/sync-admin-role.post.ts` 已达成 100% 覆盖（Pilot）。
     -   详细分析见 [测试覆盖率提升计划](./testing/coverage.md)。
 
 -   **阶段化推进**：
