@@ -21,5 +21,21 @@ export default defineVitestConfig({
                 inline: ['primevue'],
             },
         },
+        coverage: {
+            provider: 'v8',
+            reporter: ['text', 'json', 'html'],
+            exclude: [
+                '**/node_modules/**',
+                '**/dist/**',
+                '**/.nuxt/**',
+                '**/*.d.ts',
+                '**/*.config.ts',
+                'tests/**',
+                'coverage/**',
+                'public/**',
+                'assets/**',
+                'scripts/**',
+            ],
+        },
     },
 })

@@ -223,13 +223,23 @@
 
 ### 4. 覆盖率 ≥ 60%（G4）
 
+-   **当前状态 (2025-12-14)**：
+
+    -   总体覆盖率：~17.65%
+    -   主要缺口：`server/api` (0%), `composables` (~5%), `components` (~26%)。
+    -   详细分析见 [测试覆盖率提升计划](./testing/coverage.md)。
+
 -   **阶段化推进**：
-    1. **P1**：纯函数/确定性逻辑（已完成大部分，继续覆盖新增 util）。
-    2. **P2**：副作用轻量模块（rate-limit、email-service、phone-service），通过依赖注入和 mock 实现。
-    3. **P3**：API & 组件集成；利用 `@nuxt/test-utils` + in-memory DB fixture。
+
+    1.  **P1 (Server API)**：针对 `server/api/auth`, `server/api/admin` 等核心接口建立测试脚手架，覆盖主要业务路径。
+    2.  **P2 (Composables)**：随着逻辑剥离，重点测试 `useLoginFlow`, `useRegisterFlow` 等核心流程 Hook。
+    3.  **P3 (Utils & Base Components)**：补全 `server/utils` (email, logger) 和 `components/base` 的测试。
+
 -   **工具配置**：
+
     -   在 `vitest.config.ts` 的 `coverage` 中设置阈值（如 `lines: 0.6`）并输出 `lcov`。
     -   为 PR CI 新增 `pnpm test --coverage` job，未达标自动失败。
+
 -   **补测清单（新增）**：
     -   `server/utils/email-service.ts`（模板错误、限流、sendEmail 异常）。
     -   `server/utils/phone.ts`（Spug/Twilio 分支、限流日志）。
