@@ -50,10 +50,35 @@ Server API 是系统的核心业务逻辑入口。
 随着重构将逻辑从 Vue 组件移至 Composables，Composables 的测试变得至关重要。
 
 -   **策略**: 使用 `vi.mock` 模拟 `useFetch`, `navigateTo`, `useRuntimeConfig` 等 Nuxt 内置组合式函数。
--   **重点目标**:
-    -   `useLoginFlow`, `useRegisterFlow`
-    -   `useDataTable`
-    -   `useForm` (已部分完成)
+
+#### 待补充测试清单
+
+| 优先级 | 模块            | 文件路径                                          | 状态      | 备注                   |
+| :----- | :-------------- | :------------------------------------------------ | :-------- | :--------------------- |
+| **P0** | **Core Flows**  | `composables/use-login-flow.ts`                   | ❌ 待开发 | 登录流程               |
+|        |                 | `composables/use-register-flow.ts`                | ❌ 待开发 | 注册流程               |
+|        |                 | `composables/use-forgot-password-flow.ts`         | ❌ 待开发 | 找回密码流程           |
+|        |                 | `composables/use-security-settings.ts`            | ❌ 待开发 | 安全设置               |
+|        |                 | `composables/use-captcha.ts`                      | ❌ 待开发 | 验证码逻辑             |
+| **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ❌ 待开发 | 数据表格逻辑           |
+|        | **Admin**       | `composables/admin/use-user-management.ts`        | ❌ 待开发 | 用户管理               |
+|        |                 | `composables/admin/use-application-management.ts` | ❌ 待开发 | 应用管理               |
+|        |                 | `composables/admin/use-sso-providers.ts`          | ❌ 待开发 | SSO 提供商管理         |
+| **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ❌ 待开发 | 修改密码               |
+|        |                 | `composables/use-profile-flow.ts`                 | ❌ 待开发 | 个人资料               |
+|        |                 | `composables/use-quick-login-flow.ts`             | ❌ 待开发 | 快捷登录               |
+|        |                 | `composables/use-sso-login-flow.ts`               | ❌ 待开发 | SSO 登录               |
+|        |                 | `composables/use-oauth-consent.ts`                | ❌ 待开发 | OAuth 授权             |
+|        |                 | `composables/use-oauth-clients.ts`                | ❌ 待开发 | 已授权应用管理         |
+|        |                 | `composables/use-index-flow.ts`                   | ❌ 待开发 | 首页逻辑               |
+| **P3** | **Utils**       | `composables/utils/*.ts`                          | ❌ 待开发 | 剪贴板、Logout 等      |
+|        | **Analytics**   | `composables/use-*-analytics.ts`                  | ❌ 待开发 | 统计代码 (Mock window) |
+
+#### 已有测试
+
+-   `composables/core/use-api.ts` (✅ Covered)
+-   `composables/core/use-form.ts` (✅ Covered)
+-   `composables/use-otp.ts` (✅ Covered)
 
 ### 3. 补充 Server Utils 测试 (P2)
 
