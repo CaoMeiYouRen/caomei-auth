@@ -53,27 +53,25 @@ Server API 是系统的核心业务逻辑入口。
 
 #### 待补充测试清单
 
-| 优先级 | 模块            | 文件路径                                          | 状态      | 备注                   |
-| :----- | :-------------- | :------------------------------------------------ | :-------- | :--------------------- |
-| **P0** | **Core Flows**  | `composables/use-login-flow.ts`                   | ✅ 已完成 | 登录流程               |
-|        |                 | `composables/use-register-flow.ts`                | ✅ 已完成 | 注册流程               |
-|        |                 | `composables/use-forgot-password-flow.ts`         | ✅ 已完成 | 找回密码流程           |
-|        |                 | `composables/use-security-settings.ts`            | ✅ 已完成 | 安全设置               |
-|        |                 | `composables/use-captcha.ts`                      | ✅ 已完成 | 验证码逻辑             |
-| **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ✅ 已完成 | 数据表格逻辑           |
-|        | **Admin**       | `composables/admin/use-user-management.ts`        | ✅ 已完成 | 用户管理               |
-|        |                 | `composables/admin/use-application-management.ts` | ✅ 已完成 | 应用管理               |
-|        |                 | `composables/admin/use-sso-providers.ts`          | ✅ 已完成 | SSO 提供商管理         |
-|        |                 | `composables/admin/use-logs-management.ts`        | ✅ 已完成 | 日志管理               |
-| **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ✅ 已完成 | 修改密码               |
-|        |                 | `composables/use-profile-flow.ts`                 | ✅ 已完成 | 个人资料               |
-|        |                 | `composables/use-quick-login-flow.ts`             | ✅ 已完成 | 快捷登录               |
-|        |                 | `composables/use-sso-login-flow.ts`               | ✅ 已完成 | SSO 登录               |
-|        |                 | `composables/use-oauth-consent.ts`                | ✅ 已完成 | OAuth 授权             |
-|        |                 | `composables/use-oauth-clients.ts`                | ✅ 已完成 | 已授权应用管理         |
-|        |                 | `composables/use-index-flow.ts`                   | ✅ 已完成 | 首页逻辑               |
-| **P3** | **Utils**       | `composables/utils/*.ts`                          | ❌ 待开发 | 剪贴板、Logout 等      |
-|        | **Analytics**   | `composables/use-*-analytics.ts`                  | ❌ 待开发 | 统计代码 (Mock window) |
+| 优先级 | 模块            | 文件路径                                          | 状态      | 备注           |
+| :----- | :-------------- | :------------------------------------------------ | :-------- | :------------- |
+| **P0** | **Core Flows**  | `composables/use-login-flow.ts`                   | ✅ 已完成 | 登录流程       |
+|        |                 | `composables/use-register-flow.ts`                | ✅ 已完成 | 注册流程       |
+|        |                 | `composables/use-forgot-password-flow.ts`         | ✅ 已完成 | 找回密码流程   |
+|        |                 | `composables/use-security-settings.ts`            | ✅ 已完成 | 安全设置       |
+|        |                 | `composables/use-captcha.ts`                      | ✅ 已完成 | 验证码逻辑     |
+| **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ✅ 已完成 | 数据表格逻辑   |
+|        | **Admin**       | `composables/admin/use-user-management.ts`        | ✅ 已完成 | 用户管理       |
+|        |                 | `composables/admin/use-application-management.ts` | ✅ 已完成 | 应用管理       |
+|        |                 | `composables/admin/use-sso-providers.ts`          | ✅ 已完成 | SSO 提供商管理 |
+|        |                 | `composables/admin/use-logs-management.ts`        | ✅ 已完成 | 日志管理       |
+| **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ✅ 已完成 | 修改密码       |
+|        |                 | `composables/use-profile-flow.ts`                 | ✅ 已完成 | 个人资料       |
+|        |                 | `composables/use-quick-login-flow.ts`             | ✅ 已完成 | 快捷登录       |
+|        |                 | `composables/use-sso-login-flow.ts`               | ✅ 已完成 | SSO 登录       |
+|        |                 | `composables/use-oauth-consent.ts`                | ✅ 已完成 | OAuth 授权     |
+|        |                 | `composables/use-oauth-clients.ts`                | ✅ 已完成 | 已授权应用管理 |
+|        |                 | `composables/use-index-flow.ts`                   | ✅ 已完成 | 首页逻辑       |
 
 #### 已有测试
 
@@ -83,12 +81,23 @@ Server API 是系统的核心业务逻辑入口。
 
 ### 3. 补充 Server Utils 测试 (P2)
 
--   **重点目标**:
-    -   `server/utils/email` (完善边界情况)
-    -   `server/utils/logger` (确保日志逻辑正确)
-    -   `server/utils/sms/providers` (Mock 外部 API 调用)
+-   **策略**: 针对 Node.js 环境下的工具函数，重点测试环境检测、文件 I/O 降级、隐私脱敏及第三方 API 参数组装。
 
-### 4. 组件测试 (P3)
+| 优先级     | 模块                | 文件路径                          | 状态      | 备注                                 |
+| :--------- | :------------------ | :-------------------------------- | :-------- | :----------------------------------- |
+| **High**   | **Logger**          | `server/utils/logger.ts`          | ❌ 待开发 | 环境检测、文件写入降级、隐私脱敏     |
+| **Medium** | **SMS Providers**   | `server/utils/sms/providers/*.ts` | ❌ 待开发 | 阿里云/腾讯云/Twilio 参数组装与 Mock |
+| **Low**    | **Email Templates** | `server/utils/email/templates.ts` | ❌ 待开发 | 模板渲染、主题生成                   |
+| **Low**    | **Email Service**   | `server/utils/email/index.ts`     | ⚠️ 需完善 | 限流边界、并发锁模拟                 |
+
+### 4. 其他待补充测试 (P3)
+
+| 模块          | 文件路径                         | 状态      | 备注                   |
+| :------------ | :------------------------------- | :-------- | :--------------------- |
+| **Utils**     | `composables/utils/*.ts`         | ❌ 待开发 | 剪贴板、Logout 等      |
+| **Analytics** | `composables/use-*-analytics.ts` | ❌ 待开发 | 统计代码 (Mock window) |
+
+### 5. 组件测试 (P3)
 
 -   **策略**: 优先测试 `components/base` 基础组件，确保 UI 交互逻辑正确。业务组件主要依赖 Composables 测试。
 
