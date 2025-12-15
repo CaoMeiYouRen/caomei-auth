@@ -10,7 +10,7 @@
 | 模块           | 覆盖率 (Lines) | 状态                               |
 | :------------- | :------------- | :--------------------------------- |
 | `utils/shared` | ~80%           | ✅ 良好                            |
-| `server/utils` | ~48%           | ⚠️ 需提升 (Email, Logger)          |
+| `server/utils` | ~80%           | ✅ 良好                            |
 | `composables`  | ~5%            | ❌ 严重不足                        |
 | `server/api`   | ~1%            | ⚠️ 启动中 (`sync-admin-role` 100%) |
 | `components`   | ~26%           | ❌ 严重不足                        |
@@ -85,9 +85,9 @@ Server API 是系统的核心业务逻辑入口。
 
 | 优先级     | 模块                | 文件路径                          | 状态      | 备注                                 |
 | :--------- | :------------------ | :-------------------------------- | :-------- | :----------------------------------- |
-| **High**   | **Logger**          | `server/utils/logger.ts`          | ❌ 待开发 | 环境检测、文件写入降级、隐私脱敏     |
-| **Medium** | **SMS Providers**   | `server/utils/sms/providers/*.ts` | ❌ 待开发 | 阿里云/腾讯云/Twilio 参数组装与 Mock |
-| **Low**    | **Email Templates** | `server/utils/email/templates.ts` | ❌ 待开发 | 模板渲染、主题生成                   |
+| **High**   | **Logger**          | `server/utils/logger.ts`          | ✅ 已完成 | 环境检测、文件写入降级、隐私脱敏     |
+| **Medium** | **SMS Providers**   | `server/utils/sms/providers/*.ts` | ✅ 已完成 | 阿里云/腾讯云/Twilio 参数组装与 Mock |
+| **Low**    | **Email Templates** | `server/utils/email/templates.ts` | ✅ 已完成 | 模板渲染、主题生成                   |
 | **Low**    | **Email Service**   | `server/utils/email/index.ts`     | ⚠️ 需完善 | 限流边界、并发锁模拟                 |
 
 ### 4. 其他待补充测试 (P3)
