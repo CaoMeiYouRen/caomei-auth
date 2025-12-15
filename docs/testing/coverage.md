@@ -65,13 +65,13 @@ Server API 是系统的核心业务逻辑入口。
 |        |                 | `composables/admin/use-application-management.ts` | ✅ 已完成 | 应用管理               |
 |        |                 | `composables/admin/use-sso-providers.ts`          | ✅ 已完成 | SSO 提供商管理         |
 |        |                 | `composables/admin/use-logs-management.ts`        | ✅ 已完成 | 日志管理               |
-| **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ❌ 待开发 | 修改密码               |
-|        |                 | `composables/use-profile-flow.ts`                 | ❌ 待开发 | 个人资料               |
-|        |                 | `composables/use-quick-login-flow.ts`             | ❌ 待开发 | 快捷登录               |
-|        |                 | `composables/use-sso-login-flow.ts`               | ❌ 待开发 | SSO 登录               |
-|        |                 | `composables/use-oauth-consent.ts`                | ❌ 待开发 | OAuth 授权             |
-|        |                 | `composables/use-oauth-clients.ts`                | ❌ 待开发 | 已授权应用管理         |
-|        |                 | `composables/use-index-flow.ts`                   | ❌ 待开发 | 首页逻辑               |
+| **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ✅ 已完成 | 修改密码               |
+|        |                 | `composables/use-profile-flow.ts`                 | ✅ 已完成 | 个人资料               |
+|        |                 | `composables/use-quick-login-flow.ts`             | ✅ 已完成 | 快捷登录               |
+|        |                 | `composables/use-sso-login-flow.ts`               | ✅ 已完成 | SSO 登录               |
+|        |                 | `composables/use-oauth-consent.ts`                | ✅ 已完成 | OAuth 授权             |
+|        |                 | `composables/use-oauth-clients.ts`                | ✅ 已完成 | 已授权应用管理         |
+|        |                 | `composables/use-index-flow.ts`                   | ✅ 已完成 | 首页逻辑               |
 | **P3** | **Utils**       | `composables/utils/*.ts`                          | ❌ 待开发 | 剪贴板、Logout 等      |
 |        | **Analytics**   | `composables/use-*-analytics.ts`                  | ❌ 待开发 | 统计代码 (Mock window) |
 
