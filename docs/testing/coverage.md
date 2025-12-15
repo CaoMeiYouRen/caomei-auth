@@ -1,6 +1,6 @@
 # 测试覆盖率提升计划
 
-## 当前状态 (2025-12-14)
+## 当前状态 (2025-12-15)
 
 -   **总体覆盖率**: ~17.65% (Lines)
 -   **目标**: ≥ 60%
@@ -60,10 +60,11 @@ Server API 是系统的核心业务逻辑入口。
 |        |                 | `composables/use-forgot-password-flow.ts`         | ✅ 已完成 | 找回密码流程           |
 |        |                 | `composables/use-security-settings.ts`            | ✅ 已完成 | 安全设置               |
 |        |                 | `composables/use-captcha.ts`                      | ✅ 已完成 | 验证码逻辑             |
-| **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ❌ 待开发 | 数据表格逻辑           |
-|        | **Admin**       | `composables/admin/use-user-management.ts`        | ❌ 待开发 | 用户管理               |
-|        |                 | `composables/admin/use-application-management.ts` | ❌ 待开发 | 应用管理               |
-|        |                 | `composables/admin/use-sso-providers.ts`          | ❌ 待开发 | SSO 提供商管理         |
+| **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ✅ 已完成 | 数据表格逻辑           |
+|        | **Admin**       | `composables/admin/use-user-management.ts`        | ✅ 已完成 | 用户管理               |
+|        |                 | `composables/admin/use-application-management.ts` | ✅ 已完成 | 应用管理               |
+|        |                 | `composables/admin/use-sso-providers.ts`          | ✅ 已完成 | SSO 提供商管理         |
+|        |                 | `composables/admin/use-logs-management.ts`        | ✅ 已完成 | 日志管理               |
 | **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ❌ 待开发 | 修改密码               |
 |        |                 | `composables/use-profile-flow.ts`                 | ❌ 待开发 | 个人资料               |
 |        |                 | `composables/use-quick-login-flow.ts`             | ❌ 待开发 | 快捷登录               |
