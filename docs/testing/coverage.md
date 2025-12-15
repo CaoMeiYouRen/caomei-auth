@@ -88,14 +88,14 @@ Server API 是系统的核心业务逻辑入口。
 | **High**   | **Logger**          | `server/utils/logger.ts`          | ✅ 已完成 | 环境检测、文件写入降级、隐私脱敏     |
 | **Medium** | **SMS Providers**   | `server/utils/sms/providers/*.ts` | ✅ 已完成 | 阿里云/腾讯云/Twilio 参数组装与 Mock |
 | **Low**    | **Email Templates** | `server/utils/email/templates.ts` | ✅ 已完成 | 模板渲染、主题生成                   |
-| **Low**    | **Email Service**   | `server/utils/email/index.ts`     | ⚠️ 需完善 | 限流边界、并发锁模拟                 |
+| **Low**    | **Email Service**   | `server/utils/email/index.ts`     | ✅ 已完成 | 限流边界、并发锁模拟                 |
 
 ### 4. 其他待补充测试 (P3)
 
 | 模块          | 文件路径                         | 状态      | 备注                   |
 | :------------ | :------------------------------- | :-------- | :--------------------- |
-| **Utils**     | `composables/utils/*.ts`         | ❌ 待开发 | 剪贴板、Logout 等      |
-| **Analytics** | `composables/use-*-analytics.ts` | ❌ 待开发 | 统计代码 (Mock window) |
+| **Utils**     | `composables/utils/*.ts`         | ✅ 已完成 | 剪贴板、Logout 等      |
+| **Analytics** | `composables/use-*-analytics.ts` | ✅ 已完成 | 统计代码 (Mock window) |
 
 ### 5. 组件测试 (P3)
 
