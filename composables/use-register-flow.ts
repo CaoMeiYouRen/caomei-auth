@@ -105,6 +105,10 @@ export function useRegisterFlow() {
     })
 
     const changeMode = (mode: 'email' | 'phone') => {
+        if (mode === 'phone' && !phoneEnabled) {
+            toast.add({ severity: 'error', summary: '功能未启用', detail: '短信功能未启用，请使用其他方式注册', life: 3000 })
+            return
+        }
         params.mode = mode
         activeTab.value = mode
         setErrors({})

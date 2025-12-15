@@ -55,11 +55,11 @@ Server API 是系统的核心业务逻辑入口。
 
 | 优先级 | 模块            | 文件路径                                          | 状态      | 备注                   |
 | :----- | :-------------- | :------------------------------------------------ | :-------- | :--------------------- |
-| **P0** | **Core Flows**  | `composables/use-login-flow.ts`                   | ❌ 待开发 | 登录流程               |
-|        |                 | `composables/use-register-flow.ts`                | ❌ 待开发 | 注册流程               |
-|        |                 | `composables/use-forgot-password-flow.ts`         | ❌ 待开发 | 找回密码流程           |
-|        |                 | `composables/use-security-settings.ts`            | ❌ 待开发 | 安全设置               |
-|        |                 | `composables/use-captcha.ts`                      | ❌ 待开发 | 验证码逻辑             |
+| **P0** | **Core Flows**  | `composables/use-login-flow.ts`                   | ✅ 已完成 | 登录流程               |
+|        |                 | `composables/use-register-flow.ts`                | ✅ 已完成 | 注册流程               |
+|        |                 | `composables/use-forgot-password-flow.ts`         | ✅ 已完成 | 找回密码流程           |
+|        |                 | `composables/use-security-settings.ts`            | ✅ 已完成 | 安全设置               |
+|        |                 | `composables/use-captcha.ts`                      | ✅ 已完成 | 验证码逻辑             |
 | **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ❌ 待开发 | 数据表格逻辑           |
 |        | **Admin**       | `composables/admin/use-user-management.ts`        | ❌ 待开发 | 用户管理               |
 |        |                 | `composables/admin/use-application-management.ts` | ❌ 待开发 | 应用管理               |
