@@ -17,8 +17,8 @@ export function useUserManagement() {
     const session = computed(() => sessionState.value?.data)
 
     // 筛选状态 (Specific to this view)
-    const selectedRole = ref(null)
-    const selectedStatus = ref(null)
+    const selectedRole = ref<string | null>(null)
+    const selectedStatus = ref<string | null>(null)
     const selectedUsers = ref<any[]>([])
 
     const fetcher = async (params: DataTableFetchParams) => {
