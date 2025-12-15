@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref } from 'vue'
 import { useApplicationManagement } from '@/composables/admin/use-application-management'
 
 // Mock dependencies

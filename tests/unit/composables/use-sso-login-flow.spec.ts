@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref } from 'vue'
 import { useSsoLoginFlow } from '@/composables/use-sso-login-flow'
 import { authClient } from '@/lib/auth-client'
 

@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref } from 'vue'
 import { useDataTable } from '@/composables/core/use-data-table'
 
 describe('useDataTable', () => {
@@ -114,7 +113,7 @@ describe('useDataTable', () => {
     })
 
     it('handles errors', async () => {
-        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { /* noop */ })
         mockFetcher.mockRejectedValue(new Error('Fetch failed'))
 
         const { load, loading } = useDataTable({

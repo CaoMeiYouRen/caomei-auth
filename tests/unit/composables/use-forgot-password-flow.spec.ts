@@ -4,7 +4,7 @@ import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useForgotPasswordFlow } from '@/composables/use-forgot-password-flow'
 
 // Mock Nuxt composables
-const { config, useToastMock, toastAddMock } = vi.hoisted(() => {
+const { config, useToastMock } = vi.hoisted(() => {
     const addMock = vi.fn()
     return {
         config: {
@@ -64,7 +64,7 @@ describe('useForgotPasswordFlow', () => {
     })
 
     it('validates email before sending code', async () => {
-        const { email, sendEmailCode, errors } = useForgotPasswordFlow()
+        const { sendEmailCode } = useForgotPasswordFlow()
 
         // Empty email
         await sendEmailCode()

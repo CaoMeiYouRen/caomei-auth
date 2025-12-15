@@ -1,4 +1,3 @@
-import fs from 'fs'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock dependencies

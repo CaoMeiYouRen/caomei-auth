@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref } from 'vue'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useIndexFlow } from '@/composables/use-index-flow'
-import { authClient } from '@/lib/auth-client'
 
 // Mock authClient using hoisted variable
 const useSessionMock = vi.hoisted(() => vi.fn())

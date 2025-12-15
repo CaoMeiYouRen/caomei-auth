@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { defineEventHandler, getRequestURL } from 'h3'
 
 // Polyfill auto-imports
@@ -47,7 +47,7 @@ describe('server/api/social/providers.get', () => {
 
         expect(result.success).toBe(true)
         expect(result.providers).toBeDefined()
-        
+
         // Check that enabled providers are present
         const github = result.providers!.find((p: any) => p.provider === 'github')
         expect(github).toBeDefined()
@@ -78,7 +78,7 @@ describe('server/api/social/providers.get', () => {
         const result = await handler(event as any)
 
         expect(result.success).toBe(true)
-        
+
         // Check that disabled providers ARE present
         const google = result.providers!.find((p: any) => p.provider === 'google')
         expect(google).toBeDefined()

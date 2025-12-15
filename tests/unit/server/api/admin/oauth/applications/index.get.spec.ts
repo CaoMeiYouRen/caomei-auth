@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getQuery } from 'h3'
-import { Like } from 'typeorm'
 import indexHandler from '@/server/api/admin/oauth/applications/index.get'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'

@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref, reactive } from 'vue'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useLoginFlow } from '@/composables/use-login-flow'
-import { authClient } from '@/lib/auth-client'
 
 // Mock Nuxt composables
 const { config, useToastMock, useFetchMock, useNuxtAppMock, toastAddMock } = vi.hoisted(() => {
