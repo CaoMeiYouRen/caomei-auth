@@ -112,10 +112,10 @@ Server API 是系统的核心业务逻辑入口。
 |        |             | `components/base/phone-input.vue`  | ✅ 已完成 | 国家码选择、输入格式化             |
 |        |             | `components/base/status-badge.vue` | ✅ 已完成 | 状态样式映射                       |
 |        |             | `components/base/table.vue`        | ✅ 已完成 | 数据渲染、分页/排序事件            |
-| **P1** | **Shared**  | `components/captcha.vue`           | ❌ 待开发 | 验证码渲染、Token 回调             |
-|        |             | `components/send-code-button.vue`  | ❌ 待开发 | 倒计时逻辑、点击事件、Loading 状态 |
-|        |             | `components/password-strength.vue` | ❌ 待开发 | 强度计算视觉反馈                   |
-|        |             | `components/theme-toggle.vue`      | ❌ 待开发 | 主题切换交互                       |
+| **P1** | **Shared**  | `components/captcha.vue`           | ✅ 已完成 | 验证码渲染、Token 回调             |
+|        |             | `components/send-code-button.vue`  | ✅ 已完成 | 倒计时逻辑、点击事件、Loading 状态 |
+|        |             | `components/password-strength.vue` | ✅ 已完成 | 强度计算视觉反馈                   |
+|        |             | `components/theme-toggle.vue`      | ✅ 已完成 | 主题切换交互                       |
 | **P2** | **Feature** | `components/auth-left.vue`         | ❌ 待开发 | 静态展示组件                       |
 |        |             | `components/app-footer.vue`        | ❌ 待开发 | 静态展示组件                       |
 
