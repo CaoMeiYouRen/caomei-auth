@@ -101,4 +101,50 @@ describe('useRegisterFlow', () => {
         password.value = 'password123'
         expect(password.value).toBe('password123')
     })
+
+    it('handles email registration success', async () => {
+        const { activeTab, email, password, confirmPassword, agreedToTerms, register } = useRegisterFlow()
+        activeTab.value = 'email'
+        email.value = 'test@example.com'
+        password.value = 'password123'
+        confirmPassword.value = 'password123'
+        agreedToTerms.value = true
+
+        const signUpMock = vi.fn().mockResolvedValue({ data: { user: { id: '1' } }, error: null })
+        const { authClient } = await import('@/lib/auth-client')
+        authClient.signUp.email = signUpMock
+
+        await register()
+
+        expect(signUpMock).toHaveBeenCalledWith({
+            email: 'test@example.com',
+            password: 'password123',
+            name: '',
+            username: '',
+        }, undefined)
+    })
+
+    it('handles phone registration success', async () => {
+        const { activeTab, phone, phoneCode, password, confirmPassword, agreedToTerms, register } = useRegisterFlow()
+        activeTab.value = 'phone'
+        phone.value = '+8613800138000'
+        phoneCode.value = '123456'
+        password.value = 'password123'
+        confirmPassword.value = 'password123'
+        agreedToTerms.value = true
+
+        const verifyMock = vi.fn().mockResolvedValue({ data: { status: true }, error: null })
+        const updateUserMock = vi.fn().mockResolvedValue({ data: { user: { id: '1' } }, error: null })
+        const { authClient } = await import('@/lib/auth-client')
+        authClient.phoneNumber = { verify: verifyMock } as any
+        authClient.updateUser = updateUserMock
+
+        await register()
+
+        expect(verifyMock).toHaveBeenCalledWith({
+            phoneNumber: '+8613800138000',
+            code: '123456',
+        })
+        expect(updateUserMock).toHaveBeenCalled()
+    })
 })

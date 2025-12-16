@@ -53,27 +53,27 @@ Server API 是系统的核心业务逻辑入口。
 
 #### 待补充测试清单
 
-| 优先级 | 模块            | 文件路径                                          | 状态    | 备注           |
-| :----- | :-------------- | :------------------------------------------------ | :------ | :------------- |
-| **P0** | **Core Flows**  | `composables/use-login-flow.ts`                   | ⚠️ 22%  | 登录流程       |
-|        |                 | `composables/use-register-flow.ts`                | ⚠️ 37%  | 注册流程       |
-|        |                 | `composables/use-forgot-password-flow.ts`         | ⚠️ 36%  | 找回密码流程   |
-|        |                 | `composables/use-security-settings.ts`            | ⚠️ 31%  | 安全设置       |
-|        |                 | `composables/use-captcha.ts`                      | ✅ 73%  | 验证码逻辑     |
-| **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ✅ 100% | 数据表格逻辑   |
-|        | **Admin**       | `composables/admin/use-user-management.ts`        | ⚠️ 40%  | 用户管理       |
-|        |                 | `composables/admin/use-application-management.ts` | ✅ 72%  | 应用管理       |
-|        |                 | `composables/admin/use-sso-providers.ts`          | ✅ 71%  | SSO 提供商管理 |
-|        |                 | `composables/admin/use-logs-management.ts`        | ✅ 75%  | 日志管理       |
-| **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ✅ 98%  | 修改密码       |
-|        |                 | `composables/use-profile-flow.ts`                 | ⚠️ 39%  | 个人资料       |
-|        |                 | `composables/use-quick-login-flow.ts`             | ⚠️ 36%  | 快捷登录       |
-|        |                 | `composables/use-sso-login-flow.ts`               | ⚠️ 48%  | SSO 登录       |
-|        |                 | `composables/use-oauth-consent.ts`                | ⚠️ 50%  | OAuth 授权     |
-|        |                 | `composables/use-oauth-clients.ts`                | ⚠️ 53%  | 已授权应用管理 |
-|        |                 | `composables/use-index-flow.ts`                   | ✅ 80%  | 首页逻辑       |
-|        |                 | `composables/use-demo-mode.ts`                    | ❌ 0%   | 演示模式       |
-|        |                 | `composables/use-static-page-flow.ts`             | ❌ 0%   | 静态页面       |
+| 优先级 | 模块            | 文件路径                                          | 状态    | 备注              |
+| :----- | :-------------- | :------------------------------------------------ | :------ | :---------------- |
+| **P0** | **Core Flows**  | `composables/use-login-flow.ts`                   | ✅ 80%+ | 登录流程 (已补充) |
+|        |                 | `composables/use-register-flow.ts`                | ✅ 80%+ | 注册流程 (已补充) |
+|        |                 | `composables/use-forgot-password-flow.ts`         | ⚠️ 36%  | 找回密码流程      |
+|        |                 | `composables/use-security-settings.ts`            | ⚠️ 31%  | 安全设置          |
+|        |                 | `composables/use-captcha.ts`                      | ✅ 73%  | 验证码逻辑        |
+| **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ✅ 100% | 数据表格逻辑      |
+|        | **Admin**       | `composables/admin/use-user-management.ts`        | ⚠️ 40%  | 用户管理          |
+|        |                 | `composables/admin/use-application-management.ts` | ✅ 72%  | 应用管理          |
+|        |                 | `composables/admin/use-sso-providers.ts`          | ✅ 71%  | SSO 提供商管理    |
+|        |                 | `composables/admin/use-logs-management.ts`        | ✅ 75%  | 日志管理          |
+| **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ✅ 98%  | 修改密码          |
+|        |                 | `composables/use-profile-flow.ts`                 | ⚠️ 39%  | 个人资料          |
+|        |                 | `composables/use-quick-login-flow.ts`             | ⚠️ 36%  | 快捷登录          |
+|        |                 | `composables/use-sso-login-flow.ts`               | ⚠️ 48%  | SSO 登录          |
+|        |                 | `composables/use-oauth-consent.ts`                | ⚠️ 50%  | OAuth 授权        |
+|        |                 | `composables/use-oauth-clients.ts`                | ⚠️ 53%  | 已授权应用管理    |
+|        |                 | `composables/use-index-flow.ts`                   | ✅ 80%  | 首页逻辑          |
+|        |                 | `composables/use-demo-mode.ts`                    | ❌ 0%   | 演示模式          |
+|        |                 | `composables/use-static-page-flow.ts`             | ❌ 0%   | 静态页面          |
 
 #### 已有测试
 
@@ -88,7 +88,7 @@ Server API 是系统的核心业务逻辑入口。
 | 优先级     | 模块                | 文件路径                          | 状态    | 备注                                 |
 | :--------- | :------------------ | :-------------------------------- | :------ | :----------------------------------- |
 | **High**   | **Logger**          | `server/utils/logger.ts`          | ⚠️ 37%  | 环境检测、文件写入降级、隐私脱敏     |
-| **High**   | **Email Service**   | `server/utils/email/service.ts`   | ❌ 0%   | 邮件发送服务                         |
+| **High**   | **Email Service**   | `server/utils/email/service.ts`   | ✅ 100% | 邮件发送服务                         |
 | **Medium** | **SMS Providers**   | `server/utils/sms/providers/*.ts` | ✅ 84%  | 阿里云/腾讯云/Twilio 参数组装与 Mock |
 | **Low**    | **Email Templates** | `server/utils/email/templates.ts` | ✅ 70%  | 模板渲染、主题生成                   |
 | **Low**    | **Email Service**   | `server/utils/email/index.ts`     | ✅ 100% | 限流边界、并发锁模拟                 |
