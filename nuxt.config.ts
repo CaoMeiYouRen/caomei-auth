@@ -50,7 +50,7 @@ export default defineNuxtConfig({
     ],
     build: {
         // 使用 Babel 转译不兼容的包
-        transpile: ['sqlite3', 'ms', (ctx) => !ctx.isDev && 'google-libphonenumber'],
+        transpile: ['better-sqlite3', 'ms', (ctx) => !ctx.isDev && 'google-libphonenumber'],
     },
     eslint: {
         config: {

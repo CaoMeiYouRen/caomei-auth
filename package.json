@@ -41,6 +41,7 @@
     "better-auth": "1.4.5",
     "better-auth-localization": "^2.2.2",
     "better-bytes": "^1.2.4",
+    "better-sqlite3": "^12.5.0",
     "chart.js": "^4.5.1",
     "dayjs": "^1.11.19",
     "file-type": "^21.1.1",

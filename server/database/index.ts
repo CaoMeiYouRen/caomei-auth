@@ -248,7 +248,7 @@ export const initializeDB = async () => {
     switch (actualDbType) {
         case 'sqlite':
             options = {
-                type: 'sqlite',
+                type: 'better-sqlite3',
                 database: DATABASE_PATH, // Demo 模式使用内存数据库
             }
             break
