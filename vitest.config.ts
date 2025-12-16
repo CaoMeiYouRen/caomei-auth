@@ -40,6 +40,7 @@ export default defineVitestConfig({
                 '.output/**',
                 '.vercel/**',
                 '.vitepress/**',
+                '**.config.js',
             ],
         },
     },
