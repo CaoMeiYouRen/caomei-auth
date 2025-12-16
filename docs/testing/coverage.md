@@ -105,13 +105,13 @@ Server API 是系统的核心业务逻辑入口。
 
 | 优先级 | 模块        | 文件路径                           | 状态      | 备注                               |
 | :----- | :---------- | :--------------------------------- | :-------- | :--------------------------------- |
-| **P0** | **Base UI** | `components/base/base-dialog.vue`  | ❌ 待开发 | 可见性控制、Slot 渲染、事件触发    |
-|        |             | `components/base/form-group.vue`   | ❌ 待开发 | Label、错误信息显示                |
-|        |             | `components/base/input.vue`        | ❌ 待开发 | v-model 双向绑定、Props 透传       |
-|        |             | `components/base/password.vue`     | ❌ 待开发 | v-model、可见性切换                |
-|        |             | `components/base/phone-input.vue`  | ❌ 待开发 | 国家码选择、输入格式化             |
-|        |             | `components/base/status-badge.vue` | ❌ 待开发 | 状态样式映射                       |
-|        |             | `components/base/table.vue`        | ❌ 待开发 | 数据渲染、分页/排序事件            |
+| **P0** | **Base UI** | `components/base/base-dialog.vue`  | ✅ 已完成 | 可见性控制、Slot 渲染、事件触发    |
+|        |             | `components/base/form-group.vue`   | ✅ 已完成 | Label、错误信息显示                |
+|        |             | `components/base/input.vue`        | ✅ 已完成 | v-model 双向绑定、Props 透传       |
+|        |             | `components/base/password.vue`     | ✅ 已完成 | v-model、可见性切换                |
+|        |             | `components/base/phone-input.vue`  | ✅ 已完成 | 国家码选择、输入格式化             |
+|        |             | `components/base/status-badge.vue` | ✅ 已完成 | 状态样式映射                       |
+|        |             | `components/base/table.vue`        | ✅ 已完成 | 数据渲染、分页/排序事件            |
 | **P1** | **Shared**  | `components/captcha.vue`           | ❌ 待开发 | 验证码渲染、Token 回调             |
 |        |             | `components/send-code-button.vue`  | ❌ 待开发 | 倒计时逻辑、点击事件、Loading 状态 |
 |        |             | `components/password-strength.vue` | ❌ 待开发 | 强度计算视觉反馈                   |
