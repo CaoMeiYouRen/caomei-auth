@@ -116,8 +116,8 @@ Server API 是系统的核心业务逻辑入口。
 |        |             | `components/send-code-button.vue`  | ✅ 已完成 | 倒计时逻辑、点击事件、Loading 状态 |
 |        |             | `components/password-strength.vue` | ✅ 已完成 | 强度计算视觉反馈                   |
 |        |             | `components/theme-toggle.vue`      | ✅ 已完成 | 主题切换交互                       |
-| **P2** | **Feature** | `components/auth-left.vue`         | ❌ 待开发 | 静态展示组件                       |
-|        |             | `components/app-footer.vue`        | ❌ 待开发 | 静态展示组件                       |
+| **P2** | **Feature** | `components/auth-left.vue`         | ✅ 已完成 | 静态展示组件                       |
+|        |             | `components/app-footer.vue`        | ✅ 已完成 | 静态展示组件                       |
 
 ## 测试规范
 
