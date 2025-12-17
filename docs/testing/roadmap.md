@@ -35,19 +35,21 @@
     -   [ ] `utils/password.ts` (密码工具)
     -   [ ] `utils/code.ts` (验证码逻辑)
 -   **Server Utils (Node.js 环境)**
-    -   [x] `server/utils/logger.ts` (日志工具)
+    -   [ ] `server/utils/logger.ts` (日志工具) - 需提升覆盖率
     -   [x] `server/utils/sms/providers/*.ts` (短信提供商)
     -   [x] `server/utils/email/templates.ts` (邮件模板)
     -   [ ] `server/utils/rate-limit.ts` (限流工具)
 
-### 阶段 P2：API 与 业务流程 (规划中)
+### 阶段 P2：API 与 业务流程 (进行中)
 
 -   **API 测试**
     -   [ ] `/api/auth/*` (认证流程)
     -   [ ] `/api/admin/*` (管理后台)
 -   **Composables**
-    -   [ ] `composables/use-login-flow.ts`
-    -   [ ] `composables/use-register-flow.ts`
+    -   [ ] `composables/use-login-flow.ts` (P0)
+    -   [ ] `composables/use-register-flow.ts` (P0)
+    -   [ ] `composables/use-forgot-password-flow.ts` (P1)
+    -   [ ] `composables/use-security-settings.ts` (P1)
 
 ### 阶段 P3：组件与页面 (规划中)
 

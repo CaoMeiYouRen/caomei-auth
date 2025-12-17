@@ -53,27 +53,27 @@ Server API 是系统的核心业务逻辑入口。
 
 #### 待补充测试清单
 
-| 优先级 | 模块            | 文件路径                                          | 状态    | 备注              |
-| :----- | :-------------- | :------------------------------------------------ | :------ | :---------------- |
-| **P0** | **Core Flows**  | `composables/use-login-flow.ts`                   | ✅ 80%+ | 登录流程 (已补充) |
-|        |                 | `composables/use-register-flow.ts`                | ✅ 80%+ | 注册流程 (已补充) |
-|        |                 | `composables/use-forgot-password-flow.ts`         | ⚠️ 36%  | 找回密码流程      |
-|        |                 | `composables/use-security-settings.ts`            | ⚠️ 31%  | 安全设置          |
-|        |                 | `composables/use-captcha.ts`                      | ✅ 73%  | 验证码逻辑        |
-| **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ✅ 100% | 数据表格逻辑      |
-|        | **Admin**       | `composables/admin/use-user-management.ts`        | ⚠️ 40%  | 用户管理          |
-|        |                 | `composables/admin/use-application-management.ts` | ✅ 72%  | 应用管理          |
-|        |                 | `composables/admin/use-sso-providers.ts`          | ✅ 71%  | SSO 提供商管理    |
-|        |                 | `composables/admin/use-logs-management.ts`        | ✅ 75%  | 日志管理          |
-| **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ✅ 100% | 修改密码          |
-|        |                 | `composables/use-profile-flow.ts`                 | ⚠️ 39%  | 个人资料          |
-|        |                 | `composables/use-quick-login-flow.ts`             | ⚠️ 36%  | 快捷登录          |
-|        |                 | `composables/use-sso-login-flow.ts`               | ⚠️ 48%  | SSO 登录          |
-|        |                 | `composables/use-oauth-consent.ts`                | ⚠️ 50%  | OAuth 授权        |
-|        |                 | `composables/use-oauth-clients.ts`                | ⚠️ 53%  | 已授权应用管理    |
-|        |                 | `composables/use-index-flow.ts`                   | ✅ 80%  | 首页逻辑          |
-|        |                 | `composables/use-demo-mode.ts`                    | ✅ 100% | 演示模式          |
-|        |                 | `composables/use-static-page-flow.ts`             | ✅ 100% | 静态页面          |
+| 优先级 | 模块            | 文件路径                                          | 状态    | 备注                                                  |
+| :----- | :-------------- | :------------------------------------------------ | :------ | :---------------------------------------------------- |
+| **P0** | **Core Flows**  | `composables/use-login-flow.ts`                   | ✅ 80%+ | 登录流程 (需补充手机号/验证码登录、2FA、错误状态测试) |
+|        |                 | `composables/use-register-flow.ts`                | ✅ 80%+ | 注册流程 (需补充手机号注册、异常处理)                 |
+|        |                 | `composables/use-forgot-password-flow.ts`         | ⚠️ 36%  | 找回密码流程 (需补充模式切换、异常处理)               |
+|        |                 | `composables/use-security-settings.ts`            | ⚠️ 31%  | 安全设置 (需补充 MFA 开启/关闭、设备登出)             |
+|        |                 | `composables/use-captcha.ts`                      | ✅ 73%  | 验证码逻辑                                            |
+| **P1** | **Core Lib**    | `composables/core/use-data-table.ts`              | ✅ 100% | 数据表格逻辑                                          |
+|        | **Admin**       | `composables/admin/use-user-management.ts`        | ⚠️ 40%  | 用户管理                                              |
+|        |                 | `composables/admin/use-application-management.ts` | ✅ 72%  | 应用管理                                              |
+|        |                 | `composables/admin/use-sso-providers.ts`          | ✅ 71%  | SSO 提供商管理                                        |
+|        |                 | `composables/admin/use-logs-management.ts`        | ✅ 75%  | 日志管理                                              |
+| **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ✅ 100% | 修改密码                                              |
+|        |                 | `composables/use-profile-flow.ts`                 | ⚠️ 39%  | 个人资料                                              |
+|        |                 | `composables/use-quick-login-flow.ts`             | ⚠️ 36%  | 快捷登录                                              |
+|        |                 | `composables/use-sso-login-flow.ts`               | ⚠️ 48%  | SSO 登录                                              |
+|        |                 | `composables/use-oauth-consent.ts`                | ⚠️ 50%  | OAuth 授权                                            |
+|        |                 | `composables/use-oauth-clients.ts`                | ⚠️ 53%  | 已授权应用管理                                        |
+|        |                 | `composables/use-index-flow.ts`                   | ✅ 80%  | 首页逻辑                                              |
+|        |                 | `composables/use-demo-mode.ts`                    | ✅ 100% | 演示模式                                              |
+|        |                 | `composables/use-static-page-flow.ts`             | ✅ 100% | 静态页面                                              |
 
 #### 已有测试
 
@@ -85,23 +85,30 @@ Server API 是系统的核心业务逻辑入口。
 
 -   **策略**: 针对 Node.js 环境下的工具函数，重点测试环境检测、文件 I/O 降级、隐私脱敏及第三方 API 参数组装。
 
-| 优先级     | 模块                | 文件路径                          | 状态    | 备注                                 |
-| :--------- | :------------------ | :-------------------------------- | :------ | :----------------------------------- |
-| **High**   | **Logger**          | `server/utils/logger.ts`          | ⚠️ 37%  | 环境检测、文件写入降级、隐私脱敏     |
-| **High**   | **Email Service**   | `server/utils/email/service.ts`   | ✅ 100% | 邮件发送服务                         |
-| **Medium** | **SMS Providers**   | `server/utils/sms/providers/*.ts` | ✅ 84%  | 阿里云/腾讯云/Twilio 参数组装与 Mock |
-| **Low**    | **Email Templates** | `server/utils/email/templates.ts` | ✅ 70%  | 模板渲染、主题生成                   |
-| **Low**    | **Email Service**   | `server/utils/email/index.ts`     | ✅ 100% | 限流边界、并发锁模拟                 |
-| **Low**    | **Admin Sync**      | `server/utils/admin-role-sync.ts` | ⚠️ 26%  | 管理员角色同步                       |
+| 优先级     | 模块                | 文件路径                          | 状态    | 备注                                                              |
+| :--------- | :------------------ | :-------------------------------- | :------ | :---------------------------------------------------------------- |
+| **High**   | **Logger**          | `server/utils/logger.ts`          | ⚠️ 37%  | 环境检测、文件写入降级、隐私脱敏 (需补充隐私脱敏、多环境输出测试) |
+| **High**   | **Email Service**   | `server/utils/email/service.ts`   | ⚠️ 35%  | 邮件发送服务 (需补充失败重试、限流逻辑)                           |
+| **Medium** | **SMS Providers**   | `server/utils/sms/providers/*.ts` | ✅ 84%  | 阿里云/腾讯云/Twilio 参数组装与 Mock                              |
+| **Low**    | **Email Templates** | `server/utils/email/templates.ts` | ✅ 70%  | 模板渲染、主题生成                                                |
+| **Low**    | **Email Service**   | `server/utils/email/index.ts`     | ✅ 100% | 限流边界、并发锁模拟                                              |
+| **Low**    | **Admin Sync**      | `server/utils/admin-role-sync.ts` | ⚠️ 26%  | 管理员角色同步 (需补充用户创建逻辑)                               |
 
-### 4. 其他待补充测试 (P3)
+### 4. 解决 0% 覆盖率区域 (P2)
+
+| 模块           | 文件路径                            | 状态  | 备注                   |
+| :------------- | :---------------------------------- | :---- | :--------------------- |
+| **Middleware** | `server/middleware/3-demo-guard.ts` | ❌ 0% | 演示模式拦截逻辑       |
+| **Database**   | `server/database/*.ts`              | ❌ 0% | 建议排除或使用集成测试 |
+
+### 5. 其他待补充测试 (P3)
 
 | 模块          | 文件路径                         | 状态    | 备注                   |
 | :------------ | :------------------------------- | :------ | :--------------------- |
 | **Utils**     | `composables/utils/*.ts`         | ✅ 86%  | 剪贴板、Logout 等      |
 | **Analytics** | `composables/use-*-analytics.ts` | ✅ 80%+ | 统计代码 (Mock window) |
 
-### 5. 组件测试 (P3)
+### 6. 组件测试 (P3)
 
 -   **策略**: 优先测试 `components/base` 基础组件，确保 UI 交互逻辑正确。业务组件主要依赖 Composables 测试。
 
