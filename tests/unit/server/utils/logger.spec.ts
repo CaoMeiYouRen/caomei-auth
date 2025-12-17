@@ -37,7 +37,7 @@ vi.mock('fs', async (importOriginal) => {
 })
 
 vi.mock('winston', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('winston')>()
+    const actual = await importOriginal<any>()
     const formatMock = {
         combine: vi.fn().mockReturnValue('combined-format'),
         timestamp: vi.fn(),
@@ -168,7 +168,7 @@ describe('Server Utils: Logger', () => {
 
         const loggerModule = await import('@/server/utils/logger')
         const logger = loggerModule.default
-        const mockWinstonLogger = createLoggerSpy.mock.results[0].value
+        const mockWinstonLogger = createLoggerSpy.mock.results[0]!.value
 
         const email = 'test@example.com'
 
@@ -196,7 +196,7 @@ describe('Server Utils: Logger', () => {
 
         const loggerModule = await import('@/server/utils/logger')
         const logger = loggerModule.default
-        const mockWinstonLogger = createLoggerSpy.mock.results[0].value
+        const mockWinstonLogger = createLoggerSpy.mock.results[0]!.value
 
         const phone = '13800138000'
 
