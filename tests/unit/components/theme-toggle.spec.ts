@@ -68,7 +68,7 @@ describe('ThemeToggle', () => {
     })
 
     it('syncs with system preference', async () => {
-        const wrapper = mount(ThemeToggle, {
+        mount(ThemeToggle, {
             global: {
                 stubs: {
                     Button: ButtonStub,

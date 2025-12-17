@@ -1,6 +1,6 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { ref, defineComponent, Suspense } from 'vue'
+import { ref, defineComponent } from 'vue'
 import AppFooter from '@/components/app-footer.vue'
 import { authClient } from '@/lib/auth-client'
 

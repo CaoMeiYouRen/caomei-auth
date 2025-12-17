@@ -7,7 +7,6 @@ import {
     getPasswordStrengthColor,
     getPasswordValidationError,
     getPasswordScore,
-    getDefaultPasswordStrength,
     PasswordStrength,
 } from '@/utils/shared/password'
 
