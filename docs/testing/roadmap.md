@@ -50,6 +50,9 @@
     -   [ ] `composables/use-register-flow.ts` (P0)
     -   [ ] `composables/use-forgot-password-flow.ts` (P1)
     -   [ ] `composables/use-security-settings.ts` (P1)
+    -   [x] `composables/use-profile-flow.ts` (P1)
+    -   [x] `composables/use-quick-login-flow.ts` (P1)
+    -   [x] `composables/use-sso-login-flow.ts` (P1)
 
 ### 阶段 P3：组件与页面 (规划中)
 

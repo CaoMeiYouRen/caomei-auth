@@ -66,9 +66,9 @@ Server API 是系统的核心业务逻辑入口。
 |        |                 | `composables/admin/use-sso-providers.ts`          | ✅ 71%  | SSO 提供商管理                                        |
 |        |                 | `composables/admin/use-logs-management.ts`        | ✅ 75%  | 日志管理                                              |
 | **P2** | **Other Flows** | `composables/use-change-password-flow.ts`         | ✅ 100% | 修改密码                                              |
-|        |                 | `composables/use-profile-flow.ts`                 | ⚠️ 39%  | 个人资料                                              |
-|        |                 | `composables/use-quick-login-flow.ts`             | ⚠️ 36%  | 快捷登录                                              |
-|        |                 | `composables/use-sso-login-flow.ts`               | ⚠️ 48%  | SSO 登录                                              |
+|        |                 | `composables/use-profile-flow.ts`                 | ✅ 100% | 个人资料                                              |
+|        |                 | `composables/use-quick-login-flow.ts`             | ✅ 100% | 快捷登录                                              |
+|        |                 | `composables/use-sso-login-flow.ts`               | ✅ 100% | SSO 登录                                              |
 |        |                 | `composables/use-oauth-consent.ts`                | ⚠️ 50%  | OAuth 授权                                            |
 |        |                 | `composables/use-oauth-clients.ts`                | ⚠️ 53%  | 已授权应用管理                                        |
 |        |                 | `composables/use-index-flow.ts`                   | ✅ 80%  | 首页逻辑                                              |
