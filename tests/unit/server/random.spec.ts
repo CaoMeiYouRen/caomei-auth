@@ -5,10 +5,12 @@ describe('server/utils/random', () => {
     let mathRandomSpy: ReturnType<typeof vi.spyOn>
 
     beforeEach(() => {
+        vi.stubGlobal('crypto', undefined)
         mathRandomSpy = vi.spyOn(Math, 'random')
     })
 
     afterEach(() => {
+        vi.unstubAllGlobals()
         mathRandomSpy.mockRestore()
     })
 

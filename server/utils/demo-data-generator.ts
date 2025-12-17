@@ -1,7 +1,7 @@
 // import { randomBytes } from 'crypto'
 import dayjs from 'dayjs'
 import { snowflake } from './snowflake'
-import { generateRandomString } from '@/utils/shared/random'
+import { generateRandomString, secureRandom } from '@/utils/shared/random'
 import { maskIP } from '@/utils/shared/privacy'
 import { parseUserAgent } from '@/utils/shared/useragent'
 import type {
@@ -21,9 +21,9 @@ import { formatPhoneNumber } from '@/utils/shared/phone'
  */
 function getRandomDate(daysAgo: number): Date {
     const now = new Date()
-    const randomDays = Math.floor(Math.random() * daysAgo)
-    const randomHours = Math.floor(Math.random() * 24)
-    const randomMinutes = Math.floor(Math.random() * 60)
+    const randomDays = Math.floor(secureRandom() * daysAgo)
+    const randomHours = Math.floor(secureRandom() * 24)
+    const randomMinutes = Math.floor(secureRandom() * 60)
     return dayjs(now).subtract(randomDays, 'day').subtract(randomHours, 'hour').subtract(randomMinutes, 'minute').toDate()
 }
 
@@ -76,12 +76,12 @@ export function generateDemoUsers(count: number = 50): DemoUser[] {
     const domains = ['example.com', 'demo.com', 'test.org', 'sample.net']
 
     for (let i = 0; i < count; i++) {
-        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)]
-        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)]
+        const firstName = firstNames[Math.floor(secureRandom() * firstNames.length)]
+        const lastName = lastNames[Math.floor(secureRandom() * lastNames.length)]
         const name = `${firstName}${lastName}${i + 1}`
-        const domain = domains[Math.floor(Math.random() * domains.length)]
+        const domain = domains[Math.floor(secureRandom() * domains.length)]
         const email = `user${i + 1}@${domain}`
-        const randomValue = Math.random()
+        const randomValue = secureRandom()
         let status: 'active' | 'inactive' | 'suspended'
         if (randomValue > 0.1) {
             status = 'active'
@@ -95,15 +95,15 @@ export function generateDemoUsers(count: number = 50): DemoUser[] {
             id: snowflake.generateId(),
             name,
             email,
-            emailVerified: Math.random() > 0.2,
+            emailVerified: secureRandom() > 0.2,
             image: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
-            role: Math.random() > 0.95 ? 'admin' : 'user',
+            role: secureRandom() > 0.95 ? 'admin' : 'user',
             status,
             createdAt: getRandomDate(365),
             updatedAt: getRandomDate(30),
-            lastLoginAt: Math.random() > 0.3 ? getRandomDate(7) : undefined,
-            phoneNumber: Math.random() > 0.4 ? `+86199${Math.floor(Math.random() * 100000000).toString().padStart(8, '0')}` : undefined,
-            phoneNumberVerified: Math.random() > 0.3,
+            lastLoginAt: secureRandom() > 0.3 ? getRandomDate(7) : undefined,
+            phoneNumber: secureRandom() > 0.4 ? `+86199${Math.floor(secureRandom() * 100000000).toString().padStart(8, '0')}` : undefined,
+            phoneNumberVerified: secureRandom() > 0.3,
         })
     }
 
@@ -143,13 +143,13 @@ export function generateDemoOAuthApps(count: number = 20): DemoOAuthApplication[
                 `https://${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.example.com/callback`,
                 `https://localhost:3000/auth/callback`,
             ],
-            description: descriptions[Math.floor(Math.random() * descriptions.length)],
+            description: descriptions[Math.floor(secureRandom() * descriptions.length)],
             logo: `https://api.dicebear.com/7.x/shapes/svg?seed=${name}`,
-            scopes: ['openid', 'profile', 'email', ...(Math.random() > 0.5 ? ['phone'] : []), ...(Math.random() > 0.7 ? ['admin'] : [])],
-            status: Math.random() > 0.2 ? 'active' : 'inactive',
+            scopes: ['openid', 'profile', 'email', ...(secureRandom() > 0.5 ? ['phone'] : []), ...(secureRandom() > 0.7 ? ['admin'] : [])],
+            status: secureRandom() > 0.2 ? 'active' : 'inactive',
             createdAt: getRandomDate(200),
             updatedAt: getRandomDate(30),
-            authorizedUsers: Math.floor(Math.random() * 1000),
+            authorizedUsers: Math.floor(secureRandom() * 1000),
         })
     }
 
@@ -164,13 +164,13 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
     // 生成完整的IP地址
     const generateRandomIP = () => {
         const ipRanges = [
-            () => `192.168.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
-            () => `10.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
-            () => `172.${16 + Math.floor(Math.random() * 16)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
-            () => `203.208.60.${Math.floor(Math.random() * 256)}`,
-            () => `114.114.114.${Math.floor(Math.random() * 256)}`,
+            () => `192.168.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}`,
+            () => `10.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}`,
+            () => `172.${16 + Math.floor(secureRandom() * 16)}.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}`,
+            () => `203.208.60.${Math.floor(secureRandom() * 256)}`,
+            () => `114.114.114.${Math.floor(secureRandom() * 256)}`,
         ]
-        const generator = ipRanges[Math.floor(Math.random() * ipRanges.length)]
+        const generator = ipRanges[Math.floor(secureRandom() * ipRanges.length)]
         return generator ? generator() : '127.0.0.1'
     }
     const userAgents = [
@@ -187,9 +187,9 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
     const logs: DemoLoginLog[] = []
 
     for (let i = 0; i < count; i++) {
-        const user = users[Math.floor(Math.random() * users.length)]!
-        const method = methods[Math.floor(Math.random() * methods.length)]!
-        const success = Math.random() > 0.15 // 85% 成功率
+        const user = users[Math.floor(secureRandom() * users.length)]!
+        const method = methods[Math.floor(secureRandom() * methods.length)]!
+        const success = secureRandom() > 0.15 // 85% 成功率
         const id = snowflake.generateId()
         logs.push({
             id,
@@ -197,12 +197,12 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
             userEmail: user.email,
             userName: user.name,
             ip: maskIP(generateRandomIP()),
-            userAgent: userAgents[Math.floor(Math.random() * userAgents.length)] || 'Unknown',
-            location: locations[Math.floor(Math.random() * locations.length)] || 'Unknown',
+            userAgent: userAgents[Math.floor(secureRandom() * userAgents.length)] || 'Unknown',
+            location: locations[Math.floor(secureRandom() * locations.length)] || 'Unknown',
             loginMethod: method,
-            provider: method === 'oauth' ? providers[Math.floor(Math.random() * providers.length)] : undefined,
+            provider: method === 'oauth' ? providers[Math.floor(secureRandom() * providers.length)] : undefined,
             success,
-            failureReason: !success ? failureReasons[Math.floor(Math.random() * failureReasons.length)] : undefined,
+            failureReason: !success ? failureReasons[Math.floor(secureRandom() * failureReasons.length)] : undefined,
             createdAt: getRandomDate(30),
         })
     }
@@ -250,12 +250,12 @@ export function generateDemoSSOProviders(count: number = 10): DemoSSOProvider[] 
             tokenUrl: `${process.env.BASE_URL || 'https://auth.example.com'}/oauth/token`,
             userInfoUrl: `${process.env.BASE_URL || 'https://auth.example.com'}/oauth/userinfo`,
             scopes: ['openid', 'profile', 'email'],
-            enabled: Math.random() > 0.2,
+            enabled: secureRandom() > 0.2,
             logo: `https://api.dicebear.com/7.x/shapes/svg?seed=${app.name}`,
             description: app.description,
             createdAt: getRandomDate(100),
             updatedAt: getRandomDate(30),
-            usersCount: Math.floor(Math.random() * 800) + 50,
+            usersCount: Math.floor(secureRandom() * 800) + 50,
         })
     }
     return ssoProviders
@@ -265,14 +265,14 @@ export function generateDemoSSOProviders(count: number = 10): DemoSSOProvider[] 
  * 生成假的统计数据
  */
 export function generateDemoStats(): DemoStats {
-    const totalUsers = Math.floor(Math.random() * 10000) + 5000
-    const activeUsers = Math.floor(totalUsers * (0.6 + Math.random() * 0.3))
-    const totalLogins = Math.floor(totalUsers * (5 + Math.random() * 10))
-    const todayLogins = Math.floor(activeUsers * (0.1 + Math.random() * 0.4))
-    const totalOAuthApps = Math.floor(Math.random() * 50) + 20
-    const activeOAuthApps = Math.floor(totalOAuthApps * (0.7 + Math.random() * 0.3))
-    const totalSSOProviders = Math.floor(Math.random() * 15) + 5
-    const activeSSOProviders = Math.floor(totalSSOProviders * (0.8 + Math.random() * 0.2))
+    const totalUsers = Math.floor(secureRandom() * 10000) + 5000
+    const activeUsers = Math.floor(totalUsers * (0.6 + secureRandom() * 0.3))
+    const totalLogins = Math.floor(totalUsers * (5 + secureRandom() * 10))
+    const todayLogins = Math.floor(activeUsers * (0.1 + secureRandom() * 0.4))
+    const totalOAuthApps = Math.floor(secureRandom() * 50) + 20
+    const activeOAuthApps = Math.floor(totalOAuthApps * (0.7 + secureRandom() * 0.3))
+    const totalSSOProviders = Math.floor(secureRandom() * 15) + 5
+    const activeSSOProviders = Math.floor(totalSSOProviders * (0.8 + secureRandom() * 0.2))
 
     return {
         totalUsers,
@@ -295,13 +295,13 @@ export function generateDemoSessions(count: number = 100): DemoSession[] {
     // 生成完整的IP地址
     const generateRandomIP = () => {
         const ipRanges = [
-            () => `192.168.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
-            () => `10.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
-            () => `172.${16 + Math.floor(Math.random() * 16)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
-            () => `203.208.60.${Math.floor(Math.random() * 256)}`,
-            () => `114.114.114.${Math.floor(Math.random() * 256)}`,
+            () => `192.168.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}`,
+            () => `10.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}`,
+            () => `172.${16 + Math.floor(secureRandom() * 16)}.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}`,
+            () => `203.208.60.${Math.floor(secureRandom() * 256)}`,
+            () => `114.114.114.${Math.floor(secureRandom() * 256)}`,
         ]
-        const generator = ipRanges[Math.floor(Math.random() * ipRanges.length)]
+        const generator = ipRanges[Math.floor(secureRandom() * ipRanges.length)]
         return generator ? generator() : '127.0.0.1'
     }
 
@@ -320,8 +320,8 @@ export function generateDemoSessions(count: number = 100): DemoSession[] {
     const sessions: DemoSession[] = []
 
     for (let i = 0; i < count; i++) {
-        const user = users[Math.floor(Math.random() * users.length)]!
-        const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)] || 'Unknown'
+        const user = users[Math.floor(secureRandom() * users.length)]!
+        const userAgent = userAgents[Math.floor(secureRandom() * userAgents.length)] || 'Unknown'
         const parsedUserAgent = parseUserAgent(userAgent)
         const loginTime = getRandomDate(30)
         const expiresAt = dayjs(loginTime).add(30, 'day').toDate()
@@ -348,9 +348,9 @@ export function generateDemoSessions(count: number = 100): DemoSession[] {
             expiresAt,
             isActive,
             ipAddress: maskIP(generateRandomIP()),
-            location: locations[Math.floor(Math.random() * locations.length)] || 'Unknown',
+            location: locations[Math.floor(secureRandom() * locations.length)] || 'Unknown',
             device: deviceInfo,
-            provider: providers[Math.floor(Math.random() * providers.length)] || 'email',
+            provider: providers[Math.floor(secureRandom() * providers.length)] || 'email',
             sessionToken: `demo_session_${generateRandomString(32)}`,
         })
     }

@@ -3,6 +3,7 @@ import { join } from 'path'
 
 import mjml2html from 'mjml'
 import dayjs from 'dayjs'
+import { unescape } from 'lodash-es'
 
 import logger from '../logger'
 import { getFallbackFragment, getFallbackMjmlTemplate, generateFallbackHtml } from './templates-fallback'
@@ -274,15 +275,12 @@ export class EmailTemplateEngine {
      * 生成纯文本版本
      */
     private generateTextVersion(html: string): string {
-        return html
+        const stripped = html
             .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '') // 移除style标签
             .replace(/<[^>]*>/g, '') // 移除所有HTML标签
             .replace(/&nbsp;/g, ' ')
-            .replace(/&amp;/g, '&')
-            .replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>')
-            .replace(/&quot;/g, '"')
-            .replace(/&#39;/g, '\'')
+
+        return unescape(stripped)
             .replace(/\s+/g, ' ') // 压缩空白字符
             .replace(/\n\s*\n/g, '\n\n') // 处理多余的换行
             .trim()
