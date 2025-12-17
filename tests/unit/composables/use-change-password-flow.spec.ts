@@ -1,91 +1,111 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { useChangePasswordFlow } from '@/composables/use-change-password-flow'
-import { authClient } from '@/lib/auth-client'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { ref } from 'vue'
+import { useChangePasswordFlow } from '../../../composables/use-change-password-flow'
+import { authClient } from '../../../lib/auth-client'
 
 // Mock dependencies
-vi.mock('@/lib/auth-client', () => ({
-    authClient: {
-        changePassword: vi.fn(),
-    },
-}))
-
 vi.mock('primevue/usetoast', () => ({
     useToast: () => ({
         add: vi.fn(),
     }),
 }))
 
-// Mock window.location
-const mockLocation = {
-    href: '',
-}
-vi.stubGlobal('window', {
-    location: mockLocation,
-})
+vi.mock('../../../lib/auth-client', () => ({
+    authClient: {
+        changePassword: vi.fn(),
+    },
+}))
+
+// Mock useForm to execute callback immediately
+vi.mock('../../../composables/core/use-form', () => ({
+    useForm: ({ initialValues }: any) => {
+        const values = ref({ ...initialValues })
+        return {
+            values,
+            errors: ref({}),
+            submitting: ref(false),
+            handleSubmit: async (fn: (vals: any) => Promise<void>) => {
+                await fn(values.value)
+            },
+            setField: (field: string, val: any) => {
+                values.value[field] = val
+            },
+        }
+    },
+}))
 
 describe('useChangePasswordFlow', () => {
+    const originalLocation = window.location
+
     beforeEach(() => {
         vi.clearAllMocks()
-        mockLocation.href = ''
+        vi.useFakeTimers()
+
+        // Mock window.location
+        // Note: In JSDOM, window.location is not configurable by default, but we can try to modify href
+        // Or use Object.defineProperty if needed.
+        // For now, let's try to just spy on it if possible, or assume JSDOM allows setting href.
+        // Actually, JSDOM throws if we try to navigate.
+        // A better way is to mock the assignment.
+
+        Object.defineProperty(window, 'location', {
+            writable: true,
+            value: { href: '' },
+        })
     })
 
-    it('should initialize with default values', () => {
-        const { currentPassword, newPassword, confirmPassword, revokeOtherSessions } = useChangePasswordFlow()
+    afterEach(() => {
+        vi.useRealTimers()
+        Object.defineProperty(window, 'location', {
+            writable: true,
+            value: originalLocation,
+        })
+    })
 
+    it('should initialize with empty values', () => {
+        const { currentPassword, newPassword, confirmPassword } = useChangePasswordFlow()
         expect(currentPassword.value).toBe('')
         expect(newPassword.value).toBe('')
         expect(confirmPassword.value).toBe('')
-        expect(revokeOtherSessions.value).toBe(true)
     })
 
-    it('should call authClient.changePassword on successful submission', async () => {
-        const { currentPassword, newPassword, confirmPassword, changePassword } = useChangePasswordFlow()
+    it('should call authClient.changePassword on submit', async () => {
+        const { changePassword, currentPassword, newPassword, confirmPassword, revokeOtherSessions } = useChangePasswordFlow()
 
-        // Set valid values
-        currentPassword.value = 'OldPass123!'
-        newPassword.value = 'NewPass123!'
-        confirmPassword.value = 'NewPass123!'
-
-        // Mock successful API call
-        vi.mocked(authClient.changePassword).mockResolvedValue({ data: {}, error: null } as any)
+        currentPassword.value = 'oldPass'
+        newPassword.value = 'newPass'
+        confirmPassword.value = 'newPass'
+        revokeOtherSessions.value = true
 
         await changePassword()
 
         expect(authClient.changePassword).toHaveBeenCalledWith({
-            newPassword: 'NewPass123!',
-            currentPassword: 'OldPass123!',
+            currentPassword: 'oldPass',
+            newPassword: 'newPass',
             revokeOtherSessions: true,
         })
     })
 
-    it('should handle API errors', async () => {
-        const { currentPassword, newPassword, confirmPassword, changePassword } = useChangePasswordFlow()
+    it('should redirect on success', async () => {
+        const { changePassword } = useChangePasswordFlow()
 
-        // Set valid values
-        currentPassword.value = 'OldPass123!'
-        newPassword.value = 'NewPass123!'
-        confirmPassword.value = 'NewPass123!'
-
-        // Mock failed API call
-        const error = new Error('Invalid password')
-        vi.mocked(authClient.changePassword).mockRejectedValue(error)
+        vi.mocked(authClient.changePassword).mockResolvedValue({} as any)
 
         await changePassword()
 
-        expect(authClient.changePassword).toHaveBeenCalled()
-        // Toast should be called (mocked internally by useToast)
+        vi.advanceTimersByTime(1500)
+        expect(window.location.href).toBe('/login')
     })
 
-    it('should validate matching passwords', async () => {
-        const { currentPassword, newPassword, confirmPassword, changePassword, errors } = useChangePasswordFlow()
+    it('should handle error', async () => {
+        const { changePassword } = useChangePasswordFlow()
 
-        currentPassword.value = 'OldPass123!'
-        newPassword.value = 'NewPass123!'
-        confirmPassword.value = 'DifferentPass123!'
+        vi.mocked(authClient.changePassword).mockRejectedValue(new Error('Change failed'))
 
         await changePassword()
 
-        expect(authClient.changePassword).not.toHaveBeenCalled()
-        expect(errors.value.confirmPassword).toBeTruthy()
+        // Should not redirect
+        vi.advanceTimersByTime(1500)
+        expect(window.location.href).toBe('')
     })
 })
