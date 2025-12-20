@@ -1,5 +1,14 @@
 # caomei-auth
 
+## [1.12.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.12.0...v1.12.1) (2025-12-20)
+
+
+### 🐛 Bug 修复
+
+* 修改 revokeConsentSchema 中 clientId 的错误提示信息格式 ([aac3295](https://github.com/CaoMeiYouRen/caomei-auth/commit/aac3295))
+* 引入 secureRandom 函数以增强随机数生成的安全性 ([41ae0c8](https://github.com/CaoMeiYouRen/caomei-auth/commit/41ae0c8))
+* 更新数据库驱动为 better-sqlite3，并在配置中进行相应调整 ([f707fe1](https://github.com/CaoMeiYouRen/caomei-auth/commit/f707fe1))
+
 # [1.12.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.11.1...v1.12.0) (2025-12-13)
 
 
