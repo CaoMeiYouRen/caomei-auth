@@ -48,8 +48,8 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2
       '@primevue/core':
-        specifier: ^4.5.3
-        version: 4.5.3(vue@3.5.25(typescript@5.9.3))
+        specifier: ^4.5.4
+        version: 4.5.4(vue@3.5.25(typescript@5.9.3))
       '@primevue/forms':
         specifier: ^4.5.3
         version: 4.5.3(vue@3.5.25(typescript@5.9.3))
@@ -2203,6 +2203,12 @@ packages:
 
   '@primevue/core@4.5.3':
     resolution: {integrity: sha512-mYrrVwsMc41GR12xQ1G/qQEP3Iu35L56TnY2Yuzz57TCYDCe3dGVvj1eS4k10Fs0oQ3qsKLg5k/8UNDh7uWJVA==}
+    engines: {node: '>=12.11.0'}
+    peerDependencies:
+      vue: ^3.5.0
+
+  '@primevue/core@4.5.4':
+    resolution: {integrity: sha512-lYJJB3wTrDJ8MkLctzHfrPZAqXVxoatjIsswSJzupatf6ZogJHVYADUKcn1JAkLLk8dtV1FA2AxDek663fHO5Q==}
     engines: {node: '>=12.11.0'}
     peerDependencies:
       vue: ^3.5.0
@@ -8184,6 +8190,7 @@ packages:
 
   scmp@2.1.0:
     resolution: {integrity: sha512-o/mRQGk9Rcer/jEEw/yw4mwo3EU/NvYvp577/Btqrym9Qy5/MdWGBqipbALgd2lrdWTJ5/gqDusxfnQBxOxT2Q==}
+    deprecated: Just use Node.js's crypto.timingSafeEqual()
 
   scslre@0.3.0:
     resolution: {integrity: sha512-3A6sD0WYP7+QrjbfNA2FN3FsOaGGFoekCVgTyypy53gPxhbkCIjtO6YWgdrfM+n/8sI8JeXZOIxsHjMTNxQ4nQ==}
@@ -12572,6 +12579,12 @@ snapshots:
       '@primevue/metadata': 4.5.3
 
   '@primevue/core@4.5.3(vue@3.5.25(typescript@5.9.3))':
+    dependencies:
+      '@primeuix/styled': 0.7.4
+      '@primeuix/utils': 0.6.3
+      vue: 3.5.25(typescript@5.9.3)
+
+  '@primevue/core@4.5.4(vue@3.5.25(typescript@5.9.3))':
     dependencies:
       '@primeuix/styled': 0.7.4
       '@primeuix/utils': 0.6.3
