@@ -48,7 +48,7 @@
     "fs-extra": "^11.3.2",
     "google-libphonenumber": "^3.2.43",
     "ioredis": "^5.8.2",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.22",
     "lru-cache": "^11.2.4",
     "mime-types": "^3.0.2",
     "mjml": "^4.18.0",
