@@ -9,6 +9,9 @@
                 <p class="auth-subtitle">
                     请输入相关信息以修改密码
                 </p>
+                <p class="info-note">
+                    注意：通过第三方登录、邮箱验证码、短信验证码等方式注册，导致未设置初始密码的用户，请通过「忘记密码」页面重置初始密码。
+                </p>
                 <div class="form-group">
                     <label class="form-label" for="currentPassword">当前密码</label>
                     <Password
@@ -174,8 +177,18 @@ const {
 }
 
 .auth-subtitle {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     color: $secondary-light;
+}
+
+.info-note {
+    margin-bottom: 1.5rem;
+    color: $secondary-light;
+    background-color: rgba(230,57,70,0.04);
+    border-left: 4px solid $primary;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
 }
 
 .form-group {
