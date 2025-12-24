@@ -10,7 +10,13 @@
                     请输入相关信息以修改密码
                 </p>
                 <p class="info-note">
-                    注意：通过第三方登录、邮箱验证码、短信验证码等方式注册，导致未设置初始密码的用户，请通过「忘记密码」页面重置初始密码。
+                    注意：通过第三方登录、邮箱验证码、短信验证码等方式注册，导致未设置初始密码的用户，请通过<NuxtLink
+                        v-tooltip.top="'点击前往忘记密码页面'"
+                        :to="`/forget-password`"
+                        class="toggle-link"
+                    >
+                        「忘记密码」
+                    </NuxtLink>页面重置初始密码。
                 </p>
                 <div class="form-group">
                     <label class="form-label" for="currentPassword">当前密码</label>
