@@ -123,7 +123,13 @@
 
 <script setup lang="ts">
 import { authClient } from '@/lib/auth-client'
-const { data: session } = await authClient.useSession(useFetch)
+const { data: session } = await authClient.useSession((url, options) => useFetch(url, {
+    ...options,
+    headers: {
+        ...options?.headers,
+        ...useRequestHeaders(['cookie']),
+    },
+}))
 
 const config = useRuntimeConfig().public
 

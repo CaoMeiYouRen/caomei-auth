@@ -14,6 +14,12 @@ export async function useProfileFlow() {
 
     const toast = useToast()
     const confirm = useConfirm()
+    const clarity = useClarity()
+    const isDark = useDark()
+
+    // 预先调用 useFetch 以保留 Nuxt 上下文
+    const providersPromise = useFetch<{ providers: SocialProvider[] }>('/api/social/providers?includeDisabled=true')
+
     const user = ref({
         id: '',
         username: '',
@@ -44,8 +50,13 @@ export async function useProfileFlow() {
     })
 
     // Session handling
-    const { data: session } = await authClient.useSession(useFetch)
-    const clarity = useClarity()
+    const { data: session } = await authClient.useSession((url, options) => useFetch(url, {
+        ...options,
+        headers: {
+            ...options?.headers,
+            ...useRequestHeaders(['cookie']),
+        },
+    }))
 
     watch(
         () => session.value?.session,
@@ -73,8 +84,7 @@ export async function useProfileFlow() {
     )
 
 
-    const { data: providersData } = await useFetch<{ providers: SocialProvider[] }>('/api/social/providers?includeDisabled=true')
-    const isDark = useDark()
+    const { data: providersData } = await providersPromise
 
 
     const socialProviders = computed(() => {

@@ -12,7 +12,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
     if (to.path.startsWith('/api/auth') && !to.path.startsWith('/api/auth/admin')) {
         return true
     }
-    const { data: session } = await authClient.useSession(useFetch)
+    const { data: session } = await authClient.useSession((url, options) => useFetch(url, {
+        ...options,
+        headers: {
+            ...options?.headers,
+            ...useRequestHeaders(['cookie']),
+        },
+    }))
     // 检查用户是否登录
     if (!session.value) {
         // 重定向到登录页面
