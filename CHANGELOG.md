@@ -1,5 +1,14 @@
 # caomei-auth
 
+## [1.12.2](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.12.1...v1.12.2) (2025-12-27)
+
+
+### 🐛 Bug 修复
+
+* 更新 useSession 调用，添加请求头以支持 cookie ([e866ab2](https://github.com/CaoMeiYouRen/caomei-auth/commit/e866ab2))
+* 更新密码修改提示，添加链接引导用户前往「忘记密码」页面 ([5bfdcf0](https://github.com/CaoMeiYouRen/caomei-auth/commit/5bfdcf0))
+* 添加信息提示，指导未设置初始密码的用户通过「忘记密码」页面重置密码 ([a173bf5](https://github.com/CaoMeiYouRen/caomei-auth/commit/a173bf5))
+
 ## [1.12.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.12.0...v1.12.1) (2025-12-20)
 
 
