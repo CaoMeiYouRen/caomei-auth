@@ -30,8 +30,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       '@better-auth/sso':
-        specifier: ^1.4.9
-        version: 1.4.9(better-auth@1.4.9(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)))
+        specifier: ^1.4.10
+        version: 1.4.10(better-auth@1.4.10(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)))
       '@hcaptcha/vue3-hcaptcha':
         specifier: ^1.3.0
         version: 1.3.0(vue@3.5.26(typescript@5.9.3))
@@ -66,11 +66,11 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1
       better-auth:
-        specifier: 1.4.9
-        version: 1.4.9(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
+        specifier: 1.4.10
+        version: 1.4.10(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
       better-auth-localization:
         specifier: ^2.2.2
-        version: 2.2.2(better-auth@1.4.9(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)))
+        version: 2.2.2(better-auth@1.4.10(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)))
       better-bytes:
         specifier: ^1.2.6
         version: 1.2.6
@@ -818,8 +818,8 @@ packages:
     resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
     engines: {node: '>=18'}
 
-  '@better-auth/core@1.4.9':
-    resolution: {integrity: sha512-JT2q4NDkQzN22KclUEoZ7qU6tl9HUTfK1ctg2oWlT87SEagkwJcnrUwS9VznL+u9ziOIfY27P0f7/jSnmvLcoQ==}
+  '@better-auth/core@1.4.10':
+    resolution: {integrity: sha512-AThrfb6CpG80wqkanfrbN2/fGOYzhGladHFf3JhaWt/3/Vtf4h084T6PJLrDE7M/vCCGYvDI1DkvP3P1OB2HAg==}
     peerDependencies:
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
@@ -828,15 +828,15 @@ packages:
       kysely: ^0.28.5
       nanostores: ^1.0.1
 
-  '@better-auth/sso@1.4.9':
-    resolution: {integrity: sha512-ZEPZ2zLbC5Q9E47/O/TBwYve7f6YDEaJcnHrd/Kjyek2Zt5lRPPpTAW3OmYmVx5XM2IFQRywIRkG5a/j4GORzA==}
+  '@better-auth/sso@1.4.10':
+    resolution: {integrity: sha512-td8Mg32JHpyFRIwJ6sfqZ0NDa9Easf+sXw5wnWLLgmnd7/osg4xTKTFsMLEvr5j4n/1mzSFVU/RBthOV2lCD+A==}
     peerDependencies:
-      better-auth: 1.4.9
+      better-auth: 1.4.10
 
-  '@better-auth/telemetry@1.4.9':
-    resolution: {integrity: sha512-Tthy1/Gmx+pYlbvRQPBTKfVei8+pJwvH1NZp+5SbhwA6K2EXIaoonx/K6N/AXYs2aKUpyR4/gzqDesDjL7zd6A==}
+  '@better-auth/telemetry@1.4.10':
+    resolution: {integrity: sha512-Dq4XJX6EKsUu0h3jpRagX739p/VMOTcnJYWRrLtDYkqtZFg+sFiFsSWVcfapZoWpRSUGYX9iKwl6nDHn6Ju2oQ==}
     peerDependencies:
-      '@better-auth/core': 1.4.9
+      '@better-auth/core': 1.4.10
 
   '@better-auth/utils@0.3.0':
     resolution: {integrity: sha512-W+Adw6ZA6mgvnSnhOki270rwJ42t4XzSK6YWGF//BbVXL6SwCLWfyzBc1lN2m/4RM28KubdBKQ4X5VMoLRNPQw==}
@@ -3827,8 +3827,8 @@ packages:
     peerDependencies:
       better-auth: ^1.3.27
 
-  better-auth@1.4.9:
-    resolution: {integrity: sha512-usSdjuyTzZwIvM8fjF8YGhPncxV3MAg3dHUO9uPUnf0yklXUSYISiH1+imk6/Z+UBqsscyyPRnbIyjyK97p7YA==}
+  better-auth@1.4.10:
+    resolution: {integrity: sha512-0kqwEBJLe8eyFzbUspRG/htOriCf9uMLlnpe34dlIJGdmDfPuQISd4shShvUrvIVhPxsY1dSTXdXPLpqISYOYg==}
     peerDependencies:
       '@lynx-js/react': '*'
       '@prisma/client': ^5.0.0 || ^6.0.0 || ^7.0.0
@@ -11017,7 +11017,7 @@ snapshots:
 
   '@bcoe/v8-coverage@1.0.2': {}
 
-  '@better-auth/core@1.4.9(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0)':
+  '@better-auth/core@1.4.10(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0)':
     dependencies:
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
@@ -11028,19 +11028,18 @@ snapshots:
       nanostores: 1.1.0
       zod: 4.2.1
 
-  '@better-auth/sso@1.4.9(better-auth@1.4.9(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)))':
+  '@better-auth/sso@1.4.10(better-auth@1.4.10(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)))':
     dependencies:
-      '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
-      better-auth: 1.4.9(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
+      better-auth: 1.4.10(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
       fast-xml-parser: 5.3.3
       jose: 6.1.3
       samlify: 2.10.2
       zod: 4.2.1
 
-  '@better-auth/telemetry@1.4.9(@better-auth/core@1.4.9(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0))':
+  '@better-auth/telemetry@1.4.10(@better-auth/core@1.4.10(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0))':
     dependencies:
-      '@better-auth/core': 1.4.9(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0)
+      '@better-auth/core': 1.4.10(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0)
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
 
@@ -14661,14 +14660,14 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-auth-localization@2.2.2(better-auth@1.4.9(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))):
+  better-auth-localization@2.2.2(better-auth@1.4.10(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))):
     dependencies:
-      better-auth: 1.4.9(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
+      better-auth: 1.4.10(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
 
-  better-auth@1.4.9(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)):
+  better-auth@1.4.10(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)):
     dependencies:
-      '@better-auth/core': 1.4.9(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0)
-      '@better-auth/telemetry': 1.4.9(@better-auth/core@1.4.9(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0))
+      '@better-auth/core': 1.4.10(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0)
+      '@better-auth/telemetry': 1.4.10(@better-auth/core@1.4.10(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.2.1))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0))
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
       '@noble/ciphers': 2.1.1
