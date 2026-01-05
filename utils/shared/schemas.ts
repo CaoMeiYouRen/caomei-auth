@@ -8,13 +8,15 @@ import {
 } from './validators'
 
 // 注册表单 Schema (Email)
-export const registerEmailFormSchema = z.object({
+export const registerEmailFormBaseSchema = z.object({
     nickname: nicknameSchema,
     username: usernameSchema.optional().or(z.literal('')),
     email: emailSchema,
     password: passwordSchema,
     confirmPassword: z.string().min(1, '请确认密码'),
-}).refine((data) => data.password === data.confirmPassword, {
+})
+
+export const registerEmailFormSchema = registerEmailFormBaseSchema.refine((data) => data.password === data.confirmPassword, {
     message: '两次输入的密码不一致',
     path: ['confirmPassword'],
 })
@@ -31,11 +33,13 @@ export const registerPhoneFormSchema = z.object({
 export const registerFormSchema = z.union([registerEmailFormSchema, registerPhoneFormSchema])
 
 // 修改密码表单 Schema
-export const changePasswordFormSchema = z.object({
+export const changePasswordFormBaseSchema = z.object({
     currentPassword: z.string().min(1, '请输入当前密码'),
     newPassword: passwordSchema,
     confirmPassword: z.string().min(1, '请确认新密码'),
-}).refine((data) => data.newPassword === data.confirmPassword, {
+})
+
+export const changePasswordFormSchema = changePasswordFormBaseSchema.refine((data) => data.newPassword === data.confirmPassword, {
     message: '两次输入的密码不一致',
     path: ['confirmPassword'],
 }).refine((data) => data.currentPassword !== data.newPassword, {
@@ -117,7 +121,7 @@ export const oauthApplicationSchema = oauthApplicationBaseSchema.refine((data) =
 export const oauthApplicationUpdateSchema = oauthApplicationBaseSchema.partial()
 
 // SSO Provider Schema
-export const ssoProviderSchema = z.object({
+export const ssoProviderBaseSchema = z.object({
     type: z.enum(['oidc', 'saml']),
     providerId: z.string().min(1, 'Provider ID is required'),
     name: z.string().optional(),
@@ -144,7 +148,9 @@ export const ssoProviderSchema = z.object({
         issuer: z.string().optional(),
     }).optional(),
     additionalConfig: z.any().optional(),
-}).refine((data) => {
+})
+
+export const ssoProviderSchema = ssoProviderBaseSchema.refine((data) => {
     if (data.type === 'oidc') {
         return !!data.oidcConfig
     }
@@ -158,7 +164,7 @@ export const ssoProviderSchema = z.object({
 })
 
 // SSO Provider Update Schema
-export const ssoProviderUpdateSchema = ssoProviderSchema.partial()
+export const ssoProviderUpdateSchema = ssoProviderBaseSchema.partial()
 
 // Admin Role Sync Schema
 export const adminRoleSyncSchema = z.object({
