@@ -69,8 +69,8 @@ importers:
         specifier: 1.4.10
         version: 1.4.10(better-sqlite3@12.6.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
       better-auth-localization:
-        specifier: ^2.2.2
-        version: 2.2.2(better-auth@1.4.10(better-sqlite3@12.6.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)))
+        specifier: ^2.2.3
+        version: 2.2.3(better-auth@1.4.10(better-sqlite3@12.6.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3)))
       better-bytes:
         specifier: ^1.2.6
         version: 1.2.6
@@ -3826,8 +3826,8 @@ packages:
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
 
-  better-auth-localization@2.2.2:
-    resolution: {integrity: sha512-5LtL1AO1H78Lwium13k7A84GJNhV4cl0k/GFR49MR1mkwug+X4ac8j2aHmjx5+1Z3bsEtYv0bWQRk2zQTpvHOQ==}
+  better-auth-localization@2.2.3:
+    resolution: {integrity: sha512-FS39zJIbVIuNGQISrGJ6sVPaorGHCWfp77LqWmJk73/X9e39uCLk1p8bp4qfwQpiePw0NRFlTgi8U/yMPeekWQ==}
     peerDependencies:
       better-auth: ^1.3.27
 
@@ -14692,7 +14692,7 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-auth-localization@2.2.2(better-auth@1.4.10(better-sqlite3@12.6.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))):
+  better-auth-localization@2.2.3(better-auth@1.4.10(better-sqlite3@12.6.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))):
     dependencies:
       better-auth: 1.4.10(better-sqlite3@12.6.0)(mysql2@3.16.0)(pg@8.16.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
 
