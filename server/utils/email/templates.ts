@@ -4,6 +4,7 @@ import { join } from 'path'
 import mjml2html from 'mjml'
 import dayjs from 'dayjs'
 import { unescape } from 'lodash-es'
+import sanitizeHtml from 'sanitize-html'
 
 import logger from '../logger'
 import { getFallbackFragment, getFallbackMjmlTemplate, generateFallbackHtml } from './templates-fallback'
@@ -275,17 +276,15 @@ export class EmailTemplateEngine {
      * 生成纯文本版本
      */
     private generateTextVersion(html: string): string {
-        let stripped = html
-        let previous: string
-        do {
-            previous = stripped
-            stripped = stripped
-                .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '') // 移除style标签及其内容
-                .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '') // 移除script标签及其内容
-                .replace(/<[^>]*>/g, '') // 移除所有HTML标签
-        } while (stripped !== previous)
+        // 使用 sanitize-html 进行安全的标签和内容移除，避免不完整或畸形 HTML 绕过正则
+        const cleaned = sanitizeHtml(html, {
+            allowedTags: [],
+            allowedAttributes: {},
+            // 保证标签名忽略大小写，且移除注释、script/style 内容
+            parser: { lowerCaseTags: true },
+        })
 
-        return unescape(stripped.replace(/&nbsp;/g, ' '))
+        return unescape(cleaned.replace(/&nbsp;/g, ' '))
             .replace(/\s+/g, ' ') // 压缩空白字符
             .replace(/\n\s*\n/g, '\n\n') // 处理多余的换行
             .trim()
