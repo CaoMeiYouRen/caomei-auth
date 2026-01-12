@@ -7,7 +7,7 @@
 ## 项目基本信息
 
 -   **项目名称**: 草梅 Auth 统一登录平台
--   **框架**: Nuxt 3.x (Vue 3.x + TypeScript)
+-   **框架**: Nuxt 4.x (Vue 3.x + TypeScript)
 -   **包管理器**: PNPM
 -   **主题色**: 红色系 (#e63946)
 -   **开发规范**: ESLint + Stylelint + Conventional Commits
