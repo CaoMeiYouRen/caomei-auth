@@ -275,12 +275,17 @@ export class EmailTemplateEngine {
      * 生成纯文本版本
      */
     private generateTextVersion(html: string): string {
-        const stripped = html
-            .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '') // 移除style标签
-            .replace(/<[^>]*>/g, '') // 移除所有HTML标签
-            .replace(/&nbsp;/g, ' ')
+        let stripped = html
+        let previous: string
+        do {
+            previous = stripped
+            stripped = stripped
+                .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '') // 移除style标签及其内容
+                .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '') // 移除script标签及其内容
+                .replace(/<[^>]*>/g, '') // 移除所有HTML标签
+        } while (stripped !== previous)
 
-        return unescape(stripped)
+        return unescape(stripped.replace(/&nbsp;/g, ' '))
             .replace(/\s+/g, ' ') // 压缩空白字符
             .replace(/\n\s*\n/g, '\n\n') // 处理多余的换行
             .trim()
