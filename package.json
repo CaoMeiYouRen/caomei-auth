@@ -89,6 +89,7 @@
     ],
     "overrides": {
       "vite": "$vite",
+      "preact": "^10.28.2",
       "parse-git-config": "^3.0.0",
       "esbuild": "^0.25.0",
       "postcss": "^8.5.0",
