@@ -14,15 +14,17 @@
 
 ## 开发指南
 
-### [项目架构](./architecture)
+### [项目架构](../design/architecture)
 
 了解项目的整体架构设计和技术选型。
 
-### [项目规范](../standards/specifications.md)
+### [项目规范](../standards/development)
 
 详细了解开发、测试及文档编写的统一规范。
 
-### [数据库关系](./database-relations)
+### [数据库关系](../design/database)
+
+详细介绍数据库表结构和实体关系。
 
 详细介绍数据库表结构和实体关系。
 

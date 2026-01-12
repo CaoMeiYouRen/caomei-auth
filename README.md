@@ -49,13 +49,15 @@
 -   **演示站点**: [https://auth-demo.cmyr.dev/](https://auth-demo.cmyr.dev/)
 
     -   可以通过用户名 `demo_admin`，密码`Demo@123456`登录演示用管理员账号。
+
 -   **正式站点**: [https://auth.cmyr.dev/](https://auth.cmyr.dev/)
 
     -   您可以注册自己的账号查看用户视角。
+
 -   **文档站点**: [https://auth-docs.cmyr.dev/](https://auth-docs.cmyr.dev/)
 -   **问题反馈和交流群**：请参考该链接中的内容 [#114](https://github.com/CaoMeiYouRen/caomei-auth/issues/114)
-    - QQ 群: [807530287](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=K3QRQlxv_y7KqLhdEZmfouxKv9WHLN_v&authKey=pfdJX4EkvKGQXQrtM5BR968EbtFc9WnVvz8AtLiSUTGZRgw3P1wBWESSDcEjoCZB&noverify=0&group_code=807530287)
-    - Discord: [草梅友仁的交流群](https://discord.gg/6bfPevfyr6)
+    -   QQ 群: [807530287](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=K3QRQlxv_y7KqLhdEZmfouxKv9WHLN_v&authKey=pfdJX4EkvKGQXQrtM5BR968EbtFc9WnVvz8AtLiSUTGZRgw3P1wBWESSDcEjoCZB&noverify=0&group_code=807530287)
+    -   Discord: [草梅友仁的交流群](https://discord.gg/6bfPevfyr6)
 
 希望试用基于 `草梅 Auth` 的第三方登录功能？
 
@@ -70,6 +72,11 @@
 ![image-20250803195105231](https://oss.cmyr.dev/images/20250803195112443.png)
 
 ## 🚀 快速开始
+
+-   **项目规范**: [docs/standards/development.md](docs/standards/development.md)
+-   **部署指南**: [docs/deployment/index.md](docs/deployment/index.md)
+-   **开发文档**: [docs/development/index.md](docs/development/index.md)
+-   **详细文档**: [docs/index.md](docs/index.md)
 
 ### 环境要求
 
