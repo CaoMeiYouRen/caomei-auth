@@ -253,12 +253,12 @@
 ### 5. 文档同步（G5）
 
 -   **新增文档**：
-    -   本文件 `docs/REFACTOR_PLAN.md`。
-    -   `docs/architecture/decoupling.md`：说明新层次、模块职责。
-    -   `docs/testing/coverage.md`：记录覆盖策略、运行命令、夹具说明。
+    -   本文件 `docs/plan/refactor.md`。
+    -   `docs/design/architecture.md`：说明架构设计与模块职责。
+    -   `docs/standards/testing.md`：记录测试规范、运行命令、夹具说明。
 -   **更新内容**：
     -   `README.md`：加入“架构 & 质量守护”章节与覆盖率徽章。
-    -   `docs/PLAN.md` & `docs/TEST.md`：反映当前进度、阶段目标。
+    -   `docs/plan/`：反映当前进度、阶段目标。
     -   `CHANGELOG.md`：在对应 release 中列出重构与测试提升。
 -   **流程约束**：PR 模板新增 “文档同步” 复选框；缺失时 reviewer 可直接拒绝。
 

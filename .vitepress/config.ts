@@ -47,13 +47,28 @@ export default defineConfig({
             { text: '部署指南', link: '/docs/deployment/' },
             { text: '使用文档', link: '/docs/usage/' },
             { text: '登录配置', link: '/docs/login-config/' },
-            { text: '开发文档', link: '/docs/development/' },
-            { text: 'API 文档', link: '/docs/api/' },
-            { text: '项目规划', link: '/docs/PLAN' },
-            { text: '更新日志', link: 'https://github.com/CaoMeiYouRen/caomei-auth/blob/master/CHANGELOG.md' },
+            {
+                text: '开发设计',
+                items: [
+                    { text: '开发指南', link: '/docs/development/' },
+                    { text: '项目设计', link: '/docs/design/' },
+                    { text: '规范标准', link: '/docs/standards/development' },
+                    { text: 'API 参考', link: '/docs/api/' }
+                ]
+            },
+            {
+                text: '项目计划',
+                items: [
+                    { text: '待办事项', link: '/docs/plan/todo' },
+                    { text: '路线图', link: '/docs/plan/roadmap' },
+                    { text: '重构方案', link: '/docs/plan/refactor' }
+                ]
+            },
             {
                 text: '更多',
                 items: [
+                    { text: '更新日志', link: 'https://github.com/CaoMeiYouRen/caomei-auth/blob/master/CHANGELOG.md' },
+                    { text: '历史归档', link: '/docs/archive/completed-work' },
                     { text: '贡献指南', link: '/contributing' },
                     { text: '安全政策', link: '/security' },
                     { text: '行为准则', link: '/code-of-conduct' }
@@ -94,6 +109,7 @@ export default defineConfig({
                         { text: '快速开始', link: '/docs/usage/getting-started' },
                         { text: '用户管理', link: '/docs/usage/user-management' },
                         { text: '应用集成', link: '/docs/usage/app-integration' },
+                        { text: '演示模式使用', link: '/docs/usage/demo' },
                         { text: '常见问题', link: '/docs/usage/faq' },
                         { text: '故障排除', link: '/docs/usage/troubleshooting' }
                     ]
@@ -132,18 +148,47 @@ export default defineConfig({
             ],
             '/docs/development/': [
                 {
-                    text: '开发文档',
+                    text: '开发指南',
                     items: [
                         { text: '开发概览', link: '/docs/development/' },
-                        { text: '项目架构', link: '/docs/development/architecture' },
-                        { text: '数据库关系', link: '/docs/development/database-relations' },
                         { text: '管理员角色', link: '/docs/development/admin-role-sync' },
-                        { text: '用户管理', link: '/docs/development/user-management-sorting' },
-                        { text: 'Demo 模式', link: '/docs/development/demo-mode' },
+                        { text: '用户管理分页', link: '/docs/development/user-management-sorting' },
                         { text: '最佳实践', link: '/docs/development/best-practices' },
                         { text: '无障碍适配', link: '/docs/development/accessibility' },
                         { text: '调试构建', link: '/docs/development/debug-build' }
-
+                    ]
+                }
+            ],
+            '/docs/design/': [
+                {
+                    text: '项目设计',
+                    items: [
+                        { text: '设计概览', link: '/docs/design/' },
+                        { text: '架构设计', link: '/docs/design/architecture' },
+                        { text: '数据库设计', link: '/docs/design/database' },
+                        { text: 'UI/UX 设计', link: '/docs/design/ui-ux' },
+                        { text: 'Demo 模式设计', link: '/docs/design/demo-mode' }
+                    ]
+                }
+            ],
+            '/docs/standards/': [
+                {
+                    text: '规范标准',
+                    items: [
+                        { text: '开发规范', link: '/docs/standards/development' },
+                        { text: '测试规范', link: '/docs/standards/testing' },
+                        { text: '文档规范', link: '/docs/standards/documentation' },
+                        { text: '国际化指南', link: '/docs/standards/i18n' }
+                    ]
+                }
+            ],
+            '/docs/plan/': [
+                {
+                    text: '项目计划',
+                    items: [
+                        { text: '待办事项 (Todo)', link: '/docs/plan/todo' },
+                        { text: '路线图 (Roadmap)', link: '/docs/plan/roadmap' },
+                        { text: '重构计划 (Refactor)', link: '/docs/plan/refactor' }
                     ]
                 }
             ],
@@ -160,11 +205,19 @@ export default defineConfig({
                     ]
                 }
             ],
+            '/docs/archive/': [
+                {
+                    text: '历史归档',
+                    items: [
+                        { text: '已完成工作', link: '/docs/archive/completed-work' }
+                    ]
+                }
+            ],
             '/docs/': [
                 {
                     text: '项目文档',
                     items: [
-                        { text: '项目规划', link: '/docs/PLAN' }
+                        { text: '文档首页', link: '/docs/' }
                     ]
                 }
             ]
