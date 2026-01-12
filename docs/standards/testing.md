@@ -36,3 +36,29 @@
 
 -   **Pre-commit**: 在提交代码或合并 PR 之前，应在本地运行 `pnpm test` 确保无回归错误。
 -   **覆盖率**: 重要核心逻辑（如 Auth、Database Utils）应维持高覆盖率。
+
+---
+
+## 5. 测试工作流 (Testing Workflow)
+
+编写测试用例时应遵循以下步骤：
+
+### 5.1 分析目标代码
+
+-   **确定类型**: 业务逻辑推荐单元测试 (`tests/unit/`)，多模块协作推荐集成测试 (`tests/integration/`)。
+-   **识别依赖**: 识别外部库 (`fs`, `fetch`, `nodemailer`)、环境依赖 (`process.env`) 及副作用。
+
+### 5.2 创建测试文件
+
+-   **路径规范**: 与源代码路径对应。例如：`server/utils/logger.ts` 对应 `tests/unit/server/logger.spec.ts`。
+
+### 5.3 Mock 最佳实践
+
+-   **外部库**: 使用 `vi.mock("lib-name")`。
+-   **环境配置**: 如果模块在顶层读取环境配置，需结合 `vi.resetModules()` 和动态 `import()`。
+-   **文件系统**: 模拟 `fs` 时需同时处理 `default` 导出及具名导出以确保兼容性。
+
+### 5.4 验证与重构
+
+-   运行单个测试：`pnpm test <path-to-spec>`。
+-   确保测试代码同样通过 `pnpm lint`。

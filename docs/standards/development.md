@@ -40,8 +40,22 @@
     -   电话校验: `google-libphonenumber`
     -   日志记录: 内部 `logger` 模块
 -   **数据库**: TypeORM。支持多种数据库（PostgreSQL, MySQL, SQLite）。
+-   **校验框架**: **Zod**。
+    -   统一使用 Zod 进行 Schema 驱动开发。
+    -   Schema 定义应存放于 `utils/shared/validators.ts` 或 `utils/shared/schemas.ts` 以便前后端复用。
 
-## 4. API 与 数据交互
+## 4. 核心模式与实践
+
+### 4.1 校验模式 (Validation)
+
+项目采用 **单一事实来源 (Single Source of Truth)** 的校验模式：
+
+1. **定义**: 在共享目录定义 `Zod Schema`。
+2. **前端**: 使用 `useForm` 并传入 `zodSchema` 进行实时校验。
+3. **后端**: API Handler 中使用 `schema.parse(body)` 进行运行时数据验证。
+4. **类型**: 通过 `z.infer<typeof schema>` 自动推导 TypeScript 类型。
+
+### 4.2 API 与 数据交互
 
 -   **页面导航**: 优先使用 `navigateTo`，避免直接操作 `router`。
 -   **数据预取**: 在 SSR 场景下优先使用 `useFetch` 或 `useAsyncData`。
