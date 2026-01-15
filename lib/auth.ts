@@ -377,7 +377,6 @@ export const auth = betterAuth({
                     },
                     // 自定义获取用户信息逻辑
                     getUserInfo: async (tokens) => {
-                        // TODO 修复 微信登录缺少 openid 的问题
                         // 微信的token响应包含额外的openid字段，需要从原始响应中获取
                         // 微信token响应格式：
                         // {
@@ -389,7 +388,7 @@ export const auth = betterAuth({
                         //   "unionid": "UNIONID"
                         // }
 
-                        const openid = (tokens as any)?.raw?.openid
+                        const openid = tokens?.raw?.openid
 
                         if (!openid) {
                             throw new Error('Failed to get WeChat openid')
@@ -505,7 +504,6 @@ export const auth = betterAuth({
                         client_secret: DOUYIN_CLIENT_SECRET as string,
                     },
                     getUserInfo: async (tokens) => {
-                        // TODO 修复 抖音登录缺少 openid 的问题
                         // 抖音的 token 响应格式：
                         // {
                         //   "access_token": "act.xxxxx",
@@ -518,7 +516,7 @@ export const auth = betterAuth({
 
                         // 从 tokens 中获取 open_id
                         // better-auth 应该会将完整的 token 响应传递给 getUserInfo
-                        const openId = (tokens as any)?.raw?.open_id
+                        const openId = tokens?.raw?.open_id
 
                         if (!openId) {
                             throw new Error('Failed to get open_id from token response')
