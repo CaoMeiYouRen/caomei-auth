@@ -1,3 +1,6 @@
+/**
+ * @vitest-environment node
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { readBody } from 'h3'
 import handler from '@/server/api/admin/sso/providers/index.post'
