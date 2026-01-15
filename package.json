@@ -90,6 +90,8 @@
     ],
     "overrides": {
       "vite": "$vite",
+      "undici": "^7.18.2",
+      "diff": "^8.0.3",
       "preact": "^10.28.2",
       "parse-git-config": "^3.0.0",
       "esbuild": "^0.25.0",
