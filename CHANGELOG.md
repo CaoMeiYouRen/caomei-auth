@@ -1,5 +1,20 @@
 # caomei-auth
 
+## [1.12.3](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.12.2...v1.12.3) (2026-01-17)
+
+
+### 🐛 Bug 修复
+
+* 优化生成纯文本版本的逻辑，移除 script 标签及其内容 ([0841a40](https://github.com/CaoMeiYouRen/caomei-auth/commit/0841a40))
+* 修复获取微信和抖音 openid 的逻辑，简化代码 ([dde49c0](https://github.com/CaoMeiYouRen/caomei-auth/commit/dde49c0))
+* 添加 sanitize-html 依赖并优化生成纯文本版本的逻辑 ([f6ad3c2](https://github.com/CaoMeiYouRen/caomei-auth/commit/f6ad3c2))
+
+
+### 📦 代码重构
+
+* 将注册和修改密码表单的基础 Schema 提取为单独的常量 ([0619626](https://github.com/CaoMeiYouRen/caomei-auth/commit/0619626))
+* 更新文档结构，优化开发、设计和标准相关链接 ([fc975a9](https://github.com/CaoMeiYouRen/caomei-auth/commit/fc975a9))
+
 ## [1.12.2](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.12.1...v1.12.2) (2025-12-27)
 
 
