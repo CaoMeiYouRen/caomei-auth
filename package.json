@@ -131,7 +131,7 @@
     "cz-conventional-changelog-cmyr": "2.0.0",
     "eslint": "^9.39.2",
     "eslint-config-cmyr": "2.1.0",
-    "eslint-plugin-vue": "^10.6.2",
+    "eslint-plugin-vue": "^10.7.0",
     "happy-dom": "^20.1.0",
     "husky": "^9.1.7",
     "jscpd": "^4.0.7",
