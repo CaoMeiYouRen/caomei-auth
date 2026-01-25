@@ -93,8 +93,8 @@ importers:
         specifier: ^11.3.3
         version: 11.3.3
       google-libphonenumber:
-        specifier: ^3.2.43
-        version: 3.2.43
+        specifier: ^3.2.44
+        version: 3.2.44
       ioredis:
         specifier: ^5.9.2
         version: 5.9.2
@@ -5618,8 +5618,8 @@ packages:
   globjoin@0.1.4:
     resolution: {integrity: sha512-xYfnw62CKG8nLkZBfWbhWwDw02CHty86jfPcc2cr3ZfeuK9ysoVPPEUxf21bAD/rWAgk52SuBrLJlefNy8mvFg==}
 
-  google-libphonenumber@3.2.43:
-    resolution: {integrity: sha512-TbIX/UC3BFRJwCxbBeCPwuRC4Qws9Jz/CECmfTM1t9RFoI3X6eRThurv6AYr9wSrt640IA9KFIHuAD/vlyjqRw==}
+  google-libphonenumber@3.2.44:
+    resolution: {integrity: sha512-9p2TghluF2LTChFMLWsDRD5N78SZDsILdUk4gyqYxBXluCyxoPiOq+Fqt7DKM+LUd33+OgRkdrc+cPR93AypCQ==}
     engines: {node: '>=0.10'}
 
   gopd@1.2.0:
@@ -16846,7 +16846,7 @@ snapshots:
 
   globjoin@0.1.4: {}
 
-  google-libphonenumber@3.2.43: {}
+  google-libphonenumber@3.2.44: {}
 
   gopd@1.2.0: {}
 

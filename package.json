@@ -46,7 +46,7 @@
     "dayjs": "^1.11.19",
     "file-type": "^21.3.0",
     "fs-extra": "^11.3.3",
-    "google-libphonenumber": "^3.2.43",
+    "google-libphonenumber": "^3.2.44",
     "ioredis": "^5.9.2",
     "lodash-es": "^4.17.23",
     "lru-cache": "^11.2.4",
