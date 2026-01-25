@@ -31,7 +31,7 @@
     "@mdi/font": "^7.4.47",
     "@microsoft/clarity": "^1.0.2",
     "@primeuix/styles": "^2.0.2",
-    "@primeuix/themes": "^2.0.2",
+    "@primeuix/themes": "^2.0.3",
     "@primevue/core": "^4.5.4",
     "@primevue/forms": "^4.5.4",
     "@sentry/nuxt": "^10.34.0",
