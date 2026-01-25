@@ -45,8 +45,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       '@primeuix/styles':
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^2.0.3
+        version: 2.0.3
       '@primeuix/themes':
         specifier: ^2.0.3
         version: 2.0.3
@@ -2338,8 +2338,8 @@ packages:
     resolution: {integrity: sha512-QSO/NpOQg8e9BONWRBx9y8VGMCMYz0J/uKfNJEya/RGEu7ARx0oYW0ugI1N3/KB1AAvyGxzKBzGImbwg0KUiOQ==}
     engines: {node: '>=12.11.0'}
 
-  '@primeuix/styles@2.0.2':
-    resolution: {integrity: sha512-LNtkJsTonNHF5ag+9s3+zQzm00+LRmffw68QRIHy6S/dam1JpdrrAnUzNYlWbaY7aE2EkZvQmx7Np7+PyHn+ow==}
+  '@primeuix/styles@2.0.3':
+    resolution: {integrity: sha512-2ykAB6BaHzR/6TwF8ShpJTsZrid6cVIEBVlookSdvOdmlWuevGu5vWOScgIwqWwlZcvkFYAGR/SUV3OHCTBMdw==}
 
   '@primeuix/themes@2.0.3':
     resolution: {integrity: sha512-3fS1883mtCWhgUgNf/feiaaDSOND4EBIOu9tZnzJlJ8QtYyL6eFLcA6V3ymCWqLVXQ1+lTVEZv1gl47FIdXReg==}
@@ -13095,7 +13095,7 @@ snapshots:
     dependencies:
       '@primeuix/utils': 0.6.4
 
-  '@primeuix/styles@2.0.2':
+  '@primeuix/styles@2.0.3':
     dependencies:
       '@primeuix/styled': 0.7.4
 
@@ -19947,7 +19947,7 @@ snapshots:
   primevue@4.5.4(vue@3.5.26(typescript@5.9.3)):
     dependencies:
       '@primeuix/styled': 0.7.4
-      '@primeuix/styles': 2.0.2
+      '@primeuix/styles': 2.0.3
       '@primeuix/utils': 0.6.3
       '@primevue/core': 4.5.4(vue@3.5.26(typescript@5.9.3))
       '@primevue/icons': 4.5.4(vue@3.5.26(typescript@5.9.3))
