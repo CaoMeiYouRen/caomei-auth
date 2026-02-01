@@ -30,8 +30,8 @@ importers:
         specifier: ^3.975.0
         version: 3.975.0
       '@axiomhq/winston':
-        specifier: ^1.3.1
-        version: 1.3.1
+        specifier: ^1.4.0
+        version: 1.4.0
       '@better-auth/sso':
         specifier: ^1.4.15
         version: 1.4.15(@better-auth/utils@0.3.0)(better-auth@1.4.15(better-sqlite3@12.6.2)(mysql2@3.16.1)(pg@8.17.2)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.10)(happy-dom@20.3.7)(jiti@2.6.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3)))
@@ -714,13 +714,13 @@ packages:
     resolution: {integrity: sha512-oLvsaPMTBejkkmHhjf09xTgk71mOqyr/409NKhRIL08If7AhVfUsJhVsx386uJaqNd42v9kWamQ9lFbkoC2dYw==}
     engines: {node: '>=18.0.0'}
 
-  '@axiomhq/js@1.3.1':
-    resolution: {integrity: sha512-Ytf5V3wKz8FKNiqJxnqZmUhjgJ7TItKUoyHVNE/H2V9dN1ozD6NNnsueenOjKdA48cm2sGRyP432nworst18aA==}
-    engines: {node: '>=16'}
+  '@axiomhq/js@1.4.0':
+    resolution: {integrity: sha512-wC5x1ud/QJMstrjpicATkyY8+ZVWEl4WlXMtA5EZf7hkj0+b191yv4yynLxLEfr/MveXora9m6CWdJq4DsbcAg==}
+    engines: {node: '>=20'}
 
-  '@axiomhq/winston@1.3.1':
-    resolution: {integrity: sha512-Nad/PkMIkFp7VxJHnZQTg6co9QpTPQDRPeC+/G7BfvXjISQ5+AY+BxNV3h8St7Bs9tLLAufx+gtyG+fgS47x0Q==}
-    engines: {node: '>=16'}
+  '@axiomhq/winston@1.4.0':
+    resolution: {integrity: sha512-fVHwkWROOOyCuzVSXanMMkw5EVYwwKMal7zk87l6R9Zn69RBvIWVIFC8iSYM9Ea3Cg7t1sJHaDdeKvO9O4NXUw==}
+    engines: {node: '>=20'}
 
   '@babel/code-frame@7.27.1':
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
@@ -9127,6 +9127,7 @@ packages:
   tar@7.5.6:
     resolution: {integrity: sha512-xqUeu2JAIJpXyvskvU3uvQW8PAmHrtXp2KDuMJwQqW8Sqq0CaZBAQ+dKS3RBXVhU4wC5NjAdKrmh84241gO9cA==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   temp-dir@3.0.0:
     resolution: {integrity: sha512-nHc6S/bwIilKHNRgK/3jlhDoIHcp45YgyiwcAk46Tr0LfEqGBVpmiAyuiuxeVE44m3mXnEeVhaipLOEWmH+Njw==}
@@ -11217,14 +11218,13 @@ snapshots:
 
   '@aws/lambda-invoke-store@0.2.3': {}
 
-  '@axiomhq/js@1.3.1':
+  '@axiomhq/js@1.4.0':
     dependencies:
       fetch-retry: 6.0.0
-      uuid: 11.1.0
 
-  '@axiomhq/winston@1.3.1':
+  '@axiomhq/winston@1.4.0':
     dependencies:
-      '@axiomhq/js': 1.3.1
+      '@axiomhq/js': 1.4.0
       winston-transport: 4.9.0
 
   '@babel/code-frame@7.27.1':
