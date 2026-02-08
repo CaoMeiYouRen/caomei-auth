@@ -57,7 +57,7 @@ export default defineEventHandler(async (event): Promise<{
     try {
 
         // 获取存储实例
-        const storage = getFileStorage(STORAGE_TYPE, process.env as FileStorageEnv)
+        const storage = getFileStorage(STORAGE_TYPE, process.env as unknown as FileStorageEnv)
 
         // 读取表单数据
         const parts = await readMultipartFormData(event)
