@@ -145,7 +145,7 @@
     "stylelint": "^16.26.1",
     "stylelint-config-cmyr": "^1.0.0",
     "typescript": "^5.9.3",
-    "vite": "^7.2.6",
+    "vite": "^7.3.1",
     "vitepress": "^1.6.4",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.2.4"
