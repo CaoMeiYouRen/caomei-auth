@@ -205,13 +205,13 @@ export function getLocaleFromHeaders(event: H3Event): SupportedLocale {
             || getHeader(event, 'x-lang')
 
         if (customLocale) {
-            return normalizeLocale(customLocale as string)
+            return normalizeLocale(customLocale)
         }
 
         // 解析 Accept-Language 头部
         const acceptLanguage = getHeader(event, 'accept-language')
         if (acceptLanguage) {
-            const languages = parseAcceptLanguage(acceptLanguage as string)
+            const languages = parseAcceptLanguage(acceptLanguage)
             return languages[0] || DEFAULT_LOCALE
         }
 

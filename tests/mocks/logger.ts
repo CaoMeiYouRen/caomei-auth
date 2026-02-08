@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-const trackedFns: Array<ReturnType<typeof vi.fn>> = []
+const trackedFns: ReturnType<typeof vi.fn>[] = []
 
 const createFn = () => {
     const fn = vi.fn()

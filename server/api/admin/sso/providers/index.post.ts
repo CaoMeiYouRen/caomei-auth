@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
         // 创建新的 SSO 提供商
         const newProvider = new SSOProvider()
         newProvider.id = snowflake.generateId()
-        newProvider.type = type as 'oidc' | 'saml'
+        newProvider.type = type
         newProvider.providerId = providerId
         newProvider.name = name || providerId
         newProvider.description = description || ''

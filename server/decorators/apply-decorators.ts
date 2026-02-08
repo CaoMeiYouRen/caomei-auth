@@ -7,7 +7,7 @@
  *
  */
 export function applyDecorators(
-    ...decorators: Array<ClassDecorator | MethodDecorator | PropertyDecorator>
+    ...decorators: (ClassDecorator | MethodDecorator | PropertyDecorator)[]
 ) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return <TFunction extends Function, Y>(

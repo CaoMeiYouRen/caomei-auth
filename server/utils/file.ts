@@ -21,7 +21,7 @@ export function getFileExtension(contentType: string | null): string | undefined
         throw new Error('Content-Type is required')
     }
 
-    const mimeTypeMap: { [key: string]: string } = {
+    const mimeTypeMap: Record<string, string> = {
         'image/jpeg': '.jpg',
         'image/png': '.png',
         'image/gif': '.gif',

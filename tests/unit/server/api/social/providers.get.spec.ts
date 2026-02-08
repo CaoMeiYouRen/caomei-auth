@@ -49,16 +49,16 @@ describe('server/api/social/providers.get', () => {
         expect(result.providers).toBeDefined()
 
         // Check that enabled providers are present
-        const github = result.providers!.find((p: any) => p.provider === 'github')
+        const github = result.providers.find((p: any) => p.provider === 'github')
         expect(github).toBeDefined()
         expect(github!.enabled).toBe(true)
 
-        const anonymous = result.providers!.find((p: any) => p.provider === 'anonymous')
+        const anonymous = result.providers.find((p: any) => p.provider === 'anonymous')
         expect(anonymous).toBeDefined()
         expect(anonymous!.enabled).toBe(true)
 
         // Check that disabled providers are NOT present
-        const google = result.providers!.find((p: any) => p.provider === 'google')
+        const google = result.providers.find((p: any) => p.provider === 'google')
         expect(google).toBeUndefined()
     })
 
@@ -80,7 +80,7 @@ describe('server/api/social/providers.get', () => {
         expect(result.success).toBe(true)
 
         // Check that disabled providers ARE present
-        const google = result.providers!.find((p: any) => p.provider === 'google')
+        const google = result.providers.find((p: any) => p.provider === 'google')
         expect(google).toBeDefined()
         expect(google!.enabled).toBe(false)
     })

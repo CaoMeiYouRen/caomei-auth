@@ -16,11 +16,9 @@ import { BetterAuthError, type DBFieldAttributeConfig, type DBFieldType, generat
 import { getAuthTables } from 'better-auth/db'
 import type { DBAdapter, BetterAuthOptions, Where, DBTransactionAdapter } from 'better-auth/types'
 
-type JoinOption = {
-    [model: string]: boolean | {
-        limit?: number
-    }
-}
+type JoinOption = Record<string, boolean | {
+    limit?: number
+}>
 
 type FieldAttribute = {
     type: DBFieldType

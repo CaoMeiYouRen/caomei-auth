@@ -7,9 +7,9 @@ import { ms } from 'ms'
 // 雪花算法机器 ID。默认为进程 ID 对 1024 取余数，也可以手动指定
 export const MACHINE_ID = Number(process.env.MACHINE_ID || import.meta.server ? process.pid % 1024 : 0)
 // Better Auth 的基础 URL
-export const AUTH_BASE_URL = process.env.NUXT_PUBLIC_AUTH_BASE_URL || import.meta.env.NUXT_PUBLIC_AUTH_BASE_URL as string || ''
+export const AUTH_BASE_URL = process.env.NUXT_PUBLIC_AUTH_BASE_URL || import.meta.env.NUXT_PUBLIC_AUTH_BASE_URL || ''
 // 联系邮箱
-export const CONTACT_EMAIL = import.meta.env.NUXT_PUBLIC_CONTACT_EMAIL as string
+export const CONTACT_EMAIL = import.meta.env.NUXT_PUBLIC_CONTACT_EMAIL
 // ICP备案号
 export const ICP_BEIAN_NUMBER = import.meta.env.NUXT_PUBLIC_ICP_BEIAN_NUMBER
 // 公安备案号
@@ -17,7 +17,7 @@ export const PUBLIC_SECURITY_BEIAN_NUMBER = import.meta.env.NUXT_PUBLIC_PUBLIC_S
 // 用于加密、签名和哈希的密钥。生产环境必须设置
 export const AUTH_SECRET = process.env.AUTH_SECRET || process.env.BETTER_AUTH_SECRET || ''
 // 应用名称
-export const APP_NAME = process.env.NUXT_PUBLIC_APP_NAME || import.meta.env.NUXT_PUBLIC_APP_NAME as string || '草梅Auth'
+export const APP_NAME = process.env.NUXT_PUBLIC_APP_NAME || import.meta.env.NUXT_PUBLIC_APP_NAME || '草梅Auth'
 
 // 是否写入日志到文件
 export const LOGFILES = process.env.LOGFILES === 'true'
@@ -35,7 +35,7 @@ export const AXIOM_API_TOKEN = process.env.AXIOM_API_TOKEN
  * 允许通过环境变量设置密码强度要求
  */
 // 密码强度级别：weak, medium, strong, very_strong，默认为 strong
-export const PASSWORD_STRENGTH_LEVEL = import.meta.env.NUXT_PUBLIC_PASSWORD_STRENGTH_LEVEL as string || 'strong'
+export const PASSWORD_STRENGTH_LEVEL = import.meta.env.NUXT_PUBLIC_PASSWORD_STRENGTH_LEVEL || 'strong'
 
 /**
  * 文件上传配置
@@ -46,7 +46,7 @@ export const STORAGE_TYPE = process.env.STORAGE_TYPE || ''
 // 文件名前缀
 export const BUCKET_PREFIX = process.env.BUCKET_PREFIX || ''
 // 最大允许上传的文件大小，默认 4.5 MiB
-export const MAX_UPLOAD_SIZE_TEXT = process.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE || import.meta.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE as string || '4.5MiB'
+export const MAX_UPLOAD_SIZE_TEXT = process.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE || import.meta.env.NUXT_PUBLIC_MAX_UPLOAD_SIZE || '4.5MiB'
 export const MAX_UPLOAD_SIZE = Number(parse(MAX_UPLOAD_SIZE_TEXT))
 // 限流时间窗口（默认1天）
 export const UPLOAD_LIMIT_WINDOW = Number(process.env.UPLOAD_LIMIT_WINDOW || ms('1d') / 1000)
@@ -229,17 +229,17 @@ export const CAPTCHA_PROVIDER = (process.env.NUXT_PUBLIC_CAPTCHA_PROVIDER || imp
 
 // Google reCAPTCHA 配置
 export const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
-export const RECAPTCHA_SITE_KEY = process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY || import.meta.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY as string
+export const RECAPTCHA_SITE_KEY = process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY || import.meta.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY
 // reCAPTCHA v3 最小得分阈值，默认 0.5
 export const RECAPTCHA_MIN_SCORE = Number(process.env.RECAPTCHA_MIN_SCORE || '0.5')
 
 // Cloudflare Turnstile 配置
 export const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY
-export const TURNSTILE_SITE_KEY = process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || import.meta.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY as string
+export const TURNSTILE_SITE_KEY = process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || import.meta.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY
 
 // hCaptcha 配置
 export const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY
-export const HCAPTCHA_SITE_KEY = process.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY || import.meta.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY as string
+export const HCAPTCHA_SITE_KEY = process.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY || import.meta.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY
 
 // 反馈配置
-export const FEEDBACK_URL = process.env.NUXT_PUBLIC_FEEDBACK_URL || import.meta.env.NUXT_PUBLIC_FEEDBACK_URL as string || ''
+export const FEEDBACK_URL = process.env.NUXT_PUBLIC_FEEDBACK_URL || import.meta.env.NUXT_PUBLIC_FEEDBACK_URL || ''

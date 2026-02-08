@@ -70,7 +70,7 @@ export const useGoogleAnalytics = (): GoogleAnalyticsMethods => {
     }): void => {
         if (checkGoogleAnalytics() && window.gtag) {
             const runtimeConfig = useRuntimeConfig()
-            const googleAnalyticsId = runtimeConfig.public.googleAnalyticsId as string
+            const googleAnalyticsId = runtimeConfig.public.googleAnalyticsId
             if (googleAnalyticsId) {
                 window.gtag('config', googleAnalyticsId, config)
             }

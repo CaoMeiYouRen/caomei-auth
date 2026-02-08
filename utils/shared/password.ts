@@ -183,7 +183,7 @@ export function getPasswordScore(
     options?: PasswordValidatorOptions,
 ): number {
     const finalOptions = options || passwordStrengthPresets[getDefaultPasswordStrength()]
-    return passwordValidator(password, { ...finalOptions, returnScore: true }) as number
+    return passwordValidator(password, { ...finalOptions, returnScore: true })
 }
 
 /**

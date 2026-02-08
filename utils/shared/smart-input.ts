@@ -130,7 +130,7 @@ export function detectPossibleRegions(phoneNumber: string): PossibleRegion[] {
  * 智能检测输入类型
  */
 export function detectInputType(input: string): InputType {
-    if (!input || !input.trim()) {
+    if (!input?.trim()) {
         return 'unknown'
     }
 

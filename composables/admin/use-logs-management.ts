@@ -23,7 +23,7 @@ export function useLogsManagement() {
             query.status = selectedStatus.value
         }
 
-        if (dateRange.value && dateRange.value.length === 2) {
+        if (dateRange.value?.length === 2) {
             query.startDate = dateRange.value[0]?.toISOString()
             query.endDate = dateRange.value[1]?.toISOString()
         }

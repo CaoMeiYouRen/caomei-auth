@@ -1,4 +1,4 @@
-export type SocialProvider = {
+export interface SocialProvider {
     name: string
     provider: string
     social?: boolean

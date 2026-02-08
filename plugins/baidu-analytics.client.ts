@@ -5,7 +5,7 @@
 
 export default defineNuxtPlugin(() => {
     const config = useRuntimeConfig()
-    const baiduAnalyticsId = config.public.baiduAnalyticsId as string
+    const baiduAnalyticsId = config.public.baiduAnalyticsId
 
     // 只在客户端且配置了百度统计 ID 时执行
     if (baiduAnalyticsId && import.meta.client) {
@@ -28,7 +28,7 @@ export default defineNuxtPlugin(() => {
 
         // 将脚本插入到第一个 script 标签之前
         const firstScript = document.getElementsByTagName('script')[0]
-        if (firstScript && firstScript.parentNode) {
+        if (firstScript?.parentNode) {
             firstScript.parentNode.insertBefore(script, firstScript)
         } else {
             // 如果没有找到 script 标签，就插入到 head 中

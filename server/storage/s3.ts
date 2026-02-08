@@ -1,7 +1,7 @@
 import { S3Client, PutObjectCommand, type PutObjectCommandInput } from '@aws-sdk/client-s3'
 import type { Storage } from './type'
 
-export type S3Env = {
+export interface S3Env {
     // S3 基础 URL
     S3_BASE_URL?: string
     // S3 区域

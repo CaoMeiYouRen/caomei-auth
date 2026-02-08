@@ -130,8 +130,8 @@ describe('server/api/admin/sso/providers/index.get', () => {
         const event = { context: {} }
         const result = await handler(event as any)
 
-        const p1 = result.data![0]!
-        const p2 = result.data![1]!
+        const p1 = result.data[0]!
+        const p2 = result.data[1]!
 
         expect(p1.clientSecret).toBe('***')
         expect(JSON.parse(p1.oidcConfig).clientSecret).toBe('***')

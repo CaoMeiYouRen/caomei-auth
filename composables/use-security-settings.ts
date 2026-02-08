@@ -74,7 +74,7 @@ export function useSecuritySettings() {
             })
 
             if (error) {
-                throw error
+                throw new Error(error.message || '设置失败')
             }
 
             totpUri.value = data.totpURI
@@ -106,7 +106,7 @@ export function useSecuritySettings() {
             })
 
             if (error) {
-                throw error
+                throw new Error(error.message || '禁用失败')
             }
 
             showPasswordDialog.value = false
@@ -161,7 +161,7 @@ export function useSecuritySettings() {
             })
 
             if (error) {
-                throw error
+                throw new Error(error.message || '验证失败')
             }
 
             showTotpSetup.value = false
@@ -185,7 +185,7 @@ export function useSecuritySettings() {
 
     const copyBackupCodes = () => {
         const codesText = backupCodes.value.join('\n')
-        navigator.clipboard.writeText(codesText)
+        void navigator.clipboard.writeText(codesText)
         toast.add({
             severity: 'success',
             summary: '成功',
@@ -275,18 +275,18 @@ export function useSecuritySettings() {
             await authClient.revokeSessions()
             await listSessions()
             showRevokeAllSessionsConfirm.value = false
-            navigateTo('/login')
+            void navigateTo('/login')
         } catch (error) {
             console.error('撤销所有会话失败:', error)
         }
     }
 
     const goProfile = () => {
-        navigateTo('/profile')
+        void navigateTo('/profile')
     }
 
     onMounted(() => {
-        listSessions()
+        void listSessions()
     })
 
     return {

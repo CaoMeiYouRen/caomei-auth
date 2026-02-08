@@ -300,7 +300,7 @@ export const auth = betterAuth({
                         })
                         return
                     }
-                    if ((user as User).phoneNumberVerified) {
+                    if ((user).phoneNumberVerified) {
                         await sendPhoneOtp(user.phoneNumber, otp, 60)
                         return
                     }

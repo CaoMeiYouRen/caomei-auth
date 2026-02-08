@@ -152,8 +152,8 @@ export function useRegisterFlow() {
                     }
                 } else if (activeTab.value === 'phone') {
                     const isVerified = await authClient.phoneNumber.verify({
-                        phoneNumber: vals.phone!,
-                        code: vals.code!,
+                        phoneNumber: vals.phone,
+                        code: vals.code,
                     })
 
                     if (!isVerified.data?.status) {

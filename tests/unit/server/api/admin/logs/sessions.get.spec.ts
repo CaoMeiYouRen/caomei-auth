@@ -151,8 +151,8 @@ describe('server/api/admin/logs/sessions.get', () => {
             expect(mockQueryBuilder.leftJoinAndSelect).toHaveBeenCalledWith('session.user', 'user')
             expect(mockQueryBuilder.orderBy).toHaveBeenCalledWith('session.createdAt', 'DESC')
             expect(result.success).toBe(true)
-            expect(result.data!.sessions).toHaveLength(1)
-            expect(result.data!.sessions[0]!.id).toBe('session-1')
+            expect(result.data.sessions).toHaveLength(1)
+            expect(result.data.sessions[0]!.id).toBe('session-1')
         })
 
         it('should apply filters correctly', async () => {

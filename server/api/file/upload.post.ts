@@ -70,7 +70,7 @@ export default defineEventHandler(async (event): Promise<{
         }
 
         const filePart = parts.find((part) => part.name === 'file')
-        if (!filePart || !filePart.filename || !filePart.data) {
+        if (!filePart?.filename || !filePart.data) {
             return {
                 status: 400,
                 success: false,

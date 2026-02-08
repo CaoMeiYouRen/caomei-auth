@@ -68,7 +68,7 @@ export function useForm<T extends Record<string, any> = Record<string, any>>(opt
     function reset(newValues?: Partial<T>) {
         // reset values to initial or provided
         const base = newValues ? { ...initialValues, ...newValues } : initialValues
-        values.value = { ...base } as T
+        values.value = { ...base }
         errors.value = {}
     }
 

@@ -1,7 +1,7 @@
 import { put } from '@vercel/blob'
 import type { Storage } from './type'
 
-export type VercelEnv = {
+export interface VercelEnv {
     // Vercel Blob 令牌
     VERCEL_BLOB_TOKEN: string
     // Vercel Blob 读写令牌

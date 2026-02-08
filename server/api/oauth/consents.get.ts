@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
             .getRawAndEntities()
 
         // 处理查询结果，合并应用信息
-        const authorizedApps: Array<{
+        const authorizedApps: {
             id: string
             clientId: string
             consentedAt: Date
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
                 tosUri: string
                 policyUri: string
             }
-        }> = []
+        }[] = []
         for (const consent of consents.entities) {
             const application = await dataSource
                 .getRepository(OAuthApplication)

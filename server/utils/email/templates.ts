@@ -10,9 +10,7 @@ import logger from '../logger'
 import { getFallbackFragment, getFallbackMjmlTemplate, generateFallbackHtml } from './templates-fallback'
 import { APP_NAME, AUTH_BASE_URL, CONTACT_EMAIL } from '@/utils/shared/env'
 
-interface EmailTemplateData {
-    [key: string]: string | number | boolean
-}
+type EmailTemplateData = Record<string, string | number | boolean>
 
 interface BaseTemplateConfig {
     headerIcon: string
