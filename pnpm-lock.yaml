@@ -33,8 +33,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       '@better-auth/sso':
-        specifier: ^1.4.15
-        version: 1.4.15(@better-auth/utils@0.3.1)(better-auth@1.4.18(better-sqlite3@12.6.2)(mysql2@3.17.1)(pg@8.17.2)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.2.3)(happy-dom@20.6.1)(jiti@2.6.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.9.3)))
+        specifier: ^1.4.18
+        version: 1.4.18(@better-auth/utils@0.3.1)(better-auth@1.4.18(better-sqlite3@12.6.2)(mysql2@3.17.1)(pg@8.17.2)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.2.3)(happy-dom@20.6.1)(jiti@2.6.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.9.3)))
       '@hcaptcha/vue3-hcaptcha':
         specifier: ^1.3.0
         version: 1.3.0(vue@3.5.28(typescript@5.9.3))
@@ -738,11 +738,11 @@ packages:
       kysely: ^0.28.5
       nanostores: ^1.0.1
 
-  '@better-auth/sso@1.4.15':
-    resolution: {integrity: sha512-iU4Kn71YRgJ3yQy/2+w4kRXq6P67z9ywg23VHF5CHs3TgwQ9cEdmKxaPVvrWAVDoVMYS5toHR9SkGMW4kg+0Dw==}
+  '@better-auth/sso@1.4.18':
+    resolution: {integrity: sha512-jwTxZUBp71W6YVOavy50DBZ4OFi0a9MGvTTAi+mxMuINFRcz2RyGZv0gb3jy8AJT97TwKU60qRYIWYYyJj1uhA==}
     peerDependencies:
       '@better-auth/utils': 0.3.0
-      better-auth: 1.4.15
+      better-auth: 1.4.18
 
   '@better-auth/telemetry@1.4.18':
     resolution: {integrity: sha512-e5rDF8S4j3Um/0LIVATL2in9dL4lfO2fr2v1Wio4qTMRbfxqnUDTa+6SZtwdeJrbc4O+a3c+IyIpjG9Q/6GpfQ==}
@@ -5230,12 +5230,12 @@ packages:
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
-  fast-xml-parser@5.3.3:
-    resolution: {integrity: sha512-2O3dkPAAC6JavuMm8+4+pgTk+5hoAs+CjZ+sWcQLkX9+/tHRuTkQh/Oaifr8qDmZ8iEHb771Ea6G8CdwkrgvYA==}
-    hasBin: true
-
   fast-xml-parser@5.3.4:
     resolution: {integrity: sha512-EFd6afGmXlCx8H8WTZHhAoDaWaGyuIBoZJ2mknrNxug+aZKjkp0a0dlars9Izl+jF+7Gu1/5f/2h68cQpe0IiA==}
+    hasBin: true
+
+  fast-xml-parser@5.3.6:
+    resolution: {integrity: sha512-QNI3sAvSvaOiaMl8FYU4trnEzCwiRr8XMWgAHzlrWpTSj+QaCSvOf1h82OEP1s4hiAXhnbXSyFWCf4ldZzZRVA==}
     hasBin: true
 
   fastest-levenshtein@1.0.16:
@@ -10740,12 +10740,12 @@ snapshots:
       nanostores: 1.1.0
       zod: 4.3.6
 
-  '@better-auth/sso@1.4.15(@better-auth/utils@0.3.1)(better-auth@1.4.18(better-sqlite3@12.6.2)(mysql2@3.17.1)(pg@8.17.2)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.2.3)(happy-dom@20.6.1)(jiti@2.6.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.9.3)))':
+  '@better-auth/sso@1.4.18(@better-auth/utils@0.3.1)(better-auth@1.4.18(better-sqlite3@12.6.2)(mysql2@3.17.1)(pg@8.17.2)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.2.3)(happy-dom@20.6.1)(jiti@2.6.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.9.3)))':
     dependencies:
       '@better-auth/utils': 0.3.1
       '@better-fetch/fetch': 1.1.21
       better-auth: 1.4.18(better-sqlite3@12.6.2)(mysql2@3.17.1)(pg@8.17.2)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.2.3)(happy-dom@20.6.1)(jiti@2.6.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.9.3))
-      fast-xml-parser: 5.3.3
+      fast-xml-parser: 5.3.6
       jose: 6.1.3
       samlify: 2.10.2
       zod: 4.3.6
@@ -15981,11 +15981,11 @@ snapshots:
 
   fast-uri@3.1.0: {}
 
-  fast-xml-parser@5.3.3:
+  fast-xml-parser@5.3.4:
     dependencies:
       strnum: 2.1.2
 
-  fast-xml-parser@5.3.4:
+  fast-xml-parser@5.3.6:
     dependencies:
       strnum: 2.1.2
 
