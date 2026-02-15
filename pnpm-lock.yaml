@@ -138,8 +138,8 @@ importers:
         specifier: ^3.0.4
         version: 3.0.4(typescript@5.9.3)(vue@3.5.27(typescript@5.9.3))
       primelocale:
-        specifier: ^2.2.4
-        version: 2.2.4
+        specifier: ^2.3.0
+        version: 2.3.0
       primevue:
         specifier: ^4.5.4
         version: 4.5.4(vue@3.5.27(typescript@5.9.3))
@@ -7958,8 +7958,8 @@ packages:
     resolution: {integrity: sha512-gjVS5hOP+M3wMm5nmNOucbIrqudzs9v/57bWRHQWLYklXqoXKrVfYW2W9+glfGsqtPgpiz5WwyEEB+ksXIx3gQ==}
     engines: {node: '>=18'}
 
-  primelocale@2.2.4:
-    resolution: {integrity: sha512-NKsQ9AYXe1t/Z8JnOxcPCUUF/M6/BqKr0gYhyQmqrITE2ElIOGdPQXXQtEFEgJgBLbbgU7qhKOYbgz80zfVMrQ==}
+  primelocale@2.3.0:
+    resolution: {integrity: sha512-xo9QRzXcXlORu+T3InrdBYs3XcEDidUqKawjE/sQL1Cze+3zLv7HkK4LF7q+FcHi+W/STQ4qcDSII13n3oG6fw==}
     engines: {node: '>=18.0.0', npm: '>=8.6.0'}
 
   primevue@4.5.4:
@@ -8607,6 +8607,11 @@ packages:
 
   srvx@0.11.2:
     resolution: {integrity: sha512-u6NbjE84IJwm1XUnJ53WqylLTQ3BdWRw03lcjBNNeMBD+EFjkl0Cnw1RVaGSqRAo38pOHOPXJH30M6cuTINUxw==}
+    engines: {node: '>=20.16.0'}
+    hasBin: true
+
+  srvx@0.11.4:
+    resolution: {integrity: sha512-m/2p87bqWZ94xpRN06qNBwh0xq/D0dXajnvPDSHFqrTogxuTWYNP1UHz6Cf+oY7D+NPLY35TJAp4ESIKn0WArQ==}
     engines: {node: '>=20.16.0'}
     hasBin: true
 
@@ -16702,7 +16707,7 @@ snapshots:
   h3@2.0.1-rc.14:
     dependencies:
       rou3: 0.7.12
-      srvx: 0.11.2
+      srvx: 0.11.4
 
   handlebars@4.7.8:
     dependencies:
@@ -19590,7 +19595,7 @@ snapshots:
     dependencies:
       parse-ms: 4.0.0
 
-  primelocale@2.2.4: {}
+  primelocale@2.3.0: {}
 
   primevue@4.5.4(vue@3.5.27(typescript@5.9.3)):
     dependencies:
@@ -20425,6 +20430,8 @@ snapshots:
   sqlstring@2.3.3: {}
 
   srvx@0.11.2: {}
+
+  srvx@0.11.4: {}
 
   ssri@8.0.1:
     dependencies:
