@@ -53,7 +53,7 @@
     "mime-types": "^3.0.2",
     "mjml": "^4.18.0",
     "ms": "^4.0.0-nightly.202508271359",
-    "mysql2": "^3.17.1",
+    "mysql2": "^3.17.4",
     "nest-winston": "^1.10.2",
     "nodemailer": "^8.0.1",
     "normalize.css": "^8.0.1",
