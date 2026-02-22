@@ -35,7 +35,7 @@
     "@primevue/core": "^4.5.4",
     "@primevue/forms": "^4.5.4",
     "@sentry/nuxt": "^10.38.0",
-    "@vercel/blob": "^2.2.0",
+    "@vercel/blob": "^2.3.0",
     "@vueuse/core": "^14.2.1",
     "animate.css": "^4.1.1",
     "better-auth": "^1.4.18",
