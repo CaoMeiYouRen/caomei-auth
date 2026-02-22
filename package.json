@@ -72,7 +72,7 @@
     "validator": "^13.15.26",
     "vue": "^3.5.28",
     "vue-recaptcha": "^3.0.0-alpha.6",
-    "vue-router": "^5.0.2",
+    "vue-router": "^5.0.3",
     "vue-turnstile": "^1.0.11",
     "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0",
