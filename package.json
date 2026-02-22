@@ -64,7 +64,7 @@
     "primelocale": "^2.3.0",
     "primevue": "^4.5.4",
     "qrcode": "^1.5.4",
-    "sanitize-html": "^2.8.1",
+    "sanitize-html": "^2.17.1",
     "sqlite3": "^5.1.7",
     "twilio": "^5.12.1",
     "typeorm": "^0.3.28",
