@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getQuery } from 'h3'
+import { getValidatedQuery } from 'h3'
 import handler from '@/server/api/admin/logs/sessions.get'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
@@ -12,7 +12,7 @@ vi.mock('h3', async () => {
     const actual = await vi.importActual('h3')
     return {
         ...actual,
-        getQuery: vi.fn(),
+        getValidatedQuery: vi.fn(),
     }
 })
 
@@ -70,7 +70,18 @@ describe('server/api/admin/logs/sessions.get', () => {
         } as any)
         vi.mocked(isDemoMode).mockReturnValue(false)
         vi.mocked(parseUserAgent).mockReturnValue({ browser: 'Chrome', os: 'Windows' })
-        vi.mocked(getQuery).mockReturnValue({})
+        vi.mocked(getValidatedQuery).mockResolvedValue({
+            success: true,
+            data: {
+                page: 1,
+                limit: 20,
+                userId: undefined,
+                startDate: undefined,
+                endDate: undefined,
+                status: 'all',
+                search: undefined,
+            },
+        } as any)
     })
 
     describe('Demo Mode', () => {
@@ -90,7 +101,10 @@ describe('server/api/admin/logs/sessions.get', () => {
                 },
             ]
             vi.mocked(generateDemoSessions).mockReturnValue(mockSessions as any)
-            vi.mocked(getQuery).mockReturnValue({ page: 1, limit: 10 })
+            vi.mocked(getValidatedQuery).mockResolvedValue({
+                success: true,
+                data: { page: 1, limit: 10, userId: undefined, startDate: undefined, endDate: undefined, status: 'all', search: undefined },
+            } as any)
 
             const event = {
                 context: {},
@@ -109,7 +123,10 @@ describe('server/api/admin/logs/sessions.get', () => {
                 { id: 's2', userId: 'u2', user: { name: 'U2' } },
             ]
             vi.mocked(generateDemoSessions).mockReturnValue(mockSessions as any)
-            vi.mocked(getQuery).mockReturnValue({ userId: 'u1' })
+            vi.mocked(getValidatedQuery).mockResolvedValue({
+                success: true,
+                data: { page: 1, limit: 20, userId: 'u1', startDate: undefined, endDate: undefined, status: 'all', search: undefined },
+            } as any)
 
             const event = {
                 context: {},
@@ -139,7 +156,10 @@ describe('server/api/admin/logs/sessions.get', () => {
 
             mockQueryBuilder.getCount.mockResolvedValue(1)
             mockQueryBuilder.getMany.mockResolvedValue(mockSessions)
-            vi.mocked(getQuery).mockReturnValue({ page: 1, limit: 10 })
+            vi.mocked(getValidatedQuery).mockResolvedValue({
+                success: true,
+                data: { page: 1, limit: 10, userId: undefined, startDate: undefined, endDate: undefined, status: 'all', search: undefined },
+            } as any)
 
             const event = {
                 context: {},
@@ -158,13 +178,18 @@ describe('server/api/admin/logs/sessions.get', () => {
         it('should apply filters correctly', async () => {
             mockQueryBuilder.getCount.mockResolvedValue(0)
             mockQueryBuilder.getMany.mockResolvedValue([])
-            vi.mocked(getQuery).mockReturnValue({
-                userId: 'u1',
-                search: 'test',
-                status: 'active',
-                startDate: '2023-01-01',
-                endDate: '2023-01-31',
-            })
+            vi.mocked(getValidatedQuery).mockResolvedValue({
+                success: true,
+                data: {
+                    page: 1,
+                    limit: 20,
+                    userId: 'u1',
+                    search: 'test',
+                    status: 'active',
+                    startDate: '2023-01-01',
+                    endDate: '2023-01-31',
+                },
+            } as any)
 
             const event = {
                 context: {},

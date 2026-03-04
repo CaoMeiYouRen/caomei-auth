@@ -12,7 +12,7 @@
 
 -   [ ] **多语言适配 (i18n)**: 支持 UI、邮件、API 响应的翻译。详见 [i18n 规范](../standards/i18n.md)。
 -   [ ] **时区设置**: 支持在界面展示用户所在时区的日期时间。
--   [ ] **Zod 迁移 (后端)**: 将所有 API Handlers (`server/api/**`) 的手动参数校验替换为 `Zod Schema` 校验。
+-   [x] **Zod 迁移 (后端)**: 将所有 API Handlers (`server/api/**`) 的手动参数校验替换为 `Zod Schema` 校验。已完成 8 个 handlers 迁移。
 -   [ ] **Zod 迁移 (前端)**: 补全剩余页面的表单 Zod 校验。
 
 ## 2. 测试覆盖率提升 🔴

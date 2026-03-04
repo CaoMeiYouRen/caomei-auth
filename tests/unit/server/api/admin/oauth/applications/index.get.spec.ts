@@ -59,11 +59,14 @@ describe('server/api/admin/oauth/applications/index.get', () => {
 
         // Mock Query
         vi.mocked(getValidatedQuery).mockResolvedValue({
-            page: 0,
-            limit: 10,
-            search: '',
-            sortField: 'createdAt',
-            sortOrder: 'DESC',
+            success: true,
+            data: {
+                page: 0,
+                limit: 10,
+                search: '',
+                sortField: 'createdAt',
+                sortOrder: 'DESC',
+            },
         } as any)
 
         // Mock DB Result
@@ -147,11 +150,14 @@ describe('server/api/admin/oauth/applications/index.get', () => {
     it('should handle search query and pagination', async () => {
         vi.mocked(checkAdmin).mockResolvedValue({ data: { userId: 'admin-1' } } as any)
         vi.mocked(getValidatedQuery).mockResolvedValue({
-            page: 1,
-            limit: 20,
-            search: 'test',
-            sortField: 'name',
-            sortOrder: 'ASC',
+            success: true,
+            data: {
+                page: 1,
+                limit: 20,
+                search: 'test',
+                sortField: 'name',
+                sortOrder: 'ASC',
+            },
         } as any)
 
         mockRepo.findAndCount.mockResolvedValue([[], 0])
@@ -176,11 +182,14 @@ describe('server/api/admin/oauth/applications/index.get', () => {
     it('should handle null jwks and metadata', async () => {
         vi.mocked(checkAdmin).mockResolvedValue({ data: { userId: 'admin-1' } } as any)
         vi.mocked(getValidatedQuery).mockResolvedValue({
-            page: 0,
-            limit: 10,
-            search: '',
-            sortField: 'createdAt',
-            sortOrder: 'DESC',
+            success: true,
+            data: {
+                page: 0,
+                limit: 10,
+                search: '',
+                sortField: 'createdAt',
+                sortOrder: 'DESC',
+            },
         } as any)
 
         const mockApps = [
@@ -204,11 +213,14 @@ describe('server/api/admin/oauth/applications/index.get', () => {
     it('should handle errors', async () => {
         vi.mocked(checkAdmin).mockResolvedValue({ data: { userId: 'admin-1' } } as any)
         vi.mocked(getValidatedQuery).mockResolvedValue({
-            page: 0,
-            limit: 10,
-            search: '',
-            sortField: 'createdAt',
-            sortOrder: 'DESC',
+            success: true,
+            data: {
+                page: 0,
+                limit: 10,
+                search: '',
+                sortField: 'createdAt',
+                sortOrder: 'DESC',
+            },
         } as any)
 
         const error = new Error('DB Error')
