@@ -1,4 +1,4 @@
-import { defineEventHandler, getQuery } from 'h3'
+import { defineEventHandler, createError } from 'h3'
 import dayjs from 'dayjs'
 import { dataSource } from '@/server/database'
 import { Session } from '@/server/entities/session'
@@ -6,29 +6,22 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import { parseUserAgent } from '@/utils/shared/useragent'
 import { isDemoMode, generateDemoSessions } from '@/server/utils/demo-data-generator'
 import logger from '@/server/utils/logger'
-
-interface SessionLogQuery {
-    page?: number
-    limit?: number
-    userId?: string
-    startDate?: string
-    endDate?: string
-    status?: 'active' | 'expired' | 'all'
-    search?: string
-}
+import { validateQuery } from '@/server/utils/validation'
+import { sessionLogsQuerySchema, type SessionLogsQuery } from '@/utils/shared/api-schemas'
 
 export default defineEventHandler(async (event) => {
     // 检查管理员权限
     const auth = await checkAdmin(event)
 
-    const query = getQuery<SessionLogQuery>(event)
+    // 使用 Zod 校验查询参数
+    const query: SessionLogsQuery = await validateQuery(event, sessionLogsQuerySchema)
     const {
-        page = 1,
-        limit = 20,
+        page,
+        limit,
         userId,
         startDate,
         endDate,
-        status = 'all',
+        status,
         search,
     } = query
 

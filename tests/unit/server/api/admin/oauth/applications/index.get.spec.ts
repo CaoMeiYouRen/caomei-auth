@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getQuery } from 'h3'
+import { getValidatedQuery } from 'h3'
 import indexHandler from '@/server/api/admin/oauth/applications/index.get'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
@@ -9,7 +9,7 @@ vi.mock('h3', async () => {
     const actual = await vi.importActual('h3')
     return {
         ...actual,
-        getQuery: vi.fn(),
+        getValidatedQuery: vi.fn(),
     }
 })
 
@@ -58,7 +58,13 @@ describe('server/api/admin/oauth/applications/index.get', () => {
         vi.mocked(checkAdmin).mockResolvedValue({ data: { userId: 'admin-1' } } as any)
 
         // Mock Query
-        vi.mocked(getQuery).mockReturnValue({})
+        vi.mocked(getValidatedQuery).mockResolvedValue({
+            page: 0,
+            limit: 10,
+            search: '',
+            sortField: 'createdAt',
+            sortOrder: 'DESC',
+        } as any)
 
         // Mock DB Result
         const mockApps = [
@@ -140,13 +146,13 @@ describe('server/api/admin/oauth/applications/index.get', () => {
 
     it('should handle search query and pagination', async () => {
         vi.mocked(checkAdmin).mockResolvedValue({ data: { userId: 'admin-1' } } as any)
-        vi.mocked(getQuery).mockReturnValue({
+        vi.mocked(getValidatedQuery).mockResolvedValue({
+            page: 1,
+            limit: 20,
             search: 'test',
-            page: '1',
-            limit: '20',
             sortField: 'name',
-            sortOrder: 'asc',
-        })
+            sortOrder: 'ASC',
+        } as any)
 
         mockRepo.findAndCount.mockResolvedValue([[], 0])
 
@@ -169,7 +175,13 @@ describe('server/api/admin/oauth/applications/index.get', () => {
 
     it('should handle null jwks and metadata', async () => {
         vi.mocked(checkAdmin).mockResolvedValue({ data: { userId: 'admin-1' } } as any)
-        vi.mocked(getQuery).mockReturnValue({})
+        vi.mocked(getValidatedQuery).mockResolvedValue({
+            page: 0,
+            limit: 10,
+            search: '',
+            sortField: 'createdAt',
+            sortOrder: 'DESC',
+        } as any)
 
         const mockApps = [
             {
@@ -191,7 +203,13 @@ describe('server/api/admin/oauth/applications/index.get', () => {
 
     it('should handle errors', async () => {
         vi.mocked(checkAdmin).mockResolvedValue({ data: { userId: 'admin-1' } } as any)
-        vi.mocked(getQuery).mockReturnValue({})
+        vi.mocked(getValidatedQuery).mockResolvedValue({
+            page: 0,
+            limit: 10,
+            search: '',
+            sortField: 'createdAt',
+            sortOrder: 'DESC',
+        } as any)
 
         const error = new Error('DB Error')
         mockRepo.findAndCount.mockRejectedValue(error)

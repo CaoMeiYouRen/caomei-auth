@@ -1,19 +1,18 @@
-import { defineEventHandler, getQuery } from 'h3'
+import { defineEventHandler, createError } from 'h3'
 import { Like } from 'typeorm'
 import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
+import { validateQuery } from '@/server/utils/validation'
+import { paginationQuerySchema, type PaginationQuery } from '@/utils/shared/api-schemas'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
-    const query = getQuery(event)
 
-    const page = Number(query.page) || 0
-    const limit = Number(query.limit) || 10
-    const search = (query.search as string) || ''
-    const sortField = (query.sortField as string) || 'createdAt'
-    const sortOrder = (query.sortOrder as string) || 'DESC'
+    // 使用 Zod 校验查询参数
+    const query: PaginationQuery = await validateQuery(event, paginationQuerySchema)
+    const { page, limit, search, sortField, sortOrder } = query
 
     try {
         let where: any = {}
@@ -32,7 +31,7 @@ export default defineEventHandler(async (event) => {
                 skip: page * limit,
                 take: limit,
                 order: {
-                    [sortField]: sortOrder.toUpperCase(),
+                    [sortField]: sortOrder,
                 },
             })
 

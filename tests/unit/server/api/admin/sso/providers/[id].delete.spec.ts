@@ -2,7 +2,7 @@
  * @vitest-environment node
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getRouterParam } from 'h3'
+import { getValidatedRouterParams } from 'h3'
 import handler from '@/server/api/admin/sso/providers/[id].delete'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
@@ -13,7 +13,7 @@ vi.mock('h3', async () => {
     const actual = await vi.importActual('h3')
     return {
         ...actual,
-        getRouterParam: vi.fn(),
+        getValidatedRouterParams: vi.fn(),
     }
 })
 
@@ -53,7 +53,7 @@ describe('server/api/admin/sso/providers/[id].delete', () => {
         const providerId = 'p1'
         const existingProvider = { id: providerId, name: 'Provider 1' }
 
-        vi.mocked(getRouterParam).mockReturnValue(providerId)
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: providerId } } as any)
         mockRepo.findOne.mockResolvedValue(existingProvider)
         mockRepo.remove.mockResolvedValue(existingProvider)
 
@@ -69,14 +69,14 @@ describe('server/api/admin/sso/providers/[id].delete', () => {
     })
 
     it('should throw 400 if provider ID is missing', async () => {
-        vi.mocked(getRouterParam).mockReturnValue(undefined)
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: false, error: { issues: [{ message: 'ID 不能为空' }] } } as any)
 
         const event = { context: {} }
-        await expect(handler(event as any)).rejects.toThrow('缺少提供商 ID')
+        await expect(handler(event as any)).rejects.toThrow('ID 不能为空')
     })
 
     it('should throw 404 if provider not found', async () => {
-        vi.mocked(getRouterParam).mockReturnValue('p1')
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'p1' } } as any)
         mockRepo.findOne.mockResolvedValue(null)
 
         const event = { context: {} }
@@ -84,7 +84,7 @@ describe('server/api/admin/sso/providers/[id].delete', () => {
     })
 
     it('should handle database errors', async () => {
-        vi.mocked(getRouterParam).mockReturnValue('p1')
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'p1' } } as any)
         mockRepo.findOne.mockResolvedValue({ id: 'p1' })
         const error = new Error('Database error')
         mockRepo.remove.mockRejectedValue(error)

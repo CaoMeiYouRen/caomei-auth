@@ -1,9 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { getValidatedRouterParams } from 'h3'
 import handler from '@/server/api/oauth/client/[id].get'
 import { dataSource } from '@/server/database'
 import { OAuthApplication } from '@/server/entities/oauth-application'
 
 // Mock dependencies
+vi.mock('h3', async () => {
+    const actual = await vi.importActual('h3')
+    return {
+        ...actual,
+        getValidatedRouterParams: vi.fn(),
+    }
+})
+
 vi.mock('@/server/database', () => ({
     dataSource: {
         getRepository: vi.fn(),
@@ -38,6 +47,7 @@ describe('server/api/oauth/client/[id].get', () => {
             disabled: false,
         }
         mockRepo.findOne.mockResolvedValue(mockApp)
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: clientId } } as any)
 
         const event = { context: { params: { id: clientId } } }
         const result = await handler(event as any)
@@ -63,13 +73,18 @@ describe('server/api/oauth/client/[id].get', () => {
     })
 
     it('should return 400 if client ID is missing', async () => {
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({
+            success: false,
+            error: { issues: [{ message: 'ID 不能为空' }] },
+        } as any)
+
         const event = { context: { params: {} } }
         const result = await handler(event as any)
 
         expect(result).toEqual({
             status: 400,
             success: false,
-            message: '缺少客户端ID',
+            message: 'ID 不能为空',
             data: null,
         })
     })
@@ -77,6 +92,7 @@ describe('server/api/oauth/client/[id].get', () => {
     it('should return 404 if client not found', async () => {
         const clientId = 'client-123'
         mockRepo.findOne.mockResolvedValue(null)
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: clientId } } as any)
 
         const event = { context: { params: { id: clientId } } }
         const result = await handler(event as any)
@@ -92,6 +108,7 @@ describe('server/api/oauth/client/[id].get', () => {
     it('should return 404 if client is disabled', async () => {
         const clientId = 'client-123'
         mockRepo.findOne.mockResolvedValue({ disabled: true })
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: clientId } } as any)
 
         const event = { context: { params: { id: clientId } } }
         const result = await handler(event as any)
@@ -108,6 +125,7 @@ describe('server/api/oauth/client/[id].get', () => {
         const clientId = 'client-123'
         const error = new Error('Database error')
         mockRepo.findOne.mockRejectedValue(error)
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: clientId } } as any)
 
         const event = { context: { params: { id: clientId } } }
         const result = await handler(event as any)

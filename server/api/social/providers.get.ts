@@ -14,6 +14,8 @@ import {
     DOUYIN_CLIENT_ID,
     FACEBOOK_CLIENT_ID,
 } from '@/utils/shared/env'
+import { validateQuery } from '@/server/utils/validation'
+import { socialProvidersQuerySchema, type SocialProvidersQuery } from '@/utils/shared/api-schemas'
 
 // 所有第三方登录的元数据
 const allProviders: SocialProvider[] = [
@@ -119,8 +121,9 @@ const allProviders: SocialProvider[] = [
 ]
 
 export default defineEventHandler(async (event) => {
-    const url = getRequestURL(event)
-    const includeDisabled = url.searchParams.get('includeDisabled') === 'true'
+    // 使用 Zod 校验查询参数
+    const query: SocialProvidersQuery = await validateQuery(event, socialProvidersQuerySchema)
+    const { includeDisabled } = query
 
     return {
         status: 200,

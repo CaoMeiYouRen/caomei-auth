@@ -1,10 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { getValidatedRouterParams } from 'h3'
 import handler from '@/server/api/admin/oauth/applications/[id].delete'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 
 // Mock dependencies
+vi.mock('h3', async () => {
+    const actual = await vi.importActual('h3')
+    return {
+        ...actual,
+        getValidatedRouterParams: vi.fn(),
+    }
+})
+
 vi.mock('@/server/database', () => ({
     dataSource: {
         getRepository: vi.fn(),
@@ -42,6 +51,11 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
     })
 
     it('should return 400 if id is missing', async () => {
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({
+            success: false,
+            error: { issues: [{ message: 'ID 不能为空' }] },
+        } as any)
+
         const event = {
             context: {
                 params: {},
@@ -53,12 +67,14 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
         expect(result).toEqual({
             status: 400,
             success: false,
-            message: '参数不完整',
+            message: 'ID 不能为空',
             data: null,
         })
     })
 
     it('should return 404 if application not found', async () => {
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'app-123' } } as any)
+
         const event = {
             context: {
                 params: { id: 'app-123' },
@@ -81,6 +97,8 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
     })
 
     it('should delete application successfully', async () => {
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'app-123' } } as any)
+
         const event = {
             context: {
                 params: { id: 'app-123' },
@@ -106,6 +124,8 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
     })
 
     it('should handle database errors', async () => {
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'app-123' } } as any)
+
         const event = {
             context: {
                 params: { id: 'app-123' },

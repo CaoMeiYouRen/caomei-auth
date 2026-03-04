@@ -2,7 +2,7 @@
  * @vitest-environment node
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getRouterParam } from 'h3'
+import { getValidatedRouterParams } from 'h3'
 import handler from '@/server/api/admin/sso/providers/[id].get'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
@@ -13,7 +13,7 @@ vi.mock('h3', async () => {
     const actual = await vi.importActual('h3')
     return {
         ...actual,
-        getRouterParam: vi.fn(),
+        getValidatedRouterParams: vi.fn(),
     }
 })
 
@@ -49,14 +49,14 @@ describe('server/api/admin/sso/providers/[id].get', () => {
     })
 
     it('should return 400 if ID is missing', async () => {
-        vi.mocked(getRouterParam).mockReturnValue(undefined)
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: false, error: { issues: [{ message: 'ID 不能为空' }] } } as any)
 
         const event = { context: {} }
-        await expect(handler(event as any)).rejects.toThrow('缺少提供商 ID')
+        await expect(handler(event as any)).rejects.toThrow('ID 不能为空')
     })
 
     it('should return 404 if provider not found', async () => {
-        vi.mocked(getRouterParam).mockReturnValue('non-existent')
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'non-existent' } } as any)
         mockRepo.findOne.mockResolvedValue(null)
 
         const event = { context: {} }
@@ -64,7 +64,7 @@ describe('server/api/admin/sso/providers/[id].get', () => {
     })
 
     it('should return provider details with sanitized secrets (OIDC)', async () => {
-        vi.mocked(getRouterParam).mockReturnValue('oidc-1')
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'oidc-1' } } as any)
         const mockProvider = {
             id: 'oidc-1',
             type: 'oidc',
@@ -89,7 +89,7 @@ describe('server/api/admin/sso/providers/[id].get', () => {
     })
 
     it('should return provider details with sanitized secrets (SAML)', async () => {
-        vi.mocked(getRouterParam).mockReturnValue('saml-1')
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'saml-1' } } as any)
         const mockProvider = {
             id: 'saml-1',
             type: 'saml',
@@ -112,7 +112,7 @@ describe('server/api/admin/sso/providers/[id].get', () => {
     })
 
     it('should handle database errors', async () => {
-        vi.mocked(getRouterParam).mockReturnValue('error-id')
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'error-id' } } as any)
         mockRepo.findOne.mockRejectedValue(new Error('Database error'))
 
         const event = { context: {} }
@@ -120,7 +120,7 @@ describe('server/api/admin/sso/providers/[id].get', () => {
 
         expect(logger.error).toHaveBeenCalledWith('Failed to get SSO provider details', {
             error: 'Database error',
-            providerId: 'error-id',
+            providerId: 'unknown',
         })
     })
 })

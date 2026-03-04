@@ -2,7 +2,7 @@
  * @vitest-environment node
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getQuery } from 'h3'
+import { getValidatedQuery } from 'h3'
 import { Like } from 'typeorm'
 import handler from '@/server/api/admin/sso/providers/index.get'
 import { dataSource } from '@/server/database'
@@ -14,7 +14,7 @@ vi.mock('h3', async () => {
     const actual = await vi.importActual('h3')
     return {
         ...actual,
-        getQuery: vi.fn(),
+        getValidatedQuery: vi.fn(),
     }
 })
 
@@ -56,7 +56,18 @@ describe('server/api/admin/sso/providers/index.get', () => {
             message: 'Authorized',
             data: { userId: 'admin-123' },
         } as any)
-        vi.mocked(getQuery).mockReturnValue({})
+        vi.mocked(getValidatedQuery).mockResolvedValue({
+            success: true,
+            data: {
+                page: 0,
+                limit: 10,
+                search: '',
+                sortField: 'createdAt',
+                sortOrder: 'DESC',
+                type: '',
+                enabled: undefined,
+            },
+        } as any)
     })
 
     it('should fetch providers with default pagination and sorting', async () => {
@@ -83,15 +94,18 @@ describe('server/api/admin/sso/providers/index.get', () => {
     })
 
     it('should apply search and filters', async () => {
-        vi.mocked(getQuery).mockReturnValue({
-            page: 1,
-            limit: 20,
-            search: 'test',
-            type: 'oidc',
-            enabled: 'true',
-            sortField: 'name',
-            sortOrder: 'ASC',
-        })
+        vi.mocked(getValidatedQuery).mockResolvedValue({
+            success: true,
+            data: {
+                page: 1,
+                limit: 20,
+                search: 'test',
+                type: 'oidc',
+                enabled: true,
+                sortField: 'name',
+                sortOrder: 'ASC',
+            },
+        } as any)
         mockRepo.findAndCount.mockResolvedValue([[], 0])
 
         const event = { context: {} }

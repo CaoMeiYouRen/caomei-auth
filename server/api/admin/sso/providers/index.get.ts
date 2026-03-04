@@ -1,21 +1,18 @@
-import { defineEventHandler, getQuery } from 'h3'
+import { defineEventHandler, createError } from 'h3'
 import { Like } from 'typeorm'
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
+import { validateQuery } from '@/server/utils/validation'
+import { ssoProvidersQuerySchema, type SSOProvidersQuery } from '@/utils/shared/api-schemas'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
-    const query = getQuery(event)
 
-    const page = Number(query.page) || 0
-    const limit = Number(query.limit) || 10
-    const search = (query.search as string) || ''
-    const type = (query.type as string) || ''
-    const enabled = query.enabled as string
-    const sortField = (query.sortField as string) || 'createdAt'
-    const sortOrder = (query.sortOrder as string) || 'DESC'
+    // 使用 Zod 校验查询参数
+    const query: SSOProvidersQuery = await validateQuery(event, ssoProvidersQuerySchema)
+    const { page, limit, search, sortField, sortOrder, type, enabled } = query
 
     try {
         // 获取 SSO 提供商列表
@@ -37,8 +34,8 @@ export default defineEventHandler(async (event) => {
             if (type) {
                 cond.type = type
             }
-            if (enabled !== undefined && enabled !== '') {
-                cond.enabled = enabled === 'true'
+            if (enabled !== undefined) {
+                cond.enabled = enabled
             }
             return cond
         })
@@ -48,7 +45,7 @@ export default defineEventHandler(async (event) => {
             skip: page * limit,
             take: limit,
             order: {
-                [sortField]: sortOrder.toUpperCase(),
+                [sortField]: sortOrder,
             },
             relations: ['user'],
         })
