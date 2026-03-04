@@ -254,5 +254,181 @@ describe('useForgotPasswordFlow', () => {
             })
             expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }))
         })
+
+        it('should validate invalid phone number', async () => {
+            const { changeMode, phone, resetPassword, errors } = useForgotPasswordFlow()
+            changeMode('phone')
+
+            phone.value = 'invalid-phone'
+
+            await resetPassword()
+            expect(errors.value.phone).toContain('有效')
+        })
+
+        it('should validate empty phone code', async () => {
+            const { changeMode, phone, resetPassword, errors } = useForgotPasswordFlow()
+            changeMode('phone')
+
+            phone.value = '+8613800138000'
+
+            await resetPassword()
+            expect(errors.value.phoneCode).toBe('请输入短信验证码')
+        })
+
+        it('should handle phone reset password error', async () => {
+            const { changeMode, phone, phoneCode, newPassword, confirmPassword, resetPassword } = useForgotPasswordFlow()
+            changeMode('phone')
+
+            phone.value = '+8613800138000'
+            phoneCode.value = '123456'
+            newPassword.value = 'Password123!'
+            confirmPassword.value = 'Password123!'
+
+            mockAuthClient.phoneNumber.resetPassword.mockResolvedValue({
+                data: { status: false },
+            })
+
+            await resetPassword()
+
+            expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error' }))
+        })
+    })
+
+    describe('Computed Properties', () => {
+        it('should compute canSendEmailCode correctly', () => {
+            const { email, canSendEmailCode, errors } = useForgotPasswordFlow()
+
+            // Empty email - should not be able to send
+            email.value = ''
+            expect(canSendEmailCode.value).toBe(false)
+
+            // Valid email - should be able to send
+            email.value = 'test@example.com'
+            expect(canSendEmailCode.value).toBe(true)
+
+            // Invalid email - should not be able to send
+            email.value = 'invalid-email'
+            expect(canSendEmailCode.value).toBe(false)
+
+            // Email with error - should not be able to send
+            email.value = 'test@example.com'
+            errors.value.email = 'Some error'
+            expect(canSendEmailCode.value).toBe(false)
+        })
+
+        it('should compute canSendPhoneCode correctly', () => {
+            const { phone, canSendPhoneCode, errors } = useForgotPasswordFlow()
+
+            // Empty phone - should not be able to send
+            phone.value = ''
+            expect(canSendPhoneCode.value).toBe(false)
+
+            // Valid phone - should be able to send
+            phone.value = '+8613800138000'
+            expect(canSendPhoneCode.value).toBe(true)
+
+            // Invalid phone - should not be able to send
+            phone.value = '123'
+            expect(canSendPhoneCode.value).toBe(false)
+
+            // Phone with error - should not be able to send
+            phone.value = '+8613800138000'
+            errors.value.phone = 'Some error'
+            expect(canSendPhoneCode.value).toBe(false)
+        })
+    })
+
+    describe('Send Code Functions', () => {
+        it('should call sendEmailOtp with correct params', async () => {
+            const { email, sendEmailCode } = useForgotPasswordFlow()
+
+            email.value = 'test@example.com'
+
+            sendEmailOtp.mockImplementation(async () => {})
+
+            await sendEmailCode()
+
+            expect(sendEmailOtp).toHaveBeenCalledWith(
+                'test@example.com',
+                'forget-password',
+                expect.anything(),
+                expect.any(Function),
+                expect.any(Function),
+            )
+        })
+
+        it('should call sendPhoneOtp with correct params', async () => {
+            const { phone, sendPhoneCode } = useForgotPasswordFlow()
+
+            phone.value = '+8613800138000'
+
+            sendPhoneOtp.mockImplementation(async () => {})
+
+            await sendPhoneCode()
+
+            expect(sendPhoneOtp).toHaveBeenCalledWith(
+                '+8613800138000',
+                'forget-password',
+                expect.anything(),
+                expect.any(Function),
+                expect.any(Function),
+            )
+        })
+
+        it('should set error on invalid email when sending code', async () => {
+            const { email, sendEmailCode, errors } = useForgotPasswordFlow()
+
+            email.value = 'invalid-email'
+
+            sendEmailOtp.mockImplementation(async (_val: string, _type: string, _captcha: any, validator: () => boolean) => {
+                if (!validator()) {
+                    // do nothing
+                }
+            })
+
+            await sendEmailCode()
+
+            expect(errors.value.email).toBeTruthy()
+        })
+
+        it('should set error on invalid phone when sending code', async () => {
+            const { phone, sendPhoneCode, errors } = useForgotPasswordFlow()
+
+            phone.value = 'invalid-phone'
+
+            sendPhoneOtp.mockImplementation(async (_val: string, _type: string, _captcha: any, validator: () => boolean) => {
+                if (!validator()) {
+                    // do nothing
+                }
+            })
+
+            await sendPhoneCode()
+
+            expect(errors.value.phone).toBeTruthy()
+        })
+    })
+
+    describe('Password Validation', () => {
+        it('should validate weak password', async () => {
+            const { email, emailCode, newPassword, confirmPassword, resetPassword, errors } = useForgotPasswordFlow()
+            email.value = 'test@example.com'
+            emailCode.value = '123456'
+            newPassword.value = '123' // Too weak
+            confirmPassword.value = '123'
+
+            await resetPassword()
+            expect(Object.keys(errors.value).length).toBeGreaterThan(0)
+        })
+
+        it('should validate password length', async () => {
+            const { email, emailCode, newPassword, confirmPassword, resetPassword, errors } = useForgotPasswordFlow()
+            email.value = 'test@example.com'
+            emailCode.value = '123456'
+            newPassword.value = 'Pass1!' // Too short (min 8 chars)
+            confirmPassword.value = 'Pass1!'
+
+            await resetPassword()
+            expect(Object.keys(errors.value).length).toBeGreaterThan(0)
+        })
     })
 })

@@ -193,7 +193,7 @@ export function generateDemoLoginLogs(count: number = 200): DemoLoginLog[] {
         const id = snowflake.generateId()
         logs.push({
             id,
-            userId: user.id as string,
+            userId: user.id!,
             userEmail: user.email,
             userName: user.name,
             ip: maskIP(generateRandomIP()),
@@ -337,9 +337,9 @@ export function generateDemoSessions(count: number = 100): DemoSession[] {
 
         sessions.push({
             id: sessionId,
-            userId: user.id as string,
+            userId: user.id!,
             user: {
-                id: user.id as string,
+                id: user.id!,
                 name: user.name,
                 email: user.email,
                 image: user.image,

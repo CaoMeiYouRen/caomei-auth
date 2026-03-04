@@ -146,38 +146,38 @@ export const auth = betterAuth({
     },
     socialProviders: {
         github: { // 支持 GitHub 登录
-            clientId: GITHUB_CLIENT_ID as string,
-            clientSecret: GITHUB_CLIENT_SECRET as string,
+            clientId: GITHUB_CLIENT_ID!,
+            clientSecret: GITHUB_CLIENT_SECRET!,
         },
         google: { // 支持 Google 登录
-            clientId: GOOGLE_CLIENT_ID as string,
-            clientSecret: GOOGLE_CLIENT_SECRET as string,
+            clientId: GOOGLE_CLIENT_ID!,
+            clientSecret: GOOGLE_CLIENT_SECRET!,
         },
         microsoft: { // 支持 Microsoft 登录
-            clientId: MICROSOFT_CLIENT_ID as string,
-            clientSecret: MICROSOFT_CLIENT_SECRET as string,
+            clientId: MICROSOFT_CLIENT_ID!,
+            clientSecret: MICROSOFT_CLIENT_SECRET!,
             // 可选配置
             tenantId: 'common',
         },
         discord: { // 支持 Discord 登录
-            clientId: DISCORD_CLIENT_ID as string,
-            clientSecret: DISCORD_CLIENT_SECRET as string,
+            clientId: DISCORD_CLIENT_ID!,
+            clientSecret: DISCORD_CLIENT_SECRET!,
         },
         facebook: { // 支持 Facebook 登录
-            clientId: FACEBOOK_CLIENT_ID as string,
-            clientSecret: FACEBOOK_CLIENT_SECRET as string,
+            clientId: FACEBOOK_CLIENT_ID!,
+            clientSecret: FACEBOOK_CLIENT_SECRET!,
             scopes: ['email', 'public_profile', ...FACEBOOK_SCOPES],
             fields: ['id', 'name', 'email', 'picture', ...FACEBOOK_FIELDS],
             configId: FACEBOOK_CONFIG_ID,
         },
         apple: { // 支持 Apple 登录
-            clientId: APPLE_CLIENT_ID as string,
-            clientSecret: APPLE_CLIENT_SECRET as string,
-            appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER as string,
+            clientId: APPLE_CLIENT_ID!,
+            clientSecret: APPLE_CLIENT_SECRET!,
+            appBundleIdentifier: APPLE_APP_BUNDLE_IDENTIFIER!,
         },
         twitter: { // 支持 Twitter 登录
-            clientId: TWITTER_CLIENT_ID as string,
-            clientSecret: TWITTER_CLIENT_SECRET as string,
+            clientId: TWITTER_CLIENT_ID!,
+            clientSecret: TWITTER_CLIENT_SECRET!,
             scopes: ['user.email', 'users.read'], // users.email 用于获取邮箱，users.read 用于获取基本用户信息
         },
     },
@@ -316,8 +316,8 @@ export const auth = betterAuth({
             config: [
                 {
                     providerId: 'weibo',
-                    clientId: WEIBO_CLIENT_ID as string,
-                    clientSecret: WEIBO_CLIENT_SECRET as string,
+                    clientId: WEIBO_CLIENT_ID!,
+                    clientSecret: WEIBO_CLIENT_SECRET!,
                     authorizationUrl: 'https://api.weibo.com/oauth2/authorize',
                     tokenUrl: 'https://api.weibo.com/oauth2/access_token',
                     userInfoUrl: 'https://api.weibo.com/2/users/show.json',
@@ -360,8 +360,8 @@ export const auth = betterAuth({
                 },
                 {
                     providerId: 'wechat',
-                    clientId: WECHAT_CLIENT_ID as string,
-                    clientSecret: WECHAT_CLIENT_SECRET as string,
+                    clientId: WECHAT_CLIENT_ID!,
+                    clientSecret: WECHAT_CLIENT_SECRET!,
                     authorizationUrl: 'https://open.weixin.qq.com/connect/qrconnect',
                     tokenUrl: 'https://api.weixin.qq.com/sns/oauth2/access_token',
                     userInfoUrl: 'https://api.weixin.qq.com/sns/userinfo',
@@ -432,8 +432,8 @@ export const auth = betterAuth({
                 },
                 {
                     providerId: 'qq',
-                    clientId: QQ_CLIENT_ID as string,
-                    clientSecret: QQ_CLIENT_SECRET as string,
+                    clientId: QQ_CLIENT_ID!,
+                    clientSecret: QQ_CLIENT_SECRET!,
                     authorizationUrl: 'https://graph.qq.com/oauth2.0/authorize',
                     tokenUrl: 'https://graph.qq.com/oauth2.0/token',
                     userInfoUrl: 'https://graph.qq.com/user/get_user_info',
@@ -484,8 +484,8 @@ export const auth = betterAuth({
                 },
                 {
                     providerId: 'douyin',
-                    clientId: DOUYIN_CLIENT_ID as string,
-                    clientSecret: DOUYIN_CLIENT_SECRET as string,
+                    clientId: DOUYIN_CLIENT_ID!,
+                    clientSecret: DOUYIN_CLIENT_SECRET!,
                     authorizationUrl: 'https://open.douyin.com/platform/oauth/connect',
                     tokenUrl: 'https://open.douyin.com/oauth/access_token/',
                     userInfoUrl: 'https://open.douyin.com/oauth/userinfo/',
@@ -495,13 +495,13 @@ export const auth = betterAuth({
                     authorizationUrlParams: {
                         response_type: 'code',
                         // 授权时使用 client_key
-                        client_key: DOUYIN_CLIENT_ID as string,
+                        client_key: DOUYIN_CLIENT_ID!,
                     },
                     tokenUrlParams: {
                         grant_type: 'authorization_code',
                         // token 获取时使用 client_key 和 client_secret
-                        client_key: DOUYIN_CLIENT_ID as string,
-                        client_secret: DOUYIN_CLIENT_SECRET as string,
+                        client_key: DOUYIN_CLIENT_ID!,
+                        client_secret: DOUYIN_CLIENT_SECRET!,
                     },
                     getUserInfo: async (tokens) => {
                         // 抖音的 token 响应格式：

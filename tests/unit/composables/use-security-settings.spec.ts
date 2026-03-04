@@ -333,5 +333,170 @@ describe('useSecuritySettings', () => {
             expect(showRevokeAllSessionsConfirm.value).toBe(false)
             expect(mockNavigateTo).toHaveBeenCalledWith('/login')
         })
+
+        it('should handle list sessions error', async () => {
+            const consoleSpy = vi.spyOn(console, 'error')
+            mockAuthClient.listSessions.mockRejectedValue(new Error('Network error'))
+
+            useSecuritySettings()
+
+            // Wait for async operation
+            await new Promise((resolve) => setTimeout(resolve, 0))
+
+            expect(consoleSpy).toHaveBeenCalled()
+            consoleSpy.mockRestore()
+        })
+
+        it('should handle revoke session error', async () => {
+            const consoleSpy = vi.spyOn(console, 'error')
+            mockAuthClient.revokeSession.mockRejectedValue(new Error('Revoke failed'))
+
+            const { confirmRevokeSession, revokeSingleSession } = useSecuritySettings()
+            confirmRevokeSession('token123')
+
+            await revokeSingleSession()
+
+            expect(consoleSpy).toHaveBeenCalled()
+            consoleSpy.mockRestore()
+        })
+
+        it('should handle revoke other sessions error', async () => {
+            const consoleSpy = vi.spyOn(console, 'error')
+            mockAuthClient.revokeOtherSessions.mockRejectedValue(new Error('Revoke failed'))
+
+            const { confirmRevokeOtherSessions, revokeOtherSessions } = useSecuritySettings()
+            confirmRevokeOtherSessions()
+
+            await revokeOtherSessions()
+
+            expect(consoleSpy).toHaveBeenCalled()
+            consoleSpy.mockRestore()
+        })
+
+        it('should handle revoke all sessions error', async () => {
+            const consoleSpy = vi.spyOn(console, 'error')
+            mockAuthClient.revokeSessions.mockRejectedValue(new Error('Revoke failed'))
+
+            const { confirmRevokeAllSessions, revokeAllSessions } = useSecuritySettings()
+            confirmRevokeAllSessions()
+
+            await revokeAllSessions()
+
+            expect(consoleSpy).toHaveBeenCalled()
+            consoleSpy.mockRestore()
+        })
+    })
+
+    describe('Utility Functions', () => {
+        it('should clear password on dialog hide', () => {
+            const { password, onPasswordDialogHide } = useSecuritySettings()
+
+            password.value = 'test-password'
+            onPasswordDialogHide()
+
+            expect(password.value).toBe('')
+        })
+
+        it('should clear all state on finish setup', () => {
+            const { password, verificationCode, totpUri, qrCodeUrl, backupCodes, showBackupCodes, finishSetup } = useSecuritySettings()
+
+            password.value = 'test-password'
+            verificationCode.value = '123456'
+            totpUri.value = 'otpauth://totp/test'
+            qrCodeUrl.value = 'data:image/png;base64,...'
+            backupCodes.value = ['code1', 'code2']
+            showBackupCodes.value = true
+
+            finishSetup()
+
+            expect(password.value).toBe('')
+            expect(verificationCode.value).toBe('')
+            expect(totpUri.value).toBe('')
+            expect(qrCodeUrl.value).toBe('')
+            expect(backupCodes.value).toEqual([])
+            expect(showBackupCodes.value).toBe(false)
+        })
+
+        it('should navigate to profile', () => {
+            const { goProfile } = useSecuritySettings()
+
+            goProfile()
+
+            expect(mockNavigateTo).toHaveBeenCalledWith('/profile')
+        })
+    })
+
+    describe('Session List Computed', () => {
+        it('should format session list with correct properties', async () => {
+            const mockDate = new Date('2024-01-01T12:00:00Z')
+            mockAuthClient.listSessions.mockResolvedValue({
+                data: [
+                    {
+                        id: 'session1',
+                        token: 'token1',
+                        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0',
+                        ipAddress: '192.168.1.1',
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                        expiresAt: mockDate,
+                        userId: 'user1',
+                    },
+                ],
+            })
+            mockGetBrowser.mockReturnValue('Chrome')
+            mockGetOs.mockReturnValue('Windows')
+
+            const { sessionList } = useSecuritySettings()
+
+            // Wait for the async listSessions to complete
+            await new Promise((resolve) => setTimeout(resolve, 0))
+
+            expect(sessionList.value).toHaveLength(1)
+            expect(sessionList.value[0]!.browser).toBe('Chrome')
+            expect(sessionList.value[0]!.os).toBe('Windows')
+            expect(sessionList.value[0]!.createdAt).toContain('2024')
+        })
+    })
+
+    describe('Disable 2FA Error Handling', () => {
+        it('should handle disable 2FA error', async () => {
+            const { onPasswordConfirm, password, passwordDialogMode, showPasswordDialog } = useSecuritySettings()
+
+            password.value = 'password123'
+            passwordDialogMode.value = 'disable'
+            showPasswordDialog.value = true
+
+            mockAuthClient.twoFactor.disable.mockResolvedValue({
+                error: { message: 'Invalid password' },
+            })
+
+            await onPasswordConfirm()
+
+            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
+                severity: 'error',
+                detail: expect.stringContaining('Invalid password'),
+            }))
+        })
+    })
+
+    describe('Verify TOTP Error Handling', () => {
+        it('should handle verify TOTP error', async () => {
+            const { verifyAndEnable2FA, verificationCode, showTotpSetup } = useSecuritySettings()
+
+            verificationCode.value = '123456'
+            showTotpSetup.value = true
+
+            mockAuthClient.twoFactor.verifyTotp.mockResolvedValue({
+                error: { message: 'Invalid code' },
+            })
+
+            await verifyAndEnable2FA()
+
+            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
+                severity: 'error',
+                detail: expect.stringContaining('Invalid code'),
+            }))
+            expect(showTotpSetup.value).toBe(true)
+        })
     })
 })

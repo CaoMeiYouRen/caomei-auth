@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { checkAndSyncAdminRole, checkAndSyncAdminRoleWithUser, isUserAdmin } from '@/server/utils/admin-role-sync'
+import { checkAndSyncAdminRole, checkAndSyncAdminRoleWithUser, isUserAdmin, setUserAdminRole, removeUserAdminRole } from '@/server/utils/admin-role-sync'
 import logger from '@/server/utils/logger'
 import type { User } from '@/server/entities/user'
 
@@ -112,6 +112,133 @@ describe('Server Utils: Admin Role Sync', () => {
             expect(isUserAdmin({ role: null }, 'admin-user')).toBe(true)
             expect(isUserAdmin({ role: 'member,admin' }, 'someone')).toBe(true)
             expect(isUserAdmin({ role: 'member' }, 'guest')).toBe(false)
+        })
+    })
+
+    describe('setUserAdminRole', () => {
+        it('should return false if user does not exist', async () => {
+            findOneMock.mockResolvedValue(null)
+
+            const result = await setUserAdminRole('non-existent-user')
+
+            expect(result).toBe(false)
+        })
+
+        it('should add admin role to user without roles', async () => {
+            const user = { id: 'user-1', role: null, email: 'user@example.com' }
+            findOneMock.mockResolvedValue(user)
+            saveMock.mockResolvedValue(user)
+
+            const result = await setUserAdminRole('user-1')
+
+            expect(result).toBe(true)
+            expect(user.role).toContain('admin')
+            expect(saveMock).toHaveBeenCalledWith(user)
+        })
+
+        it('should add admin role to user with existing roles', async () => {
+            const user = { id: 'user-1', role: 'user', email: 'user@example.com' }
+            findOneMock.mockResolvedValue(user)
+            saveMock.mockResolvedValue(user)
+
+            const result = await setUserAdminRole('user-1')
+
+            expect(result).toBe(true)
+            expect(user.role).toContain('admin')
+            expect(user.role).toContain('user')
+        })
+
+        it('should not duplicate admin role if already present', async () => {
+            const user = { id: 'user-1', role: 'user,admin', email: 'user@example.com' }
+            findOneMock.mockResolvedValue(user)
+            saveMock.mockResolvedValue(user)
+
+            const result = await setUserAdminRole('user-1')
+
+            expect(result).toBe(true)
+            // Should not call save since role already exists
+            expect(saveMock).not.toHaveBeenCalled()
+        })
+
+        it('should handle errors gracefully', async () => {
+            findOneMock.mockRejectedValue(new Error('DB Error'))
+
+            const result = await setUserAdminRole('user-1')
+
+            expect(result).toBe(false)
+            expect(logger.error).toHaveBeenCalledWith(
+                expect.stringContaining('设置管理员角色失败'),
+                expect.any(Object),
+            )
+        })
+    })
+
+    describe('removeUserAdminRole', () => {
+        it('should return false if user does not exist', async () => {
+            findOneMock.mockResolvedValue(null)
+
+            const result = await removeUserAdminRole('non-existent-user')
+
+            expect(result).toBe(false)
+        })
+
+        it('should prevent user from removing their own admin role', async () => {
+            const result = await removeUserAdminRole('user-1', 'user-1')
+
+            expect(result).toBe(false)
+            expect(logger.security.permissionDenied).toHaveBeenCalledWith({
+                userId: 'user-1',
+                resource: 'admin_role',
+                action: 'remove_self',
+            })
+        })
+
+        it('should remove admin role and keep other roles', async () => {
+            const user = { id: 'user-1', role: 'user,admin,moderator', email: 'user@example.com' }
+            findOneMock.mockResolvedValue(user)
+            saveMock.mockResolvedValue(user)
+
+            const result = await removeUserAdminRole('user-1', 'admin-1')
+
+            expect(result).toBe(true)
+            expect(user.role).not.toContain('admin')
+            expect(user.role).toContain('user')
+            expect(user.role).toContain('moderator')
+            expect(saveMock).toHaveBeenCalledWith(user)
+        })
+
+        it('should set user role if no other roles remain', async () => {
+            const user = { id: 'user-1', role: 'admin', email: 'user@example.com' }
+            findOneMock.mockResolvedValue(user)
+            saveMock.mockResolvedValue(user)
+
+            const result = await removeUserAdminRole('user-1', 'admin-1')
+
+            expect(result).toBe(true)
+            expect(user.role).toBe('user')
+        })
+
+        it('should handle null role by setting user role', async () => {
+            const user = { id: 'user-1', role: null, email: 'user@example.com' }
+            findOneMock.mockResolvedValue(user)
+            saveMock.mockResolvedValue(user)
+
+            const result = await removeUserAdminRole('user-1', 'admin-1')
+
+            expect(result).toBe(true)
+            expect(user.role).toBe('user')
+        })
+
+        it('should handle errors gracefully', async () => {
+            findOneMock.mockRejectedValue(new Error('DB Error'))
+
+            const result = await removeUserAdminRole('user-1', 'admin-1')
+
+            expect(result).toBe(false)
+            expect(logger.error).toHaveBeenCalledWith(
+                expect.stringContaining('移除管理员角色失败'),
+                expect.any(Object),
+            )
         })
     })
 })

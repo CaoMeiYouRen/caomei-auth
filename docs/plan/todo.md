@@ -19,16 +19,16 @@
 
 当前重点关注覆盖率低于 50% 的核心模块。
 
--   [ ] **Composables**:
-    -   [ ] `use-forgot-password-flow.ts` (当前 36%)
-    -   [ ] `use-security-settings.ts` (当前 31%)
-    -   [ ] `admin/use-user-management.ts` (当前 40%)
--   [ ] **Server Utils**:
-    -   [ ] `server/utils/logger.ts`: 补充隐私脱敏、多环境输出测试。
-    -   [ ] `server/utils/email/service.ts`: 补充失败重试、并发限流测试。
-    -   [ ] `server/utils/admin-role-sync.ts`: 补充用户自动创建逻辑。
--   [ ] **Middleware**:
-    -   [ ] `server/middleware/3-demo-guard.ts` (当前 0%)
+-   [x] **Composables**:
+    -   [x] `use-forgot-password-flow.ts`: 补充 Computed 属性、发送验证码、密码验证测试。
+    -   [x] `use-security-settings.ts`: 补充清理函数、导航、Session 错误处理、2FA 错误处理测试。
+    -   [x] `admin/use-user-management.ts`: 补充用户操作、角色同步、批量操作、Dialog 测试。
+-   [x] **Server Utils**:
+    -   [x] `server/utils/logger.ts`: 补充全部日志分类测试（Security/API/Database/System/Business/Email/Phone）。
+    -   [x] `server/utils/email/service.ts`: 补充全部邮件发送方法测试（验证/重置/OTP/魔法链接/安全通知）。
+    -   [x] `server/utils/admin-role-sync.ts`: 补充 `setUserAdminRole`、`removeUserAdminRole` 测试。
+-   [x] **Middleware**:
+    -   [x] `server/middleware/3-demo-guard.ts`: 新建完整测试文件，覆盖 Demo 模式拦截逻辑。
 
 ## 3. 体验优化 🟡
 
