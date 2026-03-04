@@ -3,9 +3,19 @@ import { useUrlSearchParams } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
 import { emailSchema, phoneSchema } from '@/utils/shared/validators'
-import { validatePasswordForm } from '@/utils/shared/password-validator'
+import {
+    forgotPasswordEmailFormSchema,
+    forgotPasswordPhoneFormSchema,
+    resetPasswordFormSchema,
+} from '@/utils/shared/schemas'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import type { CaptchaExpose } from '@/utils/web/captcha'
+
+// Helper function to get first Zod error
+function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }): string | null {
+    if (result.success) { return null }
+    return result.error?.issues[0]?.message || '校验失败'
+}
 
 export function useForgotPasswordFlow() {
     const config = useRuntimeConfig().public
@@ -95,44 +105,46 @@ export function useForgotPasswordFlow() {
     async function resetPassword() {
         errors.value = {}
 
+        // 校验邮箱/手机号和验证码
         if (activeTab.value === 'email') {
-            if (!email.value) {
-                errors.value.email = '请输入邮箱'
-                return
-            }
-            const emailValidation = emailSchema.safeParse(email.value)
-            if (!emailValidation.success) {
-                errors.value.email = emailValidation.error.issues[0]?.message || '请输入有效的邮箱地址'
-                return
-            }
-            if (!emailCode.value) {
-                errors.value.emailCode = '请输入邮箱验证码'
+            const result = forgotPasswordEmailFormSchema.safeParse({
+                email: email.value,
+                code: emailCode.value,
+            })
+            if (!result.success) {
+                const errorMsg = getFirstZodError(result)
+                if (errorMsg) {
+                    const path = result.error.issues[0]?.path[0] as string
+                    errors.value[path] = errorMsg
+                }
                 return
             }
         } else if (activeTab.value === 'phone') {
-            if (!phone.value) {
-                errors.value.phone = '请输入手机号'
-                return
-            }
-            const phoneValidation = phoneSchema.safeParse(phone.value)
-            if (!phoneValidation.success) {
-                errors.value.phone = phoneValidation.error.issues[0]?.message || '请输入有效的手机号'
-                return
-            }
-            if (!phoneCode.value) {
-                errors.value.phoneCode = '请输入短信验证码'
+            const result = forgotPasswordPhoneFormSchema.safeParse({
+                phone: phone.value,
+                code: phoneCode.value,
+            })
+            if (!result.success) {
+                const errorMsg = getFirstZodError(result)
+                if (errorMsg) {
+                    const path = result.error.issues[0]?.path[0] as string
+                    errors.value[path] = errorMsg
+                }
                 return
             }
         }
 
-        // 使用新的密码验证工具函数
-        const passwordErrors = validatePasswordForm({
-            password: newPassword.value,
+        // 使用 Zod schema 校验密码
+        const passwordResult = resetPasswordFormSchema.safeParse({
+            newPassword: newPassword.value,
             confirmPassword: confirmPassword.value,
         })
-
-        if (Object.keys(passwordErrors).length > 0) {
-            Object.assign(errors.value, passwordErrors)
+        if (!passwordResult.success) {
+            const errorMsg = getFirstZodError(passwordResult)
+            if (errorMsg) {
+                const path = passwordResult.error.issues[0]?.path[0] as string
+                errors.value[path] = errorMsg
+            }
             return
         }
 

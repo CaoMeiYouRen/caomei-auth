@@ -2,10 +2,20 @@ import { ref, computed } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
-import { validateEmail, validatePhone } from '@/utils/shared/validate'
+import { emailSchema, phoneSchema } from '@/utils/shared/validators'
+import {
+    quickLoginEmailFormSchema,
+    quickLoginPhoneFormSchema,
+} from '@/utils/shared/schemas'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
 import type { CaptchaExpose } from '@/utils/web/captcha'
+
+// Helper function to get first Zod error
+function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }): string | null {
+    if (result.success) { return null }
+    return result.error?.issues[0]?.message || '校验失败'
+}
 
 export function useQuickLoginFlow() {
     // 配置
@@ -44,8 +54,9 @@ export function useQuickLoginFlow() {
         'sign-in',
         captcha,
         () => {
-            if (!validateEmail(email.value)) {
-                errors.value.email = '请输入有效的邮箱地址'
+            const result = emailSchema.safeParse(email.value)
+            if (!result.success) {
+                errors.value.email = getFirstZodError(result) || '请输入有效的邮箱地址'
                 return false
             }
             return true
@@ -62,8 +73,9 @@ export function useQuickLoginFlow() {
         'sign-in',
         captcha,
         () => {
-            if (!validatePhone(phone.value)) {
-                errors.value.phone = '请输入有效的手机号'
+            const result = phoneSchema.safeParse(phone.value)
+            if (!result.success) {
+                errors.value.phone = getFirstZodError(result) || '请输入有效的手机号'
                 return false
             }
             return true
@@ -74,9 +86,9 @@ export function useQuickLoginFlow() {
     )
 
     // 计算属性
-    const canSendEmailCode = computed(() => Boolean(email.value.trim() && validateEmail(email.value) && !errors.value.email))
+    const canSendEmailCode = computed(() => Boolean(email.value.trim() && emailSchema.safeParse(email.value).success && !errors.value.email))
 
-    const canSendPhoneCode = computed(() => Boolean(phone.value.trim() && validatePhone(phone.value) && !errors.value.phone))
+    const canSendPhoneCode = computed(() => Boolean(phone.value.trim() && phoneSchema.safeParse(phone.value).success && !errors.value.phone))
 
     // 方法
     const changeTab = (tab: 'email' | 'phone') => {
@@ -102,8 +114,9 @@ export function useQuickLoginFlow() {
     const sendEmailVerificationCode = async () => {
         errors.value.email = ''
 
-        if (!validateEmail(email.value)) {
-            const message = '请输入有效的邮箱地址'
+        const result = emailSchema.safeParse(email.value)
+        if (!result.success) {
+            const message = getFirstZodError(result) || '请输入有效的邮箱地址'
             errors.value.email = message
             toast.add({
                 severity: 'error',
@@ -135,8 +148,9 @@ export function useQuickLoginFlow() {
     const sendPhoneVerificationCode = async () => {
         errors.value.phone = ''
 
-        if (!validatePhone(phone.value)) {
-            const message = '请输入有效的手机号'
+        const result = phoneSchema.safeParse(phone.value)
+        if (!result.success) {
+            const message = getFirstZodError(result) || '请输入有效的手机号'
             errors.value.phone = message
             toast.add({
                 severity: 'error',
@@ -168,13 +182,17 @@ export function useQuickLoginFlow() {
     const loginWithEmail = async () => {
         errors.value = {}
 
-        if (!validateEmail(email.value)) {
-            errors.value.email = '请输入有效的邮箱地址'
-            return
-        }
-
-        if (!emailCode.value) {
-            errors.value.emailCode = '请输入验证码'
+        // 使用 Zod schema 校验
+        const result = quickLoginEmailFormSchema.safeParse({
+            email: email.value,
+            code: emailCode.value,
+        })
+        if (!result.success) {
+            const errorMsg = getFirstZodError(result)
+            if (errorMsg) {
+                const path = result.error.issues[0]?.path[0] as string
+                errors.value[path] = errorMsg
+            }
             return
         }
 
@@ -214,13 +232,17 @@ export function useQuickLoginFlow() {
     const loginWithPhone = async () => {
         errors.value = {}
 
-        if (!validatePhone(phone.value)) {
-            errors.value.phone = '请输入有效的手机号'
-            return
-        }
-
-        if (!phoneCode.value) {
-            errors.value.phoneCode = '请输入验证码'
+        // 使用 Zod schema 校验
+        const result = quickLoginPhoneFormSchema.safeParse({
+            phone: phone.value,
+            code: phoneCode.value,
+        })
+        if (!result.success) {
+            const errorMsg = getFirstZodError(result)
+            if (errorMsg) {
+                const path = result.error.issues[0]?.path[0] as string
+                errors.value[path] = errorMsg
+            }
             return
         }
 

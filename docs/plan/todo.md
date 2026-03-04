@@ -13,7 +13,11 @@
 -   [ ] **多语言适配 (i18n)**: 支持 UI、邮件、API 响应的翻译。详见 [i18n 规范](../standards/i18n.md)。
 -   [ ] **时区设置**: 支持在界面展示用户所在时区的日期时间。
 -   [x] **Zod 迁移 (后端)**: 将所有 API Handlers (`server/api/**`) 的手动参数校验替换为 `Zod Schema` 校验。已完成 8 个 handlers 迁移。
--   [ ] **Zod 迁移 (前端)**: 补全剩余页面的表单 Zod 校验。
+-   [x] **Zod 迁移 (前端)**: 补全剩余页面的表单 Zod 校验。
+    -   [x] 登录/忘记密码/快速登录流程 (composables: `use-login-flow.ts`, `use-forgot-password-flow.ts`, `use-quick-login-flow.ts`)
+    -   [x] 管理员创建用户对话框 (`create-user-dialog.vue`)
+    -   [ ] OAuth 应用对话框 (`create-application-dialog.vue`) - 待迁移
+    -   [ ] SSO 提供商对话框 (`create-provider-dialog.vue`) - 待迁移
 
 ## 2. 测试覆盖率提升 🔴
 

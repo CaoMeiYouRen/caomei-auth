@@ -2,13 +2,25 @@ import { ref, watch, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useUrlSearchParams, useDark } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
-import { emailSchema, phoneSchema } from '@/utils/shared/validators'
-import { validateEmail, validatePhone } from '@/utils/shared/validate'
+import { emailSchema, phoneSchema, usernameSchema } from '@/utils/shared/validators'
+import {
+    loginEmailFormSchema,
+    loginEmailOtpFormSchema,
+    loginUsernameFormSchema,
+    loginPhoneFormSchema,
+    loginPhoneOtpFormSchema,
+} from '@/utils/shared/schemas'
 import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
+
+// Helper function to get first Zod error
+function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }): string | null {
+    if (result.success) { return null }
+    return result.error?.issues[0]?.message || '校验失败'
+}
 
 export function useLoginFlow() {
     const config = useRuntimeConfig().public
@@ -207,28 +219,25 @@ export function useLoginFlow() {
         errors.value = {}
 
         if (activeTab.value === 'email') {
-            if (!email.value) {
-                errors.value.email = '请输入邮箱'
-                return
-            }
-            const emailValidation = emailSchema.safeParse(email.value)
-            if (!emailValidation.success) {
-                errors.value.email = emailValidation.error.issues[0]?.message || '请输入有效的邮箱地址'
-                return
-            }
+            // 使用 Zod schema 校验邮箱登录
+            const schema = emailUseCode.value ? loginEmailOtpFormSchema : loginEmailFormSchema
+            const formData = emailUseCode.value
+                ? { email: email.value, code: emailCode.value }
+                : { email: email.value, password: emailPassword.value }
 
-            if (emailUseCode.value) {
-                if (!emailCode.value) {
-                    errors.value.emailCode = '请输入验证码'
-                    return
+            const result = schema.safeParse(formData)
+            if (!result.success) {
+                const errorMsg = getFirstZodError(result)
+                if (errorMsg) {
+                    // 根据 error path 设置对应的错误字段
+                    const path = result.error.issues[0]?.path[0] as string
+                    errors.value[path] = errorMsg
                 }
-            } else if (!emailPassword.value) {
-                errors.value.emailPassword = '请输入密码'
                 return
             }
 
             try {
-                const result = emailUseCode.value
+                const authResult = emailUseCode.value
                     ? await authClient.signIn.emailOtp({
                         email: email.value,
                         otp: emailCode.value,
@@ -239,11 +248,11 @@ export function useLoginFlow() {
                         rememberMe: rememberMe.value,
                     })
 
-                if (result.error) {
-                    throw new Error(result.error.message || '登录失败')
+                if (authResult.error) {
+                    throw new Error(authResult.error.message || '登录失败')
                 }
 
-                if (handle2FA(result)) {
+                if (handle2FA(authResult)) {
                     return
                 }
 
@@ -267,26 +276,31 @@ export function useLoginFlow() {
         }
 
         if (activeTab.value === 'username') {
-            if (!username.value) {
-                errors.value.username = '请输入用户名'
-                return
-            }
-            if (!usernamePassword.value) {
-                errors.value.usernamePassword = '请输入密码'
+            // 使用 Zod schema 校验用户名登录
+            const result = loginUsernameFormSchema.safeParse({
+                username: username.value,
+                password: usernamePassword.value,
+            })
+            if (!result.success) {
+                const errorMsg = getFirstZodError(result)
+                if (errorMsg) {
+                    const path = result.error.issues[0]?.path[0] as string
+                    errors.value[path] = errorMsg
+                }
                 return
             }
 
             try {
-                const result = await authClient.signIn.username({
+                const authResult = await authClient.signIn.username({
                     username: username.value,
                     password: usernamePassword.value,
                     rememberMe: rememberMe.value,
                 })
-                if (result.error) {
-                    throw new Error(result.error.message || '登录失败')
+                if (authResult.error) {
+                    throw new Error(authResult.error.message || '登录失败')
                 }
 
-                if (handle2FA(result)) {
+                if (handle2FA(authResult)) {
                     return
                 }
                 toast.add({
@@ -310,46 +324,42 @@ export function useLoginFlow() {
         }
 
         if (activeTab.value === 'phone') {
-            if (!phone.value) {
-                errors.value.phone = '请输入手机号'
-                return
-            }
-            const phoneValidation = phoneSchema.safeParse(phone.value)
-            if (!phoneValidation.success) {
-                errors.value.phone = phoneValidation.error.issues[0]?.message || '请输入有效的手机号'
-                return
-            }
+            // 使用 Zod schema 校验手机号登录
+            const schema = phoneUseCode.value ? loginPhoneOtpFormSchema : loginPhoneFormSchema
+            const formData = phoneUseCode.value
+                ? { phone: phone.value, code: phoneCode.value }
+                : { phone: phone.value, password: phonePassword.value }
 
-            if (phoneUseCode.value) {
-                if (!phoneCode.value) {
-                    errors.value.phoneCode = '请输入验证码'
-                    return
+            const result = schema.safeParse(formData)
+            if (!result.success) {
+                const errorMsg = getFirstZodError(result)
+                if (errorMsg) {
+                    const path = result.error.issues[0]?.path[0] as string
+                    errors.value[path] = errorMsg
                 }
-            } else if (!phonePassword.value) {
-                errors.value.phonePassword = '请输入密码'
                 return
             }
 
             try {
-                let result
+                let authResult
                 if (phoneUseCode.value) {
-                    result = await authClient.phoneNumber.verify({
+                    authResult = await authClient.phoneNumber.verify({
                         phoneNumber: phone.value,
                         code: phoneCode.value,
                     })
                 } else {
-                    result = await authClient.signIn.phoneNumber({
+                    authResult = await authClient.signIn.phoneNumber({
                         phoneNumber: phone.value,
                         password: phonePassword.value,
                         rememberMe: rememberMe.value,
                     })
                 }
 
-                if (result.error) {
-                    throw new Error(result.error.message || '登录失败')
+                if (authResult.error) {
+                    throw new Error(authResult.error.message || '登录失败')
                 }
 
-                if (handle2FA(result)) {
+                if (handle2FA(authResult)) {
                     return
                 }
 
@@ -458,8 +468,9 @@ export function useLoginFlow() {
             'sign-in',
             captcha,
             () => {
-                if (!validateEmail(email.value)) {
-                    errors.value.email = '请输入有效的邮箱地址'
+                const result = emailSchema.safeParse(email.value)
+                if (!result.success) {
+                    errors.value.email = getFirstZodError(result) || '请输入有效的邮箱地址'
                     return false
                 }
                 return true
@@ -476,8 +487,9 @@ export function useLoginFlow() {
             'sign-in',
             captcha,
             () => {
-                if (!validatePhone(phone.value)) {
-                    errors.value.phone = '请输入有效的手机号'
+                const result = phoneSchema.safeParse(phone.value)
+                if (!result.success) {
+                    errors.value.phone = getFirstZodError(result) || '请输入有效的手机号'
                     return false
                 }
                 return true
@@ -554,7 +566,9 @@ export function useLoginFlow() {
         loginWithSocial,
         sendEmailCode,
         sendPhoneCode,
-        validateEmail,
-        validatePhone,
+
+        // Validation helpers
+        validateEmail: (value: string) => emailSchema.safeParse(value).success,
+        validatePhone: (value: string) => phoneSchema.safeParse(value).success,
     }
 }

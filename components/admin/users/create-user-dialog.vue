@@ -12,6 +12,7 @@
                 v-model="createForm.name"
                 label="昵称"
                 placeholder="请输入用户昵称"
+                :error="errors.name || ''"
                 required
             />
 
@@ -21,6 +22,7 @@
                 label="邮箱"
                 type="email"
                 placeholder="请输入邮箱地址"
+                :error="errors.email || ''"
                 required
             />
 
@@ -29,6 +31,7 @@
                 v-model="createForm.username"
                 label="用户名"
                 placeholder="请输入用户名（可选）"
+                :error="errors.username || ''"
             />
 
             <BasePassword
@@ -36,10 +39,15 @@
                 v-model="createForm.password"
                 label="密码"
                 placeholder="请输入密码"
+                :error="errors.password || ''"
                 required
             />
 
-            <BaseFormGroup label="角色" for="createRole">
+            <BaseFormGroup
+                label="角色"
+                for="createRole"
+                :error="errors.role || ''"
+            >
                 <Select
                     id="createRole"
                     v-model="createForm.role"
@@ -71,6 +79,7 @@
 import { ref, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
+import { createUserFormSchema } from '@/utils/shared/schemas'
 import { useUserTable } from '@/composables/admin/use-user-table'
 
 const props = defineProps<{
@@ -86,6 +95,7 @@ const toast = useToast()
 const { roleOptions } = useUserTable()
 
 const createLoading = ref(false)
+const errors = ref<Record<string, string>>({})
 const createForm = ref({
     name: '',
     email: '',
@@ -102,6 +112,7 @@ const resetCreateForm = () => {
         password: '',
         role: 'user',
     }
+    errors.value = {}
 }
 
 // Reset form when dialog opens
@@ -111,7 +122,27 @@ watch(() => props.visible, (newValue) => {
     }
 })
 
+// Helper function to get first Zod error
+function getFirstZodError(result: { success: boolean, error?: { issues: Array<{ message: string, path: (string | number)[] }> } }): string | null {
+    if (result.success) return null
+    return result.error?.issues[0]?.message || '校验失败'
+}
+
 const createUser = async () => {
+    errors.value = {}
+
+    // 使用 Zod schema 校验
+    const result = createUserFormSchema.safeParse(createForm.value)
+    if (!result.success) {
+        result.error.issues.forEach((issue) => {
+            const path = issue.path[0] as string
+            if (path) {
+                errors.value[path] = issue.message
+            }
+        })
+        return
+    }
+
     try {
         createLoading.value = true
 

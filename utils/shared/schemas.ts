@@ -7,6 +7,77 @@ import {
     passwordSchema,
 } from './validators'
 
+// ========== 登录表单 Schemas ==========
+
+// 邮箱登录表单 Schema
+export const loginEmailFormSchema = z.object({
+    email: emailSchema,
+    password: z.string().min(1, '请输入密码'),
+})
+
+// 邮箱验证码登录表单 Schema
+export const loginEmailOtpFormSchema = z.object({
+    email: emailSchema,
+    code: z.string().min(1, '请输入验证码'),
+})
+
+// 用户名登录表单 Schema
+export const loginUsernameFormSchema = z.object({
+    username: usernameSchema,
+    password: z.string().min(1, '请输入密码'),
+})
+
+// 手机号登录表单 Schema
+export const loginPhoneFormSchema = z.object({
+    phone: phoneSchema,
+    password: z.string().min(1, '请输入密码'),
+})
+
+// 手机号验证码登录表单 Schema
+export const loginPhoneOtpFormSchema = z.object({
+    phone: phoneSchema,
+    code: z.string().min(1, '请输入验证码'),
+})
+
+// ========== 忘记密码表单 Schemas ==========
+
+// 邮箱找回密码表单 Schema
+export const forgotPasswordEmailFormSchema = z.object({
+    email: emailSchema,
+    code: z.string().min(1, '请输入邮箱验证码'),
+})
+
+// 手机号找回密码表单 Schema
+export const forgotPasswordPhoneFormSchema = z.object({
+    phone: phoneSchema,
+    code: z.string().min(1, '请输入短信验证码'),
+})
+
+// 重置密码表单 Schema (用于忘记密码后的密码重置)
+export const resetPasswordFormBaseSchema = z.object({
+    newPassword: passwordSchema,
+    confirmPassword: z.string().min(1, '请确认新密码'),
+})
+
+export const resetPasswordFormSchema = resetPasswordFormBaseSchema.refine((data) => data.newPassword === data.confirmPassword, {
+    message: '两次输入的密码不一致',
+    path: ['confirmPassword'],
+})
+
+// ========== 快速登录表单 Schemas ==========
+
+// 邮箱验证码快速登录表单 Schema
+export const quickLoginEmailFormSchema = z.object({
+    email: emailSchema,
+    code: z.string().min(1, '请输入验证码'),
+})
+
+// 手机号验证码快速登录表单 Schema
+export const quickLoginPhoneFormSchema = z.object({
+    phone: phoneSchema,
+    code: z.string().min(1, '请输入验证码'),
+})
+
 // 注册表单 Schema (Email)
 export const registerEmailFormBaseSchema = z.object({
     nickname: nicknameSchema,
@@ -66,11 +137,11 @@ export const editPhoneFormSchema = z.object({
 
 // 管理员创建用户表单 Schema
 export const createUserFormSchema = z.object({
-    username: usernameSchema,
+    name: nicknameSchema, // 昵称 (对应 API 的 name 字段)
     email: emailSchema,
+    username: z.string().default(''), // 用户名可选，默认为空字符串
     password: passwordSchema,
     role: z.string().min(1, '请选择角色'),
-    nickname: nicknameSchema.optional(),
 })
 
 // 管理员更新用户表单 Schema
@@ -176,3 +247,25 @@ export const adminRoleSyncSchema = z.object({
 export const revokeConsentSchema = z.object({
     clientId: z.string({ message: '缺少客户端ID' }).min(1, '缺少客户端ID'),
 })
+
+// ========== 类型导出 ==========
+export type LoginEmailForm = z.infer<typeof loginEmailFormSchema>
+export type LoginEmailOtpForm = z.infer<typeof loginEmailOtpFormSchema>
+export type LoginUsernameForm = z.infer<typeof loginUsernameFormSchema>
+export type LoginPhoneForm = z.infer<typeof loginPhoneFormSchema>
+export type LoginPhoneOtpForm = z.infer<typeof loginPhoneOtpFormSchema>
+export type ForgotPasswordEmailForm = z.infer<typeof forgotPasswordEmailFormSchema>
+export type ForgotPasswordPhoneForm = z.infer<typeof forgotPasswordPhoneFormSchema>
+export type ResetPasswordForm = z.infer<typeof resetPasswordFormSchema>
+export type QuickLoginEmailForm = z.infer<typeof quickLoginEmailFormSchema>
+export type QuickLoginPhoneForm = z.infer<typeof quickLoginPhoneFormSchema>
+export type RegisterEmailForm = z.infer<typeof registerEmailFormSchema>
+export type RegisterPhoneForm = z.infer<typeof registerPhoneFormSchema>
+export type ChangePasswordForm = z.infer<typeof changePasswordFormSchema>
+export type SetUsernameForm = z.infer<typeof setUsernameFormSchema>
+export type EditEmailForm = z.infer<typeof editEmailFormSchema>
+export type EditPhoneForm = z.infer<typeof editPhoneFormSchema>
+export type CreateUserForm = z.infer<typeof createUserFormSchema>
+export type UpdateUserForm = z.infer<typeof updateUserFormSchema>
+export type OAuthApplicationForm = z.infer<typeof oauthApplicationSchema>
+export type SSOProviderForm = z.infer<typeof ssoProviderSchema>
