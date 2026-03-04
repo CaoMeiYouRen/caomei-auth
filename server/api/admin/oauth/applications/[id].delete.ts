@@ -3,20 +3,21 @@ import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
+import { validateParamsSafe } from '@/server/utils/validation'
+import { idParamSchema } from '@/utils/shared/api-schemas'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
+    let appId = 'unknown'
     try {
-        const id = event.context.params?.id
+        const paramsResult = await validateParamsSafe(event, idParamSchema)
 
-        if (!id) {
-            return {
-                status: 400,
-                success: false,
-                message: '参数不完整',
-                data: null,
-            }
+        if (!paramsResult.success) {
+            return paramsResult.error
         }
+
+        const { id } = paramsResult.data
+        appId = id
 
         const repo = dataSource.getRepository(OAuthApplication)
 
@@ -43,7 +44,7 @@ export default defineEventHandler(async (event) => {
         }
     } catch (error) {
         logger.business.oauthAppDeleted({
-            appId: event.context.params?.id || 'unknown',
+            appId,
             deletedBy: auth.data.userId,
         })
         return {

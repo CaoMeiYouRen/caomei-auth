@@ -1,19 +1,18 @@
 import { defineEventHandler } from 'h3'
 import { OAuthApplication } from '@/server/entities/oauth-application'
 import { dataSource } from '@/server/database'
+import { validateParamsSafe } from '@/server/utils/validation'
+import { idParamSchema } from '@/utils/shared/api-schemas'
 
 export default defineEventHandler(async (event) => {
     try {
-        const clientId = event.context.params?.id
+        const paramsResult = await validateParamsSafe(event, idParamSchema)
 
-        if (!clientId) {
-            return {
-                status: 400,
-                success: false,
-                message: '缺少客户端ID',
-                data: null,
-            }
+        if (!paramsResult.success) {
+            return paramsResult.error
         }
+
+        const { id: clientId } = paramsResult.data
 
         const application = await dataSource
             .getRepository(OAuthApplication)

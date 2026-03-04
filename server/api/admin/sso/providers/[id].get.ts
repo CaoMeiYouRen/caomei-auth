@@ -1,20 +1,16 @@
-import { defineEventHandler, getRouterParam, createError } from 'h3'
+import { defineEventHandler, createError } from 'h3'
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
+import { validateParams } from '@/server/utils/validation'
+import { idParamSchema } from '@/utils/shared/api-schemas'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
 
     try {
-        const providerId = getRouterParam(event, 'id')
-        if (!providerId) {
-            throw createError({
-                statusCode: 400,
-                statusMessage: '缺少提供商 ID',
-            })
-        }
+        const { id: providerId } = await validateParams(event, idParamSchema)
 
         const ssoProviderRepository = dataSource.getRepository(SSOProvider)
         const provider = await ssoProviderRepository.findOne({
@@ -77,7 +73,7 @@ export default defineEventHandler(async (event) => {
     } catch (error: any) {
         logger.error('Failed to get SSO provider details', {
             error: error.message,
-            providerId: getRouterParam(event, 'id'),
+            providerId: error.providerId || 'unknown',
         })
 
         if (error.statusCode) {
