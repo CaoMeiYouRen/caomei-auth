@@ -16,8 +16,8 @@
 -   [x] **Zod 迁移 (前端)**: 补全剩余页面的表单 Zod 校验。
     -   [x] 登录/忘记密码/快速登录流程 (composables: `use-login-flow.ts`, `use-forgot-password-flow.ts`, `use-quick-login-flow.ts`)
     -   [x] 管理员创建用户对话框 (`create-user-dialog.vue`)
-    -   [ ] OAuth 应用对话框 (`create-application-dialog.vue`) - 待迁移
-    -   [ ] SSO 提供商对话框 (`create-provider-dialog.vue`) - 待迁移
+    -   [x] OAuth 应用对话框 (`create-application-dialog.vue`)
+    -   [x] SSO 提供商对话框 (`create-provider-dialog.vue`)
 
 ## 2. 测试覆盖率提升 🔴
 

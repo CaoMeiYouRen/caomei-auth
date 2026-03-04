@@ -57,10 +57,10 @@ describe('useQuickLoginFlow', () => {
     it('should validate email before sending code', async () => {
         const { email, sendEmailVerificationCode, errors } = useQuickLoginFlow()
 
-        // Empty email
+        // Empty email - Zod schema returns '请输入邮箱' for empty
         email.value = ''
         await sendEmailVerificationCode()
-        expect(errors.value.email).toBe('请输入有效的邮箱地址')
+        expect(errors.value.email).toBe('请输入邮箱')
         expect(sendEmailSpy).not.toHaveBeenCalled()
 
         // Invalid email
@@ -90,10 +90,10 @@ describe('useQuickLoginFlow', () => {
     it('should validate phone before sending code', async () => {
         const { phone, sendPhoneVerificationCode, errors } = useQuickLoginFlow()
 
-        // Empty phone
+        // Empty phone - Zod schema returns '请输入手机号' for empty
         phone.value = ''
         await sendPhoneVerificationCode()
-        expect(errors.value.phone).toBe('请输入有效的手机号')
+        expect(errors.value.phone).toBe('请输入手机号')
         expect(sendPhoneSpy).not.toHaveBeenCalled()
 
         // Invalid phone
@@ -150,17 +150,18 @@ describe('useQuickLoginFlow', () => {
     })
 
     it('should handle email login validation', async () => {
-        const { email, loginWithEmail, errors } = useQuickLoginFlow()
+        const { email, emailCode, loginWithEmail, errors } = useQuickLoginFlow()
 
         // Invalid email
         email.value = 'invalid'
         await loginWithEmail()
         expect(errors.value.email).toBe('请输入有效的邮箱地址')
 
-        // Missing code
+        // Missing code - schema uses 'code' field name
         email.value = 'test@example.com'
+        emailCode.value = ''
         await loginWithEmail()
-        expect(errors.value.emailCode).toBe('请输入验证码')
+        expect(errors.value.code).toBe('请输入验证码')
     })
 
     it('should handle successful email login', async () => {

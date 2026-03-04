@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { validateUrl } from '@/utils/shared/validate'
+import { ssoProviderFormSchema } from '@/utils/shared/schemas'
 import OidcConfigForm from './oidc-config-form.vue'
 import SamlConfigForm from './saml-config-form.vue'
 import AttributeMappingForm from './attribute-mapping-form.vue'
@@ -369,57 +369,58 @@ function resetForm() {
 function validateForm(): string[] {
     const errors: string[] = []
 
-    // 基本信息验证
-    if (!formData.value.providerId.trim()) {
-        errors.push('Provider ID 不能为空')
+    // 构建符合 schema 的数据结构
+    const formToValidate: any = {
+        type: formData.value.type,
+        providerId: formData.value.providerId,
+        name: formData.value.name,
+        description: formData.value.description,
+        issuer: formData.value.issuer,
+        domain: formData.value.domain,
+        organizationId: formData.value.organizationId,
+        enabled: formData.value.enabled,
     }
 
-    if (!formData.value.issuer.trim()) {
-        errors.push('发行者 URL 不能为空')
-    } else if (!validateUrl(formData.value.issuer)) {
-        errors.push('发行者 URL 格式无效')
-    }
-
-    if (!formData.value.domain.trim()) {
-        errors.push('域名不能为空')
-    }
-
-    // OIDC 配置验证
+    // 根据类型添加配置
     if (formData.value.type === 'oidc') {
-        if (!oidcFormData.value.clientId.trim()) {
-            errors.push('Client ID 不能为空')
+        formToValidate.oidcConfig = {
+            clientId: oidcFormData.value.clientId,
+            clientSecret: oidcFormData.value.clientSecret,
+            discoveryEndpoint: oidcFormData.value.discoveryEndpoint,
+            authorizationEndpoint: oidcFormData.value.authorizationEndpoint,
+            tokenEndpoint: oidcFormData.value.tokenEndpoint,
+            userInfoEndpoint: oidcFormData.value.userInfoEndpoint,
+            jwksEndpoint: oidcFormData.value.jwksEndpoint,
+            scopes: oidcFormData.value.scopes,
+            pkce: oidcFormData.value.pkce,
+            mapping: {
+                id: mappingFormData.value.id,
+                email: mappingFormData.value.email,
+                emailVerified: mappingFormData.value.emailVerified,
+                name: mappingFormData.value.name,
+                image: mappingFormData.value.image,
+            },
         }
-        if (!oidcFormData.value.clientSecret.trim()) {
-            errors.push('Client Secret 不能为空')
-        }
-
-        // 验证端点 URL
-        const endpoints = [
-            { field: 'discoveryEndpoint', name: 'Discovery Endpoint' },
-            { field: 'authorizationEndpoint', name: 'Authorization Endpoint' },
-            { field: 'tokenEndpoint', name: 'Token Endpoint' },
-            { field: 'userInfoEndpoint', name: 'UserInfo Endpoint' },
-            { field: 'jwksEndpoint', name: 'JWKS Endpoint' },
-        ]
-
-        for (const endpoint of endpoints) {
-            const value = oidcFormData.value[endpoint.field as keyof typeof oidcFormData.value] as string
-            if (value && value.trim() && !validateUrl(value)) {
-                errors.push(`${endpoint.name} URL 格式无效`)
-            }
+    } else if (formData.value.type === 'saml') {
+        formToValidate.samlConfig = {
+            entryPoint: samlFormData.value.entryPoint,
+            certificate: samlFormData.value.certificate,
+            signingKey: samlFormData.value.signingKey,
+            attributeConsumingServiceIndex: samlFormData.value.attributeConsumingServiceIndex,
+            mapping: {
+                id: mappingFormData.value.id,
+                email: mappingFormData.value.email,
+                name: mappingFormData.value.name,
+                firstName: mappingFormData.value.firstName,
+                lastName: mappingFormData.value.lastName,
+            },
         }
     }
 
-    // SAML 配置验证
-    if (formData.value.type === 'saml') {
-        if (!samlFormData.value.entryPoint.trim()) {
-            errors.push('SAML 入口点 URL 不能为空')
-        } else if (!validateUrl(samlFormData.value.entryPoint)) {
-            errors.push('SAML 入口点 URL 格式无效')
-        }
-
-        if (!samlFormData.value.certificate.trim()) {
-            errors.push('X.509 证书不能为空')
+    const result = ssoProviderFormSchema.safeParse(formToValidate)
+    if (!result.success) {
+        for (const issue of result.error.issues) {
+            errors.push(issue.message)
         }
     }
 

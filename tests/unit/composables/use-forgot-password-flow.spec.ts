@@ -162,7 +162,8 @@ describe('useForgotPasswordFlow', () => {
             email.value = 'test@example.com'
 
             await resetPassword()
-            expect(errors.value.emailCode).toBe('请输入邮箱验证码')
+            // Schema uses 'code' field name, not 'emailCode'
+            expect(errors.value.code).toBe('请输入邮箱验证码')
         })
 
         it('should validate password match', async () => {
@@ -272,7 +273,8 @@ describe('useForgotPasswordFlow', () => {
             phone.value = '+8613800138000'
 
             await resetPassword()
-            expect(errors.value.phoneCode).toBe('请输入短信验证码')
+            // Schema uses 'code' field name, not 'phoneCode'
+            expect(errors.value.code).toBe('请输入短信验证码')
         })
 
         it('should handle phone reset password error', async () => {
@@ -424,11 +426,11 @@ describe('useForgotPasswordFlow', () => {
             const { email, emailCode, newPassword, confirmPassword, resetPassword, errors } = useForgotPasswordFlow()
             email.value = 'test@example.com'
             emailCode.value = '123456'
-            newPassword.value = 'Pass1!' // Too short (min 8 chars)
-            confirmPassword.value = 'Pass1!'
+            newPassword.value = 'Pa1!' // Too short (min 6 chars)
+            confirmPassword.value = 'Pa1!'
 
             await resetPassword()
-            expect(Object.keys(errors.value).length).toBeGreaterThan(0)
+            expect(errors.value.newPassword).toBe('密码长度不能少于 6 位')
         })
     })
 })

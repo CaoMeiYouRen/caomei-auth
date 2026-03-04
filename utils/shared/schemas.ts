@@ -6,6 +6,7 @@ import {
     nicknameSchema,
     passwordSchema,
 } from './validators'
+import { validateEmail, validateUrl } from './validate'
 
 // ========== 登录表单 Schemas ==========
 
@@ -248,6 +249,113 @@ export const revokeConsentSchema = z.object({
     clientId: z.string({ message: '缺少客户端ID' }).min(1, '缺少客户端ID'),
 })
 
+// ========== 前端表单专用 Schemas ==========
+
+// OAuth 应用前端表单 Schema
+export const oauthApplicationFormSchema = z.object({
+    client_name: z.string().min(1, '应用名称不能为空'),
+    description: z.string().optional(),
+    redirect_uris: z.array(z.string().min(1, '重定向URL不能为空'))
+        .min(1, '至少需要一个重定向URL')
+        .refine((urls) => urls.every((url) => validateUrl(url)), {
+            message: '重定向URL格式无效',
+        }),
+    client_uri: z.string().optional().refine((val) => !val || validateUrl(val), {
+        message: '应用主页格式无效',
+    }),
+    logo_uri: z.string().optional().refine((val) => !val || validateUrl(val), {
+        message: '应用Logo格式无效',
+    }),
+    scope: z.string().min(1, '授权范围不能为空'),
+    contacts: z.array(z.string()).optional().refine((emails) => !emails || emails.every((email) => validateEmail(email)), {
+        message: '联系邮箱格式无效',
+    }),
+    tos_uri: z.string().optional().refine((val) => !val || validateUrl(val), {
+        message: '服务条款链接格式无效',
+    }),
+    policy_uri: z.string().optional().refine((val) => !val || validateUrl(val), {
+        message: '隐私政策链接格式无效',
+    }),
+    token_endpoint_auth_method: z.enum(['none', 'client_secret_basic', 'client_secret_post']),
+    grant_types: z.array(z.enum(['authorization_code', 'refresh_token']))
+        .min(1, '至少需要选择一种授权类型'),
+    response_types: z.array(z.enum(['code']))
+        .min(1, '至少需要选择一种响应类型'),
+    software_id: z.string().optional(),
+    software_version: z.string().optional(),
+    disabled: z.boolean().optional(),
+})
+
+// SSO 提供商前端表单 Schema
+export const ssoProviderFormSchema = z.object({
+    type: z.enum(['oidc', 'saml']),
+    providerId: z.string().min(1, 'Provider ID 不能为空'),
+    name: z.string().optional(),
+    description: z.string().optional(),
+    issuer: z.string().min(1, '发行者 URL 不能为空')
+        .refine((val) => validateUrl(val), {
+            message: '发行者 URL 格式无效',
+        }),
+    domain: z.string().min(1, '域名不能为空'),
+    organizationId: z.string().optional(),
+    enabled: z.boolean().optional(),
+    oidcConfig: z.object({
+        clientId: z.string().min(1, 'Client ID 不能为空'),
+        clientSecret: z.string().min(1, 'Client Secret 不能为空'),
+        discoveryEndpoint: z.string().optional().refine((val) => !val || validateUrl(val), {
+            message: 'Discovery Endpoint 格式无效',
+        }),
+        authorizationEndpoint: z.string().optional().refine((val) => !val || validateUrl(val), {
+            message: 'Authorization Endpoint 格式无效',
+        }),
+        tokenEndpoint: z.string().optional().refine((val) => !val || validateUrl(val), {
+            message: 'Token Endpoint 格式无效',
+        }),
+        userInfoEndpoint: z.string().optional().refine((val) => !val || validateUrl(val), {
+            message: 'UserInfo Endpoint 格式无效',
+        }),
+        jwksEndpoint: z.string().optional().refine((val) => !val || validateUrl(val), {
+            message: 'JWKS Endpoint 格式无效',
+        }),
+        scopes: z.array(z.string()).optional(),
+        pkce: z.boolean().optional(),
+        mapping: z.object({
+            id: z.string().optional(),
+            email: z.string().optional(),
+            emailVerified: z.string().optional(),
+            name: z.string().optional(),
+            image: z.string().optional(),
+        }).optional(),
+    }).optional(),
+    samlConfig: z.object({
+        entryPoint: z.string().min(1, 'SAML 入口点 URL 不能为空')
+            .refine((val) => validateUrl(val), {
+                message: 'SAML 入口点 URL 格式无效',
+            }),
+        certificate: z.string().min(1, 'X.509 证书不能为空'),
+        signingKey: z.string().optional(),
+        attributeConsumingServiceIndex: z.number().optional(),
+        mapping: z.object({
+            id: z.string().optional(),
+            email: z.string().optional(),
+            name: z.string().optional(),
+            firstName: z.string().optional(),
+            lastName: z.string().optional(),
+        }).optional(),
+    }).optional(),
+}).refine((data) => {
+    if (data.type === 'oidc') {
+        return !!data.oidcConfig
+    }
+    if (data.type === 'saml') {
+        return !!data.samlConfig
+    }
+    return true
+}, {
+    message: '配置不能为空',
+    path: ['type'],
+})
+
 // ========== 类型导出 ==========
 export type LoginEmailForm = z.infer<typeof loginEmailFormSchema>
 export type LoginEmailOtpForm = z.infer<typeof loginEmailOtpFormSchema>
@@ -269,3 +377,5 @@ export type CreateUserForm = z.infer<typeof createUserFormSchema>
 export type UpdateUserForm = z.infer<typeof updateUserFormSchema>
 export type OAuthApplicationForm = z.infer<typeof oauthApplicationSchema>
 export type SSOProviderForm = z.infer<typeof ssoProviderSchema>
+export type OAuthApplicationFormData = z.infer<typeof oauthApplicationFormSchema>
+export type SSOProviderFormData = z.infer<typeof ssoProviderFormSchema>

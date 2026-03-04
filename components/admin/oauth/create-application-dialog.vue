@@ -159,7 +159,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { validateEmail, validateUrl } from '@/utils/shared/validate'
+import { oauthApplicationFormSchema, type OAuthApplicationFormData } from '@/utils/shared/schemas'
 
 const props = defineProps<{
     visible: boolean
@@ -270,66 +270,13 @@ function updateContacts() {
     formData.value.contacts = emails
 }
 
-function validateForm() {
+function validateForm(): string[] {
     const errors: string[] = []
 
-    if (!formData.value.client_name.trim()) {
-        errors.push('应用名称不能为空')
-    }
-
-    if (formData.value.redirect_uris.length === 0) {
-        errors.push('至少需要一个重定向URL')
-    }
-
-    for (const uri of formData.value.redirect_uris) {
-        if (!validateUrl(uri)) {
-            errors.push(`重定向URL格式无效：${uri}`)
-        }
-    }
-
-    if (!formData.value.scope.trim()) {
-        errors.push('授权范围不能为空')
-    }
-
-    if (formData.value.grant_types.length === 0) {
-        errors.push('至少需要选择一种授权类型')
-    }
-
-    const supportedGrantTypes = ['authorization_code', 'refresh_token']
-    const unsupportedGrants = formData.value.grant_types.filter((type) => !supportedGrantTypes.includes(type))
-    if (unsupportedGrants.length > 0) {
-        errors.push(`不支持的授权类型：${unsupportedGrants.join(', ')}`)
-    }
-
-    if (formData.value.response_types.length === 0) {
-        errors.push('至少需要选择一种响应类型')
-    }
-
-    const supportedResponseTypes = ['code']
-    const unsupportedResponses = formData.value.response_types.filter((type) => !supportedResponseTypes.includes(type))
-    if (unsupportedResponses.length > 0) {
-        errors.push(`不支持的响应类型：${unsupportedResponses.join(', ')}`)
-    }
-
-    const urlFields = [
-        { field: 'client_uri', name: '应用主页' },
-        { field: 'logo_uri', name: '应用Logo' },
-        { field: 'tos_uri', name: '服务条款链接' },
-        { field: 'policy_uri', name: '隐私政策链接' },
-    ]
-
-    for (const { field, name } of urlFields) {
-        const value = formData.value[field as keyof typeof formData.value] as string
-        if (value && value.trim()) {
-            if (!validateUrl(value)) {
-                errors.push(`${name}格式无效：${value}`)
-            }
-        }
-    }
-
-    for (const email of formData.value.contacts) {
-        if (email && !validateEmail(email)) {
-            errors.push(`联系邮箱格式无效：${email}`)
+    const result = oauthApplicationFormSchema.safeParse(formData.value)
+    if (!result.success) {
+        for (const issue of result.error.issues) {
+            errors.push(issue.message)
         }
     }
 
