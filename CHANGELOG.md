@@ -1,5 +1,16 @@
 # caomei-auth
 
+# [1.13.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.12.3...v1.13.0) (2026-03-07)
+
+
+### ✨ 新功能
+
+* **frontend:** 前端 Zod 校验迁移 ([f5bc380](https://github.com/CaoMeiYouRen/caomei-auth/commit/f5bc380))
+* **frontend:** 完成 OAuth 和 SSO 对话框的 Zod 校验迁移 ([61a598e](https://github.com/CaoMeiYouRen/caomei-auth/commit/61a598e))
+* **validation:** 完成 Zod 校验迁移并修复测试 ([b651564](https://github.com/CaoMeiYouRen/caomei-auth/commit/b651564))
+* **validation:** 添加 Zod 校验基础设施 ([93571c3](https://github.com/CaoMeiYouRen/caomei-auth/commit/93571c3))
+* **validation:** 添加 Zod 校验基础设施并迁移路径参数 handlers ([f2061c1](https://github.com/CaoMeiYouRen/caomei-auth/commit/f2061c1))
+
 ## [1.12.3](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.12.2...v1.12.3) (2026-01-17)
 
 
