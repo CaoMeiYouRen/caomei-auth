@@ -71,7 +71,7 @@ jobs:
           password: ${{ secrets.ALIYUN_PASSWORD }}
       - name: Extract Docker metadata
         id: metadata
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           # 发布到 docker.io / ghcr.io / registry.cn-hangzhou.aliyuncs.com
           images: |
