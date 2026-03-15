@@ -45,7 +45,7 @@
     "chart.js": "^4.5.1",
     "dayjs": "^1.11.19",
     "file-type": "^21.3.2",
-    "fs-extra": "^11.3.3",
+    "fs-extra": "^11.3.4",
     "google-libphonenumber": "^3.2.44",
     "ioredis": "^5.9.3",
     "lodash-es": "^4.17.23",
