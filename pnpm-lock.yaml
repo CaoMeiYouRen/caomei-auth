@@ -42,8 +42,8 @@ importers:
         specifier: ^3.1009.0
         version: 3.1009.0
       '@axiomhq/winston':
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.5.0
+        version: 1.5.0
       '@better-auth/sso':
         specifier: ^1.4.18
         version: 1.4.18(@better-auth/utils@0.3.1)(better-auth@1.4.18(better-sqlite3@12.8.0)(mysql2@3.19.1(@types/node@25.5.0))(pg@8.20.0)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.5.0)(happy-dom@20.8.4)(jiti@2.6.1)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30(typescript@5.9.3)))
@@ -585,12 +585,12 @@ packages:
     resolution: {integrity: sha512-iY8yvjE0y651BixKNPgmv1WrQc+GZ142sb0z4gYnChDDY2YqI4P/jsSopBWrKfAt7LOJAkOXt7rC/hms+WclQQ==}
     engines: {node: '>=18.0.0'}
 
-  '@axiomhq/js@1.4.0':
-    resolution: {integrity: sha512-wC5x1ud/QJMstrjpicATkyY8+ZVWEl4WlXMtA5EZf7hkj0+b191yv4yynLxLEfr/MveXora9m6CWdJq4DsbcAg==}
+  '@axiomhq/js@1.5.0':
+    resolution: {integrity: sha512-7SkfgnrKpjRs86h4TIcoZQ1TltKG0+WcQtMkBa5N3iSuGT5+aIpnbLFrRfbfhwhxzysQkF01qNW4fNUtePqjDg==}
     engines: {node: '>=20'}
 
-  '@axiomhq/winston@1.4.0':
-    resolution: {integrity: sha512-fVHwkWROOOyCuzVSXanMMkw5EVYwwKMal7zk87l6R9Zn69RBvIWVIFC8iSYM9Ea3Cg7t1sJHaDdeKvO9O4NXUw==}
+  '@axiomhq/winston@1.5.0':
+    resolution: {integrity: sha512-yriWaitAgHztvr97xwYTFRYyPCZ7Hg5E0T0v+mbw+Z+wAJLAD1MK1JwwCNEnym0Zvx7+M7Qy/VdE374o8zCtjg==}
     engines: {node: '>=20'}
 
   '@babel/code-frame@7.29.0':
@@ -8793,6 +8793,10 @@ packages:
     resolution: {integrity: sha512-ki4hZQfh5rX0QDLLkOCj+h+CVNkqmp/CMf8v8kZpkNVK6jGQooMytqzLZYUVYIZcFZ6yDB70EfD8POcFXiF5oA==}
     engines: {node: '>=18'}
 
+  strtok3@10.3.5:
+    resolution: {integrity: sha512-ki4hZQfh5rX0QDLLkOCj+h+CVNkqmp/CMf8v8kZpkNVK6jGQooMytqzLZYUVYIZcFZ6yDB70EfD8POcFXiF5oA==}
+    engines: {node: '>=18'}
+
   structured-clone-es@1.0.0:
     resolution: {integrity: sha512-FL8EeKFFyNQv5cMnXI31CIMCsFarSVI2bF0U0ImeNE3g/F1IvJQyqzOXxPBRXiwQfyBTlbNe88jh1jFW0O/jiQ==}
 
@@ -10578,13 +10582,13 @@ snapshots:
 
   '@aws/lambda-invoke-store@0.2.4': {}
 
-  '@axiomhq/js@1.4.0':
+  '@axiomhq/js@1.5.0':
     dependencies:
       fetch-retry: 6.0.0
 
-  '@axiomhq/winston@1.4.0':
+  '@axiomhq/winston@1.5.0':
     dependencies:
-      '@axiomhq/js': 1.4.0
+      '@axiomhq/js': 1.5.0
       winston-transport: 4.9.0
 
   '@babel/code-frame@7.29.0':
@@ -20363,6 +20367,10 @@ snapshots:
   strnum@2.1.2: {}
 
   strnum@2.2.0: {}
+
+  strtok3@10.3.5:
+    dependencies:
+      '@tokenizer/token': 0.3.0
 
   strtok3@10.3.5:
     dependencies:
