@@ -44,7 +44,7 @@
     "better-sqlite3": "^12.8.0",
     "chart.js": "^4.5.1",
     "dayjs": "^1.11.20",
-    "file-type": "^21.3.4",
+    "file-type": "^22.0.0",
     "fs-extra": "^11.3.4",
     "google-libphonenumber": "^3.2.44",
     "ioredis": "^5.10.0",
