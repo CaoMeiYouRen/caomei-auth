@@ -119,12 +119,13 @@
       "serialize-javascript": "^7.0.5",
       "youch": "^4.1.0-beta.11",
       "better-call": "^1.0.18",
-      "tar-fs": "2.1.4",
+      "tar-fs": "^2.1.4",
       "mdast-util-to-hast": "^13.2.1",
       "js-yaml": "^4.1.1",
       "glob": "^10.5.0",
       "jws": "^3.2.3",
-      "h3": "^1.15.10"
+      "h3": "^1.15.10",
+      "file-type": "$file-type"
     }
   },
   "devDependencies": {
