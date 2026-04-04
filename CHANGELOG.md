@@ -1,5 +1,12 @@
 # caomei-auth
 
+## [1.13.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.0...v1.13.1) (2026-04-04)
+
+
+### 🐛 Bug 修复
+
+* **deps:** fix broken pnpm-lock.yaml (duplicated mapping key) ([b5a0297](https://github.com/CaoMeiYouRen/caomei-auth/commit/b5a0297))
+
 # [1.13.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.12.3...v1.13.0) (2026-03-07)
 
 
