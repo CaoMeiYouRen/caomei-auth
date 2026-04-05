@@ -53,8 +53,8 @@ importers:
         specifier: ^3.1024.0
         version: 3.1024.0
       '@axiomhq/winston':
-        specifier: ^1.5.0
-        version: 1.5.0
+        specifier: ^1.6.0
+        version: 1.6.0
       '@better-auth/sso':
         specifier: ^1.4.18
         version: 1.4.18(@better-auth/utils@0.3.1)(better-auth@1.4.18(better-sqlite3@12.8.0)(mysql2@3.20.0(@types/node@25.3.0))(pg@8.20.0)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.3.0)(happy-dom@20.8.9)(jiti@2.6.1)(sass@1.99.0)(terser@5.46.0)(yaml@2.8.3))(vue@3.5.31(typescript@5.9.3)))
@@ -596,12 +596,12 @@ packages:
     resolution: {integrity: sha512-iY8yvjE0y651BixKNPgmv1WrQc+GZ142sb0z4gYnChDDY2YqI4P/jsSopBWrKfAt7LOJAkOXt7rC/hms+WclQQ==}
     engines: {node: '>=18.0.0'}
 
-  '@axiomhq/js@1.5.0':
-    resolution: {integrity: sha512-7SkfgnrKpjRs86h4TIcoZQ1TltKG0+WcQtMkBa5N3iSuGT5+aIpnbLFrRfbfhwhxzysQkF01qNW4fNUtePqjDg==}
+  '@axiomhq/js@1.6.0':
+    resolution: {integrity: sha512-qm0ObduIpI6PJUOYwakH5WV3E7IF0qXE/wh5N1JWGAzxKtCZryk+YwA0aW3lPZSGPQeLHyEzN+9pXsOIjoPiRg==}
     engines: {node: '>=20'}
 
-  '@axiomhq/winston@1.5.0':
-    resolution: {integrity: sha512-yriWaitAgHztvr97xwYTFRYyPCZ7Hg5E0T0v+mbw+Z+wAJLAD1MK1JwwCNEnym0Zvx7+M7Qy/VdE374o8zCtjg==}
+  '@axiomhq/winston@1.6.0':
+    resolution: {integrity: sha512-7f35MXE7yHP9np47bLvVJ2w/qkW6/o/Zu3+QNDzy5MMa+OLawtZ2l353wpAtxWYbxA/5laJDzP81Iq1yhYNZIQ==}
     engines: {node: '>=20'}
 
   '@babel/code-frame@7.29.0':
@@ -10585,13 +10585,13 @@ snapshots:
 
   '@aws/lambda-invoke-store@0.2.4': {}
 
-  '@axiomhq/js@1.5.0':
+  '@axiomhq/js@1.6.0':
     dependencies:
       fetch-retry: 6.0.0
 
-  '@axiomhq/winston@1.5.0':
+  '@axiomhq/winston@1.6.0':
     dependencies:
-      '@axiomhq/js': 1.5.0
+      '@axiomhq/js': 1.6.0
       winston-transport: 4.9.0
 
   '@babel/code-frame@7.29.0':
