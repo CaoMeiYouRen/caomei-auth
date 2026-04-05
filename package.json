@@ -158,7 +158,7 @@
     "jscpd": "^4.0.8",
     "lint-staged": "^16.4.0",
     "pkg-types": "^2.3.0",
-    "playwright-core": "^1.58.2",
+    "playwright-core": "^1.59.1",
     "postcss": "^8.5.8",
     "sass": "^1.99.0",
     "semantic-release": "^25.0.3",
