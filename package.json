@@ -125,7 +125,8 @@
       "glob": "^10.5.0",
       "jws": "^3.2.3",
       "h3": "^1.15.10",
-      "file-type": "$file-type"
+      "file-type": "$file-type",
+      "defu": "^6.1.5"
     }
   },
   "devDependencies": {
