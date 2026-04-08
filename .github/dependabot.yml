@@ -4,13 +4,13 @@ updates:
     directory: /
     open-pull-requests-limit: 20
     schedule:
-      interval: weekly
-      time: "04:00"
+      interval: monthly
+      time: "03:00"
       timezone: Asia/Shanghai
   - package-ecosystem: github-actions
     directory: /
     open-pull-requests-limit: 20
     schedule:
-      interval: weekly
-      time: "04:00"
+      interval: monthly
+      time: "03:00"
       timezone: Asia/Shanghai
