@@ -101,7 +101,7 @@
       "postcss": "^8.5.0",
       "tmp": "^0.2.4",
       "devalue": "^5.6.4",
-      "fast-xml-parser": "^5.5.9",
+      "fast-xml-parser": "^5.7.1",
       "nanotar": "^0.3.0",
       "tar": "^7.5.13",
       "handlebars": "^4.7.9",
