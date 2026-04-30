@@ -49,7 +49,7 @@
     "google-libphonenumber": "^3.2.44",
     "ioredis": "^5.10.0",
     "lodash-es": "^4.18.1",
-    "lru-cache": "^11.3.2",
+    "lru-cache": "^11.3.5",
     "mime-types": "^3.0.2",
     "mjml": "^4.18.0",
     "ms": "^4.0.0-nightly.202508271359",
