@@ -148,7 +148,7 @@
     "@types/ua-parser-js": "^0.7.39",
     "@types/validator": "^13.15.10",
     "@vitest/coverage-v8": "^3.2.4",
-    "@vue/test-utils": "^2.4.6",
+    "@vue/test-utils": "^2.4.10",
     "commitizen": "^4.3.1",
     "commitlint": "^20.5.3",
     "commitlint-config-cmyr": "^1.0.0",
