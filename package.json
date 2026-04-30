@@ -167,7 +167,7 @@
     "postcss": "^8.5.9",
     "sass": "^1.99.0",
     "semantic-release": "^25.0.3",
-    "semantic-release-cmyr-config": "^1.0.1",
+    "semantic-release-cmyr-config": "^1.0.2",
     "stylelint": "^16.26.1",
     "stylelint-config-cmyr": "^1.0.0",
     "typescript": "^5.9.3",
