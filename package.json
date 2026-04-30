@@ -69,7 +69,7 @@
     "typeorm": "^0.3.28",
     "ua-parser-js": "^2.0.9",
     "validator": "^13.15.35",
-    "vue": "^3.5.32",
+    "vue": "^3.5.33",
     "vue-recaptcha": "^3.0.0-alpha.6",
     "vue-router": "^5.0.6",
     "vue-turnstile": "^1.0.11",
