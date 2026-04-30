@@ -148,8 +148,8 @@ importers:
         specifier: ^1.10.2
         version: 1.10.2(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(winston@3.19.0)
       nodemailer:
-        specifier: ^8.0.5
-        version: 8.0.5
+        specifier: ^8.0.7
+        version: 8.0.7
       normalize.css:
         specifier: ^8.0.1
         version: 8.0.1
@@ -7362,8 +7362,8 @@ packages:
     resolution: {integrity: sha512-tGnJW6OKRii9u/b2WiUViTJS+h7Apxx17qsMUjsUeNDiMMX5ZFf8F8Fcz7PAQ6omvOxHZtvDTmOYKJQwmfpjeg==}
     engines: {node: '>=20'}
 
-  nodemailer@8.0.5:
-    resolution: {integrity: sha512-0PF8Yb1yZuQfQbq+5/pZJrtF6WQcjTd5/S4JOHs9PGFxuTqoB/icwuB44pOdURHJbRKX1PPoJZtY7R4VUoCC8w==}
+  nodemailer@8.0.7:
+    resolution: {integrity: sha512-pkjE4mkBzQjdJT4/UmlKl3pX0rC9fZmjh7c6C9o7lv66Ac6w9WCnzPzhbPNxwZAzlF4mdq4CSWB5+FbK6FWCow==}
     engines: {node: '>=6.0.0'}
 
   nopt@5.0.0:
@@ -18916,7 +18916,7 @@ snapshots:
       '@types/sarif': 2.1.7
       fs-extra: 11.3.4
 
-  nodemailer@8.0.5: {}
+  nodemailer@8.0.7: {}
 
   nopt@5.0.0:
     dependencies:
