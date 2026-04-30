@@ -156,7 +156,7 @@
     "cross-env": "^10.1.0",
     "cz-conventional-changelog-cmyr": "^2.0.0",
     "eslint": "^9.39.2",
-    "eslint-config-cmyr": "^2.2.2",
+    "eslint-config-cmyr": "^2.3.0",
     "eslint-plugin-vue": "^10.9.0",
     "happy-dom": "^20.8.4",
     "husky": "^9.1.7",
