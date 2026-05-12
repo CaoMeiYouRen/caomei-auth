@@ -106,7 +106,7 @@
       "tar": "^7.5.13",
       "handlebars": "^4.7.9",
       "flatted": "^3.4.2",
-      "kysely": "^0.28.15",
+      "kysely": "^0.28.17",
       "node-forge": "^1.4.0",
       "@xmldom/xmldom": "^0.8.13",
       "picomatch@^4": "^4.0.4",
