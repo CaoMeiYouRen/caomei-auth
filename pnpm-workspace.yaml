@@ -27,7 +27,7 @@ overrides:
   tar: "^7.5.13"
   handlebars: "^4.7.9"
   flatted: "^3.4.2"
-  kysely: "^0.28.15"
+  kysely: "^0.28.17"
   node-forge: "^1.4.0"
   "@xmldom/xmldom": "^0.8.13"
   picomatch@^4: "^4.0.4"
@@ -52,5 +52,10 @@ overrides:
   h3: "^1.15.10"
   file-type: "$file-type"
   defu: "^6.1.5"
+  fast-uri: "^3.1.2"
+  fast-xml-builder: "^1.1.7"
+
+  js-cookie: "^3.0.6"
+  samlify: "^2.13.0"
 
 strictPeerDependencies: false
