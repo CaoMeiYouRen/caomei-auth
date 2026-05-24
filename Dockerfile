@@ -7,7 +7,7 @@ FROM nodejs AS builder
 
 WORKDIR /app
 
-COPY package.json .npmrc pnpm-lock.yaml /app/
+COPY package.json pnpm-lock.yaml /app/
 
 # 用于构建 sqlite3
 RUN apk add --no-cache python3 python3-dev py3-setuptools make g++ && \
@@ -31,7 +31,7 @@ COPY --from=builder /app/.output ./.output
 # 阶段三：生产阶段
 FROM runtime
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 WORKDIR /app
 
