@@ -190,7 +190,7 @@ const {
 .info-note {
     margin-bottom: 1.5rem;
     color: $secondary-light;
-    background-color: rgba(230,57,70,0.04);
+    background-color: rgb(230 57 70 / 0.04);
     border-left: 4px solid $primary;
     padding: 0.75rem 1rem;
     border-radius: 6px;

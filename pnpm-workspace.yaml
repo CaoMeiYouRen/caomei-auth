@@ -1,0 +1,56 @@
+allowBuilds:
+  "@parcel/watcher": true
+  "@sentry/cli": true
+  better-sqlite3: true
+  esbuild: true
+  sqlite3: true
+  unrs-resolver: true
+  vue-demi: true
+
+overrides:
+  axios: "^1.15.0"
+  follow-redirects: "^1.16.0"
+  "@unhead/vue": "^2.1.13"
+  unhead: "^2.1.13"
+  vite: "$vite"
+  rollup: "^4.59.0"
+  undici: "^7.24.7"
+  diff: "^8.0.3"
+  preact: "^10.28.2"
+  parse-git-config: "^3.0.0"
+  esbuild: "^0.25.0"
+  postcss: "^8.5.0"
+  tmp: "^0.2.4"
+  devalue: "^5.6.4"
+  fast-xml-parser: "^5.7.1"
+  nanotar: "^0.3.0"
+  tar: "^7.5.13"
+  handlebars: "^4.7.9"
+  flatted: "^3.4.2"
+  kysely: "^0.28.15"
+  node-forge: "^1.4.0"
+  "@xmldom/xmldom": "^0.8.13"
+  picomatch@^4: "^4.0.4"
+  brace-expansion@^1: "^1.1.13"
+  brace-expansion@^2: "^2.0.3"
+  yaml: "^2.8.3"
+  "@tootallnate/once": "^3.0.1"
+  minimatch@^3: "^3.1.5"
+  minimatch@^5: "^5.1.9"
+  minimatch@^9: "^9.0.9"
+  minimatch@^10: "^10.2.4"
+  ajv@^6: "^6.14.0"
+  lodash: "^4.18.1"
+  serialize-javascript: "^7.0.5"
+  youch: "^4.1.0-beta.11"
+  better-call: "^1.0.18"
+  tar-fs: "^2.1.4"
+  mdast-util-to-hast: "^13.2.1"
+  js-yaml: "^4.1.1"
+  glob: "^10.5.0"
+  jws: "^3.2.3"
+  h3: "^1.15.10"
+  file-type: "$file-type"
+  defu: "^6.1.5"
+
+strictPeerDependencies: false
