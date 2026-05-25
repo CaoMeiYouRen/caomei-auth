@@ -328,12 +328,41 @@
 -   环境变量未设置
 -   函数超时
 -   内存限制
+-   Better Auth 相关依赖版本漂移，导致运行时模块解析失败
 
 **解决方案：**
 
 1. 检查构建日志
 2. 设置正确的环境变量
 3. 优化函数性能，减少执行时间
+
+#### 问题：Vercel 运行时提示 `Cannot find module '/var/task/node_modules/@better-auth/core/dist/utils/host.mjs'`
+
+**现象：**
+
+-   首页、`/api/auth/get-session` 等接口直接返回 500
+-   Vercel Runtime Logs 中出现 `ERR_MODULE_NOT_FOUND`
+-   错误栈来自 `@better-auth/sso`
+
+**原因：**
+
+`@better-auth/sso` 与 `better-auth` 属于强耦合版本族。如果其中一个被锁文件解析到较新的补丁版本，而另一个仍停留在旧补丁版本，就可能在运行时引用不存在的内部文件。
+
+**解决方案：**
+
+1. 将 `@better-auth/sso` 与 `better-auth` 固定到相同的精确版本，不要只使用宽松的 `^` 范围。
+2. 重新执行 `pnpm install`，确保 `pnpm-lock.yaml` 中两者解析到同一版本。
+3. 可使用以下命令检查当前解析结果：
+
+    ```bash
+    pnpm list @better-auth/sso better-auth @better-auth/core --depth 1
+    ```
+
+4. 可使用以下命令直接验证运行时导入是否恢复正常：
+
+    ```bash
+    node --input-type=module -e "await import('@better-auth/sso'); console.log('sso-import-ok')"
+    ```
 
 ## 调试技巧
 
