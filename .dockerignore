@@ -11,6 +11,9 @@ LICENSE
 .github
 # assets
 coverage
+.nuxt
+.nitro
+.output
 docs
 # test
 .codecov.yml

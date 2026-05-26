@@ -17,6 +17,9 @@ RUN pnpm i --frozen-lockfile
 
 COPY . /app
 
+# 防止宿主机已有的 Nuxt/Nitro 构建产物污染容器内构建结果
+RUN rm -rf /app/.nuxt /app/.nitro /app/.output
+
 RUN pnpm run build
 
 # 阶段二：缩小阶段
