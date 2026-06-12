@@ -177,6 +177,7 @@ export default defineNuxtConfig({
             inline: [
                 'better-auth',
                 'better-auth-localization',
+                '@better-auth/core',
                 /^@better-auth\//,
                 /^@better-fetch\//,
                 'better-call',
