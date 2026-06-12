@@ -504,6 +504,27 @@ export const typeormAdapter =
                 }
             },
 
+            async consumeOne<T>(data: {
+                model: string
+                where: Where[]
+            }): Promise<T | null> {
+                const { model, where } = data
+                const repositoryName = getModelName(model)
+                const repository = manager.getRepository(repositoryName)
+
+                try {
+                    const findOptions = convertWhereToFindOptions(model, where)
+                    const record = await repository.findOne({ where: findOptions })
+                    if (!record) { return null }
+                    await repository.delete(findOptions)
+                    return record as T
+                } catch (error: unknown) {
+                    throw new BetterAuthError(
+                        `Failed to consume ${model}: ${error instanceof Error ? error.message : String(error)}`,
+                    )
+                }
+            },
+
             async updateMany(data) {
                 const { model, where, update } = data
                 const repositoryName = getModelName(model)

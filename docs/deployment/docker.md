@@ -578,6 +578,18 @@ services:
     docker-compose restart app
     ```
 
+5. **`@better-auth` 相关模块缺失**
+
+    如果日志里出现 `Cannot find module '/app/.output/server/node_modules/@better-auth/core/...`，通常是服务端构建把 Better Auth 生态包外置到了运行时依赖链，导致容器内解析失败。
+
+    从当前版本开始，Nitro 构建会内联 `better-auth`、`@better-auth/*` 与相关 peer dependency，重新构建镜像即可：
+
+    ```bash
+    docker-compose build --no-cache app
+    docker-compose up -d app
+    docker-compose logs -f app
+    ```
+
 ### 性能调优
 
 ```yaml

@@ -171,6 +171,17 @@ export default defineNuxtConfig({
         // host: '0.0.0.0',
     },
     nitro: {
+        externals: {
+            // Better Auth SSO 在容器运行时会依赖多层 peer dependency 解析；
+            // 将整个 Better Auth 生态内联到 Nitro 服务端产物中，避免 .output/server/node_modules 缺文件导致启动失败。
+            inline: [
+                'better-auth',
+                'better-auth-localization',
+                /^@better-auth\//,
+                /^@better-fetch\//,
+                'better-call',
+            ],
+        },
         // 将模板文件夹包含到构建输出中 - 使用正确的配置
         serverAssets: [
             {
