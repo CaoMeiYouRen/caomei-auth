@@ -67,7 +67,7 @@
     "sanitize-html": "^2.17.4",
     "twilio": "^6.0.0",
     "typeorm": "^0.3.28",
-    "ua-parser-js": "^2.0.9",
+    "ua-parser-js": "^2.0.10",
     "validator": "^13.15.35",
     "vue": "^3.5.33",
     "vue-recaptcha": "^3.0.0-alpha.6",
