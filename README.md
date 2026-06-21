@@ -308,7 +308,8 @@ docker run -p 3000:3000 caomei-auth
 
 如果这个项目对你有帮助，请给一个 ⭐️，非常感谢！
 
-你也可以通过以下方式支持作者：
+你也可以通过以下方式支持作者。
+如需商业版支持、定制开发或赞助等，请通过 [爱发电](https://afdian.com/a/CaoMeiYouRen) 联系（可直接下单）。
 
 <a href="https://afdian.com/@CaoMeiYouRen">
   <img src="https://oss.cmyr.dev/images/202306192324870.png" width="312px" height="78px" alt="在爱发电支持我">
