@@ -14,7 +14,8 @@ overrides:
   unhead: "^2.1.13"
   vite: "$vite"
   rollup: "^4.59.0"
-  undici: "^7.24.7"
+  undici: "^7.28.0"
+  ini@^1: "^1.3.6"
   diff: "^8.0.3"
   preact: "^10.28.2"
   parse-git-config: "^3.0.0"
@@ -49,7 +50,7 @@ overrides:
   better-call: "^1.0.18"
   tar-fs: "^2.1.4"
   mdast-util-to-hast: "^13.2.1"
-  js-yaml: "^4.1.1"
+  js-yaml: "^4.2.0"
   glob: "^10.5.0"
   jws: "^3.2.3"
   h3: "^1.15.10"
@@ -60,5 +61,7 @@ overrides:
   js-cookie: "^3.0.6"
   samlify: "^2.13.0"
   form-data: "^4.0.6"
+  "@opentelemetry/core": "^2.8.0"
+  "@babel/core": "^7.29.6"
 
 strictPeerDependencies: false
