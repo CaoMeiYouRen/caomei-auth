@@ -61,7 +61,7 @@
     "p-queue": "^9.2.0",
     "pg": "^8.20.0",
     "pinia": "^3.0.4",
-    "primelocale": "^2.3.1",
+    "primelocale": "^2.4.0",
     "primevue": "^4.5.5",
     "qrcode": "^1.5.4",
     "sanitize-html": "^2.17.4",
