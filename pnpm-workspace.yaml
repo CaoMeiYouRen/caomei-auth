@@ -64,5 +64,6 @@ overrides:
   form-data: "^4.0.6"
   "@opentelemetry/core": "^2.8.0"
   "@babel/core": "^7.29.6"
-
+  better-auth: "^1.6.13"
+ 
 strictPeerDependencies: false
