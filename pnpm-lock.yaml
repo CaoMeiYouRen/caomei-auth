@@ -74,7 +74,7 @@ importers:
         version: 1.8.0
       '@better-auth/sso':
         specifier: 1.6.11
-        version: 1.6.11(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(better-auth@1.6.13(@opentelemetry/api@1.9.1)(better-sqlite3@12.8.0)(mysql2@3.22.3(@types/node@25.6.0))(pg@8.22.0)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.33(typescript@5.9.3)))(better-call@1.3.7(zod@4.4.1))
+        version: 1.6.11(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(better-auth@1.6.13(@opentelemetry/api@1.9.1)(better-sqlite3@12.8.0)(mysql2@3.22.3(@types/node@25.6.0))(pg@8.22.0)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.33(typescript@5.9.3)))(better-call@1.3.7(zod@4.4.1))
       '@hcaptcha/vue3-hcaptcha':
         specifier: ^1.3.0
         version: 1.3.0(vue@3.5.33(typescript@5.9.3))
@@ -315,7 +315,7 @@ importers:
         version: 1.61.1
       postcss:
         specifier: ^8.5.0
-        version: 8.5.16
+        version: 8.5.18
       sass:
         specifier: ^1.101.0
         version: 1.101.0
@@ -330,7 +330,7 @@ importers:
         version: 16.26.1(typescript@5.9.3)
       stylelint-config-cmyr:
         specifier: ^1.0.0
-        version: 1.0.0(postcss@8.5.16)(stylelint@16.26.1(typescript@5.9.3))
+        version: 1.0.0(postcss@8.5.18)(stylelint@16.26.1(typescript@5.9.3))
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -339,7 +339,7 @@ importers:
         version: 7.3.5(@types/node@25.6.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       vitepress:
         specifier: ^1.6.4
-        version: 1.6.4(@algolia/client-search@5.45.0)(@types/node@25.6.0)(axios@1.18.1)(change-case@5.4.4)(fuse.js@7.4.2)(jiti@2.7.0)(postcss@8.5.16)(qrcode@1.5.4)(sass@1.101.0)(search-insights@2.17.3)(terser@5.48.0)(typescript@5.9.3)(yaml@2.9.0)
+        version: 1.6.4(@algolia/client-search@5.45.0)(@types/node@25.6.0)(axios@1.18.1)(change-case@5.4.4)(fuse.js@7.4.2)(jiti@2.7.0)(postcss@8.5.18)(qrcode@1.5.4)(sass@1.101.0)(search-insights@2.17.3)(terser@5.48.0)(typescript@5.9.3)(yaml@2.9.0)
       vitest:
         specifier: ^3.2.6
         version: 3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
@@ -815,9 +815,6 @@ packages:
       '@better-auth/core': ^1.6.13
       '@better-auth/utils': 0.4.1
       '@better-fetch/fetch': 1.1.21
-
-  '@better-auth/utils@0.4.0':
-    resolution: {integrity: sha512-RpMtLUIQAEWMgdPLNVbIF5ON2mm+CH0U3rCdUCU1VyeAUui4m38DyK7/aXMLZov2YDjG684pS1D0MBllrmgjQA==}
 
   '@better-auth/utils@0.4.1':
     resolution: {integrity: sha512-SZBPRPF3z0nBvE5ygOkxae35wnnXPRShmqFo78S+qslLeFoPu/pMgnXAuNKFMMybac3tiLaVg1e3MQW5MC+1iA==}
@@ -7289,8 +7286,8 @@ packages:
     resolution: {integrity: sha512-Tz09sEL2EEuv5fFowm419c1+a/jSMiBjI9gHxVLrVdbUkkNUUfjsVYs9pVZu5oCon/kmRh9TfLEObFtkVxmY0w==}
     engines: {node: '>=8.0.0'}
 
-  nanoid@3.3.15:
-    resolution: {integrity: sha512-y7Wygv/7mEOvxTuEQDB8StXdMRBWf1kR/tlhAzBRUFkB2jfcLOAxO/SHmOO2zgz1pVgK29/kyupn059/bCHdjA==}
+  nanoid@3.3.16:
+    resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -8146,8 +8143,8 @@ packages:
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  postcss@8.5.16:
-    resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
+  postcss@8.5.18:
+    resolution: {integrity: sha512-xdB1oSLHbz1vRWgCDalrCqEFTWzFlhqFC5tIHLMOSUIjhm3XXQ1qrFy8S/ESr1JYRRXqM3c1QFiMZUJdUTqyMQ==}
     engines: {node: ^10 || ^12 || >=14}
 
   postgres-array@2.0.0:
@@ -10838,20 +10835,6 @@ snapshots:
 
   '@bcoe/v8-coverage@1.0.2': {}
 
-  '@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)':
-    dependencies:
-      '@better-auth/utils': 0.4.0
-      '@better-fetch/fetch': 1.1.21
-      '@opentelemetry/semantic-conventions': 1.43.0
-      '@standard-schema/spec': 1.1.0
-      better-call: 1.3.7(zod@4.4.1)
-      jose: 6.2.4
-      kysely: 0.28.17
-      nanostores: 1.4.1
-      zod: 4.4.1
-    optionalDependencies:
-      '@opentelemetry/api': 1.9.1
-
   '@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)':
     dependencies:
       '@better-auth/utils': 0.4.1
@@ -10866,37 +10849,37 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
 
-  '@better-auth/drizzle-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)':
+  '@better-auth/drizzle-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)':
     dependencies:
-      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
+      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
       '@better-auth/utils': 0.4.1
 
-  '@better-auth/kysely-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(kysely@0.28.17)':
+  '@better-auth/kysely-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(kysely@0.28.17)':
     dependencies:
-      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
+      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
       '@better-auth/utils': 0.4.1
     optionalDependencies:
       kysely: 0.28.17
 
-  '@better-auth/memory-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)':
+  '@better-auth/memory-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)':
     dependencies:
-      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
+      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
       '@better-auth/utils': 0.4.1
 
-  '@better-auth/mongo-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)':
+  '@better-auth/mongo-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)':
     dependencies:
-      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
+      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
       '@better-auth/utils': 0.4.1
 
-  '@better-auth/prisma-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)':
+  '@better-auth/prisma-adapter@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)':
     dependencies:
-      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
+      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
       '@better-auth/utils': 0.4.1
 
-  '@better-auth/sso@1.6.11(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(better-auth@1.6.13(@opentelemetry/api@1.9.1)(better-sqlite3@12.8.0)(mysql2@3.22.3(@types/node@25.6.0))(pg@8.22.0)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.33(typescript@5.9.3)))(better-call@1.3.7(zod@4.4.1))':
+  '@better-auth/sso@1.6.11(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(better-auth@1.6.13(@opentelemetry/api@1.9.1)(better-sqlite3@12.8.0)(mysql2@3.22.3(@types/node@25.6.0))(pg@8.22.0)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.33(typescript@5.9.3)))(better-call@1.3.7(zod@4.4.1))':
     dependencies:
-      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
-      '@better-auth/utils': 0.4.0
+      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
+      '@better-auth/utils': 0.4.1
       '@better-fetch/fetch': 1.1.21
       better-auth: 1.6.13(@opentelemetry/api@1.9.1)(better-sqlite3@12.8.0)(mysql2@3.22.3(@types/node@25.6.0))(pg@8.22.0)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.33(typescript@5.9.3))
       better-call: 1.3.7(zod@4.4.1)
@@ -10906,15 +10889,11 @@ snapshots:
       tldts: 6.1.0
       zod: 4.4.1
 
-  '@better-auth/telemetry@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)':
+  '@better-auth/telemetry@1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)':
     dependencies:
-      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
+      '@better-auth/core': 1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
       '@better-auth/utils': 0.4.1
       '@better-fetch/fetch': 1.1.21
-
-  '@better-auth/utils@0.4.0':
-    dependencies:
-      '@noble/hashes': 2.2.0
 
   '@better-auth/utils@0.4.1':
     dependencies:
@@ -12208,9 +12187,9 @@ snapshots:
       '@rollup/plugin-replace': 6.0.3(rollup@4.62.0)
       '@vitejs/plugin-vue': 6.0.7(vite@7.3.5(@types/node@25.6.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))
       '@vitejs/plugin-vue-jsx': 5.1.5(vite@7.3.5(@types/node@25.6.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))
-      autoprefixer: 10.5.0(postcss@8.5.16)
+      autoprefixer: 10.5.0(postcss@8.5.18)
       consola: 3.4.2
-      cssnano: 8.0.2(postcss@8.5.16)
+      cssnano: 8.0.2(postcss@8.5.18)
       defu: 6.1.7
       escape-string-regexp: 5.0.0
       exsolve: 1.0.8
@@ -12224,7 +12203,7 @@ snapshots:
       nypm: 0.6.7
       pathe: 2.0.3
       pkg-types: 2.3.1
-      postcss: 8.5.16
+      postcss: 8.5.18
       seroval: 1.5.4
       std-env: 4.1.0
       ufo: 1.6.4
@@ -14160,7 +14139,7 @@ snapshots:
       '@vue/shared': 3.5.33
       estree-walker: 2.0.2
       magic-string: 0.30.21
-      postcss: 8.5.16
+      postcss: 8.5.18
       source-map-js: 1.2.1
 
   '@vue/compiler-sfc@3.5.38':
@@ -14172,7 +14151,7 @@ snapshots:
       '@vue/shared': 3.5.38
       estree-walker: 2.0.2
       magic-string: 0.30.21
-      postcss: 8.5.16
+      postcss: 8.5.18
       source-map-js: 1.2.1
 
   '@vue/compiler-ssr@3.5.33':
@@ -14631,13 +14610,13 @@ snapshots:
 
   at-least-node@1.0.0: {}
 
-  autoprefixer@10.5.0(postcss@8.5.16):
+  autoprefixer@10.5.0(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.2
       caniuse-lite: 1.0.30001799
       fraction.js: 5.3.4
       picocolors: 1.1.1
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
   available-typed-arrays@1.0.7:
@@ -14718,12 +14697,12 @@ snapshots:
   better-auth@1.6.13(@opentelemetry/api@1.9.1)(better-sqlite3@12.8.0)(mysql2@3.22.3(@types/node@25.6.0))(pg@8.22.0)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.33(typescript@5.9.3)):
     dependencies:
       '@better-auth/core': 1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1)
-      '@better-auth/drizzle-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)
-      '@better-auth/kysely-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(kysely@0.28.17)
-      '@better-auth/memory-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)
-      '@better-auth/mongo-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)
-      '@better-auth/prisma-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)
-      '@better-auth/telemetry': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)
+      '@better-auth/drizzle-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)
+      '@better-auth/kysely-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(kysely@0.28.17)
+      '@better-auth/memory-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)
+      '@better-auth/mongo-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)
+      '@better-auth/prisma-adapter': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)
+      '@better-auth/telemetry': 1.6.13(@better-auth/core@1.6.13(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.1))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.1)(@better-fetch/fetch@1.1.21)
       '@better-auth/utils': 0.4.1
       '@better-fetch/fetch': 1.1.21
       '@noble/ciphers': 2.2.0
@@ -15400,48 +15379,48 @@ snapshots:
 
   cssesc@3.0.0: {}
 
-  cssnano-preset-default@8.0.2(postcss@8.5.16):
+  cssnano-preset-default@8.0.2(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.2
-      cssnano-utils: 6.0.1(postcss@8.5.16)
-      postcss: 8.5.16
-      postcss-calc: 10.1.1(postcss@8.5.16)
-      postcss-colormin: 8.0.1(postcss@8.5.16)
-      postcss-convert-values: 8.0.1(postcss@8.5.16)
-      postcss-discard-comments: 8.0.1(postcss@8.5.16)
-      postcss-discard-duplicates: 8.0.1(postcss@8.5.16)
-      postcss-discard-empty: 8.0.1(postcss@8.5.16)
-      postcss-discard-overridden: 8.0.1(postcss@8.5.16)
-      postcss-merge-longhand: 8.0.1(postcss@8.5.16)
-      postcss-merge-rules: 8.0.1(postcss@8.5.16)
-      postcss-minify-font-values: 8.0.1(postcss@8.5.16)
-      postcss-minify-gradients: 8.0.1(postcss@8.5.16)
-      postcss-minify-params: 8.0.1(postcss@8.5.16)
-      postcss-minify-selectors: 8.0.2(postcss@8.5.16)
-      postcss-normalize-charset: 8.0.1(postcss@8.5.16)
-      postcss-normalize-display-values: 8.0.1(postcss@8.5.16)
-      postcss-normalize-positions: 8.0.1(postcss@8.5.16)
-      postcss-normalize-repeat-style: 8.0.1(postcss@8.5.16)
-      postcss-normalize-string: 8.0.1(postcss@8.5.16)
-      postcss-normalize-timing-functions: 8.0.1(postcss@8.5.16)
-      postcss-normalize-unicode: 8.0.1(postcss@8.5.16)
-      postcss-normalize-url: 8.0.1(postcss@8.5.16)
-      postcss-normalize-whitespace: 8.0.1(postcss@8.5.16)
-      postcss-ordered-values: 8.0.1(postcss@8.5.16)
-      postcss-reduce-initial: 8.0.1(postcss@8.5.16)
-      postcss-reduce-transforms: 8.0.1(postcss@8.5.16)
-      postcss-svgo: 8.0.1(postcss@8.5.16)
-      postcss-unique-selectors: 8.0.1(postcss@8.5.16)
+      cssnano-utils: 6.0.1(postcss@8.5.18)
+      postcss: 8.5.18
+      postcss-calc: 10.1.1(postcss@8.5.18)
+      postcss-colormin: 8.0.1(postcss@8.5.18)
+      postcss-convert-values: 8.0.1(postcss@8.5.18)
+      postcss-discard-comments: 8.0.1(postcss@8.5.18)
+      postcss-discard-duplicates: 8.0.1(postcss@8.5.18)
+      postcss-discard-empty: 8.0.1(postcss@8.5.18)
+      postcss-discard-overridden: 8.0.1(postcss@8.5.18)
+      postcss-merge-longhand: 8.0.1(postcss@8.5.18)
+      postcss-merge-rules: 8.0.1(postcss@8.5.18)
+      postcss-minify-font-values: 8.0.1(postcss@8.5.18)
+      postcss-minify-gradients: 8.0.1(postcss@8.5.18)
+      postcss-minify-params: 8.0.1(postcss@8.5.18)
+      postcss-minify-selectors: 8.0.2(postcss@8.5.18)
+      postcss-normalize-charset: 8.0.1(postcss@8.5.18)
+      postcss-normalize-display-values: 8.0.1(postcss@8.5.18)
+      postcss-normalize-positions: 8.0.1(postcss@8.5.18)
+      postcss-normalize-repeat-style: 8.0.1(postcss@8.5.18)
+      postcss-normalize-string: 8.0.1(postcss@8.5.18)
+      postcss-normalize-timing-functions: 8.0.1(postcss@8.5.18)
+      postcss-normalize-unicode: 8.0.1(postcss@8.5.18)
+      postcss-normalize-url: 8.0.1(postcss@8.5.18)
+      postcss-normalize-whitespace: 8.0.1(postcss@8.5.18)
+      postcss-ordered-values: 8.0.1(postcss@8.5.18)
+      postcss-reduce-initial: 8.0.1(postcss@8.5.18)
+      postcss-reduce-transforms: 8.0.1(postcss@8.5.18)
+      postcss-svgo: 8.0.1(postcss@8.5.18)
+      postcss-unique-selectors: 8.0.1(postcss@8.5.18)
 
-  cssnano-utils@6.0.1(postcss@8.5.16):
+  cssnano-utils@6.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
-  cssnano@8.0.2(postcss@8.5.16):
+  cssnano@8.0.2(postcss@8.5.18):
     dependencies:
-      cssnano-preset-default: 8.0.2(postcss@8.5.16)
+      cssnano-preset-default: 8.0.2(postcss@8.5.18)
       lilconfig: 3.1.3
-      postcss: 8.5.16
+      postcss: 8.5.18
 
   csso@5.0.5:
     dependencies:
@@ -18446,7 +18425,7 @@ snapshots:
     dependencies:
       lru.min: 1.1.4
 
-  nanoid@3.3.15: {}
+  nanoid@3.3.16: {}
 
   nanostores@1.4.1: {}
 
@@ -19264,168 +19243,168 @@ snapshots:
 
   possible-typed-array-names@1.1.0: {}
 
-  postcss-calc@10.1.1(postcss@8.5.16):
+  postcss-calc@10.1.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-selector-parser: 7.1.4
       postcss-value-parser: 4.2.0
 
-  postcss-colormin@8.0.1(postcss@8.5.16):
+  postcss-colormin@8.0.1(postcss@8.5.18):
     dependencies:
       '@colordx/core': 5.4.3
       browserslist: 4.28.2
       caniuse-api: 4.0.0
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-convert-values@8.0.1(postcss@8.5.16):
+  postcss-convert-values@8.0.1(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.2
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-discard-comments@8.0.1(postcss@8.5.16):
+  postcss-discard-comments@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-selector-parser: 7.1.4
 
-  postcss-discard-duplicates@8.0.1(postcss@8.5.16):
+  postcss-discard-duplicates@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
-  postcss-discard-empty@8.0.1(postcss@8.5.16):
+  postcss-discard-empty@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
-  postcss-discard-overridden@8.0.1(postcss@8.5.16):
+  postcss-discard-overridden@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
   postcss-html@1.8.0:
     dependencies:
       htmlparser2: 8.0.2
       js-tokens: 9.0.1
-      postcss: 8.5.16
-      postcss-safe-parser: 6.0.0(postcss@8.5.16)
+      postcss: 8.5.18
+      postcss-safe-parser: 6.0.0(postcss@8.5.18)
 
   postcss-media-query-parser@0.2.3: {}
 
-  postcss-merge-longhand@8.0.1(postcss@8.5.16):
+  postcss-merge-longhand@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
-      stylehacks: 8.0.1(postcss@8.5.16)
+      stylehacks: 8.0.1(postcss@8.5.18)
 
-  postcss-merge-rules@8.0.1(postcss@8.5.16):
+  postcss-merge-rules@8.0.1(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.2
       caniuse-api: 4.0.0
-      cssnano-utils: 6.0.1(postcss@8.5.16)
-      postcss: 8.5.16
+      cssnano-utils: 6.0.1(postcss@8.5.18)
+      postcss: 8.5.18
       postcss-selector-parser: 7.1.4
 
-  postcss-minify-font-values@8.0.1(postcss@8.5.16):
+  postcss-minify-font-values@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-minify-gradients@8.0.1(postcss@8.5.16):
+  postcss-minify-gradients@8.0.1(postcss@8.5.18):
     dependencies:
       '@colordx/core': 5.4.3
-      cssnano-utils: 6.0.1(postcss@8.5.16)
-      postcss: 8.5.16
+      cssnano-utils: 6.0.1(postcss@8.5.18)
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-minify-params@8.0.1(postcss@8.5.16):
+  postcss-minify-params@8.0.1(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.2
-      cssnano-utils: 6.0.1(postcss@8.5.16)
-      postcss: 8.5.16
+      cssnano-utils: 6.0.1(postcss@8.5.18)
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-minify-selectors@8.0.2(postcss@8.5.16):
+  postcss-minify-selectors@8.0.2(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.2
       caniuse-api: 4.0.0
       cssesc: 3.0.0
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-selector-parser: 7.1.4
 
-  postcss-normalize-charset@8.0.1(postcss@8.5.16):
+  postcss-normalize-charset@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
-  postcss-normalize-display-values@8.0.1(postcss@8.5.16):
+  postcss-normalize-display-values@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-normalize-positions@8.0.1(postcss@8.5.16):
+  postcss-normalize-positions@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-normalize-repeat-style@8.0.1(postcss@8.5.16):
+  postcss-normalize-repeat-style@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-normalize-string@8.0.1(postcss@8.5.16):
+  postcss-normalize-string@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-normalize-timing-functions@8.0.1(postcss@8.5.16):
+  postcss-normalize-timing-functions@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-normalize-unicode@8.0.1(postcss@8.5.16):
+  postcss-normalize-unicode@8.0.1(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.2
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-normalize-url@8.0.1(postcss@8.5.16):
+  postcss-normalize-url@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-normalize-whitespace@8.0.1(postcss@8.5.16):
+  postcss-normalize-whitespace@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-ordered-values@8.0.1(postcss@8.5.16):
+  postcss-ordered-values@8.0.1(postcss@8.5.18):
     dependencies:
-      cssnano-utils: 6.0.1(postcss@8.5.16)
-      postcss: 8.5.16
+      cssnano-utils: 6.0.1(postcss@8.5.18)
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
-  postcss-reduce-initial@8.0.1(postcss@8.5.16):
+  postcss-reduce-initial@8.0.1(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.2
       caniuse-api: 4.0.0
-      postcss: 8.5.16
+      postcss: 8.5.18
 
-  postcss-reduce-transforms@8.0.1(postcss@8.5.16):
+  postcss-reduce-transforms@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
   postcss-resolve-nested-selector@0.1.6: {}
 
-  postcss-safe-parser@6.0.0(postcss@8.5.16):
+  postcss-safe-parser@6.0.0(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
-  postcss-safe-parser@7.0.1(postcss@8.5.16):
+  postcss-safe-parser@7.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
-  postcss-scss@4.0.9(postcss@8.5.16):
+  postcss-scss@4.0.9(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
   postcss-selector-parser@7.1.1:
     dependencies:
@@ -19437,26 +19416,26 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-sorting@9.1.0(postcss@8.5.16):
+  postcss-sorting@9.1.0(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
-  postcss-svgo@8.0.1(postcss@8.5.16):
+  postcss-svgo@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
       svgo: 4.0.1
 
-  postcss-unique-selectors@8.0.1(postcss@8.5.16):
+  postcss-unique-selectors@8.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-selector-parser: 7.1.4
 
   postcss-value-parser@4.2.0: {}
 
-  postcss@8.5.16:
+  postcss@8.5.18:
     dependencies:
-      nanoid: 3.3.15
+      nanoid: 3.3.16
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -20017,7 +19996,7 @@ snapshots:
       is-plain-object: 5.0.0
       launder: 1.7.1
       parse-srcset: 1.0.2
-      postcss: 8.5.16
+      postcss: 8.5.18
 
   sass@1.101.0:
     dependencies:
@@ -20483,21 +20462,21 @@ snapshots:
 
   structured-clone-es@2.0.0: {}
 
-  stylehacks@8.0.1(postcss@8.5.16):
+  stylehacks@8.0.1(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.2
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-selector-parser: 7.1.4
 
-  stylelint-config-cmyr@1.0.0(postcss@8.5.16)(stylelint@16.26.1(typescript@5.9.3)):
+  stylelint-config-cmyr@1.0.0(postcss@8.5.18)(stylelint@16.26.1(typescript@5.9.3)):
     dependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-html: 1.8.0
-      postcss-scss: 4.0.9(postcss@8.5.16)
+      postcss-scss: 4.0.9(postcss@8.5.18)
       stylelint: 16.26.1(typescript@5.9.3)
       stylelint-config-html: 1.1.0(postcss-html@1.8.0)(stylelint@16.26.1(typescript@5.9.3))
       stylelint-config-standard: 39.0.1(stylelint@16.26.1(typescript@5.9.3))
-      stylelint-config-standard-scss: 15.0.1(postcss@8.5.16)(stylelint@16.26.1(typescript@5.9.3))
+      stylelint-config-standard-scss: 15.0.1(postcss@8.5.18)(stylelint@16.26.1(typescript@5.9.3))
       stylelint-order: 7.0.0(stylelint@16.26.1(typescript@5.9.3))
       stylelint-scss: 6.12.1(stylelint@16.26.1(typescript@5.9.3))
 
@@ -20506,14 +20485,14 @@ snapshots:
       postcss-html: 1.8.0
       stylelint: 16.26.1(typescript@5.9.3)
 
-  stylelint-config-recommended-scss@15.0.1(postcss@8.5.16)(stylelint@16.26.1(typescript@5.9.3)):
+  stylelint-config-recommended-scss@15.0.1(postcss@8.5.18)(stylelint@16.26.1(typescript@5.9.3)):
     dependencies:
-      postcss-scss: 4.0.9(postcss@8.5.16)
+      postcss-scss: 4.0.9(postcss@8.5.18)
       stylelint: 16.26.1(typescript@5.9.3)
       stylelint-config-recommended: 16.0.0(stylelint@16.26.1(typescript@5.9.3))
       stylelint-scss: 6.12.1(stylelint@16.26.1(typescript@5.9.3))
     optionalDependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
   stylelint-config-recommended@16.0.0(stylelint@16.26.1(typescript@5.9.3)):
     dependencies:
@@ -20523,13 +20502,13 @@ snapshots:
     dependencies:
       stylelint: 16.26.1(typescript@5.9.3)
 
-  stylelint-config-standard-scss@15.0.1(postcss@8.5.16)(stylelint@16.26.1(typescript@5.9.3)):
+  stylelint-config-standard-scss@15.0.1(postcss@8.5.18)(stylelint@16.26.1(typescript@5.9.3)):
     dependencies:
       stylelint: 16.26.1(typescript@5.9.3)
-      stylelint-config-recommended-scss: 15.0.1(postcss@8.5.16)(stylelint@16.26.1(typescript@5.9.3))
+      stylelint-config-recommended-scss: 15.0.1(postcss@8.5.18)(stylelint@16.26.1(typescript@5.9.3))
       stylelint-config-standard: 38.0.0(stylelint@16.26.1(typescript@5.9.3))
     optionalDependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
 
   stylelint-config-standard@38.0.0(stylelint@16.26.1(typescript@5.9.3)):
     dependencies:
@@ -20543,8 +20522,8 @@ snapshots:
 
   stylelint-order@7.0.0(stylelint@16.26.1(typescript@5.9.3)):
     dependencies:
-      postcss: 8.5.16
-      postcss-sorting: 9.1.0(postcss@8.5.16)
+      postcss: 8.5.18
+      postcss-sorting: 9.1.0(postcss@8.5.18)
       stylelint: 16.26.1(typescript@5.9.3)
 
   stylelint-scss@6.12.1(stylelint@16.26.1(typescript@5.9.3)):
@@ -20589,9 +20568,9 @@ snapshots:
       micromatch: 4.0.8
       normalize-path: 3.0.0
       picocolors: 1.1.1
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-resolve-nested-selector: 0.1.6
-      postcss-safe-parser: 7.0.1(postcss@8.5.16)
+      postcss-safe-parser: 7.0.1(postcss@8.5.18)
       postcss-selector-parser: 7.1.1
       postcss-value-parser: 4.2.0
       resolve-from: 5.0.0
@@ -21373,7 +21352,7 @@ snapshots:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
-      postcss: 8.5.16
+      postcss: 8.5.18
       rollup: 4.62.0
       tinyglobby: 0.2.17
     optionalDependencies:
@@ -21384,7 +21363,7 @@ snapshots:
       terser: 5.48.0
       yaml: 2.9.0
 
-  vitepress@1.6.4(@algolia/client-search@5.45.0)(@types/node@25.6.0)(axios@1.18.1)(change-case@5.4.4)(fuse.js@7.4.2)(jiti@2.7.0)(postcss@8.5.16)(qrcode@1.5.4)(sass@1.101.0)(search-insights@2.17.3)(terser@5.48.0)(typescript@5.9.3)(yaml@2.9.0):
+  vitepress@1.6.4(@algolia/client-search@5.45.0)(@types/node@25.6.0)(axios@1.18.1)(change-case@5.4.4)(fuse.js@7.4.2)(jiti@2.7.0)(postcss@8.5.18)(qrcode@1.5.4)(sass@1.101.0)(search-insights@2.17.3)(terser@5.48.0)(typescript@5.9.3)(yaml@2.9.0):
     dependencies:
       '@docsearch/css': 3.8.2
       '@docsearch/js': 3.8.2(@algolia/client-search@5.45.0)(search-insights@2.17.3)
@@ -21405,7 +21384,7 @@ snapshots:
       vite: 7.3.5(@types/node@25.6.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       vue: 3.5.33(typescript@5.9.3)
     optionalDependencies:
-      postcss: 8.5.16
+      postcss: 8.5.18
     transitivePeerDependencies:
       - '@algolia/client-search'
       - '@types/node'
