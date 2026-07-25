@@ -172,9 +172,9 @@ export class EmailTemplateEngine {
     /**
      * 编译MJML模板
      */
-    private compileMjmlTemplate(template: string, templateName: string): string | null {
+    private async compileMjmlTemplate(template: string, templateName: string): Promise<string | null> {
         try {
-            const { html, errors } = mjml2html(template, {
+            const { html, errors } = await mjml2html(template, {
                 validationLevel: 'soft',
             })
 
@@ -220,7 +220,7 @@ export class EmailTemplateEngine {
         }
 
         const finalTemplate = this.renderTemplate(baseTemplate, finalTemplateData)
-        const compiledHtml = this.compileMjmlTemplate(finalTemplate, templateName)
+        const compiledHtml = await this.compileMjmlTemplate(finalTemplate, templateName)
 
         if (compiledHtml) {
             const text = this.generateTextVersion(compiledHtml)

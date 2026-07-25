@@ -65,5 +65,7 @@ overrides:
   "@opentelemetry/core": "^2.8.0"
   "@babel/core": "^7.29.6"
   better-auth: "^1.6.13"
+  svgo: "^4.0.2"
+  mjml: "^5.0.0-alpha.9"
  
 strictPeerDependencies: false
