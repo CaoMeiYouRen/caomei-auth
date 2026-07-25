@@ -558,6 +558,44 @@ export const typeormAdapter =
                     )
                 }
             },
+
+            async incrementOne<T>(data: {
+                model: string
+                where: Where[]
+                increment: Record<string, number>
+                set?: Record<string, unknown> | undefined
+            }): Promise<T | null> {
+                const { model, where, increment, set } = data
+                const repositoryName = getModelName(model)
+                const repository = manager.getRepository(repositoryName)
+
+                try {
+                    const findOptions = convertWhereToFindOptions(model, where)
+                    const record = await repository.findOne({ where: findOptions })
+                    if (!record) {
+                        return null
+                    }
+
+                    for (const [field, delta] of Object.entries(increment)) {
+                        if (typeof record[field] === 'number') {
+                            record[field] += delta
+                        }
+                    }
+
+                    if (set) {
+                        for (const [field, value] of Object.entries(set)) {
+                            record[field] = value
+                        }
+                    }
+
+                    const result = await repository.save(record)
+                    return transformOutput(result, model) as T
+                } catch (error: unknown) {
+                    throw new BetterAuthError(
+                        `Failed to increment ${model}: ${error instanceof Error ? error.message : String(error)}`,
+                    )
+                }
+            },
         })
 
         return {
