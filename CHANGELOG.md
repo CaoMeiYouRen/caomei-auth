@@ -1,5 +1,12 @@
 # caomei-auth
 
+## [1.13.2](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.1...v1.13.2) (2026-07-25)
+
+
+### 🐛 Bug 修复
+
+* 修复安全告警并兼容 mjml v5 异步 API ([c9d4add](https://github.com/CaoMeiYouRen/caomei-auth/commit/c9d4add))
+
 ## [1.13.1](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.0...v1.13.1) (2026-04-04)
 
 
