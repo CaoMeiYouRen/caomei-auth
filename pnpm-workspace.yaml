@@ -35,7 +35,7 @@ overrides:
   picomatch@^4: "^4.0.4"
   brace-expansion@^1: "^1.1.16"
   brace-expansion@^2: "^2.0.3"
-  brace-expansion@^5: "^5.0.6"
+  brace-expansion@^5: "^5.0.8"
   qs: "^6.15.2"
   ws: "^8.20.1"
   yaml: "^2.8.3"
