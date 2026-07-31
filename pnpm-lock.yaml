@@ -231,7 +231,7 @@ importers:
         version: 1.15.2(@typescript-eslint/utils@8.62.1(eslint@9.39.2(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(eslint-import-resolver-node@0.3.10)(eslint@9.39.2(jiti@2.7.0))(magicast@0.5.3)(typescript@5.9.3)(vite@7.3.5(@types/node@25.6.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       '@nuxt/test-utils':
         specifier: ^3.23.0
-        version: 3.23.0(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.61.1)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 3.23.0(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.62.0)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       '@primevue/nuxt-module':
         specifier: ^4.5.5
         version: 4.5.5(@babel/parser@7.29.7)(magicast@0.5.3)(vue@3.5.33(typescript@5.9.3))
@@ -314,8 +314,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.1
       playwright-core:
-        specifier: ^1.61.1
-        version: 1.61.1
+        specifier: ^1.62.0
+        version: 1.62.0
       postcss:
         specifier: ^8.5.0
         version: 8.5.18
@@ -7978,9 +7978,9 @@ packages:
   pkg-types@2.3.1:
     resolution: {integrity: sha512-y+ichcgc2LrADuhLNAx8DFjVfgz91pRxfZdI3UDhxHvcVEZsenLO+7XaU5vOp0u/7V/wZ+plyuQxtrDlZJ+yeg==}
 
-  playwright-core@1.61.1:
-    resolution: {integrity: sha512-h7Qlt6m4REp25qvIdvbDtVmD4LqVXfpRxhORv9L0jzETM05p4fuPJ3dKyuSXQxDSbXnmS79HAgi9589lGSpLkg==}
-    engines: {node: '>=18'}
+  playwright-core@1.62.0:
+    resolution: {integrity: sha512-nsNRyq0r2zsG8AcRHWknc9QRA5XCueC7gWMrs+Gx2tlZn9hcl8zudfh00lhJPY1DE7NmZ6bDsT9g2yey8mXljA==}
+    engines: {node: '>=20'}
     hasBin: true
 
   pluralize@8.0.0:
@@ -12378,7 +12378,7 @@ snapshots:
       rc9: 3.0.1
       std-env: 4.1.0
 
-  '@nuxt/test-utils@3.23.0(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.61.1)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))':
+  '@nuxt/test-utils@3.23.0(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.62.0)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))':
     dependencies:
       '@clack/prompts': 1.0.0-alpha.9
       '@nuxt/kit': 3.20.2(magicast@0.5.3)
@@ -12406,12 +12406,12 @@ snapshots:
       tinyexec: 1.0.2
       ufo: 1.6.2
       unplugin: 2.3.11
-      vitest-environment-nuxt: 1.0.1(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.61.1)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
+      vitest-environment-nuxt: 1.0.1(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.62.0)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       vue: 3.5.33(typescript@5.9.3)
     optionalDependencies:
       '@vue/test-utils': 2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3))
       happy-dom: 20.9.0
-      playwright-core: 1.61.1
+      playwright-core: 1.62.0
       vitest: 3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - crossws
@@ -19687,7 +19687,7 @@ snapshots:
       exsolve: 1.0.8
       pathe: 2.0.3
 
-  playwright-core@1.61.1: {}
+  playwright-core@1.62.0: {}
 
   pluralize@8.0.0: {}
 
@@ -22008,9 +22008,9 @@ snapshots:
       - universal-cookie
       - yaml
 
-  vitest-environment-nuxt@1.0.1(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.61.1)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)):
+  vitest-environment-nuxt@1.0.1(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.62.0)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)):
     dependencies:
-      '@nuxt/test-utils': 3.23.0(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.61.1)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
+      '@nuxt/test-utils': 3.23.0(@vue/test-utils@2.4.10(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.38(vue@3.5.33(typescript@5.9.3)))(vue@3.5.33(typescript@5.9.3)))(happy-dom@20.9.0)(magicast@0.5.3)(playwright-core@1.62.0)(typescript@5.9.3)(vitest@3.2.6(@types/debug@4.1.12)(@types/node@25.6.0)(happy-dom@20.9.0)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@jest/globals'
