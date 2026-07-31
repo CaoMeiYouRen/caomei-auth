@@ -88,8 +88,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       '@primeuix/styles':
-        specifier: ^2.0.3
-        version: 2.0.3
+        specifier: ^3.0.0
+        version: 3.0.0
       '@primeuix/themes':
         specifier: ^3.0.0
         version: 3.0.0
@@ -2621,6 +2621,9 @@ packages:
 
   '@primeuix/styles@2.0.3':
     resolution: {integrity: sha512-2ykAB6BaHzR/6TwF8ShpJTsZrid6cVIEBVlookSdvOdmlWuevGu5vWOScgIwqWwlZcvkFYAGR/SUV3OHCTBMdw==}
+
+  '@primeuix/styles@3.0.0':
+    resolution: {integrity: sha512-nFsG2V0kbn3Q/fr0EV0Lxy2cKeW1F+WFXyxWI1CxWAAXW34mTCLkDd6OFbN5dP9hrSJOVaeXWzTdoonh1sdklQ==}
 
   '@primeuix/themes@3.0.0':
     resolution: {integrity: sha512-lNMOhorzu4vHRKbTDIU2/raS7/Z6Oyq2WXGfFDVhOwAIVDF4e7hCX75jlgfC7bo4D0Bl5f+oW5HPGZpG52r6lw==}
@@ -13090,6 +13093,10 @@ snapshots:
   '@primeuix/styles@2.0.3':
     dependencies:
       '@primeuix/styled': 0.7.4
+
+  '@primeuix/styles@3.0.0':
+    dependencies:
+      '@primeuix/styled': 1.0.0
 
   '@primeuix/themes@3.0.0':
     dependencies:
