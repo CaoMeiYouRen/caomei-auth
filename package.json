@@ -65,7 +65,7 @@
     "primevue": "^4.5.5",
     "qrcode": "^1.5.4",
     "sanitize-html": "^2.17.6",
-    "twilio": "^6.0.0",
+    "twilio": "^6.0.2",
     "typeorm": "^0.3.31",
     "ua-parser-js": "^2.0.10",
     "validator": "^13.15.35",
