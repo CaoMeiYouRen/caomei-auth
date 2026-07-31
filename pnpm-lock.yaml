@@ -94,8 +94,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       '@primevue/core':
-        specifier: ^4.5.5
-        version: 4.5.5(vue@3.5.33(typescript@5.9.3))
+        specifier: ^5.0.0
+        version: 5.0.0(vue@3.5.33(typescript@5.9.3))
       '@primevue/forms':
         specifier: ^4.5.5
         version: 4.5.5(vue@3.5.33(typescript@5.9.3))
@@ -2639,6 +2639,12 @@ packages:
 
   '@primevue/core@4.5.5':
     resolution: {integrity: sha512-JpkXhq1ddc70JdsC3CC4dM+UbeeWuCW/8DpS9dNBfrOk824TLSlRlMEGFyVKqRMn5WPQvYLiy3xXfLQeNdSqhQ==}
+    engines: {node: '>=12.11.0'}
+    peerDependencies:
+      vue: ^3.5.0
+
+  '@primevue/core@5.0.0':
+    resolution: {integrity: sha512-VGw1a5m3bSHosAQScg7huvD8ZFQ4cfltmbIuOSx7gsMS2NnYno9BCIq7O2L2H3zmB0pBLfcpdawb3EPeg1LIxw==}
     engines: {node: '>=12.11.0'}
     peerDependencies:
       vue: ^3.5.0
@@ -13101,6 +13107,13 @@ snapshots:
     dependencies:
       '@primeuix/styled': 0.7.4
       '@primeuix/utils': 0.6.4
+      vue: 3.5.33(typescript@5.9.3)
+
+  '@primevue/core@5.0.0(vue@3.5.33(typescript@5.9.3))':
+    dependencies:
+      '@primeui/license-manager': 1.0.0
+      '@primeuix/styled': 1.0.0
+      '@primeuix/utils': 0.8.0
       vue: 3.5.33(typescript@5.9.3)
 
   '@primevue/forms@4.5.5(vue@3.5.33(typescript@5.9.3))':
