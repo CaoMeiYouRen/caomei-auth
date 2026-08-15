@@ -17,14 +17,14 @@
             "mode": "subagent",
             "description": "需求守门员，负责需求挖掘、意图抽离、范围判断、验收标准定义与路线图对齐。",
             "prompt": "{file:.github/agents/product-manager.agent.md}",
-            "model": "opencode-go/deepseek-v4-flash",
+            "model": "opencode-go/deepseek-v4-pro",
             "variant": "max"
         },
         "code-auditor": {
             "mode": "subagent",
             "description": "Review Gate 负责人，对代码、文档、配置、脚本与治理定义执行结构化审查，输出 Pass/Reject 结论。",
             "prompt": "{file:.github/agents/code-auditor.agent.md}",
-            "model": "opencode-go/deepseek-v4-flash",
+            "model": "opencode-go/deepseek-v4-pro",
             "variant": "max"
         },
         "quality-guardian": {
@@ -45,7 +45,7 @@
             "mode": "subagent",
             "description": "浏览器验证角色，负责在真实渲染环境中确认 UI 变更的可用性、响应式与主题表现。",
             "prompt": "{file:.github/agents/ui-validator.agent.md}",
-            "model": "opencode-go/deepseek-v4-flash"
+            "model": "opencode-go/qwen3.7-plus"
         },
         "qa-assistant": {
             "mode": "subagent",
