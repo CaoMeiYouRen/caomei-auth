@@ -79,6 +79,8 @@
     `frontend-expert`、`backend-expert`、`devops-specialist`、`technical-architect`、`requirement-analyst`、`security-guardian`、`code-reviewer`、`ui-validator`、`qa-assistant`、`gh-cli`、`full-stack-master`
 - [x] Agents 升级：`full-stack-developer` → `full-stack-master`；新增 `code-auditor`、`ui-validator`、`qa-assistant`（`product-manager` 留待二期评估）
 
+> 后续优化（2026-08-15 实施）：`frontend-expert` 已并入 `nuxt-code-editor`（职责重叠，本项目纯 Vue 无需 React 兼容）；`quality-guardian` agent 已删除（与 `code-auditor` Review Gate 职责重叠，质量门执行由主责角色自跑或审计时核验，`quality-guardian` skill 保留）；`security-guardian` 补入 full-stack-master agent 质量技能引用。
+
 ### 第三批：规范文档
 
 - [x] 新增 `docs/standards/ai-collaboration.md`（PDTFC 流程细节 + 验证矩阵，按本项目规模精简）

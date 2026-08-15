@@ -40,12 +40,12 @@ metadata:
 ### D (Do) — 开发实现
 
 - 同一事项同一时点只保留一个实现主责。
-- 按方案映射把改动交给对应技能：后端 backend-expert、前端 frontend-expert、文档 documentation-specialist。
+- 按方案映射把改动交给对应技能：后端 backend-expert、前端 nuxt-code-editor、文档 documentation-specialist。
 - 实现收尾须通过本地自检（lint + typecheck + 定向测试）。
 - 预计改动超出任务粒度约束（默认 10 文件或 800 行新增，项目可调整）时，先返回 P 拆分为多个原子条目，分批实现、分批审计、分批提交。
 - **范围闸门**：开发中发现新的优化点或非阻塞事项时，返回 P 重新分流，不静默扩写。
 
-- **技能**：backend-expert、frontend-expert、devops-specialist 等按需
+- **技能**：backend-expert、nuxt-code-editor、devops-specialist 等按需
 
 ### A (Audit) — 质量门与审计放行（强制）
 
@@ -124,7 +124,7 @@ metadata:
 - context-analyzer：建立上下文。
 - requirement-analyst：澄清需求。
 - technical-architect：设计方案。
-- backend-expert / frontend-expert：实施改动。
+- backend-expert / nuxt-code-editor：实施改动。
 - documentation-specialist：同步文档。
 - ui-validator：验证界面。
 - test-engineer：补测试与查失败。

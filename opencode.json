@@ -27,13 +27,6 @@
             "model": "opencode-go/deepseek-v4-pro",
             "variant": "max"
         },
-        "quality-guardian": {
-            "mode": "subagent",
-            "description": "独立代码质量审查者，执行类型检查、Lint 与静态分析，输出 Pass/Reject 结论。",
-            "prompt": "{file:.github/agents/quality-guardian.agent.md}",
-            "model": "opencode-go/deepseek-v4-flash",
-            "variant": "max"
-        },
         "test-engineer": {
             "mode": "subagent",
             "description": "测试主责角色，负责测试补强、回归验证与覆盖率提升。",
