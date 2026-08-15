@@ -1,16 +1,17 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
-const fetchMock = vi.fn()
+const fetchMock = vi.hoisted(() => vi.fn())
+vi.mock('#build/fetch.mjs', () => ({
+    $fetch: fetchMock,
+}))
 
 describe('utils/admin-role-client', () => {
     beforeEach(() => {
         vi.resetModules()
         fetchMock.mockReset()
-        vi.stubGlobal('$fetch', fetchMock)
     })
 
     afterEach(() => {
-        vi.unstubAllGlobals()
         vi.clearAllMocks()
         vi.resetModules()
     })

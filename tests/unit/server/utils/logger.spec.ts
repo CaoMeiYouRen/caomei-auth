@@ -74,13 +74,17 @@ vi.mock('@axiomhq/winston', () => ({
     WinstonTransport: winstonTransportSpy,
 }))
 
-vi.mock('@/utils/shared/env', () => ({
-    LOG_LEVEL: 'info',
-    LOGFILES: true,
-    AXIOM_DATASET_NAME: '',
-    AXIOM_API_TOKEN: '',
-    LOG_DIR: 'logs',
-}))
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
+    return {
+        ...actual,
+        LOG_LEVEL: 'info',
+        LOGFILES: true,
+        AXIOM_DATASET_NAME: '',
+        AXIOM_API_TOKEN: '',
+        LOG_DIR: 'logs',
+    }
+})
 
 describe('Server Utils: Logger', () => {
     beforeEach(() => {

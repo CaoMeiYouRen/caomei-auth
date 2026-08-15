@@ -11,11 +11,15 @@ vi.mock('fs', async (importOriginal) => {
     }
 })
 
-vi.mock('@/utils/shared/env', () => ({
-    APP_NAME: 'TestApp',
-    AUTH_BASE_URL: 'http://localhost',
-    CONTACT_EMAIL: 'support@example.com',
-}))
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
+    return {
+        ...actual,
+        APP_NAME: 'TestApp',
+        AUTH_BASE_URL: 'http://localhost',
+        CONTACT_EMAIL: 'support@example.com',
+    }
+})
 
 describe('server/utils/email/templates', () => {
     it('should generate code email template', async () => {

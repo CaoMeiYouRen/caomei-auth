@@ -1,5 +1,4 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useStaticPageFlow } from '@/composables/use-static-page-flow'
 
 // Mock useRuntimeConfig
@@ -11,7 +10,13 @@ const { mockConfig } = vi.hoisted(() => ({
     },
 }))
 
-mockNuxtImport('useRuntimeConfig', () => () => mockConfig)
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useRuntimeConfig: () => mockConfig,
+    }
+})
 
 describe('useStaticPageFlow', () => {
     it('should return correct contact email and link', () => {

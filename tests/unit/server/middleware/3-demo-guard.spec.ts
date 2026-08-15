@@ -6,9 +6,13 @@ const mockLoggerWarn = vi.fn()
 const mockCreateError = vi.fn()
 
 // Mock dependencies
-vi.mock('@/utils/shared/env', () => ({
-    DEMO_MODE: false,
-}))
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
+    return {
+        ...actual,
+        DEMO_MODE: false,
+    }
+})
 
 vi.mock('@/server/utils/logger', () => ({
     default: {

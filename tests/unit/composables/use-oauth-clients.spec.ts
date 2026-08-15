@@ -26,8 +26,10 @@ vi.mock('primevue/usetoast', () => ({
 mockNuxtImport('useFetch', () => mockUseFetch)
 mockNuxtImport('navigateTo', () => mockNavigateTo)
 
-// Mock global $fetch
-global.$fetch = mockFetch as any
+// Mock $fetch
+vi.mock('#build/fetch.mjs', () => ({
+    $fetch: mockFetch,
+}))
 
 // Mock window.open
 global.window.open = vi.fn()

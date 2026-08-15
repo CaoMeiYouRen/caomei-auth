@@ -9,8 +9,10 @@ vi.mock('primevue/usetoast', () => ({
 }))
 
 // Mock $fetch
-const fetchMock = vi.fn()
-vi.stubGlobal('$fetch', fetchMock)
+const fetchMock = vi.hoisted(() => vi.fn())
+vi.mock('#build/fetch.mjs', () => ({
+    $fetch: fetchMock,
+}))
 
 describe('useSsoProviders', () => {
     beforeEach(() => {

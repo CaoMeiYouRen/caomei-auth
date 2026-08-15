@@ -26,9 +26,14 @@ const { config, useToastMock, useFetchMock, useNuxtAppMock, toastAddMock } = vi.
     }
 })
 
-mockNuxtImport('useRuntimeConfig', () => () => config)
-
-mockNuxtImport('useNuxtApp', () => useNuxtAppMock)
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useRuntimeConfig: () => config,
+        useNuxtApp: useNuxtAppMock,
+    }
+})
 
 mockNuxtImport('useFetch', () => useFetchMock)
 

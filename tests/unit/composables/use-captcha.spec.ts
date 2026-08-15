@@ -1,14 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useCaptcha } from '@/composables/use-captcha'
 
 // Mock Nuxt composables
-mockNuxtImport('useRuntimeConfig', () => () => ({
-    public: {
-        captchaProvider: 'google-recaptcha',
-        recaptchaSiteKey: 'test-key',
-    },
-}))
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useRuntimeConfig: () => ({
+            public: {
+                captchaProvider: 'google-recaptcha',
+                recaptchaSiteKey: 'test-key',
+            },
+        }),
+    }
+})
 
 vi.mock('vue-recaptcha', () => ({
     useChallengeV3: vi.fn(() => ({

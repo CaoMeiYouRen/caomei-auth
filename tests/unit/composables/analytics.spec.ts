@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useGoogleAnalytics } from '@/composables/use-google-analytics'
 import { useBaiduAnalytics } from '@/composables/use-baidu-analytics'
 import { useClarity } from '@/composables/use-clarity'
@@ -22,11 +21,16 @@ const { mockClarityPlugin, mockRuntimeConfig } = vi.hoisted(() => {
     return { mockClarityPlugin: clarityPlugin, mockRuntimeConfig: runtimeConfig }
 })
 
-mockNuxtImport('useNuxtApp', () => () => ({
-    $clarity: mockClarityPlugin,
-}))
-
-mockNuxtImport('useRuntimeConfig', () => () => mockRuntimeConfig)
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useNuxtApp: () => ({
+            $clarity: mockClarityPlugin,
+        }),
+        useRuntimeConfig: () => mockRuntimeConfig,
+    }
+})
 
 describe('composables/analytics', () => {
     beforeEach(() => {

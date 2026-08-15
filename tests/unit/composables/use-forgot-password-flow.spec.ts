@@ -49,7 +49,13 @@ vi.mock('vue', async (importOriginal) => {
 })
 
 // Mock Nuxt composables
-mockNuxtImport('useRuntimeConfig', () => mockUseRuntimeConfig)
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useRuntimeConfig: () => mockUseRuntimeConfig(),
+    }
+})
 mockNuxtImport('navigateTo', () => mockNavigateTo)
 
 describe('useForgotPasswordFlow', () => {

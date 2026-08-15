@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref } from 'vue'
-import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useQuickLoginFlow } from '@/composables/use-quick-login-flow'
 import { authClient } from '@/lib/auth-client'
 
@@ -40,7 +39,13 @@ vi.mock('@/utils/web/navigation', () => ({
 }))
 
 const useRuntimeConfigMock = vi.hoisted(() => vi.fn())
-mockNuxtImport('useRuntimeConfig', () => useRuntimeConfigMock)
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useRuntimeConfig: () => useRuntimeConfigMock(),
+    }
+})
 
 describe('useQuickLoginFlow', () => {
     beforeEach(() => {

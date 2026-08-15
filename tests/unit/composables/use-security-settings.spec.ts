@@ -68,16 +68,16 @@ global.navigator = {
     },
 } as any
 
-global.URL = {
-    createObjectURL: vi.fn(() => 'blob:url'),
-    revokeObjectURL: vi.fn(),
-} as any
-
 global.Blob = class {} as any
 
 describe('useSecuritySettings', () => {
     beforeEach(() => {
         vi.clearAllMocks()
+
+        // Patch URL methods after Nuxt setup (keep the URL constructor intact).
+        // Vitest 默认 per-file 隔离，无需 afterEach 还原。
+        ;(globalThis as any).URL.createObjectURL = vi.fn(() => 'blob:url')
+        ;(globalThis as any).URL.revokeObjectURL = vi.fn()
 
         // Default session mock
         mockAuthClient.useSession.mockReturnValue({

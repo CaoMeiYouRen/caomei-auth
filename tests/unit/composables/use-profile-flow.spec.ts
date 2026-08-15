@@ -69,7 +69,13 @@ const useFetchMock = vi.hoisted(() => vi.fn())
 const useRuntimeConfigMock = vi.hoisted(() => vi.fn())
 
 mockNuxtImport('useFetch', () => useFetchMock)
-mockNuxtImport('useRuntimeConfig', () => useRuntimeConfigMock)
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useRuntimeConfig: () => useRuntimeConfigMock(),
+    }
+})
 
 describe('useProfileFlow', () => {
     beforeEach(() => {

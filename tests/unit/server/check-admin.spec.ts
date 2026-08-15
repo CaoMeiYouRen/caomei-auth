@@ -16,11 +16,15 @@ vi.mock('@/server/utils/demo-data-generator', () => ({
     getDemoConfig: getDemoConfigMock,
 }))
 
-vi.mock('@/utils/shared/env', () => ({
-    get DEMO_MODE() {
-        return demoModeRef.value
-    },
-}))
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
+    return {
+        ...actual,
+        get DEMO_MODE() {
+            return demoModeRef.value
+        },
+    }
+})
 
 const createErrorMock = vi.fn((error: any) => error)
 

@@ -37,7 +37,13 @@ vi.mock('@/lib/auth-client', () => ({
 
 mockNuxtImport('useFetch', () => mockUseFetch)
 mockNuxtImport('useRoute', () => mockUseRoute)
-mockNuxtImport('useRuntimeConfig', () => mockUseRuntimeConfig)
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useRuntimeConfig: () => mockUseRuntimeConfig(),
+    }
+})
 mockNuxtImport('navigateTo', () => mockNavigateTo)
 
 // Mock window.location

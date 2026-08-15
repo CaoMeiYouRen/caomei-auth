@@ -11,20 +11,24 @@ vi.mock('@/utils/web/social-colors', () => ({
 }))
 
 // Mock env vars
-vi.mock('@/utils/shared/env', () => ({
-    ANONYMOUS_LOGIN_ENABLED: true,
-    GITHUB_CLIENT_ID: 'github-id',
-    GOOGLE_CLIENT_ID: '', // Disabled
-    MICROSOFT_CLIENT_ID: '',
-    DISCORD_CLIENT_ID: '',
-    APPLE_CLIENT_ID: '',
-    TWITTER_CLIENT_ID: '',
-    WEIBO_CLIENT_ID: '',
-    QQ_CLIENT_ID: '',
-    WECHAT_CLIENT_ID: '',
-    DOUYIN_CLIENT_ID: '',
-    FACEBOOK_CLIENT_ID: '',
-}))
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
+    return {
+        ...actual,
+        ANONYMOUS_LOGIN_ENABLED: true,
+        GITHUB_CLIENT_ID: 'github-id',
+        GOOGLE_CLIENT_ID: '', // Disabled
+        MICROSOFT_CLIENT_ID: '',
+        DISCORD_CLIENT_ID: '',
+        APPLE_CLIENT_ID: '',
+        TWITTER_CLIENT_ID: '',
+        WEIBO_CLIENT_ID: '',
+        QQ_CLIENT_ID: '',
+        WECHAT_CLIENT_ID: '',
+        DOUYIN_CLIENT_ID: '',
+        FACEBOOK_CLIENT_ID: '',
+    }
+})
 
 // Import handler after mocks
 import handler from '@/server/api/social/providers.get'

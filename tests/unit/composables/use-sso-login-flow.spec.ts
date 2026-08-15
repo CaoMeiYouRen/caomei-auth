@@ -32,8 +32,10 @@ vi.mock('vue', async (importOriginal) => {
 const useRouteMock = vi.hoisted(() => vi.fn())
 mockNuxtImport('useRoute', () => useRouteMock)
 
-const fetchMock = vi.fn()
-vi.stubGlobal('$fetch', fetchMock)
+const fetchMock = vi.hoisted(() => vi.fn())
+vi.mock('#build/fetch.mjs', () => ({
+    $fetch: fetchMock,
+}))
 
 describe('useSsoLoginFlow', () => {
     beforeEach(() => {

@@ -28,14 +28,18 @@ vi.mock('@/server/database/storage', () => ({
 }))
 
 // Mock env
-vi.mock('@/utils/shared/env', () => ({
-    EMAIL_DAILY_LIMIT: 100,
-    EMAIL_SINGLE_USER_DAILY_LIMIT: 5,
-    EMAIL_LIMIT_WINDOW: 86400,
-    EMAIL_FROM: 'test@example.com',
-    EMAIL_HOST: 'smtp.example.com',
-    EMAIL_USER: 'user@example.com',
-}))
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
+    return {
+        ...actual,
+        EMAIL_DAILY_LIMIT: 100,
+        EMAIL_SINGLE_USER_DAILY_LIMIT: 5,
+        EMAIL_LIMIT_WINDOW: 86400,
+        EMAIL_FROM: 'test@example.com',
+        EMAIL_HOST: 'smtp.example.com',
+        EMAIL_USER: 'user@example.com',
+    }
+})
 
 describe('server/utils/email/index', () => {
     beforeEach(() => {

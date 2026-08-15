@@ -1,9 +1,13 @@
 import crypto from 'crypto'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('@/utils/shared/env', () => ({
-    TEMP_EMAIL_DOMAIN_NAME: 'temp.local',
-}))
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
+    return {
+        ...actual,
+        TEMP_EMAIL_DOMAIN_NAME: 'temp.local',
+    }
+})
 
 import * as random from '@/utils/shared/random'
 import { generateClientId, generateClientSecret, getTempEmail, getTempName } from '@/server/utils/auth-generators'

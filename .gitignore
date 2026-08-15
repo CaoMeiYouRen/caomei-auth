@@ -40,3 +40,4 @@ node_modules
 .agents
 .claude
 .opencode
+/artifacts

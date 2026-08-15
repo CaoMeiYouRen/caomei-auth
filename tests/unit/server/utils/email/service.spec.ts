@@ -16,9 +16,13 @@ vi.mock('@/server/utils/email/templates', () => ({
     },
 }))
 
-vi.mock('@/utils/shared/env', () => ({
-    APP_NAME: 'Test App',
-}))
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
+    return {
+        ...actual,
+        APP_NAME: 'Test App',
+    }
+})
 
 describe('Server Utils: Email Service', () => {
     beforeEach(() => {

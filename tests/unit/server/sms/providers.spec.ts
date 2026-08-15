@@ -17,13 +17,17 @@ vi.mock('twilio', () => ({
 }))
 
 // Mock env
-vi.mock('@/utils/shared/env', () => ({
-    PHONE_SENDER_NAME: 'TestApp',
-    SPUG_TEMPLATE_ID: 'spug-123',
-    TWILIO_ACCOUNT_SID: 'AC123',
-    TWILIO_AUTH_TOKEN: 'token123',
-    TWILIO_PHONE_NUMBER: '+15005550006',
-}))
+vi.mock('@/utils/shared/env', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/utils/shared/env')>()
+    return {
+        ...actual,
+        PHONE_SENDER_NAME: 'TestApp',
+        SPUG_TEMPLATE_ID: 'spug-123',
+        TWILIO_ACCOUNT_SID: 'AC123',
+        TWILIO_AUTH_TOKEN: 'token123',
+        TWILIO_PHONE_NUMBER: '+15005550006',
+    }
+})
 
 describe('server/utils/sms/providers', () => {
     beforeEach(() => {

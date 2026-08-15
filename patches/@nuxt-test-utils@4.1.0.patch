@@ -1,0 +1,17 @@
+diff --git a/dist/runtime/shared/nuxt.mjs b/dist/runtime/shared/nuxt.mjs
+--- a/dist/runtime/shared/nuxt.mjs
++++ b/dist/runtime/shared/nuxt.mjs
+@@ -4,11 +4,12 @@
+ 	const { useRouter } = await import("#app/composables/router");
+ 	await import("#app/nuxt-vitest-app-entry").then((r) => r.default());
+ 	const nuxtApp = useNuxtApp();
+ 	function sync() {
++		if (!nuxtApp._route) return;
+ 		return nuxtApp._route.sync ? nuxtApp._route.sync() : nuxtApp.callHook("page:finish");
+ 	}
+ 	const { hasNuxtPage } = getVueWrapperPlugin();
+-	useRouter().afterEach(() => {
++	useRouter()?.afterEach(() => {
+ 		if (hasNuxtPage()) return;
+ 		return sync();
+ 	});

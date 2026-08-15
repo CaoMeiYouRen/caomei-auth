@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useDemoMode, useDemoModeGuard, useDemoBanner } from '../../../composables/use-demo-mode'
 
-// Hoist the mock state so it can be used in mockNuxtImport
+// Hoist the mock state so it can be used in the mock
 const { mockState } = vi.hoisted(() => ({
     mockState: {
         demoMode: false,
@@ -10,13 +9,19 @@ const { mockState } = vi.hoisted(() => ({
 }))
 
 // Mock useRuntimeConfig
-mockNuxtImport('useRuntimeConfig', () => () => ({
-    public: {
-        get demoMode() {
-            return mockState.demoMode
-        },
-    },
-}))
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useRuntimeConfig: () => ({
+            public: {
+                get demoMode() {
+                    return mockState.demoMode
+                },
+            },
+        }),
+    }
+})
 
 describe('useDemoMode', () => {
     beforeEach(() => {

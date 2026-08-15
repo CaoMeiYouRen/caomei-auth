@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref, reactive } from 'vue'
-import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useRegisterFlow } from '@/composables/use-register-flow'
 
 // Mock Nuxt composables
@@ -20,7 +19,13 @@ const { config, useToastMock, toastAddMock } = vi.hoisted(() => {
     }
 })
 
-mockNuxtImport('useRuntimeConfig', () => () => config)
+vi.mock('#app/nuxt', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('#app/nuxt')>()
+    return {
+        ...actual,
+        useRuntimeConfig: () => config,
+    }
+})
 
 vi.mock('primevue/usetoast', () => ({
     useToast: useToastMock,
