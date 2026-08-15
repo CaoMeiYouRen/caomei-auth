@@ -7,7 +7,9 @@ FROM nodejs AS builder
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml patches/ /app/
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /app/
+# 多源 COPY 会展开目录内容，patches/ 需单独复制以保留目录结构（patchedDependencies 依赖）
+COPY patches/ /app/patches/
 
 # 用于构建 sqlite3
 RUN apk add --no-cache python3 python3-dev py3-setuptools make g++ && \
