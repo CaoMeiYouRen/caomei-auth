@@ -285,8 +285,8 @@ importers:
         specifier: ^4.3.1
         version: 4.3.2(@types/node@26.1.2)(typescript@5.9.3)
       commitlint:
-        specifier: ^21.2.0
-        version: 21.2.0(@types/node@26.1.2)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
+        specifier: ^21.2.1
+        version: 21.2.1(@types/node@26.1.2)(conventional-commits-parser@7.1.2)(typescript@5.9.3)
       commitlint-config-cmyr:
         specifier: ^1.0.0
         version: 1.0.1
@@ -908,8 +908,8 @@ packages:
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
     engines: {node: '>=0.1.90'}
 
-  '@commitlint/cli@21.2.0':
-    resolution: {integrity: sha512-4GLVIhUaT3c3GBlQ0GB80/5H3xXdn/Tgw4lrsuoOQVDu2wl4Xw0GuzSar8xZKSMv4H3xaKaQXmvH91GmdyYBZA==}
+  '@commitlint/cli@21.2.2':
+    resolution: {integrity: sha512-a+6hQxIxnpdvSvS2apvttPNbEliYsVC3PqFYDiiB2kjbwIsQsj1urvQ4Tkf70pKYozPalKAuRQmm/GHwndduqA==}
     engines: {node: '>=22.12.0'}
     hasBin: true
 
@@ -917,8 +917,8 @@ packages:
     resolution: {integrity: sha512-P/ZRhryQmkj0Z0dY9FOoRwe3xkwJyyAdtXwt01NT2kuZttcG2CNYp1q5Ci3u+nDT2jcbJRw2kt13Czl1qKNPfg==}
     engines: {node: '>=22.12.0'}
 
-  '@commitlint/config-conventional@21.2.0':
-    resolution: {integrity: sha512-Qf8WRDVcyVd14if6VTWenebxFbKnVnbzPUJjlzjkyJGeHK2xCGd63Dr1XZzj0plXKQb9P0BfOxoc1HVeCo2BWQ==}
+  '@commitlint/config-conventional@21.2.2':
+    resolution: {integrity: sha512-NxA37SZviusFUEYOQZ5hNnZ1h7O/KiemPkxjOlpzKJNnWxThiwc6/SaZhaPa8fyLvfRBAywhQhJJk8XESHWlpQ==}
     engines: {node: '>=22.12.0'}
 
   '@commitlint/config-validator@19.8.1':
@@ -949,16 +949,16 @@ packages:
     resolution: {integrity: sha512-RifH+FmImozKBE6mozhF4K3r2RRKP7SMi/Q/zLCmExtp5e05lhHOUYqGBlFBAGNHaZxU/WYw1XuugYK9jQzqnA==}
     engines: {node: '>=22.12.0'}
 
-  '@commitlint/format@21.2.0':
-    resolution: {integrity: sha512-c4q64xaav2U83t7k7RyzJerBZurPer7FxUOY0RL5L/6CZijZ7K+s6HIBGIghj0ey1P2+seRX0J9XQYtDued6tg==}
+  '@commitlint/format@21.2.2':
+    resolution: {integrity: sha512-v6fvxZSc/AvVMROlr3H34+1766bZSYApRUSCAMjWamStPjKMvZ8GdvVA5YW/VQNgbFTmcMz6OYmSTJEvIjPrfA==}
     engines: {node: '>=22.12.0'}
 
-  '@commitlint/is-ignored@21.2.0':
-    resolution: {integrity: sha512-4/eB0vBN7L88O/oC4ajAEqi7j2ZfNgxl/+11RfAV9YosejZgDXhY2C9VcHnHJhOzPLoSy5P3Mg/46kqeyJfXKw==}
+  '@commitlint/is-ignored@21.2.2':
+    resolution: {integrity: sha512-9UoKNgfFE3LU7FrzierCvk3CdDfMDeVGC86qZiT/n0TIjfq/dmZ9MHuXd45OTNRa26ZanmJRxEtmiXk/lEJihg==}
     engines: {node: '>=22.12.0'}
 
-  '@commitlint/lint@21.2.0':
-    resolution: {integrity: sha512-ceO5dp9pLjEZ6y6qbq/uXWXDPykqqlTsyzoQ0NzecpisSJhK3kTy9qzQoPeJuWG/IMNdV1lO0RgmzqoAlSi1uw==}
+  '@commitlint/lint@21.2.2':
+    resolution: {integrity: sha512-Fy8JxEBzdmsYWFude/61GxXu5O+wEymwiRK2z9GL9R8mCsXphCoGxAFc5iHn5mjlfcSrhiiONE+ksf4KOjnaPg==}
     engines: {node: '>=22.12.0'}
 
   '@commitlint/load@19.8.1':
@@ -969,20 +969,20 @@ packages:
     resolution: {integrity: sha512-Dauup/GfjwffBXRJUdlX/YRKfSVXsXZLnINXKz0VZkXdKDcaEILAi9oflHGbfydonJnJAbXEbF3nXPm9rm3G6A==}
     engines: {node: '>=v18'}
 
-  '@commitlint/load@21.2.0':
-    resolution: {integrity: sha512-RjlzWQqruRwIenJEfZtq7kG97co97nKoHpflE5YnF61tDLXxHPrdWImgzw6VL6MlFyaOcVlk74eBV8ZQmc3oIA==}
+  '@commitlint/load@21.2.2':
+    resolution: {integrity: sha512-0Tt6wDPX167cjKC5D4zhm0+20wJJG+TN/TKovMOspfSe78rOnKX+MNzlVNiu6HyQPZChPJ8QBH31MVt6Bb8fCg==}
     engines: {node: '>=22.12.0'}
 
   '@commitlint/message@21.2.0':
     resolution: {integrity: sha512-YxGoiXD/HXNXLJPrQwE5poXa+XH0CBEm+mdvbHQP0g6MV/dmJyUFCzPNzZbxL93GvZ70TmtTK0Z0/IBpAqHv8g==}
     engines: {node: '>=22.12.0'}
 
-  '@commitlint/parse@21.2.0':
-    resolution: {integrity: sha512-QHWxG4d0PLTF634/AdyZ0MQS+CLn5YOuJlCFhMMlSGKFxzYGUetkHBj18xgBD+6fVzUrA2lrCdi/vlS2f/oYXg==}
+  '@commitlint/parse@21.2.2':
+    resolution: {integrity: sha512-MEkobPfvRp+z06Wro8HMG1BDGHzZmj82A1LH1nWeG3ipHpg/x4m6v3wEDvMBIKjRFUnfR3nBeFs3MVCr7UdAmg==}
     engines: {node: '>=22.12.0'}
 
-  '@commitlint/read@21.2.0':
-    resolution: {integrity: sha512-ELx8Ovh/JoAw5lpvDgxc6Y0We9skf2IPI2RFN+gnYgDGjRdMSF8zeodxhZmcclLWzfUIF7hXLOa8gOlllYcvBA==}
+  '@commitlint/read@21.2.1':
+    resolution: {integrity: sha512-hUW7EJQnNTL0vPOmVMNK4CrnrNBN0nN+JJHReFkdHO5y4iyHeEmTBwuC15OCqUTjxWo7idnH1LftfpWVIaPWIA==}
     engines: {node: '>=22.12.0'}
 
   '@commitlint/resolve-extends@19.8.1':
@@ -993,12 +993,12 @@ packages:
     resolution: {integrity: sha512-ay1KM8q0t+/OnlpqXJ+7gEFQNlUtSU5Gxr8GEwnVf2TPN3+ywc5DzL3JCxmpucqxfHBTFwfRMXxPRRnR5Ki20g==}
     engines: {node: '>=v18'}
 
-  '@commitlint/resolve-extends@21.2.0':
-    resolution: {integrity: sha512-4O/1j51+79Wth9s/MGxt/5gs0XYLDgNlYpltQfhAvLE0itusLKs9zruxbiNg1oOkmkb9L9L4USYGjEj7n87NxA==}
+  '@commitlint/resolve-extends@21.2.2':
+    resolution: {integrity: sha512-RPkJ/IFi7sMUUVbZLqwWFtWw/zRDcfFsmrPSiTMrt5wb7AdxOr86EGQFvmGzef5QKV5IPBWWCujqVTw1RWX44A==}
     engines: {node: '>=22.12.0'}
 
-  '@commitlint/rules@21.2.0':
-    resolution: {integrity: sha512-C2yXMNpiB8ETZKfx5JD8+ExgF8vTU1VQMKPSUUYwqKpw9oJWQBrlXBpdU038mj2WPjof7o9UzFpmTyBeGMZwZg==}
+  '@commitlint/rules@21.2.2':
+    resolution: {integrity: sha512-eplQzyYkBjYB1HyyRj8hkcK11Y9DU9nuBz7uOKEd6NpE9NGDytLFCAnlRE+OoiK/5sHEJsaz2RGhuWBvYzIbNA==}
     engines: {node: '>=22.12.0'}
 
   '@commitlint/to-lines@21.0.1':
@@ -1021,21 +1021,17 @@ packages:
     resolution: {integrity: sha512-7zVFCDB2reMvJH5dmbKnOQPjZEvjdJTH8jc0U/PIPU1r3/+vf5pD1HlfitV2MWsWXrvu7u39iY1lyLUPOaN0Gw==}
     engines: {node: '>=22.12.0'}
 
-  '@conventional-changelog/git-client@2.7.0':
-    resolution: {integrity: sha512-j7A8/LBEQ+3rugMzPXoKYzyUPpw/0CBQCyvtTR7Lmu4olG4yRC/Tfkq79Mr3yuPs0SUitlO2HwGP3gitMJnRFw==}
-    engines: {node: '>=18'}
+  '@conventional-changelog/git-client@3.1.2':
+    resolution: {integrity: sha512-jZqwnJwf7nboIlAcw/mkOjVa6DexCcUOgT2oOQgkoi3z9vR8tGFkcMy2BFcYwjhL9sYcDDXkRQDayiDieCoW7A==}
+    engines: {node: '>=22'}
     peerDependencies:
-      conventional-commits-filter: ^5.0.0
-      conventional-commits-parser: ^6.4.0
+      conventional-commits-filter: ^6.0.1
+      conventional-commits-parser: ^7.1.2
     peerDependenciesMeta:
       conventional-commits-filter:
         optional: true
       conventional-commits-parser:
         optional: true
-
-  '@conventional-changelog/template@1.2.1':
-    resolution: {integrity: sha512-TzlTVpKPjaqW6qOYjQcYUDuGsLCNsvFHVBXkYGTAnf5V37jCWrE5haKNXzz0WZUtVHjrpV76L1buANjwXMfT8w==}
-    engines: {node: '>=22'}
 
   '@conventional-changelog/template@1.3.0':
     resolution: {integrity: sha512-GsCw/qu92GI0EX6s7fxUi/SG1lmFjG9XZivxxEDZXqztuQKCn5o5wKdz4v005zci0Md7EZzgAwmQLoIEDZoaow==}
@@ -2814,9 +2810,9 @@ packages:
   '@simple-git/argv-parser@1.1.1':
     resolution: {integrity: sha512-Q9lBcfQ+VQCpQqGJFHe5yooOS5hGdLFFbJ5R+R5aDsnkPCahtn1hSkMcORX65J2Z5lxSkD0lQorMsncuBQxYUw==}
 
-  '@simple-libs/child-process-utils@1.0.2':
-    resolution: {integrity: sha512-/4R8QKnd/8agJynkNdJmNw2MBxuFTRcNFnE5Sg/G+jkSsV8/UBgULMzhizWWW42p8L5H7flImV2ATi79Ove2Tw==}
-    engines: {node: '>=18'}
+  '@simple-libs/child-process-utils@2.0.0':
+    resolution: {integrity: sha512-dvNoRKLijXnD0XoJAz94pbNuB5GQgDr55UhpSPhffDkTT0Cmcqh9jSCOtwfT2d4H6MI9E7c4SgtMuJXZ6F3c6A==}
+    engines: {node: '>=22'}
 
   '@simple-libs/stream-utils@1.2.0':
     resolution: {integrity: sha512-KxXvfapcixpz6rVEB6HPjOUZT22yN6v0vI0urQSk1L8MlEWPDFCZkhw2xmkyoTGYeFw7tWTZd7e3lVzRZRN/EA==}
@@ -4364,8 +4360,8 @@ packages:
     resolution: {integrity: sha512-UQaiuH2FgOX2GI7Z2moJMdoYZS16LlrRdqS64ps74qxo8bvpsRKVgf2E1ER3fIkpz0265p03AdrXi0IgFDaVlg==}
     engines: {node: '>=18'}
 
-  commitlint@21.2.0:
-    resolution: {integrity: sha512-MCxw4QenpFaWXatU9abColk3M/8iWk055aeXTY5bS99NYOC23k3GAp6f57KXAB0P/s3R9hJjXLn5Cw2bPRO9Ow==}
+  commitlint@21.2.1:
+    resolution: {integrity: sha512-Ki6U66eL6wXsZf/is2qCs/6W2fNeF/WL2GSiacnuf2wwmCPapjtOoUvwfwMoqUAwosKbJfXVwr2iLnV08J7JmA==}
     engines: {node: '>=22.12.0'}
     hasBin: true
 
@@ -4414,8 +4410,8 @@ packages:
     resolution: {integrity: sha512-QhD/0545XRgspCcopi2d5L8ffFdiqsaqqcQfGRprv18CVH0NUQUtfORpbNqEOWwl1VxYj1pZUcVyxHTSfam1Xg==}
     engines: {node: '>=18'}
 
-  conventional-changelog-conventionalcommits@10.2.1:
-    resolution: {integrity: sha512-n4Kr1HFMTf3iMbES0TMxKIcYtUUv4rKqyQQp2JwfOEfFCOfGT3Tq4mCyJ8S9/YPyWhydjfKrrvnyl+gCjA+mJQ==}
+  conventional-changelog-conventionalcommits@10.3.0:
+    resolution: {integrity: sha512-qag0zFD867Qq1DK0jAWicyWlEMS1FFC/BLVLISaoeI7Y6Em6aWchk7BCkhOTsecRpMsV6qX41XmlNnghiiTmSw==}
     engines: {node: '>=22'}
 
   conventional-changelog-conventionalcommits@9.3.1:
@@ -4437,11 +4433,6 @@ packages:
   conventional-commits-parser@6.4.0:
     resolution: {integrity: sha512-tvRg7FIBNlyPzjdG8wWRlPHQJJHI7DylhtRGeU9Lq+JuoPh5BKpPRX83ZdLrvXuOSu5Eo/e7SzOQhU4Hd2Miuw==}
     engines: {node: '>=18'}
-    hasBin: true
-
-  conventional-commits-parser@7.0.1:
-    resolution: {integrity: sha512-6VtskFpPsNkGVk/TY2RnV/MEdKfvCPBtQZN9x8jh9+k5RWBQ+tiaWn5UFCzTr0Dd88iKx7xghxbjBRp5uIzp3g==}
-    engines: {node: '>=22'}
     hasBin: true
 
   conventional-commits-parser@7.1.2:
@@ -5015,8 +5006,8 @@ packages:
     resolution: {integrity: sha512-yPDz7wqpg1/mmHLmS3tcfTfbw5f1eryXvyghYBffGdERwe+mV7ZcWzTR8LR17Kvqt3qfPurjlonmnq3MKXIOXw==}
     engines: {node: '>= 0.4'}
 
-  es-toolkit@1.49.0:
-    resolution: {integrity: sha512-G5iZ6Pc/FNRY/soKZHC+TxGDD83rHUDXxzaWhGCX44vAv/tMs56WMusnm/KMNK+luUPsgA9U28cGr4RDlSzL2g==}
+  es-toolkit@1.50.0:
+    resolution: {integrity: sha512-OyZKhUVvEep9ITEiwHn8GKnMRQIVqoSIX7WnRbkWgJkllCujilqP2rD0u979tkl8wqyc8ICwlc1UBVv/Sl1G6w==}
 
   esbuild@0.25.0:
     resolution: {integrity: sha512-BXq5mqc8ltbaN34cDqWuYKyNhX8D/Z0J1xdtdQ8UcIIIyJyz+ZMKUt58tF3SrZ85jcfN/PZYhjR5uDQAYNVbuw==}
@@ -5592,12 +5583,6 @@ packages:
 
   git-log-parser@1.2.1:
     resolution: {integrity: sha512-PI+sPDvHXNPl5WNOErAK05s3j0lgwUzMN6o8cyQrDaKfT3qd7TmNJKeXX+SknI5I0QhG5fVPAEwSY4tRGDtYoQ==}
-
-  git-raw-commits@5.0.1:
-    resolution: {integrity: sha512-Y+csSm2GD/PCSh6Isd/WiMjNAydu0VBiG9J7EdQsNA5P9uXvLayqjmTsNlK5Gs9IhblFZqOU0yid5Il5JPoLiQ==}
-    engines: {node: '>=18'}
-    deprecated: Deprecated and no longer maintained. Use @conventional-changelog/git-client instead.
-    hasBin: true
 
   github-from-package@0.0.0:
     resolution: {integrity: sha512-SyHy3T1v2NUXn29OsWdxmK6RwHD+vkj3v8en8AOBZ1wBQ/hCAQ5bAQTD02kW4W9tUp/3Qh6J8r9EvntiyCmOOw==}
@@ -9097,6 +9082,10 @@ packages:
     resolution: {integrity: sha512-SHf/r48b7vOrjve9PxJo3MN5v5yuyjHvdUcrQffT3WXMUfnGmHDVbC4k3sHJaJTgZCwpUplIaAo5ANtMyp3YHg==}
     engines: {node: '>=18'}
 
+  tinyexec@1.3.0:
+    resolution: {integrity: sha512-QKAl9m8gWWGHV8jZcPeym6j+XULi6tOf1mT83WYJ4Lk2ytW/uwAWkrP0uFsdoYMdueVJ0qs26wZ+23xeB4ibNQ==}
+    engines: {node: '>=18'}
+
   tinyglobby@0.2.16:
     resolution: {integrity: sha512-pn99VhoACYR8nFHhxqix+uvsbXineAasWm5ojXoN8xEwK5Kd3/TrhNn1wByuD52UxWRLy8pu+kRMniEi6Eq9Zg==}
     engines: {node: '>=12.0.0'}
@@ -10314,7 +10303,7 @@ snapshots:
   '@antfu/install-pkg@1.1.0':
     dependencies:
       package-manager-detector: 1.6.0
-      tinyexec: 1.2.4
+      tinyexec: 1.3.0
 
   '@apidevtools/json-schema-ref-parser@14.2.1(@types/json-schema@7.0.15)':
     dependencies:
@@ -10948,15 +10937,15 @@ snapshots:
 
   '@colors/colors@1.6.0': {}
 
-  '@commitlint/cli@21.2.0(@types/node@26.1.2)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)':
+  '@commitlint/cli@21.2.2(@types/node@26.1.2)(conventional-commits-parser@7.1.2)(typescript@5.9.3)':
     dependencies:
-      '@commitlint/config-conventional': 21.2.0
-      '@commitlint/format': 21.2.0
-      '@commitlint/lint': 21.2.0
-      '@commitlint/load': 21.2.0(@types/node@26.1.2)(typescript@5.9.3)
-      '@commitlint/read': 21.2.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)
+      '@commitlint/config-conventional': 21.2.2
+      '@commitlint/format': 21.2.2
+      '@commitlint/lint': 21.2.2
+      '@commitlint/load': 21.2.2(@types/node@26.1.2)(typescript@5.9.3)
+      '@commitlint/read': 21.2.1(conventional-commits-parser@7.1.2)
       '@commitlint/types': 21.2.0
-      tinyexec: 1.2.4
+      tinyexec: 1.3.0
       yargs: 18.1.0
     transitivePeerDependencies:
       - '@types/node'
@@ -10969,10 +10958,10 @@ snapshots:
       '@commitlint/types': 21.2.0
       conventional-changelog-conventionalcommits: 9.3.1
 
-  '@commitlint/config-conventional@21.2.0':
+  '@commitlint/config-conventional@21.2.2':
     dependencies:
       '@commitlint/types': 21.2.0
-      conventional-changelog-conventionalcommits: 10.2.1
+      conventional-changelog-conventionalcommits: 10.3.0
 
   '@commitlint/config-validator@19.8.1':
     dependencies:
@@ -10993,7 +10982,7 @@ snapshots:
   '@commitlint/ensure@21.2.0':
     dependencies:
       '@commitlint/types': 21.2.0
-      es-toolkit: 1.49.0
+      es-toolkit: 1.50.0
 
   '@commitlint/execute-rule@19.8.1': {}
 
@@ -11002,21 +10991,21 @@ snapshots:
 
   '@commitlint/execute-rule@21.0.1': {}
 
-  '@commitlint/format@21.2.0':
+  '@commitlint/format@21.2.2':
     dependencies:
       '@commitlint/types': 21.2.0
       picocolors: 1.1.1
 
-  '@commitlint/is-ignored@21.2.0':
+  '@commitlint/is-ignored@21.2.2':
     dependencies:
       '@commitlint/types': 21.2.0
       semver: 7.8.5
 
-  '@commitlint/lint@21.2.0':
+  '@commitlint/lint@21.2.2':
     dependencies:
-      '@commitlint/is-ignored': 21.2.0
-      '@commitlint/parse': 21.2.0
-      '@commitlint/rules': 21.2.0
+      '@commitlint/is-ignored': 21.2.2
+      '@commitlint/parse': 21.2.2
+      '@commitlint/rules': 21.2.2
       '@commitlint/types': 21.2.0
 
   '@commitlint/load@19.8.1(@types/node@26.1.2)(typescript@5.9.3)':
@@ -11051,15 +11040,15 @@ snapshots:
       - typescript
     optional: true
 
-  '@commitlint/load@21.2.0(@types/node@26.1.2)(typescript@5.9.3)':
+  '@commitlint/load@21.2.2(@types/node@26.1.2)(typescript@5.9.3)':
     dependencies:
       '@commitlint/config-validator': 21.2.0
       '@commitlint/execute-rule': 21.0.1
-      '@commitlint/resolve-extends': 21.2.0
+      '@commitlint/resolve-extends': 21.2.2
       '@commitlint/types': 21.2.0
       cosmiconfig: 9.0.2(typescript@5.9.3)
       cosmiconfig-typescript-loader: 6.3.0(@types/node@26.1.2)(cosmiconfig@9.0.2(typescript@5.9.3))(typescript@5.9.3)
-      es-toolkit: 1.49.0
+      es-toolkit: 1.50.0
       is-plain-obj: 4.1.0
       picocolors: 1.1.1
     transitivePeerDependencies:
@@ -11068,18 +11057,18 @@ snapshots:
 
   '@commitlint/message@21.2.0': {}
 
-  '@commitlint/parse@21.2.0':
+  '@commitlint/parse@21.2.2':
     dependencies:
       '@commitlint/types': 21.2.0
       conventional-changelog-angular: 9.3.0
       conventional-commits-parser: 7.1.2
 
-  '@commitlint/read@21.2.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)':
+  '@commitlint/read@21.2.1(conventional-commits-parser@7.1.2)':
     dependencies:
       '@commitlint/top-level': 21.2.0
       '@commitlint/types': 21.2.0
-      git-raw-commits: 5.0.1(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)
-      tinyexec: 1.2.4
+      '@conventional-changelog/git-client': 3.1.2(conventional-commits-parser@7.1.2)
+      tinyexec: 1.3.0
     transitivePeerDependencies:
       - conventional-commits-filter
       - conventional-commits-parser
@@ -11103,15 +11092,15 @@ snapshots:
       resolve-from: 5.0.0
     optional: true
 
-  '@commitlint/resolve-extends@21.2.0':
+  '@commitlint/resolve-extends@21.2.2':
     dependencies:
       '@commitlint/config-validator': 21.2.0
       '@commitlint/types': 21.2.0
-      es-toolkit: 1.49.0
+      es-toolkit: 1.50.0
       global-directory: 5.0.0
       resolve-from: 5.0.0
 
-  '@commitlint/rules@21.2.0':
+  '@commitlint/rules@21.2.2':
     dependencies:
       '@commitlint/ensure': 21.2.0
       '@commitlint/message': 21.2.0
@@ -11137,19 +11126,16 @@ snapshots:
 
   '@commitlint/types@21.2.0':
     dependencies:
-      conventional-commits-parser: 7.0.1
+      conventional-commits-parser: 7.1.2
       picocolors: 1.1.1
 
-  '@conventional-changelog/git-client@2.7.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)':
+  '@conventional-changelog/git-client@3.1.2(conventional-commits-parser@7.1.2)':
     dependencies:
-      '@simple-libs/child-process-utils': 1.0.2
-      '@simple-libs/stream-utils': 1.2.0
+      '@simple-libs/child-process-utils': 2.0.0
+      '@simple-libs/stream-utils': 2.0.0
       semver: 7.8.5
     optionalDependencies:
-      conventional-commits-filter: 5.0.0
-      conventional-commits-parser: 6.4.0
-
-  '@conventional-changelog/template@1.2.1': {}
+      conventional-commits-parser: 7.1.2
 
   '@conventional-changelog/template@1.3.0': {}
 
@@ -13164,9 +13150,9 @@ snapshots:
     dependencies:
       '@simple-git/args-pathspec': 1.0.3
 
-  '@simple-libs/child-process-utils@1.0.2':
+  '@simple-libs/child-process-utils@2.0.0':
     dependencies:
-      '@simple-libs/stream-utils': 1.2.0
+      '@simple-libs/stream-utils': 2.0.0
 
   '@simple-libs/stream-utils@1.2.0': {}
 
@@ -14817,9 +14803,9 @@ snapshots:
     dependencies:
       '@commitlint/config-conventional': 21.0.2
 
-  commitlint@21.2.0(@types/node@26.1.2)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3):
+  commitlint@21.2.1(@types/node@26.1.2)(conventional-commits-parser@7.1.2)(typescript@5.9.3):
     dependencies:
-      '@commitlint/cli': 21.2.0(@types/node@26.1.2)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
+      '@commitlint/cli': 21.2.2(@types/node@26.1.2)(conventional-commits-parser@7.1.2)(typescript@5.9.3)
       '@commitlint/types': 21.2.0
     transitivePeerDependencies:
       - '@types/node'
@@ -14874,9 +14860,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  conventional-changelog-conventionalcommits@10.2.1:
+  conventional-changelog-conventionalcommits@10.3.0:
     dependencies:
-      '@conventional-changelog/template': 1.2.1
+      '@conventional-changelog/template': 1.3.0
 
   conventional-changelog-conventionalcommits@9.3.1:
     dependencies:
@@ -14898,11 +14884,6 @@ snapshots:
     dependencies:
       '@simple-libs/stream-utils': 1.2.0
       meow: 13.2.0
-
-  conventional-commits-parser@7.0.1:
-    dependencies:
-      '@simple-libs/stream-utils': 2.0.0
-      meow: 14.1.0
 
   conventional-commits-parser@7.1.2:
     dependencies:
@@ -15523,7 +15504,7 @@ snapshots:
       is-date-object: 1.1.0
       is-symbol: 1.1.1
 
-  es-toolkit@1.49.0: {}
+  es-toolkit@1.50.0: {}
 
   esbuild@0.25.0:
     optionalDependencies:
@@ -16267,14 +16248,6 @@ snapshots:
       stream-combiner2: 1.1.1
       through2: 2.0.5
       traverse: 0.6.8
-
-  git-raw-commits@5.0.1(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0):
-    dependencies:
-      '@conventional-changelog/git-client': 2.7.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)
-      meow: 13.2.0
-    transitivePeerDependencies:
-      - conventional-commits-filter
-      - conventional-commits-parser
 
   github-from-package@0.0.0: {}
 
@@ -17477,7 +17450,8 @@ snapshots:
 
   meow@13.2.0: {}
 
-  meow@14.1.0: {}
+  meow@14.1.0:
+    optional: true
 
   merge-stream@2.0.0: {}
 
@@ -20608,6 +20582,8 @@ snapshots:
   tinyclip@0.1.15: {}
 
   tinyexec@1.2.4: {}
+
+  tinyexec@1.3.0: {}
 
   tinyglobby@0.2.16:
     dependencies:
