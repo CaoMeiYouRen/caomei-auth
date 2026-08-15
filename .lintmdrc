@@ -1,0 +1,13 @@
+{
+    "excludeFiles": [
+        "CHANGELOG.md"
+    ],
+    "rules": {
+        "no-empty-code": 0,
+        "correct-title-trailing-punctuation": 0,
+        "no-long-code": 0,
+        "no-empty-code-lang": 0,
+        "no-empty-inline-code": 0,
+        "no-half-width-punctuation": 0
+    }
+}

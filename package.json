@@ -3,8 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "ai:check": "node scripts/ai/check-governance.mjs",
     "lint:css": "stylelint ./**/*.{css,scss,sass,vue} --fix",
     "lint:duplicate": "jscpd .",
+    "lint:md": "lint-md *.md docs/**/*.md .github/**/*.md --fix",
     "lint": "cross-env NODE_ENV=production eslint . --fix",
     "release": "semantic-release",
     "build": "nuxt build",
@@ -78,6 +80,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@lint-md/cli": "^2.2.5",
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/test-utils": "^3.23.0",
     "@primevue/nuxt-module": "^4.5.5",

@@ -1,8 +1,8 @@
-# AI 基建优化规划 (AI Infrastructure Optimization Plan)
+# AI 基建优化规划 （AI Infrastructure Optimization Plan）
 
-> 状态: `proposed`
-> 日期: 2026-08-15
-> 适用范围: 草梅 Auth 项目的 Skills / Agents / 项目规范 / i18n 规划
+> 状态： `proposed`
+> 日期： 2026-08-15
+> 适用范围： 草梅 Auth 项目的 Skills / Agents / 项目规范 / i18n 规划
 
 ## 1. 背景与目标
 
@@ -89,9 +89,9 @@
 
 ### 第四批：治理脚本与 i18n
 
-- [ ] 新增 `scripts/ai/check-governance.mjs` + `package.json` 增加 `ai:check`、`lint:md`（含 `lint-md` 依赖）
+- [x] 新增 `scripts/ai/check-governance.mjs` + `package.json` 增加 `ai:check`、`lint:md`（含 `lint-md` 依赖与 `.lintmdrc` 配置）
 - [x] 新增 `external-skills-registry.json` + `docs/standards/external-skills-intake.md`（已提前至第三批落地）
-- [ ] i18n 规划升级（见第 6 节）
+- [x] i18n 规划升级（见第 6 节）：重写 `docs/standards/i18n.md`，引入 Locale Registry、语言标识规范（纠正 better-auth 风格标识）、就绪度分级回退链、服务端装配与治理脚本规划
 
 ### 二期可选
 
@@ -145,7 +145,7 @@
 
 ## 7. 关联文档
 
-- 权威事实源: [AGENTS.md](../../../AGENTS.md)（本规划实施后）
-- 现有规范: [开发规范](../../standards/development.md) | [测试规范](../../standards/testing.md) | [国际化实施方案](../../standards/i18n.md)
-- 参考蓝本: momei `docs/standards/ai-collaboration.md` / `ai-governance.md` / `docs/design/modules/i18n.md`；dependfix `AGENTS.md`
-- 源仓库: cmyr-skills-agents `skills/` / `agents/`
+- 权威事实源： [AGENTS.md](../../../AGENTS.md)（本规划实施后）
+- 现有规范： [开发规范](../../standards/development.md) | [测试规范](../../standards/testing.md) | [国际化实施方案](../../standards/i18n.md)
+- 参考蓝本： momei `docs/standards/ai-collaboration.md` / `ai-governance.md` / `docs/design/modules/i18n.md`；dependfix `AGENTS.md`
+- 源仓库： cmyr-skills-agents `skills/` / `agents/`

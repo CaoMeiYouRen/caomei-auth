@@ -21,6 +21,7 @@ description: 驱动完整的 PDTFC 循环，负责需求分析、方案设计、
 -   **实现技能**: [Nuxt Code Editor](../../.github/skills/nuxt-code-editor/SKILL.md)、[Backend Expert](../../.github/skills/backend-expert/SKILL.md)、[Frontend Expert](../../.github/skills/frontend-expert/SKILL.md)、[DevOps Specialist](../../.github/skills/devops-specialist/SKILL.md)
 -   **质量技能**: [Quality Guardian](../../.github/skills/quality-guardian/SKILL.md)、[Code Reviewer](../../.github/skills/code-reviewer/SKILL.md)、[Test Engineer](../../.github/skills/test-engineer/SKILL.md)、[UI Validator](../../.github/skills/ui-validator/SKILL.md)
 -   **交付技能**: [Documentation Specialist](../../.github/skills/documentation-specialist/SKILL.md)、[Conventional Committer](../../.github/skills/conventional-committer/SKILL.md)
+-   **工具技能**: [GH CLI](../../.github/skills/gh-cli/SKILL.md)（涉及 GitHub 仓库、Issue、PR、Actions、Release 等操作时使用）
 
 ## 专项智能体矩阵
 
