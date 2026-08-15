@@ -31,7 +31,7 @@ metadata:
 ### P (Plan) — 需求分析与规划
 
 - 读取项目上下文与任务状态（AGENTS.md、README、package.json、todo 与验收标准）。
-- 需求模糊时交给 requirement-analyst 做最小必要澄清，不跳过。
+- 需求模糊时交给 product-manager 做最小必要澄清，不跳过。
 - 输出受影响文件清单、验证矩阵和阶段交接顺序。
 - 不在需求未收敛时启动代码改动。
 
@@ -105,7 +105,7 @@ metadata:
 
 ## Session 协议（跨 session 恢复）
 
-> 项目适配说明：草梅 Auth 目前**未启用** `.session/` 机制（列入 AI 基建优化规划二期可选）。在启用前，跳过本协议，不读写 `.session/` 目录；启用后按以下流程执行。
+本技能内化轻量 Session 感知机制，状态文件写入项目 `.session/` 目录（已在 `.gitignore` 中排除）。
 
 ### 新 Session 开局
 

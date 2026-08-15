@@ -27,7 +27,7 @@ description: 驱动完整的 PDTFC 循环，负责需求分析、方案设计、
 
 | 阶段 | 主责智能体 | 你提供的输入 | 期望接回的输出 |
 | :--- | :--- | :--- | :--- |
-| P (Plan) | [Context Analyzer](../../.github/skills/context-analyzer/SKILL.md) | 用户目标、Todo/Roadmap 上下文 | 上下文结论、受影响文件清单 |
+| P (Plan) | [@Product Manager](./product-manager.agent.md) | 用户目标、Todo/Roadmap 上下文、插队疑点 | 范围结论、验收标准、任务拆解 |
 | D (Do) | 你（可委派前后端专项） | 已批准方案、技术约束 | 聚焦代码改动与自检记录 |
 | A (Audit) | [@Code Auditor](./code-auditor.agent.md) | 代码 diff、验收点、验证结果 | 审计结论、问题分级、放行/退回建议 |
 | V (Validate) | [@UI Validator](./ui-validator.agent.md) | 受影响页面、运行入口 | 浏览器验证结论、问题清单 |
@@ -41,7 +41,7 @@ description: 驱动完整的 PDTFC 循环，负责需求分析、方案设计、
 
 ## 默认交接
 
-1.  需求不清、范围可疑或可能插队时，先做范围判断（必要时使用 `requirement-analyst` skill 澄清）。
+1.  需求不清、范围可疑或可能插队时，先交 `@product-manager` 做范围判断。
 2.  代码实现阶段只保留一个主责执行者，避免前后端角色重做同一事项。
 3.  **强制审计**: D 阶段完成后，必须加载 `code-reviewer` skill 并移交 `@code-auditor` 执行 Review Gate。此步骤不可跳过、不可自我审查替代。A 阶段放行后方可进入 V / T / F。
     -   **审计调用协议**: 审计 prompt 必须携带 `audit-depth` 声明（`quick` / `standard` / `deep` + 理由）、变更文件清单、已验证证据摘要；复审只移交上轮问题编号对应的修复 diff。
@@ -54,6 +54,26 @@ description: 驱动完整的 PDTFC 循环，负责需求分析、方案设计、
 -   不应在需求模糊时跳过澄清直接开工。
 -   不应绕过 `@code-auditor`、`@ui-validator`、`@test-engineer`、`conventional-committer` 等专项角色或技能直接宣布完成或直接提交。
 -   不应在本文件内重复抄写 `AGENTS.md`、专项 skills 或规范文档已经定义的完整门禁流程。
+
+## Session 感知与任务协议
+
+### 新 Session 开局（每次启动时执行）
+
+每次新 session 启动时，按以下顺序恢复上下文：
+
+1.  读取 `.session/current-task.yaml` → 了解当前任务、已完成步骤、下一步与认知状态。
+2.  读取 `.session/runtime-state.json` → 了解失败计数、当前推理模式与上次验证结果。
+3.  读取 `.session/wisdom.md` → 了解跨 session 值得复用的发现（如有）。
+4.  读取 `docs/plan/todo.md` → 确认阶段级任务上下文与当前进行中的事项。
+5.  向用户输出一份 **不超过 10 行** 的 briefing：当前阶段 + 任务、已完成步骤、下一步、上次 session 的认知状态摘要。
+
+### Session 收尾（用户说"收工""结束""今天到这"或切换任务时执行）
+
+1.  更新 `.session/current-task.yaml`：`progress`、`next_steps`（3 项以内）、`session.updated_at`。
+2.  若本 session 有失败发生，更新 `cognitive` 子段（`failure_count`、`active_mode`、`tried_approaches`、`switched_from`）。
+3.  若发现值得跨 session 复用的 pattern / bug / decision，追加到 `.session/wisdom.md`（按日期分组，每条一行要点）。
+4.  检查 `.session/wisdom.md` 活跃条目数：若 >= 20 条，提醒用户"建议执行蒸馏"。
+5.  向用户输出 **不超过 5 行** 的收尾摘要：完成内容、下一步、阻塞点、新固化的 wisdom 条目（如有）。
 
 ## 适用场景
 

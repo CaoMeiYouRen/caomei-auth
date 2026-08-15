@@ -36,6 +36,7 @@ node_modules
 
 /coverage
 /jscpd-report
+/.session
 .agents
 .claude
 .opencode

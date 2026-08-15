@@ -95,9 +95,9 @@
 
 ### 二期可选
 
-- [ ] `.session/` session 治理（current-task.yaml / wisdom.md / runtime-state.json + 蒸馏机制）
-- [ ] `.opencode/plugins/` session 钩子、`scripts/ai-hooks/`
-- [ ] `product-manager` agent 与 `planning.md` 规范
+- [x] `.session/` session 治理（current-task.yaml / wisdom.md / runtime-state.json，已引入；蒸馏机制简化为 wisdom 条目数提醒）
+- [ ] `.opencode/plugins/` session 钩子、`scripts/ai-hooks/`（**用户决策不引入**，保持 .session 手工维护）
+- [x] `product-manager` agent（已引入；`planning.md` 规范暂缓，待规划工作流复杂化后再补）
 
 ## 5. 各批次完成定义
 

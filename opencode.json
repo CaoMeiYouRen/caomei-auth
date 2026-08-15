@@ -13,6 +13,13 @@
             "model": "opencode-go/deepseek-v4-flash",
             "variant": "max"
         },
+        "product-manager": {
+            "mode": "subagent",
+            "description": "需求守门员，负责需求挖掘、意图抽离、范围判断、验收标准定义与路线图对齐。",
+            "prompt": "{file:.github/agents/product-manager.agent.md}",
+            "model": "opencode-go/deepseek-v4-flash",
+            "variant": "max"
+        },
         "code-auditor": {
             "mode": "subagent",
             "description": "Review Gate 负责人，对代码、文档、配置、脚本与治理定义执行结构化审查，输出 Pass/Reject 结论。",

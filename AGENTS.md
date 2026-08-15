@@ -74,7 +74,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 为了保证交付质量，任何功能开发任务必须严格遵循 PDTFC (Plan-Do-Test-Fix-Commit) 循环：
 
-1.  **P (Plan)**: 分析任务上下文（`context-analyzer` skill）；核对 `docs/plan/todo.md` 与 `docs/plan/roadmap.md` 确认规划归属；更新设计文档（`docs/design/`）；输出受影响文件清单与技术路径。
+1.  **P (Plan)**: 需求不清或可能插队时，先交 `@product-manager` 做范围判断；分析任务上下文（`context-analyzer` skill）；核对 `docs/plan/todo.md` 与 `docs/plan/roadmap.md` 确认规划归属；更新设计文档（`docs/design/`）；输出受影响文件清单与技术路径。
 2.  **D (Do)**: 使用 `nuxt-code-editor` skill 编写代码；必须阅读并严格遵守 [开发规范](./docs/standards/development.md)、[API 规范](./docs/standards/api.md) 与 [测试规范](./docs/standards/testing.md)；始终使用 TypeScript、Vue 3 Composition API、SCSS BEM 和 i18n 规范。
 3.  **T (Test)**: 运行本地测试（`pnpm test`）与 Lint 检查（`pnpm lint`、`pnpm lint:css`、`pnpm typecheck`）；复杂测试增强可移交 `@test-engineer`。
 4.  **F (Fix)**: 分析测试失败原因并修复；修复过程中如有重大逻辑变动，同步记录到 `@documentation-specialist`；同一问题修复失败 >= 2 次时，必须先触发搜索优先流程，不得用同一思路反复重试。
@@ -95,7 +95,8 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 | 智能体 | 适用场景 | 主要输出 | 必经交接点 | 不应承担 |
 | :--- | :--- | :--- | :--- | :--- |
-| `@full-stack-master` | 默认开发主责角色；驱动 PDTFC 全循环，负责需求分析、方案设计、前后端实现到测试修复和最终提交 | 全栈代码改动、测试、提交、阶段编排 | 代码落地后交 `@code-auditor` 审计；涉及界面交 `@ui-validator`；复杂测试交 `@test-engineer`；文档交 `@documentation-specialist` | 不应绕过质量审查、测试和文档收口直接宣布完成 |
+| `@product-manager` | 需求澄清、插队分流、验收标准定义、Todo/Roadmap 维护 | 范围判定、验收标准、任务拆解、规划更新 | 需求明确后交 `@full-stack-master` | 不应承担代码实现、最终审计或测试编写 |
+| `@full-stack-master` | 默认开发主责角色；驱动 PDTFC 全循环，负责需求分析、方案设计、前后端实现到测试修复和最终提交 | 全栈代码改动、测试、提交、阶段编排 | 需求不清先交 `@product-manager`；代码落地后交 `@code-auditor` 审计；涉及界面交 `@ui-validator`；复杂测试交 `@test-engineer`；文档交 `@documentation-specialist` | 不应绕过质量审查、测试和文档收口直接宣布完成 |
 | `@code-auditor` | 所有代码改动完成后的强制 Review Gate；执行结构化审查（正确性、安全、架构、规范一致性） | 审计结论（Pass/Reject）、问题分级（blocker/warning/suggest） | Pass 后才能进入提交或后续阶段；Reject 时退回对应开发者 | 不应承担需求定义、功能开发主责或测试增强主责 |
 | `@quality-guardian` | 质量检查执行者；运行类型检查、Lint、测试等质量门 | 质量检查结论、缺陷清单 | 检查通过后才能进入提交；失败时退回对应开发者 | 不应承担需求定义、功能开发主责 |
 | `@test-engineer` | 测试补强、回归验证、覆盖率提升 | 新增/修正测试、运行结果、剩余缺口 | 测试代码变更仍需交 `@code-auditor` 审看 | 不应承担需求规划、视觉验收或替代质量审计 |
@@ -105,11 +106,12 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 ### 6.1 默认推荐路径
 
-1. 代码实现阶段默认由 `@full-stack-master` 统一负责需求理解、方案设计与前后端落地。
-2. 任何代码改动收尾都必须进入 `@code-auditor` Review Gate，不能用"已本地验证"替代审计结论。
-3. 涉及实际页面或交互渲染的改动，再交 `@ui-validator` 做浏览器验证。
-4. 测试补强与回归验证由 `@test-engineer` 主责承担。
-5. 设计、规范、README 与 Plan 文档同步由 `@documentation-specialist` 承担。
+1. 需求不清、验收标准缺失或怀疑插队时，优先交给 `@product-manager` 做范围判断。
+2. 代码实现阶段默认由 `@full-stack-master` 统一负责需求理解、方案设计与前后端落地。
+3. 任何代码改动收尾都必须进入 `@code-auditor` Review Gate，不能用"已本地验证"替代审计结论。
+4. 涉及实际页面或交互渲染的改动，再交 `@ui-validator` 做浏览器验证。
+5. 测试补强与回归验证由 `@test-engineer` 主责承担。
+6. 设计、规范、README 与 Plan 文档同步由 `@documentation-specialist` 承担。
 
 ### 6.2 主定义、镜像与 Skills 复用治理
 
