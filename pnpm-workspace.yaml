@@ -16,7 +16,8 @@ minimumReleaseAgeExclude:
 # @nuxt/test-utils@4.1.0 的 setupNuxt 在测试文件 mock `#app/nuxt`（如 useRuntimeConfig）
 # 时，nuxtApp 未完整初始化导致 useRouter()/nuxtApp._route 为空而崩溃。
 # patch 内容：useRouter()?.afterEach + sync() 内 _route 判空。
-# 移除条件：上游发布修复版本（>=4.1.1）后删除本段与 patches/ 文件。
+# 移除条件：上游发布修复版本（>=4.1.1）后删除本段与 patches/ 文件，
+# 并同步移除 Dockerfile 第 10 行 COPY 指令中的 patches/。
 patchedDependencies:
   "@nuxt/test-utils@4.1.0": patches/@nuxt-test-utils@4.1.0.patch
 
