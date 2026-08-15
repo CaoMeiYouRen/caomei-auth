@@ -36,3 +36,6 @@ node_modules
 
 /coverage
 /jscpd-report
+.agents
+.claude
+.opencode
