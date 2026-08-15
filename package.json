@@ -121,7 +121,7 @@
     "vite": "^8.2.0",
     "vitepress": "^1.6.4",
     "vitest": "^4.1.10",
-    "vue-tsc": "^3.3.6"
+    "vue-tsc": "^3.3.9"
   },
   "author": "CaoMeiYouRen",
   "description": "草梅 Auth 是一个基于 Nuxt 全栈框架的统一登录平台。支持 OAuth2.0 协议，集成邮箱、用户名、手机号、验证码、社交媒体等多种登录注册方式。",
