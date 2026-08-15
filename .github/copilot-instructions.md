@@ -1,105 +1,23 @@
-# Copilot Instructions
+# GitHub Copilot Workspace Instructions
 
-## 项目规划
+本文件为 GitHub Copilot / Copilot Workspace 的适配入口，只提供最小执行门禁与平台差异说明，完整项目级规则以 [AGENTS.md](../AGENTS.md) 与 `docs/standards/` 规范文档为准。
 
-参考 [PLAN.md](../docs/PLAN.md)
+## 使用边界
 
-## 项目技术栈
+1.  先读取 [AGENTS.md](../AGENTS.md)：项目级 AI 行为准则、PDTFC 循环、角色边界与安全红线均以该文件为准。
+2.  本文件只包含 Copilot 平台的最小执行门禁，不重复编写 `AGENTS.md`、[开发规范](../docs/standards/development.md)、[API 规范](../docs/standards/api.md)、[测试规范](../docs/standards/testing.md) 中已定义的内容。
+3.  若本文件与 [AGENTS.md](../AGENTS.md) 冲突，以 [AGENTS.md](../AGENTS.md) 为准。
 
--   **框架**: 使用 [Vue 3](https://vuejs.org/) 和 [Nuxt 3](https://nuxt.com/) 构建。
--   **语言**: 使用 [TypeScript](https://www.typescriptlang.org/) 进行类型安全的开发。
--   **包管理**: 使用 [PNPM](https://pnpm.io/) 作为包管理工具。
--   **样式**: 使用 [SCSS](https://sass-lang.com/) 进行样式开发，遵循模块化和可维护性原则。
+## 最小执行门禁
 
-## 开发约定
+1.  规划准入：先读 [docs/plan/todo.md](../docs/plan/todo.md)、[docs/plan/roadmap.md](../docs/plan/roadmap.md)，确认任务归属与验收标准。
+2.  代码实现：再读 [docs/standards/development.md](../docs/standards/development.md)、[docs/standards/api.md](../docs/standards/api.md)、[docs/standards/testing.md](../docs/standards/testing.md)；UI 文本必须遵循 [国际化实施方案](../docs/standards/i18n.md)。
+3.  文档同步：涉及 README / Standards / Plan / Design 变更时，先读 [docs/standards/documentation.md](../docs/standards/documentation.md)。
+4.  默认开发路径：代码实现默认由 `@full-stack-developer` 统一负责；涉及 CI/CD、Docker 与环境配置时，遵循 [开发规范 - 技术栈指南](../docs/standards/development.md)。
+5.  提交前检查：`pnpm lint`、`pnpm lint:css`、`pnpm typecheck` 与必要的定向测试必须通过；提交消息符合 [Conventional Commits](https://www.conventionalcommits.org/) 规范且使用中文描述。
 
-1. **代码风格**:
+## 目录约定
 
-    - 遵循 [ESLint](https://eslint.org/) 和 [Stylelint](https://stylelint.io/) 的规则。
-    - 使用 `eslint-config-cmyr` 和 `stylelint-config-cmyr` 配置。
-    - 提交代码前确保通过 `lint` 检查。
-
-2. **提交规范**:
-
-    - 使用 [Commitizen](https://commitizen.github.io/cz-cli/) 和 `cz-conventional-changelog-cmyr` 规范化提交信息。
-    - 提交信息需符合 [Conventional Commits](https://www.conventionalcommits.org/) 规范。
-
-3. **分支管理**:
-
-    - 主分支为 `master`，用于发布稳定版本。
-    - 功能开发请创建独立分支，命名格式：`feature/<功能描述>`。
-
-4. **依赖管理**:
-
-    - 使用 `pnpm` 管理依赖，确保锁文件一致性。
-    - 安装依赖时运行 `pnpm install`，避免使用其他包管理工具。
-
-5. **样式开发**:
-
-    - 使用 SCSS 编写样式。
-    - 样式文件存放于 `styles` 目录。
-    - 使用 @mdi/font 图标库
-
-6. **组件开发**:
-    - 组件文件存放于 `components` 目录。
-    - 组件需遵循 Vue 3 单文件组件规范。
-    - 组件需使用 TypeScript 进行类型定义。
-
-## 常用命令
-
--   **开发环境**: `pnpm dev`
--   **构建项目**: `pnpm build`
--   **生成静态站点**: `pnpm generate`
--   **运行测试**: `pnpm test`
--   **代码检查**: `pnpm lint`
--   **提交代码**: `pnpm commit`
-
-## 目录结构
-
--   `components/`: Vue 组件目录。
--   `pages/`: Nuxt 页面目录。
--   `styles/`: 样式文件目录。
--   `public/`: 公共静态资源目录（如图片、字体等）。
--   `plugins/`: Nuxt 插件目录。
--   `store/`: 状态管理目录。
--   `utils/`: 工具函数目录（前后端通用）。
--   `server`: 服务器端代码目录（如 API 路由等）。
-    -   `server/api/`: API 路由目录。
-    -   `server/middleware/`: 服务器中间件目录。
-    -   `server/config/`: 服务器配置目录。
-    -   `server/utils/`: 服务器端工具函数目录（仅服务器端）。
-    -   `server/database/`: 数据库相关代码目录。
--   `middleware/`: 中间件目录。
--   `tests/`: 测试代码目录。
--   `config/`: 配置文件目录。
-
-## 注意事项
-
--   确保 Node.js 版本 >= 18。
--   提交代码前运行 `pnpm lint` 和 `pnpm test`，确保代码无错误。
--   遵循模块化和组件化开发原则，提升代码可维护性。
--   文件名称优先使用小写字母和连字符（kebab-case），如 `my-component.vue`。
--   使用 TypeScript 进行类型定义，确保代码的类型安全。若无必要，禁止使用 any 类型，请优先使用 unknown 和类型检查函数。
--   新增任何代码前，请先检查现有代码是否有类似功能，避免重复实现。如果已有功能，请考虑复用或扩展现有代码。
--   在添加 CSS 样式时，优先使用现有的样式变量和混合宏，以保持样式的一致性和可维护性。并且，确保样式符合项目的整体设计规范。
--   尽可能优先使用 return 来提前结束函数执行，避免不必要的逻辑判断和循环。减少函数的嵌套层级，提高代码的可读性和可维护性。
--   优先使用 utils 目录下的工具函数来处理通用逻辑，避免重复实现相同功能。确保工具函数的命名清晰且具有描述性，以便其他开发者能够快速理解其用途。
--   优先使用 package.json 中的依赖来处理项目中的功能需求，避免直接引用其他库或模块。确保依赖的版本符合项目的要求，并在更新依赖时进行充分测试。
-
--   优先使用 `navigateTo` 函数来处理页面导航，确保导航逻辑符合 Nuxt 3 的路由规范。避免直接使用 `router.push` 或其他路由方法，以保持代码的一致性和可维护性。
--   如果涉及时间、日期等相关功能，优先使用 `dayjs` 库来处理日期和时间的格式化、计算等操作。确保使用的函数符合项目的需求，并遵循一致的日期格式。仅 `new Date()` 这样极为简单的场景可以直接使用原生 JavaScript 的 `Date` 对象。
--   在处理 API 请求时，优先使用 `fetch` 库来发送 HTTP 请求。确保请求的 URL、方法和参数符合 API 规范，并在请求前进行必要的验证和处理。在 SSR 场景下，优先使用 `useFetch` 函数来处理数据获取逻辑，以确保数据的预取和缓存机制正常工作。
--   应当使用 `fs-extra` 库来处理文件系统操作，确保文件的读写、复制、删除等操作符合项目需求，并且具有良好的错误处理机制。避免使用 Node.js 原生的 `fs` 模块，除非是非常简单的文件操作场景。
--   应当使用 `google-libphonenumber` 库来处理电话号码的验证和格式化。确保电话号码符合国际标准，并在必要时进行格式转换。避免使用简单的正则表达式来验证电话号码，以确保更高的准确性和兼容性。
--   应当使用 `lodash-es` 库来处理常见的数组、对象和函数操作。确保使用的函数符合项目需求，并且具有良好的性能和可读性。避免使用原生 JavaScript 的复杂操作，除非是非常简单的场景。
--   应当使用 `logger` 模块来记录日志，确保日志信息的格式和内容符合项目规范。日志记录应包括错误、警告、信息等不同级别，并在适当的地方添加上下文信息（如用户 ID、请求路径等）。
--   其余的功能和库使用应遵循项目的整体设计原则和规范，确保代码的一致性和可维护性。
-
--   在进行代码改动前，应当评估是否会对现有功能造成影响，特别是在涉及核心功能或公共组件时。确保改动不会破坏现有的功能逻辑，并在必要时进行充分的测试和验证。如果会造成破坏，应该重新思考改动的方案。
-
--   在进行代码改动时，应当遵循最小变更原则，尽量减少对现有代码的修改范围。确保改动的代码是必要的，并且不会引入不必要的复杂性或副作用。
--   在进行代码改动时，应当考虑代码的可读性和可维护性。确保代码的逻辑清晰，命名规范，并且具有良好的注释和文档。避免过度优化或复杂化代码，保持代码的简洁性和易读性。
--   在进行代码改动时，应当进行复杂度审查，确保代码的复杂度在可接受范围内。避免过度嵌套、循环或条件判断，保持代码的平坦性和易读性。使用工具（如 ESLint）来检查代码复杂度，并在必要时进行重构。
--   在进行代码改动时，应当进行实用性评估，确保改动的代码能够满足实际需求，并且具有良好的性能和可用性。避免过度设计或实现不必要的功能，保持代码的实用性和高效性。分析这个问题是否在生产环境真实存在，分析有多少用户会遇到，解决方案的复杂度与收益是否成正比。
-
--   应当严格检查任何会有用户输入然后渲染的地方，确保对用户输入进行适当的验证和清理，以防止 XSS 攻击，确保渲染的内容安全可靠。
+1.  `.github/agents/` 与 `.github/skills/` 是 agent / skill 主定义目录。
+2.  `.claude/agents/`、`.claude/skills/`、`.opencode/agents/`、`.opencode/skills/` 与 `.agents/` 均为平台兼容镜像（以链接形式指向 `.github/` 主定义，由 `scripts/setup-ai.mjs` 维护），不得独立扩展职责边界。
+3.  如需要 GitHub Copilot 专属补充能力，只写平台差异说明与加载回退，不重复项目级规范。

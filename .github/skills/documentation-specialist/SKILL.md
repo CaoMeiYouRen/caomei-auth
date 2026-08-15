@@ -28,5 +28,5 @@ applyTo: "docs/**/*.md"
 输入: "查阅 API 设计规范关于状态码的定义。"
 动作: 读取 `docs/standards/api.md` 并提取状态码部分。
 
-输入: "更新 API 文档以包含新的文章发布接口。"
-动作: 读取 `server/api/posts/index.post.ts` 的代码逻辑，然后在 `docs/design/api.md` 中添加对应的接口描述。
+输入: "更新 API 文档以包含新的用户管理接口。"
+动作: 读取 `server/api/admin/users/index.get.ts` 的代码逻辑，然后在 `docs/api/` 下添加对应的接口描述。

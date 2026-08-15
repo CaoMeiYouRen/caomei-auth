@@ -1,0 +1,38 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "model": "opencode-go/deepseek-v4-flash",
+    "default_agent": "full-stack-developer",
+    "instructions": [
+        "AGENTS.md"
+    ],
+    "agent": {
+        "full-stack-developer": {
+            "mode": "primary",
+            "description": "默认开发主责角色，驱动 PDTFC 全循环，负责需求分析、代码编写、测试修复与最终提交。",
+            "prompt": "{file:.github/agents/full-stack-developer.agent.md}",
+            "model": "opencode-go/deepseek-v4-flash",
+            "variant": "max"
+        },
+        "quality-guardian": {
+            "mode": "subagent",
+            "description": "独立代码质量审查者（Review Gate），执行类型检查、Lint 与静态分析，输出 Pass/Reject 结论。",
+            "prompt": "{file:.github/agents/quality-guardian.agent.md}",
+            "model": "opencode-go/deepseek-v4-flash",
+            "variant": "max"
+        },
+        "test-engineer": {
+            "mode": "subagent",
+            "description": "测试主责角色，负责测试补强、回归验证与覆盖率提升。",
+            "prompt": "{file:.github/agents/test-engineer.agent.md}",
+            "model": "opencode-go/deepseek-v4-flash",
+            "variant": "max"
+        },
+        "documentation-specialist": {
+            "mode": "subagent",
+            "description": "文档资产守护者，负责设计文档、规范文档与 README/Plan 的同步维护。",
+            "prompt": "{file:.github/agents/documentation-specialist.agent.md}",
+            "model": "opencode-go/deepseek-v4-flash",
+            "variant": "medium"
+        }
+    }
+}

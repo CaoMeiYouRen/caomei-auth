@@ -20,7 +20,7 @@ description: 驱动完整的 PDTFC 循环，负责从需求分析、代码编写
 -   [开发规范](../../docs/standards/development.md): 核心原则、目录结构、技术栈指南。
 -   [API 规范](../../docs/standards/api.md): 响应格式、状态码、权限及参数校验。
 -   [测试规范](../../docs/standards/testing.md): 测试覆盖率、Vitest 配置及编写准则。
--   [UI 设计](../../docs/design/ui.md) & [API 设计](../../docs/design/api.md): 全局设计原则。
+-   [UI/UX 设计](../../docs/design/ui-ux.md) & [API 文档](../../docs/api/): 全局设计原则与接口参考。
 
 你的职责是驱动完整的 **PDTFC (Plan-Do-Test-Fix-Commit)** 循环，确保任务从需求到提交的高质量交付。
 
