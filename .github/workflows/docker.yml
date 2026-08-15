@@ -97,6 +97,8 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+          # 阿里云 ACR 拒绝 OCI provenance empty manifest（application/vnd.oci.empty.v1+json），禁用 provenance 元数据
+          provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Docker Hub README & description sync
