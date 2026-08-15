@@ -13,7 +13,7 @@
 1.  规划准入：先读 [docs/plan/todo.md](../docs/plan/todo.md)、[docs/plan/roadmap.md](../docs/plan/roadmap.md)，确认任务归属与验收标准。
 2.  代码实现：再读 [docs/standards/development.md](../docs/standards/development.md)、[docs/standards/api.md](../docs/standards/api.md)、[docs/standards/testing.md](../docs/standards/testing.md)；UI 文本必须遵循 [国际化实施方案](../docs/standards/i18n.md)。
 3.  文档同步：涉及 README / Standards / Plan / Design 变更时，先读 [docs/standards/documentation.md](../docs/standards/documentation.md)。
-4.  默认开发路径：代码实现默认由 `@full-stack-developer` 统一负责；涉及 CI/CD、Docker 与环境配置时，遵循 [开发规范 - 技术栈指南](../docs/standards/development.md)。
+4.  默认开发路径：代码实现默认由 `@full-stack-master` 统一负责；涉及 CI/CD、Docker 与环境配置时，遵循 [开发规范 - 技术栈指南](../docs/standards/development.md)。
 5.  提交前检查：`pnpm lint`、`pnpm lint:css`、`pnpm typecheck` 与必要的定向测试必须通过；提交消息符合 [Conventional Commits](https://www.conventionalcommits.org/) 规范且使用中文描述。
 
 ## 目录约定

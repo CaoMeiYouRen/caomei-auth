@@ -78,7 +78,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 2.  **D (Do)**: 使用 `nuxt-code-editor` skill 编写代码；必须阅读并严格遵守 [开发规范](./docs/standards/development.md)、[API 规范](./docs/standards/api.md) 与 [测试规范](./docs/standards/testing.md)；始终使用 TypeScript、Vue 3 Composition API、SCSS BEM 和 i18n 规范。
 3.  **T (Test)**: 运行本地测试（`pnpm test`）与 Lint 检查（`pnpm lint`、`pnpm lint:css`、`pnpm typecheck`）；复杂测试增强可移交 `@test-engineer`。
 4.  **F (Fix)**: 分析测试失败原因并修复；修复过程中如有重大逻辑变动，同步记录到 `@documentation-specialist`；同一问题修复失败 >= 2 次时，必须先触发搜索优先流程，不得用同一思路反复重试。
-5.  **C (Commit)**: 提交前必须通过 `@quality-guardian` 质量核查（`pnpm typecheck`、`pnpm lint`、`pnpm lint:css`），严禁在存在类型错误或 Lint 警告的情况下提交；调用 `conventional-committer` skill 生成符合 Conventional Commits 规范的提交信息；确保 `@documentation-specialist` 已完成文档补全。
+5.  **C (Commit)**: 提交前必须通过 `@code-auditor` Review Gate 放行，并经 `@quality-guardian` 质量核查（`pnpm typecheck`、`pnpm lint`、`pnpm lint:css`），严禁在存在类型错误或 Lint 警告的情况下提交；调用 `conventional-committer` skill 生成符合 Conventional Commits 规范的提交信息；确保 `@documentation-specialist` 已完成文档补全。
 
 ### 5.1 迭代中途发现事项处理规则
 
@@ -95,17 +95,21 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 | 智能体 | 适用场景 | 主要输出 | 必经交接点 | 不应承担 |
 | :--- | :--- | :--- | :--- | :--- |
-| `@full-stack-developer` | 默认开发主责角色；驱动 PDTFC 全循环，负责需求分析、代码编写到测试修复和最终提交 | 全栈代码改动、测试、提交 | 代码落地后交 `@quality-guardian` 审查；复杂测试交 `@test-engineer`；文档交 `@documentation-specialist` | 不应绕过质量审查、测试和文档收口直接宣布完成 |
-| `@quality-guardian` | 独立代码质量审查者（Review Gate）；执行类型检查、Lint 和静态分析 | 质量核查结论、缺陷清单 | Pass 后才能进入提交；Reject 时退回对应开发者 | 不应承担需求定义、功能开发主责 |
-| `@test-engineer` | 测试补强、回归验证、覆盖率提升 | 新增/修正测试、运行结果、剩余缺口 | 测试代码变更仍需交 `@quality-guardian` 审看 | 不应承担需求规划、视觉验收或替代质量审计 |
+| `@full-stack-master` | 默认开发主责角色；驱动 PDTFC 全循环，负责需求分析、方案设计、前后端实现到测试修复和最终提交 | 全栈代码改动、测试、提交、阶段编排 | 代码落地后交 `@code-auditor` 审计；涉及界面交 `@ui-validator`；复杂测试交 `@test-engineer`；文档交 `@documentation-specialist` | 不应绕过质量审查、测试和文档收口直接宣布完成 |
+| `@code-auditor` | 所有代码改动完成后的强制 Review Gate；执行结构化审查（正确性、安全、架构、规范一致性） | 审计结论（Pass/Reject）、问题分级（blocker/warning/suggest） | Pass 后才能进入提交或后续阶段；Reject 时退回对应开发者 | 不应承担需求定义、功能开发主责或测试增强主责 |
+| `@quality-guardian` | 质量检查执行者；运行类型检查、Lint、测试等质量门 | 质量检查结论、缺陷清单 | 检查通过后才能进入提交；失败时退回对应开发者 | 不应承担需求定义、功能开发主责 |
+| `@test-engineer` | 测试补强、回归验证、覆盖率提升 | 新增/修正测试、运行结果、剩余缺口 | 测试代码变更仍需交 `@code-auditor` 审看 | 不应承担需求规划、视觉验收或替代质量审计 |
+| `@ui-validator` | 页面可视化变更后的浏览器验证、响应式/主题验证 | 验证记录、截图/结论、回退问题清单 | UI 通过后交 `@test-engineer` 或回到开发者修复 | 不应承担业务逻辑实现、产品规划或替代自动化测试 |
+| `@qa-assistant` | 只读问答、代码/文档检索、架构解释 | 证据化回答、定位结果、推荐阅读路径 | 如需修改代码或文档，转交对应执行角色 | 严禁修改代码、配置或规划文档 |
 | `@documentation-specialist` | 设计文档、规范文档、README/Plan 同步维护 | 文档更新、同步说明 | 规划类文档与开发结论对齐 | 不应虚构未实现能力或替代产品验收 |
 
 ### 6.1 默认推荐路径
 
-1. 代码实现阶段默认由 `@full-stack-developer` 统一负责需求理解、方案设计与前后端落地。
-2. 任何代码改动收尾都必须进入 `@quality-guardian` 质量核查，不能用"已本地验证"替代核查结论。
-3. 测试补强与回归验证由 `@test-engineer` 主责承担。
-4. 设计、规范、README 与 Plan 文档同步由 `@documentation-specialist` 承担。
+1. 代码实现阶段默认由 `@full-stack-master` 统一负责需求理解、方案设计与前后端落地。
+2. 任何代码改动收尾都必须进入 `@code-auditor` Review Gate，不能用"已本地验证"替代审计结论。
+3. 涉及实际页面或交互渲染的改动，再交 `@ui-validator` 做浏览器验证。
+4. 测试补强与回归验证由 `@test-engineer` 主责承担。
+5. 设计、规范、README 与 Plan 文档同步由 `@documentation-specialist` 承担。
 
 ### 6.2 主定义、镜像与 Skills 复用治理
 
@@ -134,7 +138,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 1. **必须使用 `conventional-committer` skill**：任何代码、文档、配置或脚本的提交都必须通过 `conventional-committer` skill 执行。禁止直接使用 `git commit -m "..."` 裸提交。
 2. **格式要求**：提交消息必须符合 Conventional Commits 规范（`type(scope): description`），且 `description` 统一使用**中文或用户使用的语言**。
-3. **质量前置**：提交前必须确认 `@quality-guardian` 质量核查已通过，且 `pnpm lint`、`pnpm typecheck` 和必要的定向测试均已通过。质量门禁未通过时不得提交。
+3. **质量前置**：提交前必须确认 `@code-auditor` Review Gate 已放行、`@quality-guardian` 质量核查已通过，且 `pnpm lint`、`pnpm typecheck` 和必要的定向测试均已通过。质量门禁未通过时不得提交。
 4. **原子粒度**：一个提交对应一个逻辑变更，关联且仅关联 `docs/plan/todo.md` 中的一个原子条目。
 5. **推送禁令**：`git commit` 后不得自动执行 `git push`，推送仅限用户明确要求时执行。提交完成后应告知用户"已提交到本地，等待推送确认"。
 6. **提交钩子**：提交必须通过 husky 钩子（commitlint / lint-staged），禁止使用 `--no-verify` 跳过。

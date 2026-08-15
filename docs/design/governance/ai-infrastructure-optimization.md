@@ -74,10 +74,10 @@
 
 ### 第二批：技能与角色
 
-- [ ] 从 cmyr-skills-agents 同步 6 个现有 skill 为新格式，升级为项目适配版（补 `metadata.internal`）
-- [ ] 精选引入新 skills（约 10-12 个）：
+- [x] 从 cmyr-skills-agents 同步 6 个现有 skill 为新格式，升级为项目适配版（补 `metadata.internal`）
+- [x] 精选引入新 skills（约 10-12 个）：
     `frontend-expert`、`backend-expert`、`devops-specialist`、`technical-architect`、`requirement-analyst`、`security-guardian`、`code-reviewer`、`ui-validator`、`qa-assistant`、`gh-cli`、`full-stack-master`
-- [ ] Agents 升级：`full-stack-developer` → `full-stack-master`；新增 `code-auditor`、`ui-validator`、`qa-assistant`（+ 可选 `product-manager`）
+- [x] Agents 升级：`full-stack-developer` → `full-stack-master`；新增 `code-auditor`、`ui-validator`、`qa-assistant`（`product-manager` 留待二期评估）
 
 ### 第三批：规范文档
 

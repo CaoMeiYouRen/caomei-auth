@@ -1,28 +1,64 @@
 ---
 name: conventional-committer
-description: 暂存更改并生成符合 Conventional Commits 规范的提交消息。
-version: 1.0.0
-author: GitHub Copilot
-tools: ["terminal"]
+description: 需要生成 Conventional Commit 提交消息并执行单次提交时使用。适用于 feat、fix、docs、refactor、test、build、ci、chore 等常规提交场景。先检查质量门，再分析 diff，再生成符合 commitlint 预期的消息。
+
+metadata:
+  internal: true
 ---
 
-# Conventional Committer Skill (规范提交技能)
+# Conventional Committer
 
-## 能力 (Capabilities)
+铁律：不要在不了解本次实际变更范围和质量状态的前提下直接 git add . 然后提交。
 
--   **暂存 (Staging)**: 将修改后的文件添加到 git 暂存区。
--   **消息生成**: 创建遵循 `type(scope): description` 格式的提交消息 (例如: `feat(auth): add login page`)。
--   **提交 (Committing)**: 执行 `git commit`。
+## 工作流
 
-## 指令 (Instructions)
+- [ ] Step 1: 确认是否允许提交 ⚠️ REQUIRED
+	- [ ] 1.1 检查用户是否明确要求提交。
+	- [ ] 1.2 确认质量检查已经完成，或明确告知仍有风险。
+- [ ] Step 2: 审视变更范围 ⚠️ REQUIRED
+	- [ ] 2.1 查看 git status 和 diff，识别应该提交的文件。
+	- [ ] 2.2 排除临时文件、生成物和无关改动。
+- [ ] Step 3: 生成提交消息
+	- [ ] 3.1 先判断 type，再决定是否需要 scope。
+	- [ ] 3.2 描述聚焦“为什么”和“本次改了什么”，保持简洁可读。
+- [ ] Step 4: 执行提交 (conditional)
+	- [ ] 4.1 只有在用户明确允许时才执行 git add / git commit。
+	- [ ] 4.2 提交后复查消息是否符合 commitlint 习惯。
+	- [ ] 4.3 若环境中的 husky hook 依赖旧版 Node 或工具链不兼容，使用 `--no-verify` 跳过 hook（如 `git commit --no-verify -m "..."`）。仅在已知 hook 不兼容当前环境时使用，不可滥用。
+	- [ ] 4.4 依赖类批量修复统一使用中文格式：`chore(deps): xxx`，让提交消息能跨项目复用。
 
-1.  **提交前检查**: 在执行任何 git 提交操作前，确认 `@quality-guardian` 已经通过了 `pnpm typecheck` 和 `pnpm lint`。如果尚未执行，应提示 Agent 或用户先完成质量核查。
-2.  **验证状态**: 检查 `git status` 查看哪些内容需要暂存。
-3.  **生成消息**: 分析更改以确定 `type` (feat, fix, docs, style, refactor, test, perf, build, ci, chore, revert), `scope` (可选, 例如: 组件名, 模块) 和 `description`。
-4.  **提交**: 运行 `git commit -m "..."`。
-5.  **验证**: 确保消息符合 `commitlint.config.ts`。
+## 常见 type
 
-## 使用示例 (Usage Example)
+- feat
+- fix
+- docs
+- refactor
+- test
+- build
+- ci
+- chore
+- perf
+- revert
 
-输入: "提交新的用户资料功能。"
-动作: `git add .`, 分析变更, 生成消息 `feat(user): 实现带有头像上传功能的用户个人资料页面`, `git commit`。
+## 反模式
+
+- 不看 diff，直接用模糊消息如 update files。
+- 把多类变更混成一个没有 scope 的提交。
+- 在质量检查未完成时默认提交。
+- 在 husky hook 兼容的环境下滥用 `--no-verify`，跳过了本应生效的检查。
+
+## 交付前检查
+
+- [ ] 已确认本次允许提交。
+- [ ] 暂存范围只包含相关变更。
+- [ ] 提交消息符合 Conventional Commits 语义。
+- [ ] 已说明任何未完成的质量风险。
+
+
+
+
+
+
+
+
+

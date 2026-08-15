@@ -1,28 +1,62 @@
 ---
 name: context-analyzer
-description: 分析项目上下文、Nuxt 3 结构和依赖项，用于规划和调试。
-version: 1.0.0
-author: GitHub Copilot
-applyTo: "**/*.{ts,vue,json,md}"
+description: 在动手规划、修改、调试或回答复杂项目问题前使用。用于快速扫描项目结构、依赖、约束文档、关键文件和调用链，输出任务相关上下文，而不是直接改代码。用户提到 analyze context、scan repo、understand project、定位实现、找规范、排查调用链时都应触发。
+
+metadata:
+  internal: true
 ---
 
-# Context Analyzer Skill (上下文分析技能)
+# Context Analyzer
 
-## 能力 (Capabilities)
+铁律：在没有建立最小充分上下文前，不要直接下结论，更不要直接修改代码。
 
--   **项目结构分析**: 理解 Nuxt 3/4 目录约定 (`server/api`, `components`, `pages`)。
--   **符号解析**: 定位组件、自动导入的可组合函数 (composables) 和 TypeORM 实体的定义 (通常在 `server/entities`)。
--   **依赖检查**: 读取 `package.json` 以验证已安装的包和版本。
+## 工作流
 
-## 指令 (Instructions)
+- [ ] Step 1: 先扫结构 ⚠️ REQUIRED
+	- [ ] 1.1 查看根目录、关键子目录和配置文件。
+	- [ ] 1.2 忽略构建产物与依赖目录，聚焦真实源码和文档。
+- [ ] Step 2: 自动发现约束文档 ⚠️ REQUIRED
+	- [ ] 2.1 优先读根目录文档、AGENTS.md、README、贡献与安全文档。
+	- [ ] 2.2 如果存在 docs/、.github/ 或特定规范文件，再按主题补读。
+- [ ] Step 3: 锁定任务相关代码
+	- [ ] 3.1 用文件名、符号名、配置项和调用链缩小范围。
+	- [ ] 3.2 识别入口、核心模块、依赖边界和风险区域。
+- [ ] Step 4: 输出上下文摘要
+	- [ ] 4.1 给出关键文件、已知约束、未知点和下一步建议。
+	- [ ] 4.2 区分“已确认事实”和“待验证假设”。
 
-1.  **读取结构**: 使用目录列表工具了解布局，忽略 `node_modules` 和 `.output`。
-2.  **识别后端目录**: 将 `server/` 识别为后端逻辑，包含 API (`server/api`), 实体 (`server/entities`), 工具库 (`server/utils`) 和数据库配置 (`server/database`)。
-3.  **识别前端目录**: 将 `pages`/`components`/`composables`/`layouts` 识别为前端。
-4.  **追踪逻辑**: 广泛搜索符号定义，以理解数据如何在后端实体 (Entities) 和前端组件 (Components) 之间流动。
-5.  **依赖项**: 在建议导入之前检查 `package.json` 以了解可用的库 (如 `dayjs`, `lodash-es`, `fs-extra`)。
+## 输出目标
 
-## 使用示例 (Usage Example)
+- 任务相关文件清单。
+- 需要遵循的规范来源。
+- 关键数据流、依赖和调用链摘要。
+- 仍然缺失的信息和最小下一步。
 
-输入: "分析当前的用户认证流程。"
-动作: 读取 `server/api/auth/*`, `lib/auth.ts`, `middleware/auth.global.ts` 和 `pages/login.vue` 来映射流程。
+## 常见项目切入点
+
+- package.json：确认脚本、依赖和实际工具链。
+- server/api、pages、components、composables：判断前后端边界与调用链。
+- lib/auth.ts、lib/auth-client.ts、middleware/auth.global.ts、server/api/auth/*：排查认证与权限流时优先检查。
+- README、AGENTS.md、CONTRIBUTING.md、SECURITY.md：优先提取项目规则与协作约束。
+
+## 反模式
+
+- 把仓库里所有文件都读一遍，导致分析失焦。
+- 看到相似文件名就假定实现细节一致。
+- 不区分事实和猜测，直接给出实现建议。
+
+## 交付前检查
+
+- [ ] 已定位任务相关文件，而不是泛泛而谈。
+- [ ] 已优先扫描实际存在的规范文档。
+- [ ] 已把结论、证据和未知点分开表述。
+- [ ] 输出足以支撑下一步规划或实现。
+
+
+
+
+
+
+
+
+

@@ -1,21 +1,28 @@
 {
     "$schema": "https://opencode.ai/config.json",
     "model": "opencode-go/deepseek-v4-flash",
-    "default_agent": "full-stack-developer",
+    "default_agent": "full-stack-master",
     "instructions": [
         "AGENTS.md"
     ],
     "agent": {
-        "full-stack-developer": {
+        "full-stack-master": {
             "mode": "primary",
-            "description": "默认开发主责角色，驱动 PDTFC 全循环，负责需求分析、代码编写、测试修复与最终提交。",
-            "prompt": "{file:.github/agents/full-stack-developer.agent.md}",
+            "description": "默认开发主责角色，驱动 PDTFC 全循环，负责需求分析、方案设计、前后端实现与最终提交。",
+            "prompt": "{file:.github/agents/full-stack-master.agent.md}",
+            "model": "opencode-go/deepseek-v4-flash",
+            "variant": "max"
+        },
+        "code-auditor": {
+            "mode": "subagent",
+            "description": "Review Gate 负责人，对代码、文档、配置、脚本与治理定义执行结构化审查，输出 Pass/Reject 结论。",
+            "prompt": "{file:.github/agents/code-auditor.agent.md}",
             "model": "opencode-go/deepseek-v4-flash",
             "variant": "max"
         },
         "quality-guardian": {
             "mode": "subagent",
-            "description": "独立代码质量审查者（Review Gate），执行类型检查、Lint 与静态分析，输出 Pass/Reject 结论。",
+            "description": "独立代码质量审查者，执行类型检查、Lint 与静态分析，输出 Pass/Reject 结论。",
             "prompt": "{file:.github/agents/quality-guardian.agent.md}",
             "model": "opencode-go/deepseek-v4-flash",
             "variant": "max"
@@ -26,6 +33,19 @@
             "prompt": "{file:.github/agents/test-engineer.agent.md}",
             "model": "opencode-go/deepseek-v4-flash",
             "variant": "max"
+        },
+        "ui-validator": {
+            "mode": "subagent",
+            "description": "浏览器验证角色，负责在真实渲染环境中确认 UI 变更的可用性、响应式与主题表现。",
+            "prompt": "{file:.github/agents/ui-validator.agent.md}",
+            "model": "opencode-go/deepseek-v4-flash"
+        },
+        "qa-assistant": {
+            "mode": "subagent",
+            "description": "只读问答角色，负责基于现有代码和文档回答问题、定位信息并解释架构。严禁修改代码。",
+            "prompt": "{file:.github/agents/qa-assistant.agent.md}",
+            "model": "opencode-go/deepseek-v4-flash",
+            "variant": "low"
         },
         "documentation-specialist": {
             "mode": "subagent",
