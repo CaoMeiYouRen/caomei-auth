@@ -46,6 +46,11 @@
 |------|------|
 | [AGENTS.md](./AGENTS.md) | 唯一权威事实源：角色矩阵、PDTFC 循环、安全红线、提交规范 |
 | [开发规范](./docs/standards/development.md) | 开发规范、技术栈指南、代码生成准则 |
+| [API 规范](./docs/standards/api.md) | API 响应格式、状态码、权限与校验 |
 | [测试规范](./docs/standards/testing.md) | 测试规范 |
+| [AI 协作规范](./docs/standards/ai-collaboration.md) | PDTFC 流程细节、验证分级矩阵、Review Gate 协议 |
+| [AI 资产治理规范](./docs/standards/ai-governance.md) | Skills / Agents 镜像与生命周期治理 |
+| [Git 规范](./docs/standards/git.md) | 分支、提交与推送规范 |
+| [安全规范](./docs/standards/security.md) | 安全红线实施细则 |
 | [国际化实施方案](./docs/standards/i18n.md) | i18n 规划 |
 | [AI 基建优化规划](./docs/design/governance/ai-infrastructure-optimization.md) | Skills / Agents / 规范体系演进规划 |

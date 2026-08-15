@@ -81,15 +81,16 @@
 
 ### 第三批：规范文档
 
-- [ ] 新增 `docs/standards/ai-collaboration.md`（PDTFC 流程细节 + 验证矩阵，按本项目规模精简）
-- [ ] 新增 `docs/standards/ai-governance.md`（镜像治理 + 生命周期）
-- [ ] 新增 `docs/standards/git.md`、`docs/standards/security.md`（dependfix 版本精简）
-- [ ] 新增 `docs/standards/api.md`（或调整引用指向 `docs/api/`）
+- [x] 新增 `docs/standards/ai-collaboration.md`（PDTFC 流程细节 + 验证矩阵，按本项目规模精简）
+- [x] 新增 `docs/standards/ai-governance.md`（镜像治理 + 生命周期）
+- [x] 新增 `docs/standards/git.md`、`docs/standards/security.md`（dependfix 版本精简）
+- [x] 新增 `docs/standards/api.md`（基于实际 handler 契约，第一批已随死链修复落地）
+- [x] 新增 `docs/standards/external-skills-intake.md` + `.github/external-skills-registry.json`（配套 ai-governance 引用，提前至本批落地）
 
 ### 第四批：治理脚本与 i18n
 
 - [ ] 新增 `scripts/ai/check-governance.mjs` + `package.json` 增加 `ai:check`、`lint:md`（含 `lint-md` 依赖）
-- [ ] 新增 `external-skills-registry.json` + `docs/standards/external-skills-intake.md`
+- [x] 新增 `external-skills-registry.json` + `docs/standards/external-skills-intake.md`（已提前至第三批落地）
 - [ ] i18n 规划升级（见第 6 节）
 
 ### 二期可选

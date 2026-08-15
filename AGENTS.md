@@ -152,7 +152,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 ## 9. 相关文档
 
 -   **规划**: [项目路线图](./docs/plan/roadmap.md) | [待办事项](./docs/plan/todo.md) | [AI 基建优化规划](./docs/design/governance/ai-infrastructure-optimization.md)
--   **规范**: [开发规范](./docs/standards/development.md) | [API 规范](./docs/standards/api.md) | [测试规范](./docs/standards/testing.md) | [文档规范](./docs/standards/documentation.md) | [国际化实施方案](./docs/standards/i18n.md)
+-   **规范**: [开发规范](./docs/standards/development.md) | [API 规范](./docs/standards/api.md) | [测试规范](./docs/standards/testing.md) | [文档规范](./docs/standards/documentation.md) | [国际化实施方案](./docs/standards/i18n.md) | [Git 规范](./docs/standards/git.md) | [安全规范](./docs/standards/security.md) | [AI 协作规范](./docs/standards/ai-collaboration.md) | [AI 资产治理规范](./docs/standards/ai-governance.md) | [外部 Skills 准入清单](./docs/standards/external-skills-intake.md)
 -   **设计**: [架构设计](./docs/design/architecture.md) | [UI/UX 设计](./docs/design/ui-ux.md) | [数据库设计](./docs/design/database.md)
 -   **API 参考**: [API 文档](./docs/api/)
 -   **适配与入口**: [Claude 适配说明](./CLAUDE.md) | [Copilot 指令](./.github/copilot-instructions.md) | [项目主页入口](./README.md)

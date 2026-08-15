@@ -1,0 +1,68 @@
+[
+    {
+        "id": "nuxt",
+        "displayName": "nuxt",
+        "sourceType": "user-profile-skill",
+        "sourcePath": "%USERPROFILE%/.copilot/skills/nuxt/SKILL.md",
+        "syncAddress": "%USERPROFILE%/.copilot/skills/nuxt/",
+        "updateCadence": "每月一次，或 Nuxt 主版本 / skill 文本显著变化后复核",
+        "failurePolicy": "若本地 skill 缺失、描述过时或与当前 Nuxt 事实不符，则降级到官方文档与 Context7，不镜像入库。",
+        "internalizationThreshold": "当同类任务连续 3 次以上依赖该 skill 且需要补充项目特化规则时，转为内部 skill 或并入现有内部定义。",
+        "adoptedFor": "Nuxt 应用结构、server routes、useFetch、middleware、SSR / SSG 混合场景"
+    },
+    {
+        "id": "vue",
+        "displayName": "vue",
+        "sourceType": "user-profile-skill",
+        "sourcePath": "%USERPROFILE%/.copilot/skills/vue/SKILL.md",
+        "syncAddress": "%USERPROFILE%/.copilot/skills/vue/",
+        "updateCadence": "每月一次，或 Vue 3 组合式 API 最佳实践发生明显变化后复核",
+        "failurePolicy": "若 skill 与项目既有 `<script setup lang=\"ts\">` 规范冲突，则以项目规范和官方文档为准，不直接吸收入库。",
+        "internalizationThreshold": "当需要补充本项目 i18n、BEM、Nuxt 目录约束等项目特化内容时，合并进内部前端类 skill。",
+        "adoptedFor": "Vue 3 组件、组合式 API、宏语法、内置组件与响应式模型"
+    },
+    {
+        "id": "vue-best-practices",
+        "displayName": "vue-best-practices",
+        "sourceType": "user-profile-skill",
+        "sourcePath": "%USERPROFILE%/.copilot/skills/vue-best-practices/SKILL.md",
+        "syncAddress": "%USERPROFILE%/.copilot/skills/vue-best-practices/",
+        "updateCadence": "每两个月一次，或 Volar / vue-tsc / Vue 官方推荐范式变化后复核",
+        "failurePolicy": "若建议与项目既有 Nuxt 约束重复或冲突，仅保留参考，不直接复制到仓库镜像。",
+        "internalizationThreshold": "当外部最佳实践需要稳定沉淀为本项目 Vue 编码准则时，优先并入 nuxt-code-editor 或前端类 skill。",
+        "adoptedFor": "Vue 代码风格审校、组合式 API 约束、TypeScript 与 SSR 兼容建议"
+    },
+    {
+        "id": "vitest",
+        "displayName": "vitest",
+        "sourceType": "user-profile-skill",
+        "sourcePath": "%USERPROFILE%/.copilot/skills/vitest/SKILL.md",
+        "syncAddress": "%USERPROFILE%/.copilot/skills/vitest/",
+        "updateCadence": "每月一次，或 Vitest 重大版本变更后复核",
+        "failurePolicy": "若外部 skill 的运行方式与本项目测试预算、目录规范冲突，则以测试规范和现有 test-engineer 为准。",
+        "internalizationThreshold": "当需要反复补充本项目的测试预算、目录约束和回归模板时，沉淀到内部 test-engineer references。",
+        "adoptedFor": "Vitest 定向运行、mock、coverage、fixture 与 Jest 兼容 API"
+    },
+    {
+        "id": "vitepress",
+        "displayName": "vitepress",
+        "sourceType": "user-profile-skill",
+        "sourcePath": "%USERPROFILE%/.copilot/skills/vitepress/SKILL.md",
+        "syncAddress": "%USERPROFILE%/.copilot/skills/vitepress/",
+        "updateCadence": "每两个月一次，或文档站目录 / 主题配置出现结构性调整后复核",
+        "failurePolicy": "若外部 skill 未覆盖本项目 docs 规范或 sidebar 约束，则只作为补充参考。",
+        "internalizationThreshold": "当文档站改造频繁复用该 skill 且需要长期维护项目 rewrites / sidebar 规则时，转为内部文档治理能力。",
+        "adoptedFor": "VitePress 站点配置、导航 / 侧边栏维护、Markdown 页面生成"
+    },
+    {
+        "id": "pnpm",
+        "displayName": "pnpm",
+        "sourceType": "user-profile-skill",
+        "sourcePath": "%USERPROFILE%/.copilot/skills/pnpm/SKILL.md",
+        "syncAddress": "%USERPROFILE%/.copilot/skills/pnpm/",
+        "updateCadence": "每两个月一次，或 lockfile / workspace / overrides 策略调整后复核",
+        "failurePolicy": "若外部 skill 建议与本项目既有依赖审计、冻结安装或 workspace 约束不一致，则以项目脚本与安全规范为准。",
+        "internalizationThreshold": "当依赖治理、workspace 约束与发版前校验出现稳定复用需求时，沉淀到内部治理能力。",
+        "adoptedFor": "pnpm workspace、frozen lockfile、依赖管理与 lockfile 治理"
+    }
+]
