@@ -23,3 +23,9 @@
 ### 5. [特殊模式设计](./demo-mode)
 
 有关演示模式 (Demo Mode) 的实现方案，包括数据拦截与仿真逻辑。
+
+### 6. [治理与规划 (Governance)](./governance)
+
+AI 基建、依赖治理、架构演进等决策与规划文档。
+
+-   [AI 基建优化规划](./governance/ai-infrastructure-optimization.md): Skills / Agents / 项目规范 / i18n 规划的评估与分批复核清单。
