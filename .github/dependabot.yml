@@ -7,6 +7,44 @@ updates:
       interval: monthly
       time: "03:00"
       timezone: Asia/Shanghai
+    groups:
+      # PrimeVue 生态（primevue / @primevue/* / @primeuix/*）是配套发布的多包体系，
+      # core/forms/themes/styles/styled/utils 必须版本同步，拆开独立升级会造成跨 major 混装
+      # （2026-07 dependabot 曾独立把 core 升到 5.0.0 导致生产运行时崩溃，见 fix(deps) d080bf3）。
+      # 4.x 线内的 minor/patch 更新合并为一个 PR，保持生态版本对齐。
+      primevue-ecosystem:
+        applies-to: version-updates
+        patterns:
+          - "primevue"
+          - "@primevue/*"
+          - "@primeuix/*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # PrimeVue v4 线锁定：忽略 v5 生态的 major 版本，防止 dependabot 再次独立拆分升级造成
+      # 跨 major 错配（v4 ↔ v5 对应关系：primevue 4.x ↔ core/forms 4.x ↔ styles/themes 2.x
+      # ↔ styled 0.7.x ↔ utils 0.6.x；v5 线对应 5.x / 3.x / 1.x / 0.8.x，utils 0.7.x 为 v5 过渡线一并拦截）。
+      # 整体迁移 primevue 5.x 时删除本段，并同步核对生态全部包版本。
+      # 注意：本段同时作用于安全更新——v5 线专属安全修复不会自动出 PR，
+      # 由 Dependabot alerts + security-alert-remediator 流程兜底；
+      # 新增 @primevue/* 或 @primeuix/* 直接依赖时，需同步补充对应 ignore 条目。
+      - dependency-name: "primevue"
+        versions: [">=5.0.0"]
+      - dependency-name: "@primevue/core"
+        versions: [">=5.0.0"]
+      - dependency-name: "@primevue/forms"
+        versions: [">=5.0.0"]
+      - dependency-name: "@primevue/nuxt-module"
+        versions: [">=5.0.0"]
+      - dependency-name: "@primeuix/styles"
+        versions: [">=3.0.0"]
+      - dependency-name: "@primeuix/themes"
+        versions: [">=3.0.0"]
+      - dependency-name: "@primeuix/styled"
+        versions: [">=1.0.0"]
+      - dependency-name: "@primeuix/utils"
+        versions: [">=0.7.0"]
   - package-ecosystem: github-actions
     directory: /
     open-pull-requests-limit: 20
