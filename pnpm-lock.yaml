@@ -80,8 +80,8 @@ importers:
         specifier: ^3.1076.0
         version: 3.1076.0
       '@axiomhq/winston':
-        specifier: ^1.8.0
-        version: 1.8.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@better-auth/sso':
         specifier: 1.6.11
         version: 1.6.11(@better-auth/core@1.6.22(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.4.3))(jose@6.2.4)(kysely@0.28.17)(nanostores@1.4.1))(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(better-auth@1.6.22(@opentelemetry/api@1.9.1)(better-sqlite3@12.11.1)(mysql2@3.23.3(@types/node@26.1.2))(pg@8.22.0)(vitest@4.1.10)(vue@3.5.41(typescript@5.9.3)))(better-call@1.3.7(zod@4.4.3))
@@ -576,12 +576,12 @@ packages:
     resolution: {integrity: sha512-sl4Bm6yiMNYrZKkqqDFWN0UfnWhlS8ivKxrYl+6t0gCLrqr8y3B2IqZZbFRkfaVVp7C/baApyh71P+LeE1A2sQ==}
     engines: {node: '>=18.0.0'}
 
-  '@axiomhq/js@1.8.0':
-    resolution: {integrity: sha512-VRkqV9XH+pkj8d9eRdw8TuWvXdCkVDMtDOz2rix5UAg7x5SlOeWhUz9fwc0ZgySosMSMA7WP7X0fFX8N/jBHtQ==}
+  '@axiomhq/js@2.0.0':
+    resolution: {integrity: sha512-mhDH0KLFkDko9ytoltgmch2gOiwE6kY6VWhCmTux9lzL9hmjTej68JeQKwq9GGqOY7xwDsya88bNiTnp/zc8+Q==}
     engines: {node: '>=20'}
 
-  '@axiomhq/winston@1.8.0':
-    resolution: {integrity: sha512-AGpIRa2TZbP3bLPFQrRQUuHrD4HCp3VALD2V1HZRHCapd9cQfYTV1XPYNcT+dZOmj/AGIWJGjVtTjFlV9aOWFg==}
+  '@axiomhq/winston@2.0.0':
+    resolution: {integrity: sha512-PT2/iC4goWKI8yuGJn5AotN157mJNq++5d3UfaMHR41pPkI31OBsZ6MXnQqZi36BR8taRIzsmdR1E5exNyNhIg==}
     engines: {node: '>=20'}
 
   '@babel/code-frame@7.29.7':
@@ -10424,13 +10424,13 @@ snapshots:
 
   '@aws/lambda-invoke-store@0.3.0': {}
 
-  '@axiomhq/js@1.8.0':
+  '@axiomhq/js@2.0.0':
     dependencies:
       fetch-retry: 6.0.0
 
-  '@axiomhq/winston@1.8.0':
+  '@axiomhq/winston@2.0.0':
     dependencies:
-      '@axiomhq/js': 1.8.0
+      '@axiomhq/js': 2.0.0
       winston-transport: 4.9.0
 
   '@babel/code-frame@7.29.7':
