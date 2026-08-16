@@ -50,7 +50,27 @@ export default defineNuxtConfig({
     ],
     build: {
         // 使用 Babel 转译不兼容的包
-        transpile: ['better-sqlite3', 'ms', (ctx) => !ctx.isDev && 'google-libphonenumber'],
+        transpile: [
+            'better-sqlite3',
+            'ms',
+            (ctx) => !ctx.isDev && 'google-libphonenumber',
+            // PrimeVue/PrimeUIX 生态包的 exports 仅含 import/default 条件，
+            // Nitro nft trace（过滤 import/default 条件）无法完整复制其文件，
+            // 导致 .output/server/node_modules 缺文件、生产运行时 ERR_MODULE_NOT_FOUND
+            // （如 @primeuix/styles/dist/base/index.mjs、@primevue/core/index.mjs）。
+            // 同时需要在 nitro.externals.inline 中用正则覆盖（含传递依赖），
+            // 字符串形式对 pnpm 虚拟 store 内的传递依赖（如 @primeuix/styled）无法匹配。
+            '@primeuix/styles',
+            '@primeuix/themes',
+            '@primeuix/styled',
+            '@primeuix/utils',
+            '@primevue/core',
+            '@primevue/forms',
+            // sanitize-html 为 CJS 包，但依赖 ESM-only 的 htmlparser2@12，
+            // 在不支持 require(esm) 的 Node 版本（< 20.19 / < 22.12）上抛 ERR_REQUIRE_ESM。
+            // 内联后由 rollup 处理 CJS/ESM 互操作。
+            'sanitize-html',
+        ],
     },
     eslint: {
         config: {
@@ -181,6 +201,21 @@ export default defineNuxtConfig({
                 /^@better-auth\//,
                 /^@better-fetch\//,
                 'better-call',
+                // PrimeVue/PrimeUIX 生态（含 @primevue/core、@primeuix/styled 等传递依赖）：
+                // 其 package.json exports 仅含 import/default 条件，Nitro 的 nft trace
+                // （条件集过滤 import/default）无法解析，导致 .output/server/node_modules
+                // 缺文件、生产运行时 ERR_MODULE_NOT_FOUND。
+                // 使用函数匹配以同时覆盖裸包名与 pnpm 虚拟 store 真实路径
+                // （node_modules/.pnpm/@primeuix+styled@0.7.4/node_modules/...），
+                // 避免字符串/正则前缀匹配在真实路径下失效。
+                (id) => id.startsWith('@primeuix/') || id.includes('@primeuix+'),
+                (id) => id.startsWith('@primevue/') || id.includes('@primevue+'),
+                // sanitize-html 为 CJS 包但依赖 ESM-only 的 htmlparser2@12，
+                // 在不支持 require(esm) 的 Node 版本（< 20.19 / < 22.12）上抛 ERR_REQUIRE_ESM。
+                // 内联后由 rollup 处理 CJS/ESM 互操作；htmlparser2 链（ESM-only）一并内联。
+                'sanitize-html',
+                (id) => /^(htmlparser2|domelementtype|domhandler|domutils|dom-serializer|entities)(\/|$)/.test(id)
+                    || /@(?:htmlparser2|domelementtype|domhandler|domutils|dom-serializer|entities)\+/.test(id),
             ],
         },
         // 将模板文件夹包含到构建输出中 - 使用正确的配置
