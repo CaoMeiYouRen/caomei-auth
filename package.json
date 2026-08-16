@@ -85,7 +85,7 @@
     "@lint-md/cli": "^2.2.5",
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/test-utils": "^4.1.0",
-    "@primevue/nuxt-module": "^4.5.5",
+    "@primevue/nuxt-module": "^5.0.0",
     "@types/fs-extra": "^11.0.4",
     "@types/google-libphonenumber": "^7.4.30",
     "@types/lodash-es": "^4.17.12",
