@@ -206,8 +206,8 @@ importers:
         specifier: ^2.17.6
         version: 2.17.6
       twilio:
-        specifier: ^6.0.2
-        version: 6.0.2
+        specifier: ^6.1.0
+        version: 6.1.0
       typeorm:
         specifier: ^0.3.31
         version: 0.3.31(better-sqlite3@12.11.1)(ioredis@5.11.1)(mysql2@3.23.2(@types/node@26.1.2))(pg@8.22.0)
@@ -9161,8 +9161,8 @@ packages:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
 
-  twilio@6.0.2:
-    resolution: {integrity: sha512-RN3TZxUtxLz2HBZVt62+LdZxQbrMVgYKtuzLgwmO7nqKvR+gQS5mCackD9hf4Y7MmoK/bX7tCm7kaJC8kC8zFA==}
+  twilio@6.1.0:
+    resolution: {integrity: sha512-a226jNHitbQQoLs4chB9TGzG2mOrxKR9NHs5XH8ZE4k48MQWdAwh+Hh6JsVB0hmCrsZpyHCsybf81Se6u6627A==}
     engines: {node: '>=20.0.0'}
 
   type-check@0.4.0:
@@ -20632,7 +20632,7 @@ snapshots:
 
   tunnel@0.0.6: {}
 
-  twilio@6.0.2:
+  twilio@6.1.0:
     dependencies:
       axios: 1.19.0
       dayjs: 1.11.21
