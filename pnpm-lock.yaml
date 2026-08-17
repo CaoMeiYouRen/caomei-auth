@@ -68,9 +68,7 @@ overrides:
   mjml: ^5.0.0-alpha.9
 
 patchedDependencies:
-  '@nuxt/test-utils@4.1.0':
-    hash: b66dc6455b91b461cef5291eca0805d430be2ddd4cc8f917cedaec80a92c69d8
-    path: patches/@nuxt-test-utils@4.1.0.patch
+  '@nuxt/test-utils@4.1.0': b66dc6455b91b461cef5291eca0805d430be2ddd4cc8f917cedaec80a92c69d8
 
 importers:
 
