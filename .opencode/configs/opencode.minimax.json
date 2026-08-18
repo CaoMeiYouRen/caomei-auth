@@ -1,0 +1,36 @@
+{
+    "model": "minimax-cn-coding-plan/MiniMax-M2.7",
+    "agent": {
+        "full-stack-master": {
+            "model": "minimax-cn-coding-plan/MiniMax-M3",
+            "mode": "primary",
+            "variant": "high"
+        },
+        "product-manager": {
+            "model": "minimax-cn-coding-plan/MiniMax-M3",
+            "mode": "subagent",
+            "variant": "high"
+        },
+        "code-auditor": {
+            "model": "minimax-cn-coding-plan/MiniMax-M3",
+            "mode": "subagent",
+            "variant": "high"
+        },
+        "test-engineer": {
+            "model": "minimax-cn-coding-plan/MiniMax-M2.7",
+            "mode": "subagent"
+        },
+        "ui-validator": {
+            "model": "minimax-cn-coding-plan/MiniMax-M2.7",
+            "mode": "subagent"
+        },
+        "qa-assistant": {
+            "model": "minimax-cn-coding-plan/MiniMax-M2.7",
+            "mode": "subagent"
+        },
+        "documentation-specialist": {
+            "model": "minimax-cn-coding-plan/MiniMax-M2.7",
+            "mode": "subagent"
+        }
+    }
+}

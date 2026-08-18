@@ -4,6 +4,9 @@
   "type": "module",
   "scripts": {
     "ai:check": "node scripts/ai/check-governance.mjs",
+    "setup:ai": "node scripts/setup-ai.mjs",
+    "setup:switch-models": "node scripts/setup/switch-models.mjs",
+    "setup:switch-models:list": "node scripts/setup/switch-models.mjs --list",
     "lint:css": "stylelint ./**/*.{css,scss,sass,vue} --fix",
     "lint:duplicate": "jscpd .",
     "lint:md": "lint-md *.md docs/**/*.md .github/**/*.md --fix",
