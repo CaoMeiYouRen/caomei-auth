@@ -45,6 +45,15 @@ updates:
         versions: [">=1.0.0"]
       - dependency-name: "@primeuix/utils"
         versions: [">=0.7.0"]
+      # better-auth 1.6.x 线锁定：忽略 1.7+ minor 版本，防止 dependabot 自动拆分升级。
+      # better-auth 1.7 是含 breaking changes 的 minor release，移除 oidcProvider/oidcClient/genericOAuthClient
+      # plugin 并扩展 SecondaryStorage 接口要求。package.json 已用 ~1.6.30 tilde 范围锁定 patch，
+      # 本段 ignore 作为双保险（dependabot 偶尔会在 tilde 范围外提 PR）。
+      # 升级路径见 docs/design/governance/better-auth-1.7-upgrade.md，由专项任务驱动。
+      # 本段同时作用于安全更新——1.x 线专属安全修复不会自动出 PR，
+      # 由 Dependabot alerts + security-alert-remediator 流程兜底。
+      - dependency-name: "better-auth"
+        versions: [">=1.7.0"]
       # TypeORM 0.3.x 线锁定：忽略 1.0+ major 版本，防止 dependabot 自动拆分升级。
       # typeorm 1.0 是含 breaking changes 的跨级 release（0.x → 1.x，跨 7 个 minor），涉及
       # invalidWhereValuesBehavior 默认从 ignore 改为 throw、移除多个全局便利函数、
