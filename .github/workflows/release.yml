@@ -95,5 +95,8 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+          # 阿里云 ACR 个人版拒绝 provenance/sbom 使用的 OCI 空 manifest（application/vnd.oci.empty.v1+json），关闭 attestation
+          provenance: false
+          sbom: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
