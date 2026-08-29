@@ -1,5 +1,15 @@
 # caomei-auth
 
+## [1.13.3](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.2...v1.13.3) (2026-08-22)
+
+
+### 🐛 Bug 修复
+
+* **ci:** 禁用 OCI provenance 修复阿里云 ACR 推送失败 ([6239b4f](https://github.com/CaoMeiYouRen/caomei-auth/commit/6239b4f))
+* **deps:** 修复生产运行时缺模块错误 ([d080bf3](https://github.com/CaoMeiYouRen/caomei-auth/commit/d080bf3))
+* **docker:** 单独复制 patches 目录以保留目录结构 ([a0ce752](https://github.com/CaoMeiYouRen/caomei-auth/commit/a0ce752))
+* **docker:** 复制 patches 目录以修复 pnpm patchedDependencies 构建 ([615e980](https://github.com/CaoMeiYouRen/caomei-auth/commit/615e980))
+
 ## [1.13.2](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.1...v1.13.2) (2026-07-25)
 
 

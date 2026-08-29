@@ -181,6 +181,6 @@
       "git add"
     ]
   },
-  "version": "1.13.2",
+  "version": "1.13.3",
   "packageManager": "pnpm@11.17.0"
 }
