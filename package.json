@@ -71,7 +71,7 @@
     "primelocale": "^2.4.0",
     "primevue": "^4.5.5",
     "qrcode": "^1.5.4",
-    "sanitize-html": "^2.17.6",
+    "sanitize-html": "^2.17.7",
     "twilio": "^6.1.0",
     "typeorm": "^0.3.31",
     "ua-parser-js": "^2.0.10",
