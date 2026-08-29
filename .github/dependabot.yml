@@ -45,6 +45,15 @@ updates:
         versions: [">=1.0.0"]
       - dependency-name: "@primeuix/utils"
         versions: [">=0.7.0"]
+      # TypeORM 0.3.x 线锁定：忽略 1.0+ major 版本，防止 dependabot 自动拆分升级。
+      # typeorm 1.0 是含 breaking changes 的跨级 release（0.x → 1.x，跨 7 个 minor），涉及
+      # invalidWhereValuesBehavior 默认从 ignore 改为 throw、移除多个全局便利函数、
+      # nullable: false 关系改用 INNER JOIN、onConflict() 移除等运行时行为变更。
+      # 升级路径见 docs/design/governance/typeorm-1.0-upgrade.md，由专项任务驱动。
+      # 本段同时作用于安全更新——1.x 线专属安全修复不会自动出 PR，
+      # 由 Dependabot alerts + security-alert-remediator 流程兜底。
+      - dependency-name: "typeorm"
+        versions: [">=1.0.0"]
   - package-ecosystem: github-actions
     directory: /
     open-pull-requests-limit: 20
