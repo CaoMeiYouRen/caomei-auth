@@ -94,7 +94,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/mjml": "^4.7.4",
     "@types/nodemailer": "^8.0.1",
-    "@types/pg": "^8.21.0",
+    "@types/pg": "^8.23.1",
     "@types/qrcode": "^1.5.6",
     "@types/sanitize-html": "^2.16.1",
     "@types/ua-parser-js": "^0.7.39",
