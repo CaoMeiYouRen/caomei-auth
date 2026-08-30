@@ -1,0 +1,23 @@
+diff --git a/package.json b/package.json
+index 28aab619b0701e2331ae25286c21f2b9c1ee04cf..39c9bff7215938267dd73d634239958cf12975a8 100644
+--- a/package.json
++++ b/package.json
+@@ -72,16 +72,8 @@
+       "require": "./dist/rsa.cjs"
+     },
+     "./password": {
+-      "workerd": {
+-        "import": "./dist/password.node.mjs",
+-        "require": "./dist/password.node.cjs"
+-      },
+-      "node": {
+-        "import": "./dist/password.node.mjs",
+-        "require": "./dist/password.node.cjs"
+-      },
+-      "import": "./dist/password.mjs",
+-      "require": "./dist/password.cjs"
++      "import": "./dist/password.node.mjs",
++      "require": "./dist/password.node.cjs"
+     }
+   },
+   "files": [

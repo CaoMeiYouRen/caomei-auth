@@ -19,6 +19,7 @@ minimumReleaseAgeExclude:
 # 移除条件：上游发布修复版本（>=4.1.1）后删除本段与 patches/ 文件，
 # 并同步移除 Dockerfile 第 10 行 COPY 指令中的 patches/。
 patchedDependencies:
+  '@better-auth/utils@0.4.2': patches/@better-auth__utils@0.4.2.patch
   "@nuxt/test-utils@4.1.0": patches/@nuxt-test-utils@4.1.0.patch
 
 overrides:
@@ -83,5 +84,5 @@ overrides:
   better-auth: "^1.6.13"
   svgo: "^4.0.2"
   mjml: "^5.0.0-alpha.9"
- 
+
 strictPeerDependencies: false
