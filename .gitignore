@@ -45,3 +45,5 @@ node_modules
 # opencode.json 由 .opencode/configs/ 下的预设通过 scripts/setup/switch-models.mjs 生成，
 # 不再固定单一套渠道配置，避免 PR 反复 churn 默认值。
 opencode.json
+# dependfix
+dependfix-reports/
