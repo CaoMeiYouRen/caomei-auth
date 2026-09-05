@@ -1,5 +1,13 @@
 # caomei-auth
 
+## [1.13.4](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.3...v1.13.4) (2026-09-05)
+
+
+### 🐛 Bug 修复
+
+* **deps:** bump fast-uri, @humanfs/node, qs, postcss-selector-parser ([a6faee4](https://github.com/CaoMeiYouRen/caomei-auth/commit/a6faee4))
+* **deps:** 回退 better-auth 到 1.6.30 patch 范围 ([d7ca42c](https://github.com/CaoMeiYouRen/caomei-auth/commit/d7ca42c)), closes [#604](https://github.com/CaoMeiYouRen/caomei-auth/issues/604)
+
 ## [1.13.3](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.2...v1.13.3) (2026-08-22)
 
 
