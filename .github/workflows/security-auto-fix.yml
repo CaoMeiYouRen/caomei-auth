@@ -1,0 +1,99 @@
+name: Security Auto Fix
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "运行模式"
+        type: choice
+        required: true
+        options:
+          - report-only
+          - fix
+          - fix-and-pr
+        default: fix-and-pr
+      severity-threshold:
+        description: "严重级别阈值"
+        type: choice
+        required: false
+        options:
+          - critical
+          - high
+          - medium
+          - all
+        default: high
+      dry-run:
+        description: "试运行模式（不修改文件，仅在 fix 模式下生效）"
+        type: boolean
+        required: false
+        default: false
+      max-alerts-per-repository:
+        description: "每仓库最多处理的告警数"
+        type: string
+        required: false
+        default: "50"
+      repos:
+        description: "目标仓库列表（逗号分隔 owner/repo，留空默认使用当前仓库）"
+        type: string
+        required: false
+        default: ""
+      cleanup-branches-auto:
+        description: "（fix-and-pr 模式）结束后自动删除已合并/已关闭的 dependfix 分支（非交互；不删有 open PR 的分支）"
+        type: boolean
+        required: false
+        default: true
+      commands:
+        description: "自定义验证命令（逗号分隔；留空使用本仓库默认链：install + nuxt prepare + lint + typecheck + build）"
+        type: string
+        required: false
+        default: ""
+  schedule:
+    # 每天 UTC 0:00（北京时间 8:00）—— 早于人工 PR review 时段，构成"先自动修复 → 后人工复核"的时序闭环：
+    # 修复 PR 合并后，后续任何 pnpm audit / dependabot recheck 的结果自然归零。
+    - cron: "0 0 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: read
+
+concurrency:
+  group: security-auto-fix-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  dependfix:
+    name: Dependfix Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+      security-events: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Run Dependfix Action
+        # 引用外部 action 并钉 tag（v0.4.0），不追踪 master；
+        # schedule 触发时 inputs 为空 → 下方回退值生效（fix-and-pr / high / 50 / cleanup=true），
+        # 设计意图：定时巡检保守（聚焦 high+，与 security:alerts 的 --min-severity=high 口径对齐）；
+        # 手动触发可用 inputs 覆盖（可更激进）。
+        uses: dependfix/dependfix@v0.4.0
+        with:
+          mode: ${{ inputs.mode || 'fix-and-pr' }}
+          severity-threshold: ${{ inputs.severity-threshold || 'high' }}
+          dry-run: ${{ inputs.dry-run || 'false' }}
+          max-alerts-per-repository: ${{ inputs.max-alerts-per-repository || '50' }}
+          repos: ${{ inputs.repos || '' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Dependabot alerts 读取需最小权限 PAT（fine-grained，仅 Dependabot alerts: read）；
+          # GITHUB_TOKEN 无法读取该 API。仓库 Settings → Secrets 配置 GH_TOKEN。
+          dependabot-alerts-token: ${{ secrets.GH_TOKEN }}
+          cleanup-branches-auto: ${{ inputs.cleanup-branches-auto || 'true' }}
+          # caomei-auth 验证链：Nuxt 4 单包项目（非 monorepo），无 workspace 子包；
+          # lint/typecheck 依赖 .nuxt/tsconfig.json（nuxt prepare 生成物），故在 install 后显式 prepare；
+          # lint 带 --fix（修复分支上产生的格式化改动随 PR 一并提交）。
+          # 与现有 test.yml / docker.yml 风格对齐（pnpm i + pnpm run 前缀）。
+          commands: ${{ inputs.commands || 'pnpm i --frozen-lockfile, pnpm exec nuxt prepare, pnpm run lint, pnpm run typecheck, pnpm run build' }}
