@@ -58,6 +58,28 @@
 -   **最小依赖**: 新增依赖必须经过必要性评估，优先使用官方维护的安全库。
 -   **对齐 CI**: 依赖安全检查应纳入 CI 或定期回归任务，本地抽查不能替代流水线检查。
 
+### 5.1.1 pnpm supply-chain cooldown 命中时的处置
+
+pnpm 10+ 默认启用 1440 分钟（24h）发布冷却期（`minimumReleaseAge`），防止从 registry 立即拉取刚发布的版本（典型防御场景：账号劫持后短时间内投毒）。当 Dependabot PR 引入刚发布的传递依赖时，`pnpm install --frozen-lockfile` 会触发 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`，导致 Test job 失败。
+
+处置流程：
+
+1.  从 CI 日志中提取违规包名与版本（例如 `obug@2.2.1 was published within the minimumReleaseAge cutoff`）。
+2.  评估是否必须立刻拉取（通常不需要，可等 24h 自然 age out）；若必须，仅对该精确版本加入豁免。
+3.  在 `pnpm-workspace.yaml` 的 `minimumReleaseAgeExclude` 中追加 `pkg@x.y.z`（pnpm 10.19+ 支持精确版本语法；OR 形式 `pkg@1.2.3 || 1.2.4` 也支持）。
+4.  注释中标注"为何需要豁免"与"预计自然失效时间"，便于后续 review 时清理。
+5.  严禁使用范围语法或 glob 通配符豁免（pnpm 不支持，会被忽略），否则豁免失效且无任何报错。
+
+### 5.1.2 Security Auto Fix 工作流启用真实自动修复的前置条件
+
+`.github/workflows/security-auto-fix.yml` 当前 schedule 触发默认采用 `report-only`（仅产出报告归档，不创建 PR）。若需启用 `fix-and-pr` 自动创建修复 PR，需满足以下前置条件，缺一不可：
+
+1.  仓库 Settings → Secrets 配置 `GH_TOKEN`（fine-grained PAT，仓库级 Dependabot alerts: read 权限）；GITHUB_TOKEN 无法读取 Dependabot alerts API。
+2.  workflow_dispatch 触发时显式选择 `mode: fix-and-pr`（默认即为 fix-and-pr，但 schedule 默认是 report-only）。
+3.  验证链命令在 `commands` 中已配置（默认：pnpm i --frozen-lockfile + nuxt prepare + lint + typecheck + build）。
+
+未配置 `GH_TOKEN` 的 schedule 运行会得到"无可用 alerts"的报告并归档为 artifact，**不视为失败**；若需观察告警，可改用 `pnpm audit` 本地巡检。
+
 ### 5.2 供应链信任边界 (Supply Chain Trust Boundary)
 
 引入新的依赖、MCP server、外部 skill/agent 或 AI 推荐的包时，必须执行来源核验，默认不信任：
