@@ -62,7 +62,7 @@
     "ms": "^4.0.0-nightly.202508271359",
     "mysql2": "^3.24.2",
     "nest-winston": "^2.0.0",
-    "nodemailer": "^9.1.1",
+    "nodemailer": "^10.0.11",
     "normalize.css": "^8.0.1",
     "nuxt": "^4.5.2",
     "p-queue": "^9.3.3",
