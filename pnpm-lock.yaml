@@ -242,8 +242,8 @@ importers:
         version: 4.6.5
     devDependencies:
       '@lint-md/cli':
-        specifier: ^2.3.0
-        version: 2.3.0
+        specifier: ^2.4.0
+        version: 2.4.0
       '@nuxt/eslint':
         specifier: ^1.17.0
         version: 1.17.0(@typescript-eslint/utils@8.67.0(eslint@9.39.2(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(@vue/compiler-sfc@3.5.42)(esbuild@0.25.12)(eslint-import-resolver-node@0.3.10(supports-color@10.2.2))(eslint@9.39.2(jiti@2.7.0)(supports-color@10.2.2))(magic-string@1.2.0)(magicast@0.5.4)(rolldown@1.2.6)(rollup@4.62.0)(srvx@0.11.22)(supports-color@10.2.2)(typescript@6.0.3)(unplugin@3.3.0(esbuild@0.25.12)(rolldown@1.2.6)(rollup@4.62.0)(vite@8.2.2(@types/node@26.3.0)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.105.0)(terser@5.48.0)(yaml@2.9.0)))(vite@8.2.2(@types/node@26.3.0)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.105.0)(terser@5.48.0)(yaml@2.9.0))
@@ -1518,22 +1518,22 @@ packages:
   '@kwsites/promise-deferred@1.1.1':
     resolution: {integrity: sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==}
 
-  '@lint-md/cli@2.3.0':
-    resolution: {integrity: sha512-QGuppDO7mERAoqaQGVCATfDrQRKzZSV6mXUWtoNTooyNcbqjWH7bnN+542pj4grzbSdn+WXxicBhcCIxjAXmTQ==}
+  '@lint-md/cli@2.4.0':
+    resolution: {integrity: sha512-rQNOU46eLeFthZM5w2sC16D9eXqSHTraE0TX2a7AoS4p6WAgeLR2GN0irrKh0rcGWLqwq+ebNY9K5jJU/1v3Mw==}
     hasBin: true
 
   '@lint-md/core@2.0.0':
     resolution: {integrity: sha512-DbjU4NhmddVM2GaeUz+f+urFLt0IoTomwJglrRGuUKBCr4udpVe/rnh26R02zQKXm/+ocQ5WfU0iLCCWBsXoYA==}
 
-  '@lint-md/core@2.4.0':
-    resolution: {integrity: sha512-Fp2drWoAd6GDdxqx64U+9rdoYOqTYbGtaQeV4NCd3zb2RL+Xi0JGamax9xT3+U9g9ktgwZnPkx9Hy8GpGpxUmA==}
+  '@lint-md/core@2.5.3':
+    resolution: {integrity: sha512-cmgwBrYGcyAa0+umsnX7c/oD8XiwHwWGNfXzJbfqow2Gm4xfZNdyEO6dShmreCqvvcSRM1aTZo67N2QshWDMnw==}
     engines: {node: '>=20'}
 
   '@lint-md/parser@0.0.14':
     resolution: {integrity: sha512-kFFq6TowN2MBe+EFctnn6VluPWHV/9i/mHGQG/d5qGcR7EnA7JSURaxw9kQDHG11bwUK+pHOoXjSOp/6VzM/1w==}
 
-  '@lint-md/parser@0.2.1':
-    resolution: {integrity: sha512-tgnfSiid5qxFs+i9gFeJcuQDhWmPNQnVns8G2FwIhE0PhbKglEXiuVvowE3cns+4scRBE+VWI4JXzAvBQYK69g==}
+  '@lint-md/parser@0.3.1':
+    resolution: {integrity: sha512-NQy7mq4bL6bGX5QSj4wSdEj4GB2MyCyCH4oXdGBEklBt0QazjE2wrvwq+SCHbezREPAP/3s4UY/LbGQ5DvgNcw==}
     engines: {node: '>=20'}
 
   '@lukeed/csprng@1.1.0':
@@ -3905,8 +3905,8 @@ packages:
   brace-expansion@1.1.18:
     resolution: {integrity: sha512-Edep/X9fGqVNmzKBVsDYIOtD+z1tuezV70LBjdCst9Tqu76lsnvRiZ6oTic1n+/BIwX6QDGAO94PN4N2SADvtw==}
 
-  brace-expansion@2.1.4:
-    resolution: {integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==}
+  brace-expansion@2.1.7:
+    resolution: {integrity: sha512-uZbew1NqdmPDTMJ8ah1y+b+9QEJrfkXFk3RcTQw3X0jW/xRUvFKsg1CfQdSYGdTbXZWExtU3J3ccxtnfw1Fi0g==}
 
   brace-expansion@5.0.9:
     resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
@@ -7598,8 +7598,8 @@ packages:
       typescript:
         optional: true
 
-  piscina@5.3.1:
-    resolution: {integrity: sha512-LYbVUyHb5CzavqNgs64Uv+gHkrCdEt73kfPazdsJnndDSJiaEDIzMUIAHbtV3plzaoBUphZfXZCQKF01LHMgXw==}
+  piscina@5.3.2:
+    resolution: {integrity: sha512-vv7l/mM7B9WgrhDaudIqv1x6v4LOBRYYmpWGdWushhpbCmVHp11sUB2v4hj1CAeTGXVxuZFz6xOU1RalAiPKfQ==}
     engines: {node: '>=20.x'}
 
   pkg-conf@2.1.0:
@@ -11264,13 +11264,13 @@ snapshots:
 
   '@kwsites/promise-deferred@1.1.1': {}
 
-  '@lint-md/cli@2.3.0':
+  '@lint-md/cli@2.4.0':
     dependencies:
-      '@lint-md/core': 2.4.0
+      '@lint-md/core': 2.5.3
       chalk: 4.1.2
       commander: 9.5.0
       glob: 10.5.0
-      piscina: 5.3.1
+      piscina: 5.3.2
       strip-ansi: 6.0.1
       text-table: 0.2.0
 
@@ -11281,9 +11281,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@lint-md/core@2.4.0':
+  '@lint-md/core@2.5.3':
     dependencies:
-      '@lint-md/parser': 0.2.1
+      '@lint-md/parser': 0.3.1
 
   '@lint-md/parser@0.0.14(supports-color@10.2.2)':
     dependencies:
@@ -11297,7 +11297,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@lint-md/parser@0.2.1':
+  '@lint-md/parser@0.3.1':
     dependencies:
       '@types/mdast': 3.0.15
 
@@ -14050,7 +14050,7 @@ snapshots:
       balanced-match: 1.0.2
       concat-map: 0.0.1
 
-  brace-expansion@2.1.4:
+  brace-expansion@2.1.7:
     dependencies:
       balanced-match: 1.0.2
 
@@ -17380,11 +17380,11 @@ snapshots:
 
   minimatch@5.1.9:
     dependencies:
-      brace-expansion: 2.1.4
+      brace-expansion: 2.1.7
 
   minimatch@9.0.9:
     dependencies:
-      brace-expansion: 2.1.4
+      brace-expansion: 2.1.7
 
   minimist@1.2.8: {}
 
@@ -18628,7 +18628,7 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  piscina@5.3.1:
+  piscina@5.3.2:
     optionalDependencies:
       '@napi-rs/nice': 1.1.1
 
