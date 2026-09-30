@@ -208,8 +208,8 @@ importers:
         specifier: ^2.17.7
         version: 2.17.7
       twilio:
-        specifier: ^6.1.0
-        version: 6.1.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+        specifier: ^6.1.1
+        version: 6.1.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
       typeorm:
         specifier: ^0.3.31
         version: 0.3.31(better-sqlite3@12.11.1)(ioredis@5.11.1(supports-color@10.2.2))(mysql2@3.24.2(@types/node@26.3.0))(pg@8.23.0)(supports-color@10.2.2)
@@ -360,7 +360,7 @@ importers:
         version: 8.2.2(@types/node@26.3.0)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.105.0)(terser@5.48.0)(yaml@2.9.0)
       vitepress:
         specifier: ^1.6.4
-        version: 1.6.4(@algolia/client-search@5.45.0)(@types/node@26.3.0)(axios@1.19.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(change-case@5.4.4)(esbuild@0.25.12)(fuse.js@7.4.2)(jiti@2.7.0)(postcss@8.5.26)(qrcode@1.5.4)(sass@1.105.0)(search-insights@2.17.3)(terser@5.48.0)(typescript@6.0.3)(yaml@2.9.0)
+        version: 1.6.4(@algolia/client-search@5.45.0)(@types/node@26.3.0)(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(change-case@5.4.4)(esbuild@0.25.12)(fuse.js@7.4.2)(jiti@2.7.0)(postcss@8.5.26)(qrcode@1.5.4)(sass@1.105.0)(search-insights@2.17.3)(terser@5.48.0)(typescript@6.0.3)(yaml@2.9.0)
       vitest:
         specifier: ^4.1.11
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@26.3.0)(@vitest/coverage-v8@4.1.10)(happy-dom@20.11.13)(vite@8.2.2(@types/node@26.3.0)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.105.0)(terser@5.48.0)(yaml@2.9.0))
@@ -3709,8 +3709,8 @@ packages:
     resolution: {integrity: sha512-NZKeq9AfyQvEeNlN0zSYAaWrmBffJh3IELMZfRpJVWgrpEbtEpnjvzqBPf+mxoI287JohRDoa+/nsfqqiZmF6g==}
     engines: {node: '>= 6.0.0'}
 
-  axios@1.19.0:
-    resolution: {integrity: sha512-ht/iuYZXEjFxLH/Hkezgd7m6JKlHHXEUSneaDz8uZe1Gj5QZtCnpyDsckvAiEnT89OEbCLmnte4R4sn7P0EKFw==}
+  axios@1.20.0:
+    resolution: {integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==}
 
   b4a@1.8.1:
     resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}
@@ -9079,8 +9079,8 @@ packages:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
 
-  twilio@6.1.0:
-    resolution: {integrity: sha512-a226jNHitbQQoLs4chB9TGzG2mOrxKR9NHs5XH8ZE4k48MQWdAwh+Hh6JsVB0hmCrsZpyHCsybf81Se6u6627A==}
+  twilio@6.1.1:
+    resolution: {integrity: sha512-d9xFCQaa8DpuDvFiG49TwmppmULHhqzEVncpppazS5oZv5O0E9Wb76STCHt4q+ZjWDL6RAtKey+u8jWcQLKWjw==}
     engines: {node: '>=20.0.0'}
 
   type-check@0.4.0:
@@ -13637,13 +13637,13 @@ snapshots:
       '@vueuse/shared': 15.0.0(vue@3.5.42(typescript@6.0.3))
       vue: 3.5.42(typescript@6.0.3)
 
-  '@vueuse/integrations@12.8.2(axios@1.19.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(change-case@5.4.4)(focus-trap@7.6.6)(fuse.js@7.4.2)(qrcode@1.5.4)(typescript@6.0.3)':
+  '@vueuse/integrations@12.8.2(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(change-case@5.4.4)(focus-trap@7.6.6)(fuse.js@7.4.2)(qrcode@1.5.4)(typescript@6.0.3)':
     dependencies:
       '@vueuse/core': 12.8.2(typescript@6.0.3)
       '@vueuse/shared': 12.8.2(typescript@6.0.3)
       vue: 3.5.42(typescript@6.0.3)
     optionalDependencies:
-      axios: 1.19.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+      axios: 1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
       change-case: 5.4.4
       focus-trap: 7.6.6
       fuse.js: 7.4.2
@@ -13937,7 +13937,7 @@ snapshots:
 
   aws-ssl-profiles@1.1.2: {}
 
-  axios@1.19.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
+  axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
       follow-redirects: 1.16.0(debug@4.4.3(supports-color@10.2.2))
       form-data: 4.0.6
@@ -20313,9 +20313,9 @@ snapshots:
 
   tunnel@0.0.6: {}
 
-  twilio@6.1.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
+  twilio@6.1.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
-      axios: 1.19.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+      axios: 1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
       dayjs: 1.11.23
       https-proxy-agent: 5.0.1(supports-color@10.2.2)
       jsonwebtoken: 9.0.3
@@ -20883,7 +20883,7 @@ snapshots:
       terser: 5.48.0
       yaml: 2.9.0
 
-  vitepress@1.6.4(@algolia/client-search@5.45.0)(@types/node@26.3.0)(axios@1.19.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(change-case@5.4.4)(esbuild@0.25.12)(fuse.js@7.4.2)(jiti@2.7.0)(postcss@8.5.26)(qrcode@1.5.4)(sass@1.105.0)(search-insights@2.17.3)(terser@5.48.0)(typescript@6.0.3)(yaml@2.9.0):
+  vitepress@1.6.4(@algolia/client-search@5.45.0)(@types/node@26.3.0)(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(change-case@5.4.4)(esbuild@0.25.12)(fuse.js@7.4.2)(jiti@2.7.0)(postcss@8.5.26)(qrcode@1.5.4)(sass@1.105.0)(search-insights@2.17.3)(terser@5.48.0)(typescript@6.0.3)(yaml@2.9.0):
     dependencies:
       '@docsearch/css': 3.8.2
       '@docsearch/js': 3.8.2(@algolia/client-search@5.45.0)(search-insights@2.17.3)
@@ -20896,7 +20896,7 @@ snapshots:
       '@vue/devtools-api': 7.7.9
       '@vue/shared': 3.5.25
       '@vueuse/core': 12.8.2(typescript@6.0.3)
-      '@vueuse/integrations': 12.8.2(axios@1.19.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(change-case@5.4.4)(focus-trap@7.6.6)(fuse.js@7.4.2)(qrcode@1.5.4)(typescript@6.0.3)
+      '@vueuse/integrations': 12.8.2(axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(change-case@5.4.4)(focus-trap@7.6.6)(fuse.js@7.4.2)(qrcode@1.5.4)(typescript@6.0.3)
       focus-trap: 7.6.6
       mark.js: 8.11.1
       minisearch: 7.2.0
