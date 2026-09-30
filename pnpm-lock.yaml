@@ -175,8 +175,8 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2(@types/node@26.3.0)
       nest-winston:
-        specifier: ^1.10.2
-        version: 1.10.2(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2))(winston@3.19.0)
+        specifier: ^2.0.0
+        version: 2.0.0(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2))(winston@3.19.0)
       nodemailer:
         specifier: ^9.1.1
         version: 9.1.1
@@ -7002,10 +7002,11 @@ packages:
   nerf-dart@1.0.0:
     resolution: {integrity: sha512-EZSPZB70jiVsivaBLYDCyntd5eH8NTSMOn3rB+HxwdmKThGELLdYv8qVIMWvZEFy9w8ZZpW9h9OB32l1rGtj7g==}
 
-  nest-winston@1.10.2:
-    resolution: {integrity: sha512-Z9IzL/nekBOF/TEwBHUJDiDPMaXUcFquUQOFavIRet6xF0EbuWnOzslyN/ksgzG+fITNgXhMdrL/POp9SdaFxA==}
+  nest-winston@2.0.0:
+    resolution: {integrity: sha512-W+0ynGlWwydv6XmMBl1EITzT2cmkiq+gWmjFk9dSrk64lIcnkFZLSu6JMtNcpBL4cTNY9AuwFF2yrFRtoYAPkg==}
+    engines: {node: '>= 20'}
     peerDependencies:
-      '@nestjs/common': ^5.0.0 || ^6.6.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
+      '@nestjs/common': ^11.0.0 || ^12.0.0
       winston: ^3.0.0
 
   nitropack@2.13.4:
@@ -17898,7 +17899,7 @@ snapshots:
 
   nerf-dart@1.0.0: {}
 
-  nest-winston@1.10.2(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2))(winston@3.19.0):
+  nest-winston@2.0.0(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2))(winston@3.19.0):
     dependencies:
       '@nestjs/common': 11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2)
       fast-safe-stringify: 2.1.1
