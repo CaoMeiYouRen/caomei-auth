@@ -148,8 +148,8 @@ importers:
         specifier: ^22.0.2
         version: 22.0.2(supports-color@10.2.2)
       fs-extra:
-        specifier: ^11.4.0
-        version: 11.4.0
+        specifier: ^11.4.1
+        version: 11.4.1
       google-libphonenumber:
         specifier: ^3.2.46
         version: 3.2.46
@@ -5380,8 +5380,8 @@ packages:
   fs-constants@1.0.0:
     resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
 
-  fs-extra@11.4.0:
-    resolution: {integrity: sha512-EQsFzMUJkCKGr1ePqlYADkIUmHW1s3ZXr5Yqy6wbGrfUCphpl2maM/kyOIRA2HpP3AaFQTZXD4ldjek+nccddA==}
+  fs-extra@11.4.1:
+    resolution: {integrity: sha512-KYAb4c9BJQI6QqGKthV68OHe0badztdXJWKo0WtBA9IuCFPTKvE5ZdUBglP833aMjhaSPNO4A5j/EkzZtGlKjA==}
     engines: {node: '>=14.14'}
 
   fs-extra@9.1.0:
@@ -12420,7 +12420,7 @@ snapshots:
     dependencies:
       '@semantic-release/error': 3.0.0
       aggregate-error: 3.1.0
-      fs-extra: 11.4.0
+      fs-extra: 11.4.1
       lodash: 4.18.1
       semantic-release: 25.0.9(supports-color@10.2.2)(typescript@6.0.3)
 
@@ -12487,7 +12487,7 @@ snapshots:
       aggregate-error: 5.0.0
       env-ci: 11.2.0
       execa: 9.6.1
-      fs-extra: 11.4.0
+      fs-extra: 11.4.1
       lodash-es: 4.18.1
       nerf-dart: 1.0.0
       normalize-url: 9.0.1
@@ -15750,7 +15750,7 @@ snapshots:
 
   fs-constants@1.0.0: {}
 
-  fs-extra@11.4.0:
+  fs-extra@11.4.1:
     dependencies:
       graceful-fs: 4.2.11
       jsonfile: 6.2.1
