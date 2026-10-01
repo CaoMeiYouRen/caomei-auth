@@ -60,7 +60,7 @@
     "mime-types": "^3.0.2",
     "mjml": "^4.18.0",
     "ms": "^4.0.0-nightly.202508271359",
-    "mysql2": "^3.24.2",
+    "mysql2": "^3.24.4",
     "nest-winston": "^2.0.0",
     "nodemailer": "^10.0.11",
     "normalize.css": "^8.0.1",
