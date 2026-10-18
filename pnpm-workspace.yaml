@@ -19,13 +19,13 @@ overrides:
   unhead: ^3.3.1
   vite: ^8.2.2
   rollup: ^4.59.0
-  undici: ^7.29.0
+  undici: ^7.29.1
   ini@^1: ^1.3.6
   diff: ^8.0.3
   preact: ^10.28.2
   parse-git-config: ^3.0.0
   esbuild: ^0.25.0
-  shell-quote: ^1.9.0
+  shell-quote: ^1.11.0
   postcss: ^8.5.0
   tmp: ^0.2.6
   devalue: ^5.9.2
@@ -33,15 +33,15 @@ overrides:
   nanotar: ^0.3.0
   nanoid@^3: ^3.3.18
   tar: ^7.5.18
-  handlebars: ^4.7.9
+  handlebars: ^4.7.10
   flatted: ^3.4.2
   kysely: ^0.28.17
   node-forge: ^1.4.0
   "@xmldom/xmldom": ^0.8.13
   picomatch@^4: ^4.0.4
-  brace-expansion@^1: ^1.1.18
+  brace-expansion@^1: ^1.1.21
   brace-expansion@^2: ^2.1.4
-  brace-expansion@^5: ^5.0.9
+  brace-expansion@^5: ^5.0.12
   qs: ^6.16.0
   ws: ^8.20.1
   yaml: ^2.8.3
@@ -63,7 +63,7 @@ overrides:
   h3: ^1.15.11
   file-type: ^22.0.2
   defu: ^6.1.5
-  fast-uri: ^3.1.6
+  fast-uri: ^3.1.8
   fast-xml-builder: ^1.1.7
   js-cookie: ^3.0.6
   samlify: ^2.13.0
@@ -77,4 +77,6 @@ overrides:
   "@humanfs/node": ^0.16.8
   postcss-selector-parser: ^7.1.3
   colord: ^2.9.4
+  source-map-js: ^1.2.2
+  moment: ^2.31.0
 strictPeerDependencies: false
