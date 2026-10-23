@@ -1,4 +1,4 @@
-import { useFetch, navigateTo, type UseFetchOptions } from 'nuxt/app'
+import { useFetch, navigateTo, type AnyServerRouteMethod, type KeysOf, type UseFetchOptions } from 'nuxt/app'
 import { defu } from 'defu'
 import { useToast } from 'primevue/usetoast'
 
@@ -16,7 +16,7 @@ export interface ApiResponse<T = any> {
  * @param url 请求地址
  * @param options 请求配置
  */
-export function useApi<T = any>(url: string | (() => string), options: UseFetchOptions<T> = {}) {
+export function useApi<T = any, M extends AnyServerRouteMethod = AnyServerRouteMethod>(url: string | (() => string), options: UseFetchOptions<T, T, KeysOf<T>, undefined, string, M> = {}) {
     const toast = useToast()
 
     const defaults: UseFetchOptions<T> = {
@@ -73,7 +73,7 @@ export function useApi<T = any>(url: string | (() => string), options: UseFetchO
     }
 
     // 合并配置
-    const params = defu(options, defaults)
+    const params = defu(options, defaults) as UseFetchOptions<T, T, KeysOf<T>, undefined, string, M>
 
     return useFetch(url, params)
 }

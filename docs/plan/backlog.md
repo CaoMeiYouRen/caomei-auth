@@ -78,6 +78,7 @@ _详情见 [zod-migration.md](./zod-migration.md)。_
 ### 中优先级（长期可维护性）
 
 - [ ] **安全审计常态化**: 将 `pnpm audit` 集成到 CI，自动化依赖漏洞扫描与报告。
+- [ ] **上游未修复依赖告警跟进**: `braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4）与 `node-forge`（GHSA-86w9-cpqp-85rv，需 ≥1.4.1）当前均无已发布补丁版本，仅存在于构建/开发工具链。待上游发版后升级，并复查 `pnpm audit`。
 - [ ] **jscpd 重复代码检测**: 引入代码重复率检测，目标全项目重复率降至 5% 以下。
 - [ ] **API 参考文档同步**: 随着 Zod 迁移推进，同步更新 `docs/api/` 中的请求/响应示例。
 - [ ] **max-lines 基线清理**: 消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。
