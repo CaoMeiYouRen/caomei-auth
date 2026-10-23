@@ -72,6 +72,9 @@ overrides:
   colord: ^2.9.4
   source-map-js: ^1.2.2
   moment: ^2.31.0
+  '@simple-git/argv-parser': ^2.0.1
+  simple-git: ^4.0.1
+  katex: ^0.18.2
 
 patchedDependencies:
   '@better-auth/utils@0.4.2': c4e873f7887c51425480f24ef715cc1593be0e7314c98d2d4d9c45f2016238ed
