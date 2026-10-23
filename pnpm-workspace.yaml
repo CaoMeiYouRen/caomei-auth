@@ -80,4 +80,7 @@ overrides:
   colord: ^2.9.4
   source-map-js: ^1.2.2
   moment: ^2.31.0
+  "@simple-git/argv-parser": ^2.0.1
+  simple-git: ^4.0.1
+  katex: ^0.18.2
 strictPeerDependencies: false
