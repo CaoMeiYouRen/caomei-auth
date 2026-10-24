@@ -1,5 +1,12 @@
 # caomei-auth
 
+## [1.13.5](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.4...v1.13.5) (2026-10-24)
+
+
+### 🐛 Bug 修复
+
+* **deps:** 修复依赖安全风险版本 ([d8e0cc4](https://github.com/CaoMeiYouRen/caomei-auth/commit/d8e0cc4))
+
 ## [1.13.4](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.3...v1.13.4) (2026-09-05)
 
 
