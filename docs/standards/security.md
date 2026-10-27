@@ -23,6 +23,7 @@
 
 - `getUserSession(event)`: 校验用户是否已登录并获取会话。
 - `checkAdmin(event)`: 校验用户是否为管理员（未登录 401、非管理员 403）。
+- `isUserAdmin(user, userId)`: 轻量管理员判断（只读会话用户角色与 `ADMIN_USER_IDS`，不查库、不同步角色），仅供中间件等已由 `checkAndSyncAdminRoleWithUser` 完成同步的场景使用。
 - 其他权限逻辑以 `server/utils/` 下对应工具为准，禁止在 Handler 内手写重复实现。
 
 ## 1. 认证与授权 (Authentication & Authorization)
@@ -30,6 +31,14 @@
 -   **严格鉴权**: 所有涉及用户数据的 API 必须通过会话校验（`getUserSession`）或明确的路由保护。
 -   **权限最小化**: 管理端接口必须使用 `checkAdmin`；业务逻辑中按角色判断时，使用统一的角色判断工具，禁止散落 `role === 'admin'` 一类硬编码判断。
 -   **密码安全**: 禁止在数据库中存储明文密码。使用 better-auth 默认的安全哈希机制。
+
+### 1.1 第三方认证插件端点 (Third-party Auth Plugin Endpoints)
+
+-   **不信任上游默认端点**: better-auth 及其插件的端点默认可能只校验登录态（`sessionMiddleware`），不校验管理员身份。启用插件前必须核对上游实现，显式关闭或拦截其中的管理类端点。
+-   **SSO 提供商仅限管理员维护**: `@better-auth/sso` 的 `/sso/register`、`/sso/update-provider`、`/sso/delete-provider`、`/sso/request-domain-verification`、`/sso/verify-domain` 必须通过 `disabledPaths`（统一列表见 `utils/shared/sso-management-paths.ts`）关闭，并把 `providersLimit` 设为 `0`；`server/middleware/2-auth.ts` 还会按 `isSsoManagementAuthPath` 追加管理员校验作为纵深防御。提供商维护只允许走 `/api/admin/sso/providers`。登录链路（`/sign-in/sso`、`/sso/callback*`、`/sso/saml2/*`）不在关闭列表内，必须保持可用。
+-   **中间件与业务接口的权限口径**: 中间件层使用 `isUserAdmin`（只读判断，不额外查库）；业务接口仍使用 `checkAdmin`（读取会话中的角色，含 Demo 分支）。同一请求内的管理员角色同步由中间件调用 `checkAndSyncAdminRoleWithUser` 完成，两者结论必须一致。
+-   **历史配置排查**: 升级或收紧 SSO 配置后，管理员必须调用 `GET /api/admin/sso/audit`（只读，不返回 `clientSecret`、`oidcConfig` 等敏感字段）核查 `suspiciousProviders` / `suspiciousAccounts`，确认后清理历史遗留的提供商与账号链接；仅关闭注册端点不会撤销已经建立的链接。清理顺序：先用 `DELETE /api/admin/sso/providers/{id}` 删除可疑 `sso_provider` 记录，再删除 `account` 表中对应 `providerId` 的链接——管理端删除接口只删除 provider，不会级联删除 account，残留链接在重建同名 `providerId` 后会重新生效。
+-   **`trustEmailVerified` 使用前提**: 仅当用户无法自助注册 SSO 提供商（上述管理端点全部关闭）时才可开启；若重新开放注册，必须同时改为 `false`，或启用 `domainVerification` 并在 `SSOProvider` 实体中持久化 `domainVerified`（当前实体尚未包含该字段，启用前需先补列）。
 
 ## 2. 数据安全 (Data Security)
 

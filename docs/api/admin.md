@@ -503,6 +503,46 @@ GET /api/admin/logs/sessions?page=1&limit=20&status=active&search=192.168
 }
 ```
 
+### SSO 配置排查
+
+#### GET /api/admin/sso/audit
+
+只读接口，用于排查历史遗留的恶意 SSO 提供商（GHSA-785j-54p4-vxw9）。返回所有者缺失或所有者不是管理员的提供商，以及指向这些提供商的账号链接。
+
+**响应示例:**
+
+```json
+{
+    "success": true,
+    "data": {
+        "totalProviders": 12,
+        "suspiciousProviders": [
+            {
+                "id": "123456789",
+                "providerId": "untrusted-idp",
+                "name": "Untrusted IdP",
+                "domain": "example.com",
+                "issuer": "https://idp.example.com",
+                "userId": "987654321",
+                "enabled": true,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+        ],
+        "suspiciousAccounts": [
+            {
+                "id": "555555555",
+                "userId": "111111111",
+                "providerId": "untrusted-idp",
+                "accountId": "attacker-controlled-sub",
+                "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+        ]
+    }
+}
+```
+
+响应中不包含 `clientSecret`、`oidcConfig` 等敏感字段。确认后先通过 `DELETE /api/admin/sso/providers/{id}` 删除可疑提供商，再清理 `account` 表中对应 `providerId` 的链接；删除提供商不会级联删除账号链接。完整清理流程与 `trustEmailVerified` 的使用前提见 [安全规范 - 第三方认证插件端点](../standards/security.md#11-第三方认证插件端点-third-party-auth-plugin-endpoints)。
+
 ## 错误处理
 
 所有管理员 API 都遵循统一的错误响应格式：

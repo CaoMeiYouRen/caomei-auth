@@ -208,6 +208,7 @@ sequenceDiagram
 - **JWT 令牌**: 使用 JWT 进行会话管理
 - **CSRF 保护**: 防止跨站请求伪造攻击
 - **速率限制**: 防止暴力破解和 DDoS 攻击
+- **第三方插件端点**: 上游认证插件的管理端点默认只校验登录态，必须显式关闭或追加管理员校验（见 [安全规范 - 第三方认证插件端点](../standards/security.md#11-第三方认证插件端点-third-party-auth-plugin-endpoints)）
 
 ### 2. 数据安全
 

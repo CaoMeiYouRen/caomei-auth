@@ -22,6 +22,7 @@
 
 ### 技术债务
 
+-   [ ] **SSO 历史配置排查（部署本次加固后必做）**: 由管理员调用 `GET /api/admin/sso/audit` 核查 `suspiciousProviders` / `suspiciousAccounts`，确认并清理历史遗留的恶意 SSO 提供商与账号链接；清理顺序见 [安全规范](../standards/security.md#11-第三方认证插件端点-third-party-auth-plugin-endpoints)（GHSA-785j-54p4-vxw9 善后）。
 -   [ ] **Zod 后端迁移（续）**: 完成 `zod-migration.md` 中剩余 8 个 handlers。
     -   优先级 1（4 个）：路径参数校验 → `oauth/client/[id].get`, `admin/oauth/applications/[id].delete`, `admin/sso/providers/[id].get`, `admin/sso/providers/[id].delete`
     -   优先级 2（2 个）：分页查询参数 → `admin/oauth/applications/index.get`, `admin/sso/providers/index.get`
@@ -46,7 +47,7 @@
 
 -   [ ] **Demo 数据生成**: 完善 `demo-data-generator.ts`，支持更真实的统计分布仿真。
 -   [ ] **安全审计工具集成**: 扫描依赖及配置漏洞（Dependabot / pnpm audit 常态化）。
--   [ ] **文档同步**: 随着 Zod 和 i18n 迁移，同步更新 API 参考文档（`docs/api/`）。
+-   [ ] **文档同步**: 随着 Zod 和 i18n 迁移，同步更新 API 参考文档（`docs/api/`），并补录 `/api/admin/sso/providers` 系列接口。
 
 ---
 
@@ -54,6 +55,7 @@
 
 *（最近一个 sprint 内完成，供参考）*
 
+-   SSO 安全加固：关闭上游 `/sso/register` 等自助管理端点（`disabledPaths` + `providersLimit: 0` + 管理员校验兜底），修复 `trustEmailVerified` 账户接管风险（GHSA-785j-54p4-vxw9）
 -   Zod 后端迁移（已完成 6 个 handlers）
 -   Zod 前端迁移（全部页面表单校验）
 -   Composables 测试覆盖率提升（`use-forgot-password-flow`、`use-security-settings`、`admin/use-user-management`）

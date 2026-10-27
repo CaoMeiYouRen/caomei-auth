@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth'
 import { publicPaths } from '@/utils/shared/public-paths'
+import { isSsoManagementAuthPath } from '@/utils/shared/sso-management-paths'
 import { checkAndSyncAdminRoleWithUser, isUserAdmin } from '@/server/utils/admin-role-sync'
 import logger from '@/server/utils/logger'
 
@@ -35,6 +36,25 @@ export default defineEventHandler(async (event) => {
                 statusCode: 403,
                 statusMessage: 'Forbidden',
                 message: '仅管理员可以访问注册应用接口',
+            })
+        }
+    }
+
+    // SSO 提供商管理端点的纵深防御：即使 disabledPaths 被误删，也不允许普通用户访问。
+    // 详见 utils/shared/sso-management-paths.ts 与 GHSA-785j-54p4-vxw9。
+    if (isSsoManagementAuthPath(event.path)) {
+        if (!session?.user || !isUserAdmin(session.user, session.user.id)) {
+            // 已登录用户的越权尝试需要留痕；未登录命中多为探测，避免日志放大。
+            if (session?.user) {
+                logger.warn('非管理员访问 SSO 提供商管理接口', {
+                    userId: session.user.id,
+                    path: event.path,
+                })
+            }
+            throw createError({
+                statusCode: 403,
+                statusMessage: 'Forbidden',
+                message: '仅管理员可以访问 SSO 提供商管理接口',
             })
         }
     }

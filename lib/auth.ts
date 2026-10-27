@@ -68,9 +68,14 @@ import { emailService } from '@/server/utils/email/service'
 import { getUserLocale } from '@/server/utils/locale'
 import { getCaptchaConfig } from '@/server/utils/captcha-config'
 import { isCaptchaEnabled } from '@/utils/web/captcha'
+import { AUTH_DISABLED_PATHS } from '@/utils/shared/sso-management-paths'
 
 export const auth = betterAuth({
     appName: APP_NAME, // 应用名称。它将被用作发行者。
+    // 显式关闭上游 SSO 提供商管理端点。
+    // 这些端点只校验登录态，不校验管理员身份；本项目只允许通过 admin API 管理 SSO 提供商。
+    // 详见 utils/shared/sso-management-paths.ts 与 GHSA-785j-54p4-vxw9。
+    disabledPaths: AUTH_DISABLED_PATHS,
     // 数据库适配器
     // 使用 TypeORM 适配器
     database: typeormAdapter(dataSource),
@@ -679,11 +684,14 @@ export const auth = betterAuth({
             },
             // 默认覆盖用户信息：使用 SSO 提供商的信息更新本地用户信息
             defaultOverrideUserInfo: false,
-            // 禁用隐式注册：需要显式调用注册才能创建新用户
+            // 隐式注册：false 表示允许 SSO 首次登录时自动创建本地用户
             disableImplicitSignUp: false,
-            // 限制每个用户可以注册的 SSO 提供商数量
-            providersLimit: 10,
-            // 信任邮箱验证状态：信任 SSO 提供商的邮箱验证状态
+            // 禁止用户自助注册 SSO 提供商（0 表示关闭，双保险：disabledPaths 已关闭该端点）
+            // 提供商只能由管理员通过 /api/admin/sso/providers 维护
+            providersLimit: 0,
+            // 信任邮箱验证状态：信任 SSO 提供商返回的 email_verified。
+            // 该选项仅在上游端点不可自助注册时成立（见 disabledPaths 与本文件注释）；
+            // 若未来要重新开放 /sso/register，必须同时改为 false 或启用 domainVerification。
             trustEmailVerified: true,
         }),
         localization({
