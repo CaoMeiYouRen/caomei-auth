@@ -1,5 +1,12 @@
 # caomei-auth
 
+## [1.13.6](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.5...v1.13.6) (2026-10-27)
+
+
+### 🐛 Bug 修复
+
+* **auth:** 关闭 SSO 自助管理端点修复账户接管风险 ([b2d9172](https://github.com/CaoMeiYouRen/caomei-auth/commit/b2d9172))
+
 ## [1.13.5](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.4...v1.13.5) (2026-10-24)
 
 
