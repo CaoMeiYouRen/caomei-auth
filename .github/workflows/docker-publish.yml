@@ -1,0 +1,214 @@
+name: Docker Publish
+
+# 手动补发镜像：Release 工作流的构建步骤失败/超时后，为已有 tag 补上版本镜像。
+#
+# 默认使用「重新打标签」模式：从已推送的 sha-* 镜像（由 Publish Docker Image 工作流
+# 在 push 时构建）直接复制 manifest，不重新构建，几秒内完成。
+# 若 sha-* 镜像不存在或勾选 rebuild，则回退到完整多架构构建。
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "要发布的 Git tag（例如 v1.13.6）"
+        required: true
+        type: string
+      latest:
+        description: "是否同时更新 latest（仅当该 tag 是最新发布时勾选）"
+        required: false
+        type: boolean
+        default: true
+      source:
+        description: "重新打标签的来源镜像 tag（留空则使用 sha-<short>）"
+        required: false
+        type: string
+        default: ""
+      rebuild:
+        description: "强制重新构建（会执行完整多架构构建，耗时较长）"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: docker-publish-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish images
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Resolve tags
+        id: vars
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          TAG="$INPUT_TAG"
+          case "$TAG" in
+            v*) ;;
+            *)
+              echo "::error::tag 必须以 v 开头（收到：$TAG）"
+              exit 1
+              ;;
+          esac
+          if ! git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
+            echo "::error::找不到 tag $TAG，请确认 checkout 成功且 fetch-depth 足够"
+            exit 1
+          fi
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse "refs/tags/$TAG^{commit}")" ]; then
+            echo "::error::HEAD 与 tag $TAG 指向的提交不一致"
+            exit 1
+          fi
+          SHORT_SHA="$(git rev-parse --short=7 HEAD)"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+          echo "short_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
+          echo "date=$(TZ=Asia/Shanghai git log -1 --format=%cd --date=format:%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          echo "repo=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4.6.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Login to Alibaba Cloud Container Registry
+        uses: docker/login-action@v4.6.0
+        with:
+          registry: registry.cn-hangzhou.aliyuncs.com
+          username: ${{ secrets.ALIYUN_USERNAME }}
+          password: ${{ secrets.ALIYUN_PASSWORD }}
+
+      - name: Decide publish mode
+        id: plan
+        env:
+          INPUT_REBUILD: ${{ inputs.rebuild }}
+          INPUT_SOURCE: ${{ inputs.source }}
+          REPO: ${{ steps.vars.outputs.repo }}
+          SHORT_SHA: ${{ steps.vars.outputs.short_sha }}
+        run: |
+          set -euo pipefail
+          inspect() { docker buildx imagetools inspect "ghcr.io/$REPO:$1" >/dev/null 2>&1; }
+
+          if [ "$INPUT_REBUILD" = "true" ]; then
+            echo "mode=build" >> "$GITHUB_OUTPUT"
+            echo "强制重新构建"
+            exit 0
+          fi
+
+          if [ -n "$INPUT_SOURCE" ]; then
+            if inspect "$INPUT_SOURCE"; then
+              echo "mode=retag" >> "$GITHUB_OUTPUT"
+              echo "source=$INPUT_SOURCE" >> "$GITHUB_OUTPUT"
+              echo "来源镜像 ghcr.io/$REPO:$INPUT_SOURCE 存在，使用重新打标签模式"
+            else
+              echo "mode=build" >> "$GITHUB_OUTPUT"
+              echo "::warning::来源镜像 ghcr.io/$REPO:$INPUT_SOURCE 不存在，回退到完整构建"
+            fi
+            exit 0
+          fi
+
+          if inspect "sha-$SHORT_SHA"; then
+            echo "mode=retag" >> "$GITHUB_OUTPUT"
+            echo "source=sha-$SHORT_SHA" >> "$GITHUB_OUTPUT"
+            echo "来源镜像 ghcr.io/$REPO:sha-$SHORT_SHA 存在，使用重新打标签模式"
+            exit 0
+          fi
+
+          # 发布 tag 通常指向 semantic-release 的版本提交，其父提交才是 Publish Docker Image
+          # 工作流构建的代码提交。仅当两者差异只包含发布产物时才允许复用父提交镜像。
+          PARENT_SHA="$(git rev-parse --short=7 'HEAD^' 2>/dev/null || true)"
+          if [ -n "$PARENT_SHA" ]; then
+            NON_RELEASE_FILES="$(git diff --name-only 'HEAD^' 'HEAD' | grep -vE '^(package\.json|CHANGELOG\.md)$' || true)"
+            if [ -z "$NON_RELEASE_FILES" ] && inspect "sha-$PARENT_SHA"; then
+              echo "mode=retag" >> "$GITHUB_OUTPUT"
+              echo "source=sha-$PARENT_SHA" >> "$GITHUB_OUTPUT"
+              echo "复用父提交镜像 ghcr.io/$REPO:sha-$PARENT_SHA（差异仅含发布产物）"
+              exit 0
+            fi
+          fi
+
+          echo "mode=build" >> "$GITHUB_OUTPUT"
+          echo "::warning::未找到可复用的 sha-* 镜像，回退到完整构建"
+
+      - name: Retag images
+        if: steps.plan.outputs.mode == 'retag'
+        env:
+          REPO: ${{ steps.vars.outputs.repo }}
+          VERSION: ${{ steps.vars.outputs.version }}
+          DATE: ${{ steps.vars.outputs.date }}
+          SOURCE: ${{ steps.plan.outputs.source }}
+          LATEST: ${{ inputs.latest }}
+        run: |
+          set -euo pipefail
+          EXTRA_TAGS=""
+          if [ "$LATEST" = "true" ]; then
+            EXTRA_TAGS=" + latest"
+          fi
+          for prefix in "" "ghcr.io/" "registry.cn-hangzhou.aliyuncs.com/"; do
+            image="${prefix}${REPO}"
+            args=(-t "${image}:${VERSION}" -t "${image}:${DATE}")
+            if [ "$LATEST" = "true" ]; then
+              args+=(-t "${image}:latest")
+            fi
+            echo "重新打标签: ${image}:${SOURCE} -> ${VERSION}${EXTRA_TAGS}"
+            docker buildx imagetools create "${args[@]}" "${image}:${SOURCE}"
+          done
+
+      - name: Extract Docker metadata
+        if: steps.plan.outputs.mode == 'build'
+        id: metadata
+        uses: docker/metadata-action@v6
+        with:
+          images: |
+            ${{ github.repository }}
+            ghcr.io/${{ github.repository }}
+            registry.cn-hangzhou.aliyuncs.com/${{ github.repository }}
+          tags: |
+            type=raw,value=${{ steps.vars.outputs.version }}
+            type=raw,value=latest,enable=${{ inputs.latest }}
+            type=raw,value=${{ steps.vars.outputs.date }}
+            type=raw,value=sha-${{ steps.vars.outputs.short_sha }}
+          flavor: latest=false
+
+      - name: Build and push Docker images
+        if: steps.plan.outputs.mode == 'build'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          # 阿里云 ACR 个人版拒绝 provenance/sbom 使用的 OCI 空 manifest，关闭 attestation
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Show published manifests
+        env:
+          REPO: ${{ steps.vars.outputs.repo }}
+          VERSION: ${{ steps.vars.outputs.version }}
+        run: docker buildx imagetools inspect "ghcr.io/${REPO}:${VERSION}"
