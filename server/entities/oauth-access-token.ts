@@ -1,70 +1,89 @@
-import { Entity, ManyToOne } from 'typeorm'
+import { Entity } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
-import { User } from './user'
-import { OAuthApplication } from './oauth-application'
 
+/**
+ * OAuth 访问令牌（better-auth 1.7 `oauthAccessToken` 模型）
+ *
+ * 仅在访问令牌没有 resource audience 声明（非 JWT）时落库，默认以哈希形式存储。
+ */
 @Entity('oauth_access_token')
 export class OAuthAccessToken extends BaseEntity {
     /**
-     * 颁发给客户端的访问令牌
+     * 访问令牌（默认为哈希值）
      */
-    @CustomColumn({ type: 'text', index: true, nullable: false })
-    accessToken: string
+    @CustomColumn({ type: 'varchar', index: true, unique: true, length: 255, nullable: false })
+    token: string
 
     /**
-     * 颁发给客户端的刷新令牌
+     * OAuth 客户端标识
      */
-    @CustomColumn({ type: 'text', index: true, nullable: true })
-    refreshToken: string
-
-    /**
-     * 访问令牌的过期日期
-     */
-    @CustomColumn({ type: 'datetime', nullable: false })
-    accessTokenExpiresAt: Date
-
-    /**
-     * 刷新令牌的过期日期
-     */
-    @CustomColumn({ type: 'datetime', nullable: true })
-    refreshTokenExpiresAt: Date
-
-    /**
-     * OAuth客户端的ID
-     */
-    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: false })
+    @CustomColumn({ type: 'varchar', index: true, length: 191, nullable: false })
     clientId: string
 
     /**
-     * 与令牌关联的用户的ID
+     * 关联的会话 ID
      */
-    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: false })
+    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: true })
+    sessionId: string
+
+    /**
+     * 关联的用户 ID
+     */
+    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: true })
     userId: string
 
     /**
-     * 授予的作用域的逗号分隔列表
+     * 关联的引用标识
      */
-    @CustomColumn({ type: 'text', nullable: true })
-    scopes: string
-
-    // ========== 关系定义 ==========
+    @CustomColumn({ type: 'varchar', length: 191, nullable: true })
+    referenceId: string
 
     /**
-     * 关联的 OAuth 客户端（多对一关系）
+     * 授权码标识
      */
-    @ManyToOne(() => OAuthApplication, (client) => client.accessTokens, {
-        onDelete: 'CASCADE',
-        nullable: false,
-    })
-    client: OAuthApplication
+    @CustomColumn({ type: 'varchar', index: true, length: 191, nullable: true })
+    authorizationCodeId: string
 
     /**
-     * 关联的用户（多对一关系）
+     * 资源标识列表
      */
-    @ManyToOne(() => User, (user) => user.oauthAccessTokens, {
-        onDelete: 'CASCADE',
-        nullable: false,
-    })
-    user: User
+    @CustomColumn({ type: 'simple-json', nullable: true })
+    resources: string[]
+
+    /**
+     * 请求的 userinfo 声明
+     */
+    @CustomColumn({ type: 'simple-json', nullable: true })
+    requestedUserInfoClaims: string[]
+
+    /**
+     * 关联的刷新令牌 ID
+     */
+    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: true })
+    refreshId: string
+
+    /**
+     * 过期时间
+     */
+    @CustomColumn({ type: 'datetime', nullable: false })
+    expiresAt: Date
+
+    /**
+     * 吊销时间
+     */
+    @CustomColumn({ type: 'datetime', nullable: true })
+    revoked: Date
+
+    /**
+     * 确认信息
+     */
+    @CustomColumn({ type: 'simple-json', nullable: true })
+    confirmation: Record<string, any>
+
+    /**
+     * 授予的作用域
+     */
+    @CustomColumn({ type: 'simple-json', nullable: false })
+    scopes: string[]
 }

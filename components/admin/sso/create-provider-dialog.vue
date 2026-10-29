@@ -206,7 +206,6 @@ const samlFormData = ref({
 
 // 属性映射
 const mappingFormData = ref({
-    id: '',
     email: 'email',
     emailVerified: 'email_verified',
     name: '',
@@ -261,7 +260,6 @@ watch(() => props.provider, async (provider) => {
                     // 解析映射配置
                     if (oidcConfig.mapping) {
                         mappingFormData.value = {
-                            id: oidcConfig.mapping.id || 'sub',
                             email: oidcConfig.mapping.email || 'email',
                             emailVerified: oidcConfig.mapping.emailVerified || 'email_verified',
                             name: oidcConfig.mapping.name || 'name',
@@ -289,7 +287,6 @@ watch(() => props.provider, async (provider) => {
                     // 解析映射配置
                     if (samlConfig.mapping) {
                         mappingFormData.value = {
-                            id: samlConfig.mapping.id || 'nameID',
                             email: samlConfig.mapping.email || 'email',
                             emailVerified: '',
                             name: samlConfig.mapping.name || 'displayName',
@@ -355,7 +352,6 @@ function resetForm() {
     }
 
     mappingFormData.value = {
-        id: '',
         email: 'email',
         emailVerified: 'email_verified',
         name: '',
@@ -394,7 +390,6 @@ function validateForm(): string[] {
             scopes: oidcFormData.value.scopes,
             pkce: oidcFormData.value.pkce,
             mapping: {
-                id: mappingFormData.value.id,
                 email: mappingFormData.value.email,
                 emailVerified: mappingFormData.value.emailVerified,
                 name: mappingFormData.value.name,
@@ -408,7 +403,6 @@ function validateForm(): string[] {
             signingKey: samlFormData.value.signingKey,
             attributeConsumingServiceIndex: samlFormData.value.attributeConsumingServiceIndex,
             mapping: {
-                id: mappingFormData.value.id,
                 email: mappingFormData.value.email,
                 name: mappingFormData.value.name,
                 firstName: mappingFormData.value.firstName,
@@ -469,7 +463,6 @@ async function submitProvider() {
                 scopes: oidcFormData.value.scopes,
                 pkce: oidcFormData.value.pkce,
                 mapping: {
-                    id: mappingFormData.value.id || 'sub',
                     email: mappingFormData.value.email || 'email',
                     emailVerified: mappingFormData.value.emailVerified || 'email_verified',
                     name: mappingFormData.value.name || 'name',
@@ -483,7 +476,6 @@ async function submitProvider() {
                 signingKey: samlFormData.value.signingKey || undefined,
                 attributeConsumingServiceIndex: samlFormData.value.attributeConsumingServiceIndex,
                 mapping: {
-                    id: mappingFormData.value.id || 'nameID',
                     email: mappingFormData.value.email || 'email',
                     name: mappingFormData.value.name || 'displayName',
                     firstName: mappingFormData.value.firstName || 'givenName',

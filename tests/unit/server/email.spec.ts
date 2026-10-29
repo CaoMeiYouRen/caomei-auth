@@ -14,6 +14,7 @@ const limiterMock: LimiterDeps = {
     get: vi.fn(),
     set: vi.fn(),
     delete: vi.fn(),
+    getAndDelete: vi.fn(),
 }
 
 function createMockTransporter(): Transporter {

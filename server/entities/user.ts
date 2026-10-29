@@ -4,9 +4,6 @@ import { BaseEntity } from './base-entity'
 import { TwoFactor } from './two-factor'
 import { Account } from './account'
 import { Session } from './session'
-import { OAuthApplication } from './oauth-application'
-import { OAuthAccessToken } from './oauth-access-token'
-import { OAuthConsent } from './oauth-consent'
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -123,32 +120,5 @@ export class User extends BaseEntity {
         onDelete: 'CASCADE',
     })
     sessions?: Session[]
-
-    /**
-     * 用户创建的 OAuth 应用（一对多关系）
-     */
-    @OneToMany(() => OAuthApplication, (application) => application.user, {
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
-    oauthApplications?: OAuthApplication[]
-
-    /**
-     * 用户的 OAuth 访问令牌（一对多关系）
-     */
-    @OneToMany(() => OAuthAccessToken, (token) => token.user, {
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
-    oauthAccessTokens?: OAuthAccessToken[]
-
-    /**
-     * 用户的 OAuth 授权同意（一对多关系）
-     */
-    @OneToMany(() => OAuthConsent, (consent) => consent.user, {
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
-    oauthConsents?: OAuthConsent[]
 
 }

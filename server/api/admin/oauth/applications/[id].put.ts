@@ -1,7 +1,8 @@
 import { defineEventHandler, readBody } from 'h3'
-import { OAuthApplication } from '@/server/entities/oauth-application'
+import { OAuthClient } from '@/server/entities/oauth-client'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
+import { applyOAuthClientInput, toAdminOAuthClientView } from '@/server/utils/oauth-client-view'
 import logger from '@/server/utils/logger'
 import { oauthApplicationUpdateSchema } from '@/utils/shared/schemas'
 
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
             }
         }
 
-        const repo = dataSource.getRepository(OAuthApplication)
+        const repo = dataSource.getRepository(OAuthClient)
 
         const application = await repo.findOne({
             where: { id },
@@ -44,7 +45,7 @@ export default defineEventHandler(async (event) => {
                 status: 200,
                 success: true,
                 message: `应用已${body.disabled ? '禁用' : '启用'}`,
-                data: application,
+                data: toAdminOAuthClientView(application),
             }
         }
 
@@ -61,51 +62,23 @@ export default defineEventHandler(async (event) => {
 
         const validatedData = validationResult.data
 
-        if (validatedData.client_name) {
-            application.name = validatedData.client_name
-        }
-        if (validatedData.description !== undefined) {
-            application.description = validatedData.description
-        }
-        if (validatedData.redirect_uris && Array.isArray(validatedData.redirect_uris)) {
-            application.redirectURLs = validatedData.redirect_uris.join(',')
-        }
-        if (validatedData.client_uri !== undefined) {
-            application.clientUri = validatedData.client_uri
-        }
-        if (validatedData.logo_uri !== undefined) {
-            application.logoUri = validatedData.logo_uri
-        }
-        if (validatedData.scope) {
-            application.scope = validatedData.scope
-        }
-        if (validatedData.contacts && Array.isArray(validatedData.contacts)) {
-            application.contacts = validatedData.contacts.join(',')
-        }
-        if (validatedData.tos_uri !== undefined) {
-            application.tosUri = validatedData.tos_uri
-        }
-        if (validatedData.policy_uri !== undefined) {
-            application.policyUri = validatedData.policy_uri
-        }
-        if (validatedData.token_endpoint_auth_method) {
-            application.tokenEndpointAuthMethod = validatedData.token_endpoint_auth_method
-        }
-        if (validatedData.grant_types && Array.isArray(validatedData.grant_types)) {
-            application.grantTypes = validatedData.grant_types.join(',')
-        }
-        if (validatedData.response_types && Array.isArray(validatedData.response_types)) {
-            application.responseTypes = validatedData.response_types.join(',')
-        }
-        if (validatedData.software_id !== undefined) {
-            application.softwareId = validatedData.software_id
-        }
-        if (validatedData.software_version !== undefined) {
-            application.softwareVersion = validatedData.software_version
-        }
-        if (validatedData.disabled !== undefined) {
-            application.disabled = validatedData.disabled
-        }
+        applyOAuthClientInput(application, {
+            name: validatedData.client_name,
+            description: validatedData.description,
+            redirectURLs: validatedData.redirect_uris && Array.isArray(validatedData.redirect_uris) ? validatedData.redirect_uris.join(',') : undefined,
+            clientUri: validatedData.client_uri,
+            logoUri: validatedData.logo_uri,
+            scope: validatedData.scope,
+            contacts: validatedData.contacts && Array.isArray(validatedData.contacts) ? validatedData.contacts.join(',') : undefined,
+            tosUri: validatedData.tos_uri,
+            policyUri: validatedData.policy_uri,
+            tokenEndpointAuthMethod: validatedData.token_endpoint_auth_method,
+            grantTypes: validatedData.grant_types && Array.isArray(validatedData.grant_types) ? validatedData.grant_types.join(',') : undefined,
+            responseTypes: validatedData.response_types && Array.isArray(validatedData.response_types) ? validatedData.response_types.join(',') : undefined,
+            softwareId: validatedData.software_id,
+            softwareVersion: validatedData.software_version,
+            disabled: validatedData.disabled,
+        })
 
         await repo.save(application)
 
@@ -113,7 +86,7 @@ export default defineEventHandler(async (event) => {
             status: 200,
             success: true,
             message: '应用更新成功',
-            data: application,
+            data: toAdminOAuthClientView(application),
         }
     } catch (error) {
         logger.business.oauthAppUpdated({

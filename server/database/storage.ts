@@ -22,6 +22,13 @@ interface BaseStorage {
      * @returns
      */
     increment: (key: string, ttl: number) => Promise<number>
+    /**
+     * 原子读取并删除
+     *
+     * @param key
+     * @returns
+     */
+    getAndDelete: (key: string) => Promise<string | null>
 }
 
 // 初始化基础存储
@@ -50,6 +57,7 @@ const createBaseStorage = (): BaseStorage => {
                 }
                 return current
             },
+            getAndDelete: async (key: string) => redis.getdel(key),
         }
     }
     const memoryStorage = new LRUCache<string, string>({
@@ -70,8 +78,20 @@ const createBaseStorage = (): BaseStorage => {
         increment: async (key: string, ttl: number) => {
             const currentValue = memoryStorage.get(key)
             const current = (currentValue ? parseInt(currentValue, 10) : 0) + 1
-            memoryStorage.set(key, current.toString(), { ttl: ttl * 1000 })
+            // 仅在首次创建时设置过期时间，避免后续自增不断延长计数窗口（与 Redis 实现保持一致）
+            if (current === 1) {
+                memoryStorage.set(key, current.toString(), { ttl: ttl * 1000 })
+            } else {
+                memoryStorage.set(key, current.toString())
+            }
             return current
+        },
+        getAndDelete: async (key: string): Promise<string | null> => {
+            const value = await memoryStorage.fetch(key)
+            if (value === undefined) {
+                return null
+            }
+            return value
         },
     }
 }
@@ -84,6 +104,9 @@ const secondaryStorageImplementation: SecondaryStorage = {
     get: baseStorage.get,
     set: baseStorage.set,
     delete: baseStorage.delete,
+    increment: baseStorage.increment,
+    // better-auth 1.7 起 getAndDelete 为必实现方法，用于原子读取并删除
+    getAndDelete: baseStorage.getAndDelete,
 }
 
 // 二级存储

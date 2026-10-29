@@ -6,11 +6,16 @@ import { User } from '../entities/user'
 import { Verification } from '../entities/verification'
 import { TwoFactor } from '../entities/two-factor'
 import { OAuthAccessToken } from '../entities/oauth-access-token'
-import { OAuthApplication } from '../entities/oauth-application'
+import { OAuthClient } from '../entities/oauth-client'
+import { OAuthClientAssertion } from '../entities/oauth-client-assertion'
+import { OAuthClientResource } from '../entities/oauth-client-resource'
 import { OAuthConsent } from '../entities/oauth-consent'
+import { OAuthRefreshToken } from '../entities/oauth-refresh-token'
+import { OAuthResource } from '../entities/oauth-resource'
 import { Jwks } from '../entities/jwks'
 import { SSOProvider } from '../entities/sso-provider'
 import logger from '../utils/logger'
+import { hashClientSecret } from '../utils/oauth-client-view'
 import { CustomLogger } from './logger'
 import { SnakeCaseNamingStrategy } from './naming-strategy'
 import {
@@ -57,7 +62,7 @@ async function populateDemoDataAsync(): Promise<void> {
 
         // 获取仓库
         const userRepository = AppDataSource.getRepository(User)
-        const oauthAppRepository = AppDataSource.getRepository(OAuthApplication)
+        const oauthAppRepository = AppDataSource.getRepository(OAuthClient)
         const ssoProviderRepository = AppDataSource.getRepository(SSOProvider)
 
         // 检查是否已存在演示数据
@@ -156,13 +161,17 @@ async function populateDemoDataAsync(): Promise<void> {
                 const app = oauthAppRepository.create({
                     name: appData.name,
                     clientId: appData.clientId,
-                    clientSecret: appData.clientSecret,
-                    redirectURLs: appData.redirectUris.join('\n'), // 注意字段名是 redirectURLs
+                    clientSecret: hashClientSecret(appData.clientSecret),
+                    redirectUris: appData.redirectUris,
                     description: appData.description,
-                    logoUri: appData.logo,
-                    scope: appData.scopes.join(' '),
+                    icon: appData.logo,
+                    scopes: appData.scopes,
                     disabled: appData.status === 'inactive',
-                    type: 'web', // 设置默认类型
+                    applicationType: 'web', // 设置默认类型
+                    grantTypes: ['authorization_code', 'refresh_token'],
+                    responseTypes: ['code'],
+                    tokenEndpointAuthMethod: 'client_secret_basic',
+                    requirePKCE: false,
                     userId: adminUser.user.id, // 所有演示应用归属于管理员
                     createdAt: appData.createdAt,
                     updatedAt: appData.updatedAt,
@@ -222,7 +231,22 @@ const SUPPORTED_DATABASE_TYPES = ['sqlite', 'mysql', 'postgres']
 let isInitialized = false
 let AppDataSource: DataSource | null = null
 
-const entities = [Account, Session, User, Verification, TwoFactor, OAuthApplication, OAuthAccessToken, OAuthConsent, Jwks, SSOProvider]
+const entities = [
+    Account,
+    Session,
+    User,
+    Verification,
+    TwoFactor,
+    OAuthClient,
+    OAuthClientResource,
+    OAuthResource,
+    OAuthAccessToken,
+    OAuthRefreshToken,
+    OAuthConsent,
+    OAuthClientAssertion,
+    Jwks,
+    SSOProvider,
+]
 
 export const initializeDB = async () => {
     if (isInitialized && AppDataSource) {

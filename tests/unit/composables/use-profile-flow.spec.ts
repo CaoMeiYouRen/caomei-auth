@@ -174,12 +174,12 @@ describe('useProfileFlow', () => {
             const { linkSocialAccount } = await useProfileFlow()
             const provider = { provider: 'oidc', name: 'OIDC', enabled: true, oauth2: true }
 
-            mockAuthClient.oauth2.link.mockResolvedValue({ data: true })
+            mockAuthClient.linkSocial.mockResolvedValue({ data: true })
 
             await linkSocialAccount(provider as any)
 
-            expect(mockAuthClient.oauth2.link).toHaveBeenCalledWith(expect.objectContaining({
-                providerId: 'oidc',
+            expect(mockAuthClient.linkSocial).toHaveBeenCalledWith(expect.objectContaining({
+                provider: 'oidc',
             }))
         })
 
@@ -238,7 +238,6 @@ describe('useProfileFlow', () => {
             await acceptCallback()
 
             expect(mockAuthClient.unlinkAccount).toHaveBeenCalledWith({
-                providerId: 'github',
                 accountId: 'gh_123',
             })
             expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({

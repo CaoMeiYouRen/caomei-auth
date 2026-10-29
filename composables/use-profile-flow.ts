@@ -131,7 +131,7 @@ export async function useProfileFlow() {
     }
 
     async function linkSocialAccount(socialProvider: SocialProvider) {
-        const { provider, name, social, oauth2, enabled } = socialProvider
+        const { provider, name, enabled } = socialProvider
 
         if (!enabled) {
             toast.add({
@@ -144,18 +144,10 @@ export async function useProfileFlow() {
         }
 
         try {
-            let result: any
-            if (social) {
-                result = await authClient.linkSocial({
-                    provider,
-                    callbackURL: `${AUTH_BASE_URL}/profile`,
-                })
-            } else if (oauth2) {
-                result = await authClient.oauth2.link({
-                    providerId: provider,
-                    callbackURL: `${AUTH_BASE_URL}/profile`,
-                })
-            }
+            const result = await authClient.linkSocial({
+                provider,
+                callbackURL: `${AUTH_BASE_URL}/profile`,
+            })
             if (!result || result.error) {
                 throw new Error(result?.error?.message || `${name} 绑定失败`)
             }
@@ -179,7 +171,6 @@ export async function useProfileFlow() {
     async function unlinkAccount(provider: string, accountId: string) {
         try {
             const result = await authClient.unlinkAccount({
-                providerId: provider,
                 accountId,
             })
             if (result.error) {

@@ -68,9 +68,12 @@ describe('SSO 管理端点禁用契约', () => {
     let hardened: ReturnType<typeof createAuth>
     let baseline: ReturnType<typeof createAuth>
 
-    beforeAll(() => {
+    beforeAll(async () => {
         hardened = createAuth({ disabledPaths: AUTH_DISABLED_PATHS })
         baseline = createAuth()
+        // better-auth 1.7 在首次使用前要求数据库 schema 已就绪，否则直接抛 schema mismatch
+        await (await hardened.$context).runMigrations()
+        await (await baseline.$context).runMigrations()
     })
 
     it.each(ALWAYS_REGISTERED_PATHS)('禁用后 %s 返回 404', async (disabledPath) => {

@@ -3,7 +3,7 @@ import handler from '@/server/api/oauth/consents.get'
 import { dataSource } from '@/server/database'
 import { getUserSession } from '@/server/utils/get-user-session'
 import { OAuthConsent } from '@/server/entities/oauth-consent'
-import { OAuthApplication } from '@/server/entities/oauth-application'
+import { OAuthClient } from '@/server/entities/oauth-client'
 
 // Mock dependencies
 vi.mock('@/server/database', () => ({
@@ -18,16 +18,10 @@ vi.mock('@/server/utils/get-user-session', () => ({
 
 describe('server/api/oauth/consents.get', () => {
     const mockConsentRepo = {
-        createQueryBuilder: vi.fn(),
+        find: vi.fn(),
     }
     const mockAppRepo = {
         findOne: vi.fn(),
-    }
-    const mockQueryBuilder = {
-        leftJoinAndSelect: vi.fn().mockReturnThis(),
-        where: vi.fn().mockReturnThis(),
-        andWhere: vi.fn().mockReturnThis(),
-        getRawAndEntities: vi.fn(),
     }
 
     beforeEach(() => {
@@ -36,12 +30,11 @@ describe('server/api/oauth/consents.get', () => {
             if (entity === OAuthConsent) {
                 return mockConsentRepo as any
             }
-            if (entity === OAuthApplication) {
+            if (entity === OAuthClient) {
                 return mockAppRepo as any
             }
             return {} as any
         })
-        mockConsentRepo.createQueryBuilder.mockReturnValue(mockQueryBuilder)
     })
 
     it('should return authorized apps for logged in user', async () => {
@@ -51,21 +44,18 @@ describe('server/api/oauth/consents.get', () => {
         } as any)
 
         const mockConsents = [
-            { id: 'c1', clientId: 'client-1', createdAt: new Date(), scopes: 'openid,profile', consentGiven: true },
+            { id: 'c1', clientId: 'client-1', createdAt: new Date(), scopes: ['openid', 'profile'] },
         ]
-        mockQueryBuilder.getRawAndEntities.mockResolvedValue({
-            entities: mockConsents,
-            raw: [],
-        })
+        mockConsentRepo.find.mockResolvedValue(mockConsents)
 
         const mockApp = {
             clientId: 'client-1',
             name: 'Test App',
             description: 'Test Description',
-            logoUri: 'https://example.com/logo.png',
-            clientUri: 'https://example.com',
-            tosUri: 'https://example.com/tos',
-            policyUri: 'https://example.com/policy',
+            icon: 'https://example.com/logo.png',
+            uri: 'https://example.com',
+            tos: 'https://example.com/tos',
+            policy: 'https://example.com/policy',
             disabled: false,
         }
         mockAppRepo.findOne.mockResolvedValue(mockApp)
@@ -74,9 +64,7 @@ describe('server/api/oauth/consents.get', () => {
         const result = await handler(event as any)
 
         expect(getUserSession).toHaveBeenCalledWith(event)
-        expect(mockConsentRepo.createQueryBuilder).toHaveBeenCalledWith('consent')
-        expect(mockQueryBuilder.where).toHaveBeenCalledWith('consent.userId = :userId', { userId })
-        expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith('consent.consentGiven = :consentGiven', { consentGiven: true })
+        expect(mockConsentRepo.find).toHaveBeenCalledWith({ where: { userId } })
         expect(mockAppRepo.findOne).toHaveBeenCalledWith({ where: { clientId: 'client-1' } })
 
         expect(result).toEqual({
@@ -114,13 +102,9 @@ describe('server/api/oauth/consents.get', () => {
             user: { id: userId },
         } as any)
 
-        const mockConsents = [
-            { id: 'c1', clientId: 'client-1', createdAt: new Date(), scopes: 'openid', consentGiven: true },
-        ]
-        mockQueryBuilder.getRawAndEntities.mockResolvedValue({
-            entities: mockConsents,
-            raw: [],
-        })
+        mockConsentRepo.find.mockResolvedValue([
+            { id: 'c1', clientId: 'client-1', createdAt: new Date(), scopes: ['openid'] },
+        ])
 
         mockAppRepo.findOne.mockResolvedValue({ disabled: true })
 
@@ -137,9 +121,7 @@ describe('server/api/oauth/consents.get', () => {
         } as any)
 
         const error = new Error('Database error')
-        mockConsentRepo.createQueryBuilder.mockImplementation(() => {
-            throw error
-        })
+        mockConsentRepo.find.mockRejectedValue(error)
 
         const event = { context: {} }
         const result = await handler(event as any)

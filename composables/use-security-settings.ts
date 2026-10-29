@@ -71,10 +71,16 @@ export function useSecuritySettings() {
 
             const { data, error } = await authClient.twoFactor.enable({
                 password: password.value,
+                method: 'totp',
             })
 
             if (error) {
                 throw new Error(error.message || '设置失败')
+            }
+
+            // 1.7 起 enableTwoFactor 返回按 method 区分的联合类型，仅在 totp 分支包含密钥与备份码
+            if (!data || data.method !== 'totp') {
+                throw new Error('未获取到 TOTP 配置信息')
             }
 
             totpUri.value = data.totpURI

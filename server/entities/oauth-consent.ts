@@ -1,52 +1,45 @@
-import { Entity, ManyToOne } from 'typeorm'
+import { Entity } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
-import { User } from './user'
-import { OAuthApplication } from './oauth-application'
 
+/**
+ * OAuth 用户授权同意（better-auth 1.7 `oauthConsent` 模型）
+ */
 @Entity('oauth_consent')
 export class OAuthConsent extends BaseEntity {
     /**
-     * 给予同意的用户的ID
+     * OAuth 客户端标识
      */
-    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: false })
-    userId: string
-
-    /**
-     * OAuth客户端的ID
-     */
-    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: false })
+    @CustomColumn({ type: 'varchar', index: true, length: 191, nullable: false })
     clientId: string
 
     /**
-     * 同意的作用域的逗号分隔列表
+     * 给予同意的用户 ID
      */
-    @CustomColumn({ type: 'text', nullable: true })
-    scopes: string
+    @CustomColumn({ type: 'varchar', index: true, length: 36, nullable: true })
+    userId: string
 
     /**
-     * 指示是否给予了同意
+     * 关联的引用标识
      */
-    @CustomColumn({ type: 'boolean', default: false })
-    consentGiven: boolean
-
-    // ========== 关系定义 ==========
+    @CustomColumn({ type: 'varchar', length: 191, nullable: true })
+    referenceId: string
 
     /**
-     * 关联的 OAuth 客户端（多对一关系）
+     * 资源标识列表
      */
-    @ManyToOne(() => OAuthApplication, (client) => client.consents, {
-        onDelete: 'CASCADE',
-        nullable: false,
-    })
-    client: OAuthApplication
+    @CustomColumn({ type: 'simple-json', nullable: true })
+    resources: string[]
 
     /**
-     * 关联的用户（多对一关系）
+     * 请求的 userinfo 声明
      */
-    @ManyToOne(() => User, (user) => user.oauthConsents, {
-        onDelete: 'CASCADE',
-        nullable: false,
-    })
-    user: User
+    @CustomColumn({ type: 'simple-json', nullable: true })
+    requestedUserInfoClaims: string[]
+
+    /**
+     * 授予的作用域
+     */
+    @CustomColumn({ type: 'simple-json', nullable: false })
+    scopes: string[]
 }
