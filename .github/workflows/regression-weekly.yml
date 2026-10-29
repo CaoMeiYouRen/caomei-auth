@@ -2,9 +2,8 @@ name: Weekly Regression
 
 on:
   schedule:
-    # 每周一 UTC 1:00（北京时间 9:00）：在每周规划时段完整重跑一遍 release 前置全链路（不正式发布），
-    # 并早于 release.yml 的周六发布窗口，形成"周初发现问题 → 周中修复 → 周末发布"的闭环。
-    - cron: "0 1 * * 1"
+    # UTC+0 每周五中午 12 点触发（UTC+8 每周五晚上 20 点触发）
+    - cron: "0 12 * * 5"
   workflow_dispatch:
     inputs:
       scope:
