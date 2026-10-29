@@ -53,81 +53,172 @@ CREATE TABLE `caomei_auth_account` (
     CONSTRAINT `FK_6415e014be607f933d913962c95` FOREIGN KEY (`user_id`) REFERENCES `caomei_auth_user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 表: caomei_auth_oauth_application
-DROP TABLE IF EXISTS `caomei_auth_oauth_application`;
+-- 表: caomei_auth_oauth_client
+DROP TABLE IF EXISTS `caomei_auth_oauth_client`;
 
-CREATE TABLE `caomei_auth_oauth_application` (
-    `id` VARCHAR(36) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `client_id` TEXT NOT NULL,
-    `client_secret` TEXT NOT NULL,
-    `name` TEXT NOT NULL,
-    `redirect_ur_ls` TEXT NOT NULL,
-    `metadata` TEXT NULL,
-    `type` VARCHAR(32) NOT NULL,
-    `disabled` BOOLEAN NOT NULL DEFAULT FALSE,
+CREATE TABLE `caomei_auth_oauth_client` (
+    `id` VARCHAR(36) NOT NULL PRIMARY KEY,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `client_id` VARCHAR(191) NOT NULL,
+    `client_secret` TEXT NULL,
+    `client_discovery_id` VARCHAR(191) NULL,
+    `disabled` BOOLEAN NOT NULL DEFAULT 0,
+    `skip_consent` BOOLEAN NULL,
+    `enable_end_session` BOOLEAN NULL,
+    `subject_type` VARCHAR(32) NULL,
+    `scopes` TEXT NULL,
+    `client_credentials_scopes` TEXT NULL,
     `user_id` VARCHAR(36) NULL,
+    `name` TEXT NULL,
     `description` TEXT NULL,
-    `token_endpoint_auth_method` VARCHAR(32) DEFAULT 'client_secret_basic',
-    `grant_types` TEXT NULL,
-    `response_types` TEXT NULL,
-    `client_uri` TEXT NULL,
-    `logo_uri` TEXT NULL,
-    `scope` TEXT NULL,
+    `uri` TEXT NULL,
+    `icon` TEXT NULL,
     `contacts` TEXT NULL,
-    `tos_uri` TEXT NULL,
-    `policy_uri` TEXT NULL,
-    `jwks_uri` TEXT NULL,
-    `jwks` TEXT NULL,
+    `tos` TEXT NULL,
+    `policy` TEXT NULL,
     `software_id` VARCHAR(64) NULL,
     `software_version` VARCHAR(32) NULL,
     `software_statement` TEXT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `IDX_dee3adb9afb19035fe52c3fd32` (`client_id`(255)),
-    KEY `IDX_e99bf1ea40294f87fef9d3e13b` (`user_id`),
-    CONSTRAINT `FK_e99bf1ea40294f87fef9d3e13b6` FOREIGN KEY (`user_id`) REFERENCES `caomei_auth_user` (`id`) ON DELETE CASCADE
+    `redirect_uris` TEXT NOT NULL,
+    `post_logout_redirect_uris` TEXT NULL,
+    `backchannel_logout_uri` TEXT NULL,
+    `backchannel_logout_session_required` BOOLEAN NULL,
+    `token_endpoint_auth_method` VARCHAR(32) NULL,
+    `application_type` VARCHAR(32) NULL,
+    `jwks` TEXT NULL,
+    `jwks_uri` TEXT NULL,
+    `grant_types` TEXT NULL,
+    `response_types` TEXT NULL,
+    `require_pkce` BOOLEAN NULL,
+    `dpop_bound_access_tokens` BOOLEAN NOT NULL DEFAULT 0,
+    `reference_id` VARCHAR(191) NULL,
+    `metadata` TEXT NULL,
+    UNIQUE KEY `IDX_7e27963e79c7ec5cb46ecbd3e0` (`client_id`),
+    KEY `IDX_ed96c8129eaa026b4141b92877` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 表: caomei_auth_oauth_resource
+DROP TABLE IF EXISTS `caomei_auth_oauth_resource`;
+
+CREATE TABLE `caomei_auth_oauth_resource` (
+    `id` VARCHAR(36) NOT NULL PRIMARY KEY,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `identifier` VARCHAR(768) NOT NULL,
+    `name` TEXT NOT NULL,
+    `access_token_ttl` INTEGER NULL,
+    `refresh_token_ttl` INTEGER NULL,
+    `signing_algorithm` VARCHAR(32) NULL,
+    `signing_key_id` VARCHAR(191) NULL,
+    `allowed_scopes` TEXT NULL,
+    `custom_claims` TEXT NULL,
+    `dpop_bound_access_tokens_required` BOOLEAN NOT NULL DEFAULT 0,
+    `disabled` BOOLEAN NOT NULL DEFAULT 0,
+    `policy_version` INTEGER NOT NULL DEFAULT 1,
+    `metadata` TEXT NULL,
+    UNIQUE KEY `undefined` (`identifier`),
+    UNIQUE KEY `UQ_63b7a3234cb7e761bb8ec431178` (`identifier`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 表: caomei_auth_oauth_client_resource
+DROP TABLE IF EXISTS `caomei_auth_oauth_client_resource`;
+
+CREATE TABLE `caomei_auth_oauth_client_resource` (
+    `id` VARCHAR(36) NOT NULL PRIMARY KEY,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `client_id` VARCHAR(191) NOT NULL,
+    `resource_id` VARCHAR(512) NOT NULL,
+    `metadata` TEXT NULL,
+    KEY `IDX_66d910ee583421b58c74f76d34` (`client_id`),
+    KEY `IDX_8a12fed2128cad8405547cd132` (`resource_id`),
+    UNIQUE KEY `IDX_16f4c39e99d3b2619a4e92992c` (`client_id`, `resource_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 表: caomei_auth_oauth_access_token
 DROP TABLE IF EXISTS `caomei_auth_oauth_access_token`;
 
 CREATE TABLE `caomei_auth_oauth_access_token` (
-    `id` VARCHAR(36) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `access_token` TEXT NOT NULL,
-    `refresh_token` TEXT NULL,
-    `access_token_expires_at` TIMESTAMP NOT NULL,
-    `refresh_token_expires_at` TIMESTAMP NULL,
-    `client_id` VARCHAR(36) NOT NULL,
-    `user_id` VARCHAR(36) NOT NULL,
-    `scopes` TEXT NULL,
-    PRIMARY KEY (`id`),
-    KEY `IDX_64151152d3b06145934b2776db` (`access_token`(255)),
+    `id` VARCHAR(36) NOT NULL PRIMARY KEY,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `token` VARCHAR(255) NOT NULL,
+    `client_id` VARCHAR(191) NOT NULL,
+    `session_id` VARCHAR(36) NULL,
+    `user_id` VARCHAR(36) NULL,
+    `reference_id` VARCHAR(191) NULL,
+    `authorization_code_id` VARCHAR(191) NULL,
+    `resources` TEXT NULL,
+    `requested_user_info_claims` TEXT NULL,
+    `refresh_id` VARCHAR(36) NULL,
+    `expires_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `revoked` DATETIME NULL,
+    `confirmation` TEXT NULL,
+    `scopes` TEXT NOT NULL,
+    UNIQUE KEY `IDX_078f4bd43a276ea00117f6b5a7` (`token`),
     KEY `IDX_79dc2fd873300c86e710e1e573` (`client_id`),
+    KEY `IDX_a204f51ebef92e5a0ac9abf81e` (`session_id`),
     KEY `IDX_993218a00f98d6c01350c75c48` (`user_id`),
-    KEY `IDX_de6b575c18d7b60ef79b62c9f9` (`refresh_token`(255)),
-    CONSTRAINT `FK_79dc2fd873300c86e710e1e5734` FOREIGN KEY (`client_id`) REFERENCES `caomei_auth_oauth_application` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `FK_993218a00f98d6c01350c75c48a` FOREIGN KEY (`user_id`) REFERENCES `caomei_auth_user` (`id`) ON DELETE CASCADE
+    KEY `IDX_4884a51f27eebd700342707639` (`authorization_code_id`),
+    KEY `IDX_0d00b3721ac96b0128088e83c6` (`refresh_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 表: caomei_auth_oauth_refresh_token
+DROP TABLE IF EXISTS `caomei_auth_oauth_refresh_token`;
+
+CREATE TABLE `caomei_auth_oauth_refresh_token` (
+    `id` VARCHAR(36) NOT NULL PRIMARY KEY,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `token` VARCHAR(255) NOT NULL,
+    `client_id` VARCHAR(191) NOT NULL,
+    `session_id` VARCHAR(36) NULL,
+    `user_id` VARCHAR(36) NOT NULL,
+    `reference_id` VARCHAR(191) NULL,
+    `authorization_code_id` VARCHAR(191) NULL,
+    `resources` TEXT NULL,
+    `requested_user_info_claims` TEXT NULL,
+    `expires_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `revoked` DATETIME NULL,
+    `rotated_at` DATETIME NULL,
+    `rotation_replay_response` TEXT NULL,
+    `rotation_replay_expires_at` DATETIME NULL,
+    `auth_time` DATETIME NULL,
+    `confirmation` TEXT NULL,
+    `scopes` TEXT NOT NULL,
+    UNIQUE KEY `IDX_62a4b4c6becebfb576f08caf83` (`token`),
+    KEY `IDX_1cf2681c8e104f4f008960e35a` (`client_id`),
+    KEY `IDX_96a6a07954a0d94d48fe001173` (`session_id`),
+    KEY `IDX_089bf8ffb36da54de18509e0b6` (`user_id`),
+    KEY `IDX_e86ccb13bb91e92d29e0999a6a` (`authorization_code_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 表: caomei_auth_oauth_consent
 DROP TABLE IF EXISTS `caomei_auth_oauth_consent`;
 
 CREATE TABLE `caomei_auth_oauth_consent` (
-    `id` VARCHAR(36) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `user_id` VARCHAR(36) NOT NULL,
-    `client_id` VARCHAR(36) NOT NULL,
-    `scopes` TEXT NULL,
-    `consent_given` BOOLEAN NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (`id`),
-    KEY `IDX_5537b38a6c06bb652a341fa637` (`user_id`),
+    `id` VARCHAR(36) NOT NULL PRIMARY KEY,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `client_id` VARCHAR(191) NOT NULL,
+    `user_id` VARCHAR(36) NULL,
+    `reference_id` VARCHAR(191) NULL,
+    `resources` TEXT NULL,
+    `requested_user_info_claims` TEXT NULL,
+    `scopes` TEXT NOT NULL,
     KEY `IDX_8a0738a41dabfbf705c162bde1` (`client_id`),
-    CONSTRAINT `FK_5537b38a6c06bb652a341fa6370` FOREIGN KEY (`user_id`) REFERENCES `caomei_auth_user` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `FK_8a0738a41dabfbf705c162bde1d` FOREIGN KEY (`client_id`) REFERENCES `caomei_auth_oauth_application` (`id`) ON DELETE CASCADE
+    KEY `IDX_5537b38a6c06bb652a341fa637` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 表: caomei_auth_oauth_client_assertion
+DROP TABLE IF EXISTS `caomei_auth_oauth_client_assertion`;
+
+CREATE TABLE `caomei_auth_oauth_client_assertion` (
+    `id` VARCHAR(36) NOT NULL PRIMARY KEY,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `expires_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 表: caomei_auth_session

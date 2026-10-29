@@ -212,6 +212,7 @@
 2. **PKCE 默认值**：1.7 中 `client.requirePKCE ?? true`，与 1.6 的 `requirePKCE: false` 行为冲突。管理端创建客户端与演示数据显式写入 `requirePKCE: false`，保持既有接入方无需改造。
 3. **issuer 保持根 URL**：`jwt.issuer` 继续取 `AUTH_BASE_URL`，避免已接入客户端校验 `iss` 失败；发现文档位于根路径（符合 OIDC Discovery 规范），同时保留旧路径。
 4. **表结构来源**：实体字段直接对齐 `getAuthTables()` 输出，并新增回归测试 `tests/unit/server/database/oauth-schema.spec.ts`（模型↔实体映射 + 数组/JSON 字段读写）。
+5. **部署建表脚本**：`database/{sqlite,mysql,postgres}/create.sql` 已同步为 1.7 的 7 张 OAuth 表（列数 16/37/4/6/9/19/15），并在 SQLite、PostgreSQL 16、MySQL 8.4 中实际执行验证通过。
 
 ### 生产库迁移清单（`synchronize: false` 时必须手工执行）
 
