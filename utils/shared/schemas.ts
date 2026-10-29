@@ -320,7 +320,6 @@ export const ssoProviderFormSchema = z.object({
         scopes: z.array(z.string()).optional(),
         pkce: z.boolean().optional(),
         mapping: z.object({
-            id: z.string().optional(),
             email: z.string().optional(),
             emailVerified: z.string().optional(),
             name: z.string().optional(),
@@ -336,7 +335,6 @@ export const ssoProviderFormSchema = z.object({
         signingKey: z.string().optional(),
         attributeConsumingServiceIndex: z.number().optional(),
         mapping: z.object({
-            id: z.string().optional(),
             email: z.string().optional(),
             name: z.string().optional(),
             firstName: z.string().optional(),

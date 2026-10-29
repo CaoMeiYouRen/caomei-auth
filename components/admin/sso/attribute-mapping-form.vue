@@ -6,16 +6,6 @@
         </p>
 
         <div class="form-group">
-            <label for="mappingId">用户 ID 字段</label>
-            <InputText
-                id="mappingId"
-                v-model="localModel.id"
-                :placeholder="type === 'saml' ? 'nameID' : 'sub'"
-                class="w-full"
-            />
-        </div>
-
-        <div class="form-group">
             <label for="mappingEmail">邮箱字段</label>
             <InputText
                 id="mappingEmail"
@@ -82,7 +72,6 @@ import { ref, watch } from 'vue'
 
 const props = defineProps<{
     modelValue: {
-        id: string
         email: string
         emailVerified: string
         name: string

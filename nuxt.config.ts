@@ -137,6 +137,18 @@ export default defineNuxtConfig({
         componentIslands: true,
     },
     vite: {
+        ssr: {
+            // better-auth 1.7 的 context 初始化会静态/动态导入 @better-auth/kysely-adapter、@better-fetch/fetch
+            // 等传递依赖；dev 下 Vite 默认将其外部化，Node 会从项目根解析而失败（Cannot find package）。
+            // 这里与 nitro.externals.inline 保持一致，把 Better Auth 生态内联后由打包器解析。
+            noExternal: [
+                'better-auth',
+                'better-auth-localization',
+                /^@better-auth\//,
+                /^@better-fetch\//,
+                'better-call',
+            ],
+        },
         vue: {
             template: {
             },

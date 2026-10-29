@@ -1,8 +1,9 @@
 import { defineEventHandler, createError } from 'h3'
 import { Like } from 'typeorm'
-import { OAuthApplication } from '@/server/entities/oauth-application'
+import { OAuthClient } from '@/server/entities/oauth-client'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
+import { toAdminOAuthClientView } from '@/server/utils/oauth-client-view'
 import logger from '@/server/utils/logger'
 import { validateQuery } from '@/server/utils/validation'
 import { paginationQuerySchema, type PaginationQuery } from '@/utils/shared/api-schemas'
@@ -25,7 +26,7 @@ export default defineEventHandler(async (event) => {
         }
 
         const [applications, total] = await dataSource
-            .getRepository(OAuthApplication)
+            .getRepository(OAuthClient)
             .findAndCount({
                 where,
                 skip: page * limit,
@@ -39,32 +40,7 @@ export default defineEventHandler(async (event) => {
             status: 200,
             success: true,
             total,
-            data: applications.map((app) => ({
-                id: app.id,
-                clientId: app.clientId,
-                name: app.name,
-                description: app.description,
-                redirectURLs: app.redirectURLs,
-                tokenEndpointAuthMethod: app.tokenEndpointAuthMethod,
-                grantTypes: app.grantTypes,
-                responseTypes: app.responseTypes,
-                clientUri: app.clientUri,
-                logoUri: app.logoUri,
-                scope: app.scope,
-                contacts: app.contacts,
-                tosUri: app.tosUri,
-                policyUri: app.policyUri,
-                jwksUri: app.jwksUri,
-                jwks: app.jwks && app.jwks !== '' ? JSON.parse(app.jwks) : null,
-                metadata: app.metadata && app.metadata !== '' ? JSON.parse(app.metadata) : null,
-                softwareId: app.softwareId,
-                softwareVersion: app.softwareVersion,
-                softwareStatement: app.softwareStatement,
-                type: app.type,
-                disabled: app.disabled,
-                createdAt: app.createdAt,
-                updatedAt: app.updatedAt,
-            })),
+            data: applications.map((app) => toAdminOAuthClientView(app)),
         }
     } catch (error) {
         logger.business.oauthAppListFailed({

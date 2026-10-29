@@ -37,6 +37,7 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
     const mockRepo = {
         findOne: vi.fn(),
         remove: vi.fn(),
+        delete: vi.fn(),
     }
 
     beforeEach(() => {
@@ -105,7 +106,7 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
             },
         }
 
-        const mockApp = { id: 'app-123', client_name: 'Test App' }
+        const mockApp = { id: 'app-123', clientId: 'client-123', client_name: 'Test App' }
         mockRepo.findOne.mockResolvedValue(mockApp)
         mockRepo.remove.mockResolvedValue(mockApp)
 

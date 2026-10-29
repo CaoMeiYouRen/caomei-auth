@@ -1,3 +1,11 @@
+publicHoistPattern:
+  - "better-auth"
+  - "better-auth-localization"
+  - "@better-auth/*"
+  - "@better-fetch/*"
+  - "better-call"
+  - "htmlparser2"
+
 allowBuilds:
   "@parcel/watcher": true
   "@sentry/cli": true
@@ -10,7 +18,7 @@ minimumReleaseAgeExclude:
   - file-type@22.0.2
   - obug@2.2.1
 patchedDependencies:
-  "@better-auth/utils@0.4.2": patches/@better-auth__utils@0.4.2.patch
+  "@better-auth/utils@0.5.1": patches/@better-auth__utils@0.5.1.patch
   "@nuxt/test-utils@4.1.0": patches/@nuxt-test-utils@4.1.0.patch
 overrides:
   axios: ^1.20.0
@@ -72,7 +80,7 @@ overrides:
   "@opentelemetry/core": ^2.8.0
   "@babel/core": ^7.29.6
   "@nuxt/devtools": ^3.4.3
-  better-auth: ^1.6.13
+  better-auth: ^1.7.14
   svgo: ^4.1.0
   mjml: ^5.0.0-alpha.9
   "@humanfs/node": ^0.16.8

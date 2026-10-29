@@ -150,8 +150,11 @@ export async function useOAuthConsent() {
         try {
             submitting.value = true
 
-            const { error, data } = await authClient.oauth2.consent({
-                accept: true,
+            const { error, data } = await authClient.$fetch<{ redirect: boolean, url: string }>('/oauth2/consent', {
+                method: 'POST',
+                body: {
+                    accept: true,
+                },
             })
 
             if (error) {
@@ -163,10 +166,9 @@ export async function useOAuthConsent() {
                 detail: '您已成功授权该应用访问您的账户',
                 life: 3000,
             })
-            // 根据 Better Auth 文档，成功后会自动重定向到 redirect_uri
-            // 如果没有自动重定向，可以手动处理
-            if (data?.redirectURI) {
-                window.location.href = data.redirectURI
+            // better-auth 1.7 起由服务端返回重定向地址（data.url）
+            if (data?.url) {
+                window.location.href = data.url
             }
         } catch (error: any) {
             toast.add({
@@ -188,18 +190,20 @@ export async function useOAuthConsent() {
         try {
             submitting.value = true
 
-            const { error, data } = await authClient.oauth2.consent({
-                accept: false,
+            const { error, data } = await authClient.$fetch<{ redirect: boolean, url: string }>('/oauth2/consent', {
+                method: 'POST',
+                body: {
+                    accept: false,
+                },
             })
 
             if (error) {
                 throw new Error(error.message)
             }
 
-            // 根据 Better Auth 文档，拒绝后会自动重定向到 redirect_uri 并带有错误参数
-            // 如果没有自动重定向，可以手动处理
-            if (data?.redirectURI) {
-                window.location.href = data.redirectURI
+            // better-auth 1.7 起由服务端返回重定向地址（data.url）
+            if (data?.url) {
+                window.location.href = data.url
             } else {
                 toast.add({
                     severity: 'info',

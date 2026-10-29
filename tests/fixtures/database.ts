@@ -6,14 +6,33 @@ import { User } from '@/server/entities/user'
 import { Verification } from '@/server/entities/verification'
 import { TwoFactor } from '@/server/entities/two-factor'
 import { OAuthAccessToken } from '@/server/entities/oauth-access-token'
-import { OAuthApplication } from '@/server/entities/oauth-application'
+import { OAuthClient } from '@/server/entities/oauth-client'
+import { OAuthClientAssertion } from '@/server/entities/oauth-client-assertion'
+import { OAuthClientResource } from '@/server/entities/oauth-client-resource'
 import { OAuthConsent } from '@/server/entities/oauth-consent'
+import { OAuthRefreshToken } from '@/server/entities/oauth-refresh-token'
+import { OAuthResource } from '@/server/entities/oauth-resource'
 import { Jwks } from '@/server/entities/jwks'
 import { SSOProvider } from '@/server/entities/sso-provider'
 
 let dataSource: DataSource | null = null
 
-const entities = [Account, Session, User, Verification, TwoFactor, OAuthApplication, OAuthAccessToken, OAuthConsent, Jwks, SSOProvider]
+const entities = [
+    Account,
+    Session,
+    User,
+    Verification,
+    TwoFactor,
+    OAuthClient,
+    OAuthClientResource,
+    OAuthResource,
+    OAuthAccessToken,
+    OAuthRefreshToken,
+    OAuthConsent,
+    OAuthClientAssertion,
+    Jwks,
+    SSOProvider,
+]
 
 export const createTestDataSource = async () => {
     if (dataSource?.isInitialized) {

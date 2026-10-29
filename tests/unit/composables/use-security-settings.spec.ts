@@ -132,6 +132,7 @@ describe('useSecuritySettings', () => {
 
             mockAuthClient.twoFactor.enable.mockResolvedValue({
                 data: {
+                    method: 'totp',
                     totpURI: 'otpauth://totp/test',
                     backupCodes: ['code1', 'code2'],
                 },
@@ -142,7 +143,7 @@ describe('useSecuritySettings', () => {
 
             await onPasswordConfirm()
 
-            expect(mockAuthClient.twoFactor.enable).toHaveBeenCalledWith({ password: 'password123' })
+            expect(mockAuthClient.twoFactor.enable).toHaveBeenCalledWith({ password: 'password123', method: 'totp' })
             expect(totpUri.value).toBe('otpauth://totp/test')
             expect(qrCodeUrl.value).toBe('data:image/png;base64,...')
             expect(backupCodes.value).toEqual(['code1', 'code2'])

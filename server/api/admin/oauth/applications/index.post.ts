@@ -1,9 +1,10 @@
 import { defineEventHandler, readBody } from 'h3'
 import dayjs from 'dayjs'
-import { OAuthApplication } from '@/server/entities/oauth-application'
+import { OAuthClient } from '@/server/entities/oauth-client'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import { generateClientSecret } from '@/server/utils/auth-generators'
+import { hashClientSecret } from '@/server/utils/oauth-client-view'
 import { snowflake } from '@/server/utils/snowflake'
 import logger from '@/server/utils/logger'
 import { oauthApplicationSchema } from '@/utils/shared/schemas'
@@ -76,57 +77,62 @@ export default defineEventHandler(async (event) => {
             }
         }
 
-        const application = new OAuthApplication()
+        const application = new OAuthClient()
         application.id = snowflake.generateId()
+        application.clientId = application.id // 使用ID作为clientId
         application.name = appName!
         application.description = (body).description || ''
-        application.clientId = application.id // 使用ID作为clientId
-        application.clientSecret = generateClientSecret()
-        application.redirectURLs = normalizedRedirectURIs.join(',')
+        // better-auth 1.7 默认以 SHA-256 + base64url 哈希存储客户端密钥
+        const clientSecret = generateClientSecret()
+        application.clientSecret = hashClientSecret(clientSecret)
+        application.redirectUris = normalizedRedirectURIs
         application.tokenEndpointAuthMethod = token_endpoint_auth_method
-        application.grantTypes = grant_types.join(',')
-        application.responseTypes = response_types.join(',')
-        application.clientUri = client_uri || ''
-        application.logoUri = logo_uri || ''
-        application.scope = scope || ''
-        application.contacts = contacts ? contacts.join(',') : ''
-        application.tosUri = tos_uri || ''
-        application.policyUri = policy_uri || ''
+        application.grantTypes = grant_types
+        application.responseTypes = response_types
+        application.uri = client_uri || ''
+        application.icon = logo_uri || ''
+        application.scopes = scope ? scope.split(/[\s,]+/).filter(Boolean) : []
+        application.contacts = contacts || []
+        application.tos = tos_uri || ''
+        application.policy = policy_uri || ''
         application.jwksUri = jwks_uri || ''
         application.jwks = jwks ? JSON.stringify(jwks) : ''
-        application.metadata = metadata ? JSON.stringify(metadata) : ''
+        application.metadata = metadata ?? null
         application.softwareId = software_id || ''
         application.softwareVersion = software_version || ''
         application.softwareStatement = software_statement || ''
-        application.type = type
+        application.applicationType = type
+        // better-auth 1.7 的 PKCE 默认值变为「必需」（`requirePKCE ?? true`）。
+        // 项目在 1.6 明确使用 `requirePKCE: false`，这里保持客户端可用性不因升级而突变。
+        application.requirePKCE = false
         application.disabled = disabled
         application.userId = auth.data?.userId || ''
 
-        await dataSource.getRepository(OAuthApplication).save(application)
+        await dataSource.getRepository(OAuthClient).save(application)
 
         // 返回符合 RFC7591 标准的响应
         const response = {
             client_id: application.clientId,
-            client_secret: application.clientSecret,
+            client_secret: clientSecret,
             client_id_issued_at: dayjs(application.createdAt).unix(),
             client_secret_expires_at: 0, // 0 表示不过期
             redirect_uris: normalizedRedirectURIs,
             token_endpoint_auth_method: application.tokenEndpointAuthMethod,
-            grant_types: application.grantTypes?.split(',') || grant_types,
-            response_types: application.responseTypes?.split(',') || response_types,
+            grant_types: application.grantTypes || grant_types,
+            response_types: application.responseTypes || response_types,
             client_name: application.name,
-            client_uri: application.clientUri,
-            logo_uri: application.logoUri,
-            scope: application.scope,
-            contacts: application.contacts?.split(',') || contacts,
-            tos_uri: application.tosUri,
-            policy_uri: application.policyUri,
+            client_uri: application.uri,
+            logo_uri: application.icon,
+            scope: (application.scopes ?? []).join(' '),
+            contacts: application.contacts || contacts,
+            tos_uri: application.tos,
+            policy_uri: application.policy,
             jwks_uri: application.jwksUri,
             jwks: application.jwks ? JSON.parse(application.jwks) : jwks,
             software_id: application.softwareId,
             software_version: application.softwareVersion,
             software_statement: application.softwareStatement,
-            metadata: application.metadata ? JSON.parse(application.metadata) : metadata,
+            metadata: application.metadata ?? metadata,
             disabled: application.disabled,
         }
 

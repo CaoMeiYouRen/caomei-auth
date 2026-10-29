@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getValidatedRouterParams } from 'h3'
 import handler from '@/server/api/oauth/client/[id].get'
 import { dataSource } from '@/server/database'
-import { OAuthApplication } from '@/server/entities/oauth-application'
+import { OAuthClient } from '@/server/entities/oauth-client'
 
 // Mock dependencies
 vi.mock('h3', async () => {
@@ -36,14 +36,14 @@ describe('server/api/oauth/client/[id].get', () => {
             clientId,
             name: 'Test App',
             description: 'Test Description',
-            clientUri: 'https://example.com',
-            logoUri: 'https://example.com/logo.png',
-            scope: 'openid',
-            tosUri: 'https://example.com/tos',
-            policyUri: 'https://example.com/policy',
-            type: 'web',
+            uri: 'https://example.com',
+            icon: 'https://example.com/logo.png',
+            scopes: ['openid'],
+            tos: 'https://example.com/tos',
+            policy: 'https://example.com/policy',
+            applicationType: 'web',
             clientSecret: 'secret', // Should not be returned
-            redirectURLs: 'https://callback.com', // Should not be returned
+            redirectUris: ['https://callback.com'], // Should not be returned
             disabled: false,
         }
         mockRepo.findOne.mockResolvedValue(mockApp)
@@ -52,7 +52,7 @@ describe('server/api/oauth/client/[id].get', () => {
         const event = { context: { params: { id: clientId } } }
         const result = await handler(event as any)
 
-        expect(dataSource.getRepository).toHaveBeenCalledWith(OAuthApplication)
+        expect(dataSource.getRepository).toHaveBeenCalledWith(OAuthClient)
         expect(mockRepo.findOne).toHaveBeenCalledWith({ where: { clientId } })
         expect(result).toEqual({
             status: 200,

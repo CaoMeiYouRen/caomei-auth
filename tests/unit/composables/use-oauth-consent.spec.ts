@@ -21,9 +21,7 @@ const {
     mockUseRuntimeConfig: vi.fn(),
     mockNavigateTo: vi.fn(),
     mockAuthClient: {
-        oauth2: {
-            consent: vi.fn(),
-        },
+        $fetch: vi.fn(),
     },
 }))
 
@@ -175,14 +173,14 @@ describe('useOAuthConsent', () => {
         it('should allow consent successfully', async () => {
             const { allowConsent } = await useOAuthConsent()
 
-            mockAuthClient.oauth2.consent.mockResolvedValue({
-                data: { redirectURI: 'https://app.com/cb?code=123' },
+            mockAuthClient.$fetch.mockResolvedValue({
+                data: { redirect: true, url: 'https://app.com/cb?code=123' },
                 error: null,
             })
 
             await allowConsent()
 
-            expect(mockAuthClient.oauth2.consent).toHaveBeenCalledWith({ accept: true })
+            expect(mockAuthClient.$fetch).toHaveBeenCalledWith('/oauth2/consent', expect.objectContaining({ method: 'POST', body: { accept: true } }))
             expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
                 severity: 'success',
             }))
@@ -192,7 +190,7 @@ describe('useOAuthConsent', () => {
         it('should handle allow consent error', async () => {
             const { allowConsent } = await useOAuthConsent()
 
-            mockAuthClient.oauth2.consent.mockResolvedValue({
+            mockAuthClient.$fetch.mockResolvedValue({
                 data: null,
                 error: { message: 'Consent failed' },
             })
@@ -208,14 +206,14 @@ describe('useOAuthConsent', () => {
         it('should deny consent successfully (redirect)', async () => {
             const { denyConsent } = await useOAuthConsent()
 
-            mockAuthClient.oauth2.consent.mockResolvedValue({
-                data: { redirectURI: 'https://app.com/cb?error=access_denied' },
+            mockAuthClient.$fetch.mockResolvedValue({
+                data: { redirect: true, url: 'https://app.com/cb?error=access_denied' },
                 error: null,
             })
 
             await denyConsent()
 
-            expect(mockAuthClient.oauth2.consent).toHaveBeenCalledWith({ accept: false })
+            expect(mockAuthClient.$fetch).toHaveBeenCalledWith('/oauth2/consent', expect.objectContaining({ method: 'POST', body: { accept: false } }))
             expect(window.location.href).toBe('https://app.com/cb?error=access_denied')
         })
 
@@ -223,8 +221,8 @@ describe('useOAuthConsent', () => {
             vi.useFakeTimers()
             const { denyConsent } = await useOAuthConsent()
 
-            mockAuthClient.oauth2.consent.mockResolvedValue({
-                data: { redirectURI: null },
+            mockAuthClient.$fetch.mockResolvedValue({
+                data: { redirect: false, url: '' },
                 error: null,
             })
 
@@ -243,7 +241,7 @@ describe('useOAuthConsent', () => {
         it('should handle deny consent error', async () => {
             const { denyConsent } = await useOAuthConsent()
 
-            mockAuthClient.oauth2.consent.mockResolvedValue({
+            mockAuthClient.$fetch.mockResolvedValue({
                 data: null,
                 error: { message: 'Deny failed' },
             })

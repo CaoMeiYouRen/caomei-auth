@@ -1,5 +1,6 @@
 import { createAuthClient } from 'better-auth/vue'
-import { usernameClient, magicLinkClient, emailOTPClient, inferAdditionalFields, anonymousClient, phoneNumberClient, adminClient, genericOAuthClient, twoFactorClient, oidcClient } from 'better-auth/client/plugins'
+import { usernameClient, magicLinkClient, emailOTPClient, inferAdditionalFields, anonymousClient, phoneNumberClient, adminClient, twoFactorClient } from 'better-auth/client/plugins'
+import { oauthProviderClient } from '@better-auth/oauth-provider/client'
 import { ssoClient } from '@better-auth/sso/client'
 import type { auth } from './auth'
 import { AUTH_BASE_URL } from '@/utils/shared/env'
@@ -15,13 +16,13 @@ export const authClient = createAuthClient({
         anonymousClient(),
         phoneNumberClient(),
         adminClient(),
-        genericOAuthClient(),
         twoFactorClient({
             // onTwoFactorRedirect() {
             //     // 全局处理 2FA 验证
             // },
         }),
-        oidcClient(),
+        // OAuth Provider 客户端：为 oauth2 相关 POST 请求附加签名过的 oauth_query
+        oauthProviderClient(),
         ssoClient(),
     ],
 })

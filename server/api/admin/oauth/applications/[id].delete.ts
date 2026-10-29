@@ -1,5 +1,9 @@
 import { defineEventHandler } from 'h3'
-import { OAuthApplication } from '@/server/entities/oauth-application'
+import { OAuthClient } from '@/server/entities/oauth-client'
+import { OAuthAccessToken } from '@/server/entities/oauth-access-token'
+import { OAuthRefreshToken } from '@/server/entities/oauth-refresh-token'
+import { OAuthConsent } from '@/server/entities/oauth-consent'
+import { OAuthClientResource } from '@/server/entities/oauth-client-resource'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
@@ -19,7 +23,7 @@ export default defineEventHandler(async (event) => {
         const { id } = paramsResult.data
         appId = id
 
-        const repo = dataSource.getRepository(OAuthApplication)
+        const repo = dataSource.getRepository(OAuthClient)
 
         const application = await repo.findOne({
             where: { id },
@@ -33,6 +37,12 @@ export default defineEventHandler(async (event) => {
                 data: null,
             }
         }
+
+        // 清理客户端关联的令牌、授权同意与资源绑定，避免残留孤儿数据
+        await dataSource.getRepository(OAuthAccessToken).delete({ clientId: application.clientId })
+        await dataSource.getRepository(OAuthRefreshToken).delete({ clientId: application.clientId })
+        await dataSource.getRepository(OAuthConsent).delete({ clientId: application.clientId })
+        await dataSource.getRepository(OAuthClientResource).delete({ clientId: application.clientId })
 
         await repo.remove(application)
 

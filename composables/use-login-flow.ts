@@ -409,7 +409,7 @@ export function useLoginFlow() {
     }
 
     const loginWithSocial = async (socialProvider: SocialProvider) => {
-        const { provider, name, social, oauth2, enabled } = socialProvider
+        const { provider, name, enabled } = socialProvider
 
         if (enabled === false) {
             toast.add({
@@ -426,18 +426,10 @@ export function useLoginFlow() {
             return
         }
         try {
-            let result: any
-            if (social) {
-                result = await authClient.signIn.social({
-                    provider,
-                    callbackURL: `${window.location.origin}/profile`,
-                })
-            } else if (oauth2) {
-                result = await authClient.signIn.oauth2({
-                    providerId: provider,
-                    callbackURL: `${window.location.origin}/profile`,
-                })
-            }
+            const result = await authClient.signIn.social({
+                provider,
+                callbackURL: `${window.location.origin}/profile`,
+            })
             if (!result || result.error) {
                 throw new Error(result?.error?.message || `${name} 登录失败`)
             }

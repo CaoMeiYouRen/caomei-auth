@@ -10,9 +10,9 @@ import {
     captcha,
     genericOAuth,
     twoFactor,
-    oidcProvider,
     jwt,
 } from 'better-auth/plugins'
+import { oauthProvider } from '@better-auth/oauth-provider'
 import { sso } from '@better-auth/sso'
 import { ms } from 'ms'
 import { localization } from 'better-auth-localization'
@@ -72,6 +72,9 @@ import { AUTH_DISABLED_PATHS } from '@/utils/shared/sso-management-paths'
 
 export const auth = betterAuth({
     appName: APP_NAME, // 应用名称。它将被用作发行者。
+    // 站点根 URL；better-auth 会拼接 basePath（/api/auth）得到实际挂载地址。
+    // 显式声明后 OAuth/OIDC 发现文档中的端点才是绝对 URL（1.7 起发现文档不再自动挂载）。
+    baseURL: AUTH_BASE_URL,
     // 显式关闭上游 SSO 提供商管理端点。
     // 这些端点只校验登录态，不校验管理员身份；本项目只允许通过 admin API 管理 SSO 提供商。
     // 详见 utils/shared/sso-management-paths.ts 与 GHSA-785j-54p4-vxw9。
@@ -137,8 +140,8 @@ export const auth = betterAuth({
     user: {
         changeEmail: {
             enabled: true, // 启用更改邮箱功能
-            // 发送更改邮箱验证邮件
-            sendChangeEmailVerification: async ({ user, newEmail, url }) => {
+            // 发送更改邮箱验证邮件（1.7 起由 sendChangeEmailVerification 更名）
+            sendChangeEmailConfirmation: async ({ user, newEmail, url }) => {
                 await emailService.sendEmailChangeVerification(user.email, newEmail, url)
             },
         },
@@ -570,21 +573,7 @@ export const auth = betterAuth({
                 },
             ],
         }),
-        oidcProvider({
-            metadata: {
-                issuer: AUTH_BASE_URL,
-                scopes_supported: [
-                    'openid',
-                    'profile',
-                    'email',
-                    'offline_access',
-                    'phone',
-                ],
-                response_types_supported: ['code'],
-                response_modes_supported: ['query'],
-                grant_types_supported: ['authorization_code', 'refresh_token'],
-            },
-            requirePKCE: false, // 是否强制 PKCE
+        oauthProvider({
             loginPage: '/login', // 登录页面的路径
             consentPage: '/oauth/consent', // 同意页面的路径
             allowDynamicClientRegistration: true, // 允许动态客户端注册
@@ -598,13 +587,13 @@ export const auth = betterAuth({
                 'offline_access',
                 'phone',
             ],
-            getAdditionalUserInfoClaim: (_user, scopes) => {
-                const user = _user as User
+            // 自定义 userinfo 端点返回的声明。sub 等协议必填声明由服务端生成，不能在此覆盖。
+            customUserInfoClaims: ({ user: _user, scopes }) => {
+                const user = _user as unknown as User
                 const claims: Record<string, any> = {}
 
                 // 根据请求的作用域添加声明
                 if (scopes.includes('openid')) {
-                    claims.sub = user.id // 使用用户 ID 作为 sub
                     claims.openid = user.id
                 }
                 if (scopes.includes('profile')) {
@@ -626,11 +615,13 @@ export const auth = betterAuth({
 
                 return claims
             },
-            // 受信任的客户端
-            // 受信任的客户端可以绕过数据库查询以获得更好的性能，并且可以选择跳过同意屏幕以改善用户体验
-            trustedClients: [],
         }),
         jwt({
+            // 1.7 的 oauth-provider 以 jwt.issuer 作为 OIDC issuer，未显式设置时会退回 ctx.baseURL；
+            // 这里保持与 1.6 `oidcProvider.metadata.issuer` 一致，避免已接入客户端的 iss 校验失效。
+            jwt: {
+                issuer: AUTH_BASE_URL,
+            },
             jwks: {
                 // 用于生成密钥对的算法
                 keyPairConfig: {
