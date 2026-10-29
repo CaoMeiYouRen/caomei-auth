@@ -150,7 +150,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 -   任何生产发布（含 semantic-release、Docker 镜像推送）前必须通过安全告警门禁：`critical` 必须修复且**不允许豁免**；`high` 默认阻塞，仅在上游无可用修复版本或修复成本过高时允许豁免。
 -   `high` 豁免必须写入 `.github/security-alert-exemptions.json`，包含 `reason`、`tracking`（Issue 或待办条目）、`expiresAt`（复核截止日期）；到期自动失效并重新阻塞发布，已修复的豁免必须及时删除。
 -   `medium` / `low` 不阻塞发布，在门禁报告中记录，随后续版本升级修复；Code scanning alerts 与 Dependabot alerts 采用同一口径。
--   门禁脚本为 `scripts/security/check-alerts.mjs`，由 `.github/workflows/release.yml`、`.github/workflows/docker.yml`（发布前）与 `.github/workflows/security-alert-gate.yml`（每周规划检查）执行；扫描未完成（token 失效、权限不足、网络异常）视为未通过，禁止把"未扫描"当成"无告警"。详细规范见 [安全开发规范 5.1.3](./docs/standards/security.md#513-发布前安全告警门禁-release-security-alert-gate)。
+-   门禁脚本为 `scripts/security/check-alerts.mjs`，由 `.github/workflows/release.yml`、`.github/workflows/docker.yml`（发布前）与 `.github/workflows/regression-weekly.yml`（每周回归：与发布前质量门等价的全量检查，不含正式发布）执行；扫描未完成（token 失效、权限不足、网络异常）视为未通过，禁止把"未扫描"当成"无告警"。详细规范见 [安全开发规范 5.1.3](./docs/standards/security.md#513-发布前安全告警门禁-release-security-alert-gate)。
 
 ## 8. 其他要求
 

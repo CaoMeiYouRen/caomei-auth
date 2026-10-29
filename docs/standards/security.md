@@ -99,7 +99,7 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 
 ### 5.1.3 发布前安全告警门禁 (Release Security Alert Gate)
 
-适用于任何生产发布（`release.yml`、`docker.yml` 的版本与镜像发布）以及每周规划检查（`security-alert-gate.yml` 的 schedule 运行）。检查对象是 GitHub Dependabot alerts 与 Code scanning alerts 中全部 `state=open` 的告警，两者采用同一处置口径。
+适用于任何生产发布（`release.yml`、`docker.yml` 的版本与镜像发布）以及每周回归检查（`regression-weekly.yml` 的 schedule 运行）。检查对象是 GitHub Dependabot alerts 与 Code scanning alerts 中全部 `state=open` 的告警，两者采用同一处置口径。
 
 | 严重级别 | 是否允许发布 | 要求 |
 | --- | --- | --- |
@@ -124,7 +124,7 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 
 -   脚本：`scripts/security/check-alerts.mjs`，本地等价命令 `pnpm security:alerts`（支持 `--scope=release|weekly`、`--report=`、`--json=`）。
 -   发布前检查：`.github/workflows/release.yml`（semantic-release 与镜像推送）与 `.github/workflows/docker.yml`（master 推送触发的 latest / sha-* 镜像发布及 Jenkins 部署）均在发布动作之前执行，未通过则终止发布。
--   每周规划检查：`.github/workflows/security-alert-gate.yml` 每周一 09:00（UTC+8）运行；未通过时自动创建或更新「安全告警追踪」Issue（含阻塞项与豁免到期时间），恢复通过后自动关闭。
+-   每周回归检查：`.github/workflows/regression-weekly.yml` 每周一 09:00（UTC+8）运行，内容等价于 `release.yml` 发布前质量门（`install` + `lint` + `lint:css` + `typecheck` + `build` + 测试与覆盖率，另补 `lint:md` / `ai:check` / `lint:duplicate` / `docs:build`，不含 semantic-release 与镜像推送），并同时执行本告警门禁；未通过时自动创建或更新「安全告警追踪」Issue（含阻塞项与豁免到期时间），恢复通过后自动关闭。
 -   读取 Dependabot alerts 必须使用 `GH_TOKEN`（fine-grained PAT：Dependabot alerts: read）；`GITHUB_TOKEN` 无法读取该 API（403），Token 轮换流程见 5.1.2。
 
 ### 5.2 供应链信任边界 (Supply Chain Trust Boundary)
