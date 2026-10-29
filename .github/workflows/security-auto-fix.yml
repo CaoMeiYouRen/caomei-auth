@@ -75,6 +75,80 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      # 前置校验：GH_TOKEN 是唯一能读取 Dependabot alerts 的凭据，且 fine-grained PAT 会过期。
+      # 若 token 失效，dependfix 会以 401 结束并产出"0 条告警"的报告（run 40794773689），
+      # 看起来像"扫描通过"，实为未扫描。这里先探测再进入扫描，避免误导性结论。
+      - name: Validate GH_TOKEN
+        env:
+          GH_TOKEN_VALUE: ${{ secrets.GH_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -uo pipefail
+
+          if [ -z "${GH_TOKEN_VALUE}" ]; then
+            echo "::error title=GH_TOKEN 未配置::请在仓库 Settings → Secrets and variables → Actions 新增 GH_TOKEN（fine-grained PAT：Dependabot alerts: read，可选 Contents/Pull requests: write）。"
+            exit 1
+          fi
+
+          # probe <path>：返回 HTTP 状态码；同时打印 GitHub 返回的 token 到期时间（若存在）。
+          probe() {
+            local path="$1" hdr code
+            hdr="$(mktemp)"
+            code="$(curl -sS -o /dev/null -D "${hdr}" -w '%{http_code}' \
+              --retry 3 --retry-delay 2 --retry-all-errors \
+              -H "Authorization: Bearer ${GH_TOKEN_VALUE}" \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com${path}" 2>/dev/null)" || code="000"
+            local expires
+            expires="$(grep -i '^github-authentication-token-expiration:' "${hdr}" | tr -d '\r' | sed 's/^[^:]*:[[:space:]]*//' || true)"
+            if [ -n "${expires}" ]; then
+              echo "::notice title=GH_TOKEN 到期时间::${expires}"
+            fi
+            rm -f "${hdr}"
+            printf '%s' "${code}"
+          }
+
+          echo "GH_TOKEN is ${#GH_TOKEN_VALUE} chars"
+
+          user_code="$(probe /user)"
+          case "${user_code}" in
+            200)
+              echo "OK: GH_TOKEN 身份校验通过（GET /user 200）"
+              ;;
+            401)
+              echo "::error title=GH_TOKEN 已失效::GET /user 返回 401，token 已过期、被撤销或值不正确。请重新生成 fine-grained PAT 并更新 Secret GH_TOKEN。"
+              exit 1
+              ;;
+            *)
+              echo "::error title=GH_TOKEN 校验异常::GET /user 返回 ${user_code}，请检查 token 与网络后重试。"
+              exit 1
+              ;;
+          esac
+
+          alerts_code="$(probe "/repos/${REPO}/dependabot/alerts?state=open&per_page=1")"
+          case "${alerts_code}" in
+            200)
+              echo "OK: Dependabot alerts API 可访问（GET /repos/${REPO}/dependabot/alerts 200）"
+              ;;
+            401)
+              echo "::error title=GH_TOKEN 已失效::Dependabot alerts API 返回 401，请重新生成 GH_TOKEN。"
+              exit 1
+              ;;
+            403)
+              echo "::error title=Dependabot alerts 权限不足::返回 403，GH_TOKEN 缺少 Dependabot alerts: read 权限，或该 token 无权访问本仓库。"
+              exit 1
+              ;;
+            404)
+              echo "::error title=Dependabot alerts 不可用::返回 404，仓库可能未启用 Dependabot alerts。请在 Settings → Code security 开启后重试。"
+              exit 1
+              ;;
+            *)
+              echo "::error title=Dependabot alerts 探测异常::返回 ${alerts_code}，请检查网络与仓库配置。"
+              exit 1
+              ;;
+          esac
+
       - name: Run Dependfix Action
         # 引用外部 action 并钉 tag（v0.4.0），不追踪 master。
         # mode/severity 默认值按触发场景区分：

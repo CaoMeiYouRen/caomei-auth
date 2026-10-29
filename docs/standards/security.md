@@ -87,7 +87,15 @@ pnpm 10+ 默认启用 1440 分钟（24h）发布冷却期（`minimumReleaseAge`�
 2.  workflow_dispatch 触发时显式选择 `mode: fix-and-pr`（默认即为 fix-and-pr，但 schedule 默认是 report-only）。
 3.  验证链命令在 `commands` 中已配置（默认：pnpm i --frozen-lockfile + nuxt prepare + lint + typecheck + build）。
 
-未配置 `GH_TOKEN` 的 schedule 运行会得到"无可用 alerts"的报告并归档为 artifact，**不视为失败**；若需观察告警，可改用 `pnpm audit` 本地巡检。
+工作流内置 `Validate GH_TOKEN` 前置校验，先探测 `GET /user` 与 Dependabot alerts API 再进入扫描：401（token 失效）、403（缺 Dependabot alerts: read 或无权访问仓库）、404（仓库未启用 Dependabot alerts）均以 `::error` 直接失败并给出处置指引，不再产出"0 条告警"的误导性报告（run 40794773689 即为 `GH_TOKEN` 失效导致的 401）。
+
+fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
+
+1.  GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens 重新生成：Repository access 选本仓库；Repository permissions 至少 `Dependabot alerts: Read`，`fix-and-pr` 模式另需 `Contents: Write`、`Pull requests: Write`。
+2.  更新 Secret：`gh secret set GH_TOKEN --repo CaoMeiYouRen/caomei-auth`（或 Settings → Secrets and variables → Actions）。
+3.  以 `mode: report-only` 手动运行一次，确认前置校验通过后再恢复 schedule。
+
+无法提供有效 token 时，本地巡检改用 `pnpm audit`，不得把本工作流的报告结论当作"无告警"结论。
 
 ### 5.2 供应链信任边界 (Supply Chain Trust Boundary)
 
