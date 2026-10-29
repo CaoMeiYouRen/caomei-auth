@@ -1,0 +1,12 @@
+{
+    "version": 1,
+    "exemptions": [
+        {
+            "source": "code-scanning",
+            "alertNumber": 201,
+            "reason": "误报，等待规则调整",
+            "tracking": "https://github.com/CaoMeiYouRen/caomei-auth/issues/2",
+            "expiresAt": "2999-12-31"
+        }
+    ]
+}

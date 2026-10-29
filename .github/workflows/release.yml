@@ -21,6 +21,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      security-events: read
     steps:
       - uses: actions/checkout@v7
         with:
@@ -32,6 +33,17 @@ jobs:
         with:
           node-version: "lts/*"
           cache: "pnpm"
+      # 发布前安全告警门禁（docs/standards/security.md 5.1.3）：
+      # critical 必须修复且不允许豁免；high 默认阻塞，需在 .github/security-alert-exemptions.json 登记豁免；
+      # medium / low 仅记录。读取 Dependabot alerts 只能使用 GH_TOKEN（GITHUB_TOKEN 恒为 403）。
+      - name: Security alert gate
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          node scripts/security/check-alerts.mjs \
+            --scope=release \
+            --report=security-alert-report.md \
+            --json=security-alert-report.json
       - run: pnpm i --frozen-lockfile
       - run: pnpm run lint
       - run: pnpm run lint:css

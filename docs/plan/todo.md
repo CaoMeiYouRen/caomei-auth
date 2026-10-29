@@ -23,6 +23,7 @@
 ### 技术债务
 
 -   [ ] **SSO 历史配置排查（部署本次加固后必做）**: 由管理员调用 `GET /api/admin/sso/audit` 核查 `suspiciousProviders` / `suspiciousAccounts`，确认并清理历史遗留的恶意 SSO 提供商与账号链接；清理顺序见 [安全规范](../standards/security.md#11-第三方认证插件端点-third-party-auth-plugin-endpoints)（GHSA-785j-54p4-vxw9 善后）。
+-   [ ] **代码扫描 high 告警复核**: CodeQL `js/insufficient-password-hash`（`server/utils/oauth-client-view.ts` 的 `hashClientSecret`）已登记豁免至 2026-11-30（`.github/security-alert-exemptions.json`）。复核后选择：确认误报并 dismiss / 改为可配置哈希实现 / 续期豁免并说明原因；到期未处理会重新阻塞发布。
 -   [ ] **Zod 后端迁移（续）**: 完成 `zod-migration.md` 中剩余 8 个 handlers。
     -   优先级 1（4 个）：路径参数校验 → `oauth/client/[id].get`, `admin/oauth/applications/[id].delete`, `admin/sso/providers/[id].get`, `admin/sso/providers/[id].delete`
     -   优先级 2（2 个）：分页查询参数 → `admin/oauth/applications/index.get`, `admin/sso/providers/index.get`

@@ -1,0 +1,46 @@
+[
+    {
+        "number": 101,
+        "state": "open",
+        "dependency": {
+            "package": {
+                "name": "left-pad"
+            },
+            "manifest_path": "package.json"
+        },
+        "security_advisory": {
+            "ghsa_id": "GHSA-aaaa-bbbb-cccc",
+            "severity": "high",
+            "summary": "left-pad 原型污染",
+            "vulnerabilities": [
+                {
+                    "first_patched_version": null
+                }
+            ]
+        },
+        "html_url": "https://github.com/CaoMeiYouRen/caomei-auth/security/dependabot/101",
+        "created_at": "2026-10-01T00:00:00Z"
+    },
+    {
+        "number": 102,
+        "state": "open",
+        "dependency": {
+            "package": {
+                "name": "deepmerge"
+            },
+            "manifest_path": "package.json"
+        },
+        "security_advisory": {
+            "ghsa_id": "GHSA-dddd-eeee-ffff",
+            "severity": "low",
+            "summary": "deepmerge 原型污染",
+            "vulnerabilities": [
+                {
+                    "first_patched_version": null
+                }
+            ]
+        },
+        "html_url": "https://github.com/CaoMeiYouRen/caomei-auth/security/dependabot/102",
+        "created_at": "2026-10-02T00:00:00Z"
+    }
+]

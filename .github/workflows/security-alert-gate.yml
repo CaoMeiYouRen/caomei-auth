@@ -1,0 +1,116 @@
+name: Security Alert Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "检查场景"
+        type: choice
+        required: true
+        options:
+          - weekly
+          - release
+        default: weekly
+  schedule:
+    # 每周一 UTC 1:00（北京时间 9:00）：在每周规划时段产出 high/critical 待办清单，
+    # 并早于 release.yml 的周六发布窗口，形成"周初发现 → 周中修复 → 周末发布"的闭环。
+    - cron: "0 1 * * 1"
+
+# Dependabot alerts 只能由 GH_TOKEN（fine-grained PAT）读取；GITHUB_TOKEN 恒为 403。
+permissions:
+  contents: read
+  issues: write
+  security-events: read
+
+concurrency:
+  group: security-alert-gate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    name: Alert Gate (${{ inputs.scope || 'weekly' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+
+      # 门禁口径见 docs/standards/security.md 的 5.1.3 节：
+      # critical 必须修复且不允许豁免；high 默认阻塞，登记豁免（reason + tracking + expiresAt）后放行；
+      # medium / low 仅记录。脚本在无法完成扫描时 fail closed，不把"未扫描"当作"无告警"。
+      - name: Check security alerts
+        id: gate
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          set -o pipefail
+          node scripts/security/check-alerts.mjs \
+            --scope="${{ inputs.scope || 'weekly' }}" \
+            --report=security-alert-report.md \
+            --json=security-alert-report.json
+
+      - name: Upload alert report
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: security-alert-report
+          path: |
+            security-alert-report.md
+            security-alert-report.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      # 未通过时把最新结论写入固定追踪 Issue（首次自动创建），保证 high/critical 有据可查。
+      - name: Open or update tracking issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+
+          if [ ! -f security-alert-report.md ]; then
+            echo "::warning title=追踪 Issue 未更新::本次未生成报告（可能为扫描失败），请查看 workflow 日志。"
+            exit 0
+          fi
+
+          {
+            echo "<!-- security-alert-gate -->"
+            echo ""
+            echo "> 本 Issue 由 Security Alert Gate 自动维护（run: ${RUN_URL}）。修复后门禁恢复通过时会自动关闭。"
+            echo ""
+            cat security-alert-report.md
+          } > issue-body.md
+
+          existing="$(gh issue list --state open --search "安全告警追踪 in:title" \
+            --json number,title --jq '.[] | select(.title | startswith("安全告警追踪")) | .number' | head -n 1)"
+
+          if [ -n "${existing}" ]; then
+            gh issue edit "${existing}" --body-file issue-body.md
+            echo "已更新追踪 Issue #${existing}"
+          else
+            gh issue create --title "安全告警追踪：high / critical 未闭环" --body-file issue-body.md
+          fi
+
+      # 恢复通过后关闭追踪 Issue，避免历史 Issue 长期挂着失效结论。
+      - name: Close tracking issue after recovery
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          existing="$(gh issue list --state open --search "安全告警追踪 in:title" \
+            --json number,title --jq '.[] | select(.title | startswith("安全告警追踪")) | .number' | head -n 1)"
+
+          if [ -z "${existing}" ]; then
+            exit 0
+          fi
+
+          gh issue comment "${existing}" --body "安全告警门禁已恢复通过（$(date -u +%Y-%m-%dT%H:%M:%SZ)），自动关闭。"
+          gh issue close "${existing}"

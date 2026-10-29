@@ -97,6 +97,36 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 
 无法提供有效 token 时，本地巡检改用 `pnpm audit`，不得把本工作流的报告结论当作"无告警"结论。
 
+### 5.1.3 发布前安全告警门禁 (Release Security Alert Gate)
+
+适用于任何生产发布（`release.yml`、`docker.yml` 的版本与镜像发布）以及每周规划检查（`security-alert-gate.yml` 的 schedule 运行）。检查对象是 GitHub Dependabot alerts 与 Code scanning alerts 中全部 `state=open` 的告警，两者采用同一处置口径。
+
+| 严重级别 | 是否允许发布 | 要求 |
+| --- | --- | --- |
+| `critical` | 否 | 必须修复，**不允许豁免** |
+| `high` | 默认否 | 无可用修复版本或修复成本过高时可豁免，但必须登记、追踪，并尽快安排修复 |
+| `medium` | 是 | 记录在门禁报告中，随后续版本升级修复 |
+| `low` | 是 | 同上 |
+
+补充约束：
+
+-   "修复成本过高"指升级路径受阻（上游未发布修复版本、升级会破坏跨 major 兼容等），不得因为"暂时不想改"而豁免。
+-   豁免必须登记到 `.github/security-alert-exemptions.json`，以下字段缺一不可：
+    1.  定位字段：`source` + `alertNumber`；或稳定标识（Dependabot 用 `ghsaId`，可配 `package`；Code scanning 用 `ruleId`，可配 `path`）。
+    2.  `reason`：为何当前无法修复。
+    3.  `tracking`：追踪的 Issue 链接或 `docs/plan/todo.md` 中的待办条目。
+    4.  `expiresAt`：复核截止日期（`YYYY-MM-DD`），到期即失效并重新阻塞发布。
+-   豁免不得用于 `critical`；已修复或已关闭的告警必须删除对应豁免条目，否则报告中会以"豁免清单问题"提示，避免历史条目掩盖新告警。
+-   豁免条目字段不完整（缺少定位字段、`reason`、`tracking` 或合法 `expiresAt`）时，门禁直接判为未通过，需修正豁免清单后重跑。
+-   无法完成扫描（`GH_TOKEN` 失效、权限不足、Dependabot alerts 未启用、网络异常）按**未通过**处理；不得把"未扫描"当作"无告警"。
+
+门禁实现：
+
+-   脚本：`scripts/security/check-alerts.mjs`，本地等价命令 `pnpm security:alerts`（支持 `--scope=release|weekly`、`--report=`、`--json=`）。
+-   发布前检查：`.github/workflows/release.yml`（semantic-release 与镜像推送）与 `.github/workflows/docker.yml`（master 推送触发的 latest / sha-* 镜像发布及 Jenkins 部署）均在发布动作之前执行，未通过则终止发布。
+-   每周规划检查：`.github/workflows/security-alert-gate.yml` 每周一 09:00（UTC+8）运行；未通过时自动创建或更新「安全告警追踪」Issue（含阻塞项与豁免到期时间），恢复通过后自动关闭。
+-   读取 Dependabot alerts 必须使用 `GH_TOKEN`（fine-grained PAT：Dependabot alerts: read）；`GITHUB_TOKEN` 无法读取该 API（403），Token 轮换流程见 5.1.2。
+
 ### 5.2 供应链信任边界 (Supply Chain Trust Boundary)
 
 引入新的依赖、MCP server、外部 skill/agent 或 AI 推荐的包时，必须执行来源核验，默认不信任：
@@ -123,4 +153,5 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 - **SQL 注入防护**: 必须使用参数化查询，禁止拼接 SQL
 - **敏感信息脱敏**: API 返回前剔除密码、Token 等字段
 - **异常处理**: 关键路径的异常必须记录日志并抛出，不吞异常
+- **发布前安全告警门禁**: `critical` 零豁免；`high` 需登记 `reason` / `tracking` / `expiresAt` 豁免后方可发布（见 [5.1.3](./security.md#513-发布前安全告警门禁-release-security-alert-gate)）
 - **国际化文本**: UI 文本禁止硬编码，必须使用 i18n（见 [国际化实施方案](./i18n.md)）

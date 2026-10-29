@@ -39,6 +39,7 @@
 | 质量 | `pnpm lint:css` | 运行 Stylelint 并自动修复 |
 | 质量 | `pnpm lint:duplicate` | 运行 jscpd 重复代码检查 |
 | 质量 | `pnpm typecheck` | 运行 TypeScript 类型检查 |
+| 质量 | `pnpm security:alerts` | 本地执行安全告警门禁检查（默认 `--scope=release`） |
 | 提交 | `pnpm commit` | 使用 Commitizen 引导提交 |
 | 文档 | `pnpm docs:dev` | 启动文档开发服务器 |
 | 文档 | `pnpm docs:build` | 构建文档 |
@@ -143,6 +144,13 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 4. **原子粒度**：一个提交对应一个逻辑变更，关联且仅关联 `docs/plan/todo.md` 中的一个原子条目。
 5. **推送禁令**：`git commit` 后不得自动执行 `git push`，推送仅限用户明确要求时执行。提交完成后应告知用户"已提交到本地，等待推送确认"。
 6. **提交钩子**：提交必须通过 husky 钩子（commitlint / lint-staged），禁止使用 `--no-verify` 跳过。
+
+### 7.4 发布前安全告警门禁
+
+-   任何生产发布（含 semantic-release、Docker 镜像推送）前必须通过安全告警门禁：`critical` 必须修复且**不允许豁免**；`high` 默认阻塞，仅在上游无可用修复版本或修复成本过高时允许豁免。
+-   `high` 豁免必须写入 `.github/security-alert-exemptions.json`，包含 `reason`、`tracking`（Issue 或待办条目）、`expiresAt`（复核截止日期）；到期自动失效并重新阻塞发布，已修复的豁免必须及时删除。
+-   `medium` / `low` 不阻塞发布，在门禁报告中记录，随后续版本升级修复；Code scanning alerts 与 Dependabot alerts 采用同一口径。
+-   门禁脚本为 `scripts/security/check-alerts.mjs`，由 `.github/workflows/release.yml`、`.github/workflows/docker.yml`（发布前）与 `.github/workflows/security-alert-gate.yml`（每周规划检查）执行；扫描未完成（token 失效、权限不足、网络异常）视为未通过，禁止把"未扫描"当成"无告警"。详细规范见 [安全开发规范 5.1.3](./docs/standards/security.md#513-发布前安全告警门禁-release-security-alert-gate)。
 
 ## 8. 其他要求
 
