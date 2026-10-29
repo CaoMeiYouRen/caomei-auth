@@ -1,7 +1,7 @@
 # better-auth 1.7 升级规划
 
-> 状态：`proposed`
-> 日期：2026-08-30
+> 状态：`implemented`（Phase 1–2 已完成并落地 `feat/better-auth-1.7`；Phase 3 运行时验证待 staging 执行）
+> 日期：2026-08-30（2026-10-29 更新）
 > 适用范围：草梅 Auth 项目核心鉴权层（`lib/auth.ts`、`lib/auth-client.ts`、`server/database/storage.ts`、所有 `composables/use-*-flow.ts` 中涉及 `authClient.*` 的路径）
 
 ## 1. 背景与动机
@@ -96,20 +96,20 @@
 
 ### Phase 1：预演与代码扫描（预计 1 周）
 
-- [ ] 通读官方 [1.7 upgrade guide](https://github.com/better-auth/better-auth/blob/main/docs/content/docs/guides/1-7-upgrade-guide.mdx) 全章
-- [ ] 比对 `lib/auth.ts` 中 `oidcProvider({...})` 配置（约 60 行）映射到 `oauthProvider({...})` 的逐项差异（重点：`metadata` / `requirePKCE` / `allowDynamicClientRegistration` / `generateClientId` / `generateClientSecret` / `scopes` / `getAdditionalUserInfoClaim` / `trustedClients`）
-- [ ] 调研 `genericOAuthClient` / `oidcClient` 在 1.7 中的替代方案（查 better-auth Discord / GitHub Discussions）
-- [ ] 调研 `account.unlink({ providerId })` 在 1.7 client 的正确签名
-- [ ] 编写类型收窄 helper：`(result: TwoFactorResponse) => 'totpURI' in result` 用于 `use-security-settings.ts`
-- [ ] 编写依赖 mock 更新：`tests/unit/server/email.spec.ts` 中 mock 加 `getAndDelete`
+- [x] 通读官方 [1.7 upgrade guide](https://github.com/better-auth/better-auth/blob/main/docs/content/docs/guides/1-7-upgrade-guide.mdx) 全章
+- [x] 比对 `lib/auth.ts` 中 `oidcProvider({...})` 配置（约 60 行）映射到 `oauthProvider({...})` 的逐项差异（重点：`metadata` / `requirePKCE` / `allowDynamicClientRegistration` / `generateClientId` / `generateClientSecret` / `scopes` / `getAdditionalUserInfoClaim` / `trustedClients`）
+- [x] 调研 `genericOAuthClient` / `oidcClient` 在 1.7 中的替代方案（查 better-auth Discord / GitHub Discussions）
+- [x] 调研 `account.unlink({ providerId })` 在 1.7 client 的正确签名
+- [x] 编写类型收窄 helper：`(result: TwoFactorResponse) => 'totpURI' in result` 用于 `use-security-settings.ts`
+- [x] 编写依赖 mock 更新：`tests/unit/server/email.spec.ts` 中 mock 加 `getAndDelete`
 
 ### Phase 2：依赖升级与基础类型（预计 1 周）
 
-- [ ] 单 PR 升级 `package.json` `better-auth` 到 `^1.7.2`
-- [ ] `pnpm install` 让 lockfile 自然重写
-- [ ] 重点审计 8+ 文件的 typecheck 错误（每个错误对应一个迁移点）
-- [ ] `pnpm run lint && pnpm run typecheck && pnpm run build` 三关必须通过
-- [ ] 不跑端到端，先保证编译通过
+- [x] 单 PR 升级 `package.json` `better-auth` 到 `~1.7.14`（含 `@better-auth/sso`、`better-auth-localization`、`@better-auth/oauth-provider`）
+- [x] `pnpm install` 让 lockfile 自然重写
+- [x] 重点审计 8+ 文件的 typecheck 错误（每个错误对应一个迁移点）
+- [x] `pnpm run lint && pnpm run typecheck && pnpm run build` 三关必须通过
+- [x] 不跑端到端，先保证编译通过
 
 ### Phase 3：运行时验证（预计 1–2 周）
 
@@ -175,13 +175,66 @@
 | Phase 4（合并发布） | 1 天 | 无额外风险 |
 | **合计** | **3–4 周** | 不属于紧急修复，可排在正常迭代中 |
 
+## 7.1 Phase 1–2 实施记录（2026-10-29）
+
+### 依赖变更
+
+| 包 | 1.6 | 1.7 |
+|---|---|---|
+| `better-auth` | `~1.6.33` | `~1.7.14` |
+| `@better-auth/sso` | `1.6.30` | `1.7.14` |
+| `better-auth-localization` | `^3.0.0` | `^4.0.0` |
+| `@better-auth/oauth-provider` | — | `1.7.14`（替代内置 `oidcProvider`） |
+
+- `pnpm-workspace.yaml` 的 `better-auth` override 同步提升到 `^1.7.14`。
+- `patchedDependencies` 中的 `@better-auth/utils@0.4.2` 补丁迁移到 `@better-auth/utils@0.5.1`（内容不变：去掉 `./password` 的 workerd/node 导出条件，保证 Nuxt/Nitro 打包可用）。
+- 新增 `publicHoistPattern`（`better-auth` / `@better-auth/*` / `@better-fetch/*` / `better-call` / `htmlparser2`）：better-auth 1.7 会以裸包名导入自身传递依赖，pnpm 默认隔离会让 dev 模式下的 Nitro 外部化解析失败（`Cannot find package '@better-fetch/fetch'`）。
+
+### 代码迁移
+
+| 位置 | 变更 |
+|---|---|
+| `lib/auth.ts` | `oidcProvider` → `oauthProvider`；`metadata` / `trustedClients` 移除（发现文档改为自动生成）；`getAdditionalUserInfoClaim` → `customUserInfoClaims`（`sub` 由服务端生成，不再手写）；`sendChangeEmailVerification` → `sendChangeEmailConfirmation`；显式设置 `baseURL` 与 `jwt.issuer`，保证发现文档端点为绝对 URL 且 issuer 与 1.6 一致 |
+| `lib/auth-client.ts` | 移除 `genericOAuthClient()` / `oidcClient()`，改用 `oauthProviderClient()`（自动为 oauth2 POST 附加签名查询参数） |
+| `composables/use-login-flow.ts` / `use-profile-flow.ts` | 通用 OAuth 登录改走 `signIn.social({ provider })`；绑定改走 `linkSocial()`；`unlinkAccount` 只传 `accountId`（1.7 移除 `providerId` 选择器） |
+| `composables/use-oauth-consent.ts` | 同意提交改走 `authClient.$fetch('/oauth2/consent')`，响应由 `redirectURI` 改为 `{ redirect, url }` |
+| `composables/use-security-settings.ts` | `twoFactor.enable` 显式传 `method: 'totp'` 并按返回的联合类型收窄 |
+| `server/database/storage.ts` | `SecondaryStorage` 补 `increment` / `getAndDelete`；内存实现的 `increment` 仅在首次创建时设置 TTL |
+| `server/entities/oauth-*` | 按 1.7 模型重建 7 张表：`oauth_client`、`oauth_resource`、`oauth_client_resource`、`oauth_access_token`、`oauth_refresh_token`、`oauth_consent`、`oauth_client_assertion`；删除 `oauth_application` |
+| `server/api/admin/oauth/applications/*` | 内部改用 `OAuthClient`，对外仍保持 1.6 的字段命名（`redirectURLs` / `scope` / `type` 等），前端管理页无需改写 |
+| `server/api/oauth/*` | 客户端公开信息、授权同意列表改用 `oauth_client`；同意记录不再有 `consentGiven`（存在即已授权），`scopes` 改为数组 |
+| `server/api/auth/[...all].ts` + `server/routes/.well-known/*` | 1.7 将发现端点改为 server-only，需自行暴露：根路径 `/.well-known/openid-configuration`、`/.well-known/oauth-authorization-server`，并兼容旧的 `/api/auth/.well-known/*` |
+| SSO 属性映射 | 移除 `mapping.id`（1.7 中 OIDC 用 `sub`、SAML 用 `NameID`，且 schema 为 `z.strictObject`，多余字段会直接报错） |
+
+### 关键决策
+
+1. **客户端密钥存储**：沿用 1.7 默认 `storeClientSecret: "hashed"`（SHA-256 + base64url）。管理端创建应用时按同一算法写库，明文密钥只在创建响应里返回一次。
+2. **PKCE 默认值**：1.7 中 `client.requirePKCE ?? true`，与 1.6 的 `requirePKCE: false` 行为冲突。管理端创建客户端与演示数据显式写入 `requirePKCE: false`，保持既有接入方无需改造。
+3. **issuer 保持根 URL**：`jwt.issuer` 继续取 `AUTH_BASE_URL`，避免已接入客户端校验 `iss` 失败；发现文档位于根路径（符合 OIDC Discovery 规范），同时保留旧路径。
+4. **表结构来源**：实体字段直接对齐 `getAuthTables()` 输出，并新增回归测试 `tests/unit/server/database/oauth-schema.spec.ts`（模型↔实体映射 + 数组/JSON 字段读写）。
+
+### 生产库迁移清单（`synchronize: false` 时必须手工执行）
+
+1. 新建 5 张表：`oauth_client`、`oauth_resource`、`oauth_client_resource`、`oauth_refresh_token`、`oauth_client_assertion`。
+2. `oauth_application` → `oauth_client` 数据迁移：`redirectURLs`（逗号/换行分隔）拆成 `redirect_uris` 数组、`type` → `application_type`、`scope` → `scopes` 数组、`client_uri` → `uri`、`logo_uri` → `icon`、`tos_uri` → `tos`、`policy_uri` → `policy`、`description` 保留为扩展列。
+3. 既有客户端密钥是明文，1.7 期望哈希值：迁移时对每个 `client_secret` 计算 `base64url(sha256(secret))` 后写回，同时把这些客户端的 `require_pkce` 置为 `false`。
+4. `oauth_access_token` 结构变更（`token` / `scopes` / `resources` 等）：旧表数据可丢弃（访问令牌短时有效），建议改名备份后重建。
+5. SSO：清理 `sso_provider.oidc_config` / `saml_config` 中 `mapping.id` 字段，否则 1.7 的 `z.strictObject` 校验会让该提供商的登录直接失败。
+6. `oauth_consent` 无 `consent_given` 字段（存在即授权），`scopes` 改数组。
+
+> 项目当前没有 TypeORM migration 框架，以上 DDL/DML 需在发布窗口按环境手工执行；开发与测试环境由 `synchronize` 自动建表。
+
+### 已知遗留
+
+- Phase 3 的 staging E2E 矩阵（见第 5 节）尚未执行。
+- Demo 模式数据预填在 1.7 下报 `Username is invalid`（演示用户名为中文），导致演示数据未写入；不影响生产路径，待单独修复。
+- `deepmerge` / `node-forge` 之外的其余 Dependabot 告警已在 1.7 升级中闭环，需合并到默认分支后由 GitHub 重新扫描确认。
+
 ## 8. 与现有依赖治理的关系
 
-- `.github/dependabot.yml` 已添加 `better-auth >=1.7.0` ignore（参考现有 `typeorm >=1.0.0` 写法），防止 dependabot 再次自动开 PR
-- ignore 段同样作用于 **安全更新**：1.x 线专属安全修复不会自动出 PR，由 Dependabot alerts + `security-alert-remediator` skill 兜底
-- 升级完成后，需要：
-  1. 删除 `better-auth >=1.7.0` ignore 段
-  2. 重新评估其他核心依赖（`@better-auth/sso`、`better-auth-localization`）的兼容窗口
+- `.github/dependabot.yml` 中 `better-auth >=1.7.0` 的 ignore 段已随本次升级删除（1.7 已是当前基线）
+- `package.json` 改用 `~1.7.14` 锁定 patch 线，`@better-auth/*` 生态包保持同版本
+- 后续 `@better-auth/sso`、`better-auth-localization` 的兼容窗口仍需在每次 1.7.x patch 升级时复核
 
 ## 9. 参考资料
 
@@ -198,3 +251,4 @@
 | 日期 | 变更 | 作者 |
 |---|---|---|
 | 2026-08-30 | 初始登记；dependabot #604 合并 1.7.1 后 CI 失败，已紧急回退到 `~1.6.30`；dependabot 已配置 ignore | full-stack-master |
+| 2026-10-29 | Phase 1–2 落地：依赖升级到 1.7.14、`oauthProvider` 迁移、OAuth 实体重建、发现端点自暴露、SSO `mapping.id` 清理；新增模型映射回归测试；补充生产库迁移清单 | full-stack-master |
