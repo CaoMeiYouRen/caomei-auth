@@ -90,28 +90,38 @@ jobs:
             exit 1
           fi
 
-          # probe <path>：返回 HTTP 状态码；同时打印 GitHub 返回的 token 到期时间（若存在）。
+          # 响应头落盘：probe 的 stdout 只允许出现状态码，任何日志都不得混入，
+          # 否则会被 "$(probe ...)" 一起捕获，污染 case 匹配（run 40980447828：
+          # user_code 变成 "::notice ...200"，落入 * 分支误报"校验异常"）。
+          HDR_FILE="$(mktemp)"
+          trap 'rm -f "${HDR_FILE}"' EXIT
+
+          # probe <path>：stdout 仅输出 HTTP 状态码；响应头写入 HDR_FILE 供 report_expiry 使用。
           probe() {
-            local path="$1" hdr code
-            hdr="$(mktemp)"
-            code="$(curl -sS -o /dev/null -D "${hdr}" -w '%{http_code}' \
+            local path="$1" code
+            code="$(curl -sS -o /dev/null -D "${HDR_FILE}" -w '%{http_code}' \
               --retry 3 --retry-delay 2 --retry-all-errors \
               -H "Authorization: Bearer ${GH_TOKEN_VALUE}" \
               -H 'Accept: application/vnd.github+json' \
               -H 'X-GitHub-Api-Version: 2022-11-28' \
               "https://api.github.com${path}" 2>/dev/null)" || code="000"
+            printf '%s' "${code}"
+          }
+
+          # report_expiry：在命令替换之外调用，打印上次 probe 得到的 token 到期时间。
+          report_expiry() {
             local expires
-            expires="$(grep -i '^github-authentication-token-expiration:' "${hdr}" | tr -d '\r' | sed 's/^[^:]*:[[:space:]]*//' || true)"
+            # --retry 时 curl 会向 -D 文件追加多段响应头，取最后一段，避免多行 notice 被截断。
+            expires="$(grep -i '^github-authentication-token-expiration:' "${HDR_FILE}" 2>/dev/null | tail -n 1 | tr -d '\r' | sed 's/^[^:]*:[[:space:]]*//' || true)"
             if [ -n "${expires}" ]; then
               echo "::notice title=GH_TOKEN 到期时间::${expires}"
             fi
-            rm -f "${hdr}"
-            printf '%s' "${code}"
           }
 
           echo "GH_TOKEN is ${#GH_TOKEN_VALUE} chars"
 
           user_code="$(probe /user)"
+          report_expiry
           case "${user_code}" in
             200)
               echo "OK: GH_TOKEN 身份校验通过（GET /user 200）"
