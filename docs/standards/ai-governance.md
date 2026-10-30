@@ -84,6 +84,7 @@
     - `pnpm ai:check`（若已引入；平台镜像目录被 `.gitignore` 忽略，因此当某平台的镜像目录整体缺失时会输出"跳过镜像一致性校验"提示而不是报错，部分缺失仍属治理缺陷）
     - `pnpm lint:md`（若已引入）
     - 若改动触及脚本或配置，再补对应静态检查与运行验证
+5.  CI 侧执行位置：`pnpm ai:check` 在 `Test` 工作流（`push` / `pull_request`）中前置执行，并随 `Weekly Regression` 做周级回归。
 
 ## 6. 生命周期与弃用流程
 
