@@ -532,9 +532,26 @@ async function main() {
     const githubSkillDirs = await listDirectoriesRecursive(governanceRoots.githubSkills)
     const githubAgentDirs = await listDirectoriesRecursive(governanceRoots.githubAgents)
 
+    const skippedMirrorGroups = []
+
     for (const group of mirrorGroups) {
-        const skillRoot = group.skillRoot
-        const agentRoot = group.agentRoot
+        // 平台镜像目录不入库（由 scripts/setup-ai.mjs 本地生成并被 .gitignore 忽略），
+        // 因此在 CI / 全新克隆中可能整体缺失；此时跳过该平台的一致性校验而不是直接崩溃。
+        // 仅当镜像目录"整体缺失"才判定为未安装，部分缺失仍视为治理缺陷。
+        const skillRoot = await pathExists(group.skillRoot) ? group.skillRoot : undefined
+        const agentRoot = await pathExists(group.agentRoot) ? group.agentRoot : undefined
+
+        if (!skillRoot && !agentRoot) {
+            skippedMirrorGroups.push(`.${group.name}`)
+            continue
+        }
+
+        for (const [kind, root] of [['skills', skillRoot], ['agents', agentRoot]]) {
+            if (!root) {
+                issues.push(buildIssue('missing-mirror-directory', `.${group.name}/${kind}`, `平台镜像目录缺失: .${group.name}/${kind}（可执行 pnpm setup:ai 重新生成）`))
+            }
+        }
+
         const mirrorSkillFiles = skillRoot ? await listFilesRecursive(skillRoot, () => true) : []
         const mirrorAgentFiles = agentRoot ? await listFilesRecursive(agentRoot, () => true) : []
         const mirrorSkillDirs = skillRoot ? await listDirectoriesRecursive(skillRoot) : []
@@ -611,6 +628,9 @@ async function main() {
         blockingIssues.some((issue) => ['missing-external-skill-registry', 'invalid-external-skill-registry', 'invalid-external-skill-entry', 'duplicate-external-skill-id', 'invalid-external-skill-source', 'missing-external-skill-doc', 'external-skill-doc-drift'].includes(issue.type))
             ? '补齐外部 skill 准入清单与说明文档，并确保文档描述与事实源一致。'
             : null,
+        blockingIssues.some((issue) => issue.type === 'missing-mirror-directory')
+            ? '执行 pnpm setup:ai 重新生成各平台镜像目录（.claude/.opencode/.agents）。'
+            : null,
         blockingIssues.some((issue) => ['mirror-drift', 'missing-mirror-file', 'extra-mirror-file', 'extra-mirror-directory'].includes(issue.type))
             ? '以 .github 作为主定义，并将各平台镜像（.claude/.opencode/.agents）同步到逐文件一致。'
             : null,
@@ -625,6 +645,10 @@ async function main() {
     printSection('影响范围', impactPaths)
     printSection('修复建议', suggestionLines)
     printSection('可延后事项', deferredIssues.map((issue) => `[${issue.type}] ${issue.filePath}: ${issue.message}`))
+
+    if (skippedMirrorGroups.length > 0) {
+        console.info(`跳过镜像一致性校验（平台镜像未安装）: ${skippedMirrorGroups.join(', ')}`)
+    }
 
     if (blockingIssues.length > 0) {
         process.exitCode = 1
