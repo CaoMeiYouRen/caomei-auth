@@ -87,7 +87,7 @@
     "zod": "^4.6.6"
   },
   "devDependencies": {
-    "@lint-md/cli": "^2.4.0",
+    "@lint-md/cli": "^2.5.0",
     "@nuxt/eslint": "^1.17.0",
     "@nuxt/test-utils": "^4.1.0",
     "@primevue/nuxt-module": "^4.5.5",
