@@ -188,8 +188,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2))(winston@3.19.0)
       nodemailer:
-        specifier: ^10.1.4
-        version: 10.1.4
+        specifier: ^10.2.1
+        version: 10.2.1
       normalize.css:
         specifier: ^8.0.1
         version: 8.0.1
@@ -2792,6 +2792,7 @@ packages:
   '@smithy/core@3.35.0':
     resolution: {integrity: sha512-zRMhfkByhT2snNdr1si24vJitU6Cr9ix2MikUfWmkAgp4jrNP0GcKSP5YvwQ+TlI8AZXER5QOGJn3JsVtSD9/A==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to a bug in custom logger data redaction. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -7002,8 +7003,8 @@ packages:
   node-rsa@1.1.1:
     resolution: {integrity: sha512-Jd4cvbJMryN21r5HgxQOpMEqv+ooke/korixNNK3mGqfGJmy0M77WDDzo/05969+OkMy3XW1UuZsSmW9KQm7Fw==}
 
-  nodemailer@10.1.4:
-    resolution: {integrity: sha512-EsMnOR2oRv4LGnWvHgcVYkkQ4O2j8KO4WTw6l+PHR4sOXo8SAgIraxtEnGDmotjbhv0hDsu3IuDIFZm8iXwO4A==}
+  nodemailer@10.2.1:
+    resolution: {integrity: sha512-ZrDNsPFoDMwefNs7sJwrYiEJ/CG4ClJWDZv05iNJsEBWa8GRDry1QJHTJxsuTAY9eDDKjX4k+q3SxslXJOao7w==}
     engines: {node: '>=20.0.0'}
 
   nopt@10.0.1:
@@ -17684,7 +17685,7 @@ snapshots:
     dependencies:
       asn1: 0.2.6
 
-  nodemailer@10.1.4: {}
+  nodemailer@10.2.1: {}
 
   nopt@10.0.1:
     dependencies:
