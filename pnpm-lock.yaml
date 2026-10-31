@@ -354,8 +354,8 @@ importers:
         specifier: ^25.0.9
         version: 25.0.9(supports-color@10.2.2)(typescript@6.0.3)
       semantic-release-cmyr-config:
-        specifier: ^1.0.2
-        version: 1.0.2(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)
+        specifier: ^1.1.0
+        version: 1.1.0(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)
       stylelint:
         specifier: ^16.26.1
         version: 16.26.1(supports-color@10.2.2)(typescript@6.0.3)
@@ -2521,11 +2521,11 @@ packages:
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
 
-  '@semantic-release/changelog@6.0.3':
-    resolution: {integrity: sha512-dZuR5qByyfe3Y03TpmCvAxCyTnp7r5XwtHRf/8vD9EAn4ZWbavUX8adMtXYzE86EVh0gyLA7lm5yW4IV30XUag==}
-    engines: {node: '>=14.17'}
+  '@semantic-release/changelog@7.0.0':
+    resolution: {integrity: sha512-TNPyag5db24o7jWjre7UwKB4EcL8oJxbRhnDQ7hmZRAYqzreAc6PgdxQuU3pppp5xQinYtiumL0iG8SSKvnlzg==}
+    engines: {node: ^22.22.2 || >=24.15}
     peerDependencies:
-      semantic-release: '>=18.0.0'
+      semantic-release: '>=20.1.0'
 
   '@semantic-release/commit-analyzer@13.0.1':
     resolution: {integrity: sha512-wdnBPHKkr9HhNhXOhZD5a2LNl91+hs8CC2vsAVYxtZH3y0dV3wKn+uZSN61rdJQZ8EGxzWB3inWocBHV9+u/CQ==}
@@ -2533,19 +2533,15 @@ packages:
     peerDependencies:
       semantic-release: '>=20.1.0'
 
-  '@semantic-release/error@3.0.0':
-    resolution: {integrity: sha512-5hiM4Un+tpl4cKw3lV4UgzJj+SmfNIDCLLw0TepzQxz9ZGV5ixnqkzIVF+3tp0ZHgcMKE+VNGHJjEeyFG2dcSw==}
-    engines: {node: '>=14.17'}
-
   '@semantic-release/error@4.0.0':
     resolution: {integrity: sha512-mgdxrHTLOjOddRVYIYDo0fR3/v61GNN1YGkfbrjuIKg/uMgCd+Qzo3UAXJ+woLQQpos4pl5Esuw5A7AoNlzjUQ==}
     engines: {node: '>=18'}
 
-  '@semantic-release/git@10.0.1':
-    resolution: {integrity: sha512-eWrx5KguUcU2wUPaO6sfvZI0wPafUKAMNC18aXY4EnNcrZL86dEmpNVnC9uMpGZkmZJ9EfCVJBQx4pV4EMGT1w==}
-    engines: {node: '>=14.17'}
+  '@semantic-release/git@11.0.1':
+    resolution: {integrity: sha512-Zr8BUYCTZMc8V6wDKN2dpR7nJgewd9I6THL3ydLTnp3OEdTo1/4RBLNYaeRucYMsjMv+BXoCNfXA0NADj1kwhw==}
+    engines: {node: ^22.22.2 || >=24.15}
     peerDependencies:
-      semantic-release: '>=18.0.0'
+      semantic-release: '>=20.1.0'
 
   '@semantic-release/github@12.0.9':
     resolution: {integrity: sha512-ODIqb0V3QqndipryEEiaBxUQCFjvv7Oese5Dt4omMGa60YRNEW0Sx3K+zri0uac2Y6S9nOlMehciWIzvvRCTGQ==}
@@ -2848,10 +2844,6 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
-
-  '@tokenizer/inflate@0.4.1':
-    resolution: {integrity: sha512-2mAv+8pkG6GIZiF1kNg1jAjh27IDxEPKwdGul3snfztFerfPGI1LjDezZp3i7BElXompqEtPmoPx6c2wgtWsOA==}
-    engines: {node: '>=18'}
 
   '@tokenizer/inflate@0.5.2':
     resolution: {integrity: sha512-3AZIuReWQ7i916s/UWAzy4V4k2wrkAZLW2sTi448W3w7Hz5uoc+Y7h+cnwzr0cwrwf3PsC5xKsH8MOl0NRltlg==}
@@ -3611,12 +3603,12 @@ packages:
     resolution: {integrity: sha512-TQf59BsZnytt8GdJKLPfUZ54g/iaUL2OWDSFCCvMOhsHduDQxO8xC4PNeyIkVcA5KwL2phPSv0douC0fgWzmnA==}
     engines: {node: '>= 20'}
 
-  aggregate-error@3.1.0:
-    resolution: {integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==}
-    engines: {node: '>=8'}
-
   aggregate-error@5.0.0:
     resolution: {integrity: sha512-gOsf2YwSlleG6IjRYG2A7k0HmBMEo6qVNk9Bp/EaLgAJT5ngH6PXbqa4ItvnEwCm/velL5jAnQgsHsWnjhGmvw==}
+    engines: {node: '>=18'}
+
+  aggregate-error@5.1.0:
+    resolution: {integrity: sha512-1m4/ydbOGBbHTtBYa4/ISQcqfPdZAxQLzj71wM71T8lP4ktez8lcsVolvscrujQW4CJr/LJSzoZ6mcfnqzYQ3A==}
     engines: {node: '>=18'}
 
   ajv@6.14.0:
@@ -4187,10 +4179,6 @@ packages:
 
   cjs-module-lexer@2.2.1:
     resolution: {integrity: sha512-Ca8swihM+/4yKecYHY52kgJd300hi2lADU/a1RxNTRe+RJ9jvqQlESpbz9DnG9mowez8qwXHB8qYdIUw9e+F5Q==}
-
-  clean-stack@2.2.0:
-    resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
-    engines: {node: '>=6'}
 
   clean-stack@5.3.0:
     resolution: {integrity: sha512-9ngPTOhYGQqNVSfeJkYXHmF7AGWp4/nN5D/QqNQs3Dvxd1Kk/WpjHfNujKHYUQ/5CoGyOyFNoWSPk5afzP0QVg==}
@@ -5238,6 +5226,10 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
 
+  execa@10.2.1:
+    resolution: {integrity: sha512-/Bofl3ZBh2Q4/PG0W63qFzP5vDAypi8Zc90UWTBzaDNIYiX7apPOd0N6L8hG8CojUdq4V51adu8BObP+iVsSTw==}
+    engines: {node: '>=22'}
+
   execa@5.1.1:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
     engines: {node: '>=10'}
@@ -5360,10 +5352,6 @@ packages:
 
   file-stream-rotator@0.6.1:
     resolution: {integrity: sha512-u+dBid4PvZw17PmDeRcNOtCP9CCK/9lRN2w+r1xIS7yOL9JFrIBKTvrYsxT4P0pGtThYTn++QS5ChHaUov3+zQ==}
-
-  file-type@22.0.2:
-    resolution: {integrity: sha512-0H8TsCUGBLx+V5adH3EY52hTAcyLKbV1D4gq5cIOJ6DnQAHeV9Z2Hhuc5CoBX4YmvB2oL+JIC84z0qO7JsCoNw==}
-    engines: {node: '>=22'}
 
   file-type@22.2.0:
     resolution: {integrity: sha512-XmEVJsRpQMVYC+sWFW+FKAVo2P7/lPctDdWH4UQ1r6oxhdrTobnowdM3z+ZJ93a4J8D3yDpxX0bEvRuFev0vUQ==}
@@ -5888,10 +5876,6 @@ packages:
   imurmurhash@0.1.4:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
     engines: {node: '>=0.8.19'}
-
-  indent-string@4.0.0:
-    resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
-    engines: {node: '>=8'}
 
   indent-string@5.0.0:
     resolution: {integrity: sha512-m6FAo/spmsW2Ab2fU35JTYwtOKa2yAwXSwgjSv1TJzh4Mh7mC3lzAOVLBprb72XsTrgkEIsl7YrFNAiDiRhIGg==}
@@ -7465,10 +7449,6 @@ packages:
     resolution: {integrity: sha512-P2wrCri3bhGLPo3kX7qYVXbo/5GvaVATU0DpO24CbeT53Y4z35t8JUWku04ERpXHUYB5rPMi3TkWE3fmJgx5rA==}
     engines: {node: '>=22'}
 
-  p-reduce@2.1.0:
-    resolution: {integrity: sha512-2USApvnsutq8uoxZBGbbWM0JIYLiEMJ9RlaN7fAzVNb9OZN0SHjjTTfIcb667XynS5Y1VhwDJVDa72TnPzAYWw==}
-    engines: {node: '>=8'}
-
   p-reduce@3.0.0:
     resolution: {integrity: sha512-xsrIUgI0Kn6iyDYm9StOpOeK29XM1aboGji26+QEortiFST1hGZaUQOLhtEbqHErPpGW/aSz6allwK2qcptp0Q==}
     engines: {node: '>=12'}
@@ -7957,6 +7937,10 @@ packages:
     resolution: {integrity: sha512-gjVS5hOP+M3wMm5nmNOucbIrqudzs9v/57bWRHQWLYklXqoXKrVfYW2W9+glfGsqtPgpiz5WwyEEB+ksXIx3gQ==}
     engines: {node: '>=18'}
 
+  pretty-ms@9.3.1:
+    resolution: {integrity: sha512-HzMy3Geq23nVALD/M2LliU+F+M+gVNsvkQWWqeBZ8HDiCgzo6YPJ/Omrmtq24EFrIsk0a3EkQGEd7bDOo+IhGA==}
+    engines: {node: '>=18'}
+
   primelocale@2.6.2:
     resolution: {integrity: sha512-X+X8RPapIKMq8UOEZOs1ALglwZOgFcLT9IRbKy7edGTtXa4IIAkdF00dVnu1DiymWtA8/bOYu9fV6UAqD0CZeA==}
     engines: {node: '>=18.0.0', npm: '>=8.6.0'}
@@ -8308,9 +8292,9 @@ packages:
   search-insights@2.17.3:
     resolution: {integrity: sha512-RQPdCYTa8A68uM2jwxoY842xDhvx3E5LFL1LxvxCNMev4o5mLuokczhzjAgGwUZBAmOKZknArSxLKmXtIi2AxQ==}
 
-  semantic-release-cmyr-config@1.0.2:
-    resolution: {integrity: sha512-xMa4wMK88HuTc9ODdEsW38iDRmka4iGjCWSWCHdXBU3st+8h63xkmPhWCEBR8J8Kkstd/j4bLIV00Lm1T90bJw==}
-    engines: {node: '>=18'}
+  semantic-release-cmyr-config@1.1.0:
+    resolution: {integrity: sha512-8mfdHnYgXxspqjURYfLidg2SjerAI/bfZLcxW7tsSTrvgMuKLeVVoeqc7QTzorjKnkHSakxNnzm/3xjyVWqXug==}
+    engines: {node: ^22.22.2 || >=24.15}
     peerDependencies:
       semantic-release: '>=24'
 
@@ -8657,10 +8641,6 @@ packages:
 
   strnum@2.4.2:
     resolution: {integrity: sha512-rDG3Ah4TV0k1hWvLSzkZtMmLN9+eS+h3knq4MP6A42Y3Yh5qGNnOUs1jJkoSr8FG5dsL28c7KgkIBzSEykqtuw==}
-
-  strtok3@10.3.5:
-    resolution: {integrity: sha512-ki4hZQfh5rX0QDLLkOCj+h+CVNkqmp/CMf8v8kZpkNVK6jGQooMytqzLZYUVYIZcFZ6yDB70EfD8POcFXiF5oA==}
-    engines: {node: '>=18'}
 
   strtok3@10.6.3:
     resolution: {integrity: sha512-MD8mENgyXMr2mDaDfzP3RWYDSyYQxIIou7HhCiCJiBekrsoDtUG0id3vYnjDfY9ndOEbazFXe13Qw6u/1AB8ew==}
@@ -9809,6 +9789,11 @@ packages:
   which-collection@1.0.2:
     resolution: {integrity: sha512-K4jVyjnBdgvc86Y6BkaLZEN933SwYOuBFkdmBu9ZfkcAbdVbpITnDmjvZ/aQjRXQrv5EPkTnD1s39GiiqbngCw==}
     engines: {node: '>= 0.4'}
+
+  which-command@0.1.0:
+    resolution: {integrity: sha512-XZyoF5/5hZtXitIwzrU4NKK+Wtbb9aB9CezUEw2Q0wlYK8NUYQxC1rRXgNueYLtBAJwXIb+/tFVk4dozciNJMA==}
+    engines: {node: '>=22'}
+    hasBin: true
 
   which-module@2.0.1:
     resolution: {integrity: sha512-iBdZ57RDvnOR9AGBhML2vFZf7h8vmBjhoaZqODJBFWHVtKkDmKuHai3cx5PgVMrX5YDNp27AofYbAwctSS+vhQ==}
@@ -11397,7 +11382,7 @@ snapshots:
 
   '@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2)':
     dependencies:
-      file-type: 22.0.2(supports-color@10.2.2)
+      file-type: 22.2.0(supports-color@10.2.2)
       iterare: 1.2.1
       load-esm: 1.0.2
       reflect-metadata: 0.2.2
@@ -12513,12 +12498,11 @@ snapshots:
 
   '@sec-ant/readable-stream@0.4.1': {}
 
-  '@semantic-release/changelog@6.0.3(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))':
+  '@semantic-release/changelog@7.0.0(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))':
     dependencies:
-      '@semantic-release/error': 3.0.0
-      aggregate-error: 3.1.0
-      fs-extra: 11.4.1
-      lodash: 4.18.1
+      '@semantic-release/error': 4.0.0
+      aggregate-error: 5.1.0
+      lodash-es: 4.18.1
       semantic-release: 25.0.9(supports-color@10.2.2)(typescript@6.0.3)
 
   '@semantic-release/commit-analyzer@13.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)':
@@ -12535,20 +12519,18 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@semantic-release/error@3.0.0': {}
-
   '@semantic-release/error@4.0.0': {}
 
-  '@semantic-release/git@10.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)':
+  '@semantic-release/git@11.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)':
     dependencies:
-      '@semantic-release/error': 3.0.0
-      aggregate-error: 3.1.0
+      '@semantic-release/error': 4.0.0
+      aggregate-error: 5.1.0
       debug: 4.4.3(supports-color@10.2.2)
       dir-glob: 3.0.1
-      execa: 5.1.1
-      lodash: 4.18.1
+      execa: 10.2.1
+      lodash-es: 4.18.1
       micromatch: 4.0.8
-      p-reduce: 2.1.0
+      p-reduce: 3.0.0
       semantic-release: 25.0.9(supports-color@10.2.2)(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
@@ -12939,13 +12921,6 @@ snapshots:
       espree: 10.4.0
       estraverse: 5.3.0
       picomatch: 4.0.7
-
-  '@tokenizer/inflate@0.4.1(supports-color@10.2.2)':
-    dependencies:
-      debug: 4.4.3(supports-color@10.2.2)
-      token-types: 6.1.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@tokenizer/inflate@0.5.2(supports-color@10.2.2)':
     dependencies:
@@ -13841,12 +13816,12 @@ snapshots:
 
   agent-base@9.0.0: {}
 
-  aggregate-error@3.1.0:
-    dependencies:
-      clean-stack: 2.2.0
-      indent-string: 4.0.0
-
   aggregate-error@5.0.0:
+    dependencies:
+      clean-stack: 5.3.0
+      indent-string: 5.0.0
+
+  aggregate-error@5.1.0:
     dependencies:
       clean-stack: 5.3.0
       indent-string: 5.0.0
@@ -14434,8 +14409,6 @@ snapshots:
   citty@0.2.2: {}
 
   cjs-module-lexer@2.2.1: {}
-
-  clean-stack@2.2.0: {}
 
   clean-stack@5.3.0:
     dependencies:
@@ -15649,6 +15622,21 @@ snapshots:
 
   events@3.3.0: {}
 
+  execa@10.2.1:
+    dependencies:
+      '@sindresorhus/merge-streams': 4.0.0
+      figures: 6.1.0
+      get-stream: 9.0.1
+      human-signals: 8.0.1
+      is-plain-obj: 4.1.0
+      is-stream: 4.0.1
+      npm-run-path: 6.0.0
+      pretty-ms: 9.3.1
+      signal-exit: 4.1.0
+      strip-final-newline: 4.0.0
+      which-command: 0.1.0
+      yoctocolors: 2.2.0
+
   execa@5.1.1:
     dependencies:
       cross-spawn: 7.0.6
@@ -15789,15 +15777,6 @@ snapshots:
   file-stream-rotator@0.6.1:
     dependencies:
       moment: 2.31.0
-
-  file-type@22.0.2(supports-color@10.2.2):
-    dependencies:
-      '@tokenizer/inflate': 0.4.1(supports-color@10.2.2)
-      strtok3: 10.3.5
-      token-types: 6.1.2
-      uint8array-extras: 1.6.0
-    transitivePeerDependencies:
-      - supports-color
 
   file-type@22.2.0(supports-color@10.2.2):
     dependencies:
@@ -16383,8 +16362,6 @@ snapshots:
       - webpack
 
   imurmurhash@0.1.4: {}
-
-  indent-string@4.0.0: {}
 
   indent-string@5.0.0: {}
 
@@ -18530,8 +18507,6 @@ snapshots:
 
   p-queue@10.0.0: {}
 
-  p-reduce@2.1.0: {}
-
   p-reduce@3.0.0: {}
 
   p-timeout@6.1.4: {}
@@ -18970,6 +18945,10 @@ snapshots:
     dependencies:
       parse-ms: 4.0.0
 
+  pretty-ms@9.3.1:
+    dependencies:
+      parse-ms: 4.0.0
+
   primelocale@2.6.2: {}
 
   primevue@4.5.5(vue@3.5.42(typescript@6.0.3)):
@@ -19386,12 +19365,11 @@ snapshots:
 
   search-insights@2.17.3: {}
 
-  semantic-release-cmyr-config@1.0.2(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2):
+  semantic-release-cmyr-config@1.1.0(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2):
     dependencies:
-      '@semantic-release/changelog': 6.0.3(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))
-      '@semantic-release/git': 10.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)
+      '@semantic-release/changelog': 7.0.0(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))
+      '@semantic-release/git': 11.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)
       conventional-changelog-cmyr-config: 3.0.0(supports-color@10.2.2)
-      conventional-changelog-writer: 8.4.0
       semantic-release: 25.0.9(supports-color@10.2.2)(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
@@ -19790,10 +19768,6 @@ snapshots:
   strnum@2.4.2:
     dependencies:
       anynum: 1.0.1
-
-  strtok3@10.3.5:
-    dependencies:
-      '@tokenizer/token': 0.3.0
 
   strtok3@10.6.3:
     dependencies:
@@ -21080,6 +21054,8 @@ snapshots:
       is-set: 2.0.3
       is-weakmap: 2.0.2
       is-weakset: 2.0.4
+
+  which-command@0.1.0: {}
 
   which-module@2.0.1: {}
 
