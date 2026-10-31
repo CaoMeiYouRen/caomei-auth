@@ -66,7 +66,7 @@
     "nest-winston": "^2.0.0",
     "nodemailer": "^10.2.1",
     "normalize.css": "^8.0.1",
-    "nuxt": "^4.6.2",
+    "nuxt": "^4.6.3",
     "p-queue": "^10.0.0",
     "pg": "^8.23.1",
     "pinia": "^4.1.0",
