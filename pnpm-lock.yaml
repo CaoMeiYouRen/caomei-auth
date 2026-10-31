@@ -206,8 +206,8 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.42(typescript@6.0.3))
       primelocale:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.2
+        version: 2.6.2
       primevue:
         specifier: ^4.5.5
         version: 4.5.5(vue@3.5.42(typescript@6.0.3))
@@ -2792,6 +2792,7 @@ packages:
   '@smithy/core@3.35.0':
     resolution: {integrity: sha512-zRMhfkByhT2snNdr1si24vJitU6Cr9ix2MikUfWmkAgp4jrNP0GcKSP5YvwQ+TlI8AZXER5QOGJn3JsVtSD9/A==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to a bug in custom logger data redaction. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -7815,8 +7816,8 @@ packages:
     resolution: {integrity: sha512-gjVS5hOP+M3wMm5nmNOucbIrqudzs9v/57bWRHQWLYklXqoXKrVfYW2W9+glfGsqtPgpiz5WwyEEB+ksXIx3gQ==}
     engines: {node: '>=18'}
 
-  primelocale@2.5.0:
-    resolution: {integrity: sha512-if5sKywlbltSJbuojKEHpiQu7MDVXGUCpAETjZtqchjRglV9dXgOnFQ4LL/YkYBYAgHPBoel2JhAd67sDIhZVg==}
+  primelocale@2.6.2:
+    resolution: {integrity: sha512-X+X8RPapIKMq8UOEZOs1ALglwZOgFcLT9IRbKy7edGTtXa4IIAkdF00dVnu1DiymWtA8/bOYu9fV6UAqD0CZeA==}
     engines: {node: '>=18.0.0', npm: '>=8.6.0'}
 
   primevue@4.5.5:
@@ -18514,7 +18515,7 @@ snapshots:
     dependencies:
       parse-ms: 4.0.0
 
-  primelocale@2.5.0: {}
+  primelocale@2.6.2: {}
 
   primevue@4.5.5(vue@3.5.42(typescript@6.0.3)):
     dependencies:
