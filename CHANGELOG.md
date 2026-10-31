@@ -1,5 +1,17 @@
 # caomei-auth
 
+# [1.14.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.6...v1.14.0) (2026-10-31)
+
+
+### ✨ 新功能
+
+* **auth:** 升级 better-auth 至 1.7.14 并迁移 OAuth Provider ([3213ef3](https://github.com/CaoMeiYouRen/caomei-auth/commit/3213ef3))
+
+
+### 🐛 Bug 修复
+
+* **db:** 同步 create.sql 的 OAuth 表结构到 better-auth 1.7 ([054c0f4](https://github.com/CaoMeiYouRen/caomei-auth/commit/054c0f4))
+
 ## [1.13.6](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.5...v1.13.6) (2026-10-27)
 
 
