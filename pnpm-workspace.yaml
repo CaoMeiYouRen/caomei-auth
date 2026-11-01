@@ -22,7 +22,7 @@ patchedDependencies:
   "@nuxt/test-utils@4.1.0": patches/@nuxt-test-utils@4.1.0.patch
 overrides:
   axios: ^1.20.0
-  follow-redirects: ^1.16.1
+  follow-redirects: ^1.16.2
   "@unhead/vue": ^3.4.3
   unhead: ^3.4.3
   vite: ^8.3.4
