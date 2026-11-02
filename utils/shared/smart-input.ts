@@ -31,6 +31,11 @@ export function getDefaultRegionByLocation(): string {
         return 'CN'
     }
 
+    // 测试环境或隐私模式下可能只有 window 而没有 localStorage / navigator，按默认区域处理
+    if (typeof localStorage === 'undefined' || typeof navigator === 'undefined') {
+        return 'CN'
+    }
+
     // 优先使用用户保存的偏好
     const userPreference = localStorage.getItem('caomei-auth-preferred-region')
     if (userPreference) {
@@ -68,7 +73,7 @@ export function getDefaultRegionByLocation(): string {
  * 保存用户的区域偏好
  */
 export function saveRegionPreference(region: string) {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
         localStorage.setItem('caomei-auth-preferred-region', region)
     }
 }

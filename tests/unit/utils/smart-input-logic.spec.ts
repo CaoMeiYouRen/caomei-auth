@@ -32,6 +32,7 @@ beforeEach(() => {
 
 afterEach(() => {
     vi.restoreAllMocks()
+    vi.unstubAllGlobals()
 })
 
 describe('utils/smart-input (logic-focused)', () => {
@@ -147,40 +148,16 @@ describe('utils/smart-input (logic-focused)', () => {
         })
 
         it('uses the fallback default region when region parameter is missing', () => {
-            const originalWindow = (globalThis as any).window
-            const originalNavigator = (globalThis as any).navigator
-            const originalLocalStorage = (globalThis as any).localStorage
-
-            delete (globalThis as any).window
-            delete (globalThis as any).navigator
-            delete (globalThis as any).localStorage
+            vi.stubGlobal('window', undefined)
+            vi.stubGlobal('navigator', undefined)
+            vi.stubGlobal('localStorage', undefined)
 
             mocks.formatPhoneNumberMock.mockReturnValue('+86 901-234-5678')
 
-            try {
-                const result = smartInput.formatAccountForVerification('9012345678')
+            const result = smartInput.formatAccountForVerification('9012345678')
 
-                expect(result).toBe('+86 901-234-5678')
-                expect(mocks.formatPhoneNumberMock).toHaveBeenCalledWith('9012345678', 'CN')
-            } finally {
-                if (originalWindow) {
-                    (globalThis as any).window = originalWindow
-                } else {
-                    delete (globalThis as any).window
-                }
-
-                if (originalNavigator) {
-                    (globalThis as any).navigator = originalNavigator
-                } else {
-                    delete (globalThis as any).navigator
-                }
-
-                if (originalLocalStorage) {
-                    (globalThis as any).localStorage = originalLocalStorage
-                } else {
-                    delete (globalThis as any).localStorage
-                }
-            }
+            expect(result).toBe('+86 901-234-5678')
+            expect(mocks.formatPhoneNumberMock).toHaveBeenCalledWith('9012345678', 'CN')
         })
 
         it('throws descriptive error when explicit region formatting fails', () => {
@@ -192,13 +169,24 @@ describe('utils/smart-input (logic-focused)', () => {
         })
 
         it('throws descriptive error when default region formatting fails', () => {
-            const defaultRegionSpy = vi.spyOn(smartInput, 'getDefaultRegionByLocation').mockReturnValue('CN')
+            vi.stubGlobal('window', undefined)
             mocks.formatPhoneNumberMock.mockImplementation(() => {
                 throw new Error('bad input')
             })
 
             expect(() => smartInput.formatAccountForVerification('13812345678')).toThrow('无法确定手机号格式')
-            defaultRegionSpy.mockRestore()
+        })
+
+        it('falls back to the default region when window exists without localStorage', () => {
+            vi.stubGlobal('window', {})
+            vi.stubGlobal('localStorage', undefined)
+            vi.stubGlobal('navigator', undefined)
+            mocks.formatPhoneNumberMock.mockImplementation(() => {
+                throw new Error('bad input')
+            })
+
+            expect(() => smartInput.formatAccountForVerification('13812345678')).toThrow('无法确定手机号格式')
+            expect(mocks.formatPhoneNumberMock).toHaveBeenCalledWith('13812345678', 'CN')
         })
 
         it('throws when detectInputType cannot identify the account', () => {
