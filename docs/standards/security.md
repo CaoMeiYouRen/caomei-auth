@@ -110,7 +110,7 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 
 补充约束：
 
--   "修复成本过高"指升级路径受阻（上游未发布修复版本、升级会破坏跨 major 兼容等），不得因为"暂时不想改"而豁免。
+-   "修复成本过高"指升级路径受阻（上游未发布修复版本、升级会破坏跨 major 兼容等），对应豁免类别 `hard-fix`，不得因为"暂时不想改"而豁免。
 -   豁免必须登记到 `.github/security-alert-exemptions.json`，以下字段缺一不可：
     1.  定位字段：`source` + `alertNumber`；或稳定标识（Dependabot 用 `ghsaId`，可配 `package`；Code scanning 用 `ruleId`，可配 `path`）。
     2.  `category`：`no-fix`（上游无可用修复版本）/ `hard-fix`（本发布窗口无法完成）/ `false-positive`（仅用于已 dismiss 的告警，且 `reason` 必须写明原 dismiss 原因）。

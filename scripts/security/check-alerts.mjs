@@ -261,7 +261,7 @@ async function loadExemptions(filePath) {
         }
 
         if (typeof entry.reason !== 'string' || entry.reason.trim() === '') {
-            entryErrors.push('缺少 reason（无可修复版本 / 修复成本过高的说明）')
+            entryErrors.push('缺少 reason（no-fix / hard-fix 写无法修复的原因，false-positive 写原 dismiss 原因）')
         }
 
         if (typeof entry.tracking !== 'string' || entry.tracking.trim() === '') {

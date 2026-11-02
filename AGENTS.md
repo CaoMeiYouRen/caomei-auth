@@ -147,10 +147,10 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 ### 7.4 发布前安全告警门禁
 
--   任何生产发布（含 semantic-release、Docker 镜像推送）前必须通过安全告警门禁：`critical` 必须修复且**不允许豁免**；`high` 默认阻塞，仅在上游无可用修复版本或修复成本过高时允许豁免。
--   `high` 豁免必须写入 `.github/security-alert-exemptions.json`，包含 `reason`、`tracking`（Issue 或待办条目）、`expiresAt`（复核截止日期）；到期自动失效并重新阻塞发布，已修复的豁免必须及时删除。
+-   任何生产发布（含 semantic-release、Docker 镜像推送）前必须通过安全告警门禁：扫描 Dependabot 与 Code Scanning 的 `open` 与 `dismissed` 告警（`auto_dismissed` 除外）；`critical` 必须修复且**不允许豁免**（被 dismiss 也不能替代修复）；`high` 默认阻塞，`open` 告警仅在上游无可用修复版本（`no-fix`）或本发布窗口无法完成（`hard-fix`）时允许豁免，`dismissed` 告警仅可按误报（`false-positive`）登记。
+-   `high` 豁免必须写入 `.github/security-alert-exemptions.json`，包含 `category`、`reason`、`tracking`（Issue 或待办条目）、`expiresAt`（复核截止日期），且 `category` 必须与告警状态匹配（`open` 用 `no-fix` / `hard-fix`，`dismissed` 用 `false-positive`）；到期自动失效并重新阻塞发布，已修复的豁免必须及时删除。
 -   `medium` / `low` 不阻塞发布，在门禁报告中记录，随后续版本升级修复；Code scanning alerts 与 Dependabot alerts 采用同一口径。
--   门禁脚本为 `scripts/security/check-alerts.mjs`，由 `.github/workflows/release.yml`、`.github/workflows/docker.yml`（发布前）与 `.github/workflows/regression-weekly.yml`（每周回归：与发布前质量门等价的全量检查，不含正式发布）执行；扫描未完成（token 失效、权限不足、网络异常）视为未通过，禁止把"未扫描"当成"无告警"。详细规范见 [安全开发规范 5.1.3](./docs/standards/security.md#513-发布前安全告警门禁-release-security-alert-gate)。
+-   门禁脚本为 `scripts/security/check-alerts.mjs`，由 `.github/workflows/release.yml`、`.github/workflows/docker.yml`（发布前）与 `.github/workflows/regression-weekly.yml`（每周回归：与发布前质量门等价的全量检查，不含正式发布）执行；Dependabot 使用 `GH_TOKEN`，Code Scanning 使用 workflow 的 `GITHUB_TOKEN`（`security-events: read`），两类 token 不共用；扫描未完成（token 失效、权限不足、404、网络异常）视为未通过，禁止把"未扫描"当成"无告警"。详细规范见 [安全开发规范 5.1.3](./docs/standards/security.md#513-发布前安全告警门禁-release-security-alert-gate)。
 
 ## 8. 其他要求
 
