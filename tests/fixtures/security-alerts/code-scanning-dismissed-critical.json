@@ -1,0 +1,17 @@
+[
+    {
+        "number": 201,
+        "state": "dismissed",
+        "rule": {
+            "id": "js/insufficient-password-hash",
+            "description": "Use of password hash with insufficient computational effort",
+            "security_severity_level": "critical"
+        },
+        "most_recent_instance": {
+            "location": {
+                "path": "server/utils/oauth-client-view.ts"
+            }
+        },
+        "html_url": "https://github.com/CaoMeiYouRen/caomei-auth/security/code-scanning/201"
+    }
+]

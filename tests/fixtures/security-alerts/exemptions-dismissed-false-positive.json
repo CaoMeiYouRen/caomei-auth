@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "exemptions": [
+        {
+            "source": "dependabot",
+            "alertNumber": 102,
+            "category": "false-positive",
+            "reason": "原 dismiss 原因：仅影响开发期构建脚本，不在运行时依赖链中，判定为误报",
+            "tracking": "https://github.com/CaoMeiYouRen/caomei-auth/issues/3",
+            "expiresAt": "2999-12-31"
+        }
+    ]
+}

@@ -6,7 +6,8 @@
             "alertNumber": 101,
             "reason": "上游暂无可用修复版本",
             "tracking": "https://github.com/CaoMeiYouRen/caomei-auth/issues/1",
-            "expiresAt": "2999-12-31"
+            "expiresAt": "2999-12-31",
+            "category": "no-fix"
         }
     ]
 }

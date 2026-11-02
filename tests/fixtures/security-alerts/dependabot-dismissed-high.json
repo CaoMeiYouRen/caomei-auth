@@ -1,0 +1,23 @@
+[
+    {
+        "number": 102,
+        "state": "dismissed",
+        "dependency": {
+            "package": {
+                "name": "left-pad"
+            },
+            "manifest_path": "pnpm-lock.yaml"
+        },
+        "security_advisory": {
+            "ghsa_id": "GHSA-dismissed-high",
+            "severity": "high",
+            "summary": "已 dismiss 的 high 依赖告警",
+            "vulnerabilities": [
+                {
+                    "first_patched_version": null
+                }
+            ]
+        },
+        "html_url": "https://github.com/CaoMeiYouRen/caomei-auth/security/dependabot/102"
+    }
+]

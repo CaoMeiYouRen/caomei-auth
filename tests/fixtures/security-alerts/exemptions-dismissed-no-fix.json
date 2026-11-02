@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "exemptions": [
+        {
+            "source": "dependabot",
+            "alertNumber": 102,
+            "category": "no-fix",
+            "reason": "上游暂无可用修复版本",
+            "tracking": "https://github.com/CaoMeiYouRen/caomei-auth/issues/3",
+            "expiresAt": "2999-12-31"
+        }
+    ]
+}

@@ -4,6 +4,7 @@ import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import {
     evaluateAlerts,
+    EXEMPTION_CATEGORIES,
     normalizeSeverity,
     parseDateOnly,
     renderMarkdown,
@@ -16,6 +17,8 @@ const DEFAULT_EXEMPTIONS_PATH = '.github/security-alert-exemptions.json'
 const PER_PAGE = 100
 const MAX_PAGES = 20
 const VALID_SOURCES = new Set(['dependabot', 'code-scanning'])
+/** 扫描范围：open 与 dismissed 都要看；auto_dismissed 在拉取时排除 */
+const ALERT_STATES = ['open', 'dismissed']
 
 class GitHubApiError extends Error {
     constructor(status, url, detail = '') {
@@ -70,15 +73,19 @@ function resolveRepo({ repoArg, packageJson, env = process.env } = {}) {
     throw new Error('无法确定目标仓库：请通过 --repo=owner/repo 或环境变量 GITHUB_REPOSITORY 指定。')
 }
 
-function resolveToken({ tokenArg, env = process.env } = {}) {
-    if (typeof tokenArg === 'string' && tokenArg.trim() !== '') {
-        return tokenArg.trim()
-    }
-
-    return String(env.GH_TOKEN || env.GITHUB_TOKEN || '').trim()
+/** Dependabot 必须用具备 alerts 读权限的 PAT（GITHUB_TOKEN 恒 403） */
+function resolveDependabotToken({ tokenArg, env = process.env } = {}) {
+    const explicit = typeof tokenArg === 'string' ? tokenArg.trim() : ''
+    return explicit || String(env.DEPENDABOT_TOKEN || env.GH_TOKEN || '').trim()
 }
 
-async function requestJson({ url, token, fetchImpl = fetch, allowNotFound = false }) {
+/** Code scanning 优先用 workflow 的 GITHUB_TOKEN（需 security-events: read），本地回退 PAT */
+function resolveCodeScanningToken({ tokenArg, env = process.env } = {}) {
+    const explicit = typeof tokenArg === 'string' ? tokenArg.trim() : ''
+    return explicit || String(env.CODE_SCANNING_TOKEN || env.GITHUB_TOKEN || env.GH_TOKEN || '').trim()
+}
+
+async function requestJson({ url, token, fetchImpl = fetch }) {
     let response
 
     try {
@@ -94,16 +101,12 @@ async function requestJson({ url, token, fetchImpl = fetch, allowNotFound = fals
         throw new GitHubApiError(0, url, `网络请求异常：${error instanceof Error ? error.message : String(error)}`)
     }
 
-    if (allowNotFound && response.status === 404) {
-        return { data: null, headers: response.headers, notFound: true }
-    }
-
     if (!response.ok) {
         const detail = typeof response.text === 'function' ? await response.text().catch(() => '') : ''
         throw new GitHubApiError(response.status, url, detail.slice(0, 500))
     }
 
-    return { data: await response.json(), headers: response.headers, notFound: false }
+    return { data: await response.json(), headers: response.headers }
 }
 
 function findNextLink(headers) {
@@ -124,40 +127,36 @@ function findNextLink(headers) {
     return ''
 }
 
-async function fetchOpenAlerts({ repo, source, token, fetchImpl = fetch }) {
+async function fetchAlerts({ repo, source, state, token, fetchImpl = fetch }) {
     const endpoint = source === 'dependabot'
         ? `/repos/${repo}/dependabot/alerts`
         : `/repos/${repo}/code-scanning/alerts`
     const alerts = []
     // Dependabot alerts 使用游标分页（page 参数会返回 400），统一改为跟随 Link 头的 rel="next"。
-    let url = `${API_ROOT}${endpoint}?state=open&per_page=${PER_PAGE}`
+    let url = `${API_ROOT}${endpoint}?state=${state}&per_page=${PER_PAGE}`
 
     for (let page = 1; page <= MAX_PAGES && url; page += 1) {
-        // code scanning 未启用时返回 404，按"无告警"处理，不阻塞发布。
         let result
 
         try {
-            result = await requestJson({ url, token, fetchImpl, allowNotFound: source === 'code-scanning' })
+            result = await requestJson({ url, token, fetchImpl })
         } catch (error) {
             error.source = source
+            error.state = state
             throw error
         }
 
-        const { data, headers, notFound } = result
-
-        if (notFound) {
-            return { alerts, unavailable: true }
-        }
+        const { data, headers } = result
 
         if (!Array.isArray(data)) {
             throw new GitHubApiError(0, url, '返回内容不是数组')
         }
 
-        alerts.push(...data)
+        alerts.push(...data.filter((alert) => alert?.state !== 'auto_dismissed'))
         url = findNextLink(headers)
     }
 
-    return { alerts, unavailable: false }
+    return alerts
 }
 
 function normalizeDependabotAlert(alert) {
@@ -196,10 +195,12 @@ function normalizeCodeScanningAlert(alert) {
     }
 }
 
-function normalizeAlert(source, alert) {
-    return source === 'dependabot'
+function normalizeAlert(source, alert, state = 'open') {
+    const normalized = source === 'dependabot'
         ? normalizeDependabotAlert(alert)
         : normalizeCodeScanningAlert(alert)
+
+    return { ...normalized, state: alert.state ?? state }
 }
 
 async function loadExemptions(filePath) {
@@ -267,6 +268,10 @@ async function loadExemptions(filePath) {
             entryErrors.push('缺少 tracking（追踪 Issue 或待办链接）')
         }
 
+        if (!EXEMPTION_CATEGORIES.includes(entry.category)) {
+            entryErrors.push(`category 必须是 ${EXEMPTION_CATEGORIES.join(' / ')} 之一（open 告警用 no-fix / hard-fix，dismissed 告警用 false-positive）`)
+        }
+
         const expiresAtTimestamp = parseDateOnly(entry.expiresAt)
 
         if (expiresAtTimestamp === null) {
@@ -286,6 +291,7 @@ async function loadExemptions(filePath) {
             package: entry.package ?? '',
             ruleId: entry.ruleId ?? '',
             path: entry.path ?? '',
+            category: entry.category,
             reason: entry.reason.trim(),
             tracking: entry.tracking.trim(),
             expiresAt: entry.expiresAt,
@@ -309,9 +315,11 @@ function describeApiFailure(error, source) {
     } else if (error.status === 403) {
         lines.push(source === 'dependabot'
             ? 'GITHUB_TOKEN 无法读取 Dependabot alerts：请配置具备 Dependabot alerts: read 的 GH_TOKEN。'
-            : '权限不足：GH_TOKEN 需要 security-events: read（或对应 Code scanning 权限）。')
+            : '权限不足：Code scanning 需要 Code scanning alerts: read（PAT）或 workflow 的 security-events: read。')
     } else if (error.status === 404) {
-        lines.push('仓库未启用 Dependabot alerts 或 token 无权访问该仓库，请在 Settings → Code security 开启后重试。')
+        lines.push(source === 'dependabot'
+            ? '仓库未启用 Dependabot alerts 或 token 无权访问该仓库，请在 Settings → Code security 开启后重试；本次按未通过处理。'
+            : 'Code scanning 告警接口返回 404：请确认 CodeQL 已对默认分支产出分析，且 token 具备 Code scanning alerts: read；本次按未通过处理，不得视为无告警。')
     } else {
         lines.push('请检查网络与 GitHub API 可用性后重试；本次检查未完成，按未通过处理。')
     }
@@ -328,7 +336,8 @@ async function readPackageJson() {
 }
 
 /**
- * 收集开放告警：默认调用 GitHub API，也支持用 --dependabot-json / --code-scanning-json 回放本地快照。
+ * 收集告警：默认调用 GitHub API（open + dismissed），也支持用 --dependabot-json / --code-scanning-json 回放本地快照。
+ * token 按来源分离：Dependabot 用 DEPENDABOT_TOKEN / GH_TOKEN，Code scanning 用 CODE_SCANNING_TOKEN / GITHUB_TOKEN。
  */
 async function collectAlerts({ args, repo, warnings }) {
     if (typeof args['dependabot-json'] === 'string' && typeof args['code-scanning-json'] === 'string') {
@@ -340,22 +349,32 @@ async function collectAlerts({ args, repo, warnings }) {
         return { rawDependabotAlerts, rawCodeScanningAlerts }
     }
 
-    const token = resolveToken({ tokenArg: typeof args.token === 'string' ? args.token : '' })
+    const dependabotToken = resolveDependabotToken({ tokenArg: typeof args['dependabot-token'] === 'string' ? args['dependabot-token'] : '' })
+    const codeScanningToken = resolveCodeScanningToken({ tokenArg: typeof args['code-scanning-token'] === 'string' ? args['code-scanning-token'] : '' })
 
-    if (!token) {
-        throw new Error('缺少 GH_TOKEN / GITHUB_TOKEN：读取 Dependabot alerts 需要 fine-grained PAT（Dependabot alerts: read）。')
+    if (!dependabotToken) {
+        throw new Error('缺少 DEPENDABOT_TOKEN / GH_TOKEN：读取 Dependabot alerts 需要 fine-grained PAT（Dependabot alerts: read）。')
     }
 
-    const dependabotResult = await fetchOpenAlerts({ repo, source: 'dependabot', token })
-    const codeScanningResult = await fetchOpenAlerts({ repo, source: 'code-scanning', token })
+    if (!codeScanningToken) {
+        throw new Error('缺少 CODE_SCANNING_TOKEN / GITHUB_TOKEN / GH_TOKEN：读取 Code scanning alerts 需要 security-events: read。')
+    }
 
-    if (codeScanningResult.unavailable) {
-        warnings.push('仓库未启用 Code scanning（API 返回 404），本次按 0 条告警处理。')
+    if (dependabotToken === codeScanningToken) {
+        warnings.push('Dependabot 与 Code scanning 共用同一 token，建议按来源分离（DEPENDABOT_TOKEN / CODE_SCANNING_TOKEN）以缩小权限面。')
+    }
+
+    const dependabotAlerts = []
+    const codeScanningAlerts = []
+
+    for (const state of ALERT_STATES) {
+        dependabotAlerts.push(...await fetchAlerts({ repo, source: 'dependabot', state, token: dependabotToken }))
+        codeScanningAlerts.push(...await fetchAlerts({ repo, source: 'code-scanning', state, token: codeScanningToken }))
     }
 
     return {
-        rawDependabotAlerts: dependabotResult.alerts,
-        rawCodeScanningAlerts: codeScanningResult.alerts,
+        rawDependabotAlerts: dependabotAlerts,
+        rawCodeScanningAlerts: codeScanningAlerts,
     }
 }
 
@@ -465,13 +484,14 @@ async function main(argv = process.argv.slice(2)) {
 
 export {
     collectAlerts,
-    fetchOpenAlerts,
+    fetchAlerts,
     loadExemptions,
     normalizeCodeScanningAlert,
     normalizeDependabotAlert,
     parseArgs,
+    resolveCodeScanningToken,
+    resolveDependabotToken,
     resolveRepo,
-    resolveToken,
 }
 
 const isDirectRun = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)

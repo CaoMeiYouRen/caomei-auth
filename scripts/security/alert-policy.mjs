@@ -1,5 +1,11 @@
 const DAY_IN_MS = 24 * 60 * 60 * 1000
 const BLOCKING_SEVERITIES = new Set(['critical', 'high'])
+const OPEN_EXEMPTION_CATEGORIES = new Set(['no-fix', 'hard-fix'])
+const DISMISSED_EXEMPTION_CATEGORIES = new Set(['false-positive'])
+
+/** 豁免类别：open 告警只认 no-fix / hard-fix，dismissed 告警只认 false-positive */
+export const EXEMPTION_CATEGORIES = ['no-fix', 'hard-fix', 'false-positive']
+
 const SEVERITY_LABELS = {
     critical: 'critical',
     high: 'high',
@@ -11,6 +17,11 @@ const SEVERITY_LABELS = {
 export const SCOPE_LABELS = {
     release: '发布前检查',
     weekly: '每周规划检查',
+}
+
+export function isExemptionCategoryAllowed(category, state) {
+    const allowed = state === 'dismissed' ? DISMISSED_EXEMPTION_CATEGORIES : OPEN_EXEMPTION_CATEGORIES
+    return allowed.has(category)
 }
 
 export function normalizeSeverity(value) {
@@ -85,6 +96,26 @@ export function matchesAlert(alert, exemption) {
     return matchesStableIdentity(alert, exemption)
 }
 
+function describeCriticalBlockingReason(alert, matches) {
+    if (alert.state === 'dismissed') {
+        return 'critical 不允许豁免（dismiss 不能替代修复）'
+    }
+
+    return matches.length > 0 ? 'critical 不允许豁免' : 'critical 必须修复'
+}
+
+function describeHighBlockingReason(matches, liveMatches, state) {
+    if (matches.length === 0) {
+        return 'high 未登记豁免'
+    }
+
+    if (liveMatches.length === 0) {
+        return 'high 豁免已过期'
+    }
+
+    return `high 豁免类别（${liveMatches[0].category ?? '未填写'}）不适用于 ${state} 告警`
+}
+
 export function evaluateAlerts({ alerts, exemptions, configErrors = [], warnings = [], today = new Date() }) {
     const todayTimestamp = startOfUtcDay(today)
     const preparedExemptions = exemptions.map((exemption) => {
@@ -112,19 +143,21 @@ export function evaluateAlerts({ alerts, exemptions, configErrors = [], warnings
             return {
                 alert,
                 status: 'blocking',
-                reason: matches.length > 0 ? 'critical 不允许豁免' : 'critical 必须修复',
+                reason: describeCriticalBlockingReason(alert, matches),
                 exemption: matches[0] ?? null,
                 daysLeft: null,
             }
         }
 
-        const validExemption = matches.find((exemption) => !exemption.expired)
+        const state = alert.state ?? 'open'
+        const liveMatches = matches.filter((exemption) => !exemption.expired)
+        const validExemption = liveMatches.find((exemption) => isExemptionCategoryAllowed(exemption.category, state))
 
         if (validExemption) {
             return {
                 alert,
                 status: 'exempted',
-                reason: 'high 已登记有效豁免',
+                reason: `high 已登记有效豁免（${validExemption.category}）`,
                 exemption: validExemption,
                 daysLeft: validExemption.daysLeft,
             }
@@ -133,7 +166,7 @@ export function evaluateAlerts({ alerts, exemptions, configErrors = [], warnings
         return {
             alert,
             status: 'blocking',
-            reason: matches.length > 0 ? 'high 豁免已过期' : 'high 未登记豁免',
+            reason: describeHighBlockingReason(matches, liveMatches, state),
             exemption: matches[0] ?? null,
             daysLeft: matches[0]?.daysLeft ?? null,
         }
@@ -192,7 +225,7 @@ export function renderMarkdown({ scope, repo, generatedAt, exemptionsPath, evalu
     lines.push(`# 安全告警门禁报告（${SCOPE_LABELS[scope] ?? scope}）`, '')
     lines.push(`- 仓库：\`${repo}\``)
     lines.push(`- 检查时间：${generatedAt}`)
-    lines.push('- 数据源：Dependabot alerts（open）、Code scanning alerts（open）')
+    lines.push('- 数据源：Dependabot alerts、Code scanning alerts（open + dismissed，auto_dismissed 除外）')
     lines.push(`- 豁免清单：\`${exemptionsPath}\``)
     lines.push('')
     lines.push(`## 结论：${passed ? '✅ 通过' : '🚫 未通过'}`, '')
@@ -209,10 +242,11 @@ export function renderMarkdown({ scope, repo, generatedAt, exemptionsPath, evalu
     if (evaluation.blocking.length > 0) {
         lines.push('### 阻塞项（必须处理）', '')
         lines.push(renderTable(
-            ['来源', '编号', '级别', '对象', '原因', '处理建议', '链接'],
+            ['来源', '编号', '状态', '级别', '对象', '原因', '处理建议', '链接'],
             evaluation.blocking.map((item) => [
                 item.alert.source,
                 item.alert.id,
+                item.alert.state ?? 'open',
                 item.alert.severity,
                 formatAlertSubject(item),
                 item.reason,
@@ -227,11 +261,13 @@ export function renderMarkdown({ scope, repo, generatedAt, exemptionsPath, evalu
     if (evaluation.exempted.length > 0) {
         lines.push('### 已豁免的 high 告警（需按 tracking 跟进）', '')
         lines.push(renderTable(
-            ['来源', '编号', '对象', '豁免原因', '追踪', '到期日', '剩余天数'],
+            ['来源', '编号', '状态', '对象', '类别', '豁免原因', '追踪', '到期日', '剩余天数'],
             evaluation.exempted.map((item) => [
                 item.alert.source,
                 item.alert.id,
+                item.alert.state ?? 'open',
                 formatAlertSubject(item),
+                item.exemption.category,
                 item.exemption.reason,
                 item.exemption.tracking,
                 item.exemption.expiresAt,
@@ -256,7 +292,7 @@ export function renderMarkdown({ scope, repo, generatedAt, exemptionsPath, evalu
 
     const exemptionIssues = [
         ...evaluation.criticalExemptions.map((item) => `critical 告警 #${item.alert.id} 登记了豁免，必须删除该豁免并修复漏洞。`),
-        ...evaluation.staleExemptions.map((exemption) => `豁免条目已无对应开放告警（alertNumber=${exemption.alertNumber ?? '-'}），请删除以免掩盖新告警。`),
+        ...evaluation.staleExemptions.map((exemption) => `豁免条目已无对应告警（alertNumber=${exemption.alertNumber ?? '-'}），请删除以免掩盖新告警。`),
         ...evaluation.configErrors,
     ]
 
@@ -271,11 +307,12 @@ export function renderMarkdown({ scope, repo, generatedAt, exemptionsPath, evalu
     }
 
     lines.push('## 处置口径', '')
-    lines.push('- critical：必须修复，不允许豁免。')
-    lines.push('- high：默认阻塞；无可用修复版本或修复成本过高时可豁免，但必须在豁免清单登记 reason、tracking、expiresAt，并尽快安排修复。')
+    lines.push('- 扫描范围：open 与 dismissed 告警都要看；auto_dismissed（不再适用）不参与阻断。')
+    lines.push('- critical：必须修复，不允许豁免；被 dismiss 也不能替代修复。')
+    lines.push('- high：默认阻塞；open 告警仅 no-fix（上游无可用修复版本）/ hard-fix（本发布窗口无法完成）可豁免，dismissed 告警仅 false-positive 可豁免且 reason 需写明原 dismiss 原因；均须登记 tracking 与 expiresAt。')
     lines.push('- medium / low：不阻塞当前发布，随后续版本升级修复。')
     lines.push('- Code scanning alerts 与 Dependabot alerts 采用同一口径。')
-    lines.push('- 无法完成扫描（token 失效、权限不足、网络异常）按未通过处理，不得把"未扫描"当作"无告警"。')
+    lines.push('- 无法完成扫描（token 失效、权限不足、404、网络异常）按未通过处理，不得把"未扫描"当作"无告警"。')
     lines.push('')
 
     return lines.join('\n')

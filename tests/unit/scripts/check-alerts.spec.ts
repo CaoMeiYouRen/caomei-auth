@@ -120,4 +120,59 @@ describe('scripts/security/check-alerts', () => {
         expect(payload.counts.nonBlocking).toBe(1)
         expect(payload.counts.bySeverity.high).toBe(1)
     })
+
+    it('blocks a dismissed critical alert even when an exemption matches', async () => {
+        const result = await runGate([
+            `--dependabot-json=${fixture('dependabot-empty.json')}`,
+            `--code-scanning-json=${fixture('code-scanning-dismissed-critical.json')}`,
+            `--exemptions=${fixture('exemptions-critical.json')}`,
+        ])
+
+        expect(result.code).toBe(1)
+        expect(result.output).toContain('critical 不允许豁免')
+        expect(result.output).toContain('dismiss 不能替代修复')
+    })
+
+    it('exempts a dismissed high alert registered as false-positive', async () => {
+        const result = await runGate([
+            `--dependabot-json=${fixture('dependabot-dismissed-high.json')}`,
+            `--code-scanning-json=${fixture('code-scanning-empty.json')}`,
+            `--exemptions=${fixture('exemptions-dismissed-false-positive.json')}`,
+        ])
+
+        expect(result.code).toBe(0)
+        expect(result.output).toContain('已豁免的 high 告警')
+        expect(result.output).toContain('false-positive')
+    })
+
+    it('blocks a dismissed high alert registered as no-fix', async () => {
+        const result = await runGate([
+            `--dependabot-json=${fixture('dependabot-dismissed-high.json')}`,
+            `--code-scanning-json=${fixture('code-scanning-empty.json')}`,
+            `--exemptions=${fixture('exemptions-dismissed-no-fix.json')}`,
+        ])
+
+        expect(result.code).toBe(1)
+        expect(result.output).toContain('不适用于 dismissed 告警')
+    })
+
+    it('blocks an open high alert registered as false-positive', async () => {
+        const result = await runGate([
+            ...dependabotOpenArgs,
+            `--exemptions=${fixture('exemptions-open-false-positive.json')}`,
+        ])
+
+        expect(result.code).toBe(1)
+        expect(result.output).toContain('不适用于 open 告警')
+    })
+
+    it('rejects exemptions without a category', async () => {
+        const result = await runGate([
+            ...dependabotOpenArgs,
+            `--exemptions=${fixture('exemptions-missing-category.json')}`,
+        ])
+
+        expect(result.code).toBe(1)
+        expect(result.output).toContain('category 必须是')
+    })
 })

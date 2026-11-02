@@ -41,13 +41,14 @@ jobs:
         with:
           node-version: "lts/*"
 
-      # 门禁口径见 docs/standards/security.md 的 5.1.3 节：critical 必须修复且不允许豁免；
-      # high 默认阻塞，登记豁免（reason + tracking + expiresAt）后放行；medium / low 仅记录。
-      # 脚本在无法完成扫描时 fail closed，不把"未扫描"当作"无告警"。
+      # 门禁口径见 docs/standards/security.md 的 5.1.3 节：扫描 open + dismissed；
+      # critical 必须修复且不允许豁免（dismiss 不能替代修复）；high 默认阻塞，按类别登记豁免后放行；
+      # medium / low 仅记录。脚本在无法完成扫描时 fail closed，不把"未扫描"当作"无告警"。
       - name: Check security alerts
         id: gate
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          CODE_SCANNING_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -o pipefail
           node scripts/security/check-alerts.mjs \

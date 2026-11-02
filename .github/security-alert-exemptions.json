@@ -1,16 +1,17 @@
 {
     "version": 1,
-    "description": "high 级别安全告警的豁免登记表；critical 不允许豁免。字段说明见 docs/standards/security.md 的 5.1.3 节。",
+    "description": "high 级别安全告警的豁免登记表；critical 不允许豁免。字段说明见 docs/standards/security.md 的 5.1.3 节。category 取值：open 告警用 no-fix / hard-fix，dismissed 告警用 false-positive。",
     "exemptions": [
         {
             "source": "code-scanning",
             "alertNumber": 20,
             "ruleId": "js/insufficient-password-hash",
             "path": "server/utils/oauth-client-view.ts",
-            "reason": "OAuth client secret 是高熵随机凭证，SHA-256 为 better-auth 默认存储算法（storeClientSecret: hashed）；改用慢哈希会破坏与上游的兼容性，判断为 CodeQL 误报。",
+            "category": "hard-fix",
+            "reason": "OAuth client secret 是高熵随机凭证，SHA-256 为 better-auth 默认存储算法（storeClientSecret: hashed）；改用慢哈希需等上游提供可配置哈希，本发布窗口无法完成。2026-11-30 前复核：确认误报则 dismiss 并改按 false-positive 登记。",
             "tracking": "docs/plan/todo.md#技术债务",
             "expiresAt": "2026-11-30",
-            "note": "下次代码扫描复查时确认；若上游提供可配置哈希，优先移除豁免。"
+            "note": "若上游提供可配置哈希，优先移除豁免。"
         }
     ]
 }

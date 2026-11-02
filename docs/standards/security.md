@@ -99,12 +99,12 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 
 ### 5.1.3 发布前安全告警门禁 (Release Security Alert Gate)
 
-适用于任何生产发布（`release.yml`、`docker.yml` 的版本与镜像发布）以及每周回归检查（`regression-weekly.yml` 的 schedule 运行）。检查对象是 GitHub Dependabot alerts 与 Code scanning alerts 中全部 `state=open` 的告警，两者采用同一处置口径。
+适用于任何生产发布（`release.yml`、`docker.yml` 的版本与镜像发布）以及每周回归检查（`regression-weekly.yml` 的 schedule 运行）。检查对象是 GitHub Dependabot alerts 与 Code scanning alerts 中 `state=open` **与 `state=dismissed`** 的告警（`auto_dismissed` 不再适用，不参与阻断），两者采用同一处置口径。
 
 | 严重级别 | 是否允许发布 | 要求 |
 | --- | --- | --- |
-| `critical` | 否 | 必须修复，**不允许豁免** |
-| `high` | 默认否 | 无可用修复版本或修复成本过高时可豁免，但必须登记、追踪，并尽快安排修复 |
+| `critical` | 否 | 必须修复，**不允许豁免**；被 dismiss 也算存在，dismiss 不能替代修复 |
+| `high` | 默认否 | `open` 仅 `no-fix` / `hard-fix` 可豁免；`dismissed` 仅 `false-positive` 可豁免。均须登记、追踪，并尽快安排修复 |
 | `medium` | 是 | 记录在门禁报告中，随后续版本升级修复 |
 | `low` | 是 | 同上 |
 
@@ -113,19 +113,21 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 -   "修复成本过高"指升级路径受阻（上游未发布修复版本、升级会破坏跨 major 兼容等），不得因为"暂时不想改"而豁免。
 -   豁免必须登记到 `.github/security-alert-exemptions.json`，以下字段缺一不可：
     1.  定位字段：`source` + `alertNumber`；或稳定标识（Dependabot 用 `ghsaId`，可配 `package`；Code scanning 用 `ruleId`，可配 `path`）。
-    2.  `reason`：为何当前无法修复。
-    3.  `tracking`：追踪的 Issue 链接或 `docs/plan/todo.md` 中的待办条目。
-    4.  `expiresAt`：复核截止日期（`YYYY-MM-DD`），到期即失效并重新阻塞发布。
+    2.  `category`：`no-fix`（上游无可用修复版本）/ `hard-fix`（本发布窗口无法完成）/ `false-positive`（仅用于已 dismiss 的告警，且 `reason` 必须写明原 dismiss 原因）。
+    3.  `reason`：为何当前无法修复（`false-positive` 时写原 dismiss 原因）。
+    4.  `tracking`：追踪的 Issue 链接或 `docs/plan/todo.md` 中的待办条目。
+    5.  `expiresAt`：复核截止日期（`YYYY-MM-DD`），到期即失效并重新阻塞发布。
+-   `category` 与告警状态必须匹配：`open` 告警登记 `false-positive`、或 `dismissed` 告警登记 `no-fix` / `hard-fix`，门禁都判为未通过。
 -   豁免不得用于 `critical`；已修复或已关闭的告警必须删除对应豁免条目，否则报告中会以"豁免清单问题"提示，避免历史条目掩盖新告警。
--   豁免条目字段不完整（缺少定位字段、`reason`、`tracking` 或合法 `expiresAt`）时，门禁直接判为未通过，需修正豁免清单后重跑。
--   无法完成扫描（`GH_TOKEN` 失效、权限不足、Dependabot alerts 未启用、网络异常）按**未通过**处理；不得把"未扫描"当作"无告警"。
+-   豁免条目字段不完整（缺少定位字段、`category`、`reason`、`tracking` 或合法 `expiresAt`）时，门禁直接判为未通过，需修正豁免清单后重跑。
+-   无法完成扫描（`GH_TOKEN` 失效、权限不足、Dependabot alerts 未启用、Code scanning 告警接口返回 404、网络异常）按**未通过**处理；不得把"未扫描"当作"无告警"。
 
 门禁实现：
 
 -   脚本：`scripts/security/check-alerts.mjs`，本地等价命令 `pnpm security:alerts`（支持 `--scope=release|weekly`、`--report=`、`--json=`）。
 -   发布前检查：`.github/workflows/release.yml`（semantic-release 与镜像推送）与 `.github/workflows/docker.yml`（master 推送触发的 latest / sha-* 镜像发布及 Jenkins 部署）均在发布动作之前执行，未通过则终止发布。
 -   每周回归检查：`.github/workflows/regression-weekly.yml` 每周一 09:00（UTC+8）运行，内容等价于 `release.yml` 发布前质量门（`install` + `lint` + `lint:css` + `typecheck` + `build` + 测试与覆盖率，另补 `lint:md` / `ai:check` / `lint:duplicate` / `docs:build`，不含 semantic-release 与镜像推送），并同时执行本告警门禁；未通过时自动创建或更新「安全告警追踪」Issue（含阻塞项与豁免到期时间），恢复通过后自动关闭。
--   读取 Dependabot alerts 必须使用 `GH_TOKEN`（fine-grained PAT：Dependabot alerts: read）；`GITHUB_TOKEN` 无法读取该 API（403），Token 轮换流程见 5.1.2。
+-   读取 Dependabot alerts 必须使用 `GH_TOKEN`（fine-grained PAT：Dependabot alerts: read）；`GITHUB_TOKEN` 无法读取该 API（403），Token 轮换流程见 5.1.2。Code scanning 使用 workflow 的 `GITHUB_TOKEN`（权限 `security-events: read`，环境变量 `CODE_SCANNING_TOKEN`），本地执行时回退 `GH_TOKEN`；两类 token 不共用，避免单一凭据失效同时中断两路扫描。
 
 ### 5.2 供应链信任边界 (Supply Chain Trust Boundary)
 
@@ -153,5 +155,5 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 - **SQL 注入防护**: 必须使用参数化查询，禁止拼接 SQL
 - **敏感信息脱敏**: API 返回前剔除密码、Token 等字段
 - **异常处理**: 关键路径的异常必须记录日志并抛出，不吞异常
-- **发布前安全告警门禁**: `critical` 零豁免；`high` 需登记 `reason` / `tracking` / `expiresAt` 豁免后方可发布（见 [5.1.3](./security.md#513-发布前安全告警门禁-release-security-alert-gate)）
+- **发布前安全告警门禁**: 扫描 `open` + `dismissed`；`critical` 零豁免（dismiss 也不能替代修复）；`high` 需按 `category` / `reason` / `tracking` / `expiresAt` 登记豁免后方可发布（见 [5.1.3](./security.md#513-发布前安全告警门禁-release-security-alert-gate)）
 - **国际化文本**: UI 文本禁止硬编码，必须使用 i18n（见 [国际化实施方案](./i18n.md)）

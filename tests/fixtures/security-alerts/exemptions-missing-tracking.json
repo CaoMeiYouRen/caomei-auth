@@ -5,7 +5,8 @@
             "source": "dependabot",
             "alertNumber": 101,
             "reason": "上游暂无可用修复版本",
-            "expiresAt": "2999-12-31"
+            "expiresAt": "2999-12-31",
+            "category": "no-fix"
         }
     ]
 }
