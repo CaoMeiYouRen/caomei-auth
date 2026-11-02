@@ -109,12 +109,13 @@ metadata:
 
 ### 新 Session 开局
 
-1. 读取 `.session/current-task.yaml`（当前任务、已完成步骤、下一步）与 `.session/wisdom.md`（跨 session 经验）。
-2. 向用户输出一份 **不超过 10 行** 的 briefing：当前阶段 + 任务、已完成步骤、下一步、上次 session 的认知状态摘要（如有）。
+1. 读取 `.session/current-task.yaml`（当前任务、已完成步骤、下一步）、`.session/runtime-state.json`（失败计数、当前推理模式、上次验证结果）与 `.session/wisdom.md`（跨 session 经验）；文件不存在时按首次运行处理，不阻塞任务。
+2. 做开局检查：工作区干净且是新任务时，先按 [references/task-start.md](./references/task-start.md) 看 CI 回执（`gh run list` 过滤 `HEAD` / `@{u}` 的失败）；进行中的任务跳过。
+3. 向用户输出一份 **不超过 10 行** 的 briefing：当前阶段 + 任务、已完成步骤、下一步、上次 session 的认知状态摘要（如有）、CI 回执一行（通过 / 失败 + run 链接 / 不可用 + 原因）。
 
 ### Session 收尾（用户说"收工""结束""今天到这"或切换任务时）
 
-1. 更新 `.session/current-task.yaml`：进度、next_steps（3 项以内）、updated_at。
+1. 更新 `.session/current-task.yaml`：进度、next_steps（3 项以内）、updated_at；有失败发生时同步 `.session/runtime-state.json`（失败计数、推理模式、已试方案）。
 2. 发现值得跨 session 复用的 pattern / bug / decision 时，追加到 `.session/wisdom.md`（按日期分组，每条一行要点）。
 3. 若 wisdom 活跃条目数 ≥ 20，提醒用户"建议执行蒸馏"（把可复用经验沉淀为 skill 或归档）。
 4. 向用户输出 **不超过 5 行** 的收尾摘要：完成内容、下一步、阻塞点、新固化的 wisdom 条目（如有）。
