@@ -392,6 +392,57 @@ async function validateExternalSkillRegistryDoc(registryEntries, issues) {
     }
 }
 
+/**
+ * 技能 references/ 下的 .md 必须被执行入口索引。
+ * 入口只认本技能 SKILL.md 与同名 agent 文件，避免通用文案或别的技能把孤儿文件“顶包”成已索引。
+ */
+export async function collectSkillReferenceIssues(skillRoot, agentRoot, issues = []) {
+    const entries = await readdir(skillRoot, { withFileTypes: true })
+
+    for (const entry of entries) {
+        if (!entry.isDirectory()) {
+            continue
+        }
+
+        const skillName = entry.name
+        const referencesDir = path.join(skillRoot, skillName, 'references')
+
+        if (!(await pathExists(referencesDir))) {
+            continue
+        }
+
+        const entryFiles = [
+            path.join(skillRoot, skillName, 'SKILL.md'),
+            path.join(agentRoot, `${skillName}.agent.md`),
+        ]
+        const entryTexts = []
+
+        for (const entryFile of entryFiles) {
+            if (await pathExists(entryFile)) {
+                entryTexts.push(await readUtf8(entryFile))
+            }
+        }
+
+        const referenceFiles = await listFilesRecursive(referencesDir, (name) => name.endsWith('.md'))
+
+        for (const relativeFile of referenceFiles) {
+            const needle = `references/${relativeFile}`
+
+            if (entryTexts.some((text) => text.includes(needle))) {
+                continue
+            }
+
+            issues.push(buildIssue(
+                'unindexed-skill-reference',
+                toPosixPath(path.join(referencesDir, relativeFile)),
+                `技能 reference 未被执行入口索引: ${needle}（在 SKILL.md 或 agents/${skillName}.agent.md 中引用）`,
+            ))
+        }
+    }
+
+    return issues
+}
+
 async function validateAgentOrDocLinks(filePath, issues) {
     const content = await readUtf8(filePath)
     const relativePath = toPosixPath(filePath)
@@ -597,6 +648,8 @@ async function main() {
         await validateSkillFile(skillFile, issues)
     }
 
+    await collectSkillReferenceIssues(governanceRoots.githubSkills, governanceRoots.githubAgents, issues)
+
     for (const agentFile of githubAgentFiles) {
         await validateAgentOrDocLinks(agentFile, issues)
     }
@@ -628,6 +681,9 @@ async function main() {
         blockingIssues.some((issue) => ['missing-external-skill-registry', 'invalid-external-skill-registry', 'invalid-external-skill-entry', 'duplicate-external-skill-id', 'invalid-external-skill-source', 'missing-external-skill-doc', 'external-skill-doc-drift'].includes(issue.type))
             ? '补齐外部 skill 准入清单与说明文档，并确保文档描述与事实源一致。'
             : null,
+        blockingIssues.some((issue) => issue.type === 'unindexed-skill-reference')
+            ? '为技能 references 下的每个文件在本技能 SKILL.md 或同名 agent 文件中补充引用。'
+            : null,
         blockingIssues.some((issue) => issue.type === 'missing-mirror-directory')
             ? '执行 pnpm setup:ai 重新生成各平台镜像目录（.claude/.opencode/.agents）。'
             : null,
@@ -655,4 +711,9 @@ async function main() {
     }
 }
 
-await main()
+const isDirectRun = typeof process.argv[1] === 'string'
+    && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+
+if (isDirectRun) {
+    await main()
+}

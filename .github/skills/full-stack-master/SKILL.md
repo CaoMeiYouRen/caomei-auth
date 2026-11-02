@@ -19,6 +19,8 @@ metadata:
 
 ## 统一执行原则
 
+> 验证分级矩阵与不同改动类型的最低验证要求见 [references/standards-reference.md](./references/standards-reference.md)；项目内已有权威规范时，以项目规范为准。
+
 编排遵循四步判断顺序：
 
 1. **先暴露假设**：需求有歧义或上下文不足时，先说明假设、可选解释与风险，不静默选择一种解释。
