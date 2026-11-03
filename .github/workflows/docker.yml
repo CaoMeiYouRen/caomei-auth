@@ -38,7 +38,8 @@ jobs:
   build:
     needs: test # 等待 test 执行成功
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # arm64 在 QEMU 下需要从源码编译 better-sqlite3 等原生依赖，冷缓存时可能超过 60 分钟
+    timeout-minutes: 120
     permissions:
       packages: write
       contents: read
