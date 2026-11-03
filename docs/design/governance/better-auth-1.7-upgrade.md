@@ -98,6 +98,7 @@
 
 - [x] 通读官方 [1.7 upgrade guide](https://github.com/better-auth/better-auth/blob/main/docs/content/docs/guides/1-7-upgrade-guide.mdx) 全章
 - [x] 比对 `lib/auth.ts` 中 `oidcProvider({...})` 配置（约 60 行）映射到 `oauthProvider({...})` 的逐项差异（重点：`metadata` / `requirePKCE` / `allowDynamicClientRegistration` / `generateClientId` / `generateClientSecret` / `scopes` / `getAdditionalUserInfoClaim` / `trustedClients`）
+  - 注：动态客户端注册已随 GHSA-2r7m-492j-p8xm 关闭（`allowDynamicClientRegistration: false`，不再向 `oauthProvider` 传 `generateClientId` / `generateClientSecret`；`generateClientSecret` 仍用于管理端创建接口），应用改由管理端 `/api/admin/oauth/applications` 创建。
 - [x] 调研 `genericOAuthClient` / `oidcClient` 在 1.7 中的替代方案（查 better-auth Discord / GitHub Discussions）
 - [x] 调研 `account.unlink({ providerId })` 在 1.7 client 的正确签名
 - [x] 编写类型收窄 helper：`(result: TwoFactorResponse) => 'totpURI' in result` 用于 `use-security-settings.ts`
@@ -122,7 +123,7 @@
   - 账号解绑（client API 变更路径）
   - 邮箱更换（`sendChangeEmailConfirmation`）
   - admin role sync
-  - OAuth Provider（`oauthProvider` 替代 `oidcProvider` 后的动态客户端注册、scopes、custom claims）
+  - OAuth Provider（`oauthProvider` 替代 `oidcProvider` 后的 scopes、custom claims；DCR 已关闭）
 - [ ] 检查 `auth.api.createUser` 在初始化流程中的实际行为
 - [ ] 监控日志中是否有 `SecondaryStorage.getAndDelete` 调用失败
 
@@ -152,7 +153,7 @@
 | 10 | 账号解绑 | E2E | ☐ |
 | 11 | 邮箱更换 | E2E | ☐ |
 | 12 | admin role sync | E2E | ☐ |
-| 13 | OAuth Provider（动态客户端注册、scopes、custom claims） | E2E | ☐ |
+| 13 | OAuth Provider（scopes、custom claims；DCR 已关闭） | E2E | ☐ |
 | 14 | `auth.api.createUser` 初始化流程 | E2E | ☐ |
 
 ## 6. 回滚方案

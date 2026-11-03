@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import { AUTH_BASE_PATH } from '@/utils/shared/auth-paths'
+import { AUTH_DISABLED_PATHS } from '@/utils/shared/auth-disabled-paths'
 import {
-    AUTH_BASE_PATH,
-    AUTH_DISABLED_PATHS,
     SSO_MANAGEMENT_AUTH_PATHS,
     isSsoManagementAuthPath,
 } from '@/utils/shared/sso-management-paths'
@@ -22,11 +22,13 @@ describe('utils/sso-management-paths', () => {
         ]))
     })
 
-    it('禁用列表与相对路径列表保持一致且不带 basePath 前缀', () => {
-        expect(AUTH_DISABLED_PATHS).toEqual([...SSO_MANAGEMENT_AUTH_PATHS])
+    it('SSO 管理端点全部包含在禁用列表中且使用相对路径', () => {
+        SSO_MANAGEMENT_AUTH_PATHS.forEach((path) => {
+            expect(AUTH_DISABLED_PATHS).toContain(path)
+        })
         AUTH_DISABLED_PATHS.forEach((path) => {
             expect(path.startsWith(AUTH_BASE_PATH)).toBe(false)
-            expect(path.startsWith('/sso/')).toBe(true)
+            expect(path.startsWith('/')).toBe(true)
         })
     })
 

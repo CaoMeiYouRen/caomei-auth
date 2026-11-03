@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { checkAndSyncAdminRole, checkAndSyncAdminRoleWithUser, isUserAdmin, setUserAdminRole, removeUserAdminRole } from '@/server/utils/admin-role-sync'
+import { checkAndSyncAdminRole, checkAndSyncAdminRoleWithUser, hasAdminRole, isUserAdmin, setUserAdminRole, removeUserAdminRole } from '@/server/utils/admin-role-sync'
 import logger from '@/server/utils/logger'
 import type { User } from '@/server/entities/user'
 
@@ -107,11 +107,26 @@ describe('Server Utils: Admin Role Sync', () => {
         })
     })
 
+    describe('hasAdminRole', () => {
+        it('精确匹配 admin 角色，不做子串匹配', () => {
+            expect(hasAdminRole('admin')).toBe(true)
+            expect(hasAdminRole('member,admin')).toBe(true)
+            expect(hasAdminRole('member admin')).toBe(true)
+            expect(hasAdminRole('not-admin')).toBe(false)
+            expect(hasAdminRole('superadmin')).toBe(false)
+            expect(hasAdminRole('')).toBe(false)
+            expect(hasAdminRole(null)).toBe(false)
+        })
+    })
+
     describe('isUserAdmin', () => {
         it('mirrors both env whitelist and assigned roles', () => {
             expect(isUserAdmin({ role: null }, 'admin-user')).toBe(true)
             expect(isUserAdmin({ role: 'member,admin' }, 'someone')).toBe(true)
+            expect(isUserAdmin({ role: 'admin' }, 'someone')).toBe(true)
             expect(isUserAdmin({ role: 'member' }, 'guest')).toBe(false)
+            // 角色必须精确匹配，`not-admin` 不能命中
+            expect(isUserAdmin({ role: 'not-admin' }, 'guest')).toBe(false)
         })
     })
 

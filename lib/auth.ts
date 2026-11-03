@@ -22,6 +22,7 @@ import { snowflake } from '@/server/utils/snowflake'
 import { dataSource } from '@/server/database'
 import { usernameValidator, validatePhone } from '@/utils/shared/validate'
 import { sendPhoneOtp } from '@/server/utils/sms/index'
+import { isUserAdmin } from '@/server/utils/admin-role-sync'
 import { secondaryStorage } from '@/server/database/storage'
 import {
     EMAIL_EXPIRES_IN,
@@ -63,21 +64,21 @@ import {
 } from '@/utils/shared/env'
 import type { User } from '@/server/entities/user'
 import { generateRandomString } from '@/utils/shared/random'
-import { getTempEmail, getTempName, generateClientId, generateClientSecret } from '@/server/utils/auth-generators'
+import { getTempEmail, getTempName } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email/service'
 import { getUserLocale } from '@/server/utils/locale'
 import { getCaptchaConfig } from '@/server/utils/captcha-config'
 import { isCaptchaEnabled } from '@/utils/web/captcha'
-import { AUTH_DISABLED_PATHS } from '@/utils/shared/sso-management-paths'
+import { AUTH_DISABLED_PATHS } from '@/utils/shared/auth-disabled-paths'
 
 export const auth = betterAuth({
     appName: APP_NAME, // 应用名称。它将被用作发行者。
     // 站点根 URL；better-auth 会拼接 basePath（/api/auth）得到实际挂载地址。
     // 显式声明后 OAuth/OIDC 发现文档中的端点才是绝对 URL（1.7 起发现文档不再自动挂载）。
     baseURL: AUTH_BASE_URL,
-    // 显式关闭上游 SSO 提供商管理端点。
-    // 这些端点只校验登录态，不校验管理员身份；本项目只允许通过 admin API 管理 SSO 提供商。
-    // 详见 utils/shared/sso-management-paths.ts 与 GHSA-785j-54p4-vxw9。
+    // 显式关闭上游管理端点（SSO 提供商 + OAuth 客户端自助管理）。
+    // 这些端点只校验登录态，不校验管理员身份；本项目只允许通过 admin API 管理对应资源。
+    // 详见 utils/shared/auth-disabled-paths.ts、GHSA-785j-54p4-vxw9 与 GHSA-2r7m-492j-p8xm。
     disabledPaths: AUTH_DISABLED_PATHS,
     // 数据库适配器
     // 使用 TypeORM 适配器
@@ -576,9 +577,14 @@ export const auth = betterAuth({
         oauthProvider({
             loginPage: '/login', // 登录页面的路径
             consentPage: '/oauth/consent', // 同意页面的路径
-            allowDynamicClientRegistration: true, // 允许动态客户端注册
-            generateClientId, // 动态生成客户端 ID
-            generateClientSecret, // 动态生成客户端密钥
+            // 动态客户端注册（RFC 7591）仅限管理员，但上游 `/oauth2/register` 只校验登录态，
+            // 因此直接关闭该端点；应用统一由管理后台 `/api/admin/oauth/applications` 创建。
+            // 关闭后 `registration_endpoint` 不再出现在 Discovery 元数据中。
+            // 纵深防御见 server/middleware/2-auth.ts 与 utils/shared/auth-paths.ts（GHSA-2r7m-492j-p8xm）。
+            allowDynamicClientRegistration: false,
+            // 纵深防御：即使 disabledPaths 被误删，客户端管理也只允许管理员操作。
+            // 上游默认在未配置该回调时放行任意登录会话（含匿名会话）。
+            clientPrivileges: ({ user }) => Boolean(user && isUserAdmin(user as { role?: string | null }, user.id)),
             // 添加自定义作用域支持
             scopes: [
                 'openid',

@@ -56,6 +56,7 @@
 
 *（最近一个 sprint 内完成，供参考）*
 
+-   OAuth 动态客户端注册加固：关闭 `/api/auth/oauth2/register`（`allowDynamicClientRegistration: false`），应用统一走管理端创建；中间件与 Demo 守卫改用 `normalizeAuthPath` 归一化路径，修复点段绕过与白名单前缀穿越（GHSA-2r7m-492j-p8xm）
 -   SSO 安全加固：关闭上游 `/sso/register` 等自助管理端点（`disabledPaths` + `providersLimit: 0` + 管理员校验兜底），修复 `trustEmailVerified` 账户接管风险（GHSA-785j-54p4-vxw9）
 -   Zod 后端迁移（已完成 6 个 handlers）
 -   Zod 前端迁移（全部页面表单校验）

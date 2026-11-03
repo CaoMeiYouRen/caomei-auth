@@ -87,17 +87,6 @@
                                     />
                                 </div>
                             </div>
-                            <div class="endpoint-item">
-                                <label>动态客户端注册端点</label>
-                                <div class="endpoint-url">
-                                    <code>{{ authBaseUrl }}/api/auth/oauth2/register</code>
-                                    <Button
-                                        icon="mdi mdi-content-copy"
-                                        class="p-button-sm p-button-text"
-                                        @click="copyToClipboard(`${authBaseUrl}/api/auth/oauth2/register`)"
-                                    />
-                                </div>
-                            </div>
                         </div>
                     </AccordionContent>
                 </AccordionPanel>
@@ -133,6 +122,7 @@
                         <li>当前 OIDC 实现基于 Better Auth，仅支持标准 OpenID Connect 核心功能</li>
                         <li>支持授权码流程（Authorization Code Flow）和刷新令牌</li>
                         <li>不支持隐式流程、密码流程、客户端流程等非标准模式</li>
+                        <li>不开放动态客户端注册，OAuth 应用需由管理员在管理后台创建</li>
                         <li>所有端点都要求使用 HTTPS</li>
                     </ul>
                 </div>
@@ -178,7 +168,6 @@ const oidcConfig = computed(() => ({
     token_endpoint: `${authBaseUrl.value}/api/auth/oauth2/token`,
     userinfo_endpoint: `${authBaseUrl.value}/api/auth/oauth2/userinfo`,
     jwks_uri: `${authBaseUrl.value}/api/auth/jwks`,
-    registration_endpoint: `${authBaseUrl.value}/api/auth/oauth2/register`,
     response_types_supported: ['code'],
     grant_types_supported: ['authorization_code', 'refresh_token'],
     subject_types_supported: ['public'],

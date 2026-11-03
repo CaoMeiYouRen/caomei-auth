@@ -1,5 +1,6 @@
 import type { H3Event } from 'h3'
 import { getUserSession } from './get-user-session'
+import { hasAdminRole } from './admin-role-sync'
 import { getDemoConfig } from './demo-data-generator'
 import { DEMO_MODE } from '@/utils/shared/env'
 
@@ -25,7 +26,7 @@ export async function checkAdmin(event: H3Event) {
         throw createError({ statusCode: 403, message: 'Demo 模式：无管理员权限' })
     }
 
-    if (!session.session.user?.role?.includes('admin')) {
+    if (!hasAdminRole(session.session.user?.role)) {
         // 如果不是管理员用户，返回无权限访问
         throw createError({ statusCode: 403, message: '无权限访问' })
     }

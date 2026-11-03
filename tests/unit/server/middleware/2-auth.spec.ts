@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { H3Event } from 'h3'
 import { auth } from '@/lib/auth'
+import { publicPaths } from '@/utils/shared/public-paths'
 import { isUserAdmin } from '@/server/utils/admin-role-sync'
 import logger from '@/server/utils/logger'
 import middleware from '@/server/middleware/2-auth'
@@ -109,13 +110,70 @@ describe('server/middleware/2-auth SSO 管理端点守卫', () => {
                 user: { id: 'user-1', role: 'user' },
             })).rejects.toMatchObject({ statusCode: 403 })
         })
+
+        it.each([
+            '/api/auth/oauth2/./register',
+            '/api/auth/oauth2/x/../register',
+            '/api/auth/oauth2/%2e/register',
+            '/api/auth/oauth2/%2e%2e/oauth2/register',
+        ])('点段路径 %s 不会被绕过', async (path) => {
+            vi.mocked(isUserAdmin).mockReturnValue(false)
+            await expect(run(path, { user: { id: 'user-1', role: 'user' } }))
+                .rejects.toMatchObject({ statusCode: 403 })
+        })
+
+        it('管理员访问点段路径仍放行', async () => {
+            vi.mocked(isUserAdmin).mockReturnValue(true)
+            await expect(run('/api/auth/oauth2/./register', {
+                user: { id: 'admin-1', role: 'admin' },
+            })).resolves.toBeUndefined()
+        })
+    })
+
+    describe('OAuth 客户端自助管理端点守卫', () => {
+        it.each([
+            '/api/auth/oauth2/create-client',
+            '/api/auth/oauth2/./create-client',
+            '/api/auth/oauth2/x/../create-client',
+            '/api/auth/oauth2/%2e/create-client',
+            '/api/auth/oauth2/get-client',
+            '/api/auth/oauth2/get-clients',
+            '/api/auth/oauth2/update-client',
+            '/api/auth/oauth2/delete-client',
+            '/api/auth/oauth2/client/rotate-secret',
+        ])('普通用户访问 %s 返回 403', async (path) => {
+            vi.mocked(isUserAdmin).mockReturnValue(false)
+            await expect(run(path, { user: { id: 'user-1', role: 'user' } }))
+                .rejects.toMatchObject({ statusCode: 403 })
+        })
+
+        it('未登录访问 create-client 返回 403', async () => {
+            await expect(run('/api/auth/oauth2/create-client', null))
+                .rejects.toMatchObject({ statusCode: 403 })
+        })
+
+        it('管理员可以访问客户端管理端点', async () => {
+            vi.mocked(isUserAdmin).mockReturnValue(true)
+            await expect(run('/api/auth/oauth2/create-client', {
+                user: { id: 'admin-1', role: 'admin' },
+            })).resolves.toBeUndefined()
+        })
     })
 
     describe('公开路径白名单', () => {
-        it('白名单路径直接放行', async () => {
+        it.each(publicPaths)('白名单路径 %s 直接放行', async (path) => {
             vi.mocked(isUserAdmin).mockReturnValue(false)
-            await expect(run('/login', { user: { id: 'user-1', role: 'user' } }))
+            await expect(run(path, { user: { id: 'user-1', role: 'user' } }))
                 .resolves.toBeUndefined()
+        })
+
+        it.each([
+            '/register/../api/auth/oauth2/register',
+            '/login/../api/auth/sso/register',
+        ])('点段路径 %s 不会借白名单提前放行', async (path) => {
+            vi.mocked(isUserAdmin).mockReturnValue(false)
+            await expect(run(path, { user: { id: 'user-1', role: 'user' } }))
+                .rejects.toMatchObject({ statusCode: 403 })
         })
     })
 })

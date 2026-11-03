@@ -4,7 +4,9 @@ import Database from 'better-sqlite3'
 import { betterAuth } from 'better-auth'
 import { sso } from '@better-auth/sso'
 import { beforeAll, describe, expect, it } from 'vitest'
-import { AUTH_BASE_PATH, AUTH_DISABLED_PATHS } from '@/utils/shared/sso-management-paths'
+import { AUTH_BASE_PATH } from '@/utils/shared/auth-paths'
+import { AUTH_DISABLED_PATHS } from '@/utils/shared/auth-disabled-paths'
+import { SSO_MANAGEMENT_AUTH_PATHS } from '@/utils/shared/sso-management-paths'
 
 /**
  * 契约测试：确认真实 better-auth 路由层确实会按 `AUTH_DISABLED_PATHS`
@@ -60,7 +62,7 @@ const DOMAIN_VERIFICATION_PATHS = [
     '/sso/request-domain-verification',
     '/sso/verify-domain',
 ]
-const ALWAYS_REGISTERED_PATHS = AUTH_DISABLED_PATHS.filter(
+const ALWAYS_REGISTERED_PATHS = SSO_MANAGEMENT_AUTH_PATHS.filter(
     (item) => !DOMAIN_VERIFICATION_PATHS.includes(item),
 )
 

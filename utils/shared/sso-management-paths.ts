@@ -1,3 +1,5 @@
+import { AUTH_BASE_PATH, normalizeAuthPath } from './auth-paths'
+
 /**
  * better-auth SSO 插件的提供商管理端点。
  *
@@ -8,7 +10,7 @@
  * （GHSA-785j-54p4-vxw9 / CWE-287）。
  *
  * 因此这些端点必须满足两条约束：
- * 1. 通过 better-auth 的 `disabledPaths` 关闭，列表见 `AUTH_DISABLED_PATHS`；
+ * 1. 通过 better-auth 的 `disabledPaths` 关闭，合并列表见 `utils/shared/auth-disabled-paths.ts`；
  * 2. `server/middleware/2-auth.ts` 再做一次管理员校验作为纵深防御。
  *
  * 登录链路（`/sign-in/sso`、`/sso/callback*`、`/sso/saml2/*`）不在此列表中，保持可用。
@@ -21,17 +23,6 @@ export const SSO_MANAGEMENT_AUTH_PATHS = [
     '/sso/verify-domain',
 ] as const
 
-/** better-auth 默认挂载前缀；`disabledPaths` 使用相对此前缀的路径。 */
-export const AUTH_BASE_PATH = '/api/auth'
-
-/**
- * 传给 better-auth `disabledPaths` 的禁用列表。
- *
- * 注意：该选项按路径精确匹配（去掉尾部斜杠后比较），因此新增管理端点时必须
- * 同时补充到 `SSO_MANAGEMENT_AUTH_PATHS`。
- */
-export const AUTH_DISABLED_PATHS: string[] = [...SSO_MANAGEMENT_AUTH_PATHS]
-
 /**
  * 判断请求路径是否命中 SSO 提供商管理端点。
  *
@@ -43,13 +34,7 @@ export const AUTH_DISABLED_PATHS: string[] = [...SSO_MANAGEMENT_AUTH_PATHS]
  * @returns 命中管理端点返回 true
  */
 export function isSsoManagementAuthPath(path: string): boolean {
-    let pathname: string
-    try {
-        pathname = new URL(path, 'http://localhost').pathname
-    } catch {
-        return false
-    }
-    const normalized = pathname.replace(/\/+$/, '') || '/'
+    const normalized = normalizeAuthPath(path)
     return SSO_MANAGEMENT_AUTH_PATHS.some(
         (managementPath) => normalized === `${AUTH_BASE_PATH}${managementPath}`,
     )

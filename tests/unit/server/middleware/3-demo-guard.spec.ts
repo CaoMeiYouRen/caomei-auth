@@ -27,8 +27,9 @@ vi.mock('h3', () => ({
 }))
 
 // Helper to create mock event
-function createMockEvent(method: string, url: string): H3Event {
+function createMockEvent(method: string, url: string, path = url): H3Event {
     return {
+        path,
         node: {
             req: {
                 method,
@@ -135,6 +136,49 @@ describe('Server Middleware: Demo Guard', () => {
             const mockEvent = createMockEvent('POST', '/api/auth/sign-up')
 
             // Should throw for sign-up
+            await expect(middleware.default(mockEvent)).rejects.toThrow()
+            expect(mockLoggerWarn).toHaveBeenCalled()
+        })
+
+        it('should block dot-segment variants of dangerous endpoints', async () => {
+            vi.doMock('@/utils/shared/env', () => ({
+                DEMO_MODE: true,
+            }))
+
+            vi.resetModules()
+            const middleware = await import('@/server/middleware/3-demo-guard')
+
+            const mockEvent = createMockEvent('POST', '/api/auth/./sign-up')
+
+            await expect(middleware.default(mockEvent)).rejects.toThrow()
+            expect(mockLoggerWarn).toHaveBeenCalled()
+        })
+
+        it('should block percent-encoded paths after h3 decoding', async () => {
+            vi.doMock('@/utils/shared/env', () => ({
+                DEMO_MODE: true,
+            }))
+
+            vi.resetModules()
+            const middleware = await import('@/server/middleware/3-demo-guard')
+
+            // req.url 保留百分号编码，event.path 是 h3 解码后的路径；守卫必须使用后者
+            const mockEvent = createMockEvent('POST', '/api/auth/sign%2Dup', '/api/auth/sign-up')
+
+            await expect(middleware.default(mockEvent)).rejects.toThrow()
+            expect(mockLoggerWarn).toHaveBeenCalled()
+        })
+
+        it('should block whitelist prefix traversal', async () => {
+            vi.doMock('@/utils/shared/env', () => ({
+                DEMO_MODE: true,
+            }))
+
+            vi.resetModules()
+            const middleware = await import('@/server/middleware/3-demo-guard')
+
+            const mockEvent = createMockEvent('POST', '/api/auth/sign-in/email/../../delete-user')
+
             await expect(middleware.default(mockEvent)).rejects.toThrow()
             expect(mockLoggerWarn).toHaveBeenCalled()
         })

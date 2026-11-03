@@ -4,6 +4,7 @@
  */
 
 import logger from '@/server/utils/logger'
+import { normalizeAuthPath } from '@/utils/shared/auth-paths'
 import { DEMO_MODE } from '@/utils/shared/env'
 
 /**
@@ -114,7 +115,10 @@ export default defineEventHandler(async (event) => {
         return
     }
 
-    const { method, url } = getServerContext(event)
+    const { method, url: rawUrl } = getServerContext(event)
+    // 与 h3/Nitro 路由口径保持一致：先折叠点段再匹配，否则 `/api/auth/./sign-up`
+    // 这类路径会在路由层命中危险端点却绕过 Demo 限制。
+    const url = normalizeAuthPath(rawUrl)
 
     // 管理后台接口的处理
     if (isAdminAPI(url)) {
@@ -177,7 +181,7 @@ export default defineEventHandler(async (event) => {
         '/api/auth/link-social', // 禁止绑定社交账号
         '/api/auth/unlink-account', // 禁止解绑账号
 
-        // OAuth应用注册
+        // OAuth应用注册（上游端点已在 AUTH_DISABLED_PATHS 关闭，此处为 Demo 模式兜底）
         '/api/auth/oauth2/register', // 禁止注册OAuth应用
 
         // 文件上传
@@ -205,6 +209,8 @@ export default defineEventHandler(async (event) => {
 function getServerContext(event: any) {
     return {
         method: event.node?.req?.method || 'GET',
-        url: event.node?.req?.url || '',
+        // 使用 h3 解码后的 event.path，而不是保留百分号编码的 req.url：
+        // `/api/auth/sign%2Dup` 会在路由层解码后命中端点，用 req.url 则绕过本守卫。
+        url: event.path || '',
     }
 }

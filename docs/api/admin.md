@@ -360,113 +360,130 @@ GET /api/admin/logs/sessions?page=1&limit=20&status=active&search=192.168
 
 ## OAuth 应用管理 API
 
+> 动态客户端注册（RFC 7591）已关闭，OAuth 应用统一由管理员通过本组接口或管理后台创建。
+
 ### 获取应用列表
 
-#### GET /api/oauth/applications
+#### GET /api/admin/oauth/applications
 
-获取所有已注册的 OAuth 应用。
+获取所有已注册的 OAuth 应用。需要管理员权限。
 
 **查询参数:**
 
--   `page`: 页码，默认为 1
--   `limit`: 每页条数，默认为 20
+-   `page`: 页码，默认为 0
+-   `limit`: 每页条数，默认为 10
+-   `search`: 按名称、描述或 clientId 模糊搜索
+-   `sortField` / `sortOrder`: 排序字段与方向
 
 **响应示例:**
 
 ```json
 {
-    "data": {
-        "applications": [
-            {
-                "id": "app_123",
-                "clientId": "client_123",
-                "name": "我的应用",
-                "description": "应用描述",
-                "redirectUris": ["https://myapp.com/callback"],
-                "scopes": ["openid", "profile", "email"],
-                "disabled": false,
-                "createdAt": "2024-01-01T00:00:00Z",
-                "updatedAt": "2024-01-01T00:00:00Z"
-            }
-        ],
-        "pagination": {
-            "page": 1,
-            "limit": 20,
-            "total": 10,
-            "pages": 1
+    "status": 200,
+    "success": true,
+    "total": 10,
+    "data": [
+        {
+            "id": "app_123",
+            "clientId": "client_123",
+            "name": "我的应用",
+            "description": "应用描述",
+            "redirectURLs": "https://myapp.com/callback",
+            "scope": "openid profile email",
+            "disabled": false,
+            "createdAt": "2024-01-01T00:00:00Z",
+            "updatedAt": "2024-01-01T00:00:00Z"
         }
-    }
+    ]
 }
 ```
 
 ### 创建 OAuth 应用
 
-#### POST /api/oauth/applications
+#### POST /api/admin/oauth/applications
 
-创建新的 OAuth 应用。
+创建新的 OAuth 应用。需要管理员权限。
 
 **请求体:**
 
 ```json
 {
-    "name": "新应用",
+    "client_name": "新应用",
     "description": "应用描述",
-    "redirectUris": ["https://newapp.com/callback"],
-    "scopes": ["openid", "profile", "email"]
+    "redirect_uris": ["https://newapp.com/callback"],
+    "client_uri": "https://newapp.com",
+    "scope": "openid profile email",
+    "token_endpoint_auth_method": "client_secret_basic",
+    "grant_types": ["authorization_code", "refresh_token"],
+    "response_types": ["code"]
 }
 ```
 
-**响应示例:**
+**响应示例（`client_secret` 仅在创建时返回一次）:**
 
 ```json
 {
+    "status": 201,
+    "success": true,
+    "message": "应用创建成功",
     "data": {
-        "application": {
-            "id": "app_456",
-            "clientId": "client_456",
-            "clientSecret": "secret_456",
-            "name": "新应用",
-            "description": "应用描述",
-            "redirectUris": ["https://newapp.com/callback"],
-            "scopes": ["openid", "profile", "email"],
-            "disabled": false,
-            "createdAt": "2024-01-01T00:00:00Z"
-        }
+        "client_id": "client_456",
+        "client_secret": "secret_456",
+        "client_id_issued_at": 1704067200,
+        "client_secret_expires_at": 0,
+        "redirect_uris": ["https://newapp.com/callback"],
+        "client_name": "新应用",
+        "scope": "openid profile email"
     }
 }
 ```
 
 ### 更新 OAuth 应用
 
-#### PUT /api/oauth/applications/`{id}`
+#### PUT /api/admin/oauth/applications/`{id}`
 
-更新指定的 OAuth 应用。
+更新指定的 OAuth 应用。需要管理员权限。
 
 **请求体:**
 
 ```json
 {
-    "name": "更新后的应用名",
+    "client_name": "更新后的应用名",
     "description": "更新后的描述",
-    "redirectUris": ["https://updatedapp.com/callback"],
-    "scopes": ["openid", "profile", "email", "offline_access"]
+    "redirect_uris": ["https://updatedapp.com/callback"],
+    "scope": "openid profile email offline_access"
+}
+```
+
+**响应示例（节选）:**
+
+```json
+{
+    "status": 200,
+    "success": true,
+    "message": "应用更新成功",
+    "data": {
+        "id": "app_123",
+        "clientId": "client_123",
+        "name": "更新后的应用名"
+    }
 }
 ```
 
 ### 删除 OAuth 应用
 
-#### DELETE /api/oauth/applications/`{id}`
+#### DELETE /api/admin/oauth/applications/`{id}`
 
-删除指定的 OAuth 应用。
+删除指定的 OAuth 应用。需要管理员权限。
 
 **响应示例:**
 
 ```json
 {
-    "data": {
-        "success": true,
-        "message": "应用已成功删除"
-    }
+    "status": 200,
+    "success": true,
+    "message": "删除成功",
+    "data": null
 }
 ```
 
@@ -613,13 +630,13 @@ curl -X POST https://auth.example.com/api/auth/admin/list-users \
   -d '{"query": {"limit": 10}}'
 
 # 创建OAuth应用
-curl -X POST https://auth.example.com/api/oauth/applications \
+curl -X POST https://auth.example.com/api/admin/oauth/applications \
   -H "Authorization: Bearer <access_token>" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "新应用",
-    "redirectUris": ["https://myapp.com/callback"],
-    "scopes": ["openid", "profile", "email"]
+    "client_name": "新应用",
+    "redirect_uris": ["https://myapp.com/callback"],
+    "scope": "openid profile email"
   }'
 ```
 

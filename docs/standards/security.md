@@ -24,6 +24,8 @@
 - `getUserSession(event)`: 校验用户是否已登录并获取会话。
 - `checkAdmin(event)`: 校验用户是否为管理员（未登录 401、非管理员 403）。
 - `isUserAdmin(user, userId)`: 轻量管理员判断（只读会话用户角色与 `ADMIN_USER_IDS`，不查库、不同步角色），仅供中间件等已由 `checkAndSyncAdminRoleWithUser` 完成同步的场景使用。
+- `normalizeAuthPath(path)`: 把请求路径归一化为 WHATWG URL pathname，所有路径鉴权必须先经过它（`utils/shared/auth-paths.ts`）。
+- `isOAuthRegistrationAuthPath` / `isOAuthClientManagementAuthPath` / `isSsoManagementAuthPath`: 归一化后的端点精确匹配，禁止改回 `startsWith`。
 - 其他权限逻辑以 `server/utils/` 下对应工具为准，禁止在 Handler 内手写重复实现。
 
 ## 1. 认证与授权 (Authentication & Authorization)
@@ -35,10 +37,18 @@
 ### 1.1 第三方认证插件端点 (Third-party Auth Plugin Endpoints)
 
 -   **不信任上游默认端点**: better-auth 及其插件的端点默认可能只校验登录态（`sessionMiddleware`），不校验管理员身份。启用插件前必须核对上游实现，显式关闭或拦截其中的管理类端点。
--   **SSO 提供商仅限管理员维护**: `@better-auth/sso` 的 `/sso/register`、`/sso/update-provider`、`/sso/delete-provider`、`/sso/request-domain-verification`、`/sso/verify-domain` 必须通过 `disabledPaths`（统一列表见 `utils/shared/sso-management-paths.ts`）关闭，并把 `providersLimit` 设为 `0`；`server/middleware/2-auth.ts` 还会按 `isSsoManagementAuthPath` 追加管理员校验作为纵深防御。提供商维护只允许走 `/api/admin/sso/providers`。登录链路（`/sign-in/sso`、`/sso/callback*`、`/sso/saml2/*`）不在关闭列表内，必须保持可用。
+-   **SSO 提供商仅限管理员维护**: `@better-auth/sso` 的 `/sso/register`、`/sso/update-provider`、`/sso/delete-provider`、`/sso/request-domain-verification`、`/sso/verify-domain` 必须通过 `disabledPaths`（SSO 相对路径列表见 `utils/shared/sso-management-paths.ts`，合并后的禁用列表见 `utils/shared/auth-disabled-paths.ts`）关闭，并把 `providersLimit` 设为 `0`；`server/middleware/2-auth.ts` 还会按 `isSsoManagementAuthPath` 追加管理员校验作为纵深防御。提供商维护只允许走 `/api/admin/sso/providers`。登录链路（`/sign-in/sso`、`/sso/callback*`、`/sso/saml2/*`）不在关闭列表内，必须保持可用。
 -   **中间件与业务接口的权限口径**: 中间件层使用 `isUserAdmin`（只读判断，不额外查库）；业务接口仍使用 `checkAdmin`（读取会话中的角色，含 Demo 分支）。同一请求内的管理员角色同步由中间件调用 `checkAndSyncAdminRoleWithUser` 完成，两者结论必须一致。
 -   **历史配置排查**: 升级或收紧 SSO 配置后，管理员必须调用 `GET /api/admin/sso/audit`（只读，不返回 `clientSecret`、`oidcConfig` 等敏感字段）核查 `suspiciousProviders` / `suspiciousAccounts`，确认后清理历史遗留的提供商与账号链接；仅关闭注册端点不会撤销已经建立的链接。清理顺序：先用 `DELETE /api/admin/sso/providers/{id}` 删除可疑 `sso_provider` 记录，再删除 `account` 表中对应 `providerId` 的链接——管理端删除接口只删除 provider，不会级联删除 account，残留链接在重建同名 `providerId` 后会重新生效。
 -   **`trustEmailVerified` 使用前提**: 仅当用户无法自助注册 SSO 提供商（上述管理端点全部关闭）时才可开启；若重新开放注册，必须同时改为 `false`，或启用 `domainVerification` 并在 `SSOProvider` 实体中持久化 `domainVerified`（当前实体尚未包含该字段，启用前需先补列）。
+-   **OAuth 客户端仅限管理端维护**: `@better-auth/oauth-provider` 的 `/oauth2/register` 通过 `allowDynamicClientRegistration: false` 关闭（返回 `403 access_denied`）；`/oauth2/create-client`、`/oauth2/get-client`、`/oauth2/get-clients`、`/oauth2/update-client`、`/oauth2/delete-client`、`/oauth2/client/rotate-secret` 通过 `AUTH_DISABLED_PATHS`（`utils/shared/auth-disabled-paths.ts`）关闭（返回 404）。这些端点都不校验管理员身份：`create-client` 任意会话可调用，其余仅按 `userId` 做归属校验。`lib/auth.ts` 同时配置管理员 `clientPrivileges` 作为纵深防御。应用统一通过 `/api/admin/oauth/applications` 创建（GHSA-2r7m-492j-p8xm）。
+
+### 1.2 路径鉴权与归一化 (Path-based Authorization)
+
+-   **禁止原始路径比较**: 任何基于请求路径的鉴权、限流、Demo 守卫判断，都必须先调用 `normalizeAuthPath`（`utils/shared/auth-paths.ts`）再比较，禁止直接对 `event.path` / `req.url` 做 `startsWith`。h3 的 `event.path` 会解码百分号编码（`%2e` → `.`、`%2D` → `-`）但不折叠点段，而 better-auth 路由按 WHATWG URL 折叠点段，两者不一致会导致门禁被绕过。例外仅限不参与权限判断的路由兼容查表（如 `server/api/auth/[...all].ts` 的发现端点查表）与日志记录。
+-   **白名单同样要归一化**: 公开路径白名单（`utils/shared/public-paths.ts`）必须用归一化路径匹配，否则 `/login/../api/auth/oauth2/register` 会因原始前缀命中白名单而提前放行。
+-   **回归测试要求**: 新增或修改鉴权与白名单门禁时，测试必须覆盖 `.`、`..`、`%2e` 三种点段形态，以及白名单前缀穿越；断言"原始路径被拒绝"不足以证明安全。
+-   **反向代理不能替代应用校验**: 反向代理归一化 URI 只能作为纵深防御，不得作为唯一防线。
 
 ## 2. 数据安全 (Data Security)
 
@@ -150,7 +160,7 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 以下项目在任何实现策略下都不能简化：
 
 - **输入校验**: 所有 API 请求必须经过 Zod 或等价工具校验
-- **鉴权逻辑**: 涉及用户数据的接口必须有明确权限边界
+- **鉴权逻辑**: 涉及用户数据的接口必须有明确权限边界；路径鉴权必须先归一化（见 1.2）
 - **XSS 防护**: 用户输入渲染到页面之前必须经过转义或清洗
 - **SQL 注入防护**: 必须使用参数化查询，禁止拼接 SQL
 - **敏感信息脱敏**: API 返回前剔除密码、Token 等字段

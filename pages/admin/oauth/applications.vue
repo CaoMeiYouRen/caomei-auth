@@ -7,7 +7,7 @@
                         应用管理
                     </h1>
                     <p class="clients-subtitle">
-                        管理您的 OAuth 2.0 应用，支持 RFC7591 动态客户端注册
+                        管理您的 OAuth 2.0 应用，应用由管理员在此创建并下发给接入方
                     </p>
                     <span class="text-muted">
                         <strong>注意：</strong>当前 OIDC 实现基于 Better Auth，仅支持标准 OpenID Connect 核心功能。

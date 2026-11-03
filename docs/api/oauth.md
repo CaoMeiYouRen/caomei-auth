@@ -25,7 +25,6 @@
     "token_endpoint": "https://auth.example.com/api/auth/oauth2/token",
     "userinfo_endpoint": "https://auth.example.com/api/auth/oauth2/userinfo",
     "jwks_uri": "https://auth.example.com/api/auth/jwks",
-    "registration_endpoint": "https://auth.example.com/api/auth/oauth2/register",
     "response_types_supported": ["code"],
     "grant_types_supported": ["authorization_code", "refresh_token"],
     "subject_types_supported": ["public"],
@@ -191,78 +190,31 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 }
 ```
 
-## 动态客户端注册 (RFC 7591)
+## 动态客户端注册（已关闭）
 
-### POST /auth/oauth2/register
+本项目**不开放** RFC 7591 动态客户端注册，`/api/auth/oauth2/register` 对所有人返回 `403 access_denied`，
+Discovery 元数据中也不再包含 `registration_endpoint`。
 
-动态注册新的 OAuth 2.0 客户端。需要管理员权限。
+OAuth 应用统一由管理员在管理后台创建：
 
-#### 请求参数
+-   管理后台：**应用管理 → 创建应用**
+-   管理 API：`POST /api/admin/oauth/applications`（字段与响应见 [管理 API 文档](./admin.md#创建-oauth-应用)）
 
-```json
-{
-    "client_name": "我的应用",
-    "client_uri": "https://myapp.com",
-    "logo_uri": "https://myapp.com/logo.png",
-    "redirect_uris": [
-        "https://myapp.com/callback",
-        "https://myapp.com/auth/callback"
-    ],
-    "token_endpoint_auth_method": "client_secret_basic",
-    "grant_types": ["authorization_code", "refresh_token"],
-    "response_types": ["code"],
-    "scope": "openid profile email",
-    "contacts": ["admin@myapp.com"],
-    "tos_uri": "https://myapp.com/terms",
-    "policy_uri": "https://myapp.com/privacy"
-}
-```
+创建后可获得 `client_id` 与 `client_secret`，后续授权流程与普通 OAuth 客户端一致。
+**`client_secret` 仅在创建时返回一次**，之后无法再次查看，请立即保存。
 
-#### 客户端注册参数说明
+已通过动态客户端注册创建的历史客户端仍保留在 `oauth_client` 表中并可继续使用，本次仅关闭新增入口。
 
-| 注册参数                     | 类型   | 必需 | 描述                                          |
-| ---------------------------- | ------ | ---- | --------------------------------------------- |
-| `client_name`                | string | 是   | 客户端名称                                    |
-| `redirect_uris`              | array  | 是   | 重定向 URI 列表                               |
-| `client_uri`                 | string | 否   | 客户端主页 URI                                |
-| `logo_uri`                   | string | 否   | 客户端 Logo URI                               |
-| `token_endpoint_auth_method` | string | 否   | 令牌端点认证方法，默认 `client_secret_basic`  |
-| `grant_types`                | array  | 否   | 支持的授权类型，默认 `["authorization_code"]` |
-| `response_types`             | array  | 否   | 支持的响应类型，默认 `["code"]`               |
-| `scope`                      | string | 否   | 默认授权范围                                  |
-| `contacts`                   | array  | 否   | 联系邮箱列表                                  |
-| `tos_uri`                    | string | 否   | 服务条款 URI                                  |
-| `policy_uri`                 | string | 否   | 隐私政策 URI                                  |
-
-#### 响应示例
-
-**成功响应 (201 Created)**
-
-```json
-{
-    "client_id": "generated_client_id",
-    "client_secret": "generated_client_secret",
-    "client_id_issued_at": 1672531200,
-    "client_secret_expires_at": 0,
-    "client_name": "我的应用",
-    "redirect_uris": [
-        "https://myapp.com/callback",
-        "https://myapp.com/auth/callback"
-    ],
-    "token_endpoint_auth_method": "client_secret_basic",
-    "grant_types": ["authorization_code", "refresh_token"],
-    "response_types": ["code"],
-    "scope": "openid profile email"
-}
-```
+> 安全说明：该端点过去只校验登录态，管理员门禁又可能被点段路径绕过（GHSA-2r7m-492j-p8xm），
+> 因此改为彻底关闭，并在 `server/middleware/2-auth.ts` 保留基于归一化路径的管理员校验作为纵深防御。
 
 ## 应用管理 API
 
 ### 获取应用列表
 
-#### GET /api/oauth/applications
+#### GET /api/admin/oauth/applications
 
-获取当前用户管理的所有 OAuth 应用。需要管理员权限。
+获取所有 OAuth 应用。需要管理员权限。
 
 ##### 响应示例
 
@@ -270,6 +222,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 {
     "status": 200,
     "success": true,
+    "total": 1,
     "data": [
         {
             "id": "app_123",
@@ -317,7 +270,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 
 ### 更新应用
 
-#### PUT /api/oauth/applications/`{id}`
+#### PUT /api/admin/oauth/applications/`{id}`
 
 更新指定的 OAuth 应用信息。需要管理员权限。
 
@@ -337,7 +290,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 
 ### 删除应用
 
-#### DELETE /api/oauth/applications/`{id}`
+#### DELETE /api/admin/oauth/applications/`{id}`
 
 删除指定的 OAuth 应用。需要管理员权限。
 
@@ -448,7 +401,7 @@ API 端点的错误以 JSON 格式返回：
 | --------------------------- | ---------------------- |
 | `invalid_request`           | 请求参数无效           |
 | `unauthorized_client`       | 客户端未被授权         |
-| `access_denied`             | 用户拒绝授权           |
+| `access_denied`             | 用户拒绝授权，或端点已被关闭 |
 | `unsupported_response_type` | 不支持的响应类型       |
 | `invalid_scope`             | 无效的权限范围         |
 | `server_error`              | 服务器内部错误         |

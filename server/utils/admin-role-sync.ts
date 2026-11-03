@@ -41,10 +41,10 @@ export async function checkAndSyncAdminRoleWithUser(user: User): Promise<boolean
         const isAdminUserId = ADMIN_USER_IDS.includes(user.id)
 
         // 检查用户角色是否包含 admin
-        const hasAdminRole = user.role?.includes('admin') || false
+        const isAdminRole = hasAdminRole(user.role)
 
         // 如果用户在 adminUserIds 中但角色中没有 admin，则自动添加
-        if (isAdminUserId && !hasAdminRole) {
+        if (isAdminUserId && !isAdminRole) {
             const currentRoles = user.role ? user.role.split(',').map((r) => r.trim()) : ['user']
 
             // 如果角色列表中没有 admin，则添加
@@ -74,7 +74,7 @@ export async function checkAndSyncAdminRoleWithUser(user: User): Promise<boolean
         // 因为可能有其他方式设置的管理员角色
 
         // 返回是否为管理员（任一条件满足即可）
-        return isAdminUserId || hasAdminRole
+        return isAdminUserId || isAdminRole
     } catch (error) {
         logger.error('检查和同步管理员角色失败', {
             error: error instanceof Error ? error.message : String(error),
@@ -87,6 +87,19 @@ export async function checkAndSyncAdminRoleWithUser(user: User): Promise<boolean
 }
 
 /**
+ * 判断角色字符串是否包含管理员角色。
+ *
+ * better-auth 的 `role` 可能是逗号分隔的多角色（如 `member,admin`），
+ * 必须精确匹配单个角色，避免 `not-admin`、`superadmin` 被误判为管理员。
+ *
+ * @param role 角色字符串
+ * @returns 是否包含 `admin` 角色
+ */
+export function hasAdminRole(role?: string | null): boolean {
+    return role?.split(/[\s,]+/).includes('admin') ?? false
+}
+
+/**
  * 检查用户是否为管理员（更轻量级的版本，不进行数据库同步）
  * @param user 用户对象
  * @param userId 用户ID
@@ -96,11 +109,8 @@ export function isUserAdmin(user: { role?: string | null }, userId: string): boo
     // 检查用户是否在 adminUserIds 列表中
     const isAdminUserId = ADMIN_USER_IDS.includes(userId)
 
-    // 检查用户角色是否包含 admin
-    const hasAdminRole = user.role?.includes('admin') || false
-
     // 任一条件满足即为管理员
-    return isAdminUserId || hasAdminRole
+    return isAdminUserId || hasAdminRole(user.role)
 }
 
 /**

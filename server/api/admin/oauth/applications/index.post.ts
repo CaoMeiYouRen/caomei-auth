@@ -110,7 +110,7 @@ export default defineEventHandler(async (event) => {
 
         await dataSource.getRepository(OAuthClient).save(application)
 
-        // 返回符合 RFC7591 标准的响应
+        // 返回沿用 RFC 7591 客户端信息字段的响应（DCR 已关闭，本端点仅供管理员调用）
         const response = {
             client_id: application.clientId,
             client_secret: clientSecret,
