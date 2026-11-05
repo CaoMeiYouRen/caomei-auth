@@ -167,8 +167,8 @@ importers:
         specifier: ^11.4.1
         version: 11.4.1
       google-libphonenumber:
-        specifier: ^3.2.46
-        version: 3.2.46
+        specifier: ^3.2.48
+        version: 3.2.48
       ioredis:
         specifier: ^5.11.1
         version: 5.11.1(supports-color@10.2.2)
@@ -5898,8 +5898,8 @@ packages:
   globjoin@0.1.4:
     resolution: {integrity: sha512-xYfnw62CKG8nLkZBfWbhWwDw02CHty86jfPcc2cr3ZfeuK9ysoVPPEUxf21bAD/rWAgk52SuBrLJlefNy8mvFg==}
 
-  google-libphonenumber@3.2.46:
-    resolution: {integrity: sha512-UmrwBam+6pxzbEIW5m8T63XmSIuU08BacGlcoSFXrgSPLpPZnzc0VcO/CsmHj0MJlTvPn7x+KRMridyPXUdBRQ==}
+  google-libphonenumber@3.2.48:
+    resolution: {integrity: sha512-x8Z8baHTiMchHIcQUsCU5HNwbCVA8UOoVkOMfGxOpCtkoUG6pAAp6jtjKILHgmhNzEb6t3t8i4UxAMIkNZr3DA==}
     engines: {node: '>=0.10'}
 
   gopd@1.2.0:
@@ -16763,7 +16763,7 @@ snapshots:
 
   globjoin@0.1.4: {}
 
-  google-libphonenumber@3.2.46: {}
+  google-libphonenumber@3.2.48: {}
 
   gopd@1.2.0: {}
 
