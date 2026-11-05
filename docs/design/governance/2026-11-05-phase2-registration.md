@@ -23,7 +23,7 @@
 | **M2 Zod 后端迁移收尾** | M2-1 P1 4 个路径参数 handlers + 测试 | `oauth/client/[id].get`、`admin/oauth/applications/[id].delete`、`admin/sso/providers/[id].get`、`admin/sso/providers/[id].delete` |
 | | M2-2 P2/P3 4 个查询参数 handlers + 测试 | 分页 / 筛选 / 日志 / 社交提供商查询 |
 | | M2-3 `zod-migration.md` 收口与 API 文档同步 | 迁移状态、验证矩阵、`docs/api/` 示例 |
-| **M3 测试覆盖率第一阶段** | M3-1 覆盖率基线复测与目标校准 | 当前基线、阶段目标（max(30%, 复测基线 + 10pp)，以复测为准） |
+| **M3 测试覆盖率第一阶段** | M3-1 覆盖率基线复测与目标校准 | 当前基线、阶段目标（全局 ≥75.74% 不退化；`server/api` ≥95%、`composables` ≥80%、`components/base` ≥75%） |
 | | M3-2 定向补测 | `server/api`（含 Zod / SSO audit）、`composables`、`components/base` |
 | **M4 caomei-ui 迁移预备** | M4-1 用量盘点脚本 / 快照 + 路由白名单初值 + 版本锁定 + 回退方案 | 可复现的 PrimeVue 用量快照、`CAOMEI_UI_ROUTE_PREFIXES` 初值、`caomei-ui@1.0.0` 精确锁定 + Dependabot `ignore`、回退方案 |
 | | M4-2 接入基座（P0/P1）+ P2 前置方案 | `caomei-ui/nuxt` + `theme.css` + `data-preset="caomei"`、双库并存、构建 / 包体复测；`keyCss` / 入口 JS 基线与允许增幅（`keyCss` ≤ +10%、入口 JS ≤ +5%）；P2 视觉基线方案（只出方案，不建截图工程）；不做页面替换 |
@@ -34,7 +34,7 @@
 
 - **M1**：CodeQL #20 在 2026-11-30 前有明确结论（修复 / 误报 dismiss / 续期豁免），豁免台账字段与 `tracking` 有效；SSO audit 有结果与清理记录，无法访问部署环境时显式标记阻塞而不是伪造通过。
 - **M2**：14/14 handlers 使用 Zod；定向测试与 typecheck 通过；`zod-migration.md` 与 API 文档同步。
-- **M3**：覆盖率基线已复测；阶段目标达成（max(30%, 复测基线 + 10pp)）；新增测试覆盖 M2 与 M1 的关键路径。
+- **M3**：覆盖率基线已复测（2026-11-05：Statements 75.74% / Lines 75.95%）；阶段目标按范围设下限（全局不退化；`server/api` ≥95%、`composables` ≥80%、`components/base` ≥75%，见 [覆盖率基线记录](./2026-11-05-coverage-baseline.md)）；新增测试覆盖 M2 与 M1 的关键路径。
 - **M4**：用量快照可复现；路由白名单初值与回退方案已登记；`caomei-ui@1.0.0` 精确锁定且 Dependabot `ignore` 生效；双库构建通过；`keyCss` / 入口 JS 有前后对比且未越允许增幅；P2 视觉基线方案已输出；**无页面替换**。
 - **M5**：技术验证分支 / PR 可运行；语言切换与 `useLocaleHead` 生效；Zod map 在 1 表单 + 1 API 验证通过；输出 i18n M2 准入结论；**不全量翻译**。
 - 全阶段：`pnpm lint` / `pnpm lint:css` / `pnpm typecheck` / `pnpm test` / `pnpm build` 通过；无未关闭 blocker 进入提交。

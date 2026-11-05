@@ -126,10 +126,10 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
 
 ### 3.2 质量与测试
 
-> **已登记阶段 2**：测试覆盖率第一阶段（M3）见 [todo.md](./todo.md)；本节保留 ≥60% 的长期目标，当前阶段先做到 ≥30% 或 +10pp。
+> **已登记阶段 2**：测试覆盖率第一阶段（M3）见 [todo.md](./todo.md)；2026-11-05 复测基线为 Statements 75.74% / Lines 75.95%，阶段目标改为按范围设下限（见 [覆盖率基线记录](../design/governance/2026-11-05-coverage-baseline.md)）。
 
-- **测试覆盖率长期达标**：核心逻辑 Lines 覆盖率长期目标 ≥ 60%；阶段 2 先完成第一阶段（复测基线 + ≥30% 或 +10pp）。
-    - 主要缺口：`server/api` (~1%)、`composables` (~5%)、`components` (~26%)
+- **测试覆盖率长期达标**：核心逻辑 Lines 覆盖率长期目标 ≥ 60%，2026-11-05 基线（75.95%）已达到；后续关注 `pages`（34.92%）与 `plugins`（25.00%）等未覆盖区域，不再以全局数字作为阶段门槛。
+    - 阶段 2 按范围设下限：`server/api` ≥95%、`composables` ≥80%、`components/base` ≥75%，全局不跌破 75.74%。
     - 详见 [测试规范](../standards/testing.md)。
 - **jscpd 重复代码检测**：引入代码重复率检测，目标全项目重复率降至 5% 以下。
 - **max-lines 基线清理**：消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。
