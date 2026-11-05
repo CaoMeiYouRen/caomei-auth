@@ -112,6 +112,18 @@ async function readRaw(filePath) {
  * 解析 frontmatter（不依赖 YAML 库）：
  * 返回 { raw, keys, data }；data 为通过简单解析得到的字段值对象。
  */
+function parseScalar(value) {
+    if (value === 'true') {
+        return true
+    }
+
+    if (value === 'false') {
+        return false
+    }
+
+    return value
+}
+
 function parseFrontmatter(content) {
     const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/)
 
@@ -147,7 +159,7 @@ function parseFrontmatter(content) {
             const nestedMatch = line.match(/^\s{2,}([A-Za-z0-9_-]+):\s*(.*)$/u)
 
             if (nestedMatch) {
-                data.metadata[nestedMatch[1]] = nestedMatch[2].trim()
+                data.metadata[nestedMatch[1]] = parseScalar(nestedMatch[2].trim())
             }
         }
     }
@@ -172,6 +184,61 @@ function isExternalLink(target) {
 
 function normalizeLocalTarget(target) {
     return target.split('#')[0]
+}
+
+function collectLocalLinkTargets(content) {
+    const withoutCodeFences = content
+        .replace(/```[\s\S]*?```/gu, '')
+        .replace(/~~~[\s\S]*?~~~/gu, '')
+        .replace(/`[^`]*`/gu, '')
+
+    return [...withoutCodeFences.matchAll(/(?<!!)\[[^\]]+\]\(([^)]+)\)/gu)]
+        .map((match) => {
+            let target = match[1].trim()
+
+            // 先剥离可选 title（"..." / '...' / (...)），再处理尖括号目标。
+            target = target.replace(/\s+(?:"[^"]*"|'[^']*'|\([^)]*\))$/u, '').trim()
+
+            if (target.startsWith('<') && target.endsWith('>')) {
+                target = target.slice(1, -1).trim()
+            }
+
+            return target
+        })
+        .map((target) => normalizeLocalTarget(target))
+        .filter((target) => target && !isExternalLink(target) && !target.startsWith('#'))
+}
+
+/**
+ * references 文件必须由本技能执行入口的相对链接直接指向。
+ * 只认链接解析结果，不认纯文本提及，避免其他技能或通用文案把孤儿文件“顶包”。
+ * agent 文件既支持相对自身目录的路径，也支持相对本技能目录的 `references/...` 写法。
+ */
+async function isReferenceIndexed(referencePath, entryFiles, skillDir) {
+    const expectedPath = path.resolve(referencePath)
+
+    for (const entryFile of entryFiles) {
+        if (!(await pathExists(entryFile))) {
+            continue
+        }
+
+        const content = await readUtf8(entryFile)
+        const baseDirs = [path.dirname(entryFile)]
+
+        if (entryFile.endsWith('.agent.md')) {
+            baseDirs.push(skillDir)
+        }
+
+        for (const target of collectLocalLinkTargets(content)) {
+            for (const baseDir of baseDirs) {
+                if (path.resolve(baseDir, target) === expectedPath) {
+                    return true
+                }
+            }
+        }
+    }
+
+    return false
 }
 
 function buildIssue(type, filePath, message, severity = 'error') {
@@ -206,7 +273,7 @@ async function validateSkillFile(filePath, issues) {
     const declaredName = frontmatter.data?.name
     const metadata = frontmatter.data?.metadata
 
-    if (!metadata || metadata.internal !== 'true') {
+    if (!metadata || (metadata.internal !== 'true' && metadata.internal !== true)) {
         issues.push(buildIssue('skill-internal-mismatch', relativePath, '内部 skill 必须显式声明 metadata.internal: true。'))
     }
 
@@ -405,37 +472,32 @@ export async function collectSkillReferenceIssues(skillRoot, agentRoot, issues =
         }
 
         const skillName = entry.name
-        const referencesDir = path.join(skillRoot, skillName, 'references')
+        const skillDir = path.join(skillRoot, skillName)
+        const referencesDir = path.join(skillDir, 'references')
 
         if (!(await pathExists(referencesDir))) {
             continue
         }
 
         const entryFiles = [
-            path.join(skillRoot, skillName, 'SKILL.md'),
+            path.join(skillDir, 'SKILL.md'),
             path.join(agentRoot, `${skillName}.agent.md`),
         ]
-        const entryTexts = []
-
-        for (const entryFile of entryFiles) {
-            if (await pathExists(entryFile)) {
-                entryTexts.push(await readUtf8(entryFile))
-            }
-        }
 
         const referenceFiles = await listFilesRecursive(referencesDir, (name) => name.endsWith('.md'))
 
         for (const relativeFile of referenceFiles) {
+            const referencePath = path.join(referencesDir, relativeFile)
             const needle = `references/${relativeFile}`
 
-            if (entryTexts.some((text) => text.includes(needle))) {
+            if (await isReferenceIndexed(referencePath, entryFiles, skillDir)) {
                 continue
             }
 
             issues.push(buildIssue(
                 'unindexed-skill-reference',
-                toPosixPath(path.join(referencesDir, relativeFile)),
-                `技能 reference 未被执行入口索引: ${needle}（在 SKILL.md 或 agents/${skillName}.agent.md 中引用）`,
+                toPosixPath(referencePath),
+                `技能 reference 未被执行入口索引: ${needle}（在 SKILL.md 或 agents/${skillName}.agent.md 中用相对链接引用）`,
             ))
         }
     }
@@ -682,7 +744,7 @@ async function main() {
             ? '补齐外部 skill 准入清单与说明文档，并确保文档描述与事实源一致。'
             : null,
         blockingIssues.some((issue) => issue.type === 'unindexed-skill-reference')
-            ? '为技能 references 下的每个文件在本技能 SKILL.md 或同名 agent 文件中补充引用。'
+            ? '为技能 references 下的每个文件在本技能 SKILL.md 或同名 agent 文件中补充相对链接引用。'
             : null,
         blockingIssues.some((issue) => issue.type === 'missing-mirror-directory')
             ? '执行 pnpm setup:ai 重新生成各平台镜像目录（.claude/.opencode/.agents）。'

@@ -99,7 +99,14 @@
 
 - [x] `.session/` session 治理（current-task.yaml / wisdom.md / runtime-state.json，已引入；蒸馏机制简化为 wisdom 条目数提醒）
 - [ ] `.opencode/plugins/` session 钩子、`scripts/ai-hooks/`（**用户决策不引入**，保持 .session 手工维护）
-- [x] `product-manager` agent（已引入；`planning.md` 规范暂缓，待规划工作流复杂化后再补）
+- [x] `product-manager` agent（已引入；`planning.md` 已于 2026-11-05 补齐，规划载体与准入规则见该规范）
+
+> **后续优化（2026-11-05）**：参考 momei / dependfix / caomei-ui 补齐规划治理与 AI 检查边界。
+>
+> - 新增 [规划规范](../../standards/planning.md)：定义 roadmap / todo / backlog / archive 四类载体的准入门槛与归档规则，明确“候选先入 backlog，授权后才进 todo”。
+> - `scripts/ai/check-governance.mjs` 的 references 索引判定改为“执行入口相对链接解析到目标文件”，不再接受纯文本提及；`metadata.internal` 同时接受布尔 `true` 与字符串 `'true'`。
+> - `full-stack-master` 技能补入子代理编排纪律、阶段交接协议、迭代中途事项分流与 `references/rationale.md`，并把规划准入、审计阈值改为引用项目规范与 `code-reviewer`，避免双写。
+> - 暂不引入：弃用引用扫描、能力标记检查、`ai:check --json`（理由见 [AI 资产治理规范 §4.1](../../standards/ai-governance.md#41-检查项边界与-optout)）。
 
 ## 5. 各批次完成定义
 

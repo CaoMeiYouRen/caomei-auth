@@ -2,6 +2,8 @@
 
 本文档记录了项目已实现的关键技术升级、功能点及测试覆盖情况，作为项目发展的历史记录。
 
+> **勘误（2026-11-05）**：本归档此前把 i18n 误记为已完成；实际尚未落地，候选见 [backlog §1.2](../plan/backlog.md#12-i18n-全量落地)。归档只保留已完成工作，未完成项不在此登记。
+
 ---
 
 ## 1. 基础设施与工具链 ✅
@@ -21,7 +23,6 @@
 -   [x] **多渠道登录**: 邮箱、手机号、验证码、第三方社交登录（GitHub, Google, Apple, Microsoft, Facebook, Twitter, Weibo, WeChat, Douyin, QQ, Discord 等）。
 -   [x] **Admin 管理后台**: 用户管理、应用管理、日志统计、提供商管理功能完备。
 -   [x] **演示模式 (Demo Mode)**: 实现数据库读写拦截与内存仿真数据生成。
--   [x] **多语言支持 (i18n)**: Web UI、邮件模板、API 响应全量翻译支持。
 
 ---
 
@@ -54,15 +55,15 @@
 
 ---
 
-## 4. Zod 迁移 ✅（进行中）
+## 4. Zod 迁移（进行中）
 
 -   [x] **前端全量迁移**: 所有页面表单校验（登录/注册/忘记密码/快速登录/Admin 创建用户/OAuth 应用/SSO 提供商）已接入 Zod Schema。
 -   [x] **后端部分迁移**: 6 个 handlers 已完成（`admin/oauth/applications/index.post`、`[id].put`、`admin/sso/providers/index.post`、`[id].put`、`admin/sync-admin-role.post`、`oauth/revoke-consent.post`）。
--   ⬜ **后端剩余 8 个 handlers**: 详见 [backlog](./backlog.md#一一-zod-后端迁移)。
+-   ⬜ **后端剩余 8 个 handlers**: 详见 [backlog §1.1](../plan/backlog.md#11-zod-后端迁移)。
 
 ---
 
-## 5. 测试覆盖情况 ✅（进行中）
+## 5. 测试覆盖情况（进行中）
 
 ### 5.1 高覆盖率模块
 
@@ -74,15 +75,29 @@
 
 -   总体覆盖率：~17.65%（目标 ≥ 60%）
 -   主要缺口：`server/api` (~1%)、`composables` (~5%)、`components` (~26%)
--   提升计划见 [backlog](./backlog.md#高优先级影响开发效率)。
+-   提升计划见 [backlog §3.2](../plan/backlog.md#32-质量与测试)。
 
 ---
 
 ## 6. 文档体系 ✅
 
--   [x] `docs/plan/`: Roadmap + Todo + Backlog + Refactor（归档）规划体系。
+-   [x] `docs/plan/`: Roadmap + Todo + Backlog + Refactor（归档）规划体系；准入与归档规则见 [规划规范](../standards/planning.md)。
 -   [x] `docs/standards/`: 开发规范、API 规范、测试规范、i18n 规范、Git 规范、安全规范、AI 协作规范等。
 -   [x] `docs/design/`: 架构设计、数据库设计、UI/UX 设计、Demo 模式设计、AI 基建优化。
 -   [x] `docs/usage/`: 入门指南、用户管理、App 集成、Demo 模式、FAQ、对比分析等。
 -   [x] `docs/deployment/`: Docker、Vercel、Cloudflare、Node.js、数据库集成、监控集成（Google Analytics、Microsoft Clarity、Sentry）等。
 -   [x] `docs/login-config/social/`: 14 个社交登录配置文档（GitHub, Google, Apple, Microsoft, Facebook, Twitter, Weibo, WeChat, Douyin, QQ, Discord 等）。
+
+---
+
+## 7. 安全加固与近期交付（2026-11 归档）
+
+以下条目原登记在 `todo.md` 的「最近完成」段，2026-11-05 规划重整时迁入本归档。
+
+-   [x] **OAuth 动态客户端注册加固**: 关闭 `/api/auth/oauth2/register`（`allowDynamicClientRegistration: false`），应用统一走管理端创建；中间件与 Demo 守卫改用 `normalizeAuthPath` 归一化路径，修复点段绕过与白名单前缀穿越（GHSA-2r7m-492j-p8xm）。
+-   [x] **SSO 安全加固**: 关闭上游 `/sso/register` 等自助管理端点（`disabledPaths` + `providersLimit: 0` + 管理员校验兜底），修复 `trustEmailVerified` 账户接管风险（GHSA-785j-54p4-vxw9）。
+-   [x] **Zod 后端迁移（第一阶段）**: 已完成 6 个 handlers；剩余 8 个见 [backlog §1.1](../plan/backlog.md#11-zod-后端迁移)。
+-   [x] **Zod 前端迁移**: 全部页面表单校验接入 Zod Schema。
+-   [x] **Composables 测试覆盖率提升**: `use-forgot-password-flow`、`use-security-settings`、`admin/use-user-management`。
+-   [x] **Server Utils 测试**: `logger.ts`、`email/service.ts`、`admin-role-sync.ts`。
+-   [x] **Middleware 测试**: `3-demo-guard.ts`。

@@ -75,6 +75,13 @@
     - 开发入口与导览文档（`AGENTS.md`、`CLAUDE.md`、`copilot-instructions.md`）
     - 治理脚本的校验范围（`scripts/ai/check-governance.mjs`，若已引入）
 
+### 4.1 检查项边界与 optOut
+
+1.  **references 索引判定以相对链接为准**：`references/*.md` 必须由本技能 `SKILL.md` 或同名 `agents/<name>.agent.md` 中的相对链接解析到目标文件；其他技能、通用文案或仓库级全路径提及不算索引。该规则防止孤儿 reference 被“顶包”成已索引。
+2.  **弃用引用扫描（optOut）**：本项目暂无机器可读的 `deprecated` 资产清单或弃用标记，生命周期以本文第 6 节的表格与人工审计为准；引入机器可读清单前不新增该检查项。
+3.  **能力标记检查（optOut）**：能力台账由上游 `cmyr-skills-agents` 的 `check-capabilities` 统一审计；项目侧重复读取跨仓台账会形成第二事实源，且离线时不可用。
+4.  **输出格式**：`ai:check` 保持人类可读输出；当前无 `--json` 消费者，暂不引入。
+
 ## 5. 镜像同步规则
 
 1.  `.github/` 与各平台镜像（`.claude/`、`.opencode/`、`.agents/`）必须逐文件一致，包含主定义和配套资源，而不只是 `SKILL.md` 或 `.agent.md` 本体。

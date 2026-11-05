@@ -23,32 +23,74 @@ async function createWorkspace() {
     return { skillRoot, agentRoot, root }
 }
 
+async function collectIssues(skillContent: string, agentContent?: string) {
+    const { skillRoot, agentRoot } = await createWorkspace()
+
+    await writeFile(path.join(skillRoot, 'demo', 'SKILL.md'), skillContent, 'utf8')
+
+    if (agentContent !== undefined) {
+        await writeFile(path.join(agentRoot, 'demo.agent.md'), agentContent, 'utf8')
+    }
+
+    return await collectSkillReferenceIssues(skillRoot, agentRoot) as GovernanceIssue[]
+}
+
 describe('scripts/ai/check-governance', () => {
-    it('reports references that no execution entry indexes', async () => {
-        const { skillRoot, agentRoot } = await createWorkspace()
+    it('rejects bare text mentions and reports unindexed references', async () => {
+        const issues = await collectIssues('见 references/indexed.md\n')
 
-        await writeFile(path.join(skillRoot, 'demo', 'SKILL.md'), '见 references/indexed.md\n', 'utf8')
+        expect(issues).toHaveLength(2)
+        expect(issues.every((issue) => issue.type === 'unindexed-skill-reference')).toBe(true)
+        expect(issues.map((issue) => issue.filePath).some((file) => file.endsWith('references/nested/orphan.md'))).toBe(true)
+    })
 
-        const issues = await collectSkillReferenceIssues(skillRoot, agentRoot) as GovernanceIssue[]
+    it('accepts references indexed by relative markdown links', async () => {
+        const issues = await collectIssues(
+            '- [indexed](./references/indexed.md)\n- [orphan](./references/nested/orphan.md)\n',
+        )
 
-        expect(issues).toHaveLength(1)
-        expect(issues[0]?.type).toBe('unindexed-skill-reference')
-        expect(issues[0]?.filePath.endsWith('references/nested/orphan.md')).toBe(true)
+        expect(issues).toHaveLength(0)
     })
 
     it('accepts references indexed by the matching agent file', async () => {
-        const { skillRoot, agentRoot } = await createWorkspace()
-
-        await writeFile(path.join(skillRoot, 'demo', 'SKILL.md'), '无引用\n', 'utf8')
-        await writeFile(
-            path.join(agentRoot, 'demo.agent.md'),
-            '- references/indexed.md\n- references/nested/orphan.md\n',
-            'utf8',
+        const issues = await collectIssues(
+            '无引用\n',
+            '- [indexed](./references/indexed.md)\n- [orphan](./references/nested/orphan.md)\n',
         )
 
-        const issues = await collectSkillReferenceIssues(skillRoot, agentRoot) as GovernanceIssue[]
+        expect(issues).toHaveLength(0)
+    })
+
+    it('accepts angle-bracket targets and optional titles', async () => {
+        const issues = await collectIssues(
+            '[indexed](<./references/indexed.md> "标题")\n[orphan](./references/nested/orphan.md \'标题\')\n',
+        )
 
         expect(issues).toHaveLength(0)
+    })
+
+    it('ignores image links and links inside code fences or inline code', async () => {
+        const issues = await collectIssues(
+            [
+                '![indexed](./references/indexed.md)',
+                '',
+                '`[indexed](./references/indexed.md)`',
+                '',
+                '```md',
+                '[orphan](./references/nested/orphan.md)',
+                '```',
+            ].join('\n'),
+        )
+
+        expect(issues).toHaveLength(2)
+    })
+
+    it('ignores external links and pure anchors', async () => {
+        const issues = await collectIssues(
+            '[external](https://example.com/references/indexed.md)\n[anchor](#references-indexed)\n',
+        )
+
+        expect(issues).toHaveLength(2)
     })
 
     it('ignores skills without a references directory', async () => {

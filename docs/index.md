@@ -8,14 +8,18 @@
 
 -   [项目路线图 (Roadmap)](./plan/roadmap.md)
 -   [待办事项 (Todo)](./plan/todo.md)
+-   [候选池 (Backlog)](./plan/backlog.md)
 -   [重构方案 (Refactor)](./plan/refactor.md)
+-   [已完成工作归档](./archive/completed-work.md)
 
 ### 2. [项目规范 (Standards)](./standards/)
 
+-   [规划规范 (Planning)](./standards/planning.md)
 -   [开发规范 (Development)](./standards/development.md)
 -   [测试规范 (Testing)](./standards/testing.md)
 -   [文档规范 (Documentation)](./standards/documentation.md)
 -   [国际化指南 (i18n)](./standards/i18n.md)
+-   [AI 资产治理规范 (AI Governance)](./standards/ai-governance.md)
 
 ### 3. [架构与设计 (Design)](./design/)
 

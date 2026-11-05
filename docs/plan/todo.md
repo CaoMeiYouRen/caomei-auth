@@ -1,65 +1,16 @@
 # 项目待办 (Todo List)
 
-本文档记录了当前 sprint 或近期（1-4 周内）需要完成的具体开发任务。已完成的任务移至 [归档文档](../archive/completed-work.md)。
+本文档只承载已获授权启动的当前阶段原子条目；准入、流转与归档规则见 [规划规范](../standards/planning.md)。已完成工作见 [已完成工作归档](../archive/completed-work.md)。
 
-## 优先级说明
+## 当前状态
 
--   🔴 **高**: 核心功能、阻塞性问题、合规性要求，必须在本周期完成。
--   🟡 **中**: 功能完善、体验优化，可在高优先级完成后进行。
--   🔵 **低**: 非核心功能、文档润色，可在时间充裕时处理。
+**当前无进行中阶段。** 2026-11-05 按用户要求，原 `todo.md` 中的全部未完成条目已统一迁入 [backlog.md](./backlog.md)，等待下一阶段范围评估与用户明确授权后再登记。
 
-> 路线图整体规划见 [roadmap](./roadmap.md)，中长期需求与 tech-debt 见 [backlog](./backlog.md)。
+## 未完成项汇总
 
----
+> 本节仅为状态指针，不构成条目登记或启动授权；候选详情、优先级与验收要点见 [backlog.md](./backlog.md)。
 
-## 🔴 高优先级
-
-### 核心功能
-
--   [ ] **多语言适配 (i18n)**: 支持 UI、邮件、API 响应的翻译。详见 [i18n 规范](../standards/i18n.md)。
-    -   *阻塞 roadmap.md 阶段 1 收尾。*
--   [ ] **时区设置**: 支持在界面展示用户所在时区的日期时间。
-
-### 技术债务
-
--   [ ] **SSO 历史配置排查（部署本次加固后必做）**: 由管理员调用 `GET /api/admin/sso/audit` 核查 `suspiciousProviders` / `suspiciousAccounts`，确认并清理历史遗留的恶意 SSO 提供商与账号链接；清理顺序见 [安全规范](../standards/security.md#11-第三方认证插件端点-third-party-auth-plugin-endpoints)（GHSA-785j-54p4-vxw9 善后）。
--   [ ] **代码扫描 high 告警复核**: CodeQL `js/insufficient-password-hash`（`server/utils/oauth-client-view.ts` 的 `hashClientSecret`）已按 `hard-fix` 类别登记豁免至 2026-11-30（`.github/security-alert-exemptions.json`）。复核后选择：确认误报则 dismiss 并把豁免 `category` 改为 `false-positive` 且写明原 dismiss 原因 / 改为可配置哈希实现 / 续期豁免并说明原因；到期未处理会重新阻塞发布。
--   [ ] **Zod 后端迁移（续）**: 完成 `zod-migration.md` 中剩余 8 个 handlers。
-    -   优先级 1（4 个）：路径参数校验 → `oauth/client/[id].get`, `admin/oauth/applications/[id].delete`, `admin/sso/providers/[id].get`, `admin/sso/providers/[id].delete`
-    -   优先级 2（2 个）：分页查询参数 → `admin/oauth/applications/index.get`, `admin/sso/providers/index.get`
-    -   优先级 3（2 个）：复杂/简单查询 → `admin/logs/sessions.get`, `social/providers.get`
-    -   *依赖：`utils/shared/api-schemas.ts`、`server/utils/validation.ts`*
-
----
-
-## 🟡 中优先级
-
-### 体验优化
-
--   [ ] **注册控制**: 支持邮箱域名黑白名单，手机号国家地区黑名单配置。
--   [ ] **Admin 日志高级筛选**: 增加按 IP、按事件类型、按时间范围的筛选能力。
--   [ ] **性能审计与优化**: 针对高频数据库查询（如 Session 校验）进行索引优化和缓存策略升级。
-
----
-
-## 🔵 低优先级
-
-### 系统完善
-
--   [ ] **Demo 数据生成**: 完善 `demo-data-generator.ts`，支持更真实的统计分布仿真。
--   [ ] **安全审计工具集成**: 扫描依赖及配置漏洞（Dependabot / pnpm audit 常态化）。
--   [ ] **文档同步**: 随着 Zod 和 i18n 迁移，同步更新 API 参考文档（`docs/api/`），并补录 `/api/admin/sso/providers` 系列接口。
-
----
-
-## 最近完成 ✅
-
-*（最近一个 sprint 内完成，供参考）*
-
--   OAuth 动态客户端注册加固：关闭 `/api/auth/oauth2/register`（`allowDynamicClientRegistration: false`），应用统一走管理端创建；中间件与 Demo 守卫改用 `normalizeAuthPath` 归一化路径，修复点段绕过与白名单前缀穿越（GHSA-2r7m-492j-p8xm）
--   SSO 安全加固：关闭上游 `/sso/register` 等自助管理端点（`disabledPaths` + `providersLimit: 0` + 管理员校验兜底），修复 `trustEmailVerified` 账户接管风险（GHSA-785j-54p4-vxw9）
--   Zod 后端迁移（已完成 6 个 handlers）
--   Zod 前端迁移（全部页面表单校验）
--   Composables 测试覆盖率提升（`use-forgot-password-flow`、`use-security-settings`、`admin/use-user-management`）
--   Server Utils 测试（`logger.ts`、`email/service.ts`、`admin-role-sync.ts`）
--   Middleware 测试（`3-demo-guard.ts`）
+- 下一阶段候选组合：见 backlog「候选阶段组合」。
+- 安全与质量收口候选：SSO 历史配置排查、CodeQL high 告警复核、Zod 后端剩余 8 个 handlers、测试覆盖率冲刺。
+- 功能与体验候选：i18n 全量落地、组件库迁移到 caomei-ui、时区设置、注册控制、Admin 日志高级筛选、性能审计。
+- 长期方向：见 [roadmap.md](./roadmap.md)；未授权方向不构成启动授权。

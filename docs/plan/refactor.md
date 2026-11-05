@@ -109,11 +109,11 @@ PR 模板已包含"文档同步"复选框，Review 检查项已覆盖文档更�
 
 | 原目标 | 当前状态 | 迁移至 |
 |--------|----------|--------|
-| 测试覆盖率 ≥ 60% | 🚧 进行中 | [backlog.md](./backlog.md#高优先级影响开发效率) |
-| jscpd 重复代码检测 | 待启动 | [backlog.md](./backlog.md#中优先级长期可维护性) |
-| Dependency Cruiser 依赖分层验证 | 待启动 | [backlog.md](./backlog.md#中优先级长期可维护性) |
-| SonarQube / Codecov 集成 | 待启动 | [backlog.md](./backlog.md#低优先级基础设施完善) |
-| Nx / Turborepo 调研 | 待启动 | [backlog.md](./backlog.md#低优先级基础设施完善) |
+| 测试覆盖率 ≥ 60% | 🚧 进行中 | [backlog.md](./backlog.md#32-质量与测试) |
+| jscpd 重复代码检测 | 待启动 | [backlog.md](./backlog.md#32-质量与测试) |
+| Dependency Cruiser 依赖分层验证 | 待启动 | [backlog.md](./backlog.md#33-基础设施) |
+| SonarQube / Codecov 集成 | 待启动 | [backlog.md](./backlog.md#33-基础设施) |
+| Nx / Turborepo 调研 | 待启动 | [backlog.md](./backlog.md#33-基础设施) |
 
 ---
 

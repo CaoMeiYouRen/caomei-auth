@@ -41,10 +41,10 @@ metadata:
     - [ ] 4.1 默认把临时审查记录写入 `artifacts/review-gate/`（纳入 `.gitignore`），文件名 `<date>-<scope>.md`。
     - [ ] 4.2 按 [evidence-template.md](./references/evidence-template.md) 预填与延续：首轮创建，多轮 review 复用同一份记录，按"第 1 轮"、"第 2 轮"追加，保留未关闭问题编号（RG-B/W/S 系列）与复查结论。
 - [ ] Step 5: 进行结构化审查
-    - [ ] 5.1 使用本目录 references/solid-checklist.md 检查职责边界、扩展点和耦合度。
-    - [ ] 5.2 使用本目录 references/security-checklist.md 检查鉴权、注入、密钥泄露、日志和资源滥用风险。
-    - [ ] 5.3 使用本目录 references/code-quality-checklist.md 检查错误处理、边界条件、性能与可维护性。
-    - [ ] 5.4 使用本目录 references/removal-plan.md 判断冗余代码是可立即删除，还是需要后续迭代计划。
+    - [ ] 5.1 使用 [solid-checklist.md](./references/solid-checklist.md) 检查职责边界、扩展点和耦合度。
+    - [ ] 5.2 使用 [security-checklist.md](./references/security-checklist.md) 检查鉴权、注入、密钥泄露、日志和资源滥用风险。
+    - [ ] 5.3 使用 [code-quality-checklist.md](./references/code-quality-checklist.md) 检查错误处理、边界条件、性能与可维护性。
+    - [ ] 5.4 使用 [removal-plan.md](./references/removal-plan.md) 判断冗余代码是可立即删除，还是需要后续迭代计划。
     - [ ] 5.5 当用户要求 deep review、SOLID review 或 senior review 时，必须同时覆盖性能热点、异常处理、边界条件和删除计划，而不是只做浅层意见汇总。
     - [ ] 5.6 必查项（所有深度均适用）：规范单点声明（审查治理定义时检查是否重复抄写权威文档完整条款，应一行链接引用）；供应链信任边界（新依赖/MCP/外部 skill 引入时检查来源验证与版本钉定）；流程编号标记（新增注释与测试名不得含规划/任务/审计编号如 `T405`、`P1-1`，例外仅真实常量与带文档路径的导航指针）。
     - [ ] 5.7 优先寻找会阻塞放行的问题，而不是按文件顺序复述 diff。
@@ -134,10 +134,10 @@ metadata:
 
 当用户要求 deep review、code review expert 或 senior review 时：
 
-- 使用 references/solid-checklist.md 审查职责边界、扩展性与耦合。
-- 使用 references/security-checklist.md 审查鉴权、注入、密钥、SSRF、路径问题和竞态。
-- 使用 references/code-quality-checklist.md 审查 swallowed exceptions、async error、N+1、缓存和边界条件。
-- 使用 references/removal-plan.md 判断死代码是立即可删还是需要迁移计划。
+- 使用 [solid-checklist.md](./references/solid-checklist.md) 审查职责边界、扩展性与耦合。
+- 使用 [security-checklist.md](./references/security-checklist.md) 审查鉴权、注入、密钥、SSRF、路径问题和竞态。
+- 使用 [code-quality-checklist.md](./references/code-quality-checklist.md) 审查 swallowed exceptions、async error、N+1、缓存和边界条件。
+- 使用 [removal-plan.md](./references/removal-plan.md) 判断死代码是立即可删还是需要迁移计划。
 - 解释为什么这是结构性风险，而不是只给表面建议。
 
 ## 确认门

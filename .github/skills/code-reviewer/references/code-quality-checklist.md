@@ -176,7 +176,7 @@ if (value) { ... }  // 对 0, "", false 失效
 改动 `docs/standards/*.md`（新增/修改规范条款）时，检查新增条款的执行挂接：
 
 - **分层判定**：条款是否明确区分"宽松指引"（应当、建议 → 执行阶段声明即可）与"严格约束"（必须、阈值、禁令 → 须挂 review 阶段检查点）？
-- **挂接声明**：严格约束是否在规范文档中声明 review 挂钩（如 planning.md §1.1"合规核验由 review 阶段执行"句式）？
+- **挂接声明**：严格约束是否在规范文档中声明 review 挂钩（如“合规核验由 `@code-auditor` 在 Review Gate 执行”句式）？
 - **检查点落地**：是否已在 code-reviewer SKILL.md / 本 checklist / Code Auditor 必查项中实际存在对应检查点？缺失则要求补挂，或登记 backlog 并在本轮明确标记"待补挂"
 - **反模式**：严格约束只写在执行文档（skill/agent）而未挂 review 检查点——执行阶段上下文杂、易跳过，review 阶段上下文干净才可强制
 
