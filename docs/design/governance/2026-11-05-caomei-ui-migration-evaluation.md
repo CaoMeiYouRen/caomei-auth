@@ -183,6 +183,8 @@
 
 ### 6.3 缺口与决策项
 
+> 上游反馈：caomei-ui [#28](https://github.com/CaoMeiYouRen/caomei-ui/issues/28)（2026-11-05）已汇总 DatePicker range、Toast 主题 token、Paginator 报表、DataTable 密度 / 选择列宽度等缺口；后续按上游结论收敛本表。
+
 | 缺口 | 本项目位置 | 影响 | 选项 |
 | :--- | :--- | :--- | :--- |
 | **`DatePicker` 无 `selectionMode`（range）** | `components/admin/logs/logs-table.vue` 1 处 | 日志日期范围筛选无法直接迁移 | A. 改为两个单日期选择器（开始 / 结束），UX 微调；B. 该页保留 PrimeVue DatePicker（局部并存），必须在 P5 验收登记例外、技术债与移除触发条件（上游实现 range 后移除）；C. 推动 caomei-ui 实现 range / multiple；D. 用 `CaomeiCalendar` 自建范围选择包装 |

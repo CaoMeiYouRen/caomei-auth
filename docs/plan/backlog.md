@@ -87,6 +87,7 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
 - **验收要点**：无 PrimeVue 运行时依赖；受影响页面视觉与交互回归通过；主题 / 暗色模式一致；构建、类型检查与测试通过。
 - **依赖与顺序**：建议组件迁移先行（至少完成基座与核心页），再做 i18n 页面文案；i18n 基础设施可并行，不要同时改同一批页面。
 - **风险**：caomei-ui 1.0.0 的组件覆盖与 API 可能不完全等价；`DatePicker` 范围选择缺失；Toast 逐语气 token 缺失；DataTable 受控状态需回写；迁移面大，必须分批并保留回退路径。
+- **上游反馈**：[caomei-ui#28](https://github.com/CaoMeiYouRen/caomei-ui/issues/28)（DatePicker range / Toast 主题 token / Paginator 报表 / DataTable 密度与选择列宽度）。
 
 ### 2.2 时区设置
 
