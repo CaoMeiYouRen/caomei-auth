@@ -68,6 +68,8 @@
 
 统计口径：扫描 `.vue` 开标签，组件名取自 `node_modules/primevue/index.d.ts` 的默认导出，排除 `node_modules` / `.nuxt` / `.output` / `coverage` / `dist` / 报告目录；`logs` 仅跳过仓库根目录。数字会随代码演进失效，**每批开工前须重新取数**。
 
+> **2026-11-05 起以脚本快照为唯一事实源**：`pnpm migration:usage --json=docs/design/governance/primevue-usage-snapshot.json`，结果与 P0 基线记录见 [caomei-ui P0 基线与护栏](./2026-11-05-caomei-ui-p0-baseline.md)。下表为评估时的手工取数，二者差异 ≤3 处，不再逐项回填。
+
 | 类别 | 计数 | 说明 |
 | :--- | ---: | :--- |
 | PrimeVue 组件族 | **31** | 见 §6 映射表 |

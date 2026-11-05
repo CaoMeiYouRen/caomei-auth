@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "ai:check": "node scripts/ai/check-governance.mjs",
+    "migration:usage": "node scripts/migration/primevue-usage.mjs",
     "security:alerts": "node scripts/security/check-alerts.mjs",
     "setup:ai": "node scripts/setup-ai.mjs",
     "setup:switch-models": "node scripts/setup/switch-models.mjs",
@@ -51,6 +52,7 @@
     "better-auth-localization": "^4.0.0",
     "better-bytes": "^1.2.6",
     "better-sqlite3": "^12.11.1",
+    "caomei-ui": "1.0.0",
     "chart.js": "^4.6.1",
     "dayjs": "^1.11.23",
     "file-type": "^22.2.0",

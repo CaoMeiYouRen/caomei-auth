@@ -21,7 +21,7 @@
 | M2-3 | `zod-migration.md` 收口与 API 文档同步 | 迁移状态、验证矩阵、`docs/api/` 示例 | 已完成（14/14 handlers，文档与 API 示例同步） |
 | M3-1 | 覆盖率基线复测与目标校准 | 当前基线、阶段目标（全局 ≥75.74%；`server/api` ≥95% / `composables` ≥80% / `components/base` ≥75%） | 已完成（基线 75.74%，目标已按范围校准） |
 | M3-2 | 定向补测 | `server/api`（含 Zod / SSO audit）、`composables`、`components/base` | 已完成（Statements 78.26%；四个范围下限全部达标） |
-| M4-1 | 用量盘点脚本 / 快照 + 路由白名单初值 + 版本锁定 + 回退方案 | 可复现的 PrimeVue 用量快照、`CAOMEI_UI_ROUTE_PREFIXES` 初值、`caomei-ui@1.0.0` 精确锁定 + Dependabot `ignore`、回退方案 | 待执行 |
+| M4-1 | 用量盘点脚本 / 快照 + 路由白名单初值 + 版本锁定 + 回退方案 | 可复现的 PrimeVue 用量快照、`CAOMEI_UI_ROUTE_PREFIXES` 初值、`caomei-ui@1.0.0` 精确锁定 + Dependabot `ignore`、回退方案 | 已完成（30 族 / 301 标签 / 50 文件；白名单空集；回退方案见 P0 基线记录） |
 | M4-2 | 接入基座（P0/P1）+ P2 前置方案 | `caomei-ui/nuxt` + `theme.css` + `data-preset="caomei"`、双库并存、构建 / 包体复测；`keyCss` / 入口 JS 允许增幅；P2 视觉基线方案（不建截图工程）；不做页面替换 | 待执行 |
 | M5-1 | `@nuxtjs/i18n@10` 技术验证 | `files[]`、`localeDetector`、`prefix_except_default`、`useLocaleHead`、语言切换原型 | 待执行 |
 | M5-2 | Zod per-parse error map 验证 | 1 个表单 + 1 个 API；输出 i18n M2 准入结论 | 待执行 |
