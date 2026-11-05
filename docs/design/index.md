@@ -35,3 +35,4 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [CodeQL #20 复核记录](./governance/2026-11-05-codeql-20-review.md): `js/insufficient-password-hash` 误报判定依据、dismiss 处置与慢哈希迁移取舍。
 -   [覆盖率基线复测与目标校准](./governance/2026-11-05-coverage-baseline.md): 2026-11-05 复测数据、按范围设下限的阶段目标与定向补测优先级。
 -   [caomei-ui 迁移 P0 基线与护栏](./governance/2026-11-05-caomei-ui-p0-baseline.md): 用量快照脚本、路由白名单初值、1.0.0 精确锁定与回退方案。
+-   [caomei-ui P2 视觉基线方案](./governance/2026-11-05-caomei-ui-p2-visual-baseline-plan.md): 截图矩阵、已知预期差异与差异登记放行规则（不建截图工程）。

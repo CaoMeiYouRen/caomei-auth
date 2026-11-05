@@ -44,6 +44,8 @@ export default defineNuxtConfig({
     devtools: { enabled: false },
     modules: [
         '@primevue/nuxt-module',
+        // caomei-ui 基座（迁移期与 PrimeVue 双库并存；页面组件未迁移，见 docs/design/governance/2026-11-05-caomei-ui-p0-baseline.md）
+        'caomei-ui/nuxt',
         '@sentry/nuxt/module',
         '@nuxt/eslint',
         'vue-recaptcha/nuxt',
@@ -88,6 +90,7 @@ export default defineNuxtConfig({
             title: '草梅 Auth 统一登录平台',
             htmlAttrs: {
                 lang: 'zh-CN',
+                'data-preset': 'caomei',
             },
             link: [
                 { rel: 'icon', type: 'image/png', href: '/favicon.png' },
@@ -132,6 +135,12 @@ export default defineNuxtConfig({
             },
             locale: zh_CN,
         },
+    },
+    caomeiUI: {
+        // 与 PrimeVue 一致的暗色策略：由 VueUse useDark() 在 <html> 上切换 .dark
+        darkMode: 'class',
+        // 基础层由模块注入一次（组件自动导入不携带基础层）
+        injectStyles: true,
     },
     experimental: {
         componentIslands: true,

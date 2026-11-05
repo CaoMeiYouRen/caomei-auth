@@ -66,7 +66,38 @@ Top 组件：`Button` 141（40 文件）、`InputText` 37（14）、`Column` 31�
 - **触发条件**：构建失败无法快速定位、关键页面视觉差异无法归因、Toast / Confirm 行为异常、SSR hydration 报错、`keyCss` / 入口 JS 越线且无法归因。
 - **回退记录**：每次回退在提交说明与本文追加一行（日期、阶段、原因、验证结论）。
 
-## 5. 关联文档
+## 5. P1 基座接入结果（M4-2）
 
--   [caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[待办事项](../../plan/todo.md)｜[Backlog](../../plan/backlog.md)
+2026-11-05 完成接入，**未替换任何页面组件**：
+
+| 项 | 变更 |
+| :--- | :--- |
+| Nuxt 模块 | `modules` 增加 `caomei-ui/nuxt`（与 `@primevue/nuxt-module` 并存） |
+| 主题 | `app.head.htmlAttrs` 增加 `data-preset="caomei"`，承接品牌色预设 |
+| 暗色 | `caomeiUI.darkMode = 'class'`，沿用 `useDark()` 的 `html.dark` |
+| 样式 | `caomeiUI.injectStyles = true`，基础层由模块注入一次（不重复引入） |
+| 页面组件 | **零替换**，PrimeVue 模板与 `components/base/*` 保持不变 |
+
+### 5.1 构建与包体复测
+
+| 指标 | 接入前 | 接入后 | 变化 | 允许增幅 | 结论 |
+| :--- | ---: | ---: | ---: | ---: | :--- |
+| `keyCss`（`entry.*.css`） | 381,057 B | 399,195 B | +4.76% | ≤ +10% | 通过 |
+| 入口 JS（`entry` chunk） | 81,340 B | 81,340 B | 0% | ≤ +5% | 通过 |
+| 全部 CSS | 1,569,652 B | 1,587,790 B | +1.16% | — | 记录 |
+| 全部 JS | 3,421,440 B | 3,421,463 B | +23 B | — | 记录 |
+
+`pnpm build` 通过；接入前后均为 50 个 `.vue` 使用 PrimeVue（快照未变）。
+
+### 5.2 自动导入冲突与守卫
+
+`caomei-ui/nuxt` 会自动注册 `useToast` / `useConfirm`，与 `@primevue/nuxt-module` 同名。构建时 Nuxt 提示 PrimeVue 侧被忽略，但由于项目中全部调用点都已显式 `import` 自 `primevue/usetoast` / `primevue/useconfirm`，运行时来源正确。
+
+- 守卫脚本：`scripts/migration/check-caomei-imports.mjs`（`pnpm migration:check-imports`）。
+- CI：`test.yml` 与 `regression-weekly.yml` 在 `ai:check` 之后执行；命中自动导入即失败。
+- 迁移纪律：调用点必须显式 import 来源；P5 卸载 PrimeVue 时统一改为 `caomei-ui` 来源。
+
+## 6. 关联文档
+
+-   [caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[P2 视觉基线方案](./2026-11-05-caomei-ui-p2-visual-baseline-plan.md)｜[待办事项](../../plan/todo.md)｜[Backlog](../../plan/backlog.md)
 -   [开发规范](../../standards/development.md)｜[测试规范](../../standards/testing.md)｜[规划规范](../../standards/planning.md)

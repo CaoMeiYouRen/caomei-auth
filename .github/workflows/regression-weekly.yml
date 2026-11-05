@@ -152,6 +152,9 @@ jobs:
       - name: Check AI governance
         run: pnpm run ai:check
 
+      - name: Check caomei-ui imports
+        run: pnpm run migration:check-imports
+
       - name: Typecheck
         run: pnpm run typecheck
 
