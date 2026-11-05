@@ -75,7 +75,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 为了保证交付质量，任何功能开发任务必须严格遵循 PDTFC (Plan-Do-Test-Fix-Commit) 循环：
 
-1.  **P (Plan)**: 需求不清或可能插队时，先交 `@product-manager` 做范围判断；分析任务上下文（`context-analyzer` skill）；核对 `docs/plan/todo.md` 与 `docs/plan/roadmap.md` 确认规划归属；更新设计文档（`docs/design/`）；输出受影响文件清单与技术路径。
+1.  **P (Plan)**: 需求不清或可能插队时，先交 `@product-manager` 做范围判断；分析任务上下文（`context-analyzer` skill）；按 [规划规范](./docs/standards/planning.md) 核对 `docs/plan/todo.md`、`docs/plan/backlog.md` 与 `docs/plan/roadmap.md` 确认规划归属——新候选先登记 backlog，未经用户明确授权不得进入当前阶段；更新设计文档（`docs/design/`）；输出受影响文件清单与技术路径。
 2.  **D (Do)**: 使用 `nuxt-code-editor` skill 编写代码；必须阅读并严格遵守 [开发规范](./docs/standards/development.md)、[API 规范](./docs/standards/api.md) 与 [测试规范](./docs/standards/testing.md)；始终使用 TypeScript、Vue 3 Composition API、SCSS BEM 和 i18n 规范。
 3.  **T (Test)**: 运行本地测试（`pnpm test`）与 Lint 检查（`pnpm lint`、`pnpm lint:css`、`pnpm typecheck`）；复杂测试增强可移交 `@test-engineer`。
 4.  **F (Fix)**: 分析测试失败原因并修复；修复过程中如有重大逻辑变动，同步记录到 `@documentation-specialist`；同一问题修复失败 >= 2 次时，必须先触发搜索优先流程，不得用同一思路反复重试。
@@ -87,7 +87,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 1. **先暂停扩写**：判断该事项是否已在当前待办或当前验收范围内。
 2. **允许插队的范围**：仅限阻塞当前交付、明确功能回归、高风险安全/合规问题或导致当前任务无法闭环的基础缺陷，且必须补充"为何插队"的文字说明。
-3. **默认延期的范围**：体验优化、洁癖式重构、探索性能力、非紧急依赖升级，默认记录到 `docs/plan/roadmap.md` 或其他规划载体，不打断当前阶段。
+3. **默认延期的范围**：体验优化、洁癖式重构、探索性能力、非紧急依赖升级，默认登记到 `docs/plan/backlog.md`（规则见 [规划规范](./docs/standards/planning.md)），不打断当前阶段。
 4. **禁止静默膨胀**：不得在未告知用户的情况下，把一个原子任务扩展成新的功能包或新的子阶段。
 
 ## 6. AI 智能体体系 (AI Agents Matrix)
@@ -96,7 +96,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 | 智能体 | 适用场景 | 主要输出 | 必经交接点 | 不应承担 |
 | :--- | :--- | :--- | :--- | :--- |
-| `@product-manager` | 需求澄清、插队分流、验收标准定义、Todo/Roadmap 维护 | 范围判定、验收标准、任务拆解、规划更新 | 需求明确后交 `@full-stack-master` | 不应承担代码实现、最终审计或测试编写 |
+| `@product-manager` | 需求澄清、插队分流、验收标准定义、Todo/Backlog/Roadmap 维护 | 范围判定、验收标准、任务拆解、规划更新 | 需求明确后交 `@full-stack-master` | 不应承担代码实现、最终审计或测试编写 |
 | `@full-stack-master` | 默认开发主责角色；驱动 PDTFC 全循环，负责需求分析、方案设计、前后端实现到测试修复和最终提交 | 全栈代码改动、测试、提交、阶段编排 | 需求不清先交 `@product-manager`；代码落地后交 `@code-auditor` 审计；涉及界面交 `@ui-validator`；复杂测试交 `@test-engineer`；文档交 `@documentation-specialist` | 不应绕过质量审查、测试和文档收口直接宣布完成 |
 | `@code-auditor` | 所有代码改动完成后的强制 Review Gate；执行结构化审查（正确性、安全、架构、规范一致性）并核验质量门证据 | 审计结论（Pass/Reject）、问题分级（blocker/warning/suggest） | Pass 后才能进入提交或后续阶段；Reject 时退回对应开发者 | 不应承担需求定义、功能开发主责或测试增强主责 |
 | `@test-engineer` | 测试补强、回归验证、覆盖率提升 | 新增/修正测试、运行结果、剩余缺口 | 测试代码变更仍需交 `@code-auditor` 审看 | 不应承担需求规划、视觉验收或替代质量审计 |
@@ -141,7 +141,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 1. **必须使用 `conventional-committer` skill**：任何代码、文档、配置或脚本的提交都必须通过 `conventional-committer` skill 执行。禁止直接使用 `git commit -m "..."` 裸提交。
 2. **格式要求**：提交消息必须符合 Conventional Commits 规范（`type(scope): description`），且 `description` 统一使用**中文或用户使用的语言**。
 3. **质量前置**：提交前必须确认 `@code-auditor` Review Gate 已放行（核验 `pnpm lint`、`pnpm typecheck` 和必要的定向测试证据），质量门禁未通过时不得提交。
-4. **原子粒度**：一个提交对应一个逻辑变更，关联且仅关联 `docs/plan/todo.md` 中的一个原子条目。
+4. **原子粒度**：一个提交对应一个逻辑变更，关联且仅关联 `docs/plan/todo.md` 中的一个原子条目；规划 / 治理类改动可关联 `docs/plan/backlog.md` 中的对应候选，并在提交说明中注明。
 5. **推送禁令**：`git commit` 后不得自动执行 `git push`，推送仅限用户明确要求时执行。提交完成后应告知用户"已提交到本地，等待推送确认"。
 6. **提交钩子**：提交必须通过 husky 钩子（commitlint / lint-staged），禁止使用 `--no-verify` 跳过。
 
@@ -160,8 +160,8 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 ## 9. 相关文档
 
--   **规划**: [项目路线图](./docs/plan/roadmap.md) | [待办事项](./docs/plan/todo.md) | [AI 基建优化规划](./docs/design/governance/ai-infrastructure-optimization.md)
--   **规范**: [开发规范](./docs/standards/development.md) | [API 规范](./docs/standards/api.md) | [测试规范](./docs/standards/testing.md) | [文档规范](./docs/standards/documentation.md) | [国际化实施方案](./docs/standards/i18n.md) | [Git 规范](./docs/standards/git.md) | [安全规范](./docs/standards/security.md) | [AI 协作规范](./docs/standards/ai-collaboration.md) | [AI 资产治理规范](./docs/standards/ai-governance.md) | [外部 Skills 准入清单](./docs/standards/external-skills-intake.md)
+-   **规划**: [项目路线图](./docs/plan/roadmap.md) | [待办事项](./docs/plan/todo.md) | [候选池](./docs/plan/backlog.md) | [已完成工作归档](./docs/archive/completed-work.md) | [AI 基建优化规划](./docs/design/governance/ai-infrastructure-optimization.md)
+-   **规范**: [规划规范](./docs/standards/planning.md) | [开发规范](./docs/standards/development.md) | [API 规范](./docs/standards/api.md) | [测试规范](./docs/standards/testing.md) | [文档规范](./docs/standards/documentation.md) | [国际化实施方案](./docs/standards/i18n.md) | [Git 规范](./docs/standards/git.md) | [安全规范](./docs/standards/security.md) | [AI 协作规范](./docs/standards/ai-collaboration.md) | [AI 资产治理规范](./docs/standards/ai-governance.md) | [外部 Skills 准入清单](./docs/standards/external-skills-intake.md)
 -   **设计**: [架构设计](./docs/design/architecture.md) | [UI/UX 设计](./docs/design/ui-ux.md) | [数据库设计](./docs/design/database.md)
 -   **API 参考**: [API 文档](./docs/api/)
 -   **适配与入口**: [Claude 适配说明](./CLAUDE.md) | [Copilot 指令](./.github/copilot-instructions.md) | [项目主页入口](./README.md)

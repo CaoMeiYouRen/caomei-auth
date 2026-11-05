@@ -36,7 +36,7 @@ description: 驱动完整的 PDTFC 循环，负责需求分析、方案设计、
 
 ## 输入与输出
 
--   **输入**: 用户需求、`docs/plan/todo.md` / `docs/plan/roadmap.md`、受影响文件范围、现有验证结果。
+-   **输入**: 用户需求、`docs/plan/todo.md` / `docs/plan/backlog.md` / `docs/plan/roadmap.md`、受影响文件范围、现有验证结果。
 -   **输出**: 准入判断、阶段编排方案、交接顺序、最终收口说明。
 
 ## 默认交接
@@ -64,7 +64,7 @@ description: 驱动完整的 PDTFC 循环，负责需求分析、方案设计、
 1.  读取 `.session/current-task.yaml` → 了解当前任务、已完成步骤、下一步与认知状态。
 2.  读取 `.session/runtime-state.json` → 了解失败计数、当前推理模式与上次验证结果。
 3.  读取 `.session/wisdom.md` → 了解跨 session 值得复用的发现（如有）。
-4.  读取 `docs/plan/todo.md` → 确认阶段级任务上下文与当前进行中的事项。
+4.  读取 `docs/plan/todo.md` 与 `docs/plan/backlog.md` → 确认当前阶段条目、候选池与进行中的事项。
 5.  向用户输出一份 **不超过 10 行** 的 briefing：当前阶段 + 任务、已完成步骤、下一步、上次 session 的认知状态摘要。
 
 ### Session 收尾（用户说"收工""结束""今天到这"或切换任务时执行）
