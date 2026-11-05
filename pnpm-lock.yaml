@@ -194,8 +194,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@10.2.2))(winston@3.19.0)
       nodemailer:
-        specifier: ^10.2.1
-        version: 10.2.1
+        specifier: ^10.3.1
+        version: 10.3.1
       normalize.css:
         specifier: ^8.0.1
         version: 8.0.1
@@ -7419,8 +7419,8 @@ packages:
   node-rsa@1.1.1:
     resolution: {integrity: sha512-Jd4cvbJMryN21r5HgxQOpMEqv+ooke/korixNNK3mGqfGJmy0M77WDDzo/05969+OkMy3XW1UuZsSmW9KQm7Fw==}
 
-  nodemailer@10.2.1:
-    resolution: {integrity: sha512-ZrDNsPFoDMwefNs7sJwrYiEJ/CG4ClJWDZv05iNJsEBWa8GRDry1QJHTJxsuTAY9eDDKjX4k+q3SxslXJOao7w==}
+  nodemailer@10.3.1:
+    resolution: {integrity: sha512-uF0AFsJC07Y1vdW7p580DKAnh7rAO+4UPSSB3mDCPNDufoiaOebV6JmrzpxB14OjEEEiBsNdYoM2Y+fN8M7BBA==}
     engines: {node: '>=20.0.0'}
 
   nopt@10.0.1:
@@ -18789,7 +18789,7 @@ snapshots:
       array.prototype.flatmap: 1.3.3
       es-errors: 1.3.0
       object.entries: 1.1.9
-      semver: 6.3.2
+      semver: 6.3.1
 
   node-fetch-native@1.6.7: {}
 
@@ -18811,7 +18811,7 @@ snapshots:
     dependencies:
       asn1: 0.2.6
 
-  nodemailer@10.2.1: {}
+  nodemailer@10.3.1: {}
 
   nopt@10.0.1:
     dependencies:
