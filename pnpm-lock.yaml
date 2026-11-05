@@ -93,10 +93,10 @@ importers:
         version: 2.0.0
       '@better-auth/oauth-provider':
         specifier: 1.7.14
-        version: 1.7.14(@better-auth/core@1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.0(zod@4.6.7))
+        version: 1.7.14(@better-auth/core@1.7.15(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.0(zod@4.6.7))
       '@better-auth/sso':
-        specifier: 1.7.14
-        version: 1.7.14(@better-auth/core@1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.0(zod@4.6.7))
+        specifier: 1.7.15
+        version: 1.7.15(@better-auth/core@1.7.15(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.0(zod@4.6.7))
       '@hcaptcha/vue3-hcaptcha':
         specifier: ^1.3.0
         version: 1.3.0(vue@3.5.44(typescript@6.0.3))
@@ -483,9 +483,8 @@ packages:
     peerDependencies:
       '@types/json-schema': ^7.0.15
 
-  '@authenio/xml-encryption@2.0.2':
-    resolution: {integrity: sha512-cTlrKttbrRHEw3W+0/I609A2Matj5JQaRvfLtEIGZvlN0RaPi+3ANsMeqAyCAVlH/lUIW2tmtBlSMni74lcXeg==}
-    engines: {node: '>=12'}
+  '@authenio/xml-encryption@6.0.2':
+    resolution: {integrity: sha512-/jv5qO935fH4Ma+fxh5rJLRYZvUM57fd/I74IiSoR8cFm+sgjszXFEEn1PkqZhhBD4MVkH2YT+/UDY+pnW0S0Q==}
 
   '@aws-sdk/checksums@3.1001.7':
     resolution: {integrity: sha512-hUlYwqlsiDuPyhI5nQLgLZYKo0bFvMKaVk9JRfpb9S2kXxT2ZhyHZ5RTfH3PBpD3dMnDkGrA0/aY1AeAMFLmrQ==}
@@ -740,6 +739,20 @@ packages:
       '@opentelemetry/api':
         optional: true
 
+  '@better-auth/core@1.7.15':
+    resolution: {integrity: sha512-BetlCGMINY5GiQocDF9X2wD+9yWrSrAecQbcZUCDqXd2pAolPr15ZrFqYyjEXX6YKUdPPWotUmo8naE4NSyEVQ==}
+    peerDependencies:
+      '@better-auth/utils': ^0.4.2 || ^0.5.0
+      '@better-fetch/fetch': 1.3.3
+      '@opentelemetry/api': ^1.9.0
+      better-call: ^1.0.18
+      jose: ^6.1.0
+      kysely: ^0.28.17
+      nanostores: ^1.0.1
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+
   '@better-auth/drizzle-adapter@1.7.14':
     resolution: {integrity: sha512-5RC8Ec5Ur15FWsS4As9/VrlRbB3+9EfShxIpA5A1FcD6IgPxFvzQNkAm2+FYx9LUSqx47NPf9hBTG2GUCMP9Ig==}
     peerDependencies:
@@ -798,10 +811,10 @@ packages:
       prisma:
         optional: true
 
-  '@better-auth/sso@1.7.14':
-    resolution: {integrity: sha512-sfUzpm6GO5l5MSUA17qRO/E4INthqF+KRmymtj4Hhm+Xsx6CoRgr0BVIDfAic3tSqVhObcVYiiiZ38dXXhkCCw==}
+  '@better-auth/sso@1.7.15':
+    resolution: {integrity: sha512-0QwtxFDI76ML97pEpQHcB6FvbI3ytPZ76EQITMz6lSIviRStgEFfg4EcC0o9QfQGdoJHj/lSMcP+9bHaaFiXNw==}
     peerDependencies:
-      '@better-auth/core': ^1.7.14
+      '@better-auth/core': ^1.7.15
       '@better-auth/utils': ^0.4.2 || ^0.5.0
       '@better-fetch/fetch': 1.3.3
       better-auth: ^1.7.14
@@ -1676,8 +1689,8 @@ packages:
     resolution: {integrity: sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA==}
     engines: {node: '>= 20.19.0'}
 
-  '@nodable/entities@3.0.0':
-    resolution: {integrity: sha512-8L9xFeTYKhm49xfIypoe2W5wV1m/3Z58kT+7kR9A8OyFxcPduI4VmxaUMQyKYrRjUoLLSXv6EKKID5Tvj9cUVw==}
+  '@nodable/entities@3.1.0':
+    resolution: {integrity: sha512-LsS/DjHr+uDM647Gru/cA8+J3a3HfhttwCKLyuoyN7yXTFCxKBtSgMQBvrW9yNPa2/zDRUNuGPaH5QUFoa4arQ==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -4008,9 +4021,6 @@ packages:
     resolution: {integrity: sha512-BNoCY6SXXPQ7gF2opIP4GBE+Xw7U+pHMYKuzjgCN3GwiaIR09UUeKfheyIry77QtrCBlC0KK0q5/TER/tYh3PQ==}
     engines: {node: '>= 0.4'}
 
-  asn1@0.2.6:
-    resolution: {integrity: sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ==}
-
   assertion-error@2.0.1:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
@@ -5584,8 +5594,8 @@ packages:
   fast-xml-builder@1.3.1:
     resolution: {integrity: sha512-pIM/1n3ntFXKYrUZwW7QCK0gAW7XY+wzj1YMIV3tLDvPj/V+zTGJK5e3/4WJfwj0qWw2ElNXiTixda/R+3YSug==}
 
-  fast-xml-parser@5.11.1:
-    resolution: {integrity: sha512-TBw6K/fxoQGGjCmZDw9w/ZwP3uDcnTM4YH/g+PFRWr8sbe5idXtxNN6vITh4+1ruCZaho6uBFurElsA7F0zzgw==}
+  fast-xml-parser@5.11.2:
+    resolution: {integrity: sha512-R9iDuNrQYeQut46cn2r2wHKn4HYzVDvDm5J1wW+koZewykv0yuO2HChTYeZtrULyHIDM9cj9TUXloCsueCQUog==}
     hasBin: true
 
   fastest-levenshtein@1.0.16:
@@ -6497,6 +6507,9 @@ packages:
 
   jose@6.2.12:
     resolution: {integrity: sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==}
+
+  jose@6.2.15:
+    resolution: {integrity: sha512-qdF6ewcZARtef63fJ9AKKZPgxw+t7USH6HLXYcD4CrdmSvDp79rpJSPFEKc90QBeGS63u1KQtN2MZQHC0yDIzA==}
 
   js-beautify@2.0.3:
     resolution: {integrity: sha512-cyFbh3tkPhknnTD/0bLf0T0yy2ZIbqL05mttzbt4y1Zfr7NxqXQZ62dkBLKs3oHH/lpjmDRAnciJiSUyOy8XwQ==}
@@ -7415,9 +7428,6 @@ packages:
   node-releases@2.0.60:
     resolution: {integrity: sha512-OmO8+GM1JUZqXET720VrJCwkjUCXmCMQm0Z3UDDRbfNLHS4NEAvY60j5jiFv0tkKw2PNNlqOLhahVmwJIOLDIQ==}
     engines: {node: '>=18'}
-
-  node-rsa@1.1.1:
-    resolution: {integrity: sha512-Jd4cvbJMryN21r5HgxQOpMEqv+ooke/korixNNK3mGqfGJmy0M77WDDzo/05969+OkMy3XW1UuZsSmW9KQm7Fw==}
 
   nodemailer@10.2.1:
     resolution: {integrity: sha512-ZrDNsPFoDMwefNs7sJwrYiEJ/CG4ClJWDZv05iNJsEBWa8GRDry1QJHTJxsuTAY9eDDKjX4k+q3SxslXJOao7w==}
@@ -8565,8 +8575,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  samlify@2.13.1:
-    resolution: {integrity: sha512-vdYr/zohDGBbfWNU4miEzc1jmWOtkLySPViapC6nfGkv9KxzLq4UlGkKyryzwLw4jVlZk88Rw93HaCRVpe+t+g==}
+  samlify@2.15.1:
+    resolution: {integrity: sha512-peZitMO2cAnf0pY45H0yw0Drqmby7U91yRovH3AH8TdwYCNRnmidVORXIjcK+21cBk3Mjl8EVz8Nvuw/v20rAw==}
 
   sanitize-html@2.18.1:
     resolution: {integrity: sha512-2X5lC8fYla8YaT8g73Nj+HcLWXan5dLyCWLgVvaOmfw7JI78IRsyNtIDytTHdn7hBQbIkCah7Zbmd5jabzeDig==}
@@ -8946,8 +8956,8 @@ packages:
   strip-literal@4.0.0:
     resolution: {integrity: sha512-PaqAvfUZKBwc/SLmNZtHmzK+v19Z4O4eS3cKPeGvbIv/U3pnyEq4Tuw3/4v/FwfM8VQaEawsyCcOQ0P+kpwWWw==}
 
-  strnum@2.4.2:
-    resolution: {integrity: sha512-rDG3Ah4TV0k1hWvLSzkZtMmLN9+eS+h3knq4MP6A42Y3Yh5qGNnOUs1jJkoSr8FG5dsL28c7KgkIBzSEykqtuw==}
+  strnum@2.5.1:
+    resolution: {integrity: sha512-UM4nTLWzQiDBseVxUGxN0wJzIk0UU89Qi7pKXz9qISo+lhviJikTuikBsK/oFRlpvYHvSdz0TVoLyQ+sEpYwxA==}
 
   strtok3@10.6.3:
     resolution: {integrity: sha512-MD8mENgyXMr2mDaDfzP3RWYDSyYQxIIou7HhCiCJiBekrsoDtUG0id3vYnjDfY9ndOEbazFXe13Qw6u/1AB8ew==}
@@ -9174,8 +9184,8 @@ packages:
     resolution: {integrity: sha512-yau8yJdTt989Mm0Bd/236QnzEiPf2xLLTqUZRUJOo/3CB078LSwzei343DgtJVmfJKJE3TMINY1u42SQsP6mXw==}
     engines: {node: '>=14.0.0'}
 
-  tldts-core@7.4.19:
-    resolution: {integrity: sha512-goNXV6Ho9TIOfpJZanTd6CKG5DyYgYAL+k+22T0SLh8l6+KHIfBUPFuePuSZv05UttIaaLmI9tb7TmGIdK5AkQ==}
+  tldts-core@7.4.20:
+    resolution: {integrity: sha512-C630TWXZCZmLq0F2bW4QqwnaaxCQ/svpAqvJwnC4JvgEM5ohhBnGsEzTLSOXcN+xjz+kEaHS5uoWIw2klnqd0A==}
 
   tldts@7.4.19:
     resolution: {integrity: sha512-48dH6aSpQnpbzDUc4vIQZ1VjB8tkK+e8c1yx05/SZK+rkssgjEOlxDd/yU8/a4vGYQ9vRgJr9dwMq9TJ0b3X2Q==}
@@ -10227,8 +10237,8 @@ packages:
     resolution: {integrity: sha512-sqMMuL1rc0FmMBOzCpd0yuy9trqF2yTTVe+E9ogwCSWQCdDEtQUwrZPT6AxqtsFGRNxycgncbP/xmOOSPw5ZUw==}
     engines: {node: '>= 6.0'}
 
-  xml-crypto@6.1.2:
-    resolution: {integrity: sha512-leBOVQdVi8FvPJrMYoum7Ici9qyxfE4kVi+AkpUoYCSXaQF4IlBm1cneTK9oAxR61LpYxTx7lNcsnBIeRpGW2w==}
+  xml-crypto@6.4.0:
+    resolution: {integrity: sha512-d21ModhBO/+QWWAmOjyDeQJuHNmsR/HtOxyBchiTbKfGNKuHYwQNd+SlLhwyyrwoAGLp4Qc6BQ7nAtnM47dHSQ==}
     engines: {node: '>=16'}
 
   xml-escape@1.1.0:
@@ -10249,16 +10259,12 @@ packages:
     resolution: {integrity: sha512-Eux0i2QdDYKbdbA6AM6xE4m6ZTZr4G4xF9kahI2ukSEMCzwce2eX9WlTI5J3s+NU7hpasFsr8hWIONae7LluAQ==}
     engines: {node: '>=6.0'}
 
-  xpath@0.0.32:
-    resolution: {integrity: sha512-rxMJhSIoiO8vXcWvSifKqhvV96GjiD5wYb8/QHdoRyQvraTpp4IEv944nhGausZZ3u7dhQXteZuZbaqfpB7uYw==}
-    engines: {node: '>=0.6.0'}
-
   xpath@0.0.33:
     resolution: {integrity: sha512-NNXnzrkDrAzalLhIUc01jO2mOzXGXh1JwPgkihcLLzw98c0WgYDmmjSh1Kl3wzaxSVWMuA+fe0WTWOBDWCBmNA==}
     engines: {node: '>=0.6.0'}
 
-  xpath@0.0.34:
-    resolution: {integrity: sha512-FxF6+rkr1rNSQrhUNYrAFJpRXNzlDoMxeXN5qI84939ylEv3qqPFKa85Oxr6tDaJKqwW6KKyo2v26TSv3k6LeA==}
+  xpath@0.0.35:
+    resolution: {integrity: sha512-8O+m2N04SwLpGw/1Grz2HD8ejnWDV7M1dMPgKKuOjhYh5W9H4pel/+06kInohIdpS2FeSbL4i8ID8c4tpxwq9Q==}
     engines: {node: '>=0.6.0'}
 
   xtend@4.0.2:
@@ -10492,11 +10498,10 @@ snapshots:
       '@types/json-schema': 7.0.15
       js-yaml: 4.3.2
 
-  '@authenio/xml-encryption@2.0.2':
+  '@authenio/xml-encryption@6.0.2':
     dependencies:
       '@xmldom/xmldom': 0.8.15
       escape-html: 1.0.3
-      xpath: 0.0.32
 
   '@aws-sdk/checksums@3.1001.7':
     dependencies:
@@ -10892,6 +10897,19 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
 
+  '@better-auth/core@1.7.15(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4)':
+    dependencies:
+      '@better-auth/utils': 0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86)
+      '@better-fetch/fetch': 1.3.3
+      '@standard-schema/spec': 1.1.0
+      better-call: 1.4.0(zod@4.6.7)
+      jose: 6.2.12
+      kysely: 0.28.17
+      nanostores: 1.5.4
+      zod: 4.6.7
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.1
+
   '@better-auth/drizzle-adapter@1.7.14(@better-auth/core@1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))':
     dependencies:
       '@better-auth/core': 1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4)
@@ -10914,9 +10932,9 @@ snapshots:
       '@better-auth/core': 1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4)
       '@better-auth/utils': 0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86)
 
-  '@better-auth/oauth-provider@1.7.14(@better-auth/core@1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.0(zod@4.6.7))':
+  '@better-auth/oauth-provider@1.7.14(@better-auth/core@1.7.15(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.0(zod@4.6.7))':
     dependencies:
-      '@better-auth/core': 1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4)
+      '@better-auth/core': 1.7.15(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4)
       '@better-auth/utils': 0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86)
       '@better-fetch/fetch': 1.3.3
       better-auth: 1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3))
@@ -10929,17 +10947,17 @@ snapshots:
       '@better-auth/core': 1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4)
       '@better-auth/utils': 0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86)
 
-  '@better-auth/sso@1.7.14(@better-auth/core@1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.0(zod@4.6.7))':
+  '@better-auth/sso@1.7.15(@better-auth/core@1.7.15(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.0(zod@4.6.7))':
     dependencies:
-      '@better-auth/core': 1.7.14(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4)
+      '@better-auth/core': 1.7.15(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.28.17)(nanostores@1.5.4)
       '@better-auth/utils': 0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86)
       '@better-fetch/fetch': 1.3.3
       '@xmldom/xmldom': 0.8.15
       better-auth: 1.7.14(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3))
       better-call: 1.4.0(zod@4.6.7)
-      fast-xml-parser: 5.11.1
-      jose: 6.2.12
-      samlify: 2.13.1
+      fast-xml-parser: 5.11.2
+      jose: 6.2.15
+      samlify: 2.15.1
       tldts: 7.4.19
       zod: 4.6.7
 
@@ -11809,7 +11827,7 @@ snapshots:
 
   '@noble/hashes@2.4.0': {}
 
-  '@nodable/entities@3.0.0': {}
+  '@nodable/entities@3.1.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -14676,10 +14694,6 @@ snapshots:
       get-intrinsic: 1.3.0
       is-array-buffer: 3.0.5
 
-  asn1@0.2.6:
-    dependencies:
-      safer-buffer: 2.1.2
-
   assertion-error@2.0.1: {}
 
   ast-kit@2.2.0:
@@ -16419,13 +16433,13 @@ snapshots:
       path-expression-matcher: 1.6.2
       xml-naming: 0.3.0
 
-  fast-xml-parser@5.11.1:
+  fast-xml-parser@5.11.2:
     dependencies:
-      '@nodable/entities': 3.0.0
+      '@nodable/entities': 3.1.0
       fast-xml-builder: 1.3.1
       is-unsafe: 2.0.2
       path-expression-matcher: 1.6.2
-      strnum: 2.4.2
+      strnum: 2.5.1
       xml-naming: 0.3.0
 
   fastest-levenshtein@1.0.16: {}
@@ -17364,6 +17378,8 @@ snapshots:
   jose@5.10.0: {}
 
   jose@6.2.12: {}
+
+  jose@6.2.15: {}
 
   js-beautify@2.0.3:
     dependencies:
@@ -18789,7 +18805,7 @@ snapshots:
       array.prototype.flatmap: 1.3.3
       es-errors: 1.3.0
       object.entries: 1.1.9
-      semver: 6.3.2
+      semver: 6.3.1
 
   node-fetch-native@1.6.7: {}
 
@@ -18806,10 +18822,6 @@ snapshots:
   node-releases@2.0.53: {}
 
   node-releases@2.0.60: {}
-
-  node-rsa@1.1.1:
-    dependencies:
-      asn1: 0.2.6
 
   nodemailer@10.2.1: {}
 
@@ -20089,15 +20101,14 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  samlify@2.13.1:
+  samlify@2.15.1:
     dependencies:
-      '@authenio/xml-encryption': 2.0.2
+      '@authenio/xml-encryption': 6.0.2
       '@xmldom/xmldom': 0.8.15
-      node-rsa: 1.1.1
       xml: 1.0.1
-      xml-crypto: 6.1.2
+      xml-crypto: 6.4.0
       xml-escape: 1.1.0
-      xpath: 0.0.34
+      xpath: 0.0.35
 
   sanitize-html@2.18.1:
     dependencies:
@@ -20532,7 +20543,7 @@ snapshots:
     dependencies:
       js-tokens: 10.0.0
 
-  strnum@2.4.2:
+  strnum@2.5.1:
     dependencies:
       anynum: 1.0.1
 
@@ -20821,11 +20832,11 @@ snapshots:
 
   tinyrainbow@3.1.1: {}
 
-  tldts-core@7.4.19: {}
+  tldts-core@7.4.20: {}
 
   tldts@7.4.19:
     dependencies:
-      tldts-core: 7.4.19
+      tldts-core: 7.4.20
 
   to-buffer@1.2.2:
     dependencies:
@@ -21913,7 +21924,7 @@ snapshots:
     dependencies:
       os-paths: 4.4.0
 
-  xml-crypto@6.1.2:
+  xml-crypto@6.4.0:
     dependencies:
       '@xmldom/is-dom-node': 1.0.1
       '@xmldom/xmldom': 0.8.15
@@ -21929,11 +21940,9 @@ snapshots:
 
   xmlbuilder@13.0.2: {}
 
-  xpath@0.0.32: {}
-
   xpath@0.0.33: {}
 
-  xpath@0.0.34: {}
+  xpath@0.0.35: {}
 
   xtend@4.0.2: {}
 
