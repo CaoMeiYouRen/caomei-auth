@@ -11,6 +11,9 @@ CREATE TABLE public.caomei_auth_two_factor (
 	user_id varchar(36) NOT NULL,
 	secret text NOT NULL,
 	backup_codes text NULL,
+	verified boolean DEFAULT true NOT NULL,
+	failed_verification_count integer DEFAULT 0 NOT NULL,
+	locked_until timestamptz NULL,
 	CONSTRAINT "PK_9ad9146e5846f04d44eb40299e8" PRIMARY KEY (id)
 );
 CREATE INDEX "IDX_ed7df12901fcf60dc40654dc47" ON public.caomei_auth_two_factor USING btree (user_id);

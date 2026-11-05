@@ -232,6 +232,12 @@ CREATE TABLE IF NOT EXISTS caomei_auth_two_factor (
     user_id      VARCHAR (36) NOT NULL,
     secret       TEXT         NOT NULL,
     backup_codes TEXT,
+    verified     BOOLEAN      NOT NULL
+                              DEFAULT 1,
+    failed_verification_count INTEGER
+                              NOT NULL
+                              DEFAULT 0,
+    locked_until DATETIME,
     CONSTRAINT UQ_4916ed9f34f6e9e0a0cfb89a752 UNIQUE (
         user_id
     ),

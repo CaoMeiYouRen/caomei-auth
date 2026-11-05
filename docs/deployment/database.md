@@ -460,7 +460,7 @@ slow_query_log_file = /var/log/mysql/slow.log
 - `column OAuthAccessToken.token does not exist`
 - `Property "failedVerificationCount" was not found in "TwoFactor"`
 
-迁移脚本：[`scripts/migrations/2026-11-06-better-auth-1-7-oauth.sql`](../../scripts/migrations/2026-11-06-better-auth-1-7-oauth.sql)。
+迁移脚本：[`database/postgres/2026-11-06-better-auth-1-7-oauth.sql`](../../database/postgres/2026-11-06-better-auth-1-7-oauth.sql)。
 
 **执行前**（必须）：
 
@@ -472,7 +472,7 @@ pg_dump -Fc -d "$DATABASE_URL" -f backup_before_better_auth_1_7.dump
 
 ```bash
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 \
-  -f scripts/migrations/2026-11-06-better-auth-1-7-oauth.sql
+  -f database/postgres/2026-11-06-better-auth-1-7-oauth.sql
 ```
 
 脚本行为：
