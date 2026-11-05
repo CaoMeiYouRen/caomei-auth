@@ -454,6 +454,12 @@ const {
     user-select: none;
 }
 
+@include dark-mode {
+    .checkbox-label {
+        color: $dark-secondary;
+    }
+}
+
 .agreement-link {
     color: $primary;
     font-weight: 500;

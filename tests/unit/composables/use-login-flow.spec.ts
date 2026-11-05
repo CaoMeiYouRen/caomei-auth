@@ -47,7 +47,8 @@ vi.mock('primevue/usetoast', () => ({
 
 vi.mock('@vueuse/core', () => ({
     useUrlSearchParams: vi.fn(() => reactive({ mode: 'username' })),
-    useDark: vi.fn(() => ref(false)),
+    useColorMode: vi.fn(() => ref('light')),
+    usePreferredDark: vi.fn(() => ref(false)),
 }))
 
 vi.mock('@/composables/use-clarity', () => ({

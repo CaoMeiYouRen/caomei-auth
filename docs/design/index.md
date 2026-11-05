@@ -37,3 +37,4 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [caomei-ui 迁移 P0 基线与护栏](./governance/2026-11-05-caomei-ui-p0-baseline.md): 用量快照脚本、路由白名单初值、1.0.0 精确锁定与回退方案。
 -   [caomei-ui P2 视觉基线方案](./governance/2026-11-05-caomei-ui-p2-visual-baseline-plan.md): 截图矩阵、已知预期差异与差异登记放行规则（不建截图工程）。
 -   [i18n 技术验证记录](./governance/2026-11-05-i18n-verification.md): `@nuxtjs/i18n@10` 接入验证、Zod per-parse map 结果与 M2 准入结论。
+-   [阶段 2 UI 视觉审查](./governance/2026-11-05-ui-visual-review.md): 语言切换、暗色主题、社交按钮与 caomei-ui 基座的视觉回归结论。

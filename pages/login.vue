@@ -202,7 +202,7 @@
                             :key="provider.provider"
                             v-tooltip.top="provider.tooltip"
                             class="social-btn"
-                            :style="{color: provider.color}"
+                            :style="{'--social-color': provider.color, '--social-color-dark': provider.colorDark}"
                             :icon="provider.icon || `mdi mdi-${provider.provider}`"
                             :label="provider.label || `使用 ${provider.name} 账号登录`"
                             outlined
@@ -352,6 +352,15 @@ const {
     display: flex;
     width: 100%;
     margin-bottom: 1em;
+}
+
+// 社交按钮品牌色：按 CSS 变量切换，避免 SSR 依赖系统主题
+.social-btn {
+    color: var(--social-color);
+}
+
+:global(.dark) .social-btn {
+    color: var(--social-color-dark, var(--social-color));
 }
 
 // 添加媒体查询优化小屏幕显示

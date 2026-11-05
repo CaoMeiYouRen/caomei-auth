@@ -3,9 +3,9 @@
         class="theme-toggle"
         type="button"
         :aria-label="buttonLabel"
-        :aria-pressed="isDark"
+        :aria-pressed="effectiveDark"
         :title="buttonLabel"
-        @click="toggleDark()"
+        @click="toggle()"
     >
         <i
             class="mdi"
@@ -17,21 +17,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useDark, usePreferredDark, useToggle } from '@vueuse/core'
+import { computed, onMounted, ref } from 'vue'
+import { useAppTheme } from '@/composables/use-app-theme'
 
-const isDark = useDark({})
-const toggleDark = () => isDark.value = !isDark.value
+const { isDark, toggle } = useAppTheme()
 
-const buttonLabel = computed(() => (isDark.value ? '切换为亮色模式' : '切换为暗色模式'))
-const iconClass = computed(() => (isDark.value ? 'mdi-weather-night' : 'mdi-white-balance-sunny'))
+// 服务端不知道系统主题；挂载前统一按浅色渲染，挂载后再同步，
+// 避免 SSR / hydration 的图标与文案不一致
+const mounted = ref(false)
+onMounted(() => {
+    mounted.value = true
+})
+const effectiveDark = computed(() => mounted.value && isDark.value)
 
-const preferredDark = usePreferredDark()
-
-// 同步系统偏好设置的暗色模式状态
-watch(preferredDark, (newVal) => {
-    isDark.value = newVal
-}, { immediate: true })
+const buttonLabel = computed(() => (effectiveDark.value ? '切换为亮色模式' : '切换为暗色模式'))
+const iconClass = computed(() => (effectiveDark.value ? 'mdi-weather-night' : 'mdi-white-balance-sunny'))
 </script>
 
 <style scoped lang="scss">

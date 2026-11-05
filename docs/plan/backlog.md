@@ -142,6 +142,11 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
 - **SonarQube / Codecov 集成**：接入外部质量平台，持续追踪覆盖率与代码异味趋势。
 - **Nx / Turborepo 调研**：评估分模块构建的可行性，提升超大项目构建速度。
 
+### 3.4 UI 与主题
+
+- **Admin 布局暗色主题补全**：暗色模式下侧边栏已切换，但内容区背景、卡片、表格仍为浅色（`layouts/admin.vue` 与 admin 页面存在硬编码浅色背景）。2026-11-05 视觉审查发现，属既有问题，未在本阶段修改。
+- **Demo 模式语言切换偏移验证**：`data-preset` / GitHub 角标与右上角语言切换共存时的偏移仅在 `NUXT_PUBLIC_DEMO_MODE=true` 下可见，需在 Demo 构建中补一次视觉确认。
+
 ---
 
 ## 4. 已否决 / 暂缓提案

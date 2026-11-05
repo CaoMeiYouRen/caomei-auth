@@ -1,6 +1,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { useUrlSearchParams, useDark } from '@vueuse/core'
+import { useUrlSearchParams } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
 import { emailSchema, phoneSchema, usernameSchema } from '@/utils/shared/validators'
 import {
@@ -27,7 +27,6 @@ export function useLoginFlow() {
     const phoneEnabled = config.phoneEnabled
     const usernameEnabled = config.usernameEnabled
     const toast = useToast()
-    const isDark = useDark()
     const clarity = useClarity()
 
     // State
@@ -57,14 +56,13 @@ export function useLoginFlow() {
 
     // Social
     const { data: providersData } = useFetch('/api/social/providers')
-    // 用 computed 派生，保证 SSR 阶段就能拿到当前主题的颜色，避免客户端 hydration 时才填充列表
-    const socialProviders = computed<SocialProvider[]>(() => providersData?.value?.providers?.map((provider: any) => {
-        const theme = isDark.value ? 'dark' : 'light'
-        return {
-            ...provider,
-            color: getSocialColor(provider.provider, theme),
-        }
-    }) || [])
+    // 明暗品牌色都输出到 CSS 变量，由 .dark 选择器切换：
+    // 服务端不需要知道系统主题，避免 SSR 与客户端配色不一致造成 hydration mismatch
+    const socialProviders = computed<SocialProvider[]>(() => providersData?.value?.providers?.map((provider: any) => ({
+        ...provider,
+        color: getSocialColor(provider.provider, 'light'),
+        colorDark: getSocialColor(provider.provider, 'dark'),
+    })) || [])
 
     // URL Params
     const params = useUrlSearchParams<{ mode: 'username' | 'email' | 'phone' }>('history', { initialValue: { mode: 'username' } })

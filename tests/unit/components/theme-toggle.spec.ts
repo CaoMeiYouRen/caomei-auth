@@ -8,80 +8,69 @@ const ButtonStub = {
     template: '<button><slot /></button>',
 }
 
-// Mock @vueuse/core
-const isDark = ref(false)
+// Mock @vueuse/core：useAppTheme 依赖 useColorMode + usePreferredDark
+const mode = ref<'auto' | 'light' | 'dark'>('auto')
 const preferredDark = ref(false)
 
 vi.mock('@vueuse/core', () => ({
-    useDark: vi.fn(() => isDark),
-    useToggle: vi.fn(), // Not used in the component logic shown, but imported
+    useColorMode: vi.fn(() => mode),
     usePreferredDark: vi.fn(() => preferredDark),
 }))
 
+const mountToggle = () => mount(ThemeToggle, {
+    global: {
+        stubs: {
+            Button: ButtonStub,
+        },
+    },
+})
+
 describe('ThemeToggle', () => {
     beforeEach(() => {
-        isDark.value = false
+        mode.value = 'auto'
         preferredDark.value = false
     })
 
-    it('renders correctly in light mode', () => {
-        const wrapper = mount(ThemeToggle, {
-            global: {
-                stubs: {
-                    Button: ButtonStub,
-                },
-            },
-        })
+    it('renders correctly in light mode', async () => {
+        const wrapper = mountToggle()
+        await nextTick()
+
         expect(wrapper.find('.mdi-white-balance-sunny').exists()).toBe(true)
         expect(wrapper.find('button').attributes('title')).toBe('切换为暗色模式')
         expect(wrapper.find('button').attributes('aria-label')).toBe('切换为暗色模式')
     })
 
     it('renders correctly in dark mode', async () => {
-        isDark.value = true
-        preferredDark.value = true // Ensure watcher doesn't reset isDark to false
-        const wrapper = mount(ThemeToggle, {
-            global: {
-                stubs: {
-                    Button: ButtonStub,
-                },
-            },
-        })
+        mode.value = 'dark'
+        const wrapper = mountToggle()
+        await nextTick()
+
         expect(wrapper.find('.mdi-weather-night').exists()).toBe(true)
         expect(wrapper.find('button').attributes('title')).toBe('切换为亮色模式')
+        expect(wrapper.find('button').attributes('aria-pressed')).toBe('true')
     })
 
     it('toggles theme on click', async () => {
-        const wrapper = mount(ThemeToggle, {
-            global: {
-                stubs: {
-                    Button: ButtonStub,
-                },
-            },
-        })
+        const wrapper = mountToggle()
+        await nextTick()
 
         await wrapper.find('button').trigger('click')
-        expect(isDark.value).toBe(true)
+        expect(mode.value).toBe('dark')
 
         await wrapper.find('button').trigger('click')
-        expect(isDark.value).toBe(false)
+        expect(mode.value).toBe('light')
     })
 
-    it('syncs with system preference', async () => {
-        mount(ThemeToggle, {
-            global: {
-                stubs: {
-                    Button: ButtonStub,
-                },
-            },
-        })
+    it('follows system preference in auto mode', async () => {
+        const wrapper = mountToggle()
+        await nextTick()
 
         preferredDark.value = true
         await nextTick()
-        expect(isDark.value).toBe(true)
+        expect(wrapper.find('.mdi-weather-night').exists()).toBe(true)
 
         preferredDark.value = false
         await nextTick()
-        expect(isDark.value).toBe(false)
+        expect(wrapper.find('.mdi-white-balance-sunny').exists()).toBe(true)
     })
 })

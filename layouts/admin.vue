@@ -223,6 +223,29 @@ const toggleSidebar = () => {
     border-top: 1px solid #e2e8f0;
     display: flex;
     justify-content: flex-start;
+
+    @include dark-mode {
+        border-top-color: $dark-border-color;
+
+        :deep(.language-switcher__trigger) {
+            background: $dark-background-light;
+            color: $dark-secondary;
+            border-color: $dark-border-color;
+        }
+
+        :deep(.language-switcher__menu) {
+            background: $dark-background-light;
+            border-color: $dark-border-color;
+        }
+
+        :deep(.language-switcher__option) {
+            color: $dark-secondary;
+
+            &:hover {
+                background: rgb(255 255 255 / 0.08);
+            }
+        }
+    }
 }
 
 .admin-sidebar.collapsed .sidebar-footer {
