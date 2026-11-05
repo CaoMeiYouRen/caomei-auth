@@ -235,7 +235,7 @@
     ]
   },
   "metrics": {
-    "files": 73,
+    "files": 74,
     "openTags": 301,
     "useToastFiles": [
       "components/admin/oauth/api-docs-dialog.vue",
@@ -346,8 +346,9 @@
       "unit/composables/utils/use-confirm-action.spec.ts",
       "unit/composables/utils/use-logout.spec.ts"
     ],
-    "pTokenOccurrences": 47,
+    "pTokenOccurrences": 52,
     "pTokenFiles": [
+      "components/base/language-switcher.vue",
       "styles/_theme.scss"
     ],
     "pClassOccurrences": 131,

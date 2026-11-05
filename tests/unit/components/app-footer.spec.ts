@@ -29,7 +29,6 @@ const mountAsync = async (component: any, options: any = {}) => {
         global: {
             ...options.global,
             stubs: {
-                BaseLanguageSwitcher: true,
                 ...options.global?.stubs,
             },
             components: {

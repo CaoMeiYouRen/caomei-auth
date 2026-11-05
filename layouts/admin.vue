@@ -119,6 +119,9 @@
                     </NuxtLink>
                 </div>
             </nav>
+            <div class="sidebar-footer">
+                <BaseLanguageSwitcher :compact="isCollapsed" />
+            </div>
         </div>
 
         <div
@@ -212,6 +215,19 @@ const toggleSidebar = () => {
             width: 100%;
         }
     }
+}
+
+.sidebar-footer {
+    padding: 0.75rem 1rem;
+    margin-top: auto;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.admin-sidebar.collapsed .sidebar-footer {
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
 }
 
 .sidebar-header {
