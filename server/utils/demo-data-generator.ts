@@ -93,6 +93,8 @@ export function generateDemoUsers(count: number = 50): DemoUser[] {
 
         users.push({
             id: snowflake.generateId(),
+            // better-auth username 只允许 [a-zA-Z0-9_.]，中文姓名不能直接当用户名
+            username: `demo_user_${i + 1}`,
             name,
             email,
             emailVerified: secureRandom() > 0.2,

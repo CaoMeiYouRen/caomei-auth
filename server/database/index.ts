@@ -101,7 +101,7 @@ async function populateDemoDataAsync(): Promise<void> {
                 password: demoConfig.password,
                 role: demoConfig.normalUser.role as 'user',
                 data: {
-                    username: demoConfig.normalUser.name,
+                    username: demoConfig.normalUser.username || demoConfig.normalUser.email.split('@')[0],
                     displayUsername: demoConfig.normalUser.name,
                     phoneNumber: demoConfig.normalUser.phoneNumber, // 去掉掩码字符
                     phoneNumberVerified: demoConfig.normalUser.phoneNumberVerified,
@@ -118,7 +118,7 @@ async function populateDemoDataAsync(): Promise<void> {
 
         // 批量创建假用户
         let createdUsersCount = 2 // （因为已经创建了管理员和普通用户）
-        for (const userData of demoUsers) {
+        for (const [index, userData] of demoUsers.entries()) {
             try {
                 // 清理数据，去掉掩码字符
                 const cleanEmail = userData.email
@@ -132,7 +132,7 @@ async function populateDemoDataAsync(): Promise<void> {
                         password: demoConfig.password,
                         role: (userData.role || 'user') as 'user' | 'admin',
                         data: {
-                            username: userData.name.toLowerCase(),
+                            username: userData.username || `demo_user_${index + 1}`,
                             displayUsername: userData.name,
                             phoneNumber: cleanPhoneNumber,
                             phoneNumberVerified: cleanPhoneNumber ? userData.phoneNumberVerified : false,

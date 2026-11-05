@@ -39,7 +39,19 @@ describe('server/utils/demo-data-generator', () => {
             expect(['active', 'inactive', 'suspended']).toContain(user.status)
             expect(user.createdAt).toBeInstanceOf(Date)
             expect(user.updatedAt).toBeInstanceOf(Date)
+            // better-auth username 校验：3–30 位 [a-zA-Z0-9_.]
+            expect(user.username).toMatch(/^[\w.]{3,30}$/u)
         })
+        expect(new Set(users.map((user) => user.username)).size).toBe(users.length)
+    })
+
+    it('uses better-auth compatible usernames for built-in demo accounts', () => {
+        const config = demoModule.getDemoConfig()
+
+        for (const account of [config.adminUser, config.normalUser]) {
+            expect(account.username).toMatch(/^[\w.]{3,30}$/u)
+            expect(account.name).not.toBe(account.username)
+        }
     })
 
     it('produces demo oauth apps with secrets, redirect URIs, and scopes', () => {
