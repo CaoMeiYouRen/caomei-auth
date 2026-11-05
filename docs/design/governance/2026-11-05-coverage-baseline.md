@@ -72,7 +72,33 @@ pnpm test:coverage
 | 3 | `composables/admin/use-sso-providers.ts` | 63.0%（29/46） | 管理端 SSO 逻辑 |
 | 3 | `composables/admin/use-application-management.ts` | 66.7%（36/54） | 管理端应用逻辑 |
 
-## 5. 关联文档
+## 5. 定向补测结果（M3-2 复测）
+
+2026-11-05 补测后再次执行 `pnpm test:coverage`：
+
+| 指标 | 基线 | 补测后 |
+| :--- | :--- | :--- |
+| Statements | 75.74% | **78.26%**（3637 / 4647） |
+| Branches | 58.26% | 59.84% |
+| Functions | 66.09% | 68.03% |
+| Lines | 75.95% | **78.49%**（3529 / 4496） |
+
+按范围（Statements）：
+
+| 范围 | 阶段下限 | 基线 | 补测后 | 结论 |
+| :--- | :--- | :--- | :--- | :--- |
+| 全局 | ≥75.74% | 75.74% | 78.26% | 达标 |
+| `server/api` | ≥95% | 95.94% | 95.94% | 达标 |
+| `composables` | ≥80% | 77.95% | 84.35% | 达标 |
+| `components/base` | ≥75% | 72.53% | 90.11% | 达标 |
+
+补测内容：
+
+- `composables/use-login-flow.ts`（45.7% → 82.1%）：2FA 弹窗与三种验证方式、发送 OTP 成功 / 验证码失败 / 接口失败、匿名与社交登录、邮箱 / 手机号验证码校验、社交图标配色映射。
+- `composables/use-register-flow.ts`（55.7% → 72.6%）：验证码失败、注册接口错误、手机号验证失败、更新用户失败、发送注册验证码前的手机号校验、模式切换清理错误。
+- `components/base/phone-input.vue`（58.3% → 91.7%）：错误态渲染、`modelValue` 同步 / 解析失败 / 清空、切换区域后重新格式化。
+
+## 6. 关联文档
 
 -   [阶段 2 范围登记](./2026-11-05-phase2-registration.md)｜[待办事项](../../plan/todo.md)｜[Backlog](../../plan/backlog.md)
 -   [测试规范](../../standards/testing.md)｜[Zod 迁移计划](../../plan/zod-migration.md)

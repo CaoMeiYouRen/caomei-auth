@@ -5,7 +5,7 @@ import PhoneInput from '@/components/base/phone-input.vue'
 // Mock google-libphonenumber
 vi.mock('google-libphonenumber', () => ({
     default: {
-        PhoneNumberFormat: { E164: 1 },
+        PhoneNumberFormat: { E164: 1, NATIONAL: 2 },
         PhoneNumberUtil: {
             getInstance: () => ({}),
         },
@@ -27,6 +27,7 @@ vi.mock('@/utils/shared/phone', () => ({
     phoneUtil: {
         parse: vi.fn(),
         format: vi.fn(),
+        getRegionCodeForNumber: vi.fn(),
     },
 }))
 
@@ -35,7 +36,7 @@ describe('PhoneInput', () => {
         stubs: {
             Dropdown: {
                 template: `
-          <select class="p-dropdown-stub" :value="modelValue" @change="$emit('update:modelValue', $event.target.value); $emit('change')">
+          <select class="p-dropdown-stub" :value="modelValue?.value" @change="$emit('update:modelValue', options.find(o => o.value === $event.target.value)); $emit('change')">
             <option v-for="opt in options" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
           </select>
         `,
@@ -110,5 +111,106 @@ describe('PhoneInput', () => {
         expect(wrapper.emitted('update:modelValue')).toBeTruthy()
         // Since we mocked formatPhoneNumber to return +8613800138000
         expect(wrapper.emitted('update:modelValue')![0]).toEqual(['+8613800138000'])
+    })
+
+    it('renders the error message', () => {
+        const wrapper = mount(PhoneInput, {
+            props: {
+                id: 'test-phone',
+                modelValue: '',
+                error: '手机号格式不正确',
+            },
+            global,
+        })
+
+        expect(wrapper.find('.error-message').text()).toBe('手机号格式不正确')
+        expect(wrapper.find('.form-input').classes()).toContain('p-invalid')
+    })
+
+    it('syncs a valid modelValue into region and national number', async () => {
+        const { phoneUtil } = await import('@/utils/shared/phone')
+        const parsed = { countryCode: 1 }
+        vi.mocked(phoneUtil.parse).mockReturnValue(parsed as any)
+        vi.mocked(phoneUtil.getRegionCodeForNumber).mockReturnValue('US' as any)
+        vi.mocked(phoneUtil.format).mockReturnValue('(380) 013-8000' as any)
+
+        const wrapper = mount(PhoneInput, {
+            props: {
+                id: 'test-phone',
+                modelValue: '',
+            },
+            global,
+        })
+
+        await wrapper.setProps({ modelValue: '+13800138000' })
+        await wrapper.vm.$nextTick()
+
+        expect(phoneUtil.parse).toHaveBeenCalledWith('+13800138000')
+        expect(vi.mocked(phoneUtil.format)).toHaveBeenCalledWith(parsed, 2)
+        expect((wrapper.find('.p-dropdown-stub').element as HTMLSelectElement).value).toBe('US')
+    })
+
+    it('resets when the modelValue cannot be parsed', async () => {
+        const { phoneUtil } = await import('@/utils/shared/phone')
+        vi.mocked(phoneUtil.parse).mockImplementation(() => {
+            throw new Error('invalid')
+        })
+
+        const wrapper = mount(PhoneInput, {
+            props: {
+                id: 'test-phone',
+                modelValue: '',
+                defaultRegion: 'CN',
+            },
+            global,
+        })
+
+        await wrapper.setProps({ modelValue: 'not-a-phone' })
+        await wrapper.vm.$nextTick()
+
+        expect((wrapper.find('.p-dropdown-stub').element as HTMLSelectElement).value).toBe('CN')
+        expect((wrapper.find('.p-inputtext-stub').element as HTMLInputElement).value).toBe('')
+    })
+
+    it('resets when the modelValue is cleared', async () => {
+        const { phoneUtil } = await import('@/utils/shared/phone')
+        vi.mocked(phoneUtil.parse).mockReturnValue({} as any)
+        vi.mocked(phoneUtil.getRegionCodeForNumber).mockReturnValue('US' as any)
+        vi.mocked(phoneUtil.format).mockReturnValue('(380) 013-8000' as any)
+
+        const wrapper = mount(PhoneInput, {
+            props: {
+                id: 'test-phone',
+                modelValue: '+13800138000',
+                defaultRegion: 'CN',
+            },
+            global,
+        })
+
+        await wrapper.setProps({ modelValue: '' })
+        await wrapper.vm.$nextTick()
+
+        expect((wrapper.find('.p-dropdown-stub').element as HTMLSelectElement).value).toBe('CN')
+        expect((wrapper.find('.p-inputtext-stub').element as HTMLInputElement).value).toBe('')
+    })
+
+    it('reformats when the region changes', async () => {
+        const { formatPhoneNumber } = await import('@/utils/shared/phone')
+        vi.mocked(formatPhoneNumber).mockClear()
+
+        const wrapper = mount(PhoneInput, {
+            props: {
+                id: 'test-phone',
+                modelValue: '',
+                defaultRegion: 'CN',
+            },
+            global,
+        })
+
+        await wrapper.find('.p-inputtext-stub').setValue('13800138000')
+        await wrapper.find('.p-dropdown-stub').setValue('US')
+        await wrapper.vm.$nextTick()
+
+        expect(formatPhoneNumber).toHaveBeenCalledWith('13800138000', 'US')
     })
 })

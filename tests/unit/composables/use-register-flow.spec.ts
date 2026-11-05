@@ -152,4 +152,101 @@ describe('useRegisterFlow', () => {
         })
         expect(updateUserMock).toHaveBeenCalled()
     })
+
+    it('switches mode and clears errors', () => {
+        const { activeTab, errors, changeMode } = useRegisterFlow()
+
+        changeMode('phone')
+
+        expect(activeTab.value).toBe('phone')
+        expect(errors.value).toEqual({})
+    })
+
+    it('stops registration when captcha is not resolved', async () => {
+        const { email, password, confirmPassword, agreedToTerms, errors, register } = useRegisterFlow()
+        email.value = 'test@example.com'
+        password.value = 'password123'
+        confirmPassword.value = 'password123'
+        agreedToTerms.value = true
+
+        const { resolveCaptchaToken } = await import('@/utils/web/captcha')
+        vi.mocked(resolveCaptchaToken).mockRejectedValue(new Error('请先完成验证码验证'))
+
+        const { authClient } = await import('@/lib/auth-client')
+        const signUpMock = vi.fn()
+        authClient.signUp.email = signUpMock
+
+        await register()
+
+        expect(signUpMock).not.toHaveBeenCalled()
+        expect(errors.value.captcha).toBe('请先完成验证码验证')
+        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'warn' }))
+    })
+
+    it('reports email registration api error', async () => {
+        const { email, password, confirmPassword, agreedToTerms, register } = useRegisterFlow()
+        email.value = 'test@example.com'
+        password.value = 'password123'
+        confirmPassword.value = 'password123'
+        agreedToTerms.value = true
+
+        const { resolveCaptchaToken } = await import('@/utils/web/captcha')
+        vi.mocked(resolveCaptchaToken).mockResolvedValue(null)
+
+        const { authClient } = await import('@/lib/auth-client')
+        authClient.signUp.email = vi.fn().mockResolvedValue({ error: { message: '邮箱已存在' } })
+
+        await register()
+
+        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error', detail: '邮箱已存在' }))
+    })
+
+    it('reports phone verification failure', async () => {
+        const { activeTab, phone, phoneCode, password, confirmPassword, agreedToTerms, register } = useRegisterFlow()
+        activeTab.value = 'phone'
+        phone.value = '+8613800138000'
+        phoneCode.value = '123456'
+        password.value = 'password123'
+        confirmPassword.value = 'password123'
+        agreedToTerms.value = true
+
+        const { authClient } = await import('@/lib/auth-client')
+        authClient.phoneNumber = { verify: vi.fn().mockResolvedValue({ data: { status: false } }) } as any
+
+        await register()
+
+        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error', detail: '手机号码验证失败' }))
+    })
+
+    it('reports update user failure after phone verification', async () => {
+        const { activeTab, phone, phoneCode, password, confirmPassword, agreedToTerms, register } = useRegisterFlow()
+        activeTab.value = 'phone'
+        phone.value = '+8613800138000'
+        phoneCode.value = '123456'
+        password.value = 'password123'
+        confirmPassword.value = 'password123'
+        agreedToTerms.value = true
+
+        const { authClient } = await import('@/lib/auth-client')
+        authClient.phoneNumber = { verify: vi.fn().mockResolvedValue({ data: { status: true } }) } as any
+        authClient.updateUser = vi.fn().mockResolvedValue({ error: { message: '更新失败' } })
+
+        await register()
+
+        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error', detail: '更新失败' }))
+    })
+
+    it('validates phone before sending the register code', async () => {
+        const phoneSend = vi.fn()
+        const { usePhoneOtp } = await import('@/composables/use-otp')
+        vi.mocked(usePhoneOtp).mockReturnValue({ send: phoneSend, sending: ref(false) } as any)
+
+        const { sendPhoneCode, phone, errors } = useRegisterFlow()
+        phone.value = '123'
+        await sendPhoneCode()
+
+        const validate = phoneSend.mock.calls[0]?.[3] as () => boolean
+        expect(validate()).toBe(false)
+        expect(errors.value.phone).toBeTruthy()
+    })
 })
