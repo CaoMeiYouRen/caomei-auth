@@ -32,3 +32,4 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [PrimeVue → caomei-ui 迁移评估](./governance/2026-11-05-caomei-ui-migration-evaluation.md): 组件库迁移的现状盘点、逐组件映射、主题 / 测试耦合、分阶段计划与风险。
 -   [i18n 评估与实施方案](./governance/2026-11-05-i18n-evaluation.md): 原 i18n 规划的复核修订、Locale Registry、模块化消息、Zod v4 错误本地化、服务端 / 邮件方案与批次。
 -   [阶段 2 范围登记：安全收口与迁移预备](./governance/2026-11-05-phase2-registration.md): 当前阶段的 5 条主线 / 11 条原子条目、验收与边界。
+-   [CodeQL #20 复核记录](./governance/2026-11-05-codeql-20-review.md): `js/insufficient-password-hash` 误报判定依据、dismiss 处置与慢哈希迁移取舍。

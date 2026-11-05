@@ -7,11 +7,11 @@
             "alertNumber": 20,
             "ruleId": "js/insufficient-password-hash",
             "path": "server/utils/oauth-client-view.ts",
-            "category": "hard-fix",
-            "reason": "OAuth client secret 是高熵随机凭证，SHA-256 为 better-auth 默认存储算法（storeClientSecret: hashed）；改用慢哈希需等上游提供可配置哈希，本发布窗口无法完成。2026-11-30 前复核：确认误报则 dismiss 并改按 false-positive 登记。",
+            "category": "false-positive",
+            "reason": "2026-11-05 已按误报 dismiss：OAuth client secret 是 CSPRNG 生成的高熵凭证（真实 secret 24 字节约 192 bit；演示 secret 为 demo_secret_ + 16 位 base62 约 95 bit），不可猜测、离线爆破不可行；SHA-256 是 @better-auth/oauth-provider 默认存储算法且比较使用 constant time；CWE-916 面向低熵口令，不适用于机器生成的 client secret。复核依据见 docs/design/governance/2026-11-05-codeql-20-review.md。",
             "tracking": "docs/plan/todo.md#阶段-2-原子条目",
-            "expiresAt": "2026-11-30",
-            "note": "若上游提供可配置哈希，优先移除豁免。"
+            "expiresAt": "2027-05-31",
+            "note": "上游 1.7.14 已支持自定义 storeClientSecret hash，但改用慢哈希会使存量哈希对应的 client 认证失效（无法从哈希回填明文），故不迁移；若未来支持强制重签 client secret，再重新评估。"
         }
     ]
 }

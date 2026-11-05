@@ -14,7 +14,7 @@
 
 | 编号 | 条目 | 交付面 | 状态 |
 | :--- | :--- | :--- | :--- |
-| M1-1 | CodeQL #20 复核与豁免处置（2026-11-30 前） | `.github/security-alert-exemptions.json`、告警结论、复核记录 | 待执行 |
+| M1-1 | CodeQL #20 复核与豁免处置（2026-11-30 前） | `.github/security-alert-exemptions.json`、告警结论、复核记录 | 已完成（误报 dismiss，2026-11-05） |
 | M1-2 | SSO 历史配置排查与安全台账复核 | `GET /api/admin/sso/audit` 结果、清理记录、豁免台账 | 待执行 |
 | M2-1 | P1 4 个路径参数 handlers + 测试 | `oauth/client/[id].get`、`admin/oauth/applications/[id].delete`、`admin/sso/providers/[id].get`、`admin/sso/providers/[id].delete` | 待执行 |
 | M2-2 | P2/P3 4 个查询参数 handlers + 测试 | 分页 / 筛选 / 日志 / 社交提供商查询 | 待执行 |
