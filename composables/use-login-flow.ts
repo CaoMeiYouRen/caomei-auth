@@ -1,4 +1,4 @@
-import { ref, watch, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useUrlSearchParams, useDark } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
@@ -56,24 +56,20 @@ export function useLoginFlow() {
     const pendingLoginData = ref<any>(null)
 
     // Social
-    const socialProviders = ref<SocialProvider[]>([])
     const { data: providersData } = useFetch('/api/social/providers')
+    // 用 computed 派生，保证 SSR 阶段就能拿到当前主题的颜色，避免客户端 hydration 时才填充列表
+    const socialProviders = computed<SocialProvider[]>(() => providersData?.value?.providers?.map((provider: any) => {
+        const theme = isDark.value ? 'dark' : 'light'
+        return {
+            ...provider,
+            color: getSocialColor(provider.provider, theme),
+        }
+    }) || [])
 
     // URL Params
     const params = useUrlSearchParams<{ mode: 'username' | 'email' | 'phone' }>('history', { initialValue: { mode: 'username' } })
 
     // Methods
-    const changeSocialColor = (darkMode: boolean) => {
-        socialProviders.value = providersData?.value?.providers?.map((provider: any) => {
-            const theme = darkMode ? 'dark' : 'light'
-            const color = getSocialColor(provider.provider, theme)
-            return {
-                ...provider,
-                color,
-            }
-        }) || []
-    }
-
     const changeMode = (mode: 'username' | 'email' | 'phone') => {
         if (mode === 'phone' && !phoneEnabled) {
             toast.add({ severity: 'error', summary: '功能未启用', detail: '短信功能未启用，请使用其他方式登录', life: 3000 })
@@ -492,15 +488,7 @@ export function useLoginFlow() {
         )
     }
 
-    // Watchers & Lifecycle
-    watch(isDark, (newVal) => {
-        changeSocialColor(newVal)
-    }, { immediate: true })
-
-    watch(providersData, () => {
-        changeSocialColor(isDark.value)
-    })
-
+    // Lifecycle
     onMounted(() => {
         if (!['username', 'email', 'phone'].includes(params.mode as string)) {
             params.mode = usernameEnabled ? 'username' : 'email'
@@ -518,8 +506,6 @@ export function useLoginFlow() {
 
         clarity.setTag('page_type', 'login')
         clarity.setTag('initial_login_method', params.mode)
-
-        changeSocialColor(isDark.value)
     })
 
     return {
