@@ -33,4 +33,22 @@ export class TwoFactor extends BaseEntity {
     @CustomColumn({ type: 'text', nullable: true })
     backupCodes: string
 
+    /**
+     * 是否已完成 2FA 验证（better-auth 1.7 新增）
+     */
+    @CustomColumn({ type: 'boolean', default: true, nullable: false })
+    verified: boolean
+
+    /**
+     * 连续验证失败次数（better-auth 1.7 新增）
+     */
+    @CustomColumn({ type: 'integer', default: 0, nullable: false })
+    failedVerificationCount: number
+
+    /**
+     * 锁定截止时间（better-auth 1.7 新增）
+     */
+    @CustomColumn({ type: 'datetime', nullable: true })
+    lockedUntil: Date
+
 }

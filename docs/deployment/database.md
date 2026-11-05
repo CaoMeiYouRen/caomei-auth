@@ -452,6 +452,53 @@ slow_query_log_file = /var/log/mysql/slow.log
     psql -U caomei_auth -d caomei_auth -f mysql_dump.sql
     ```
 
+### better-auth 1.7 结构升级（PostgreSQL）
+
+从 better-auth 1.6 升级到 1.7 后，OAuth Provider 与 Two-Factor 的表结构发生变化。生产环境使用 `synchronize: false`，不会自动改表，典型报错：
+
+- `relation "caomei_auth_oauth_refresh_token" does not exist`
+- `column OAuthAccessToken.token does not exist`
+- `Property "failedVerificationCount" was not found in "TwoFactor"`
+
+迁移脚本：[`scripts/migrations/2026-11-06-better-auth-1-7-oauth.sql`](../../scripts/migrations/2026-11-06-better-auth-1-7-oauth.sql)。
+
+**执行前**（必须）：
+
+```bash
+pg_dump -Fc -d "$DATABASE_URL" -f backup_before_better_auth_1_7.dump
+```
+
+**执行**（建议维护窗口内，单事务）：
+
+```bash
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 \
+  -f scripts/migrations/2026-11-06-better-auth-1-7-oauth.sql
+```
+
+脚本行为：
+
+- `oauth_application` → `oauth_client`，字段重映射，组合字段转 JSON 数组；
+- 旧 `oauth_access_token` 重建为 1.7 结构，`refresh_token` 拆到 `oauth_refresh_token`，`refresh_id` 关联；
+- `oauth_consent` 重建，保留行数据；
+- 新建 `oauth_client_resource` / `oauth_resource` / `oauth_client_assertion` / `jwks`（已存在则跳过）；
+- `two_factor` 增加 `verified` / `failed_verification_count` / `locked_until`；
+- **不删除数据**：旧表整体移动到 `legacy_better_auth_1_7_20261106` schema，可随时回滚或核对。
+
+注意：
+
+- 表前缀默认 `caomei_auth_`；若设置了 `DATABASE_ENTITY_PREFIX`，执行前需同步替换脚本中的表名与索引名。
+- 旧明文令牌与 client secret 会转换为 better-auth 1.7 的 SHA-256 base64url 哈希；已经是 43 位 base64url 的值视为已哈希，保持不变。若旧部署使用了其他哈希算法，需先人工核对再执行。
+- 脚本可重复执行，已迁移的部分会跳过。
+
+**验证**：
+
+1. 重新部署后登录、2FA、OAuth 授权、back-channel logout 不再出现上述报错；
+2. `select count(*)` 核对迁移前后行数一致；
+3. 确认无误后再删除旧 schema：
+   `DROP SCHEMA legacy_better_auth_1_7_20261106 CASCADE;`
+
+**回滚**：停止写入后用备份恢复，或把 legacy schema 中的表移回 `public`（需先删除迁移后的新表，且会丢失迁移后产生的新数据）。
+
 ## 最佳实践
 
 1. **定期备份**: 建立自动化备份机制
