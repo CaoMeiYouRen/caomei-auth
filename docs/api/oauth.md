@@ -10,6 +10,14 @@
 -   **数据格式**: JSON / application/x-www-form-urlencoded
 -   **字符编码**: UTF-8
 
+## 参数校验
+
+应用管理相关接口的路径参数与查询参数由 Zod Schema 校验（规则见 [Zod 迁移计划](../plan/zod-migration.md)）：
+
+-   `GET /api/oauth/client/{client_id}`：`client_id` 必须为非空字符串，缺失或为空返回 400；
+-   `GET /api/admin/oauth/applications`：`page` / `limit` 只接受非负整数（字符串形式同样接受），`sortOrder` 只接受 `ASC` / `DESC`；
+-   参数不合法时返回 400，`message` 为首条校验错误（如 `ID 不能为空`、`必须是数字`）。
+
 ## Discovery 端点
 
 ### GET /.well-known/openid-configuration

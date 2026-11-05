@@ -16,9 +16,9 @@
 | :--- | :--- | :--- | :--- |
 | M1-1 | CodeQL #20 复核与豁免处置（2026-11-30 前） | `.github/security-alert-exemptions.json`、告警结论、复核记录 | 已完成（误报 dismiss，2026-11-05） |
 | M1-2 | SSO 历史配置排查与安全台账复核 | `GET /api/admin/sso/audit` 结果、清理记录、豁免台账 | 阻塞（需管理员权限的已部署环境；2026-11-05 本地库无 SSO 数据，未伪造结果） |
-| M2-1 | P1 4 个路径参数 handlers + 测试 | `oauth/client/[id].get`、`admin/oauth/applications/[id].delete`、`admin/sso/providers/[id].get`、`admin/sso/providers/[id].delete` | 待执行 |
+| M2-1 | P1 4 个路径参数 handlers + 测试 | `oauth/client/[id].get`、`admin/oauth/applications/[id].delete`、`admin/sso/providers/[id].get`、`admin/sso/providers/[id].delete` | 已完成（4 个 handler 已用 `idParamSchema`，含 400 用例） |
 | M2-2 | P2/P3 4 个查询参数 handlers + 测试 | 分页 / 筛选 / 日志 / 社交提供商查询 | 已完成（4 个 handler 已用 Zod；新增 Schema 层单测 15 例） |
-| M2-3 | `zod-migration.md` 收口与 API 文档同步 | 迁移状态、验证矩阵、`docs/api/` 示例 | 待执行 |
+| M2-3 | `zod-migration.md` 收口与 API 文档同步 | 迁移状态、验证矩阵、`docs/api/` 示例 | 已完成（14/14 handlers，文档与 API 示例同步） |
 | M3-1 | 覆盖率基线复测与目标校准 | 当前基线、阶段目标（max(30%, 复测基线 + 10pp)，以复测为准） | 待执行 |
 | M3-2 | 定向补测 | `server/api`（含 Zod / SSO audit）、`composables`、`components/base` | 待执行 |
 | M4-1 | 用量盘点脚本 / 快照 + 路由白名单初值 + 版本锁定 + 回退方案 | 可复现的 PrimeVue 用量快照、`CAOMEI_UI_ROUTE_PREFIXES` 初值、`caomei-ui@1.0.0` 精确锁定 + Dependabot `ignore`、回退方案 | 待执行 |

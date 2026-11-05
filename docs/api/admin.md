@@ -18,6 +18,32 @@
 Authorization: Bearer <access_token>
 ```
 
+## 参数校验
+
+本文件中的路径参数、查询参数与请求体均由 Zod Schema 校验（实现与规则见 [Zod 迁移计划](../plan/zod-migration.md)）。参数不合法时，按所在 handler 的返回风格给出两种形态之一：
+
+-   抛出 400（`statusCode` / `statusMessage`），适用于查询参数与路径参数接口；
+-   返回业务响应对象：
+
+```json
+{
+    "status": 400,
+    "success": false,
+    "message": "ID 不能为空",
+    "data": null
+}
+```
+
+主要规则：
+
+| 参数 | 规则 |
+| :--- | :--- |
+| `{id}` 路径参数 | 非空字符串 |
+| `page` / `limit` | 非负整数，允许字符串形式；小数、负数、非数字返回 400 |
+| `sortOrder` | `ASC` / `DESC`，大小写不敏感，统一归一化为大写 |
+| `status`（会话日志） | `active` / `expired` / `all` |
+| `type`（SSO 提供商） | `oidc` / `saml` / 空字符串 |
+
 ## 用户管理 API
 
 ### 获取用户列表
