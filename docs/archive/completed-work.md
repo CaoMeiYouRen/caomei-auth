@@ -59,7 +59,7 @@
 
 -   [x] **前端全量迁移**: 所有页面表单校验（登录/注册/忘记密码/快速登录/Admin 创建用户/OAuth 应用/SSO 提供商）已接入 Zod Schema。
 -   [x] **后端部分迁移**: 6 个 handlers 已完成（`admin/oauth/applications/index.post`、`[id].put`、`admin/sso/providers/index.post`、`[id].put`、`admin/sync-admin-role.post`、`oauth/revoke-consent.post`）。
--   ⬜ **后端剩余 8 个 handlers**: 详见 [backlog §1.1](../plan/backlog.md#11-zod-后端迁移)。
+-   ⬜ **后端剩余 8 个 handlers**: 详见 [zod-migration.md](../plan/zod-migration.md)。
 
 ---
 
@@ -96,7 +96,7 @@
 
 -   [x] **OAuth 动态客户端注册加固**: 关闭 `/api/auth/oauth2/register`（`allowDynamicClientRegistration: false`），应用统一走管理端创建；中间件与 Demo 守卫改用 `normalizeAuthPath` 归一化路径，修复点段绕过与白名单前缀穿越（GHSA-2r7m-492j-p8xm）。
 -   [x] **SSO 安全加固**: 关闭上游 `/sso/register` 等自助管理端点（`disabledPaths` + `providersLimit: 0` + 管理员校验兜底），修复 `trustEmailVerified` 账户接管风险（GHSA-785j-54p4-vxw9）。
--   [x] **Zod 后端迁移（第一阶段）**: 已完成 6 个 handlers；剩余 8 个见 [backlog §1.1](../plan/backlog.md#11-zod-后端迁移)。
+-   [x] **Zod 后端迁移（第一阶段）**: 已完成 6 个 handlers；剩余 8 个见 [zod-migration.md](../plan/zod-migration.md)。
 -   [x] **Zod 前端迁移**: 全部页面表单校验接入 Zod Schema。
 -   [x] **Composables 测试覆盖率提升**: `use-forgot-password-flow`、`use-security-settings`、`admin/use-user-management`。
 -   [x] **Server Utils 测试**: `logger.ts`、`email/service.ts`、`admin-role-sync.ts`。

@@ -9,7 +9,7 @@
             "path": "server/utils/oauth-client-view.ts",
             "category": "hard-fix",
             "reason": "OAuth client secret 是高熵随机凭证，SHA-256 为 better-auth 默认存储算法（storeClientSecret: hashed）；改用慢哈希需等上游提供可配置哈希，本发布窗口无法完成。2026-11-30 前复核：确认误报则 dismiss 并改按 false-positive 登记。",
-            "tracking": "docs/plan/todo.md#技术债务",
+            "tracking": "docs/plan/todo.md#阶段-2-原子条目",
             "expiresAt": "2026-11-30",
             "note": "若上游提供可配置哈希，优先移除豁免。"
         }
