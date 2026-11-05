@@ -1,5 +1,20 @@
 # caomei-auth
 
+# [1.15.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.14.0...v1.15.0) (2026-11-05)
+
+
+### ✨ 新功能
+
+* **ai-check:** 校验技能 references 被执行入口索引 ([ede96f0](https://github.com/CaoMeiYouRen/caomei-auth/commit/ede96f0))
+* **skills:** 开局接入 CI 回执检查并补齐 session 三件套 ([ebefbd4](https://github.com/CaoMeiYouRen/caomei-auth/commit/ebefbd4))
+
+
+### 🐛 Bug 修复
+
+* **security:** 修复 OAuth 客户端注册门禁的点段绕过 ([074997d](https://github.com/CaoMeiYouRen/caomei-auth/commit/074997d))
+* **security:** 门禁纳入 dismissed 告警并按来源分离 token ([82231a8](https://github.com/CaoMeiYouRen/caomei-auth/commit/82231a8))
+* **smart-input:** 默认区域读取不再依赖 localStorage 存在 ([4ee4d6d](https://github.com/CaoMeiYouRen/caomei-auth/commit/4ee4d6d))
+
 # [1.14.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.13.6...v1.14.0) (2026-10-31)
 
 
