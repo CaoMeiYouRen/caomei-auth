@@ -57,7 +57,7 @@
     "caomei-ui": "1.0.0",
     "chart.js": "^4.6.1",
     "dayjs": "^1.11.23",
-    "file-type": "^22.2.0",
+    "file-type": "^22.3.0",
     "fs-extra": "^11.4.1",
     "google-libphonenumber": "^3.2.48",
     "ioredis": "^5.11.1",
