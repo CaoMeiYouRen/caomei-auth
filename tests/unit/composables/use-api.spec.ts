@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => {
 })
 
 vi.mock('nuxt/app', () => ({
+    defineNuxtPlugin: (plugin: unknown) => plugin,
     useFetch: mocks.useFetch,
     navigateTo: mocks.navigateTo,
 }))

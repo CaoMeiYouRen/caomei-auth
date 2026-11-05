@@ -8,10 +8,12 @@ export interface UseFormOptions<T> {
     validate?: ValidatorFn<T>
     zodSchema?: ZodSchema<T>
     validateOnChange?: boolean
+    /** Zod per-parse error map（i18n）：把校验错误按当前语言翻译 */
+    errorMap?: (issue: { code: string }) => string | { message: string }
 }
 
 export function useForm<T extends Record<string, any> = Record<string, any>>(options: UseFormOptions<T>) {
-    const { initialValues, validate, zodSchema, validateOnChange = false } = options
+    const { initialValues, validate, zodSchema, validateOnChange = false, errorMap } = options
 
     const values = ref({ ...initialValues }) as Ref<T>
     const errors: Ref<Record<string, string>> = ref({})
@@ -21,7 +23,7 @@ export function useForm<T extends Record<string, any> = Record<string, any>>(opt
         errors.value = {}
 
         if (zodSchema) {
-            const result = zodSchema.safeParse(values.value)
+            const result = zodSchema.safeParse(values.value, errorMap ? { error: errorMap } : undefined)
             if (!result.success) {
                 const zodErrors: Record<string, string> = {}
                 result.error.issues.forEach((err) => {

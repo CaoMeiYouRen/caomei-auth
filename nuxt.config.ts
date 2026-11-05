@@ -2,6 +2,7 @@
 import Lara from '@primeuix/themes/lara'
 import { definePreset } from '@primeuix/themes'
 import { zh_CN } from 'primelocale/js/zh_CN.js'
+import { DEFAULT_LOCALE, LOCALE_COOKIE_KEY, LOCALE_REGISTRY } from './i18n/config/locale-registry'
 
 const AppPreset = definePreset(Lara, {
     semantic: {
@@ -46,6 +47,8 @@ export default defineNuxtConfig({
         '@primevue/nuxt-module',
         // caomei-ui 基座（迁移期与 PrimeVue 双库并存；页面组件未迁移，见 docs/design/governance/2026-11-05-caomei-ui-p0-baseline.md）
         'caomei-ui/nuxt',
+        // i18n 技术验证（M5）：先接基础设施与语言切换原型，页面文案翻译在 M2+ 进行
+        '@nuxtjs/i18n',
         '@sentry/nuxt/module',
         '@nuxt/eslint',
         'vue-recaptcha/nuxt',
@@ -141,6 +144,29 @@ export default defineNuxtConfig({
         darkMode: 'class',
         // 基础层由模块注入一次（组件自动导入不携带基础层）
         injectStyles: true,
+    },
+    i18n: {
+        strategy: 'prefix_except_default',
+        defaultLocale: DEFAULT_LOCALE,
+        // hreflang / canonical 需要绝对地址
+        baseUrl: process.env.NUXT_PUBLIC_AUTH_BASE_URL || 'http://localhost:3000',
+        // locales 由 Locale Registry 生成，禁止手写第二份
+        locales: LOCALE_REGISTRY.map((locale) => ({
+            code: locale.code,
+            name: locale.nativeName,
+            language: locale.code,
+            dir: locale.dir,
+            files: locale.files,
+        })),
+        detectBrowserLanguage: {
+            useCookie: true,
+            cookieKey: LOCALE_COOKIE_KEY,
+            redirectOn: 'root',
+            alwaysRedirect: false,
+        },
+        experimental: {
+            localeDetector: './localeDetector.ts',
+        },
     },
     experimental: {
         componentIslands: true,

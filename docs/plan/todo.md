@@ -23,15 +23,16 @@
 | M3-2 | 定向补测 | `server/api`（含 Zod / SSO audit）、`composables`、`components/base` | 已完成（Statements 78.26%；四个范围下限全部达标） |
 | M4-1 | 用量盘点脚本 / 快照 + 路由白名单初值 + 版本锁定 + 回退方案 | 可复现的 PrimeVue 用量快照、`CAOMEI_UI_ROUTE_PREFIXES` 初值、`caomei-ui@1.0.0` 精确锁定 + Dependabot `ignore`、回退方案 | 已完成（30 族 / 301 标签 / 50 文件；白名单空集；回退方案见 P0 基线记录） |
 | M4-2 | 接入基座（P0/P1）+ P2 前置方案 | `caomei-ui/nuxt` + `theme.css` + `data-preset="caomei"`、双库并存、构建 / 包体复测；`keyCss` / 入口 JS 允许增幅；P2 视觉基线方案（不建截图工程）；不做页面替换 | 已完成（keyCss +4.76%、入口 JS 0%；P2 方案已出；零页面替换） |
-| M5-1 | `@nuxtjs/i18n@10` 技术验证 | `files[]`、`localeDetector`、`prefix_except_default`、`useLocaleHead`、语言切换原型 | 待执行 |
-| M5-2 | Zod per-parse error map 验证 | 1 个表单 + 1 个 API；输出 i18n M2 准入结论 | 待执行 |
+| M5-1 | `@nuxtjs/i18n@10` 技术验证 | `files[]`、`localeDetector`、`prefix_except_default`、`useLocaleHead`、语言切换原型 | 已完成（10.6.0；`/en-US` 路由、hreflang、切换与 cookie 均验证） |
+| M5-2 | Zod per-parse error map 验证 | 1 个表单 + 1 个 API；输出 i18n M2 准入结论 | 已完成（表单 + API 机制通过；M2 准入有条件通过） |
 
 ## 未完成项汇总
 
 > 本节仅为状态指针，不构成条目登记或启动授权；候选详情见 [backlog.md](./backlog.md)。
 
-- 当前阶段 11 条原子条目全部待执行；无跨阶段未完成指针。
-- 正式组件库迁移（P2+）与 i18n 全量翻译（M2+）仍为 backlog 候选，待本阶段预备结论后再评估。
+- 当前阶段 11 条原子条目：**10 条已完成**，**1 条阻塞**（M1-2 需管理员权限的已部署环境，2026-11-05 未执行，未伪造结果）。
+- 待用户提供部署环境后可执行 M1-2：调用 `GET /api/admin/sso/audit`，按 [安全规范](../standards/security.md) 清理 `suspiciousProviders` / `suspiciousAccounts` 并记录。
+- 正式组件库迁移（P2+）与 i18n 全量翻译（M2+）仍为 backlog 候选；本阶段已完成 P0/P1 基座与 M1 技术验证，准入结论见对应记录。
 
 ## 说明
 

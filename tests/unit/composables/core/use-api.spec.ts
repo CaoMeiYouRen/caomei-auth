@@ -11,6 +11,7 @@ vi.mock('primevue/usetoast', () => ({
 }))
 
 vi.mock('nuxt/app', () => ({
+    defineNuxtPlugin: (plugin: unknown) => plugin,
     useFetch: (url: any, options: any) => useFetchMock(url, options),
     navigateTo: (url: any) => navigateToMock(url),
 }))

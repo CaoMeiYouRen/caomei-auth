@@ -1,0 +1,11 @@
+{
+    "validation": {
+        "invalid": "输入内容无效",
+        "type": "输入类型不正确",
+        "tooSmall": "输入内容过短或数值过小",
+        "tooBig": "输入内容过长或数值过大",
+        "format": "输入格式不正确",
+        "invalidValue": "输入值不在允许范围内",
+        "missing": "缺少必填内容"
+    }
+}

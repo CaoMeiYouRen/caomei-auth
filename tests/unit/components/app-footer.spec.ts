@@ -28,6 +28,10 @@ const mountAsync = async (component: any, options: any = {}) => {
         ...options,
         global: {
             ...options.global,
+            stubs: {
+                BaseLanguageSwitcher: true,
+                ...options.global?.stubs,
+            },
             components: {
                 TestTarget: component,
                 ...options.global?.components,

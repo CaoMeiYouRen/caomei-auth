@@ -1,0 +1,11 @@
+{
+    "validation": {
+        "invalid": "Invalid input",
+        "type": "Invalid input type",
+        "tooSmall": "Input is too short or value is too small",
+        "tooBig": "Input is too long or value is too large",
+        "format": "Invalid input format",
+        "invalidValue": "Value is not in the allowed range",
+        "missing": "Required value is missing"
+    }
+}

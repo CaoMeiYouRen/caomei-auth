@@ -1,6 +1,17 @@
 import { createError, getValidatedQuery, getValidatedRouterParams, readValidatedBody, type H3Event } from 'h3'
 import type { z } from 'zod'
 
+/** per-parse error map（Zod 4）：用于把校验错误按请求语言翻译 */
+export type ZodErrorMap = (issue: { code: string }) => string | { message: string }
+
+export interface ValidateOptions {
+    errorMap?: ZodErrorMap
+}
+
+function toParseParams(options?: ValidateOptions) {
+    return options?.errorMap ? { error: options.errorMap } : undefined
+}
+
 /**
  * Validation error response format
  */
@@ -34,8 +45,8 @@ export function createValidationError(message: string): ValidationErrorResponse 
  * Validates request body with Zod schema
  * Returns validated data or throws H3 error
  */
-export async function validateBody<T extends z.ZodType>(event: H3Event, schema: T): Promise<z.infer<T>> {
-    const result = await readValidatedBody(event, (body) => schema.safeParse(body))
+export async function validateBody<T extends z.ZodType>(event: H3Event, schema: T, options?: ValidateOptions): Promise<z.infer<T>> {
+    const result = await readValidatedBody(event, (body) => schema.safeParse(body, toParseParams(options)))
 
     if (!result.success) {
         throw createError({
@@ -54,8 +65,9 @@ export async function validateBody<T extends z.ZodType>(event: H3Event, schema: 
 export async function validateBodySafe<T extends z.ZodType>(
     event: H3Event,
     schema: T,
+    options?: ValidateOptions,
 ): Promise<{ success: true, data: z.infer<T> } | { success: false, error: ValidationErrorResponse }> {
-    const result = await readValidatedBody(event, (body) => schema.safeParse(body))
+    const result = await readValidatedBody(event, (body) => schema.safeParse(body, toParseParams(options)))
 
     if (!result.success) {
         return {
@@ -71,8 +83,8 @@ export async function validateBodySafe<T extends z.ZodType>(
  * Validates query parameters with Zod schema
  * Returns validated data or throws H3 error
  */
-export async function validateQuery<T extends z.ZodType>(event: H3Event, schema: T): Promise<z.infer<T>> {
-    const result = await getValidatedQuery(event, (query) => schema.safeParse(query))
+export async function validateQuery<T extends z.ZodType>(event: H3Event, schema: T, options?: ValidateOptions): Promise<z.infer<T>> {
+    const result = await getValidatedQuery(event, (query) => schema.safeParse(query, toParseParams(options)))
 
     if (!result.success) {
         throw createError({
@@ -88,8 +100,8 @@ export async function validateQuery<T extends z.ZodType>(event: H3Event, schema:
  * Validates router/path parameters with Zod schema
  * Returns validated data or throws H3 error
  */
-export async function validateParams<T extends z.ZodType>(event: H3Event, schema: T): Promise<z.infer<T>> {
-    const result = await getValidatedRouterParams(event, (params) => schema.safeParse(params))
+export async function validateParams<T extends z.ZodType>(event: H3Event, schema: T, options?: ValidateOptions): Promise<z.infer<T>> {
+    const result = await getValidatedRouterParams(event, (params) => schema.safeParse(params, toParseParams(options)))
 
     if (!result.success) {
         throw createError({
@@ -108,8 +120,9 @@ export async function validateParams<T extends z.ZodType>(event: H3Event, schema
 export async function validateParamsSafe<T extends z.ZodType>(
     event: H3Event,
     schema: T,
+    options?: ValidateOptions,
 ): Promise<{ success: true, data: z.infer<T> } | { success: false, error: ValidationErrorResponse }> {
-    const result = await getValidatedRouterParams(event, (params) => schema.safeParse(params))
+    const result = await getValidatedRouterParams(event, (params) => schema.safeParse(params, toParseParams(options)))
 
     if (!result.success) {
         return {

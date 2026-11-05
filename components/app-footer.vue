@@ -86,6 +86,7 @@
                 >
                     联系我们
                 </NuxtLink>
+                <BaseLanguageSwitcher />
                 <NuxtLink
                     to="https://auth-docs.cmyr.dev/"
                     external

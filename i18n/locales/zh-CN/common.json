@@ -1,0 +1,13 @@
+{
+    "app": {
+        "name": "草梅 Auth"
+    },
+    "language": {
+        "label": "语言",
+        "zh-CN": "简体中文",
+        "en-US": "English"
+    },
+    "footer": {
+        "tagline": "统一登录平台 | 安全、便捷、可扩展"
+    }
+}
