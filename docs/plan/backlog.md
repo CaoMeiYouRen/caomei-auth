@@ -1,20 +1,21 @@
 # 产品 backlog（待办池）
 
-> **状态**：当前无进行中阶段；阶段 2「安全收口与迁移预备」已于 2026-11-06 完成并归档（见 [已完成工作归档](../archive/completed-work.md)）。本表只保留**尚未进入阶段**的候选。
+> **状态**：**阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面」进行中**（2026-11-06 授权，见 [阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md)）。本表只保留**尚未进入阶段**的候选；阶段 2 已于 2026-11-06 完成并归档（见 [已完成工作归档](../archive/completed-work.md)）。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ## 0. 候选阶段组合（建议，未授权）
 
 > 仅用于范围评估，不构成启动授权，不分配阶段编号。每条候选的详情只在后文一处定义，本节只做组合索引。
 > 原「组合 A：安全与质量收口」已作为阶段 2 完成并归档（2026-11-06），见 [已完成工作归档](../archive/completed-work.md)；本表不再保留。
+> **组合 B / 组合 C 已部分上收**：i18n 非组件面（M2 前置 + 服务端试点）与 caomei-ui P2–P3 已进入阶段 3；本表只保留尚未授权的后续部分。
 
 ### 组合 B：i18n 全量落地
 
-- i18n 全量落地（M2+ 正式翻译）→ [§1.2](#12-i18n-全量落地)
+- i18n 页面文案与邮件（M2 / M4 剩余，未授权）→ [§1.2](#12-i18n-全量落地)
 
 ### 组合 C：组件库迁移到 caomei-ui
 
-- 组件库迁移到 caomei-ui（P2+ 正式迁移）→ [§2.1](#21-组件库迁移到-caomei-ui)
+- caomei-ui P4 / P5（未授权）→ [§2.1](#21-组件库迁移到-caomei-ui)
 
 ### 组合 D：体验与性能
 
@@ -40,7 +41,7 @@ _详情见 [zod-migration.md](./zod-migration.md)。_
 
 _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实施方案](../design/governance/2026-11-05-i18n-evaluation.md)。_
 
-- **状态**：M1 技术验证已完成（阶段 2 M5，2026-11-06 归档）；**M2+ 正式翻译仍为候选，未授权**。已引入 `@nuxtjs/i18n` 并建立 Locale Registry 与语言切换原型，但无业务文案翻译；网页 UI、Meta、MJML 邮件与 API 错误消息仍以简体中文硬编码为主。现有 `better-auth-localization` 仅覆盖认证插件边界，`utils/shared/locale.ts` / `server/utils/locale.ts` 提供 locale 检测。
+- **状态**：M1 技术验证已完成（阶段 2 M5，2026-11-06 归档）；**M2 前置（schema message / `validation.*` / 治理脚本）与服务端错误消息试点已进入阶段 3；i18n M2 页面文案、i18n M4 剩余（Admin 文案、邮件模板、`User.locale`、API 其余错误面）仍为候选，未授权**。已引入 `@nuxtjs/i18n` 并建立 Locale Registry 与语言切换原型，但无业务文案翻译；网页 UI、Meta、MJML 邮件与 API 错误消息仍以简体中文硬编码为主。现有 `better-auth-localization` 仅覆盖认证插件边界，`utils/shared/locale.ts` / `server/utils/locale.ts` 提供 locale 检测。
 - **目标**：建立 `zh-CN` / `en-US` 全量翻译能力，覆盖 Web UI、邮件模板、API 响应、验证错误与通知；服务端与前端共享 Locale Registry。
 - **里程碑**：M1 基础设施 → M2 核心链路 → M3 个人 / 安全 / OAuth / SSO → M4 Admin / 邮件 / API → M5 治理与 SEO。执行口径与验收见 [i18n.md](../standards/i18n.md) §8 / §10。
 - **关键修订**：`@nuxtjs/i18n` v10（`lazy` 已移除）；模块化 `files[]` + Locale Registry + runtime loader；Zod v4 per-parse error map；服务端 `useTranslation(event)`；新增 `User.locale` 支持异步邮件；与组件库迁移建议先组件后 i18n。
@@ -61,7 +62,7 @@ _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实�
 
 _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-caomei-ui-migration-evaluation.md)。_
 
-- **状态**：P0/P1 预备已完成（阶段 2 M4，2026-11-06 归档）；**P2+ 页面替换仍为候选，未授权**。可行，建议分阶段；无整体性阻塞，但有两个决策项（DatePicker range、Toast 逐语气样式）。
+- **状态**：P0/P1 预备已完成（阶段 2 M4，2026-11-06 归档）；**P2–P3 已进入阶段 3（2026-11-06 授权）；P4 / P5 仍为候选，未授权**。可行，建议分阶段；无整体性阻塞，两个决策项已裁定（DatePicker 改双日期选择器、Toast 接受默认语气样式并登记差异）。
 - **目标**：用 `caomei-ui`（Vue 3 + Reka UI，当前 1.0.0）替换 PrimeVue 4 生态，统一设计 token、主题、暗色模式与组件行为。
 - **现状**：项目依赖 `primevue` 4.x + `@primevue/*` + `@primeuix/*`；Dependabot 已锁定 v4 并阻止 v5 独立升级；31 个组件族 / 304 个开标签 / 52 个 `.vue`；无 `primeicons`；`--p-*` 仅 56 处（Toast）；已有 7 个 `components/base/*` 封装收敛改动。
 - **分阶段建议**：P0 基线与护栏 → P1 接入基座 → P2 主题 / 封装 / 试点 → P3 表单 / 资料 / 安全 / 浮层 → P4 Admin 数据页与剩余页面 → P5 收尾卸载。不要从 admin 数据表开始。
