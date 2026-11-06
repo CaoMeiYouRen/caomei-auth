@@ -1,7 +1,7 @@
 # 2026-11-05 覆盖率基线复测与目标校准
 
 > **状态**：基线已复测，阶段目标已校准（2026-11-05 用户选择「按范围设下限」）。
-> **关联条目**：[阶段 2 M3-1](../../plan/todo.md#阶段-2-原子条目)。
+> **关联条目**：[阶段 2 M3-1](../../archive/completed-work.md)。
 > **测量口径**：Vitest 4 + v8 coverage，`pnpm test:coverage`，仓库根目录 `vitest.config.ts` 的 include / exclude。
 
 ## 1. 复现方式

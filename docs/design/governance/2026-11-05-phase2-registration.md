@@ -1,7 +1,7 @@
 # 2026-11-05 阶段 2 范围登记：安全收口与迁移预备
 
-> **状态**：已授权（2026-11-05 用户选择「A 安全与质量收口」，并补充「开始 i18n 和组件库迁移预备」）。
-> **单一事实源**：原子条目与状态见 [todo.md](../../plan/todo.md)；候选详情见 [backlog.md](../../plan/backlog.md)；阶段方向见 [roadmap.md](../../plan/roadmap.md)。
+> **状态**：已完成并归档（2026-11-06）。11 条原子条目全部完成，交付摘要见 [已完成工作归档 §8](../../archive/completed-work.md)。
+> **单一事实源**：交付摘要见 [已完成工作归档](../../archive/completed-work.md)；候选详情见 [backlog.md](../../plan/backlog.md)；阶段方向见 [roadmap.md](../../plan/roadmap.md)。
 > **准入规则**：[规划规范](../../standards/planning.md)。
 
 ## 1. 阶段目标
@@ -61,6 +61,6 @@
 
 ## 6. 关联文档
 
-- [待办事项](../../plan/todo.md)｜[Backlog](../../plan/backlog.md)｜[路线图](../../plan/roadmap.md)
+- [待办事项](../../plan/todo.md)｜[Backlog](../../plan/backlog.md)｜[路线图](../../plan/roadmap.md)｜[已完成工作归档](../../archive/completed-work.md)
 - [caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[i18n 评估](./2026-11-05-i18n-evaluation.md)
 - [规划规范](../../standards/planning.md)｜[安全规范](../../standards/security.md)｜[测试规范](../../standards/testing.md)

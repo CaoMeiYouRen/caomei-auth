@@ -1,12 +1,12 @@
 # 产品 backlog（待办池）
 
-> **状态**：**阶段 2「安全收口与迁移预备」进行中**（2026-11-05 授权）。本表只保留**尚未进入当前阶段**的候选；阶段 2 已登记的条目见 [todo.md](./todo.md)，不再在本表重复。
+> **状态**：当前无进行中阶段；阶段 2「安全收口与迁移预备」已于 2026-11-06 完成并归档（见 [已完成工作归档](../archive/completed-work.md)）。本表只保留**尚未进入阶段**的候选。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ## 0. 候选阶段组合（建议，未授权）
 
 > 仅用于范围评估，不构成启动授权，不分配阶段编号。每条候选的详情只在后文一处定义，本节只做组合索引。
-> 原「组合 A：安全与质量收口」已于 2026-11-05 登记为阶段 2，见 [todo.md](./todo.md)；本表不再保留。
+> 原「组合 A：安全与质量收口」已作为阶段 2 完成并归档（2026-11-06），见 [已完成工作归档](../archive/completed-work.md)；本表不再保留。
 
 ### 组合 B：i18n 全量落地
 
@@ -34,13 +34,13 @@
 
 _详情见 [zod-migration.md](./zod-migration.md)。_
 
-**当前状态**：剩余 8 个 handlers 已登记到 **阶段 2 M2**，见 [todo.md](./todo.md)；本表不再保留候选条目。
+**当前状态**：已完成（2026-11-05），14/14 参数校验 handlers 已接入 Zod，无剩余候选；迁移记录见 [zod-migration.md](./zod-migration.md)。
 
 ### 1.2 i18n 全量落地
 
 _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实施方案](../design/governance/2026-11-05-i18n-evaluation.md)。_
 
-- **状态**：评估完成，未落地。**M1 技术验证已登记阶段 2 M5**（见 [todo.md](./todo.md)）；M2+ 正式翻译仍为候选。`nuxt.config.ts` 未引入 Vue / Nuxt 侧 i18n 模块（如 `@nuxtjs/i18n`），无业务语言包；网页 UI、Meta、MJML 邮件与 API 错误消息仍以简体中文硬编码为主。现有 `better-auth-localization` 仅覆盖认证插件边界，`utils/shared/locale.ts` / `server/utils/locale.ts` 提供 locale 检测。
+- **状态**：M1 技术验证已完成（阶段 2 M5，2026-11-06 归档）；**M2+ 正式翻译仍为候选，未授权**。已引入 `@nuxtjs/i18n` 并建立 Locale Registry 与语言切换原型，但无业务文案翻译；网页 UI、Meta、MJML 邮件与 API 错误消息仍以简体中文硬编码为主。现有 `better-auth-localization` 仅覆盖认证插件边界，`utils/shared/locale.ts` / `server/utils/locale.ts` 提供 locale 检测。
 - **目标**：建立 `zh-CN` / `en-US` 全量翻译能力，覆盖 Web UI、邮件模板、API 响应、验证错误与通知；服务端与前端共享 Locale Registry。
 - **里程碑**：M1 基础设施 → M2 核心链路 → M3 个人 / 安全 / OAuth / SSO → M4 Admin / 邮件 / API → M5 治理与 SEO。执行口径与验收见 [i18n.md](../standards/i18n.md) §8 / §10。
 - **关键修订**：`@nuxtjs/i18n` v10（`lazy` 已移除）；模块化 `files[]` + Locale Registry + runtime loader；Zod v4 per-parse error map；服务端 `useTranslation(event)`；新增 `User.locale` 支持异步邮件；与组件库迁移建议先组件后 i18n。
@@ -55,7 +55,7 @@ _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实�
 
 _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-caomei-ui-migration-evaluation.md)。_
 
-- **状态**：评估完成，正式迁移未授权。**P0/P1 预备已登记阶段 2 M4**（见 [todo.md](./todo.md)）；P2+ 页面替换仍为候选。可行，建议分阶段；无整体性阻塞，但有两个决策项（DatePicker range、Toast 逐语气样式）。
+- **状态**：P0/P1 预备已完成（阶段 2 M4，2026-11-06 归档）；**P2+ 页面替换仍为候选，未授权**。可行，建议分阶段；无整体性阻塞，但有两个决策项（DatePicker range、Toast 逐语气样式）。
 - **目标**：用 `caomei-ui`（Vue 3 + Reka UI，当前 1.0.0）替换 PrimeVue 4 生态，统一设计 token、主题、暗色模式与组件行为。
 - **现状**：项目依赖 `primevue` 4.x + `@primevue/*` + `@primeuix/*`；Dependabot 已锁定 v4 并阻止 v5 独立升级；31 个组件族 / 304 个开标签 / 52 个 `.vue`；无 `primeicons`；`--p-*` 仅 56 处（Toast）；已有 7 个 `components/base/*` 封装收敛改动。
 - **分阶段建议**：P0 基线与护栏 → P1 接入基座 → P2 主题 / 封装 / 试点 → P3 表单 / 资料 / 安全 / 浮层 → P4 Admin 数据页与剩余页面 → P5 收尾卸载。不要从 admin 数据表开始。
@@ -118,18 +118,14 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
 
 ### 3.1 安全与合规
 
-> **已登记阶段 2**：SSO 历史配置排查（M1-2）与 CodeQL #20 复核（M1-1）见 [todo.md](./todo.md)；本表不再保留为候选。
-
 - **安全审计常态化**：将 `pnpm audit` 与 Dependabot / Code Scanning 告警巡检纳入固定流程，自动化依赖漏洞扫描与报告。
 - **上游未修复依赖告警跟进**：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4）与 `node-forge`（GHSA-86w9-cpqp-85rv，需 ≥1.4.1）当前均无已发布补丁版本，仅存在于构建 / 开发工具链。待上游发版后升级，并复查 `pnpm audit`。
 - **迁入来源**：既有 backlog「安全审计常态化」「上游未修复依赖告警跟进」与原 `todo.md`「低优先级 · 安全审计工具集成」。
 
 ### 3.2 质量与测试
 
-> **已登记阶段 2**：测试覆盖率第一阶段（M3）见 [todo.md](./todo.md)；2026-11-05 复测基线为 Statements 75.74% / Lines 75.95%，阶段目标改为按范围设下限（见 [覆盖率基线记录](../design/governance/2026-11-05-coverage-baseline.md)）。
-
-- **测试覆盖率长期达标**：核心逻辑 Lines 覆盖率长期目标 ≥ 60%，2026-11-05 基线（75.95%）已达到；后续关注 `pages`（34.92%）与 `plugins`（25.00%）等未覆盖区域，不再以全局数字作为阶段门槛。
-    - 阶段 2 按范围设下限：`server/api` ≥95%、`composables` ≥80%、`components/base` ≥75%，全局不跌破 75.74%。
+- **测试覆盖率长期达标**：核心逻辑 Lines 覆盖率长期目标 ≥ 60%，2026-11-05 基线（75.95%）已达到；2026-11-06 阶段 2 复测 Statements 78.26% / Lines 78.49%，后续关注 `pages`（34.92%）与 `plugins`（25.00%）等未覆盖区域，不再以全局数字作为阶段门槛。
+    - 阶段 2 按范围设下限并全部达标：`server/api` ≥95%（95.94%）、`composables` ≥80%（84.35%）、`components/base` ≥75%（90.11%），全局不跌破 75.74%。
     - 详见 [测试规范](../standards/testing.md)。
 - **jscpd 重复代码检测**：引入代码重复率检测，目标全项目重复率降至 5% 以下。
 - **max-lines 基线清理**：消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。

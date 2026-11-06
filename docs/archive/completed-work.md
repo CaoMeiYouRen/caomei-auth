@@ -2,7 +2,7 @@
 
 本文档记录了项目已实现的关键技术升级、功能点及测试覆盖情况，作为项目发展的历史记录。
 
-> **勘误（2026-11-05）**：本归档此前把 i18n 误记为已完成；实际尚未落地，候选见 [backlog §1.2](../plan/backlog.md#12-i18n-全量落地)。归档只保留已完成工作，未完成项不在此登记。
+> **勘误（2026-11-05，2026-11-06 补充）**：本归档此前把 i18n 误记为已完成；截至 2026-11-06 仅完成 M1 基础设施与语言切换原型（阶段 2 M5），M2+ 正式翻译仍在 [backlog §1.2](../plan/backlog.md#12-i18n-全量落地)。归档只保留已完成工作，未完成项不在此登记。
 
 ---
 
@@ -55,11 +55,11 @@
 
 ---
 
-## 4. Zod 迁移（进行中）
+## 4. Zod 迁移 ✅
 
 -   [x] **前端全量迁移**: 所有页面表单校验（登录/注册/忘记密码/快速登录/Admin 创建用户/OAuth 应用/SSO 提供商）已接入 Zod Schema。
--   [x] **后端部分迁移**: 6 个 handlers 已完成（`admin/oauth/applications/index.post`、`[id].put`、`admin/sso/providers/index.post`、`[id].put`、`admin/sync-admin-role.post`、`oauth/revoke-consent.post`）。
--   ⬜ **后端剩余 8 个 handlers**: 详见 [zod-migration.md](../plan/zod-migration.md)。
+-   [x] **后端全量迁移**: 14/14 参数校验 handlers 已接入 Zod（阶段 2 M2，2026-11-05 收口），覆盖请求体、路径参数与查询参数，参数错误统一返回 400。
+-   [x] **迁移文档**: [zod-migration.md](../plan/zod-migration.md) 已收口，无剩余迁移项。
 
 ---
 
@@ -71,11 +71,11 @@
 -   **Server Utils**: `logger.ts`（全部日志分类）、`email/service.ts`（全部邮件发送方法）、`admin-role-sync.ts`、`phone.ts`（部分）。
 -   **Middleware**: `3-demo-guard.ts`（完整覆盖）。
 
-### 5.2 当前覆盖率
+### 5.2 当前覆盖率（2026-11-06 阶段 2 复测）
 
--   总体覆盖率：~17.65%（目标 ≥ 60%）
--   主要缺口：`server/api` (~1%)、`composables` (~5%)、`components` (~26%)
--   提升计划见 [backlog §3.2](../plan/backlog.md#32-质量与测试)。
+-   Statements 78.26%（3637 / 4647）、Lines 78.49%（3529 / 4496）。
+-   `server/api` 95.94%、`composables` 84.35%、`components/base` 90.11%，阶段 2 按范围设下限后全部达标。
+-   主要缺口：`pages`（34.92%）、`plugins`（25.00%）。后续按价值补测，不再以全局数字作为阶段门槛，口径见 [覆盖率基线记录](../design/governance/2026-11-05-coverage-baseline.md)。
 
 ---
 
@@ -101,3 +101,20 @@
 -   [x] **Composables 测试覆盖率提升**: `use-forgot-password-flow`、`use-security-settings`、`admin/use-user-management`。
 -   [x] **Server Utils 测试**: `logger.ts`、`email/service.ts`、`admin-role-sync.ts`。
 -   [x] **Middleware 测试**: `3-demo-guard.ts`。
+
+---
+
+## 8. 阶段 2 · 安全收口与迁移预备（2026-11-06 完成）
+
+_2026-11-05 授权，2026-11-06 全部原子条目完成并归档；共 5 条主线 / 11 条原子条目，范围与验收见 [阶段 2 登记记录](../design/governance/2026-11-05-phase2-registration.md)。本阶段只做安全 / 质量收口与两条迁移的预备，未替换页面组件、未全量翻译。_
+
+-   [x] **M1-1 CodeQL #20 复核与豁免处置**: 判定为误报并 dismiss；豁免登记为 `false-positive`，复核截止 2027-05-31，见 [复核记录](../design/governance/2026-11-05-codeql-20-review.md)。
+-   [x] **M1-2 SSO 历史配置排查与安全台账复核**: 部署实例 SSO provider 0 条，`suspiciousProviders` / `suspiciousAccounts` 为空，无需清理与豁免，见 [排查记录](../design/governance/2026-11-06-sso-audit.md)。
+-   [x] **M2-1 / M2-2 / M2-3 Zod 后端迁移收尾**: 14/14 参数校验 handlers 使用 Zod；补充 400 用例与 Schema 层单测；`zod-migration.md` 与 API 文档同步。
+-   [x] **M3-1 覆盖率基线复测与目标校准**: 基线 Statements 75.74% / Lines 75.95%；目标按范围设下限（全局不退化、`server/api` ≥95%、`composables` ≥80%、`components/base` ≥75%），见 [覆盖率基线记录](../design/governance/2026-11-05-coverage-baseline.md)。
+-   [x] **M3-2 定向补测**: Statements 78.26% / Lines 78.49%；`server/api` 95.94%、`composables` 84.35%、`components/base` 90.11%，四个范围下限全部达标。
+-   [x] **M4-1 caomei-ui 用量盘点与迁移预案**: 可复现的用量快照脚本（30 族 / 301 标签 / 50 文件）、路由白名单初值、`caomei-ui@1.0.0` 精确锁定 + Dependabot `ignore`、回退方案。
+-   [x] **M4-2 caomei-ui 基座接入（P0/P1）**: `caomei-ui/nuxt` + `theme.css` + `data-preset="caomei"`，双库并存，零页面替换；`keyCss` +4.76%、入口 JS 0%，并新增导入守卫脚本。
+-   [x] **M5-1 i18n M1 技术验证**: `@nuxtjs/i18n@10.6.0` + Locale Registry + detector + `prefix_except_default` + `useLocaleHead` + 语言切换原型，见 [i18n 技术验证](../design/governance/2026-11-05-i18n-verification.md)。
+-   [x] **M5-2 Zod per-parse error map 验证**: 1 个表单 + 1 个 API 验证通过；i18n M2 准入结论为「有条件通过」，须先清理 schema 级中文 message。
+-   [x] **阶段内附带修复**: Demo 数据填充中文用户名校验、登录社交按钮 SSR hydration、语言切换位置与暗色主题对比度、better-auth 1.7 PostgreSQL 数据迁移脚本（`database/postgres/2026-11-06-better-auth-1-7-oauth.sql`）。

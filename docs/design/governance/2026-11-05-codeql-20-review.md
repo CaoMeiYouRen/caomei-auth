@@ -1,7 +1,7 @@
 # 2026-11-05 CodeQL #20 复核记录
 
 > **状态**：已结案（按误报 dismiss，豁免台账改为 `false-positive`）。
-> **关联条目**：[阶段 2 M1-1](../../plan/todo.md#阶段-2-原子条目)。
+> **关联条目**：[阶段 2 M1-1](../../archive/completed-work.md)。
 > **门禁规则**：[安全开发规范 5.1.3](../../standards/security.md#513-发布前安全告警门禁-release-security-alert-gate)。
 
 ## 1. 告警基线
@@ -53,7 +53,7 @@
 | :--- | :--- |
 | GitHub 处置 | `state=dismissed`，`dismissed_reason=false positive`，2026-11-05T10:58:17Z |
 | 豁免台账 | `.github/security-alert-exemptions.json`：`category=false-positive`，`expiresAt=2027-05-31` |
-| 追踪 | `docs/plan/todo.md#阶段-2-原子条目`（M1-1） |
+| 追踪 | `docs/archive/completed-work.md`（阶段 2 M1-1） |
 | 复核周期 | 到期前复核一次；规则升级或引入口令类凭证时提前复核 |
 
 ## 5. 残留风险

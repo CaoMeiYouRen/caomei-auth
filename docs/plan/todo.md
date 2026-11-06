@@ -4,37 +4,19 @@
 
 ## 当前状态
 
-**当前进行中阶段：阶段 2「安全收口与迁移预备」**（2026-11-05 用户选择「A 安全与质量收口」，并补充「开始 i18n 和组件库迁移预备」）。
+**当前无进行中阶段。** 阶段 2「安全收口与迁移预备」已于 2026-11-06 完成并归档，交付摘要见 [已完成工作归档 §8](../archive/completed-work.md)。
 
-- 范围与验收口径的单一事实源：[阶段 2 登记记录](../design/governance/2026-11-05-phase2-registration.md)
-- 构成：**5 条主线 / 11 条原子条目**（安全 2 / Zod 3 / 覆盖率 2 / caomei-ui 预备 2 / i18n 预备 2）
-- 边界：**只做预备**，不替换页面级 PrimeVue 组件、不全量翻译页面 / 邮件 / API、不建截图视觉回归工程。
-
-## 阶段 2 原子条目
-
-| 编号 | 条目 | 交付面 | 状态 |
-| :--- | :--- | :--- | :--- |
-| M1-1 | CodeQL #20 复核与豁免处置（2026-11-30 前） | `.github/security-alert-exemptions.json`、告警结论、复核记录 | 已完成（误报 dismiss，2026-11-05） |
-| M1-2 | SSO 历史配置排查与安全台账复核 | `GET /api/admin/sso/audit` 结果、清理记录、豁免台账 | 阻塞（需管理员权限的已部署环境；2026-11-05 本地库无 SSO 数据，未伪造结果） |
-| M2-1 | P1 4 个路径参数 handlers + 测试 | `oauth/client/[id].get`、`admin/oauth/applications/[id].delete`、`admin/sso/providers/[id].get`、`admin/sso/providers/[id].delete` | 已完成（4 个 handler 已用 `idParamSchema`，含 400 用例） |
-| M2-2 | P2/P3 4 个查询参数 handlers + 测试 | 分页 / 筛选 / 日志 / 社交提供商查询 | 已完成（4 个 handler 已用 Zod；新增 Schema 层单测 15 例） |
-| M2-3 | `zod-migration.md` 收口与 API 文档同步 | 迁移状态、验证矩阵、`docs/api/` 示例 | 已完成（14/14 handlers，文档与 API 示例同步） |
-| M3-1 | 覆盖率基线复测与目标校准 | 当前基线、阶段目标（全局 ≥75.74%；`server/api` ≥95% / `composables` ≥80% / `components/base` ≥75%） | 已完成（基线 75.74%，目标已按范围校准） |
-| M3-2 | 定向补测 | `server/api`（含 Zod / SSO audit）、`composables`、`components/base` | 已完成（Statements 78.26%；四个范围下限全部达标） |
-| M4-1 | 用量盘点脚本 / 快照 + 路由白名单初值 + 版本锁定 + 回退方案 | 可复现的 PrimeVue 用量快照、`CAOMEI_UI_ROUTE_PREFIXES` 初值、`caomei-ui@1.0.0` 精确锁定 + Dependabot `ignore`、回退方案 | 已完成（30 族 / 301 标签 / 50 文件；白名单空集；回退方案见 P0 基线记录） |
-| M4-2 | 接入基座（P0/P1）+ P2 前置方案 | `caomei-ui/nuxt` + `theme.css` + `data-preset="caomei"`、双库并存、构建 / 包体复测；`keyCss` / 入口 JS 允许增幅；P2 视觉基线方案（不建截图工程）；不做页面替换 | 已完成（keyCss +4.76%、入口 JS 0%；P2 方案已出；零页面替换） |
-| M5-1 | `@nuxtjs/i18n@10` 技术验证 | `files[]`、`localeDetector`、`prefix_except_default`、`useLocaleHead`、语言切换原型 | 已完成（10.6.0；`/en-US` 路由、hreflang、切换与 cookie 均验证） |
-| M5-2 | Zod per-parse error map 验证 | 1 个表单 + 1 个 API；输出 i18n M2 准入结论 | 已完成（表单 + API 机制通过；M2 准入有条件通过） |
+下一阶段尚未授权；候选方向（caomei-ui P2+ 正式迁移、i18n M2+ 全量落地、体验与性能）见 [backlog.md](./backlog.md)，未经用户明确决策不得登记为当前阶段。
 
 ## 未完成项汇总
 
 > 本节仅为状态指针，不构成条目登记或启动授权；候选详情见 [backlog.md](./backlog.md)。
 
-- 当前阶段 11 条原子条目：**10 条已完成**，**1 条阻塞**（M1-2 需管理员权限的已部署环境，2026-11-05 未执行，未伪造结果）。
-- 待用户提供部署环境后可执行 M1-2：调用 `GET /api/admin/sso/audit`，按 [安全规范](../standards/security.md) 清理 `suspiciousProviders` / `suspiciousAccounts` 并记录。
-- 正式组件库迁移（P2+）与 i18n 全量翻译（M2+）仍为 backlog 候选；本阶段已完成 P0/P1 基座与 M1 技术验证，准入结论见对应记录。
+- 正式组件库迁移（P2+）与 i18n 全量翻译（M2+）仍为 backlog 候选；阶段 2 已完成 P0/P1 基座与 M1 技术验证，准入结论见对应记录。
+- i18n M2 前置：清理 74 处 schema 级中文 message、补齐 `validation.*` 全量键、引入 i18n 审计脚本，见 [i18n 技术验证](../design/governance/2026-11-05-i18n-verification.md)。
+- 后台内容区暗色主题补全、Demo 模式语言切换偏移验证，见 [backlog §3.4](./backlog.md#34-ui-与主题)。
 
 ## 说明
 
-- 阶段 2 的验收、依赖与风险以 [阶段 2 登记记录](../design/governance/2026-11-05-phase2-registration.md) 为准；本表只登记状态，不重复条款。
-- 完成态不得早于 Review Gate 结论；阶段收口时按 [规划规范](../standards/planning.md) 归档。
+- 新候选先登记 backlog，经用户明确授权后再进入 todo；`todo.md` 不保留已完成阶段的交付摘要。
+- 阶段收口时按 [规划规范](../standards/planning.md) 归档到 [已完成工作归档](../archive/completed-work.md)。
