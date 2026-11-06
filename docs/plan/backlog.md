@@ -45,7 +45,13 @@ _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实�
 - **里程碑**：M1 基础设施 → M2 核心链路 → M3 个人 / 安全 / OAuth / SSO → M4 Admin / 邮件 / API → M5 治理与 SEO。执行口径与验收见 [i18n.md](../standards/i18n.md) §8 / §10。
 - **关键修订**：`@nuxtjs/i18n` v10（`lazy` 已移除）；模块化 `files[]` + Locale Registry + runtime loader；Zod v4 per-parse error map；服务端 `useTranslation(event)`；新增 `User.locale` 支持异步邮件；与组件库迁移建议先组件后 i18n。
 - **风险**：`better-auth-localization` 的 `zh-Hans` / `zh-Hant` 标识需在认证层映射；SSR / SEO / Demo 模式兼容；PrimeVue / caomei-ui locale 需同步。
-- **迁入来源**：原 `todo.md`「高优先级 · 多语言适配」；同时修正 [已完成工作归档](../archive/completed-work.md) 中“i18n 已完成”的错误表述。
+- **M2 前置条件**（[M1 技术验证](../design/governance/2026-11-05-i18n-verification.md) §6 结论为有条件通过）：
+    1. 清理 74 处（评估口径）Schema 级中文 `message`，改为标准 Zod 消息或错误键，否则 per-parse error map 不生效；
+    2. 补齐 `validation.*` 全量错误键（`zh-CN` / `en-US` 同构）；
+    3. 引入 key parity / 缺词审计脚本（`scripts/i18n/audit-*.mjs`、`i18n:audit:*`、`lint:i18n`、`test:i18n`）并接入 CI / lint-staged；
+    4. 组件迁移至少完成 P2 试点页，避免在 PrimeVue `label` / `value` 上写 `t()` 后被二次改写；
+    5. `en-US` 保持 `ui-ready`，key parity + 邮件 + SEO 回归后再升 `seo-ready`。
+- **迁入来源**：原 `todo.md`「高优先级 · 多语言适配」与「未完成项汇总」小节（该小节已于 2026-11-06 移除，见 git 历史）；同时修正 [已完成工作归档](../archive/completed-work.md) 中“i18n 已完成”的错误表述。
 
 ---
 

@@ -7,8 +7,8 @@
 | 载体 | 文件 | 职责 |
 | :--- | :--- | :--- |
 | 路线图 | [roadmap.md](../plan/roadmap.md) | 中长期方向与已授权阶段的里程碑；方向不等于启动授权，候选详情留在 backlog |
-| 待办事项 | [todo.md](../plan/todo.md) | 当前已授权阶段的原子条目、验收状态与未完成项指针 |
-| Backlog | [backlog.md](../plan/backlog.md) | 已评估候选池、候选阶段组合与已决策但尚未登记阶段的过渡态 |
+| 待办事项 | [todo.md](../plan/todo.md) | 当前已授权阶段的原子条目与验收状态；不保留未完成项汇总，未完成候选只在 backlog 维护 |
+| Backlog | [backlog.md](../plan/backlog.md) | 已评估候选池、候选阶段组合、未完成项汇总与已决策但尚未登记阶段的过渡态 |
 | 已完成归档 | [completed-work.md](../archive/completed-work.md) | 已完成工作与阶段交付摘要的唯一去处 |
 
 > 不再新增与上述四类职责重叠的规划文件。专项子规划（如 `zod-migration.md`）保留为对应候选的详情载体，由 backlog 引用；`refactor.md` 为历史重构归档，不参与新条目流转，新重构候选统一登记 backlog。
@@ -48,7 +48,7 @@
 
 - **开发前**：对齐 `roadmap.md` 与 `todo.md`，确认条目已获授权。
 - **开发后**：同步 `todo.md` 状态与验收结果；完成项在阶段收口时迁入 [已完成工作归档](../archive/completed-work.md)。
-- **归档清理**：已完成 / 已归档条目不得在 `todo.md`、`backlog.md` 保留交付摘要、归档指针或“闭环整理”段；`todo.md` 只保留“当前阶段状态（可为无进行中阶段）+ 未完成项汇总”，`backlog.md` 只保留尚未进入阶段的候选。
+- **归档清理**：已完成 / 已归档条目不得在 `todo.md`、`backlog.md` 保留交付摘要、归档指针或“闭环整理”段；`todo.md` 只保留“当前阶段状态（可为无进行中阶段）+ 当前阶段原子条目”，`backlog.md` 只保留尚未进入阶段的候选与未完成项汇总（仅指未启动候选的聚合，不含进行中阶段原子条目）。`todo.md` 不保留未完成项汇总或跨阶段清单，避免两份口径。阶段收口时，未完成原子条目迁入 `backlog.md` 候选区，并移除阶段编号与验收状态。
 - **`.session/` 同步**：发生阶段登记、阶段归档或阶段范围变更时，须在同批同步 `.session/current-task.yaml` 与 `.session/runtime-state.json` 的阶段态。`.session/` 为 git-ignored 任务态，不进提交物，但会决定下一次 session 的恢复起点。
 - **Session 收尾**：按 `full-stack-master` 的 Session 协议更新任务态；`.session/wisdom.md` 活跃条目达到阈值时提醒蒸馏。
 
