@@ -1,5 +1,22 @@
 # caomei-auth
 
+# [1.16.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.15.0...v1.16.0) (2026-11-07)
+
+
+### ✨ 新功能
+
+* **db:** 新增 better-auth 1.7 PostgreSQL 数据迁移脚本 ([af71ac0](https://github.com/CaoMeiYouRen/caomei-auth/commit/af71ac0))
+* **i18n:** 完成 @nuxtjs/i18n 技术验证与 Zod 错误映射 ([6a97733](https://github.com/CaoMeiYouRen/caomei-auth/commit/6a97733))
+* **migration:** 接入 caomei-ui 基座并建立导入守卫 ([3ca02ac](https://github.com/CaoMeiYouRen/caomei-auth/commit/3ca02ac))
+* **ui:** 语言切换移至右上角并重做样式 ([253d241](https://github.com/CaoMeiYouRen/caomei-auth/commit/253d241))
+
+
+### 🐛 Bug 修复
+
+* **demo:** 修正演示账号用户名不合法导致填充失败 ([7f982f6](https://github.com/CaoMeiYouRen/caomei-auth/commit/7f982f6))
+* **login:** 修复社交登录按钮的 SSR hydration 不一致 ([d6422b0](https://github.com/CaoMeiYouRen/caomei-auth/commit/d6422b0))
+* **ui:** 修复阶段 2 UI 的暗色主题与对比度问题 ([a0d4f13](https://github.com/CaoMeiYouRen/caomei-auth/commit/a0d4f13))
+
 # [1.15.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.14.0...v1.15.0) (2026-11-05)
 
 
