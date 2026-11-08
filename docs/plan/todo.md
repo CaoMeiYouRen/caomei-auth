@@ -4,13 +4,24 @@
 
 ## 当前状态
 
-**当前进行中阶段：阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面」**（2026-11-06 用户选择方向 A，并补充「可以先处理组件之外的国际化」）。
+**当前进行中阶段：阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面」**（2026-11-06 用户选择方向 A，并补充「可以先处理组件之外的国际化」；2026-11-08 授权插队 M0 发布链路修复）。
 
 - 范围与验收口径的单一事实源：[阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md)
-- 构成：**6 条主线 / 16 条原子条目**（迁移准备 3 / P2 试点 2 / 认证入口 3 / 个人与安全 4 / i18n 非组件面 3 / 收口 1）
-- 边界：**只做 P2–P3 页面替换与非组件 i18n**，不翻译页面文案、不做 P4 Admin、不卸载 PrimeVue、不做体验与性能项。
+- 构成：**6 条主线 / 16 条原子条目 + M0 插队批次 4 条**（迁移准备 3 / P2 试点 2 / 认证入口 3 / 个人与安全 4 / i18n 非组件面 3 / 收口 1；M0 不计入主线）
+- 边界：**只做 P2–P3 页面替换、非组件 i18n 与发布链路修复**，不翻译页面文案、不做 P4 Admin、不卸载 PrimeVue、不做体验与性能项。
 
 ## 阶段 3 原子条目
+
+### M0 发布链路插队（2026-11-08 授权，不计入主线）
+
+| 编号 | 条目 | 交付面 | 状态 |
+| :--- | :--- | :--- | :--- |
+| M0-1 | 新增 `docker-build.yml` 复用工作流 | matrix + digest + merge、参数化 ref / tags / registry / cache scope | 待验证（已实现；本地 lint / typecheck / test / build 通过，待推送后跑工作流） |
+| M0-2 | `docker.yml` 改为调用复用工作流 | 保持 latest / 日期 / `sha-*`、README 同步与 Jenkins 顺序 | 待验证（已实现；本地 lint / typecheck / test / build 通过，待推送后跑工作流） |
+| M0-3 | `release.yml` 去 QEMU | `release` 输出 tag → `docker` 调用复用工作流；保留 semver / latest / 日期 / `sha-*` | 待验证（已实现；本地 lint / typecheck / test / build 通过，待推送后跑工作流） |
+| M0-4 | `docker-publish.yml` build 路径修复 | `prepare` / `retag` / `docker` / `verify` 拆分；retag 默认路径不变 | 待验证（已实现；本地 lint / typecheck / test / build 通过，待推送后跑工作流） |
+
+### 主线原子条目
 
 | 编号 | 条目 | 交付面 | 状态 |
 | :--- | :--- | :--- | :--- |

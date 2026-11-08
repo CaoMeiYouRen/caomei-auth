@@ -62,139 +62,45 @@ jobs:
             --report=security-alert-report.md \
             --json=security-alert-report.json
 
-  # 原生多架构构建：amd64 与 arm64 分别在对应架构的 runner 上构建，
-  # 避免 QEMU 下从源码编译 better-sqlite3 等原生依赖导致构建超时。
-  # 每个平台按 digest 推送，最后在 merge 作业合成多架构 manifest。
-  build:
-    name: Build (${{ matrix.arch }})
+  # 原生多架构构建由 docker-build.yml 复用工作流承担：amd64 / arm64 分别在
+  # 对应架构的 runner 上构建，按 digest 推送后在 merge 作业合成 manifest。
+  docker:
+    name: Docker
     needs:
       - test
       - gate
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            arch: arm64
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 45
     permissions:
-      packages: write
       contents: read
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4.7.0
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Lowercase the repo name
-        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
-      - name: Extract Docker metadata
-        id: metadata
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ env.REPO }}
-      - name: Build and push by digest
-        id: build
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./Dockerfile
-          platforms: ${{ matrix.platform }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          outputs: type=image,name=${{ env.REPO }},push-by-digest=true,name-canonical=true,push=true
-          # 阿里云 ACR 拒绝 OCI provenance empty manifest（application/vnd.oci.empty.v1+json），禁用 provenance 元数据
-          provenance: false
-          cache-from: type=gha,scope=${{ matrix.arch }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
-      - name: Export digest
-        run: |
-          mkdir -p "${RUNNER_TEMP}/digests"
-          digest="${{ steps.build.outputs.digest }}"
-          touch "${RUNNER_TEMP}/digests/${digest#sha256:}"
-      - name: Upload digest
-        uses: actions/upload-artifact@v7
-        with:
-          name: digests-${{ matrix.arch }}
-          path: ${{ runner.temp }}/digests/*
-          if-no-files-found: error
-          retention-days: 1
+      packages: write
+    uses: ./.github/workflows/docker-build.yml
+    with:
+      ref: ${{ github.sha }}
+      images: |
+        ${{ github.repository }}
+        ghcr.io/${{ github.repository }}
+        registry.cn-hangzhou.aliyuncs.com/${{ github.repository }}
+      latest: true
+      date-tag: true
+      sha-tag: true
+      cache-scope-prefix: caomei-auth
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ALIYUN_USERNAME: ${{ secrets.ALIYUN_USERNAME }}
+      ALIYUN_PASSWORD: ${{ secrets.ALIYUN_PASSWORD }}
 
-  merge:
-    name: Publish multi-arch manifests
-    needs: build
+  deploy:
+    name: Deploy
+    needs: docker
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     permissions:
-      packages: write
       contents: read
     steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - name: Download digests
-        uses: actions/download-artifact@v8
-        with:
-          path: ${{ runner.temp }}/digests
-          pattern: digests-*
-          merge-multiple: true
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v4.7.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4.7.0
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Login to Alibaba Cloud Container Registry
-        uses: docker/login-action@v4.7.0
-        with:
-          registry: registry.cn-hangzhou.aliyuncs.com
-          username: ${{ secrets.ALIYUN_USERNAME }}
-          password: ${{ secrets.ALIYUN_PASSWORD }}
       - name: Lowercase the repo name
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
       - name: Get short commit hash
         run: echo "TAG=sha-${GITHUB_SHA::7}" >>${GITHUB_ENV}
-      - name: Extract Docker metadata
-        id: metadata
-        uses: docker/metadata-action@v6
-        with:
-          # 发布到 docker.io / ghcr.io / registry.cn-hangzhou.aliyuncs.com
-          images: |
-            ${{ github.repository }}
-            ghcr.io/${{ github.repository }}
-            registry.cn-hangzhou.aliyuncs.com/${{ github.repository }}
-          tags: |
-            type=raw,value=latest,enable=true
-            type=raw,value={{date 'YYYY-MM-DD' tz='Asia/Shanghai'}},enable=true
-            type=sha,format=short,prefix=sha-,enable=true
-          flavor: latest=false
-      - name: Create and push multi-arch manifests
-        run: |
-          cd "${RUNNER_TEMP}/digests"
-          sources=$(printf '${{ env.REPO }}@sha256:%s ' *)
-          echo "sources: ${sources}"
-          while IFS= read -r tag; do
-            [ -z "$tag" ] && continue
-            echo "::group::docker buildx imagetools create -t ${tag}"
-            docker buildx imagetools create -t "${tag}" ${sources}
-            echo "::endgroup::"
-          done <<< "${{ steps.metadata.outputs.tags }}"
       - name: Docker Hub README & description sync
         uses: meeDamian/sync-readme@v1.0.6
         with:

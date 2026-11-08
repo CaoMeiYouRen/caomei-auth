@@ -17,11 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     permissions:
-      packages: write
       contents: write
       issues: write
       pull-requests: write
       security-events: read
+    outputs:
+      git_tag: ${{ steps.tag.outputs.git_tag }}
+      version: ${{ steps.tag.outputs.version }}
+      short_sha: ${{ steps.tag.outputs.short_sha }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -55,60 +58,37 @@ jobs:
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run release
-      # 发布到 docker
+      # 发布到 docker：拆到独立复用工作流（原生 amd64 / arm64），不再使用 QEMU
       - name: Get git tag
+        id: tag
         run: |
           GIT_TAG=$(git describe --tags --exact-match HEAD 2>/dev/null || true)
-          echo "GIT_TAG=$GIT_TAG" >> ${GITHUB_ENV}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v4.7.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4.7.0
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Login to Alibaba Cloud Container Registry
-        uses: docker/login-action@v4.7.0
-        with:
-          registry: registry.cn-hangzhou.aliyuncs.com
-          username: ${{ secrets.ALIYUN_USERNAME }}
-          password: ${{ secrets.ALIYUN_PASSWORD }}
-      - name: Extract Docker metadata
-        id: metadata
-        uses: docker/metadata-action@v6
-        with:
-          # 发布到 docker.io / ghcr.io / registry.cn-hangzhou.aliyuncs.com
-          images: |
-            ${{ github.repository }}
-            ghcr.io/${{ github.repository }}
-            registry.cn-hangzhou.aliyuncs.com/${{ github.repository }}
-          tags: |
-            type=semver,priority=1100,pattern={{version}},value=${{env.GIT_TAG}},enable=true
-            type=raw,value=latest,enable=true
-            type=raw,value={{date 'YYYY-MM-DD' tz='Asia/Shanghai'}},enable=true
-            type=sha,format=short,prefix=sha-,enable=true
-          flavor: latest=false
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v7
-        # 如果有 GIT_TAG ，就发布
-        if: ${{ env.GIT_TAG }}
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
-          # 阿里云 ACR 个人版拒绝 provenance/sbom 使用的 OCI 空 manifest（application/vnd.oci.empty.v1+json），关闭 attestation
-          provenance: false
-          sbom: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          echo "git_tag=$GIT_TAG" >> ${GITHUB_OUTPUT}
+          echo "version=${GIT_TAG#v}" >> ${GITHUB_OUTPUT}
+          echo "short_sha=$(git rev-parse --short=7 HEAD)" >> ${GITHUB_OUTPUT}
+
+  docker:
+    name: Docker
+    needs: release
+    if: ${{ needs.release.outputs.git_tag != '' }}
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/docker-build.yml
+    with:
+      ref: refs/tags/${{ needs.release.outputs.git_tag }}
+      images: |
+        ${{ github.repository }}
+        ghcr.io/${{ github.repository }}
+        registry.cn-hangzhou.aliyuncs.com/${{ github.repository }}
+      version: ${{ needs.release.outputs.version }}
+      latest: true
+      date-tag: true
+      sha-tag: true
+      sha: ${{ needs.release.outputs.short_sha }}
+      cache-scope-prefix: caomei-auth
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ALIYUN_USERNAME: ${{ secrets.ALIYUN_USERNAME }}
+      ALIYUN_PASSWORD: ${{ secrets.ALIYUN_PASSWORD }}

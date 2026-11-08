@@ -2,7 +2,7 @@
 
 本文档概述草梅 Auth 的中长期发展方向与大颗粒度阶段规划。候选条目、优先级与验收要点见 [backlog.md](./backlog.md)；进行中阶段的原子条目见 [todo.md](./todo.md)；准入与归档规则见 [规划规范](../standards/planning.md)。
 
-> **当前状态**：**阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面」进行中**（2026-11-06 授权）。范围与验收见 [阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md)，原子条目见 [todo.md](./todo.md)；阶段 2 已于 2026-11-06 完成并归档，交付摘要见 [已完成工作归档 §8](../archive/completed-work.md)。
+> **当前状态**：**阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面（含 M0 发布链路插队）」进行中**（2026-11-06 授权；2026-11-08 授权 M0 插队）。范围与验收见 [阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md)，原子条目见 [todo.md](./todo.md)；阶段 2 已于 2026-11-06 完成并归档，交付摘要见 [已完成工作归档 §8](../archive/completed-work.md)。
 
 ---
 
@@ -33,10 +33,11 @@ _2026-11-06：11 条原子条目全部完成并归档，交付摘要见 [已完�
 
 ---
 
-## 阶段 3: caomei-ui P2–P3 迁移与 i18n 非组件面（进行中，2026-11-06 授权）
+## 阶段 3: caomei-ui P2–P3 迁移与 i18n 非组件面（进行中，2026-11-06 授权；含 M0 插队）
 
 _目标：启动组件库正式替换（P2 试点 → P3 认证 / 个人 / 安全 / OAuth / SSO），并并行推进不改页面文案的 i18n 前置与服务端能力。_
 
+- **M0 发布链路（插队，2026-11-08 授权）**：提取 `docker-build.yml` 复用工作流；`docker.yml`、`release.yml`、`docker-publish.yml` 改为调用，去 QEMU；验收见 [原生多架构评估](../design/governance/2026-11-08-native-multiarch-docker-review.md)。
 - **M1 迁移准备与决策**：用量快照复测、P2 视觉基线、DatePicker range 与 Toast 语气样式裁定。
 - **M2 P2 登录页试点**：`/login` 整页切换 + 专用 V2 薄封装；白名单只登记已迁移路由。
 - **M3 P3 认证入口**：注册、忘记 / 重置 / 修改密码、快速登录与认证页 Toast / Confirm。
@@ -96,8 +97,8 @@ _目标：启动组件库正式替换（P2 试点 → P3 认证 / 个人 / 安�
 阶段 2（已完成 2026-11-06）：安全收口 + 迁移预备
         │  M1 安全 → M2 Zod → M3 覆盖率 → M4 caomei-ui 预备 → M5 i18n 预备
         ▼
-阶段 3（进行中）：caomei-ui P2–P3 + i18n 非组件面
-        │  M1 准备 → M2 登录页 → M3 认证入口 → M4 个人/安全/OAuth/SSO → M5 i18n 前置 → M6 收口
+阶段 3（进行中）：caomei-ui P2–P3 + i18n 非组件面（+ M0 发布链路插队）
+        │  M0 原生多架构 → M1 准备 → M2 登录页 → M3 认证入口 → M4 个人/安全/OAuth/SSO → M5 i18n 前置 → M6 收口
         ▼
 后续方向（未授权）：P4/P5 迁移收尾 / i18n 页面与邮件 / 体验与性能 / 开发者生态 / 安全增强 / 企业级
         │

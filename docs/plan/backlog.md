@@ -25,6 +25,12 @@
 - 性能审计与优化 → [§2.5](#25-性能审计与优化)
 - Demo 数据生成增强 → [§2.6](#26-demo-数据生成增强)
 
+### 组合 E：发布链路原生多架构
+
+> 已上收阶段 3 M0（2026-11-08 插队）；后续只保留「`docker-publish` 重建路径安全门禁」候选（§3.1）。
+
+- Docker 镜像去 QEMU（release / 补发入口）→ [§3.3](#33-基础设施)
+
 ---
 
 ## 1. 专项子规划
@@ -125,6 +131,7 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
 
 ### 3.1 安全与合规
 
+- **`docker-publish` 重建路径纳入安全告警门禁**：`mode=build` 会重新构建并推送生产镜像，但目前未执行 `scripts/security/check-alerts.mjs`；`retag` 复用已构建镜像，可按现状处理。待评估后决定是否在 `mode=build` 前增加 gate。
 - **安全审计常态化**：将 `pnpm audit` 与 Dependabot / Code Scanning 告警巡检纳入固定流程，自动化依赖漏洞扫描与报告。
 - **上游未修复依赖告警跟进**：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4）与 `node-forge`（GHSA-86w9-cpqp-85rv，需 ≥1.4.1）当前均无已发布补丁版本，仅存在于构建 / 开发工具链。待上游发版后升级，并复查 `pnpm audit`。
 - **迁入来源**：既有 backlog「安全审计常态化」「上游未修复依赖告警跟进」与原 `todo.md`「低优先级 · 安全审计工具集成」。
@@ -141,6 +148,11 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
 
 ### 3.3 基础设施
 
+- **发布链路原生多架构（[issue #718](https://github.com/CaoMeiYouRen/caomei-auth/issues/718)）**：`release.yml` 去除 QEMU，`docker-publish.yml` 的 `mode=build` 修复为原生 matrix + merge；`docker.yml` 改为调用复用工作流（行为不变）。
+    - **状态**：评估完成，**已排期**（2026-11-08 用户选择立即插队阶段 3，方案 C 复用工作流）；实现见 `.github/workflows/docker-build.yml` 及三个调用入口。
+    - **必要性**：release 最近一次运行在 `Build and push Docker images` 触 90 分钟上限被取消；补发重建路径无 QEMU，arm64 无法执行 Dockerfile `RUN`。
+    - **推荐方案**：方案 C（复用 `docker-build.yml`）；`docker.yml` 改为调用复用工作流（架构 matrix / digest / merge 语义不变），`release.yml` 去 QEMU，`docker-publish.yml` 的 `mode=build` 改用原生 matrix + merge；评估与取舍见 [原生多架构评估](../design/governance/2026-11-08-native-multiarch-docker-review.md)。
+    - **迁入来源**：用户 2026-11-08 指定考虑 issue #718；上游提案 `cmyr-skills-agents@fdda7ef`。
 - **Dependency Cruiser 依赖图**：配置 `depcruise` 验证 `utils/shared` / `server/utils` / `utils/web` 分层约束。
 - **SonarQube / Codecov 集成**：接入外部质量平台，持续追踪覆盖率与代码异味趋势。
 - **Nx / Turborepo 调研**：评估分模块构建的可行性，提升超大项目构建速度。

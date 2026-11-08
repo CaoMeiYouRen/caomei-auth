@@ -4,7 +4,8 @@ name: Docker Publish
 #
 # 默认使用「重新打标签」模式：从已推送的 sha-* 镜像（由 Publish Docker Image 工作流
 # 在 push 时构建）直接复制 manifest，不重新构建，几秒内完成。
-# 若 sha-* 镜像不存在或勾选 rebuild，则回退到完整多架构构建。
+# 若 sha-* 镜像不存在或勾选 rebuild，则回退到完整多架构构建（复用 docker-build.yml，
+# 原生 amd64 / arm64，不使用 QEMU）。
 on:
   workflow_dispatch:
     inputs:
@@ -33,18 +34,25 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
-    name: Publish images
+  prepare:
+    name: Prepare
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 10
     permissions:
       contents: read
-      packages: write
+      packages: read
+    outputs:
+      mode: ${{ steps.plan.outputs.mode }}
+      source: ${{ steps.plan.outputs.source }}
+      version: ${{ steps.vars.outputs.version }}
+      date: ${{ steps.vars.outputs.date }}
+      short_sha: ${{ steps.vars.outputs.short_sha }}
+      repo: ${{ steps.vars.outputs.repo }}
     steps:
       - name: Checkout tag
         uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.tag }}
+          ref: refs/tags/${{ inputs.tag }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -62,6 +70,10 @@ jobs:
               exit 1
               ;;
           esac
+          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9][0-9A-Za-z._-]*$'; then
+            echo "::error::tag 必须以 v 加数字开头，且仅允许字母、数字、点、下划线与连字符（收到：$TAG）"
+            exit 1
+          fi
           if ! git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
             echo "::error::找不到 tag $TAG，请确认 checkout 成功且 fetch-depth 足够"
             exit 1
@@ -85,19 +97,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4.7.0
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Login to Alibaba Cloud Container Registry
-        uses: docker/login-action@v4.7.0
-        with:
-          registry: registry.cn-hangzhou.aliyuncs.com
-          username: ${{ secrets.ALIYUN_USERNAME }}
-          password: ${{ secrets.ALIYUN_PASSWORD }}
 
       - name: Decide publish mode
         id: plan
@@ -151,13 +150,45 @@ jobs:
           echo "mode=build" >> "$GITHUB_OUTPUT"
           echo "::warning::未找到可复用的 sha-* 镜像，回退到完整构建"
 
+  retag:
+    name: Retag images
+    needs: prepare
+    if: needs.prepare.outputs.mode == 'retag'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4.7.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Login to Alibaba Cloud Container Registry
+        uses: docker/login-action@v4.7.0
+        with:
+          registry: registry.cn-hangzhou.aliyuncs.com
+          username: ${{ secrets.ALIYUN_USERNAME }}
+          password: ${{ secrets.ALIYUN_PASSWORD }}
+
       - name: Retag images
-        if: steps.plan.outputs.mode == 'retag'
         env:
-          REPO: ${{ steps.vars.outputs.repo }}
-          VERSION: ${{ steps.vars.outputs.version }}
-          DATE: ${{ steps.vars.outputs.date }}
-          SOURCE: ${{ steps.plan.outputs.source }}
+          REPO: ${{ needs.prepare.outputs.repo }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          DATE: ${{ needs.prepare.outputs.date }}
+          SOURCE: ${{ needs.prepare.outputs.source }}
           LATEST: ${{ inputs.latest }}
         run: |
           set -euo pipefail
@@ -175,40 +206,58 @@ jobs:
             docker buildx imagetools create "${args[@]}" "${image}:${SOURCE}"
           done
 
-      - name: Extract Docker metadata
-        if: steps.plan.outputs.mode == 'build'
-        id: metadata
-        uses: docker/metadata-action@v6
-        with:
-          images: |
-            ${{ github.repository }}
-            ghcr.io/${{ github.repository }}
-            registry.cn-hangzhou.aliyuncs.com/${{ github.repository }}
-          tags: |
-            type=raw,value=${{ steps.vars.outputs.version }}
-            type=raw,value=latest,enable=${{ inputs.latest }}
-            type=raw,value=${{ steps.vars.outputs.date }}
-            type=raw,value=sha-${{ steps.vars.outputs.short_sha }}
-          flavor: latest=false
+  docker:
+    name: Docker
+    needs: prepare
+    if: needs.prepare.outputs.mode == 'build'
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/docker-build.yml
+    with:
+      ref: refs/tags/${{ inputs.tag }}
+      images: |
+        ${{ github.repository }}
+        ghcr.io/${{ github.repository }}
+        registry.cn-hangzhou.aliyuncs.com/${{ github.repository }}
+      version: ${{ needs.prepare.outputs.version }}
+      latest: ${{ inputs.latest }}
+      date-tag: true
+      date: ${{ needs.prepare.outputs.date }}
+      sha-tag: true
+      sha: ${{ needs.prepare.outputs.short_sha }}
+      cache-scope-prefix: caomei-auth
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ALIYUN_USERNAME: ${{ secrets.ALIYUN_USERNAME }}
+      ALIYUN_PASSWORD: ${{ secrets.ALIYUN_PASSWORD }}
 
-      - name: Build and push Docker images
-        if: steps.plan.outputs.mode == 'build'
-        uses: docker/build-push-action@v7
+  verify:
+    name: Verify manifest
+    needs:
+      - prepare
+      - retag
+      - docker
+    if: ${{ !cancelled() && (needs.retag.result == 'success' || needs.docker.result == 'success') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4.7.0
         with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
-          # 阿里云 ACR 个人版拒绝 provenance/sbom 使用的 OCI 空 manifest，关闭 attestation
-          provenance: false
-          sbom: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Show published manifests
         env:
-          REPO: ${{ steps.vars.outputs.repo }}
-          VERSION: ${{ steps.vars.outputs.version }}
+          REPO: ${{ needs.prepare.outputs.repo }}
+          VERSION: ${{ needs.prepare.outputs.version }}
         run: docker buildx imagetools inspect "ghcr.io/${REPO}:${VERSION}"
