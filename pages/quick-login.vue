@@ -12,28 +12,37 @@
                 <!-- Tab切换 -->
                 <div class="login-btn mb-4">
                     <div class="card flex justify-center">
-                        <ButtonGroup>
-                            <Button
-                                label="邮箱验证码"
-                                icon="mdi mdi-email"
-                                :class="{'p-button-outlined': activeTab !== 'email'}"
+                        <CaomeiButtonGroup group-label="快速登录方式">
+                            <CaomeiButton
+                                :variant="activeTab === 'email' ? 'primary' : 'secondary'"
+                                :aria-pressed="activeTab === 'email'"
+                                title="使用邮箱验证码登录"
                                 @click="changeTab('email')"
-                            />
-                            <Button
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-email" />
+                                </template>
+                                邮箱验证码
+                            </CaomeiButton>
+                            <CaomeiButton
                                 v-if="phoneEnabled"
-                                v-tooltip.top="'使用短信验证码登录'"
-                                label="短信验证码"
-                                icon="mdi mdi-phone"
-                                :class="{'p-button-outlined': activeTab !== 'phone'}"
+                                :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
+                                :aria-pressed="activeTab === 'phone'"
+                                title="使用短信验证码登录"
                                 @click="changeTab('phone')"
-                            />
-                        </ButtonGroup>
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-phone" />
+                                </template>
+                                短信验证码
+                            </CaomeiButton>
+                        </CaomeiButtonGroup>
                     </div>
                 </div>
 
                 <!-- 邮箱验证码登录 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseInput
+                    <BaseInputV2
                         id="email"
                         v-model="email"
                         label="邮箱地址"
@@ -41,7 +50,7 @@
                         :error="errors.email"
                     />
 
-                    <BaseInput
+                    <BaseInputV2
                         id="emailCode"
                         v-model="emailCode"
                         label="验证码"
@@ -51,7 +60,7 @@
                         @input="handleEmailCodeInput"
                     >
                         <template #append>
-                            <SendCodeButton
+                            <SendCodeButtonV2
                                 :on-send="sendEmailVerificationCode"
                                 :duration="60"
                                 :disabled="!canSendEmailCode"
@@ -60,27 +69,29 @@
                                 resend-text="重新发送"
                             />
                         </template>
-                    </BaseInput>
+                    </BaseInputV2>
 
                     <!-- 邮箱登录按钮 -->
-                    <Button
+                    <CaomeiButton
                         class="btn btn-primary"
-                        label="邮箱快速登录"
+                        block
                         :loading="isEmailLoggingIn"
                         @click="loginWithEmail"
-                    />
+                    >
+                        邮箱快速登录
+                    </CaomeiButton>
                 </div>
 
                 <!-- 手机验证码登录 -->
                 <div v-show="activeTab === 'phone'">
-                    <BasePhoneInput
+                    <BasePhoneInputV2
                         id="phone"
                         v-model="phone"
                         label="手机号"
                         :error="errors.phone"
                     />
 
-                    <BaseInput
+                    <BaseInputV2
                         id="phoneCode"
                         v-model="phoneCode"
                         label="验证码"
@@ -90,7 +101,7 @@
                         @input="handlePhoneCodeInput"
                     >
                         <template #append>
-                            <SendCodeButton
+                            <SendCodeButtonV2
                                 :on-send="sendPhoneVerificationCode"
                                 :duration="60"
                                 :disabled="!canSendPhoneCode"
@@ -99,15 +110,17 @@
                                 resend-text="重新发送"
                             />
                         </template>
-                    </BaseInput>
+                    </BaseInputV2>
 
                     <!-- 手机登录按钮 -->
-                    <Button
+                    <CaomeiButton
                         class="btn btn-primary"
-                        label="手机快速登录"
+                        block
                         :loading="isPhoneLoggingIn"
                         @click="loginWithPhone"
-                    />
+                    >
+                        手机快速登录
+                    </CaomeiButton>
                 </div>
 
                 <Captcha ref="captcha" />
@@ -147,14 +160,12 @@
                 </div>
             </div>
         </div>
-
-        <Toast />
     </div>
 </template>
 
 <script lang="ts" setup>
 import AuthLeft from '@/components/auth-left.vue'
-import SendCodeButton from '@/components/send-code-button.vue'
+import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
 import Captcha from '@/components/captcha.vue'
 import { useQuickLoginFlow } from '@/composables/use-quick-login-flow'
 
@@ -199,32 +210,5 @@ const {
     display: flex;
     width: 100%;
     margin-bottom: 1em;
-}
-
-// 添加媒体查询优化小屏幕显示
-@media (width <= 375px) {
-    .login-btn .p-button {
-        padding: 0.5rem 0.75rem !important;
-        font-size: 0.875rem !important;
-    }
-}
-
-@media (width <= 320px) {
-    .login-btn .p-button {
-        padding: 0.5rem !important;
-        font-size: 0.75rem !important;
-    }
-}
-
-.code-row {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.code-btn {
-    min-width: 110px;
-    padding: 0.75rem;
-    font-size: 0.95rem;
 }
 </style>

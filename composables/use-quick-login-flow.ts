@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { emailSchema, phoneSchema } from '@/utils/shared/validators'
 import {
@@ -94,12 +94,7 @@ export function useQuickLoginFlow() {
     const changeTab = (tab: 'email' | 'phone') => {
         // 如果短信功能未启用且尝试切换到手机登录，提示错误并阻止切换
         if (tab === 'phone' && !phoneEnabled) {
-            toast.add({
-                severity: 'error',
-                summary: '功能未启用',
-                detail: '短信功能未启用，请使用邮箱验证码登录',
-                life: 3000,
-            })
+            toast.danger({ title: '功能未启用', description: '短信功能未启用，请使用邮箱验证码登录', duration: 3000 })
             return
         }
 
@@ -118,24 +113,14 @@ export function useQuickLoginFlow() {
         if (!result.success) {
             const message = getFirstZodError(result) || '请输入有效的邮箱地址'
             errors.value.email = message
-            toast.add({
-                severity: 'error',
-                summary: '发送失败',
-                detail: message,
-                life: 5000,
-            })
+            toast.danger({ title: '发送失败', description: message, duration: 5000 })
             return false
         }
 
         const success = await sendEmailCode()
 
         if (success) {
-            toast.add({
-                severity: 'success',
-                summary: '验证码已发送',
-                detail: '验证码已发送到您的邮箱，请注意查收',
-                life: 3000,
-            })
+            toast.success({ title: '验证码已发送', description: '验证码已发送到您的邮箱，请注意查收', duration: 3000 })
             return true
         }
 
@@ -152,24 +137,14 @@ export function useQuickLoginFlow() {
         if (!result.success) {
             const message = getFirstZodError(result) || '请输入有效的手机号'
             errors.value.phone = message
-            toast.add({
-                severity: 'error',
-                summary: '发送失败',
-                detail: message,
-                life: 5000,
-            })
+            toast.danger({ title: '发送失败', description: message, duration: 5000 })
             return false
         }
 
         const success = await sendPhoneCode()
 
         if (success) {
-            toast.add({
-                severity: 'success',
-                summary: '验证码已发送',
-                detail: '验证码已发送到您的手机，请注意查收',
-                life: 3000,
-            })
+            toast.success({ title: '验证码已发送', description: '验证码已发送到您的手机，请注意查收', duration: 3000 })
             return true
         }
 
@@ -207,23 +182,13 @@ export function useQuickLoginFlow() {
                 throw new Error(error.message || '登录失败')
             }
 
-            toast.add({
-                severity: 'success',
-                summary: '登录成功',
-                detail: '欢迎回来！',
-                life: 2000,
-            })
+            toast.success({ title: '登录成功', description: '欢迎回来！', duration: 2000 })
 
             navigateAfterLoginWithDelay()
         } catch (error: any) {
             const message = error.message || '登录失败，请检查验证码是否正确'
             errors.value.emailCode = message
-            toast.add({
-                severity: 'error',
-                summary: '登录失败',
-                detail: message,
-                life: 5000,
-            })
+            toast.danger({ title: '登录失败', description: message, duration: 5000 })
         } finally {
             isEmailLoggingIn.value = false
         }
@@ -256,35 +221,32 @@ export function useQuickLoginFlow() {
                 throw new Error(error.message || '登录失败')
             }
 
-            toast.add({
-                severity: 'success',
-                summary: '登录成功',
-                detail: '欢迎回来！',
-                life: 2000,
-            })
+            toast.success({ title: '登录成功', description: '欢迎回来！', duration: 2000 })
 
             navigateAfterLoginWithDelay()
         } catch (error: any) {
             const message = error.message || '登录失败，请检查验证码是否正确'
             errors.value.phoneCode = message
-            toast.add({
-                severity: 'error',
-                summary: '登录失败',
-                detail: message,
-                life: 5000,
-            })
+            toast.danger({ title: '登录失败', description: message, duration: 5000 })
         } finally {
             isPhoneLoggingIn.value = false
         }
     }
 
     const handleEmailCodeInput = () => {
+        // 表单组件换为 CaomeiInput 后，maxlength 落在外层容器上不再生效，这里补齐 6 位上限
+        if (emailCode.value.length > 6) {
+            emailCode.value = emailCode.value.slice(0, 6)
+        }
         if (errors.value.emailCode) {
             errors.value.emailCode = ''
         }
     }
 
     const handlePhoneCodeInput = () => {
+        if (phoneCode.value.length > 6) {
+            phoneCode.value = phoneCode.value.slice(0, 6)
+        }
         if (errors.value.phoneCode) {
             errors.value.phoneCode = ''
         }

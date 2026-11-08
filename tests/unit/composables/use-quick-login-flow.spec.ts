@@ -12,11 +12,9 @@ vi.mock('@/lib/auth-client', () => ({
     },
 }))
 
-const addToastMock = vi.fn()
-vi.mock('primevue/usetoast', () => ({
-    useToast: () => ({
-        add: addToastMock,
-    }),
+const toastMocks = { show: vi.fn(), success: vi.fn(), danger: vi.fn(), warning: vi.fn(), info: vi.fn() }
+vi.mock('caomei-ui', () => ({
+    useToast: () => toastMocks,
 }))
 
 const paramsMock = { tab: 'email' }
@@ -79,7 +77,7 @@ describe('useQuickLoginFlow', () => {
         sendEmailSpy.mockResolvedValue(true)
         await sendEmailVerificationCode()
         expect(sendEmailSpy).toHaveBeenCalled()
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }))
+        expect(toastMocks.success).toHaveBeenCalled()
     })
 
     it('should handle email code sending failure', async () => {
@@ -112,7 +110,7 @@ describe('useQuickLoginFlow', () => {
         sendPhoneSpy.mockResolvedValue(true)
         await sendPhoneVerificationCode()
         expect(sendPhoneSpy).toHaveBeenCalled()
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }))
+        expect(toastMocks.success).toHaveBeenCalled()
     })
 
     it('should handle phone code sending failure', async () => {
@@ -148,9 +146,8 @@ describe('useQuickLoginFlow', () => {
         changeTab('phone')
 
         expect(activeTab.value).toBe('email')
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'error',
-            summary: '功能未启用',
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({
+            title: '功能未启用',
         }))
     })
 
@@ -182,7 +179,7 @@ describe('useQuickLoginFlow', () => {
             email: 'test@example.com',
             otp: '123456',
         })
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }))
+        expect(toastMocks.success).toHaveBeenCalled()
     })
 
     it('should handle failed email login', async () => {

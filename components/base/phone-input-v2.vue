@@ -112,7 +112,8 @@ watch(() => props.modelValue, (newValue) => {
 }
 
 .region-selector {
-    flex: 1;
+    /* 固定宽度并预留下拉箭头：flex: 1 会把「CN +86」裁成「CN」，丢失区号信息 */
+    flex: 0 0 7rem;
     min-width: 0;
 
     :deep(.caomei-select) {
@@ -121,7 +122,7 @@ watch(() => props.modelValue, (newValue) => {
 }
 
 .phone-number-input {
-    flex: 3;
+    flex: 1;
     min-width: 0;
 }
 </style>
