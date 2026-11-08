@@ -11,44 +11,53 @@
                 </p>
                 <div class="forgot-btn mb-4">
                     <div class="card flex justify-center">
-                        <ButtonGroup>
-                            <Button
-                                label="邮箱"
-                                icon="mdi mdi-email"
-                                :class="{'p-button-outlined': activeTab!== 'email'}"
+                        <CaomeiButtonGroup group-label="找回密码方式">
+                            <CaomeiButton
+                                :variant="activeTab === 'email' ? 'primary' : 'secondary'"
+                                :aria-pressed="activeTab === 'email'"
+                                title="使用邮箱找回密码"
                                 @click="changeMode('email')"
-                            />
-                            <Button
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-email" />
+                                </template>
+                                邮箱
+                            </CaomeiButton>
+                            <CaomeiButton
                                 v-if="phoneEnabled"
-                                label="手机号"
-                                icon="mdi mdi-phone"
-                                :class="{'p-button-outlined': activeTab!== 'phone'}"
+                                :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
+                                :aria-pressed="activeTab === 'phone'"
+                                title="使用手机号找回密码"
                                 @click="changeMode('phone')"
-                            />
-                        </ButtonGroup>
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-phone" />
+                                </template>
+                                手机号
+                            </CaomeiButton>
+                        </CaomeiButtonGroup>
                     </div>
                 </div>
                 <!-- 邮箱找回密码表单 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseInput
+                    <BaseInputV2
                         id="email"
                         v-model="email"
-                        v-tooltip.top="'请输入注册时使用的邮箱地址'"
                         label="邮箱"
                         placeholder="请输入邮箱"
                         :error="errors.email"
+                        title="请输入注册时使用的邮箱地址"
                     />
-                    <BaseInput
+                    <BaseInputV2
                         id="emailCode"
                         v-model="emailCode"
-                        v-tooltip.top="'请输入发送到您邮箱的验证码'"
                         label="邮箱验证码"
                         placeholder="请输入邮箱验证码"
                         :error="errors.emailCode"
+                        title="请输入发送到您邮箱的验证码"
                     >
                         <template #append>
-                            <SendCodeButton
-                                v-tooltip.top="'点击获取验证码，验证码将发送到您输入的邮箱'"
+                            <SendCodeButtonV2
                                 :on-send="sendEmailCode"
                                 :duration="60"
                                 :disabled="!canSendEmailCode"
@@ -57,28 +66,27 @@
                                 resend-text="重新发送"
                             />
                         </template>
-                    </BaseInput>
+                    </BaseInputV2>
                 </div>
                 <!-- 手机号找回密码表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <BasePhoneInput
+                    <BasePhoneInputV2
                         id="phone"
                         v-model="phone"
-                        v-tooltip.top="'请输入注册时使用的手机号'"
                         label="手机号"
                         :error="errors.phone"
+                        title="请输入注册时使用的手机号"
                     />
-                    <BaseInput
+                    <BaseInputV2
                         id="phoneCode"
                         v-model="phoneCode"
-                        v-tooltip.top="'请输入发送到您手机的短信验证码'"
                         label="短信验证码"
                         placeholder="请输入短信验证码"
                         :error="errors.phoneCode"
+                        title="请输入发送到您手机的短信验证码"
                     >
                         <template #append>
-                            <SendCodeButton
-                                v-tooltip.top="'点击获取短信验证码，验证码将发送到您输入的手机号'"
+                            <SendCodeButtonV2
                                 :on-send="sendPhoneCode"
                                 :duration="60"
                                 :disabled="!canSendPhoneCode"
@@ -87,16 +95,16 @@
                                 resend-text="重新发送"
                             />
                         </template>
-                    </BaseInput>
+                    </BaseInputV2>
                 </div>
-                <BasePassword
+                <BasePasswordV2
                     id="newPassword"
                     v-model="newPassword"
-                    v-tooltip.top="getPasswordRequirementsShort()"
                     label="新密码"
                     placeholder="请输入新密码"
                     :feedback="false"
                     :error="errors.newPassword"
+                    :title="getPasswordRequirementsShort()"
                 >
                     <template #append>
                         <PasswordStrength
@@ -106,34 +114,34 @@
                             :min-length-for-display="1"
                         />
                     </template>
-                </BasePassword>
-                <BasePassword
+                </BasePasswordV2>
+                <BasePasswordV2
                     id="confirmPassword"
                     v-model="confirmPassword"
-                    v-tooltip.top="'请再次输入相同的新密码以确认'"
                     label="确认新密码"
                     placeholder="请再次输入新密码"
                     :feedback="false"
                     :error="errors.confirmPassword"
+                    title="请再次输入相同的新密码以确认"
                 />
                 <Captcha ref="captcha" />
                 <div class="form-group">
-                    <Button
-                        v-tooltip.top="'点击提交信息重置密码'"
+                    <CaomeiButton
                         class="btn btn-primary mt-2"
-                        label="重置密码"
-
+                        block
+                        title="点击提交信息重置密码"
                         @click="resetPassword"
-                    />
+                    >
+                        重置密码
+                    </CaomeiButton>
                 </div>
                 <div class="toggle-login">
                     已有账号？ <NuxtLink
-
                         :to="`/login?mode=${activeTab}`"
                         class="toggle-link"
                     >
                         立即登录
-                    </nuxtlink>
+                    </NuxtLink>
                 </div>
             </div>
         </div>
@@ -142,7 +150,7 @@
 
 <script lang="ts" setup>
 import AuthLeft from '@/components/auth-left.vue'
-import SendCodeButton from '@/components/send-code-button.vue'
+import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
 import PasswordStrength from '@/components/password-strength.vue'
 import Captcha from '@/components/captcha.vue'
 import { getPasswordRequirementsShort } from '@/utils/shared/password'
@@ -245,27 +253,6 @@ const {
     margin-bottom: 1.5rem;
 }
 
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.form-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    background-color: $background-light;
-    border: 1px solid $secondary-bg;
-    border-radius: 8px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-input:focus {
-    border-color: $primary;
-    box-shadow: 0 0 0 3px rgb(230 57 70 / 0.2);
-}
-
 .forgot-btn {
     display: flex;
     width: 100%;
@@ -322,11 +309,6 @@ const {
     gap: 1rem;
     align-items: center;
     margin-bottom: 1rem;
-}
-
-.p-password {
-    width: 100%;
-    padding: 0;
 }
 
 // 深色主题下的忘记密码页面优化

@@ -170,18 +170,46 @@
     }
 }
 
-// PrimeVue → caomei-ui 认证页表单密度桥接。
+// PrimeVue → caomei-ui 认证页视觉桥接。
 // 迁移目标是不改变既有观感（迁移评估 §11）；caomei 组件默认字号 / 高度更紧凑，
-// 用组件自身 token 恢复到迁移前尺度，避免选择器级强改。
+// 这里只覆盖组件尺寸档位引用的原始 token，避免逐组件写选择器级样式。
 .auth-card {
+    /* 字号档位：md 档在组件元素上就地声明 height 引用，故覆盖其引用源 */
+    --caomei-font-size-md: 1rem;
     --caomei-form-item-gap: 0.5rem;
     --caomei-form-item-label-font-size: 1rem;
     --caomei-form-item-message-font-size: 1rem;
-    --caomei-field-font-size: 1rem;
-    --caomei-field-height: 3.125rem;
-    --caomei-field-padding-inline: 1rem;
+    --caomei-checkbox-font-size: 1rem;
 
     .caomei-form-item {
         margin-bottom: 1.5rem;
+    }
+
+    /* 旧标签行高为 normal（16px × normal ≈ 18.4px），组件默认 1.4 会撑高每个字段 */
+    .caomei-form-item .caomei-form-item__label {
+        line-height: normal;
+    }
+
+    /* 旧错误提示与控件间距 4px、行高 normal；组件用同一 flex gap（8px）连接，需要回拉 4px */
+    .caomei-form-item .caomei-form-item__error,
+    .caomei-form-item .caomei-form-item__hint {
+        margin-top: -0.25rem;
+        line-height: normal;
+    }
+
+    /* 输入框：迁移前实测 46px（10px 内边距 + 24px 行高 + 2px 边框）；md 档 token 就地声明，需同级覆盖 */
+    .caomei-field--md {
+        --caomei-field-height: 2.875rem;
+    }
+
+    /* 按钮：迁移前默认 41px、1rem 内边距；主按钮由页面 .btn-primary 的 min-height 抬到 44px */
+    .caomei-button {
+        --caomei-button-height: 2.5rem;
+        --caomei-button-padding-x: 1rem;
+    }
+
+    /* 「获取验证码」在原设计中比输入框高 2px（48px） */
+    .code-row .caomei-button {
+        --caomei-button-height: 3rem;
     }
 }
