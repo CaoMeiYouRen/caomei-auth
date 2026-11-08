@@ -24,9 +24,9 @@
 - **渲染环境固定为容器**：本地与 CI 共用 `mcr.microsoft.com/playwright:v<版本>-noble`。宿主与容器实测约 1% 的整页漂移（12,509 / 1,296,000 px），因此基线只在容器内采集，宿主直接跑仅用于调试。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
-## 3. 视觉矩阵（每层 25 张）
+## 3. 视觉矩阵（每层 31 张）
 
-同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 25 张。
+同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 31 张。
 
 | 路由 | 主题 | 视口 | 状态 | 快照 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -41,6 +41,9 @@
 | `/forgot-password` | 浅 | 1440×900 | 手机号 Tab | `forgot-password-light-desktop-tab-phone` |
 | `/change-password` | 浅 / 暗 | 1440×900 / 390×844 | 默认（需登录） | `change-password-{theme}-{viewport}-default` |
 | `/change-password` | 浅 | 1440×900 | 校验错误（需登录） | `change-password-light-desktop-error` |
+| `/quick-login` | 浅 / 暗 | 1440×900 / 390×844 | 默认（邮箱验证码 Tab） | `quick-login-{theme}-{viewport}-default` |
+| `/quick-login` | 浅 | 1440×900 | 校验错误 | `quick-login-light-desktop-error` |
+| `/quick-login` | 浅 | 1440×900 | 短信验证码 Tab | `quick-login-light-desktop-tab-phone` |
 
 P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前提交上采集参考态，与本批迁移提交同批入库。
 
@@ -207,11 +210,33 @@ pnpm test:visual --grep "login 默认态"
 | 移动端 Tab 单行 | 修复了迁移前的逐字换行问题，属改善 |
 | 校验错误态累计位移 | 错误块与旧设计每字段仍有 ~2px 行高差 |
 
+### 6.3 2026-11-09 M3-3 批次（快速登录）
+
+**范围**：`/quick-login` 6 张参考态，采自迁移前提交 `3f8fdc3`。
+
+**发现并修复的回归**：
+
+- **区号选择器被裁剪**：`phone-input-v2.vue` 的 `.region-selector` 用 `flex: 1`，CaomeiSelect 的箭头占位后「CN +86」被裁成「CN」。该组件被 5 个已迁移页共用，属 M2/M3-2 遗留问题；改为 `flex: 0 0 7rem`，手机号输入 `flex: 1`。
+- **验证码 6 位上限失效**：`maxlength` 随 `$attrs` 落在 CaomeiInput 的根容器而非原生 input；改由 `handleEmailCodeInput` / `handlePhoneCodeInput` 截断到 6 位。
+
+**差异收敛（像素 / 占比）**
+
+| 快照 | 像素 / 占比 |
+| :--- | ---: |
+| `quick-login-light-desktop-default` | 15,935 / 2% |
+| `quick-login-dark-desktop-default` | 15,458 / 2% |
+| `quick-login-light-mobile-default` | 18,593 / 6% |
+| `quick-login-dark-mobile-default` | 18,185 / 6% |
+| `quick-login-light-desktop-error` | 19,915 / 2% |
+| `quick-login-light-desktop-tab-phone` | 16,133 / 2% |
+
+**接受项**：与其余认证页一致（按钮 41.4 → 40px、圆角 8 → 6px、卡片居中位移、移动端 Tab 单行）。Toast 已切到 caomei 组件，样式差异（圆角 / 内边距 / 标题字号）沿用迁移评估 §7.3 的登记，视觉矩阵不覆盖浮层。
+
 ## 7. 已知限制
 
 - **跨环境已用镜像固定**：本地与 CI 共用同一 Playwright 镜像；宿主直跑与容器相差约 1% 像素，故宿主结果不作判定依据。镜像升级或 playwright 版本变化时，必须重采自基线并在 PR 中说明。
 - **未覆盖状态**：2FA 弹窗视觉（需已启用 2FA 的测试账号）、验证码启用态（需 captcha provider）、提交中 / 提交成功 Toast（需真实后端）。这些状态在环境具备后追加，并同批补参考态。
-- **已覆盖四页**：`/login`、`/register`、`/forgot-password`、`/change-password`；其余 P3 页面（快速登录、个人资料、安全设置、OAuth 同意、SSO）在各自迁移前补采。
+- **已覆盖五页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`；其余 P3 页面（个人资料、安全设置、OAuth 同意、SSO）在各自迁移前补采。
 - **无预算分级**：当前用统一 `maxDiffPixels 200`，未按 `reader` / `admin` 分档；P4 数据页前评估。
 
 ## 8. 与既有文档的关系

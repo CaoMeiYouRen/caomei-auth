@@ -30,6 +30,8 @@ const passthrough = process.argv.slice(2).filter((arg) => !arg.startsWith('--mod
 const modeFlag = passthrough.find((arg) => Object.hasOwn(MODES, arg))
 const mode = modeFlag ? MODES[modeFlag] : DEFAULT_MODE
 const forwarded = passthrough.filter((arg) => arg !== modeFlag)
+/* 逐项加引号：`--grep "quick-login 短信验证码"` 这类参数含空格，直接拼接会被拆成多个位置参数 */
+const forwardedCommand = forwarded.map((arg) => `'${arg.replaceAll('\'', '\'\\\'\'')}'`).join(' ')
 
 const pnpmVersion = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8')).packageManager?.split('@').pop() ?? '11.17.0'
 const playwrightVersion = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8')).devDependencies['@playwright/test']?.replace(/^[^\d]*/, '')
@@ -50,7 +52,7 @@ run('docker', [
     '-e', 'VISUAL_IN_CONTAINER=1',
     '-e', 'CI',
     image,
-    'bash', '-lc', `npm i -g pnpm@${pnpmVersion} >/dev/null && pnpm i --frozen-lockfile && pnpm build && pnpm ${mode.raw} ${forwarded.join(' ')}`,
+    'bash', '-lc', `npm i -g pnpm@${pnpmVersion} >/dev/null && pnpm i --frozen-lockfile && pnpm build && pnpm ${mode.raw} ${forwardedCommand}`,
 ])
 copyBack()
 
