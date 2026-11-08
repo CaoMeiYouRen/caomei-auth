@@ -55,7 +55,7 @@
 ## 4. 验收标准
 
 - **M1**：用量快照可复现；白名单与包体基线与阶段 2 记录一致或有归因；P2 视觉基线覆盖矩阵，差异清单可逐项对照。
-- **M0**：`release.yml` 主路径无 `setup-qemu-action`，`build` matrix 为 amd64 / arm64 原生 runner；`docker-publish.yml` `mode=build` 不再单 runner 构建双架构，`mode=retag` 行为不变；`docker.yml` 行为不变；`imagetools inspect` 显示 amd64 + arm64，版本 / `latest` / 日期 / `sha-*` 指向同一 manifest；各架构缓存 scope 独立；全量 lint / typecheck / test / build 通过。工作流改动只能在推送后由 `workflow_dispatch` / push 验证，未验证前不得标记完成。**2026-11-08 进展**：`docker-build.yml`、`docker.yml` 构建 / merge、`docker-publish` rebuild / retag 均已跑通；`docker.yml` deploy 的 README 缺失已修复，待推送复跑 README + Jenkins 两步；`release.yml` 未单独运行，下一次定时（2026-11-14 20:00 UTC+8）或手动 dispatch 会正式发版并完成验证。证据见 [复核记录](./2026-11-08-native-multiarch-docker-review.md) §5.2。
+- **M0**：`release.yml` 主路径无 `setup-qemu-action`，`build` matrix 为 amd64 / arm64 原生 runner；`docker-publish.yml` `mode=build` 不再单 runner 构建双架构，`mode=retag` 行为不变；`docker.yml` 行为不变；`imagetools inspect` 显示 amd64 + arm64，版本 / `latest` / 日期 / `sha-*` 指向同一 manifest；各架构缓存 scope 独立；全量 lint / typecheck / test / build 通过。工作流改动只能在推送后由 `workflow_dispatch` / push 验证，未验证前不得标记完成。**2026-11-08 进展**：`docker-build.yml`、`docker.yml` 构建 / merge、`docker-publish` rebuild / retag 均已跑通；`docker.yml` deploy 的 README 缺失已修复并复跑通过（README + Jenkins 两步）；`release.yml` 未单独运行，下一次定时（2026-11-14 20:00 UTC+8）或手动 dispatch 会正式发版并完成验证。证据见 [复核记录](./2026-11-08-native-multiarch-docker-review.md) §5.2。
 - **M2**：`/login` 无 PrimeVue 在册组件族残留；浅色 / 暗色视觉差异全部归因，「待修」清零；定向测试、SSR / hydration 通过；白名单只登记已迁移路由。
 - **M3 / M4**：每个迁移路由内无两套组件混用；表单校验、提交、2FA、Toast / Confirm、OAuth 同意、SSO 登录行为与迁移前一致；a11y 与暗色通过；每批独立提交并可单独回滚。
 - **M5**：0 处 schema 级中文 `message`；`validation.*` 键 parity 100%；审计脚本可运行并接入 CI / `lint-staged`；认证类 API 在 `en-US` 下返回英文错误并带 `Content-Language`，不可用时显式登记回退。
