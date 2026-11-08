@@ -66,6 +66,13 @@ const ROUTES: readonly VisualRoute[] = [
         submitLabel: '修改密码',
         errorAnchor: '请输入当前密码',
     },
+    {
+        path: '/quick-login',
+        slug: 'quick-login',
+        submitLabel: '邮箱快速登录',
+        errorAnchor: '请输入邮箱',
+        tabs: [['短信验证码', 'phone']],
+    },
 ]
 
 /** 视觉服务固定账号：空库每次重建，首个用例注册，后续用例登录。 */

@@ -1,10 +1,23 @@
 {
     "capturedAt": "2026-11-08",
-    "capturedOn": {
-        "branch": "test/visual-baseline",
-        "commit": "fc2201e",
-        "note": "feat(login) 迁移提交 228116c 的父提交，即 /login 与 /register 仍为 PrimeVue 的最后一个提交"
-    },
+    "batches": [
+        {
+            "batch": "P2/P3 认证页（login、register）",
+            "branch": "test/visual-baseline",
+            "commit": "fc2201e",
+            "note": "feat(login) 迁移提交 228116c 的父提交"
+        },
+        {
+            "batch": "M3-2（forgot-password、change-password）",
+            "branch": "test/visual-baseline-m3-2",
+            "commit": "bfb5ce3"
+        },
+        {
+            "batch": "M3-3（quick-login）",
+            "branch": "test/visual-baseline-m3-3",
+            "commit": "3f8fdc3"
+        }
+    ],
     "purpose": "组件迁移前的 PrimeVue 渲染原貌（参考态）。迁移批次用当前渲染与之比对，差异必须逐项归因。",
     "tool": {
         "playwright": "1.64.1",
@@ -58,6 +71,12 @@
         { "name": "change-password-dark-desktop-default", "route": "/change-password", "theme": "dark", "viewport": "1440x900", "state": "默认" },
         { "name": "change-password-light-mobile-default", "route": "/change-password", "theme": "light", "viewport": "390x844", "state": "默认" },
         { "name": "change-password-dark-mobile-default", "route": "/change-password", "theme": "dark", "viewport": "390x844", "state": "默认" },
-        { "name": "change-password-light-desktop-error", "route": "/change-password", "theme": "light", "viewport": "1440x900", "state": "校验错误" }
+        { "name": "change-password-light-desktop-error", "route": "/change-password", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
+        { "name": "quick-login-light-desktop-default", "route": "/quick-login", "theme": "light", "viewport": "1440x900", "state": "默认（邮箱验证码 Tab）" },
+        { "name": "quick-login-dark-desktop-default", "route": "/quick-login", "theme": "dark", "viewport": "1440x900", "state": "默认" },
+        { "name": "quick-login-light-mobile-default", "route": "/quick-login", "theme": "light", "viewport": "390x844", "state": "默认" },
+        { "name": "quick-login-dark-mobile-default", "route": "/quick-login", "theme": "dark", "viewport": "390x844", "state": "默认" },
+        { "name": "quick-login-light-desktop-error", "route": "/quick-login", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
+        { "name": "quick-login-light-desktop-tab-phone", "route": "/quick-login", "theme": "light", "viewport": "1440x900", "state": "短信验证码 Tab" }
     ]
 }
