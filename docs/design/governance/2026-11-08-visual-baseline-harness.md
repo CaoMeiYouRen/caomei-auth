@@ -20,7 +20,8 @@
     - 参考态层：`tests/visual/parity/*.visual-parity.spec.ts` + `playwright.visual-parity.config.ts`，快照 = 迁移前 PrimeVue 原貌，随仓库提交，**不可原地刷新**。
     - 自基线层：`tests/visual/baseline/*.visual.spec.ts` + `playwright.visual.config.ts`，快照 = 当前已接受状态，用于后续回归。
 - **两层共用矩阵与服务环境**：`tests/visual/helpers/config.ts` 是唯一来源，禁止复制副本（服务环境漏一个变量就会让两层渲染分叉）。
-- **不接入 CI 阻断**：参考态尚未在 CI 复采，跨环境（本地与 ubuntu runner）渲染差异未验证；接入前不得作为阻断门禁。
+- **CI 门禁**：自基线层是阻断门禁（`.github/workflows/test.yml` 的 `visual` job）；参考态层按迁移批次使用，当前仍有已登记的有意差异，只出报告与工件、不阻断。
+- **渲染环境固定为容器**：本地与 CI 共用 `mcr.microsoft.com/playwright:v<版本>-noble`。宿主与容器实测约 1% 的整页漂移（12,509 / 1,296,000 px），因此基线只在容器内采集，宿主直接跑仅用于调试。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
 ## 3. 视觉矩阵（每层 25 张）
@@ -75,9 +76,11 @@ pnpm test:visual
 # 4) 差异归因完成后更新自基线（不得用于刷新参考态）
 pnpm test:visual:update
 
-# 5) 定向比对单个快照
-pnpm exec playwright test --config=playwright.visual-parity.config.ts --grep "login 默认态"
+# 5) 定向比对（容器内执行）
+pnpm test:visual --grep "login 默认态"
 ```
+
+> 以上命令默认在固定 Playwright 容器内执行（`scripts/testing/run-visual.mjs`）；容器内 / CI 用 `test:visual:raw*` 直接跑 Playwright。
 
 | 产物 | 路径 | 是否入库 |
 | :--- | :--- | :--- |
@@ -87,7 +90,21 @@ pnpm exec playwright test --config=playwright.visual-parity.config.ts --grep "lo
 | 失败产物 `-actual` / `-diff` | `test-results/visual-parity/`、`test-results/visual/` | 否（`.gitignore`） |
 | HTML 报告 | `playwright-report/visual-parity/`、`playwright-report/visual/` | 否（`.gitignore`） |
 
-前置条件：先 `pnpm build`（`webServer` 直接运行 `.output/server/index.mjs`），且 `3100` 端口未被其他构建占用。
+前置条件：`pnpm test:visual` 会先构建再启动 `.output/server/index.mjs`（3100 端口），无需手工 build。
+
+### 5.1 CI 门禁
+
+`.github/workflows/test.yml` 的 `visual` job 在 Playwright 官方容器内运行（`needs: [test]`）：
+
+| 步骤 | 命令 | 是否阻断 |
+| :--- | :--- | :--- |
+| 自基线回归 | `pnpm test:visual:raw` | **是**（job 失败即阻断合并） |
+| 参考态审计 | `pnpm test:visual:parity:raw` | 否（`continue-on-error: true`，产出 `-diff.png` 工件） |
+
+- 工件：`visual-regression`（`test-results/visual*`、`playwright-report/visual*`、`reference-manifest.json`），保留 7 天。
+- **基线只能在容器内更新**：本地 `pnpm test:visual:update` 会进入同一镜像执行并回写 `__screenshots__`；禁止用宿主直跑的结果更新基线。
+- **镜像版本与 `@playwright/test` 精确绑定**：升级 Playwright 必须同批重采自基线（浏览器与字体随镜像变化）。
+- 容器 job 以 root 运行，Chromium 依赖镜像自带的沙箱配置；`--ipc=host` 用于避免小 `/dev/shm` 导致的渲染抖动。
 
 ## 6. 判定与差异处置
 
@@ -192,7 +209,7 @@ pnpm exec playwright test --config=playwright.visual-parity.config.ts --grep "lo
 
 ## 7. 已知限制
 
-- **跨环境未验证**：参考态在本地 WSL2（linux x64）采集。迁移评估 §8.2 口径要求「跨环境差异无法消除时以 CI 产物为唯一基线来源」，因此 CI 接入前必须先在 ubuntu runner 复采并刷新 `reference-manifest.json`。
+- **跨环境已用镜像固定**：本地与 CI 共用同一 Playwright 镜像；宿主直跑与容器相差约 1% 像素，故宿主结果不作判定依据。镜像升级或 playwright 版本变化时，必须重采自基线并在 PR 中说明。
 - **未覆盖状态**：2FA 弹窗视觉（需已启用 2FA 的测试账号）、验证码启用态（需 captcha provider）、提交中 / 提交成功 Toast（需真实后端）。这些状态在环境具备后追加，并同批补参考态。
 - **已覆盖四页**：`/login`、`/register`、`/forgot-password`、`/change-password`；其余 P3 页面（快速登录、个人资料、安全设置、OAuth 同意、SSO）在各自迁移前补采。
 - **无预算分级**：当前用统一 `maxDiffPixels 200`，未按 `reader` / `admin` 分档；P4 数据页前评估。

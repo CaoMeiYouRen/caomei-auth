@@ -8,7 +8,7 @@
 - **目标**：在 P2 试点路由切换前，建立"可复现、可对照"的人工视觉基线，确保迁移差异逐项归因，不让未登记的外观变化静默放行。
 - **边界（2026-11-08 修订）**：
     - 两层已建立：参考态层（`playwright.visual-parity.config.ts` + `tests/visual/reference/`，迁移前原貌）与自基线层（`playwright.visual.config.ts` + `tests/visual/__screenshots__/`，当前接受态），快照均随仓库提交；采集 / 比对命令与矩阵见 [视觉参考态基座](./2026-11-08-visual-baseline-harness.md)。
-    - 不建 CI 阻断：参考态尚未在 CI 复采，跨环境渲染差异未验证；接入前只作本地与 Review Gate 证据。
+    - CI 门禁已接入：`.github/workflows/test.yml` 的 `visual` job 在固定 Playwright 容器内运行自基线回归（阻断）与参考态审计（报告）；本地 / CI 共用同一镜像，见 [视觉参考态基座](./2026-11-08-visual-baseline-harness.md) §5.1。
     - 不做分级像素阈值：以 `maxDiffPixels 200` 吸收抗锯齿噪声，超限即报告，按「差异清单 + 逐项归因」放行。
 
 ## 2. 页面与场景矩阵

@@ -66,7 +66,7 @@
 | 项 | 说明 |
 | :--- | :--- |
 | caomei-ui 版本 | 精确锁定 `1.2.0`（2026-11-08 由 1.0.0 升级并复测 typecheck / build），Dependabot `ignore` 同步为 `>1.2.0`；后续升级仍走人工批次并重跑回归 |
-| 视觉基线 | 两层：参考态（迁移前，`tests/visual/reference/`）+ 自基线（当前接受态，`tests/visual/__screenshots__/`），见 [视觉参考态基座](./2026-11-08-visual-baseline-harness.md)；首轮差异已归因，剩余差异登记为有意；CI 接入待 backlog |
+| 视觉基线 | 两层：参考态（迁移前，`tests/visual/reference/`）+ 自基线（当前接受态，`tests/visual/__screenshots__/`），见 [视觉参考态基座](./2026-11-08-visual-baseline-harness.md)；CI 门禁已接入（容器固定，自基线阻断 / 参考态报告） |
 | DatePicker / Toast | 决策已按 1.2.0 修订（range 直接迁移、Toast token 映射）；上游 #28 中 DataTable 密度 / 选择列宽度已交付，Paginator 报表仍为自渲染 |
 | Toast / Confirm 双 Provider | 所有调用点显式 import 来源，`migration:check-imports` 守卫；禁止依赖自动导入 |
 | 安全设置页体量 | 596 行，含 2FA / 会话 / 绑定；若超出原子条目阈值（10 文件 / 800 行新增）必须拆条 |

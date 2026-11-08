@@ -39,3 +39,50 @@ jobs:
 
         # 检查代码重复率
       - run: pnpm run lint:duplicate
+
+  # ===============================================================
+  # 视觉回归门禁（Visual Regression）
+  #
+  # 为什么在容器里跑：视觉比对是像素级判定，宿主与 runner 的字体集合 / fontconfig
+  # 不同会造成约 1% 的整页漂移（本地 WSL2 vs 容器实测 12,509 / 1,296,000 px）。
+  # 因此渲染环境固定为 Playwright 官方镜像，本地采集与 CI 判定同源。
+  #
+  # - 自基线（tests/visual/__screenshots__）是阻断门禁；
+  # - 参考态审计（tests/visual/parity）按迁移批次使用，当前仍有已登记的有意差异，
+  #   因此只产出报告与工件，不阻断。
+  # ===============================================================
+  visual:
+    name: Visual Regression
+    needs: [test]
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+      options: --ipc=host
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install pnpm
+        run: npm i -g pnpm@11.17.0
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+      - name: Build Nuxt
+        run: pnpm run build
+      - name: Visual baseline gate
+        run: pnpm run test:visual:raw
+      - name: Visual parity audit (report only)
+        if: always()
+        continue-on-error: true
+        run: pnpm run test:visual:parity:raw
+      - name: Upload visual artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-regression
+          path: |
+            test-results/visual/
+            playwright-report/visual/
+            test-results/visual-parity/
+            playwright-report/visual-parity/
+            tests/visual/reference-manifest.json
+          retention-days: 7
+          if-no-files-found: ignore

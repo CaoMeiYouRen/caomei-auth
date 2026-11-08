@@ -137,7 +137,6 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
     - 阶段 2 按范围设下限并全部达标：`server/api` ≥95%（95.94%）、`composables` ≥80%（84.35%）、`components/base` ≥75%（90.11%），全局不跌破 75.74%。
     - 详见 [测试规范](../standards/testing.md)。
 - **jscpd 重复代码检测**：引入代码重复率检测，目标全项目重复率降至 5% 以下。
-- **视觉回归接入 CI**：`pnpm test:visual`（自基线）与 `pnpm test:visual:parity`（迁移一致性）目前只在本地 / Review Gate 运行。接入前须在 ubuntu runner 复采参考态并确认字体渲染一致（跨环境差异无法消除时以 CI 产物为唯一基线来源），再决定自基线是否转阻断。
 - **视觉预算分级与允许清单**：P4 数据页（DataTable 密度 / 选择列 / 空态）引入 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单，避免统一阈值在数据页产生大量噪声。
 - **max-lines 基线清理**：消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本节保留 i18n 迁移与 `/api/admin/sso/providers` 系列补录。
