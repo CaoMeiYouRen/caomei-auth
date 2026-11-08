@@ -31,7 +31,7 @@
 | M2-1 | 登录页整页迁移 + login 专用 V2 薄封装 | `pages/login.vue`、按需 V2 封装、白名单 `/login` | 已完成（2026-11-08：页面 PrimeVue 节点 0；三 Tab / 校验 / 密码显隐 / 明暗回归通过） |
 | M2-2 | 试点回归与白名单登记 | 测试 mock 改写、视觉差异归因、SSR / hydration、定向测试 | 部分完成（白名单 / 三 Tab / 校验 / 密码显隐 / 明暗 / 移动 / 2FA mock 通过；2FA 视觉与 captcha 渲染待环境） |
 | M3-1 | 注册页迁移 | `pages/register.vue` 及消费者封装 | 已完成（2026-11-08：PrimeVue 节点 0；明暗 / 移动 / 错误 / 手机号 / 密码强度回归通过；captcha 待环境） |
-| M3-2 | 忘记密码 / 重置密码 / 修改密码迁移 | `forgot-password.vue`、`change-password.vue` 及相关组件 | 待开始 |
+| M3-2 | 忘记密码 / 重置密码 / 修改密码迁移 | `forgot-password.vue`、`change-password.vue` 及相关组件 | 已完成（2026-11-09：两页 PrimeVue 节点 0；明暗 / 移动 / 校验错误 / Tab 回归通过；参考态 11 张、自基线 25 张入库） |
 | M3-3 | 快速登录迁移与认证页 Toast / Confirm 切换 | `quick-login.vue`、认证相关 `useToast` / `useConfirm` 显式 import | 待开始 |
 | M4-1 | 个人资料页迁移 | `pages/profile.vue` 及消费者封装 | 待开始 |
 | M4-2 | 安全设置页迁移（2FA / 会话 / 账号绑定） | `pages/security.vue`；超阈值时按 2FA、会话、绑定拆条 | 待开始 |

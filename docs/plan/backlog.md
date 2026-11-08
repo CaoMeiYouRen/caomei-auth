@@ -128,6 +128,7 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
 - **`docker-publish` 重建路径纳入安全告警门禁**：`mode=build` 会重新构建并推送生产镜像，但目前未执行 `scripts/security/check-alerts.mjs`；`retag` 复用已构建镜像，可按现状处理。待评估后决定是否在 `mode=build` 前增加 gate。
 - **安全审计常态化**：将 `pnpm audit` 与 Dependabot / Code Scanning 告警巡检纳入固定流程，自动化依赖漏洞扫描与报告。
 - **上游未修复依赖告警跟进**：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4）与 `node-forge`（GHSA-86w9-cpqp-85rv，需 ≥1.4.1）当前均无已发布补丁版本，仅存在于构建 / 开发工具链。待上游发版后升级，并复查 `pnpm audit`。
+- **密码重置邮件链接缺页面**：`lib/auth.ts` 的 `sendResetPassword` 会把邮件链接指向 `/reset-password`，但仓库内没有该页面（`publicPaths` 与限流里都只有路径登记），点击后 404。当前实际可用的是忘记密码页的 OTP 重置流程；需决定补齐邮件链接页或移除该链路。
 - **迁入来源**：既有 backlog「安全审计常态化」「上游未修复依赖告警跟进」与原 `todo.md`「低优先级 · 安全审计工具集成」。
 
 ### 3.2 质量与测试

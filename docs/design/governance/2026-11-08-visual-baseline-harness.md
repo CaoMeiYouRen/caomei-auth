@@ -140,13 +140,61 @@ pnpm exec playwright test --config=playwright.visual-parity.config.ts --grep "lo
 | 卡片垂直位置 ~25px | 内容高度差导致居中位移，非布局断裂 |
 | 移动端 Tab 单行 | 修复了迁移前的逐字换行问题，属改善 |
 
-> 自基线层已按修复后的状态采集并通过（14/14），后续回归以自基线为准；参考态保留用于迁移一致性审计，不再作为绿/红门禁。
+> 自基线层已按修复后的状态采集并通过（14/14），后续回归以自基线为准；参考态保留用于迁移一致性审计，不再作为绿/红门禁。M3-2 批次修正桥接后已重采两层快照，最新数值见 §6.2。
+
+### 6.2 2026-11-09 M3-2 批次（忘记 / 修改密码）
+
+**范围与采集**：`/forgot-password`（公开，6 张）、`/change-password`（需登录，5 张）。参考态采自该批迁移前提交 `bfb5ce3`，提交于 `22d440d`；受保护页面用固定视觉账号建立会话。
+
+**发现的桥接缺陷（已修）**：首版桥接只声明 `--caomei-field-height` / `--caomei-field-font-size`，实际无效——组件在 `:where(.caomei-field--md)` 里就地声明这两个变量，元素级声明压过 `.auth-card` 的继承。修正为覆盖其引用源：
+
+- `--caomei-font-size-md: 1rem`（字段与按钮字号 14 → 16px）
+- `.caomei-field--md { --caomei-field-height: 2.875rem }`（36 → 46px，与迁移前实测一致）
+- 标签行高 `normal`（组件默认 1.4 会把每个字段撑高 4px）
+- 错误提示 `margin-top: -0.25rem`（组件用同一 flex gap，旧设计为 4px）
+- 按钮 40px、验证码按钮 48px、复选框字号 16px
+
+该修正同时改善了 login / register 的自基线（字段 40 → 46、字号 14 → 16、按钮 36 → 40），因此两层快照在 M3-2 批次一并重采。
+
+**差异收敛（像素 / 占比）**
+
+| 快照 | 像素 / 占比 |
+| :--- | ---: |
+| `forgot-password-light-desktop-default` | 18,055 / 2% |
+| `forgot-password-dark-desktop-default` | 17,899 / 2% |
+| `forgot-password-light-mobile-default` | 23,394 / 8% |
+| `forgot-password-dark-mobile-default` | 23,475 / 8% |
+| `forgot-password-light-desktop-error` | 26,800 / 3% |
+| `forgot-password-light-desktop-tab-phone` | 16,583 / 2% |
+| `change-password-light-desktop-default` | 26,263 / 3% |
+| `change-password-dark-desktop-default` | 24,137 / 2% |
+| `change-password-light-mobile-default` | 23,915 / 8% |
+| `change-password-dark-mobile-default` | 23,155 / 8% |
+| `change-password-light-desktop-error` | 33,335 / 3% |
+| `login-light-desktop-default`（复测） | 15,375 / 2% |
+| `register-light-desktop-default`（复测） | 27,409 / 3% |
+| `login-light-mobile-default`（复测） | 29,068 / 9% |
+| `register-light-mobile-default`（复测） | 18,653 / 6% |
+| `register-light-desktop-error`（复测） | 41,475 / 4% |
+
+> 计数包含整卡垂直位移（内容高度差导致居中位置移动），因此是上限而非逐元素差异量；判断是否回归应以 `-diff.png` 的区域分布为准。
+
+**剩余差异（接受）**
+
+| 项 | 说明 |
+| :--- | :--- |
+| 控件圆角 8 → 6px、暗色底 `#121212` → `#18181b` | 迁移评估已登记 |
+| 按钮高度 41.4 → 40px | 组件尺度 token |
+| `change-password` 旧输入 40.4 → 46px | 该页原用 PrimeVue `Password`，统一到其他认证页的 46px |
+| 卡片垂直位置 | 内容高度差导致居中位移，非布局断裂 |
+| 移动端 Tab 单行 | 修复了迁移前的逐字换行问题，属改善 |
+| 校验错误态累计位移 | 错误块与旧设计每字段仍有 ~2px 行高差 |
 
 ## 7. 已知限制
 
 - **跨环境未验证**：参考态在本地 WSL2（linux x64）采集。迁移评估 §8.2 口径要求「跨环境差异无法消除时以 CI 产物为唯一基线来源」，因此 CI 接入前必须先在 ubuntu runner 复采并刷新 `reference-manifest.json`。
 - **未覆盖状态**：2FA 弹窗视觉（需已启用 2FA 的测试账号）、验证码启用态（需 captcha provider）、提交中 / 提交成功 Toast（需真实后端）。这些状态在环境具备后追加，并同批补参考态。
-- **仅认证两页**：P3 其余页面（忘记 / 重置 / 修改密码、快速登录、个人资料、安全设置、OAuth 同意、SSO）在各自迁移前补采。
+- **已覆盖四页**：`/login`、`/register`、`/forgot-password`、`/change-password`；其余 P3 页面（快速登录、个人资料、安全设置、OAuth 同意、SSO）在各自迁移前补采。
 - **无预算分级**：当前用统一 `maxDiffPixels 200`，未按 `reader` / `admin` 分档；P4 数据页前评估。
 
 ## 8. 与既有文档的关系
