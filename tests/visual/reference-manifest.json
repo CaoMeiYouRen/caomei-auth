@@ -16,6 +16,12 @@
             "batch": "M3-3（quick-login）",
             "branch": "test/visual-baseline-m3-3",
             "commit": "3f8fdc3"
+        },
+        {
+            "batch": "M4-1（profile）",
+            "branch": "test/visual-baseline-m4-1",
+            "commit": "4d94931",
+            "note": "ID 字段加 data-visual-mask：用户 ID 每次运行随机"
         }
     ],
     "purpose": "组件迁移前的 PrimeVue 渲染原貌（参考态）。迁移批次用当前渲染与之比对，差异必须逐项归因。",
@@ -43,40 +49,265 @@
         "phoneLogin": true,
         "captchaProvider": null,
         "demoMode": false,
-        "socialProviders": ["github", "google", "wechat"],
+        "socialProviders": [
+            "github",
+            "google",
+            "wechat"
+        ],
         "authenticatedUser": "visual-baseline@example.com（登录后页面首次注册、后续登录；不写入截图）"
     },
     "snapshots": [
-        { "name": "login-light-desktop-default", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "默认" },
-        { "name": "login-dark-desktop-default", "route": "/login", "theme": "dark", "viewport": "1440x900", "state": "默认" },
-        { "name": "login-light-mobile-default", "route": "/login", "theme": "light", "viewport": "390x844", "state": "默认" },
-        { "name": "login-dark-mobile-default", "route": "/login", "theme": "dark", "viewport": "390x844", "state": "默认" },
-        { "name": "login-light-desktop-error", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
-        { "name": "login-light-desktop-tab-username", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "用户名 Tab" },
-        { "name": "login-light-desktop-tab-email", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "邮箱 Tab" },
-        { "name": "login-light-desktop-tab-phone", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "手机号 Tab" },
-        { "name": "register-light-desktop-default", "route": "/register", "theme": "light", "viewport": "1440x900", "state": "默认" },
-        { "name": "register-dark-desktop-default", "route": "/register", "theme": "dark", "viewport": "1440x900", "state": "默认" },
-        { "name": "register-light-mobile-default", "route": "/register", "theme": "light", "viewport": "390x844", "state": "默认" },
-        { "name": "register-dark-mobile-default", "route": "/register", "theme": "dark", "viewport": "390x844", "state": "默认" },
-        { "name": "register-light-desktop-error", "route": "/register", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
-        { "name": "register-light-desktop-tab-phone", "route": "/register", "theme": "light", "viewport": "1440x900", "state": "手机号 Tab" },
-        { "name": "forgot-password-light-desktop-default", "route": "/forgot-password", "theme": "light", "viewport": "1440x900", "state": "默认" },
-        { "name": "forgot-password-dark-desktop-default", "route": "/forgot-password", "theme": "dark", "viewport": "1440x900", "state": "默认" },
-        { "name": "forgot-password-light-mobile-default", "route": "/forgot-password", "theme": "light", "viewport": "390x844", "state": "默认" },
-        { "name": "forgot-password-dark-mobile-default", "route": "/forgot-password", "theme": "dark", "viewport": "390x844", "state": "默认" },
-        { "name": "forgot-password-light-desktop-error", "route": "/forgot-password", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
-        { "name": "forgot-password-light-desktop-tab-phone", "route": "/forgot-password", "theme": "light", "viewport": "1440x900", "state": "手机号 Tab" },
-        { "name": "change-password-light-desktop-default", "route": "/change-password", "theme": "light", "viewport": "1440x900", "state": "默认" },
-        { "name": "change-password-dark-desktop-default", "route": "/change-password", "theme": "dark", "viewport": "1440x900", "state": "默认" },
-        { "name": "change-password-light-mobile-default", "route": "/change-password", "theme": "light", "viewport": "390x844", "state": "默认" },
-        { "name": "change-password-dark-mobile-default", "route": "/change-password", "theme": "dark", "viewport": "390x844", "state": "默认" },
-        { "name": "change-password-light-desktop-error", "route": "/change-password", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
-        { "name": "quick-login-light-desktop-default", "route": "/quick-login", "theme": "light", "viewport": "1440x900", "state": "默认（邮箱验证码 Tab）" },
-        { "name": "quick-login-dark-desktop-default", "route": "/quick-login", "theme": "dark", "viewport": "1440x900", "state": "默认" },
-        { "name": "quick-login-light-mobile-default", "route": "/quick-login", "theme": "light", "viewport": "390x844", "state": "默认" },
-        { "name": "quick-login-dark-mobile-default", "route": "/quick-login", "theme": "dark", "viewport": "390x844", "state": "默认" },
-        { "name": "quick-login-light-desktop-error", "route": "/quick-login", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
-        { "name": "quick-login-light-desktop-tab-phone", "route": "/quick-login", "theme": "light", "viewport": "1440x900", "state": "短信验证码 Tab" }
+        {
+            "name": "login-light-desktop-default",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "login-dark-desktop-default",
+            "route": "/login",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "login-light-mobile-default",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "login-dark-mobile-default",
+            "route": "/login",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "login-light-desktop-error",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "login-light-desktop-tab-username",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "用户名 Tab"
+        },
+        {
+            "name": "login-light-desktop-tab-email",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "邮箱 Tab"
+        },
+        {
+            "name": "login-light-desktop-tab-phone",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "手机号 Tab"
+        },
+        {
+            "name": "register-light-desktop-default",
+            "route": "/register",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "register-dark-desktop-default",
+            "route": "/register",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "register-light-mobile-default",
+            "route": "/register",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "register-dark-mobile-default",
+            "route": "/register",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "register-light-desktop-error",
+            "route": "/register",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "register-light-desktop-tab-phone",
+            "route": "/register",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "手机号 Tab"
+        },
+        {
+            "name": "forgot-password-light-desktop-default",
+            "route": "/forgot-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "forgot-password-dark-desktop-default",
+            "route": "/forgot-password",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "forgot-password-light-mobile-default",
+            "route": "/forgot-password",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "forgot-password-dark-mobile-default",
+            "route": "/forgot-password",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "forgot-password-light-desktop-error",
+            "route": "/forgot-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "forgot-password-light-desktop-tab-phone",
+            "route": "/forgot-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "手机号 Tab"
+        },
+        {
+            "name": "change-password-light-desktop-default",
+            "route": "/change-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "change-password-dark-desktop-default",
+            "route": "/change-password",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "change-password-light-mobile-default",
+            "route": "/change-password",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "change-password-dark-mobile-default",
+            "route": "/change-password",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "change-password-light-desktop-error",
+            "route": "/change-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "quick-login-light-desktop-default",
+            "route": "/quick-login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认（邮箱验证码 Tab）"
+        },
+        {
+            "name": "quick-login-dark-desktop-default",
+            "route": "/quick-login",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "quick-login-light-mobile-default",
+            "route": "/quick-login",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "quick-login-dark-mobile-default",
+            "route": "/quick-login",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "quick-login-light-desktop-error",
+            "route": "/quick-login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "quick-login-light-desktop-tab-phone",
+            "route": "/quick-login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "短信验证码 Tab"
+        },
+        {
+            "name": "profile-light-desktop-default",
+            "route": "/profile",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "profile-dark-desktop-default",
+            "route": "/profile",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "profile-light-mobile-default",
+            "route": "/profile",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "profile-dark-mobile-default",
+            "route": "/profile",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "profile-light-desktop-privacy",
+            "route": "/profile",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "隐私模式"
+        }
     ]
 }

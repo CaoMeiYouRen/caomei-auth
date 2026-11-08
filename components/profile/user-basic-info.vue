@@ -5,6 +5,7 @@
         :model-value="privacyMode ? maskUserId(user.id) : user.id"
         label="ID"
         disabled
+        data-visual-mask
     />
     <BaseInput
         v-if="user.username"

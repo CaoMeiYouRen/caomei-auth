@@ -15,6 +15,13 @@ interface VisualViewport {
     height: number
 }
 
+interface VisualState {
+    /** 用例标题与快照后缀 */
+    label: string
+    slug: string
+    action: (page: Page) => Promise<void>
+}
+
 interface VisualRoute {
     /** 业务路径 */
     path: string
@@ -22,12 +29,16 @@ interface VisualRoute {
     slug: string
     /** 是否为登录后页面（需要先建立会话） */
     auth?: boolean
-    /** 提交按钮可见文案 */
-    submitLabel: string
-    /** 空表单提交后应出现的首条错误文案，用于确认校验已执行 */
-    errorAnchor: string
+    /** 异步加载页面：等待该文案出现后再截图 */
+    readyText?: string
+    /** 提交按钮可见文案；缺省则不跑校验错误态 */
+    submitLabel?: string
+    /** 空表单提交后应出现的首条错误文案；缺省则不跑校验错误态 */
+    errorAnchor?: string
     /** 额外覆盖的 Tab：[可见文案, 快照后缀] */
     tabs?: ReadonlyArray<readonly [string, string]>
+    /** 额外交互态 */
+    states?: readonly VisualState[]
 }
 
 const VIEWPORTS: readonly VisualViewport[] = [
@@ -73,6 +84,21 @@ const ROUTES: readonly VisualRoute[] = [
         errorAnchor: '请输入邮箱',
         tabs: [['短信验证码', 'phone']],
     },
+    {
+        path: '/profile',
+        slug: 'profile',
+        auth: true,
+        readyText: 'visual-baseline@example.com',
+        states: [
+            {
+                label: '隐私模式',
+                slug: 'privacy',
+                action: async (page) => {
+                    await page.getByRole('button', { name: '显示详情' }).click()
+                },
+            },
+        ],
+    },
 ]
 
 /** 视觉服务固定账号：空库每次重建，首个用例注册，后续用例登录。 */
@@ -111,6 +137,9 @@ async function open(page: Page, route: VisualRoute, theme: VisualTheme): Promise
     await applyTheme(page, theme)
     await page.goto(route.path, { waitUntil: 'domcontentloaded' })
     await expect(page.locator('.auth-card')).toBeVisible()
+    if (route.readyText) {
+        await expect(page.getByText(route.readyText)).toBeVisible()
+    }
     if (theme === 'dark') {
         await expect(page.locator('html')).toHaveClass(/dark/)
     } else {
@@ -149,12 +178,16 @@ function defineInteractionStates(): void {
         test.use({ colorScheme: 'light', viewport: { width: 1440, height: 900 } })
 
         for (const route of ROUTES) {
-            test(`${route.slug} 校验错误态`, async ({ page }) => {
-                await open(page, route, 'light')
-                await page.getByRole('button', { name: route.submitLabel, exact: true }).click()
-                await expect(page.getByText(route.errorAnchor, { exact: true })).toBeVisible()
-                await shot(page, `${route.slug}-light-desktop-error`)
-            })
+            if (route.submitLabel && route.errorAnchor) {
+                const submitLabel = route.submitLabel
+                const errorAnchor = route.errorAnchor
+                test(`${route.slug} 校验错误态`, async ({ page }) => {
+                    await open(page, route, 'light')
+                    await page.getByRole('button', { name: submitLabel, exact: true }).click()
+                    await expect(page.getByText(errorAnchor, { exact: true })).toBeVisible()
+                    await shot(page, `${route.slug}-light-desktop-error`)
+                })
+            }
 
             for (const [label, slug] of route.tabs ?? []) {
                 test(`${route.slug} ${label} Tab`, async ({ page }) => {
@@ -162,6 +195,14 @@ function defineInteractionStates(): void {
                     /* 不使用 exact：CaomeiButton 的图标参与可访问名（如「󰏲 手机号」），PrimeVue 侧为纯文本 */
                     await page.getByRole('button', { name: label }).click()
                     await shot(page, `${route.slug}-light-desktop-tab-${slug}`)
+                })
+            }
+
+            for (const state of route.states ?? []) {
+                test(`${route.slug} ${state.label}`, async ({ page }) => {
+                    await open(page, route, 'light')
+                    await state.action(page)
+                    await shot(page, `${route.slug}-light-desktop-${state.slug}`)
                 })
             }
         }
