@@ -25,12 +25,13 @@
         "themeInjection": "localStorage vueuse-color-scheme (light|dark)"
     },
     "fixtures": {
-        "database": "空 sqlite（NODE_ENV=test + synchronize），每次启动前重建",
+        "database": "空 sqlite：每次启动前按 database/sqlite/create.sql 重建（生产构建 NODE_ENV 已内联，synchronize 不生效）",
         "usernameLogin": true,
         "phoneLogin": true,
         "captchaProvider": null,
         "demoMode": false,
-        "socialProviders": ["github", "google", "wechat"]
+        "socialProviders": ["github", "google", "wechat"],
+        "authenticatedUser": "visual-baseline@example.com（登录后页面首次注册、后续登录；不写入截图）"
     },
     "snapshots": [
         { "name": "login-light-desktop-default", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "默认" },
@@ -46,6 +47,17 @@
         { "name": "register-light-mobile-default", "route": "/register", "theme": "light", "viewport": "390x844", "state": "默认" },
         { "name": "register-dark-mobile-default", "route": "/register", "theme": "dark", "viewport": "390x844", "state": "默认" },
         { "name": "register-light-desktop-error", "route": "/register", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
-        { "name": "register-light-desktop-tab-phone", "route": "/register", "theme": "light", "viewport": "1440x900", "state": "手机号 Tab" }
+        { "name": "register-light-desktop-tab-phone", "route": "/register", "theme": "light", "viewport": "1440x900", "state": "手机号 Tab" },
+        { "name": "forgot-password-light-desktop-default", "route": "/forgot-password", "theme": "light", "viewport": "1440x900", "state": "默认" },
+        { "name": "forgot-password-dark-desktop-default", "route": "/forgot-password", "theme": "dark", "viewport": "1440x900", "state": "默认" },
+        { "name": "forgot-password-light-mobile-default", "route": "/forgot-password", "theme": "light", "viewport": "390x844", "state": "默认" },
+        { "name": "forgot-password-dark-mobile-default", "route": "/forgot-password", "theme": "dark", "viewport": "390x844", "state": "默认" },
+        { "name": "forgot-password-light-desktop-error", "route": "/forgot-password", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
+        { "name": "forgot-password-light-desktop-tab-phone", "route": "/forgot-password", "theme": "light", "viewport": "1440x900", "state": "手机号 Tab" },
+        { "name": "change-password-light-desktop-default", "route": "/change-password", "theme": "light", "viewport": "1440x900", "state": "默认" },
+        { "name": "change-password-dark-desktop-default", "route": "/change-password", "theme": "dark", "viewport": "1440x900", "state": "默认" },
+        { "name": "change-password-light-mobile-default", "route": "/change-password", "theme": "light", "viewport": "390x844", "state": "默认" },
+        { "name": "change-password-dark-mobile-default", "route": "/change-password", "theme": "dark", "viewport": "390x844", "state": "默认" },
+        { "name": "change-password-light-desktop-error", "route": "/change-password", "theme": "light", "viewport": "1440x900", "state": "校验错误" }
     ]
 }

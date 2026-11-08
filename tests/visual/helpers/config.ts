@@ -66,8 +66,8 @@ export const visualUse = {
 }
 
 export const visualWebServer = {
-    /* 每次启动前重建空库，避免上一轮残留影响渲染 */
-    command: 'mkdir -p database/.visual && rm -f database/.visual/visual.sqlite && node .output/server/index.mjs',
+    /* 每次启动前重建空库并按 create.sql 建表，避免上一轮残留影响渲染 */
+    command: 'node scripts/testing/prepare-visual-db.mjs && node .output/server/index.mjs',
     url: visualBaseURL,
     reuseExistingServer: false,
     timeout: 180000,

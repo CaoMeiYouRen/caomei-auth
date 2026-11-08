@@ -23,9 +23,9 @@
 - **不接入 CI 阻断**：参考态尚未在 CI 复采，跨环境（本地与 ubuntu runner）渲染差异未验证；接入前不得作为阻断门禁。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
-## 3. 视觉矩阵（每层 14 张）
+## 3. 视觉矩阵（每层 25 张）
 
-同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 14 张。
+同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 25 张。
 
 | 路由 | 主题 | 视口 | 状态 | 快照 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -35,6 +35,11 @@
 | `/register` | 浅 / 暗 | 1440×900 / 390×844 | 默认（邮箱 Tab） | `register-{theme}-{viewport}-default` |
 | `/register` | 浅 | 1440×900 | 校验错误 | `register-light-desktop-error` |
 | `/register` | 浅 | 1440×900 | 手机号 Tab | `register-light-desktop-tab-phone` |
+| `/forgot-password` | 浅 / 暗 | 1440×900 / 390×844 | 默认（邮箱 Tab） | `forgot-password-{theme}-{viewport}-default` |
+| `/forgot-password` | 浅 | 1440×900 | 校验错误 | `forgot-password-light-desktop-error` |
+| `/forgot-password` | 浅 | 1440×900 | 手机号 Tab | `forgot-password-light-desktop-tab-phone` |
+| `/change-password` | 浅 / 暗 | 1440×900 / 390×844 | 默认（需登录） | `change-password-{theme}-{viewport}-default` |
+| `/change-password` | 浅 | 1440×900 | 校验错误（需登录） | `change-password-light-desktop-error` |
 
 P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前提交上采集参考态，与本批迁移提交同批入库。
 
@@ -48,9 +53,10 @@ P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前�
 | 主题 | `localStorage['vueuse-color-scheme']=light\|dark` | 不依赖系统 `prefers-color-scheme`；暗色额外断言 `html.dark` 生效 |
 | 动画 / 光标 | `animations: 'disabled'` / `caret: 'hide'` | 配置层统一 |
 | 减少动效 | `reducedMotion: 'reduce'` | 配置层统一 |
-| 服务环境 | `NODE_ENV=test` + 空 sqlite + `synchronize` | 每次启动前重建空库，页面不依赖种子数据 |
+| 数据库 | 空 sqlite：每次启动前按 `database/sqlite/create.sql` 重建 | 生产构建里 `NODE_ENV` 已静态内联为 production，TypeORM `synchronize` 不生效，故由 `scripts/testing/prepare-visual-db.mjs` 建表 |
+| 登录后页面 | 固定视觉账号：首次注册、后续登录 | `change-password` 等受保护页面通过 `page.request` 建立会话，账号信息不进入截图 |
 | 功能开关 | 用户名 / 手机号登录开；验证码关；Demo 角标关 | 社交渠道固定 github / google / wechat（假凭据，仅渲染） |
-| 动态区域 | `[data-visual-mask]` 显式遮蔽 | 本批两页无动态内容，暂未使用 |
+| 动态区域 | `[data-visual-mask]` 显式遮蔽 | 当前路由无动态内容，暂未使用 |
 
 环境元数据与逐快照清单记录于 [`tests/visual/reference-manifest.json`](../../../tests/visual/reference-manifest.json)。
 
