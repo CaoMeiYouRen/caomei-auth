@@ -29,6 +29,20 @@ P2 试点（登录页）先执行，P3 / P4 逐批扩展到对应路由。
 | 视口 | 桌面 1440×900、移动 390×844 |
 | 状态 | 默认、校验错误（如适用）、浮层打开（弹窗 / Toast / Confirm） |
 
+### 2.1 2026-11-08 基线采集
+
+- **方式**：本地 `pnpm build` 后启动生产 server（`127.0.0.1:3100`），Playwright 1.64.1 headless Chromium 截图。
+- **已覆盖**（`artifacts/visual-baseline/2026-11-08/p2/`，截图不入库）：
+    - 浅色 / 暗色 × 桌面 1440×900 默认：`login-{light,dark}-desktop-default.png`
+    - 浅色 / 暗色 × 移动 390×844 默认：`login-{light,dark}-mobile-default.png`
+    - 浅色桌面校验错误：`login-light-desktop-error.png`（点击登录后出现「请输入用户名」）
+    - 三个 Tab：`login-light-desktop-tab-{username,email,phone}.png`
+- **检查结论**：
+    - 暗色生效：`html.dark`，卡片背景 `rgb(30,30,30)`；浅色为 `rgb(255,255,255)`。
+    - 桌面 / 移动均无横向溢出（`scrollWidth == innerWidth`）。
+    - 校验错误文案正常渲染。
+- **未覆盖**：2FA 弹窗（需已启用 2FA 的测试账号）、验证码组件（需配置 captcha provider）、提交中 / Toast（P2 迁移后再补）。这些状态不阻塞基线建立，但 P2 试点验收前需补齐。
+
 ## 3. 采集与存放
 
 1. 本地 `pnpm dev`，用真实浏览器逐项截图（`@ui-validator` 或人工）。
