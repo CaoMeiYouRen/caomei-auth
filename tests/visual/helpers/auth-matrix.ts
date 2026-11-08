@@ -84,7 +84,8 @@ function defineInteractionStates(): void {
         for (const [tab, slug] of [['用户名', 'username'], ['邮箱', 'email'], ['手机号', 'phone']] as const) {
             test(`login ${tab} Tab`, async ({ page }) => {
                 await open(page, '/login', 'light')
-                await page.getByRole('button', { name: tab, exact: true }).click()
+                /* 不使用 exact：CaomeiButton 的图标参与可访问名（如「󰏲 手机号」），PrimeVue 侧为纯文本 */
+                await page.getByRole('button', { name: tab }).click()
                 await shot(page, `login-light-desktop-tab-${slug}`)
             })
         }
@@ -98,7 +99,7 @@ function defineInteractionStates(): void {
 
         test('register 手机号 Tab', async ({ page }) => {
             await open(page, '/register', 'light')
-            await page.getByRole('button', { name: '手机号', exact: true }).click()
+            await page.getByRole('button', { name: '手机号' }).click()
             await shot(page, 'register-light-desktop-tab-phone')
         })
     })

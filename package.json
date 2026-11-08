@@ -27,6 +27,8 @@
     "prepare": "husky install",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:visual": "playwright test --config=playwright.visual.config.ts",
+    "test:visual:update": "playwright test --config=playwright.visual.config.ts --update-snapshots",
     "test:visual:parity": "playwright test --config=playwright.visual-parity.config.ts",
     "test:visual:reference": "cross-env VISUAL_REFERENCE_CAPTURE=1 playwright test --config=playwright.visual-parity.config.ts --update-snapshots",
     "docs:dev": "vitepress dev --open",
