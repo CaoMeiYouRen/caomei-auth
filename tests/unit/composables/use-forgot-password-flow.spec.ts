@@ -26,7 +26,7 @@ vi.mock('@vueuse/core', () => ({
     useUrlSearchParams: (...args: any[]) => mockUseUrlSearchParams(...args),
 }))
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: () => mockUseToast(),
 }))
 
@@ -59,7 +59,7 @@ vi.mock('#app/nuxt', async (importOriginal) => {
 mockNuxtImport('navigateTo', () => mockNavigateTo)
 
 describe('useForgotPasswordFlow', () => {
-    let toastAdd: any
+    let toastMocks: any
     let sendEmailOtp: any
     let sendPhoneOtp: any
     let urlParams: any
@@ -78,8 +78,8 @@ describe('useForgotPasswordFlow', () => {
         urlParams = reactive({ mode: 'email' })
         mockUseUrlSearchParams.mockReturnValue(urlParams)
 
-        toastAdd = vi.fn()
-        mockUseToast.mockReturnValue({ add: toastAdd })
+        toastMocks = { show: vi.fn(), success: vi.fn(), danger: vi.fn(), warning: vi.fn(), info: vi.fn() }
+        mockUseToast.mockReturnValue(toastMocks)
 
         sendEmailOtp = vi.fn()
         mockUseEmailOtp.mockReturnValue({
@@ -199,7 +199,7 @@ describe('useForgotPasswordFlow', () => {
                 otp: '123456',
                 password: 'Password123!',
             })
-            expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }))
+            expect(toastMocks.success).toHaveBeenCalled()
 
             vi.advanceTimersByTime(1600)
             expect(mockNavigateTo).toHaveBeenCalledWith('/login?mode=email')
@@ -218,7 +218,7 @@ describe('useForgotPasswordFlow', () => {
 
             await resetPassword()
 
-            expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error', detail: 'Invalid code' }))
+            expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({ description: 'Invalid code' }))
         })
     })
 
@@ -259,7 +259,7 @@ describe('useForgotPasswordFlow', () => {
                 otp: '123456',
                 newPassword: 'Password123!',
             })
-            expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }))
+            expect(toastMocks.success).toHaveBeenCalled()
         })
 
         it('should validate invalid phone number', async () => {
@@ -298,7 +298,7 @@ describe('useForgotPasswordFlow', () => {
 
             await resetPassword()
 
-            expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error' }))
+            expect(toastMocks.danger).toHaveBeenCalled()
         })
     })
 

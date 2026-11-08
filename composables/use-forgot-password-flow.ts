@@ -1,6 +1,6 @@
 import { ref, onMounted, computed } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { emailSchema, phoneSchema } from '@/utils/shared/validators'
 import {
@@ -168,18 +168,13 @@ export function useForgotPasswordFlow() {
                     throw new Error('密码重置失败')
                 }
             }
-            toast.add({ severity: 'success', summary: '密码重置成功', detail: '请使用新密码登录', life: 2500 })
+            toast.success({ title: '密码重置成功', description: '请使用新密码登录', duration: 2500 })
             setTimeout(() => {
                 navigateTo(`/login?mode=${activeTab.value}`)
             }, 1500)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '密码重置失败'
-            toast.add({
-                severity: 'error',
-                summary: '重置失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '重置失败', description: errorMessage, duration: 5000 })
         }
     }
 

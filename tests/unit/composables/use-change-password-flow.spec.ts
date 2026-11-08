@@ -4,9 +4,13 @@ import { useChangePasswordFlow } from '../../../composables/use-change-password-
 import { authClient } from '../../../lib/auth-client'
 
 // Mock dependencies
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: () => ({
-        add: vi.fn(),
+        show: vi.fn(),
+        success: vi.fn(),
+        danger: vi.fn(),
+        warning: vi.fn(),
+        info: vi.fn(),
     }),
 }))
 

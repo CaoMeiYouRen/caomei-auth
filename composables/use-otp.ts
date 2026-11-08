@@ -1,5 +1,5 @@
 import { ref, type Ref } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { resolveCaptchaToken, type CaptchaExpose } from '@/utils/web/captcha'
 import { sendEmailOtpService, sendPhoneOtpService } from '@/utils/web/otp-service'
 
@@ -36,7 +36,7 @@ export function useEmailOtp() {
                     if (onError) {
                         onError('captcha', msg)
                     }
-                    toast.add({ severity: 'warn', summary: '验证码', detail: msg })
+                    toast.warning({ title: '验证码', description: msg })
                     return false
                 }
             }
@@ -47,10 +47,10 @@ export function useEmailOtp() {
                 throw new Error(error.message)
             }
 
-            toast.add({ severity: 'success', summary: '发送成功', detail: '请查收邮件' })
+            toast.success({ title: '发送成功', description: '请查收邮件' })
             return true
         } catch (e: any) {
-            toast.add({ severity: 'error', summary: '发送失败', detail: e.message })
+            toast.danger({ title: '发送失败', description: e.message })
             return false
         } finally {
             if (cooldown) {
@@ -103,7 +103,7 @@ export function usePhoneOtp() {
                     if (onError) {
                         onError('captcha', msg)
                     }
-                    toast.add({ severity: 'warn', summary: '验证码', detail: msg })
+                    toast.warning({ title: '验证码', description: msg })
                     return false
                 }
             }
@@ -114,10 +114,10 @@ export function usePhoneOtp() {
                 throw new Error(error.message)
             }
 
-            toast.add({ severity: 'success', summary: '发送成功', detail: '请查收短信' })
+            toast.success({ title: '发送成功', description: '请查收短信' })
             return true
         } catch (e: any) {
-            toast.add({ severity: 'error', summary: '发送失败', detail: e.message })
+            toast.danger({ title: '发送失败', description: e.message })
             return false
         } finally {
             if (cooldown) {
