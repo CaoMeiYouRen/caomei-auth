@@ -37,7 +37,7 @@ pnpm migration:usage --json=docs/design/governance/primevue-usage-snapshot.json 
 | `vi.mock('primevue/*')` 测试文件 | 20 |
 | `--p-*` token | 56 处 / 47 个唯一名 / 1 个文件（`styles/_theme.scss`，Toast 段） |
 | `.p-*` 类选择器 | 131 处 / 18 个文件 |
-| `:deep(` | 23 处 |
+| `:deep(` | 26 处（2026-11-08 复测，见 §5.3） |
 | e2e `.p-*` 断言 | 0 |
 
 Top 组件：`Button` 141（40 文件）、`InputText` 37（14）、`Column` 31（6）、`Message` 9、`Dialog` 8、`Password` 6、`Select` 6、`Checkbox` 5、`Dropdown` 5、`Textarea` 5。
@@ -63,7 +63,7 @@ Top 组件：`Button` 141（40 文件）、`InputText` 37（14）、`Column` 31�
 
 - **无数据迁移**：迁移不涉及数据库 schema、API 契约或存储格式，回退不需要数据恢复。
 - **依赖回退不改锁文件版本**：`caomei-ui` 为精确锁定，回退时整段删除依赖并重新生成 lockfile，不保留悬空 peer。
-- **触发条件**：构建失败无法快速定位、关键页面视觉差异无法归因、Toast / Confirm 行为异常、SSR hydration 报错、`keyCss` / 入口 JS 越线且无法归因。
+- **触发条件**：构建失败无法快速定位、关键页面视觉差异无法归因、Toast / Confirm 行为异常、SSR hydration 报错、`keyCss` / entry chunk / 总 JS 异常增长且无法归因。
 - **回退记录**：每次回退在提交说明与本文追加一行（日期、阶段、原因、验证结论）。
 
 ## 5. P1 基座接入结果（M4-2）
@@ -83,14 +83,14 @@ Top 组件：`Button` 141（40 文件）、`InputText` 37（14）、`Column` 31�
 | 指标 | 接入前 | 接入后 | 变化 | 允许增幅 | 结论 |
 | :--- | ---: | ---: | ---: | ---: | :--- |
 | `keyCss`（`entry.*.css`） | 381,057 B | 399,195 B | +4.76% | ≤ +10% | 通过 |
-| 入口 JS（`entry` chunk） | 81,340 B | 81,340 B | 0% | ≤ +5% | 通过（1.0.0 时期口径；2026-11-08 起不可复测，见下方说明） |
+| 入口 JS（`entry` chunk） | 81,340 B | 81,340 B | 0% | — | 历史口径，已由 §5.3 替代，不再作为预算 |
 | 全部 CSS | 1,569,652 B | 1,587,790 B | +1.16% | — | 记录 |
 | 全部 JS | 3,421,440 B | 3,421,463 B | +23 B | — | 记录 |
 
 `pnpm build` 通过；接入前后均为 50 个 `.vue` 使用 PrimeVue（快照未变）。
 
 > **2026-11-08 升级 1.2.0 复测**：`keyCss` 399,733 B（较上表 +538 B / +0.13%），typecheck / build 通过；明细见 [1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md) §5。
-> **入口 JS 指标说明**：当前构建只产出 `entry.*.css`，不再有固定命名的 `entry*.js`；「入口 JS 81,340 B」已不可复测，M1-1 收尾时改为「总 JS + 固定 chunk 白名单」口径并回写本表。
+> **入口 JS 指标说明**：当前构建只产出 `entry.*.css`，不再有固定命名的 `entry*.js`；「入口 JS 81,340 B」已不可复测，现由 §5.3 的 `entry` chunk 口径替代。
 
 ### 5.2 自动导入冲突与守卫
 
@@ -99,6 +99,26 @@ Top 组件：`Button` 141（40 文件）、`InputText` 37（14）、`Column` 31�
 - 守卫脚本：`scripts/migration/check-caomei-imports.mjs`（`pnpm migration:check-imports`）。
 - CI：`test.yml` 与 `regression-weekly.yml` 在 `ai:check` 之后执行；命中自动导入即失败。
 - 迁移纪律：调用点必须显式 import 来源；P5 卸载 PrimeVue 时统一改为 `caomei-ui` 来源。
+
+### 5.3 2026-11-08 M1-1 复测基线
+
+> 基线文件：[bundle-baseline-2026-11-08.json](./bundle-baseline-2026-11-08.json)；复测脚本：`pnpm build && pnpm migration:measure`。
+
+| 指标 | 数值 | 说明 |
+| :--- | ---: | :--- |
+| 入口 JS（`entry` chunk） | 431,270 B | 由 `precomputed.mjs` 的 `name:"entry"` 解析，替代 1.0.0 时期不可复测的 `entry*.js` 口径 |
+| `keyCss`（`entry.*.css`） | 399,733 B | 预算 ≤ +10%（相对本基线） |
+| 全部 JS | 3,517,848 B | 记录，暂不设硬上限 |
+| 全部 CSS | 1,608,872 B | 记录 |
+| PrimeVue 用量快照 | 30 族 / 301 开标签 / 50 个含标签文件 | `pnpm migration:usage --json=docs/design/governance/primevue-usage-snapshot.json` |
+| 路由白名单 | 空集 | P2 试点开工时登记 `/login` |
+
+> **固定 chunk 白名单实现方式**：不单独落盘名单；由 `.output/server/chunks/virtual/precomputed.mjs` 中 `name:"entry"` 对应的 JS 与 `entry.*.css` 作为固定跟踪项，总 JS/CSS 为 `_nuxt` 顶层全量。若后续 chunk 进入子目录，需改为递归统计。
+> **复测策略**：同名日期文件覆盖更新；跨日复测新增日期文件，不修改历史基线。
+> **预算门禁**：`keyCss` 相对本基线 ≤ +10%，由 M6-1 决定 CI 接入方式；`migration:measure` 当前只输出数据，不主动失败。
+> **与 1.2.0 复核记录的差异**：同日 `totalJs` 3,517,449 B → 3,517,848 B（+399 B），由 2026-11-08 07:27–07:43 UTC 的 Dependabot 依赖升级后重建导致，两处不是同一次构建，不可直接对比。
+
+> 快照 `metrics.files` 75 / `deepSelectors` 26 为阶段 2 UI 修复后的全量扫描结果，不是 PrimeVue 使用面增长。
 
 ## 6. 关联文档
 

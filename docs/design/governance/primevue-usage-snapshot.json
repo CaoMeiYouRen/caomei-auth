@@ -235,7 +235,7 @@
     ]
   },
   "metrics": {
-    "files": 74,
+    "files": 75,
     "openTags": 301,
     "useToastFiles": [
       "components/admin/oauth/api-docs-dialog.vue",
@@ -372,7 +372,7 @@
       "styles/_form.scss",
       "styles/_theme.scss"
     ],
-    "deepSelectors": 23,
+    "deepSelectors": 26,
     "e2ePClassAssertions": 0
   }
 }

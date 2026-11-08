@@ -17,7 +17,7 @@
 | 主线 | 原子条目 | 交付面 |
 | :--- | :--- | :--- |
 | **M0 发布链路插队（不计入主线）** | M0-1 新增 `docker-build.yml` 复用工作流；M0-2 `docker.yml` 改为调用；M0-3 `release.yml` 去 QEMU；M0-4 `docker-publish.yml` build 路径修复 | 4 个 workflow、[评估记录](./2026-11-08-native-multiarch-docker-review.md)、验证与回滚说明 |
-| **M1 迁移准备与决策** | M1-1 用量快照复测、白名单与包体基线复核（含 1.0.0 → 1.2.0 升级验证） | `pnpm migration:usage` 快照、`CAOMEI_UI_ROUTE_PREFIXES`、`keyCss` / 总 JS（固定 chunk 白名单）基线、[1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md) |
+| **M1 迁移准备与决策** | M1-1 用量快照复测、白名单与包体基线复核（含 1.0.0 → 1.2.0 升级验证） | `pnpm migration:usage` 快照、`CAOMEI_UI_ROUTE_PREFIXES`、`keyCss` / entry chunk / 总 JS 基线、[1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md) |
 | | M1-2 P2 视觉基线采集与差异清单（`/login`） | 浅色 / 暗色 × 桌面 / 移动 × 默认 / 校验错误 / 2FA / 验证码状态；差异清单 |
 | | M1-3 DatePicker range 与 Toast 语气样式决策裁定（2026-11-08 按 1.2.0 修订） | 回写迁移评估 §6.3 / §7.3；更新 §12 上收条件 |
 | **M2 P2 登录页试点** | M2-1 登录页整页迁移 + login 专用 V2 薄封装 | `pages/login.vue`、按需 V2 封装、白名单 `/login` |

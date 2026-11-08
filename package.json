@@ -6,6 +6,7 @@
     "ai:check": "node scripts/ai/check-governance.mjs",
     "migration:usage": "node scripts/migration/primevue-usage.mjs",
     "migration:check-imports": "node scripts/migration/check-caomei-imports.mjs",
+    "migration:measure": "node scripts/migration/measure-bundle.mjs",
     "security:alerts": "node scripts/security/check-alerts.mjs",
     "setup:ai": "node scripts/setup-ai.mjs",
     "setup:switch-models": "node scripts/setup/switch-models.mjs",
