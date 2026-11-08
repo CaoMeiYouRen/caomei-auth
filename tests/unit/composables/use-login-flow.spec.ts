@@ -104,6 +104,19 @@ describe('useLoginFlow', () => {
         expect(activeTab.value).toBe('phone')
     })
 
+    it('resets captcha only when a token exists', () => {
+        const { captcha, changeMode } = useLoginFlow()
+        const reset = vi.fn()
+
+        captcha.value = { token: '', reset, loading: false } as never
+        changeMode('email')
+        expect(reset).not.toHaveBeenCalled()
+
+        captcha.value = { token: ref('captcha-token'), reset, loading: false } as never
+        changeMode('phone')
+        expect(reset).toHaveBeenCalledOnce()
+    })
+
     it('validates disabled modes', () => {
         config.public.phoneEnabled = false
         config.public.usernameEnabled = false

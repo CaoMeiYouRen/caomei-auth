@@ -43,6 +43,21 @@ P2 试点（登录页）先执行，P3 / P4 逐批扩展到对应路由。
     - 校验错误文案正常渲染。
 - **未覆盖**：2FA 弹窗（需已启用 2FA 的测试账号）、验证码组件（需配置 captcha provider）、提交中 / Toast（P2 迁移后再补）。这些状态不阻塞基线建立，但 P2 试点验收前需补齐。
 
+### 2.2 2026-11-08 M2-1 迁移后复核
+
+- **方式**：同一生产 server + Playwright headless Chromium，截图存 `artifacts/visual-baseline/2026-11-08/p2-after/`（不入库）。
+- **覆盖**：与 §2.1 相同的 8 个状态（三 Tab、明暗、桌面 / 移动、校验错误）。
+- **结果**：
+    - `/login` 页面内 PrimeVue 组件节点 **0**（`.p-button` / `.p-inputtext` / `.p-dialog` / `.p-tabview` / `.p-checkbox`）；主题切换改用 `ThemeToggleV2`（CaomeiButton），页面级 `<Toast />` 移除，Toast 服务仍为 PrimeVue 并在 M3-3 统一切换。
+    - 交互回归通过：三 Tab 切换、邮箱格式校验（「请输入有效的邮箱地址」）、密码显隐、验证码登录切换、明暗切换；验证码未启用时控制台 0 error。
+    - 桌面 / 移动均无横向溢出；暗色卡片 `rgb(30,30,30)`、浅色 `rgb(255,255,255)`。
+    - 包体：[bundle-after-m2-1-2026-11-08.json](./bundle-after-m2-1-2026-11-08.json)：`entryJs` 431,229 B、`totalJs` 3,650,596 B（较 M1-1 +3.77%）、`totalCss` 1,703,412 B（+5.88%），`keyCss` 399,733 B 不变；增量来自 login 首次引入 Caomei 组件，P5 卸载 PrimeVue 后回收。
+    - PrimeVue 用量快照：30 族 / 301 标签 / 50 文件 → **28 族 / 282 标签 / 49 文件**（`TabView` / `TabPanel` 清零）。
+- **视觉差异（有意）**：控件圆角 8px → 6px、输入框内边距与高度由 Caomei token 接管、社交按钮图标间距改为组件插槽布局；主题切换按钮的暗色 / 移动端位置与 V1 对齐；无遮挡、无对比度不足。
+- **行为保持**：2FA 弹窗禁止点击遮罩关闭（与旧 Dialog 默认一致）；2FA Tabs 保留隐藏面板，避免切换后发送验证码倒计时重置；登录方式按钮补 `aria-pressed`，手机号区号选择器绑定可访问名。
+- **2FA 功能验证**（Playwright mock `sign-in` 返回 `twoFactorRedirect`）：弹窗打开；点击遮罩不关闭；Tabs 切换后面板保留（3 个输入均在）；`verify-totp` 请求发出且成功后弹窗关闭。2FA 视觉截图仍待真实测试账号。
+- **仍未覆盖**：验证码启用状态的真实渲染（需 captcha provider）；2FA 视觉截图（需测试账号）。
+
 ## 3. 采集与存放
 
 1. 本地 `pnpm dev`，用真实浏览器逐项截图（`@ui-validator` 或人工）。

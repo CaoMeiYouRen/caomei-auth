@@ -28,8 +28,8 @@
 | M1-1 | 用量快照复测、白名单与包体基线复核（含 1.0.0 → 1.2.0 升级验证） | `pnpm migration:usage` 快照、`CAOMEI_UI_ROUTE_PREFIXES`、`keyCss` / entry chunk / 总 JS 基线 | 已完成（2026-11-08：30 族 / 301 标签 / 50 文件；entry JS 431,270 B、keyCss 399,733 B；白名单空集） |
 | M1-2 | P2 视觉基线采集与差异清单（`/login`） | 浅色 / 暗色 × 桌面 / 移动 × 默认 / 校验错误 / 2FA / 验证码；差异清单 | 部分完成（2026-11-08：8 张截图覆盖三 Tab / 明暗 / 桌面移动 / 校验错误；2FA 与验证码待测试账号 / 配置） |
 | M1-3 | DatePicker range 与 Toast 语气样式决策裁定 | 回写迁移评估 §6.3 / §7.3；更新 §12 上收条件 | 已完成（2026-11-08 按 1.2.0 修订：range 直接迁移；Toast token 映射） |
-| M2-1 | 登录页整页迁移 + login 专用 V2 薄封装 | `pages/login.vue`、按需 V2 封装、白名单 `/login` | 待开始 |
-| M2-2 | 试点回归与白名单登记 | 测试 mock 改写、视觉差异归因、SSR / hydration、定向测试 | 待开始 |
+| M2-1 | 登录页整页迁移 + login 专用 V2 薄封装 | `pages/login.vue`、按需 V2 封装、白名单 `/login` | 已完成（2026-11-08：页面 PrimeVue 节点 0；三 Tab / 校验 / 密码显隐 / 明暗回归通过） |
+| M2-2 | 试点回归与白名单登记 | 测试 mock 改写、视觉差异归因、SSR / hydration、定向测试 | 部分完成（白名单 / 三 Tab / 校验 / 密码显隐 / 明暗 / 移动 / 2FA mock 通过；2FA 视觉与 captcha 渲染待环境） |
 | M3-1 | 注册页迁移 | `pages/register.vue` 及消费者封装 | 待开始 |
 | M3-2 | 忘记密码 / 重置密码 / 修改密码迁移 | `forgot-password.vue`、`change-password.vue` 及相关组件 | 待开始 |
 | M3-3 | 快速登录迁移与认证页 Toast / Confirm 切换 | `quick-login.vue`、认证相关 `useToast` / `useConfirm` 显式 import | 待开始 |

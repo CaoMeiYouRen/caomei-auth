@@ -118,7 +118,8 @@ Top 组件：`Button` 141（40 文件）、`InputText` 37（14）、`Column` 31�
 > **预算门禁**：`keyCss` 相对本基线 ≤ +10%，由 M6-1 决定 CI 接入方式；`migration:measure` 当前只输出数据，不主动失败。
 > **与 1.2.0 复核记录的差异**：同日 `totalJs` 3,517,449 B → 3,517,848 B（+399 B），由 2026-11-08 07:27–07:43 UTC 的 Dependabot 依赖升级后重建导致，两处不是同一次构建，不可直接对比。
 
-> 快照 `metrics.files` 75 / `deepSelectors` 26 为阶段 2 UI 修复后的全量扫描结果，不是 PrimeVue 使用面增长。
+> 快照 `metrics.files` M1-1 时 75 / `deepSelectors` 26（阶段 2 UI 修复后的全量扫描，不是 PrimeVue 使用面增长）；M2-1 后为 76 / 29（新增 V2 组件）。
+> **2026-11-08 M2-1 后复测**：PrimeVue 用量 28 族 / 282 标签 / 49 文件（`TabView` / `TabPanel` 清零）；包体 `entryJs` 431,229 B、`totalJs` 3,650,596 B、`totalCss` 1,703,412 B、`keyCss` 399,733 B。明细见 [P2 视觉基线方案 §2.2](./2026-11-05-caomei-ui-p2-visual-baseline-plan.md#22-2026-11-08-m2-1-迁移后复核)。
 
 ## 6. 关联文档
 

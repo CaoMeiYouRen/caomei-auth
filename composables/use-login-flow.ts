@@ -1,4 +1,4 @@
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, unref } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useUrlSearchParams } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
@@ -80,7 +80,10 @@ export function useLoginFlow() {
         params.mode = mode
         activeTab.value = mode
         errors.value.captcha = ''
-        captcha.value?.reset()
+        const hasCaptchaToken = captcha.value ? Boolean(unref(captcha.value.token)) : false
+        if (hasCaptchaToken) {
+            captcha.value?.reset()
+        }
 
         clarity.event('login_method_switch')
         clarity.setTag('switched_to_method', mode)

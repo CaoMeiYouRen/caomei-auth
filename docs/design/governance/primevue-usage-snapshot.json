@@ -2,32 +2,31 @@
   "snapshotVersion": 1,
   "scope": "PrimeVue 组件族 / 开标签 / 类名与 token 耦合（不含 node_modules、构建产物与报告目录）",
   "totals": {
-    "componentFamilies": 30,
-    "openTags": 301,
-    "files": 50
+    "componentFamilies": 28,
+    "openTags": 282,
+    "files": 49
   },
   "components": {
-    "Button": 141,
-    "InputText": 37,
+    "Button": 133,
+    "InputText": 34,
     "Column": 31,
     "Message": 9,
-    "Dialog": 8,
+    "Dialog": 7,
     "Password": 6,
     "Select": 6,
-    "Checkbox": 5,
     "Dropdown": 5,
     "Textarea": 5,
     "Avatar": 4,
-    "ButtonGroup": 4,
+    "Checkbox": 4,
     "IconField": 4,
     "InputIcon": 4,
-    "Toast": 4,
     "AccordionContent": 3,
     "AccordionHeader": 3,
     "AccordionPanel": 3,
     "Badge": 3,
+    "ButtonGroup": 3,
     "DataTable": 3,
-    "TabPanel": 3,
+    "Toast": 3,
     "Tag": 2,
     "Accordion": 1,
     "ConfirmDialog": 1,
@@ -35,8 +34,7 @@
     "Image": 1,
     "InputNumber": 1,
     "Menu": 1,
-    "MultiSelect": 1,
-    "TabView": 1
+    "MultiSelect": 1
   },
   "filesByComponent": {
     "Button": [
@@ -73,7 +71,6 @@
       "pages/change-password.vue",
       "pages/forgot-password.vue",
       "pages/index.vue",
-      "pages/login.vue",
       "pages/oauth/clients.vue",
       "pages/oauth/consent.vue",
       "pages/quick-login.vue",
@@ -94,7 +91,6 @@
       "pages/admin/oauth/applications.vue",
       "pages/admin/sso/providers.vue",
       "pages/admin/users.vue",
-      "pages/login.vue",
       "pages/sso-login.vue"
     ],
     "Column": [
@@ -118,7 +114,6 @@
       "components/demo-mode-dialog.vue",
       "components/security/session-table.vue",
       "components/security/two-factor-panel.vue",
-      "pages/login.vue",
       "pages/oauth/clients.vue"
     ],
     "Password": [
@@ -133,13 +128,6 @@
       "components/admin/users/create-user-dialog.vue",
       "components/admin/users/user-detail-dialog.vue",
       "pages/admin/users.vue"
-    ],
-    "Checkbox": [
-      "components/admin/sso/create-provider-dialog.vue",
-      "components/admin/sso/oidc-config-form.vue",
-      "pages/change-password.vue",
-      "pages/login.vue",
-      "pages/register.vue"
     ],
     "Dropdown": [
       "components/admin/oauth/create-application-dialog.vue",
@@ -159,10 +147,10 @@
       "pages/admin/oauth/applications.vue",
       "pages/admin/users.vue"
     ],
-    "ButtonGroup": [
-      "pages/forgot-password.vue",
-      "pages/login.vue",
-      "pages/quick-login.vue",
+    "Checkbox": [
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/admin/sso/oidc-config-form.vue",
+      "pages/change-password.vue",
       "pages/register.vue"
     ],
     "IconField": [
@@ -176,12 +164,6 @@
       "pages/admin/oauth/applications.vue",
       "pages/admin/sso/providers.vue",
       "pages/admin/users.vue"
-    ],
-    "Toast": [
-      "app.vue",
-      "pages/login.vue",
-      "pages/quick-login.vue",
-      "pages/security.vue"
     ],
     "AccordionContent": [
       "components/admin/oauth/api-docs-dialog.vue"
@@ -197,13 +179,20 @@
       "pages/admin/sso/providers.vue",
       "pages/sso-login.vue"
     ],
+    "ButtonGroup": [
+      "pages/forgot-password.vue",
+      "pages/quick-login.vue",
+      "pages/register.vue"
+    ],
     "DataTable": [
       "components/admin/logs/provider-stats.vue",
       "components/admin/users/user-sessions-dialog.vue",
       "components/base/table.vue"
     ],
-    "TabPanel": [
-      "pages/login.vue"
+    "Toast": [
+      "app.vue",
+      "pages/quick-login.vue",
+      "pages/security.vue"
     ],
     "Tag": [
       "components/base/status-badge.vue",
@@ -229,14 +218,11 @@
     ],
     "MultiSelect": [
       "components/admin/oauth/create-application-dialog.vue"
-    ],
-    "TabView": [
-      "pages/login.vue"
     ]
   },
   "metrics": {
-    "files": 75,
-    "openTags": 301,
+    "files": 76,
+    "openTags": 282,
     "useToastFiles": [
       "components/admin/oauth/api-docs-dialog.vue",
       "components/admin/oauth/application-secret-dialog.vue",
@@ -351,7 +337,7 @@
       "components/base/language-switcher.vue",
       "styles/_theme.scss"
     ],
-    "pClassOccurrences": 131,
+    "pClassOccurrences": 128,
     "pClassFiles": [
       "components/admin/logs/logs-header.vue",
       "components/admin/logs/logs-table.vue",
@@ -364,7 +350,6 @@
       "pages/admin/users.vue",
       "pages/change-password.vue",
       "pages/forgot-password.vue",
-      "pages/login.vue",
       "pages/quick-login.vue",
       "pages/register.vue",
       "pages/sso-login.vue",
@@ -372,7 +357,7 @@
       "styles/_form.scss",
       "styles/_theme.scss"
     ],
-    "deepSelectors": 26,
+    "deepSelectors": 29,
     "e2ePClassAssertions": 0
   }
 }

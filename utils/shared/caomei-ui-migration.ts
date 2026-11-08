@@ -4,9 +4,9 @@
  * 规则：只有路径命中白名单前缀的路由允许使用 caomei-ui 组件；未登记的路由必须继续使用 PrimeVue，
  * 避免同一路由混用两套组件库（见 docs/design/governance/2026-11-05-caomei-ui-migration-evaluation.md §8）。
  *
- * 初值：空集。P2 试点（登录页）开工时按路由登记，例如 `['/login']`；P5 收尾时清空并删除本文件。
+ * 初值：`/login`（P2 试点）；P3 / P4 按批次继续登记，P5 收尾时清空并删除本文件。
  */
-export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = []
+export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = ['/login']
 
 /**
  * 判断路径是否命中 caomei-ui 白名单。
