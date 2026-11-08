@@ -1,4 +1,4 @@
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, unref } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
 import type { z } from 'zod'
@@ -112,7 +112,10 @@ export function useRegisterFlow() {
         params.mode = mode
         activeTab.value = mode
         setErrors({})
-        captcha.value?.reset()
+        const hasCaptchaToken = captcha.value ? Boolean(unref(captcha.value.token)) : false
+        if (hasCaptchaToken) {
+            captcha.value?.reset()
+        }
     }
 
     const register = async () => {

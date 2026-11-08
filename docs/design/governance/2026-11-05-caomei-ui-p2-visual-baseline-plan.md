@@ -58,6 +58,18 @@ P2 试点（登录页）先执行，P3 / P4 逐批扩展到对应路由。
 - **2FA 功能验证**（Playwright mock `sign-in` 返回 `twoFactorRedirect`）：弹窗打开；点击遮罩不关闭；Tabs 切换后面板保留（3 个输入均在）；`verify-totp` 请求发出且成功后弹窗关闭。2FA 视觉截图仍待真实测试账号。
 - **仍未覆盖**：验证码启用状态的真实渲染（需 captcha provider）；2FA 视觉截图（需测试账号）。
 
+### 2.3 2026-11-08 M3-1 注册页迁移后复核
+
+- **覆盖**：`/register` 浅色 / 暗色 × 桌面 / 移动默认、手机号 Tab、校验错误，共 9 张截图（`artifacts/visual-baseline/2026-11-08/p3/`，不入库）。
+- **结果**：
+    - 页面内 PrimeVue 组件节点 **0**；无重复 `id`；桌面 / 移动无横向溢出；控制台 0 error。
+    - 交互回归：邮箱 / 手机号 Tab 切换、密码强度条显示、协议勾选、空表单校验与错误提示正常。
+    - 手机号布局：修复 `region-selector` 包裹层后，桌面手机号输入 264px / 区号 88px，移动 195px / 65px；手机号输入 `aria-labelledby` 非空，区号可访问名为「国家/地区代码」。
+    - PrimeVue 用量：28 族 / 282 标签 / 49 文件 → **28 族 / 275 标签 / 48 文件**。
+    - 包体：[bundle-after-m3-1-2026-11-08.json](./bundle-after-m3-1-2026-11-08.json)：`entryJs` 431,114 B、`totalJs` 3,654,000 B（较 M2-1 +0.09%）、`totalCss` 1,706,054 B（+0.16%），`keyCss` 399,733 B 不变。
+- **视觉差异（有意）**：与登录页一致，控件圆角 / 间距由 Caomei token 接管；协议与错误提示改用 Caomei Checkbox / Message。
+- **未覆盖**：验证码启用状态、提交成功后跳转 / Toast（需真实后端或 captcha 配置）。
+
 ## 3. 采集与存放
 
 1. 本地 `pnpm dev`，用真实浏览器逐项截图（`@ui-validator` 或人工）。

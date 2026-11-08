@@ -20,6 +20,7 @@
                 v-bind="$attrs"
                 @update:model-value="$emit('update:modelValue', $event)"
             />
+            <slot name="append" />
         </template>
     </CaomeiFormItem>
 </template>

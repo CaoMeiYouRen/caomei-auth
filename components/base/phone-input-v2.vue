@@ -8,15 +8,16 @@
     >
         <template #default="field">
             <div class="phone-input">
-                <CaomeiSelect
-                    v-model="region"
-                    class="region-selector"
-                    :options="options"
-                    option-label="label"
-                    option-value="value"
-                    aria-label="国家/地区代码"
-                    @update:model-value="formatPhone"
-                />
+                <div class="region-selector">
+                    <CaomeiSelect
+                        v-model="region"
+                        :options="options"
+                        option-label="label"
+                        option-value="value"
+                        aria-label="国家/地区代码"
+                        @update:model-value="formatPhone"
+                    />
+                </div>
                 <CaomeiInput
                     :id="field.id"
                     v-model="phoneNumber"
@@ -24,7 +25,7 @@
                     :name="field.name"
                     :placeholder="placeholder"
                     :invalid="field.invalid"
-                    aria-label="国家/地区代码"
+                    :aria-labelledby="field['aria-labelledby']"
                     :aria-describedby="field['aria-describedby']"
                     v-bind="$attrs"
                     @update:model-value="formatPhone"
@@ -113,6 +114,10 @@ watch(() => props.modelValue, (newValue) => {
 .region-selector {
     flex: 1;
     min-width: 0;
+
+    :deep(.caomei-select) {
+        width: 100%;
+    }
 }
 
 .phone-number-input {

@@ -3,30 +3,30 @@
   "scope": "PrimeVue 组件族 / 开标签 / 类名与 token 耦合（不含 node_modules、构建产物与报告目录）",
   "totals": {
     "componentFamilies": 28,
-    "openTags": 282,
-    "files": 49
+    "openTags": 275,
+    "files": 48
   },
   "components": {
-    "Button": 133,
+    "Button": 130,
     "InputText": 34,
     "Column": 31,
-    "Message": 9,
     "Dialog": 7,
+    "Message": 7,
     "Password": 6,
     "Select": 6,
     "Dropdown": 5,
     "Textarea": 5,
     "Avatar": 4,
-    "Checkbox": 4,
     "IconField": 4,
     "InputIcon": 4,
     "AccordionContent": 3,
     "AccordionHeader": 3,
     "AccordionPanel": 3,
     "Badge": 3,
-    "ButtonGroup": 3,
+    "Checkbox": 3,
     "DataTable": 3,
     "Toast": 3,
+    "ButtonGroup": 2,
     "Tag": 2,
     "Accordion": 1,
     "ConfirmDialog": 1,
@@ -74,7 +74,6 @@
       "pages/oauth/clients.vue",
       "pages/oauth/consent.vue",
       "pages/quick-login.vue",
-      "pages/register.vue",
       "pages/security.vue",
       "pages/sso-login.vue"
     ],
@@ -101,20 +100,19 @@
       "pages/admin/sso/providers.vue",
       "pages/admin/users.vue"
     ],
-    "Message": [
-      "components/profile/dialogs/edit-email-dialog.vue",
-      "components/profile/dialogs/edit-phone-dialog.vue",
-      "components/profile/user-basic-info.vue",
-      "components/profile/user-contact-info.vue",
-      "components/security/two-factor-panel.vue",
-      "pages/register.vue"
-    ],
     "Dialog": [
       "components/base/base-dialog.vue",
       "components/demo-mode-dialog.vue",
       "components/security/session-table.vue",
       "components/security/two-factor-panel.vue",
       "pages/oauth/clients.vue"
+    ],
+    "Message": [
+      "components/profile/dialogs/edit-email-dialog.vue",
+      "components/profile/dialogs/edit-phone-dialog.vue",
+      "components/profile/user-basic-info.vue",
+      "components/profile/user-contact-info.vue",
+      "components/security/two-factor-panel.vue"
     ],
     "Password": [
       "components/admin/sso/oidc-config-form.vue",
@@ -147,12 +145,6 @@
       "pages/admin/oauth/applications.vue",
       "pages/admin/users.vue"
     ],
-    "Checkbox": [
-      "components/admin/sso/create-provider-dialog.vue",
-      "components/admin/sso/oidc-config-form.vue",
-      "pages/change-password.vue",
-      "pages/register.vue"
-    ],
     "IconField": [
       "components/admin/logs/logs-table.vue",
       "pages/admin/oauth/applications.vue",
@@ -179,10 +171,10 @@
       "pages/admin/sso/providers.vue",
       "pages/sso-login.vue"
     ],
-    "ButtonGroup": [
-      "pages/forgot-password.vue",
-      "pages/quick-login.vue",
-      "pages/register.vue"
+    "Checkbox": [
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/admin/sso/oidc-config-form.vue",
+      "pages/change-password.vue"
     ],
     "DataTable": [
       "components/admin/logs/provider-stats.vue",
@@ -193,6 +185,10 @@
       "app.vue",
       "pages/quick-login.vue",
       "pages/security.vue"
+    ],
+    "ButtonGroup": [
+      "pages/forgot-password.vue",
+      "pages/quick-login.vue"
     ],
     "Tag": [
       "components/base/status-badge.vue",
@@ -221,8 +217,8 @@
     ]
   },
   "metrics": {
-    "files": 76,
-    "openTags": 282,
+    "files": 75,
+    "openTags": 275,
     "useToastFiles": [
       "components/admin/oauth/api-docs-dialog.vue",
       "components/admin/oauth/application-secret-dialog.vue",
@@ -307,7 +303,6 @@
       "error.vue",
       "pages/admin/sso/providers.vue",
       "pages/index.vue",
-      "pages/register.vue",
       "pages/security.vue"
     ],
     "primeVueMockFiles": [
@@ -337,7 +332,7 @@
       "components/base/language-switcher.vue",
       "styles/_theme.scss"
     ],
-    "pClassOccurrences": 128,
+    "pClassOccurrences": 127,
     "pClassFiles": [
       "components/admin/logs/logs-header.vue",
       "components/admin/logs/logs-table.vue",
@@ -351,7 +346,6 @@
       "pages/change-password.vue",
       "pages/forgot-password.vue",
       "pages/quick-login.vue",
-      "pages/register.vue",
       "pages/sso-login.vue",
       "styles/_dark-mode.scss",
       "styles/_form.scss",
