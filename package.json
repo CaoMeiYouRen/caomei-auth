@@ -54,7 +54,7 @@
     "better-auth-localization": "^4.0.0",
     "better-bytes": "^1.2.6",
     "better-sqlite3": "^12.11.1",
-    "caomei-ui": "1.0.0",
+    "caomei-ui": "1.2.0",
     "chart.js": "^4.6.1",
     "dayjs": "^1.11.23",
     "file-type": "^22.3.0",

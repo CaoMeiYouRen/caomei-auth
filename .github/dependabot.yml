@@ -22,11 +22,11 @@ updates:
           - "minor"
           - "patch"
     ignore:
-      # caomei-ui 迁移期精确锁定 1.0.0：P0/P1 只接入基座，P2+ 每次升级都需要人工阅读 CHANGELOG、
+      # caomei-ui 迁移期精确锁定 1.2.0：迁移期（P2-P5）每次升级都需要人工阅读 CHANGELOG、
       # 重跑视觉基线与回归；迁移期禁止 dependabot 自动抬版（含安全升级，由 alerts 流程兜底）。
       # 白名单收敛、PrimeVue 依赖清零后删除本段。
       - dependency-name: "caomei-ui"
-        versions: [">1.0.0"]
+        versions: [">1.2.0"]
       # PrimeVue v4 线锁定：忽略 v5 生态的 major 版本，防止 dependabot 再次独立拆分升级造成
       # 跨 major 错配（v4 ↔ v5 对应关系：primevue 4.x ↔ core/forms 4.x ↔ styles/themes 2.x
       # ↔ styled 0.7.x ↔ utils 0.6.x；v5 线对应 5.x / 3.x / 1.x / 0.8.x，utils 0.7.x 为 v5 过渡线一并拦截）。

@@ -12,8 +12,8 @@
 | 用量盘点脚本 | `scripts/migration/primevue-usage.mjs`（`pnpm migration:usage`） | 可复现扫描 PrimeVue 组件族 / 开标签 / token / 类名 / 测试耦合 |
 | 用量快照 | [primevue-usage-snapshot.json](./primevue-usage-snapshot.json) | 脚本输出，提交入库，供逐批对比 |
 | 路由白名单初值 | `utils/shared/caomei-ui-migration.ts` | `CAOMEI_UI_ROUTE_PREFIXES = []`，P2 试点时登记 |
-| 版本锁定 | `package.json`（`caomei-ui: "1.0.0"`）+ `pnpm-lock.yaml` | 精确版本，无 `^` / `~` |
-| Dependabot 忽略 | `.github/dependabot.yml`（`caomei-ui > 1.0.0`） | 迁移期禁止自动抬版 |
+| 版本锁定 | `package.json`（`caomei-ui: "1.2.0"`）+ `pnpm-lock.yaml` | 精确版本，无 `^` / `~`；2026-11-08 由 1.0.0 升级，见 [1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md) |
+| Dependabot 忽略 | `.github/dependabot.yml`（`caomei-ui > 1.2.0`） | 迁移期禁止自动抬版 |
 | 回退方案 | 本文 §4 | 分「未接入 / 已接入 / 单路由」三档 |
 
 ## 2. 用量快照
@@ -83,11 +83,14 @@ Top 组件：`Button` 141（40 文件）、`InputText` 37（14）、`Column` 31�
 | 指标 | 接入前 | 接入后 | 变化 | 允许增幅 | 结论 |
 | :--- | ---: | ---: | ---: | ---: | :--- |
 | `keyCss`（`entry.*.css`） | 381,057 B | 399,195 B | +4.76% | ≤ +10% | 通过 |
-| 入口 JS（`entry` chunk） | 81,340 B | 81,340 B | 0% | ≤ +5% | 通过 |
+| 入口 JS（`entry` chunk） | 81,340 B | 81,340 B | 0% | ≤ +5% | 通过（1.0.0 时期口径；2026-11-08 起不可复测，见下方说明） |
 | 全部 CSS | 1,569,652 B | 1,587,790 B | +1.16% | — | 记录 |
 | 全部 JS | 3,421,440 B | 3,421,463 B | +23 B | — | 记录 |
 
 `pnpm build` 通过；接入前后均为 50 个 `.vue` 使用 PrimeVue（快照未变）。
+
+> **2026-11-08 升级 1.2.0 复测**：`keyCss` 399,733 B（较上表 +538 B / +0.13%），typecheck / build 通过；明细见 [1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md) §5。
+> **入口 JS 指标说明**：当前构建只产出 `entry.*.css`，不再有固定命名的 `entry*.js`；「入口 JS 81,340 B」已不可复测，M1-1 收尾时改为「总 JS + 固定 chunk 白名单」口径并回写本表。
 
 ### 5.2 自动导入冲突与守卫
 

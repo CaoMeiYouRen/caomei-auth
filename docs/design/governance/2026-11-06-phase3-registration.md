@@ -15,9 +15,9 @@
 
 | 主线 | 原子条目 | 交付面 |
 | :--- | :--- | :--- |
-| **M1 迁移准备与决策** | M1-1 用量快照复测、白名单与包体基线复核 | `pnpm migration:usage` 快照、`CAOMEI_UI_ROUTE_PREFIXES`、`keyCss` / 入口 JS 基线 |
+| **M1 迁移准备与决策** | M1-1 用量快照复测、白名单与包体基线复核（含 1.0.0 → 1.2.0 升级验证） | `pnpm migration:usage` 快照、`CAOMEI_UI_ROUTE_PREFIXES`、`keyCss` / 总 JS（固定 chunk 白名单）基线、[1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md) |
 | | M1-2 P2 视觉基线采集与差异清单（`/login`） | 浅色 / 暗色 × 桌面 / 移动 × 默认 / 校验错误 / 2FA / 验证码状态；差异清单 |
-| | M1-3 DatePicker range 与 Toast 语气样式决策裁定 | 回写迁移评估 §6.3 / §7.3；更新 §12 上收条件 |
+| | M1-3 DatePicker range 与 Toast 语气样式决策裁定（2026-11-08 按 1.2.0 修订） | 回写迁移评估 §6.3 / §7.3；更新 §12 上收条件 |
 | **M2 P2 登录页试点** | M2-1 登录页整页迁移 + login 专用 V2 薄封装 | `pages/login.vue`、按需 V2 封装、白名单 `/login` |
 | | M2-2 试点回归与白名单登记 | 测试 mock 改写、视觉差异归因、SSR / hydration、定向测试 |
 | **M3 P3 认证入口页** | M3-1 注册页迁移 | `pages/register.vue` 及消费者封装 |
@@ -36,8 +36,12 @@
 
 | 决策项 | 结论 | 理由与后续 |
 | :--- | :--- | :--- |
-| `DatePicker` 范围选择 | 采用**两个单日期选择器**（开始 / 结束），不保留 PrimeVue 例外 | 避免 P5 遗留双库例外；UX 微调纳入 P4 视觉差异登记；caomei-ui [#28](https://github.com/CaoMeiYouRen/caomei-ui/issues/28) 补齐 range 后可评估回并 |
-| Toast 逐语气样式 | **接受 caomei-ui 默认语气样式**，登记为有意差异 | 成本最低且符合库设计路径；若业务坚持保留旧观感，再建薄封装并写明移除条件；上游补齐 token 后删除本地覆盖 |
+| `DatePicker` 范围选择 | 使用 **1.2.0 `selectionMode="range"`**（2026-11-08 复核后修订，替代双日期选择器方案） | 上游已实现 range，避免双选择器 UX 与额外状态；`admin/logs` 在 P4 迁移时改用 `@update:model-value` 触发筛选；无 `showClear` / `manualInput`，清空交互纳入 P4 视觉 / 交互回归 |
+| Toast 逐语气样式 | **token 映射** `success` / `warning` / `danger` 的 bg / border / text / shadow；`info` 走 `neutral` 默认；不建薄封装 | 1.2.0 的 16 个 token 已覆盖实际用色；圆角 / 内边距 / 标题字号 / 描述色不可覆盖，登记为有意差异；`secondary` / `contrast` 无调用点，随迁移删除 |
+| 表单布局 | 已迁移路由可用 `CaomeiFormItem` 替换 `BaseFormGroup`；`CaomeiForm` 仅在需要原生 submit 编排时使用 | 1.1.0 提供布局 / aria 组合层，无 rules 引擎；`useForm` + Zod 校验契约不变 |
+| DataTable 密度 | 用 1.2.0 的 cell padding / selection width token 覆盖，不等待 `size` prop | 1.2.0 未新增 `size` prop；逐表视觉登记 |
+
+> 依据：[1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md)｜[迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md) §6.3 / §7.3。
 
 ## 4. 验收标准
 
@@ -51,9 +55,9 @@
 
 | 项 | 说明 |
 | :--- | :--- |
-| caomei-ui 版本 | 继续精确锁定 `1.0.0`，Dependabot `ignore` 生效；升级须人工批次并重跑回归 |
+| caomei-ui 版本 | 精确锁定 `1.2.0`（2026-11-08 由 1.0.0 升级并复测 typecheck / build），Dependabot `ignore` 同步为 `>1.2.0`；后续升级仍走人工批次并重跑回归 |
 | 视觉基线 | 沿用 [P2 视觉基线方案](./2026-11-05-caomei-ui-p2-visual-baseline-plan.md)，不建截图回归工程；差异只登记结论 |
-| DatePicker / Toast | 决策已裁定；上游 #28 仍 open，补齐后按登记条件评估回并或删除本地差异 |
+| DatePicker / Toast | 决策已按 1.2.0 修订（range 直接迁移、Toast token 映射）；上游 #28 中 DataTable 密度 / 选择列宽度已交付，Paginator 报表仍为自渲染 |
 | Toast / Confirm 双 Provider | 所有调用点显式 import 来源，`migration:check-imports` 守卫；禁止依赖自动导入 |
 | 安全设置页体量 | 596 行，含 2FA / 会话 / 绑定；若超出原子条目阈值（10 文件 / 800 行新增）必须拆条 |
 | i18n 服务端 | `useTranslation(event)` 属 experimental；若 Nuxt 4.6.3 下不稳定，保留中文兜底并登记，不阻塞组件迁移 |

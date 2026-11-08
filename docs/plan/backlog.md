@@ -62,13 +62,13 @@ _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实�
 
 _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-caomei-ui-migration-evaluation.md)。_
 
-- **状态**：P0/P1 预备已完成（阶段 2 M4，2026-11-06 归档）；**P2–P3 已进入阶段 3（2026-11-06 授权）；P4 / P5 仍为候选，未授权**。可行，建议分阶段；无整体性阻塞，两个决策项已裁定（DatePicker 改双日期选择器、Toast 接受默认语气样式并登记差异）。
-- **目标**：用 `caomei-ui`（Vue 3 + Reka UI，当前 1.0.0）替换 PrimeVue 4 生态，统一设计 token、主题、暗色模式与组件行为。
+- **状态**：P0/P1 预备已完成（阶段 2 M4，2026-11-06 归档）；**P2–P3 已进入阶段 3（2026-11-06 授权）；P4 / P5 仍为候选，未授权**。迁移目标已升级至 `caomei-ui@1.2.0`（2026-11-08 复核）；DatePicker range、Toast 逐语气 token、Form/FormItem、DataTable 密度与选择列 token 已落地，决策见 [1.2.0 复核记录](../design/governance/2026-11-08-caomei-ui-1.2.0-revaluation.md)。
+- **目标**：用 `caomei-ui`（Vue 3 + Reka UI，当前 1.2.0）替换 PrimeVue 4 生态，统一设计 token、主题、暗色模式与组件行为。
 - **现状**：项目依赖 `primevue` 4.x + `@primevue/*` + `@primeuix/*`；Dependabot 已锁定 v4 并阻止 v5 独立升级；31 个组件族 / 304 个开标签 / 52 个 `.vue`；无 `primeicons`；`--p-*` 仅 56 处（Toast）；已有 7 个 `components/base/*` 封装收敛改动。
 - **分阶段建议**：P0 基线与护栏 → P1 接入基座 → P2 主题 / 封装 / 试点 → P3 表单 / 资料 / 安全 / 浮层 → P4 Admin 数据页与剩余页面 → P5 收尾卸载。不要从 admin 数据表开始。
 - **验收要点**：无 PrimeVue 运行时依赖；受影响页面视觉与交互回归通过；主题 / 暗色模式一致；构建、类型检查与测试通过。
 - **依赖与顺序**：建议组件迁移先行（至少完成基座与核心页），再做 i18n 页面文案；i18n 基础设施可并行，不要同时改同一批页面。
-- **风险**：caomei-ui 1.0.0 的组件覆盖与 API 可能不完全等价；`DatePicker` 范围选择缺失；Toast 逐语气 token 缺失；DataTable 受控状态需回写；迁移面大，必须分批并保留回退路径。
+- **风险**：caomei-ui 1.2.0 的组件覆盖与 API 可能不完全等价；`DatePicker` range 不含时间、无 `showClear`；Toast 圆角 / 间距不可覆盖；DataTable 受控状态需回写；迁移面大，必须分批并保留回退路径。复核见 [1.2.0 复核记录](../design/governance/2026-11-08-caomei-ui-1.2.0-revaluation.md)。
 - **上游反馈**：[caomei-ui#28](https://github.com/CaoMeiYouRen/caomei-ui/issues/28)（DatePicker range / Toast 主题 token / Paginator 报表 / DataTable 密度与选择列宽度）。
 
 ### 2.2 时区设置

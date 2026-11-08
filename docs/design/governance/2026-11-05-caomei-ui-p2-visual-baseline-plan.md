@@ -38,14 +38,14 @@ P2 试点（登录页）先执行，P3 / P4 逐批扩展到对应路由。
 
 ## 4. 已知预期差异（须逐项确认，不是 bug）
 
-| 项 | 基线（PrimeVue 4） | caomei-ui 1.0.0 | 处置 |
+| 项 | 基线（PrimeVue 4） | caomei-ui 1.2.0 | 处置 |
 | :--- | :--- | :--- | :--- |
 | 控件圆角 | 8px | 6px | 登记为有意差异 |
 | 暗色底 | `#121212` | `#18181b` | 登记为有意差异 |
 | 状态色 | PrimeVue primitive | 取 500 档 | 截图对照文字/图标对比度，不足则提 issue |
-| Toast | 6 套 `--p-toast-*` 语气样式 | 仅 `--caomei-toast-*`（宽度 / 偏移 / 层级 / accent） | 优先接受默认并登记；必要时薄封装（见评估 §7.3） |
-| 表格密度 / 选择列宽 | `size="small"` / 52px | 无密度 prop / 34px | P4 用页面级 CSS 或登记差异 |
-| DatePicker range | 支持 | 不支持 | P3 前按评估 §6.3 决策（双日期选择器优先） |
+| Toast | 6 套 `--p-toast-*` 语气样式 | 4 个语气 × bg/border/text/shadow + width；无圆角 / 内边距 / 标题 / 描述色 | 按评估 §7.3 做 token 映射；残余差异登记 |
+| 表格密度 / 选择列宽 | `size="small"` / 52px | 无 `size` prop；提供 padding / selection width token | 用 token 覆盖并登记像素差异 |
+| DatePicker range | 支持 | 支持（range 不含时间；无 `showClear` / `manualInput` / `@date-select`） | 直接迁移；`@update:model-value` 触发筛选；清空交互差异登记 |
 
 ## 5. 差异登记与放行
 

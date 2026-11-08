@@ -14,9 +14,12 @@ allowBuilds:
   sqlite3: true
   unrs-resolver: true
   vue-demi: true
+# 发布不足最小年龄的包由 pnpm 在 add 时自动加入（当前未显式设置 minimumReleaseAge，使用 pnpm 默认策略）；
+# caomei-ui@1.2.0 为迁移目标精确锁定，后续升级时清理旧条目。
 minimumReleaseAgeExclude:
   - file-type@22.0.2
   - obug@2.2.1
+  - caomei-ui@1.2.0
 patchedDependencies:
   "@better-auth/utils@0.5.1": patches/@better-auth__utils@0.5.1.patch
   "@nuxt/test-utils@4.1.0": patches/@nuxt-test-utils@4.1.0.patch
