@@ -1,5 +1,5 @@
 import { ref, computed, onMounted, unref } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { useUrlSearchParams } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
 import { emailSchema, phoneSchema, usernameSchema } from '@/utils/shared/validators'
@@ -70,11 +70,11 @@ export function useLoginFlow() {
     // Methods
     const changeMode = (mode: 'username' | 'email' | 'phone') => {
         if (mode === 'phone' && !phoneEnabled) {
-            toast.add({ severity: 'error', summary: '功能未启用', detail: '短信功能未启用，请使用其他方式登录', life: 3000 })
+            toast.danger({ title: '功能未启用', description: '短信功能未启用，请使用其他方式登录', duration: 3000 })
             return
         }
         if (mode === 'username' && !usernameEnabled) {
-            toast.add({ severity: 'error', summary: '功能未启用', detail: '用户名登录功能未启用，请使用其他方式登录', life: 3000 })
+            toast.danger({ title: '功能未启用', description: '用户名登录功能未启用，请使用其他方式登录', duration: 3000 })
             return
         }
         params.mode = mode
@@ -117,12 +117,7 @@ export function useLoginFlow() {
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
                 errors.value.captcha = errorMessage
-                toast.add({
-                    severity: 'warn',
-                    summary: '需要验证码',
-                    detail: errorMessage,
-                    life: 2500,
-                })
+                toast.warning({ title: '需要验证码', description: errorMessage, duration: 2500 })
                 return false
             }
             const { error } = await authClient.twoFactor.sendOtp({
@@ -133,21 +128,11 @@ export function useLoginFlow() {
             if (error) {
                 throw new Error(error.message || '发送验证码失败')
             }
-            toast.add({
-                severity: 'success',
-                summary: '发送成功',
-                detail: '验证码已发送，请检查您的邮箱',
-                life: 3000,
-            })
+            toast.success({ title: '发送成功', description: '验证码已发送，请检查您的邮箱', duration: 3000 })
             return true
         } catch (error: any) {
             const errorMessage = error instanceof Error ? error.message : '发送验证码失败'
-            toast.add({
-                severity: 'error',
-                summary: '发送失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '发送失败', description: errorMessage, duration: 5000 })
             return false
         } finally {
             otpSending.value = false
@@ -198,12 +183,7 @@ export function useLoginFlow() {
             }
 
             reset2FAState()
-            toast.add({
-                severity: 'success',
-                summary: '登录成功',
-                detail: '即将跳转到首页',
-                life: 2000,
-            })
+            toast.success({ title: '登录成功', description: '即将跳转到首页', duration: 2000 })
             navigateAfterLoginWithDelay(600)
         } catch (error: any) {
             twoFactorError.value = error.message || '验证失败'
@@ -253,21 +233,11 @@ export function useLoginFlow() {
                     return
                 }
 
-                toast.add({
-                    severity: 'success',
-                    summary: '登录成功',
-                    detail: '即将跳转到首页',
-                    life: 2000,
-                })
+                toast.success({ title: '登录成功', description: '即将跳转到首页', duration: 2000 })
                 navigateAfterLoginWithDelay(600)
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
-                toast.add({
-                    severity: 'error',
-                    summary: '登录失败',
-                    detail: errorMessage,
-                    life: 5000,
-                })
+                toast.danger({ title: '登录失败', description: errorMessage, duration: 5000 })
             }
             return
         }
@@ -300,22 +270,12 @@ export function useLoginFlow() {
                 if (handle2FA(authResult)) {
                     return
                 }
-                toast.add({
-                    severity: 'success',
-                    summary: '登录成功',
-                    detail: '即将跳转到首页',
-                    life: 2000,
-                })
+                toast.success({ title: '登录成功', description: '即将跳转到首页', duration: 2000 })
 
                 navigateAfterLoginWithDelay(200)
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
-                toast.add({
-                    severity: 'error',
-                    summary: '登录失败',
-                    detail: errorMessage,
-                    life: 2000,
-                })
+                toast.danger({ title: '登录失败', description: errorMessage, duration: 2000 })
             }
             return
         }
@@ -360,21 +320,11 @@ export function useLoginFlow() {
                     return
                 }
 
-                toast.add({
-                    severity: 'success',
-                    summary: '登录成功',
-                    detail: '即将跳转到首页',
-                    life: 2000,
-                })
+                toast.success({ title: '登录成功', description: '即将跳转到首页', duration: 2000 })
                 navigateAfterLoginWithDelay(600)
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
-                toast.add({
-                    severity: 'error',
-                    summary: '登录失败',
-                    detail: errorMessage,
-                    life: 2000,
-                })
+                toast.danger({ title: '登录失败', description: errorMessage, duration: 2000 })
             }
         }
     }
@@ -387,21 +337,11 @@ export function useLoginFlow() {
                 throw new Error(result.error.message || '匿名登录失败')
             }
 
-            toast.add({
-                severity: 'success',
-                summary: '匿名登录成功',
-                detail: '即将跳转到首页',
-                life: 2000,
-            })
+            toast.success({ title: '匿名登录成功', description: '即将跳转到首页', duration: 2000 })
             navigateAfterLoginWithDelay(600)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '匿名登录时发生未知错误'
-            toast.add({
-                severity: 'error',
-                summary: '匿名登录失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '匿名登录失败', description: errorMessage, duration: 5000 })
         }
     }
 
@@ -409,12 +349,7 @@ export function useLoginFlow() {
         const { provider, name, enabled } = socialProvider
 
         if (enabled === false) {
-            toast.add({
-                severity: 'warn',
-                summary: '登录失败',
-                detail: `${name} 登录方式未启用，请使用其他方式登录`,
-                life: 5000,
-            })
+            toast.warning({ title: '登录失败', description: `${name} 登录方式未启用，请使用其他方式登录`, duration: 5000 })
             return
         }
 
@@ -430,21 +365,11 @@ export function useLoginFlow() {
             if (!result || result.error) {
                 throw new Error(result?.error?.message || `${name} 登录失败`)
             }
-            toast.add({
-                severity: 'success',
-                summary: `正在通过 ${name} 登录`,
-                detail: '即将跳转到登录页',
-                life: 2000,
-            })
+            toast.success({ title: `正在通过 ${name} 登录`, description: '即将跳转到登录页', duration: 2000 })
             navigateAfterLoginWithDelay(600)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : `${name} 登录时发生未知错误`
-            toast.add({
-                severity: 'error',
-                summary: `${name} 登录失败`,
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: `${name} 登录失败`, description: errorMessage, duration: 5000 })
         }
     }
 
