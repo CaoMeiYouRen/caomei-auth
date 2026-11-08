@@ -6,10 +6,10 @@
 ## 1. 目标与边界
 
 - **目标**：在 P2 试点路由切换前，建立"可复现、可对照"的人工视觉基线，确保迁移差异逐项归因，不让未登记的外观变化静默放行。
-- **边界**：
-    - 不引入 Playwright 截图对比、不建 CI 视觉回归、不新增任何依赖。
-    - 基线产物为本地截图 + 差异清单，截图存 `artifacts/`（`.gitignore` 已忽略），仓库只提交差异结论。
-    - 不做像素级阈值判定，按"差异清单 + 人工确认"放行。
+- **边界（2026-11-08 修订）**：
+    - 参考态层已建立：`playwright.visual-parity.config.ts` + `tests/visual/reference/`，快照随仓库提交；采集 / 比对命令与矩阵见 [视觉参考态基座](./2026-11-08-visual-baseline-harness.md)。
+    - 不建 CI 阻断：参考态尚未在 CI 复采，跨环境渲染差异未验证；接入前只作本地与 Review Gate 证据。
+    - 不做分级像素阈值：以 `maxDiffPixels 200` 吸收抗锯齿噪声，超限即报告，按「差异清单 + 逐项归因」放行。
 
 ## 2. 页面与场景矩阵
 
@@ -72,10 +72,10 @@ P2 试点（登录页）先执行，P3 / P4 逐批扩展到对应路由。
 
 ## 3. 采集与存放
 
-1. 本地 `pnpm dev`，用真实浏览器逐项截图（`@ui-validator` 或人工）。
-2. 存放路径：`artifacts/visual-baseline/<YYYY-MM-DD>/<batch>/<route>-<theme>-<viewport>-<state>.png`。
-3. 命名示例：`artifacts/visual-baseline/2026-11-06/p2/login-light-desktop-error.png`。
-4. 基线截图不提交入库；仓库只提交差异结论（见 §5）。
+1. **参考态层（入库）**：先 `pnpm build`，再在**迁移前提交**上执行 `pnpm test:visual:reference`；快照落 `tests/visual/reference/auth.visual-parity.spec.ts/`，环境元数据落 `tests/visual/reference-manifest.json`。
+2. **比对**：迁移后执行 `pnpm test:visual:parity`；失败产物 `-actual` / `-diff` 落 `test-results/visual-parity/`（不入库），逐项归因见 §5。
+3. **参考态不可原地刷新**：需要重新审计时用 `git show <参考态提交>:tests/visual/reference/...` 取回，不得重新采集覆盖。
+4. **未纳入矩阵的临时状态**（2FA、验证码、提交中）：仍可用 `artifacts/visual-baseline/<YYYY-MM-DD>/<batch>/` 存放本地截图，但只作补充证据，不作为基线。
 
 ## 4. 已知预期差异（须逐项确认，不是 bug）
 
@@ -97,19 +97,19 @@ P2 试点（登录页）先执行，P3 / P4 逐批扩展到对应路由。
 - 路由 / 场景：<route> <theme> <viewport> <state>
 - 差异：<描述>
 - 归因：有意差异（圆角 / 暗色底 / 状态色 / Toast）| 待修（阻断）
-- 证据：artifacts/visual-baseline/<date>/...png
+- 证据：tests/visual/reference/auth.visual-parity.spec.ts/<name>.png + test-results/visual-parity/...-diff.png
 ```
 
 放行条件：
 
-- 所有差异已归因；「待修」项清零。
+- `pnpm test:visual:parity` 已运行，逐快照差异已归因（有意差异 / 待修），「待修」项清零。
 - 浅色 / 暗色均无文字对比度不足、无遮挡、无布局断裂。
 - 表单校验错误、浮层打开关闭、Toast / Confirm 行为与迁移前一致。
 
 ## 6. 触发与退出
 
 - **触发**：P2 第一批迁移开始前执行；此后每批页面迁移复用同一矩阵。
-- **退出**：P5 收尾（无页面使用 PrimeVue）后删除本方案与 `artifacts/visual-baseline/`，把稳定结论并入 [UI/UX 设计](../ui-ux.md)。
+- **退出**：P5 收尾（无页面使用 PrimeVue）后，迁移比对职责结束；**保留** `tests/visual/reference/` 作为历史证据，删除本地 `artifacts/visual-baseline/`，把稳定结论并入 [UI/UX 设计](../ui-ux.md)。
 
 ## 7. 关联文档
 

@@ -1,0 +1,51 @@
+{
+    "capturedAt": "2026-11-08",
+    "capturedOn": {
+        "branch": "test/visual-baseline",
+        "commit": "fc2201e",
+        "note": "feat(login) 迁移提交 228116c 的父提交，即 /login 与 /register 仍为 PrimeVue 的最后一个提交"
+    },
+    "purpose": "组件迁移前的 PrimeVue 渲染原貌（参考态）。迁移批次用当前渲染与之比对，差异必须逐项归因。",
+    "tool": {
+        "playwright": "1.64.1",
+        "browser": "chromium 156.0.8078.4 (revision 1248)",
+        "node": "v24.22.1",
+        "platform": "linux x64 (WSL2, ext4)"
+    },
+    "environment": {
+        "baseURL": "http://127.0.0.1:3100",
+        "deviceScaleFactor": 1,
+        "locale": "zh-CN",
+        "timezoneId": "Asia/Shanghai",
+        "reducedMotion": "reduce",
+        "animations": "disabled",
+        "caret": "hide",
+        "threshold": 0.2,
+        "maxDiffPixels": 200,
+        "themeInjection": "localStorage vueuse-color-scheme (light|dark)"
+    },
+    "fixtures": {
+        "database": "空 sqlite（NODE_ENV=test + synchronize），每次启动前重建",
+        "usernameLogin": true,
+        "phoneLogin": true,
+        "captchaProvider": null,
+        "demoMode": false,
+        "socialProviders": ["github", "google", "wechat"]
+    },
+    "snapshots": [
+        { "name": "login-light-desktop-default", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "默认" },
+        { "name": "login-dark-desktop-default", "route": "/login", "theme": "dark", "viewport": "1440x900", "state": "默认" },
+        { "name": "login-light-mobile-default", "route": "/login", "theme": "light", "viewport": "390x844", "state": "默认" },
+        { "name": "login-dark-mobile-default", "route": "/login", "theme": "dark", "viewport": "390x844", "state": "默认" },
+        { "name": "login-light-desktop-error", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
+        { "name": "login-light-desktop-tab-username", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "用户名 Tab" },
+        { "name": "login-light-desktop-tab-email", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "邮箱 Tab" },
+        { "name": "login-light-desktop-tab-phone", "route": "/login", "theme": "light", "viewport": "1440x900", "state": "手机号 Tab" },
+        { "name": "register-light-desktop-default", "route": "/register", "theme": "light", "viewport": "1440x900", "state": "默认" },
+        { "name": "register-dark-desktop-default", "route": "/register", "theme": "dark", "viewport": "1440x900", "state": "默认" },
+        { "name": "register-light-mobile-default", "route": "/register", "theme": "light", "viewport": "390x844", "state": "默认" },
+        { "name": "register-dark-mobile-default", "route": "/register", "theme": "dark", "viewport": "390x844", "state": "默认" },
+        { "name": "register-light-desktop-error", "route": "/register", "theme": "light", "viewport": "1440x900", "state": "校验错误" },
+        { "name": "register-light-desktop-tab-phone", "route": "/register", "theme": "light", "viewport": "1440x900", "state": "手机号 Tab" }
+    ]
+}
