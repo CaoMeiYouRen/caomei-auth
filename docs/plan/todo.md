@@ -16,10 +16,10 @@
 
 | 编号 | 条目 | 交付面 | 状态 |
 | :--- | :--- | :--- | :--- |
-| M0-1 | 新增 `docker-build.yml` 复用工作流 | matrix + digest + merge、参数化 ref / tags / registry / cache scope | 待验证（已实现；本地 lint / typecheck / test / build 通过，待推送后跑工作流） |
-| M0-2 | `docker.yml` 改为调用复用工作流 | 保持 latest / 日期 / `sha-*`、README 同步与 Jenkins 顺序 | 待验证（已实现；本地 lint / typecheck / test / build 通过，待推送后跑工作流） |
-| M0-3 | `release.yml` 去 QEMU | `release` 输出 tag → `docker` 调用复用工作流；保留 semver / latest / 日期 / `sha-*` | 待验证（已实现；本地 lint / typecheck / test / build 通过，待推送后跑工作流） |
-| M0-4 | `docker-publish.yml` build 路径修复 | `prepare` / `retag` / `docker` / `verify` 拆分；retag 默认路径不变 | 待验证（已实现；本地 lint / typecheck / test / build 通过，待推送后跑工作流） |
+| M0-1 | 新增 `docker-build.yml` 复用工作流 | matrix + digest + merge、参数化 ref / tags / registry / cache scope | 已验证（release 路径除外；`docker.yml` 42460267112、`docker-publish` 42461119392 / 42461601204） |
+| M0-2 | `docker.yml` 改为调用复用工作流 | 保持 latest / 日期 / `sha-*`、README 同步与 Jenkins 顺序 | 部分验证（构建 / merge / manifest 通过；deploy 的 README 同步 + Jenkins 两步待推送复跑） |
+| M0-3 | `release.yml` 去 QEMU | `release` 输出 tag → `docker` 调用复用工作流；保留 semver / latest / 日期 / `sha-*` | 待验证（定时 2026-11-14 20:00 UTC+8 或手动 dispatch 会正式发版） |
+| M0-4 | `docker-publish.yml` build 路径修复 | `prepare` / `retag` / `docker` / `verify` 拆分；retag 默认路径不变 | 已验证（rebuild 42461119392、retag 42461601204 显式 source；prepare 自动判定未单独跑） |
 
 ### 主线原子条目
 
