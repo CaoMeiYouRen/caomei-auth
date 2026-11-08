@@ -169,3 +169,19 @@
         color: #{$error};
     }
 }
+
+// PrimeVue → caomei-ui 认证页表单密度桥接。
+// 迁移目标是不改变既有观感（迁移评估 §11）；caomei 组件默认字号 / 高度更紧凑，
+// 用组件自身 token 恢复到迁移前尺度，避免选择器级强改。
+.auth-card {
+    --caomei-form-item-gap: 0.5rem;
+    --caomei-form-item-label-font-size: 1rem;
+    --caomei-form-item-message-font-size: 1rem;
+    --caomei-field-font-size: 1rem;
+    --caomei-field-height: 3.125rem;
+    --caomei-field-padding-inline: 1rem;
+
+    .caomei-form-item {
+        margin-bottom: 1.5rem;
+    }
+}
