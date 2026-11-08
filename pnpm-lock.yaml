@@ -258,8 +258,8 @@ importers:
         version: 4.6.7
     devDependencies:
       '@lint-md/cli':
-        specifier: ^2.5.0
-        version: 2.5.0(supports-color@10.2.2)
+        specifier: ^2.5.1
+        version: 2.5.1(supports-color@10.2.2)
       '@nuxt/eslint':
         specifier: ^1.17.0
         version: 1.17.0(@nuxt/schema@4.6.4)(@typescript-eslint/utils@8.67.0(eslint@9.39.2(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(@vue/compiler-sfc@3.5.44)(confbox@0.2.4)(dotenv@17.4.2)(esbuild@0.25.12)(eslint-import-resolver-node@0.3.10(supports-color@10.2.2))(eslint@9.39.2(jiti@2.7.0)(supports-color@10.2.2))(giget@3.3.0)(jiti@2.7.0)(magic-string@1.4.5)(magicast@0.5.4)(oxc-parser@0.141.0)(rolldown@1.2.16)(rollup@4.67.5)(srvx@1.0.8)(supports-color@10.2.2)(typescript@6.0.3)(unplugin@3.7.0(esbuild@0.25.12)(rolldown@1.2.16)(rollup@4.67.5)(vite@8.3.5(@types/node@26.6.5)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1)))(vite@8.3.5(@types/node@26.6.5)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))
@@ -1510,8 +1510,9 @@ packages:
   '@kurkle/color@0.3.4':
     resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
 
-  '@lint-md/cli@2.5.0':
-    resolution: {integrity: sha512-+BLEbjN28drWmaBvhRxOjouBadlNGbaULDUccAa8pW15OEXtF2tY03CrSxJYHdcvWV/RjuYlHDo3DEds/bwXzw==}
+  '@lint-md/cli@2.5.1':
+    resolution: {integrity: sha512-9145tHJbwp/6rw/Jz1UA7hZr4U0UZZgxQMDOXPfnr4kVP0xMI8yUt5ARVnb6l5dDSIuP0xWufE4syIG5OgMswA==}
+    engines: {node: '>=20'}
     hasBin: true
 
   '@lint-md/core@2.5.3':
@@ -11859,7 +11860,7 @@ snapshots:
 
   '@kurkle/color@0.3.4': {}
 
-  '@lint-md/cli@2.5.0(supports-color@10.2.2)':
+  '@lint-md/cli@2.5.1(supports-color@10.2.2)':
     dependencies:
       '@lint-md/core': 2.6.0(supports-color@10.2.2)
       chalk: 4.1.2
