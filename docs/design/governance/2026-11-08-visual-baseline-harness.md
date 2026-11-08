@@ -16,12 +16,16 @@
 
 ## 2. 边界
 
-- **本阶段只建参考态层**：`tests/visual/parity/*.visual-parity.spec.ts` + `playwright.visual-parity.config.ts`，参考态入库。
-- **不建自基线层**：迁移差异完成归因、待修项清零后再采集「当前接受状态」自基线（`tests/visual/__screenshots__/`），用于后续回归。届时再评估分级预算与允许清单。
-- **不接入 CI 阻断**：参考态比对尚未在 CI 复采，跨环境（本地与 ubuntu runner）渲染差异未验证，接入前不得作为阻断门禁。
+- **两层已建立**：
+    - 参考态层：`tests/visual/parity/*.visual-parity.spec.ts` + `playwright.visual-parity.config.ts`，快照 = 迁移前 PrimeVue 原貌，随仓库提交，**不可原地刷新**。
+    - 自基线层：`tests/visual/baseline/*.visual.spec.ts` + `playwright.visual.config.ts`，快照 = 当前已接受状态，用于后续回归。
+- **两层共用矩阵与服务环境**：`tests/visual/helpers/config.ts` 是唯一来源，禁止复制副本（服务环境漏一个变量就会让两层渲染分叉）。
+- **不接入 CI 阻断**：参考态尚未在 CI 复采，跨环境（本地与 ubuntu runner）渲染差异未验证；接入前不得作为阻断门禁。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
-## 3. 参考态矩阵（14 张）
+## 3. 视觉矩阵（每层 14 张）
+
+同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 14 张。
 
 | 路由 | 主题 | 视口 | 状态 | 快照 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -56,19 +60,26 @@ P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前�
 # 1) 采集参考态（只能在迁移前提交上执行；VISUAL_REFERENCE_CAPTURE 守卫会拒绝迁移后的页面）
 pnpm test:visual:reference
 
-# 2) 比对当前渲染 ↔ 参考态
+# 2) 比对当前渲染 ↔ 参考态（迁移一致性审计）
 pnpm test:visual:parity
 
-# 3) 定向比对单个快照
+# 3) 比对当前渲染 ↔ 自基线（回归门禁）
+pnpm test:visual
+
+# 4) 差异归因完成后更新自基线（不得用于刷新参考态）
+pnpm test:visual:update
+
+# 5) 定向比对单个快照
 pnpm exec playwright test --config=playwright.visual-parity.config.ts --grep "login 默认态"
 ```
 
 | 产物 | 路径 | 是否入库 |
 | :--- | :--- | :--- |
 | 参考态快照 | `tests/visual/reference/auth.visual-parity.spec.ts/*.png` | 是 |
+| 自基线快照 | `tests/visual/__screenshots__/auth.visual.spec.ts/*.png` | 是 |
 | 环境与清单 | `tests/visual/reference-manifest.json` | 是 |
-| 失败产物 `-actual` / `-diff` | `test-results/visual-parity/` | 否（`.gitignore`） |
-| HTML 报告 | `playwright-report/visual-parity/` | 否（`.gitignore`） |
+| 失败产物 `-actual` / `-diff` | `test-results/visual-parity/`、`test-results/visual/` | 否（`.gitignore`） |
+| HTML 报告 | `playwright-report/visual-parity/`、`playwright-report/visual/` | 否（`.gitignore`） |
 
 前置条件：先 `pnpm build`（`webServer` 直接运行 `.output/server/index.mjs`），且 `3100` 端口未被其他构建占用。
 
@@ -82,6 +93,48 @@ pnpm exec playwright test --config=playwright.visual-parity.config.ts --grep "lo
 4. **参考态不得原地刷新**。需要重新审计时，用 `git show <参考态提交>:tests/visual/reference/...` 取回，而不是重新采集。
 
 > 参考态第一次提交即 `fc2201e` 的渲染原貌；后续任何一次「更新参考态」都会破坏其自证能力。
+
+### 6.1 2026-11-08 首轮差异归因
+
+参考态采自 `fc2201e`，比对对象为 `0169d40`（`/login`、`/register` 已迁移）+ 本轮修复。首轮 14/14 快照均有差异，归因结果如下。
+
+**发现并修复的回归（未登记的有意差异）**
+
+| 项 | 迁移前 | 迁移后（修复前） | 处置 |
+| :--- | :--- | :--- | :--- |
+| 表单标签字号 | 16px | 12px（`--caomei-form-item-label-font-size` 默认 `font-size-sm`） | 用组件 token 恢复 16px |
+| 标签与控件间距 | 8px | 4px | `--caomei-form-item-gap: 0.5rem` |
+| 输入框字号 / 高度 | 16px / 50px | 14px / 40px | `--caomei-field-font-size: 1rem`、`--caomei-field-height: 3.125rem` |
+| 字段块间距 | 24px（`.form-group` margin） | 0（`CaomeiFormItem` 无外边距） | `.auth-card .caomei-form-item { margin-bottom: 1.5rem }` |
+| 校验错误字号 | 16px（继承） | 12px | `--caomei-form-item-message-font-size: 1rem` |
+
+修复落点：`styles/_form.scss` 末尾的 `.auth-card` token 桥接块（不改 `CaomeiFormItem` 内部结构，不提升选择器特异性）。
+
+**差异收敛（像素 / 占比）**
+
+| 快照 | 修复前 | 修复后 | 归因 |
+| :--- | ---: | ---: | :--- |
+| `login-light-desktop-default` | 44,092 / 4% | 24,918 / 2% | 卡片居中位移 + 圆角 / 按钮高度 |
+| `register-light-desktop-default` | 54,536 / 5% | 34,204 / 3% | 同上 |
+| `login-light-mobile-default` | 43,818 / 14% | 38,394 / 12% | 移动端 Tab 由「逐字换行」改为单行（改善） |
+| `register-light-mobile-default` | 39,908 / 13% | 31,480 / 10% | 同上 |
+| `login-dark-desktop-default` | 45,017 / 4% | 25,770 / 2% | 深色底 `#121212` → `#18181b`（有意） |
+| `login-light-desktop-error` | 46,356 / 4% | 22,641 / 2% | 同上 |
+| `register-light-desktop-error` | 77,611 / 6% | 21,102 / 2% | 表单密度修复后大幅收敛 |
+| `login-light-desktop-tab-email` | 64,094 / 5% | 43,879 / 4% | Tab 切换后表单高度变化 → 居中位移 |
+| `login-light-desktop-tab-phone` | 66,767 / 6% | 48,048 / 4% | 同上 |
+
+**剩余差异（登记为有意，不修）**
+
+| 项 | 说明 |
+| :--- | :--- |
+| 控件圆角 8px → 6px | caomei-ui 设计 token，迁移评估已登记 |
+| 暗色底 `#121212` → `#18181b` | 同上 |
+| 按钮高度（Tab 40 → 36、提交 50 → 44） | 组件尺度 token；未在迁移评估登记，按「组件尺度差异」追认 |
+| 卡片垂直位置 ~25px | 内容高度差导致居中位移，非布局断裂 |
+| 移动端 Tab 单行 | 修复了迁移前的逐字换行问题，属改善 |
+
+> 自基线层已按修复后的状态采集并通过（14/14），后续回归以自基线为准；参考态保留用于迁移一致性审计，不再作为绿/红门禁。
 
 ## 7. 已知限制
 
