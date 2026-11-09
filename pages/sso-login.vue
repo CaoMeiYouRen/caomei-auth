@@ -21,23 +21,26 @@
                     </p>
                     <form @submit.prevent="signInWithEmail">
                         <div class="form-group">
-                            <label for="email">企业邮箱</label>
-                            <InputText
+                            <BaseInputV2
                                 id="email"
                                 v-model="emailForm.email"
                                 type="email"
+                                label="企业邮箱"
                                 placeholder="例如：user@company.com"
                                 :disabled="emailForm.loading"
                                 required
                             />
                         </div>
-                        <Button
+                        <CaomeiButton
                             type="submit"
-                            label="使用 SSO 登录"
-                            icon="mdi mdi-account-network"
-                            :loading="emailForm.loading"
                             class="sso-button"
-                        />
+                            :loading="emailForm.loading"
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-account-network" />
+                            </template>
+                            使用 SSO 登录
+                        </CaomeiButton>
                     </form>
                 </div>
 
@@ -49,22 +52,25 @@
                     </p>
                     <form @submit.prevent="signInWithDomain">
                         <div class="form-group">
-                            <label for="domain">企业域名</label>
-                            <InputText
+                            <BaseInputV2
                                 id="domain"
                                 v-model="domainForm.domain"
+                                label="企业域名"
                                 placeholder="例如：company.com"
                                 :disabled="domainForm.loading"
                                 required
                             />
                         </div>
-                        <Button
+                        <CaomeiButton
                             type="submit"
-                            label="使用域名登录"
-                            icon="mdi mdi-domain"
-                            :loading="domainForm.loading"
                             class="sso-button"
-                        />
+                            :loading="domainForm.loading"
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-domain" />
+                            </template>
+                            使用域名登录
+                        </CaomeiButton>
                     </form>
                 </div>
 
@@ -76,22 +82,25 @@
                     </p>
                     <form @submit.prevent="signInWithOrganization">
                         <div class="form-group">
-                            <label for="organization">组织名称</label>
-                            <InputText
+                            <BaseInputV2
                                 id="organization"
                                 v-model="orgForm.organizationSlug"
+                                label="组织名称"
                                 placeholder="例如：company-org"
                                 :disabled="orgForm.loading"
                                 required
                             />
                         </div>
-                        <Button
+                        <CaomeiButton
                             type="submit"
-                            label="使用组织登录"
-                            icon="mdi mdi-office-building"
-                            :loading="orgForm.loading"
                             class="sso-button"
-                        />
+                            :loading="orgForm.loading"
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-office-building" />
+                            </template>
+                            使用组织登录
+                        </CaomeiButton>
                     </form>
                 </div>
 
@@ -103,22 +112,25 @@
                     </p>
                     <form @submit.prevent="signInWithProvider">
                         <div class="form-group">
-                            <label for="providerId">Provider ID</label>
-                            <InputText
+                            <BaseInputV2
                                 id="providerId"
                                 v-model="providerForm.providerId"
+                                label="Provider ID"
                                 placeholder="例如：company-sso"
                                 :disabled="providerForm.loading"
                                 required
                             />
                         </div>
-                        <Button
+                        <CaomeiButton
                             type="submit"
-                            label="使用 Provider 登录"
-                            icon="mdi mdi-key-variant"
-                            :loading="providerForm.loading"
                             class="sso-button"
-                        />
+                            :loading="providerForm.loading"
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-key-variant" />
+                            </template>
+                            使用 Provider 登录
+                        </CaomeiButton>
                     </form>
                 </div>
             </div>
@@ -134,11 +146,12 @@
                         @click="signInWithSpecificProvider(provider)"
                     >
                         <div class="provider-info">
-                            <Badge
-                                :value="provider.type?.toUpperCase() || 'OIDC'"
-                                :severity="provider.type === 'saml' ? 'warning' : 'info'"
+                            <CaomeiTag
+                                :tone="provider.type === 'saml' ? 'warning' : 'primary'"
                                 class="provider-type"
-                            />
+                            >
+                                {{ provider.type?.toUpperCase() || 'OIDC' }}
+                            </CaomeiTag>
                             <h4 class="provider-name">
                                 {{ provider.name || provider.providerId }}
                             </h4>
@@ -152,12 +165,15 @@
                             </p>
                         </div>
                         <div class="provider-action">
-                            <Button
-                                icon="mdi mdi-login"
-                                label="登录"
-                                size="small"
+                            <CaomeiButton
+                                size="sm"
                                 :loading="specificProviderLoading === provider.providerId"
-                            />
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-login" />
+                                </template>
+                                登录
+                            </CaomeiButton>
                         </div>
                     </div>
                 </div>
@@ -338,7 +354,7 @@ const {
     }
 
     .provider-action {
-        :deep(.p-button) {
+        :deep(.caomei-button) {
             width: 100%;
         }
     }

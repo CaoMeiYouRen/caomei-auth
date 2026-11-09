@@ -12,11 +12,9 @@ vi.mock('@/lib/auth-client', () => ({
     },
 }))
 
-const addToastMock = vi.fn()
-vi.mock('primevue/usetoast', () => ({
-    useToast: () => ({
-        add: addToastMock,
-    }),
+const toastMocks = { show: vi.fn(), success: vi.fn(), danger: vi.fn(), warning: vi.fn(), info: vi.fn() }
+vi.mock('caomei-ui', () => ({
+    useToast: () => toastMocks,
 }))
 
 // Mock onMounted to execute immediately
@@ -72,9 +70,8 @@ describe('useSsoLoginFlow', () => {
     it('should show error toast if query param exists', () => {
         useRouteMock.mockReturnValue({ query: { error: 'sso_failed' } })
         useSsoLoginFlow()
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'error',
-            summary: 'SSO 登录失败',
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({
+            title: 'SSO 登录失败',
         }))
     })
 
@@ -107,9 +104,8 @@ describe('useSsoLoginFlow', () => {
 
         await signInWithEmail()
 
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'error',
-            detail: 'Invalid email',
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({
+            description: 'Invalid email',
         }))
         expect(emailForm.value.loading).toBe(false)
     })
@@ -140,9 +136,8 @@ describe('useSsoLoginFlow', () => {
 
         await signInWithDomain()
 
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'error',
-            detail: 'Invalid domain',
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({
+            description: 'Invalid domain',
         }))
     })
 
@@ -172,9 +167,8 @@ describe('useSsoLoginFlow', () => {
 
         await signInWithOrganization()
 
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'error',
-            detail: 'Invalid org',
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({
+            description: 'Invalid org',
         }))
     })
 
@@ -204,9 +198,8 @@ describe('useSsoLoginFlow', () => {
 
         await signInWithProvider()
 
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'error',
-            detail: 'Invalid provider',
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({
+            description: 'Invalid provider',
         }))
     })
 
@@ -239,9 +232,8 @@ describe('useSsoLoginFlow', () => {
 
         await signInWithSpecificProvider(provider)
 
-        expect(addToastMock).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'error',
-            detail: 'Failed',
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({
+            description: 'Failed',
         }))
     })
 })

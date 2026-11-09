@@ -173,17 +173,15 @@
 // PrimeVue → caomei-ui 认证页视觉桥接。
 // 迁移目标是不改变既有观感（迁移评估 §11）；caomei 组件默认字号 / 高度更紧凑，
 // 这里只覆盖组件尺寸档位引用的原始 token，避免逐组件写选择器级样式。
-.auth-card {
+.auth-card,
+.sso-login,
+.oauth-consent {
     /* 字号档位：md 档在组件元素上就地声明 height 引用，故覆盖其引用源 */
     --caomei-font-size-md: 1rem;
     --caomei-form-item-gap: 0.5rem;
     --caomei-form-item-label-font-size: 1rem;
     --caomei-form-item-message-font-size: 1rem;
     --caomei-checkbox-font-size: 1rem;
-
-    .caomei-form-item {
-        margin-bottom: 1.5rem;
-    }
 
     /* 旧标签行高为 normal（16px × normal ≈ 18.4px），组件默认 1.4 会撑高每个字段 */
     .caomei-form-item .caomei-form-item__label {
@@ -211,5 +209,12 @@
     /* 「获取验证码」在原设计中比输入框高 2px（48px） */
     .code-row .caomei-button {
         --caomei-button-height: 3rem;
+    }
+}
+
+/* 认证卡片内的表单块间距由卡片的字段节奏决定；独立布局页（SSO / 授权同意）用页面自身的 .form-group */
+.auth-card {
+    .caomei-form-item {
+        margin-bottom: 1.5rem;
     }
 }
