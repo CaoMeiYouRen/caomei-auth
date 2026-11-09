@@ -25,12 +25,16 @@
                     v-if="userSession?.session?.id === session.id"
                     v-tooltip.top="'当前正在使用的会话，令牌为：' + session.id"
                 >当前会话</span>
-                <span v-else v-tooltip.top="'会话令牌：' + session.id">{{ session.id }}</span>
+                <span
+                    v-else
+                    v-tooltip.top="'会话令牌：' + session.id"
+                    data-visual-mask
+                >{{ session.id }}</span>
                 <span>{{ session.browser }}</span>
                 <span>{{ session.os }}</span>
-                <span>{{ session.ipAddress }}</span>
-                <span>{{ session.createdAt }}</span>
-                <span>{{ session.expiresAt }}</span>
+                <span data-visual-mask>{{ session.ipAddress }}</span>
+                <span data-visual-mask>{{ session.createdAt }}</span>
+                <span data-visual-mask>{{ session.expiresAt }}</span>
                 <span class="device-action-col">
                     <Button
                         v-tooltip.top="userSession?.session?.id === session.id ? '无法撤销当前会话' : '点击撤销此会话'"

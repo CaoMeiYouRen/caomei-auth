@@ -29,6 +29,8 @@ interface VisualRoute {
     slug: string
     /** 是否为登录后页面（需要先建立会话） */
     auth?: boolean
+    /** 为每次用例创建独立账号，避免同一账号的会话在用例间累积 */
+    isolatedAccount?: boolean
     /** 异步加载页面：等待该文案出现后再截图 */
     readyText?: string
     /** 提交按钮可见文案；缺省则不跑校验错误态 */
@@ -85,6 +87,29 @@ const ROUTES: readonly VisualRoute[] = [
         tabs: [['短信验证码', 'phone']],
     },
     {
+        path: '/security',
+        slug: 'security',
+        auth: true,
+        isolatedAccount: true,
+        readyText: '当前会话',
+        states: [
+            {
+                label: '启用 2FA 对话框',
+                slug: 'enable-2fa-dialog',
+                action: async (page) => {
+                    await page.getByRole('button', { name: '启用双因素认证' }).click()
+                },
+            },
+            {
+                label: '撤销所有会话确认',
+                slug: 'revoke-all-confirm',
+                action: async (page) => {
+                    await page.getByRole('button', { name: '撤销所有会话' }).click()
+                },
+            },
+        ],
+    },
+    {
         path: '/profile',
         slug: 'profile',
         auth: true,
@@ -109,8 +134,23 @@ const VISUAL_ACCOUNT = {
     username: 'visualbaseline',
 }
 
+let isolatedAccountSeq = 0
+
 /** 为登录后页面建立会话；注册与登录都是幂等的，日志不进入截图。 */
-async function ensureSession(page: Page): Promise<void> {
+async function ensureSession(page: Page, route: VisualRoute): Promise<void> {
+    if (route.isolatedAccount) {
+        /* 会话类页面按用例建号：同一账号反复登录会让会话表行数随用例顺序增长 */
+        isolatedAccountSeq += 1
+        const account = {
+            email: `visual-security-${isolatedAccountSeq}@example.com`,
+            password: VISUAL_ACCOUNT.password,
+            name: `Visual Security ${isolatedAccountSeq}`,
+            username: `visualsecurity${isolatedAccountSeq}`,
+        }
+        const created = await page.request.post(`${visualBaseURL}/api/auth/sign-up/email`, { data: account })
+        expect(created.ok(), '视觉隔离账号注册失败').toBeTruthy()
+        return
+    }
     const signUp = await page.request.post(`${visualBaseURL}/api/auth/sign-up/email`, { data: VISUAL_ACCOUNT })
     if (signUp.ok()) {
         return
@@ -132,7 +172,7 @@ async function assertReferenceSource(page: Page): Promise<void> {
 
 async function open(page: Page, route: VisualRoute, theme: VisualTheme): Promise<void> {
     if (route.auth) {
-        await ensureSession(page)
+        await ensureSession(page, route)
     }
     await applyTheme(page, theme)
     await page.goto(route.path, { waitUntil: 'domcontentloaded' })

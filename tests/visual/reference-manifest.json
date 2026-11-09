@@ -22,6 +22,12 @@
             "branch": "test/visual-baseline-m4-1",
             "commit": "4d94931",
             "note": "ID 字段加 data-visual-mask：用户 ID 每次运行随机"
+        },
+        {
+            "batch": "M4-2（security）",
+            "branch": "test/visual-baseline-m4-2",
+            "commit": "e4428b9",
+            "note": "会话表 token / IP / 时间列加 data-visual-mask；会话类页面按用例建独立账号，避免会话行数累积"
         }
     ],
     "purpose": "组件迁移前的 PrimeVue 渲染原貌（参考态）。迁移批次用当前渲染与之比对，差异必须逐项归因。",
@@ -308,6 +314,48 @@
             "theme": "light",
             "viewport": "1440x900",
             "state": "隐私模式"
+        },
+        {
+            "name": "security-light-desktop-default",
+            "route": "/security",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "security-dark-desktop-default",
+            "route": "/security",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "security-light-mobile-default",
+            "route": "/security",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "security-dark-mobile-default",
+            "route": "/security",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "security-light-desktop-enable-2fa-dialog",
+            "route": "/security",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "启用 2FA 对话框"
+        },
+        {
+            "name": "security-light-desktop-revoke-all-confirm",
+            "route": "/security",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "撤销所有会话确认"
         }
     ]
 }
