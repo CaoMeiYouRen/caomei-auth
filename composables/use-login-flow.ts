@@ -15,15 +15,19 @@ import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } fr
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 
 // Helper function to get first Zod error
-function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }): string | null {
+function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
     if (result.success) { return null }
-    return result.error?.issues[0]?.message || '校验失败'
+    const message = result.error?.issues[0]?.message
+    return translate ? translate(message) : resolveValidationMessage(message) || '校验失败'
 }
 
 export function useLoginFlow() {
     const config = useRuntimeConfig().public
+    const translate = useValidationMessage()
     const phoneEnabled = config.phoneEnabled
     const usernameEnabled = config.usernameEnabled
     const toast = useToast()
@@ -204,7 +208,7 @@ export function useLoginFlow() {
 
             const result = schema.safeParse(formData)
             if (!result.success) {
-                const errorMsg = getFirstZodError(result)
+                const errorMsg = getFirstZodError(result, translate)
                 if (errorMsg) {
                     // 根据 error path 设置对应的错误字段
                     const path = result.error.issues[0]?.path[0] as string
@@ -249,7 +253,7 @@ export function useLoginFlow() {
                 password: usernamePassword.value,
             })
             if (!result.success) {
-                const errorMsg = getFirstZodError(result)
+                const errorMsg = getFirstZodError(result, translate)
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -289,7 +293,7 @@ export function useLoginFlow() {
 
             const result = schema.safeParse(formData)
             if (!result.success) {
-                const errorMsg = getFirstZodError(result)
+                const errorMsg = getFirstZodError(result, translate)
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -384,7 +388,7 @@ export function useLoginFlow() {
             () => {
                 const result = emailSchema.safeParse(email.value)
                 if (!result.success) {
-                    errors.value.email = getFirstZodError(result) || '请输入有效的邮箱地址'
+                    errors.value.email = getFirstZodError(result, translate) || '请输入有效的邮箱地址'
                     return false
                 }
                 return true
@@ -403,7 +407,7 @@ export function useLoginFlow() {
             () => {
                 const result = phoneSchema.safeParse(phone.value)
                 if (!result.success) {
-                    errors.value.phone = getFirstZodError(result) || '请输入有效的手机号'
+                    errors.value.phone = getFirstZodError(result, translate) || '请输入有效的手机号'
                     return false
                 }
                 return true

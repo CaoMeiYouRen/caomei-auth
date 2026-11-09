@@ -63,6 +63,7 @@ import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
 import type { CaptchaExpose } from '@/utils/web/captcha'
 import { useForm } from '@/composables/core/use-form'
 import { editPhoneFormSchema } from '@/utils/shared/schemas'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 
 const props = defineProps<{
     user: {
@@ -78,6 +79,7 @@ const emit = defineEmits<{
 const visible = defineModel<boolean>('visible', { required: true })
 
 const toast = useToast()
+const translate = useValidationMessage()
 const phoneCaptcha = ref<CaptchaExpose | null>(null)
 
 const { values, errors, submitting: bindingPhone, handleSubmit, reset, setField, setErrors } = useForm({
@@ -106,7 +108,7 @@ const sendPhoneCode = async () => {
         () => {
             const res = editPhoneFormSchema.shape.phone.safeParse(phone.value)
             if (!res.success) {
-                setErrors({ ...errors.value, phone: res.error.issues[0]?.message || '请输入有效的手机号' })
+                setErrors({ ...errors.value, phone: translate(res.error.issues[0]?.message) || '请输入有效的手机号' })
                 return false
             }
             return true

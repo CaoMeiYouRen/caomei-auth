@@ -3,57 +3,57 @@ import { validateEmail, validatePhone, validateUrl } from './validate'
 
 // Email Schema
 export const emailSchema = z.string()
-    .min(1, '请输入邮箱')
+    .min(1, 'validation.emailRequired')
     .refine(validateEmail, {
-        message: '请输入有效的邮箱地址',
+        message: 'validation.emailInvalid',
     })
 
 // Phone Schema
 export const phoneSchema = z.string()
-    .min(1, '请输入手机号')
+    .min(1, 'validation.phoneRequired')
     .refine((val) => validatePhone(val), {
-        message: '请输入有效的手机号',
+        message: 'validation.phoneInvalid',
     })
 
 // Username Schema
 export const usernameSchema = z.string()
-    .min(1, '请输入用户名')
-    .min(2, '用户名长度不能少于 2 位')
-    .max(36, '用户名长度不能超过 36 位')
-    .regex(/^[a-zA-Z0-9_-]+$/, '用户名只能包含字母、数字、下划线和连字符')
+    .min(1, 'validation.usernameRequired')
+    .min(2, 'validation.usernameTooShort')
+    .max(36, 'validation.usernameTooLong')
+    .regex(/^[a-zA-Z0-9_-]+$/, 'validation.usernameCharset')
     .refine((val) => !emailSchema.safeParse(val).success, {
-        message: '用户名不能是邮箱格式',
+        message: 'validation.usernameEmailFormat',
     })
     .refine((val) => !validatePhone(val), {
-        message: '用户名不能是手机号格式',
+        message: 'validation.usernamePhoneFormat',
     })
 
 // Nickname Schema
 export const nicknameSchema = z.string()
-    .min(1, '请输入昵称')
-    .min(2, '昵称长度不能少于 2 位')
-    .max(36, '昵称长度不能超过 36 位')
+    .min(1, 'validation.nicknameRequired')
+    .min(2, 'validation.nicknameTooShort')
+    .max(36, 'validation.nicknameTooLong')
     // eslint-disable-next-line no-control-regex
-    .regex(/^[^\u0000-\u001F\u0020\u007F-\u009F\u00A0-\u00FF]+$/, '昵称包含非法字符')
+    .regex(/^[^\u0000-\u001F\u0020\u007F-\u009F\u00A0-\u00FF]+$/, 'validation.nicknameCharset')
 
 // Password Schema
 export const passwordSchema = z.string()
-    .min(1, '请输入密码')
-    .min(6, '密码长度不能少于 6 位')
-    .max(32, '密码长度不能超过 32 位')
+    .min(1, 'validation.passwordRequired')
+    .min(6, 'validation.passwordTooShort')
+    .max(32, 'validation.passwordTooLong')
 
 // URL Schema
 export const urlSchema = z.string()
     .refine(validateUrl, {
-        message: '请输入有效的链接',
+        message: 'validation.urlInvalid',
     })
 
 // ID Schema
-export const idSchema = z.string().min(1, 'ID 不能为空')
+export const idSchema = z.string().min(1, 'validation.idRequired')
 
 // CN Phone Schema
 export const cnPhoneSchema = z.string()
-    .min(1, '请输入手机号')
+    .min(1, 'validation.phoneRequired')
     .refine((val) => validatePhone(val, 'zh-CN'), {
-        message: '请输入有效的中国大陆手机号',
+        message: 'validation.cnPhoneInvalid',
     })

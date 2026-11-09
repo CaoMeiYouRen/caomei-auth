@@ -1,5 +1,6 @@
 import { createError, getValidatedQuery, getValidatedRouterParams, readValidatedBody, type H3Event } from 'h3'
 import type { z } from 'zod'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 
 /** per-parse error map（Zod 4）：用于把校验错误按请求语言翻译 */
 export type ZodErrorMap = (issue: { code: string }) => string | { message: string }
@@ -26,7 +27,7 @@ export interface ValidationErrorResponse {
  * Extracts the first error message from Zod validation issues
  */
 export function getFirstZodError(error: z.ZodError): string {
-    return error.issues[0]?.message || '参数校验失败'
+    return resolveValidationMessage(error.issues[0]?.message) || '参数校验失败'
 }
 
 /**

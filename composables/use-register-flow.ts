@@ -5,11 +5,13 @@ import type { z } from 'zod'
 import { registerEmailFormSchema, registerPhoneFormSchema } from '@/utils/shared/schemas'
 import { usePhoneOtp } from '@/composables/use-otp'
 import { authClient } from '@/lib/auth-client'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 import { useForm } from '@/composables/core/use-form'
 
 export function useRegisterFlow() {
     const config = useRuntimeConfig().public
+    const translate = useValidationMessage()
     const phoneEnabled = config.phoneEnabled
     const usernameEnabled = config.usernameEnabled
 
@@ -81,7 +83,7 @@ export function useRegisterFlow() {
             () => {
                 const res = registerPhoneFormSchema.shape.phone.safeParse(phone.value)
                 if (!res.success) {
-                    setErrors({ ...errors.value, phone: res.error.issues[0]?.message || '请输入有效的手机号' })
+                    setErrors({ ...errors.value, phone: translate(res.error.issues[0]?.message) || '请输入有效的手机号' })
                     return false
                 }
                 return true

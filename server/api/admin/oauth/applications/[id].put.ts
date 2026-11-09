@@ -5,6 +5,7 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import { applyOAuthClientInput, toAdminOAuthClientView } from '@/server/utils/oauth-client-view'
 import logger from '@/server/utils/logger'
 import { oauthApplicationUpdateSchema } from '@/utils/shared/schemas'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -55,7 +56,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 400,
                 success: false,
-                message: validationResult.error?.issues[0]?.message || '参数校验失败',
+                message: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数校验失败',
                 data: null,
             }
         }

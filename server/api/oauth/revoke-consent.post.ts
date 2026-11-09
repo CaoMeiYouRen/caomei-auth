@@ -3,6 +3,7 @@ import { OAuthConsent } from '@/server/entities/oauth-consent'
 import { dataSource } from '@/server/database'
 import { getUserSession } from '@/server/utils/get-user-session'
 import { revokeConsentSchema } from '@/utils/shared/schemas'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 
 export default defineEventHandler(async (event) => {
     try {
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 400,
                 success: false,
-                message: validationResult.error?.issues[0]?.message || '参数验证失败',
+                message: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数验证失败',
                 data: null,
             }
         }

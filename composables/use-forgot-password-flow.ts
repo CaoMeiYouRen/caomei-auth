@@ -9,16 +9,20 @@ import {
     resetPasswordFormSchema,
 } from '@/utils/shared/schemas'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import type { CaptchaExpose } from '@/utils/web/captcha'
 
 // Helper function to get first Zod error
-function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }): string | null {
+function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
     if (result.success) { return null }
-    return result.error?.issues[0]?.message || '校验失败'
+    const message = result.error?.issues[0]?.message
+    return translate ? translate(message) : resolveValidationMessage(message) || '校验失败'
 }
 
 export function useForgotPasswordFlow() {
     const config = useRuntimeConfig().public
+    const translate = useValidationMessage()
     const phoneEnabled = config.phoneEnabled
 
     const email = ref('')
@@ -112,7 +116,7 @@ export function useForgotPasswordFlow() {
                 code: emailCode.value,
             })
             if (!result.success) {
-                const errorMsg = getFirstZodError(result)
+                const errorMsg = getFirstZodError(result, translate)
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -125,7 +129,7 @@ export function useForgotPasswordFlow() {
                 code: phoneCode.value,
             })
             if (!result.success) {
-                const errorMsg = getFirstZodError(result)
+                const errorMsg = getFirstZodError(result, translate)
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -140,7 +144,7 @@ export function useForgotPasswordFlow() {
             confirmPassword: confirmPassword.value,
         })
         if (!passwordResult.success) {
-            const errorMsg = getFirstZodError(passwordResult)
+            const errorMsg = getFirstZodError(passwordResult, translate)
             if (errorMsg) {
                 const path = passwordResult.error.issues[0]?.path[0] as string
                 errors.value[path] = errorMsg

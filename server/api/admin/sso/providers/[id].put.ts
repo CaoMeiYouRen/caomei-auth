@@ -4,6 +4,7 @@ import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { ssoProviderUpdateSchema } from '@/utils/shared/schemas'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
@@ -36,7 +37,7 @@ export default defineEventHandler(async (event) => {
         if (!validationResult.success) {
             throw createError({
                 statusCode: 400,
-                statusMessage: validationResult.error?.issues[0]?.message || '参数校验失败',
+                statusMessage: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数校验失败',
             })
         }
 

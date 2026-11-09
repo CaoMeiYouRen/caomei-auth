@@ -5,6 +5,7 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { ssoProviderSchema } from '@/utils/shared/schemas'
 import { snowflake } from '@/server/utils/snowflake'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -18,7 +19,7 @@ export default defineEventHandler(async (event) => {
         if (!validationResult.success) {
             throw createError({
                 statusCode: 400,
-                statusMessage: validationResult.error?.issues[0]?.message || '参数校验失败',
+                statusMessage: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数校验失败',
             })
         }
 
