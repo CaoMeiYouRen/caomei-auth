@@ -34,6 +34,12 @@
             "branch": "test/visual-baseline-m4-3",
             "commit": "ca6661d",
             "note": "visual DB 预置固定 OAuth 客户端 visual-client；页面就绪选择器/文案按路由可配"
+        },
+        {
+            "batch": "M4-4（sso-login）",
+            "branch": "test/visual-baseline-m4-4",
+            "commit": "ba07d26",
+            "note": "/sso-login 加入 publicPaths（页面声明 auth:false，但全局守卫只认白名单）"
         }
     ],
     "purpose": "组件迁移前的 PrimeVue 渲染原貌（参考态）。迁移批次用当前渲染与之比对，差异必须逐项归因。",
@@ -387,6 +393,34 @@
         {
             "name": "oauth-consent-dark-mobile-default",
             "route": "/oauth/consent?client_id=visual-client",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "sso-login-light-desktop-default",
+            "route": "/sso-login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "sso-login-dark-desktop-default",
+            "route": "/sso-login",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "sso-login-light-mobile-default",
+            "route": "/sso-login",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "sso-login-dark-mobile-default",
+            "route": "/sso-login",
             "theme": "dark",
             "viewport": "390x844",
             "state": "默认"

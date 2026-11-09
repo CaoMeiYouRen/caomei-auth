@@ -98,6 +98,12 @@ const ROUTES: readonly VisualRoute[] = [
         readyText: '视觉测试应用',
     },
     {
+        path: '/sso-login',
+        slug: 'sso-login',
+        readySelector: '.sso-login',
+        readyText: 'SSO 单点登录',
+    },
+    {
         path: '/security',
         slug: 'security',
         auth: true,
