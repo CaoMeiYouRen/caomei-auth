@@ -28,6 +28,12 @@
             "branch": "test/visual-baseline-m4-2",
             "commit": "e4428b9",
             "note": "会话表 token / IP / 时间列加 data-visual-mask；会话类页面按用例建独立账号，避免会话行数累积"
+        },
+        {
+            "batch": "M4-3（oauth-consent）",
+            "branch": "test/visual-baseline-m4-3",
+            "commit": "ca6661d",
+            "note": "visual DB 预置固定 OAuth 客户端 visual-client；页面就绪选择器/文案按路由可配"
         }
     ],
     "purpose": "组件迁移前的 PrimeVue 渲染原貌（参考态）。迁移批次用当前渲染与之比对，差异必须逐项归因。",
@@ -356,6 +362,34 @@
             "theme": "light",
             "viewport": "1440x900",
             "state": "撤销所有会话确认"
+        },
+        {
+            "name": "oauth-consent-light-desktop-default",
+            "route": "/oauth/consent?client_id=visual-client",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-consent-dark-desktop-default",
+            "route": "/oauth/consent?client_id=visual-client",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-consent-light-mobile-default",
+            "route": "/oauth/consent?client_id=visual-client",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-consent-dark-mobile-default",
+            "route": "/oauth/consent?client_id=visual-client",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
         }
     ]
 }

@@ -21,6 +21,15 @@ rmSync(databasePath, { force: true })
 const db = new Database(databasePath)
 try {
     db.exec(readFileSync(schemaPath, 'utf8'))
+    /* 固定的公开 OAuth 客户端：授权同意页需要真实 client_id 才能渲染应用信息 */
+    db.exec(`
+        INSERT INTO caomei_auth_oauth_client
+            (id, client_id, disabled, scopes, name, description, uri, redirect_uris, application_type)
+        VALUES
+            ('00000000-0000-4000-8000-000000000001', 'visual-client', 0,
+             '["openid","profile","email"]', '视觉测试应用', '用于视觉基线的演示应用',
+             'https://example.com', '["http://127.0.0.1:3100/callback"]', 'web')
+    `)
 } finally {
     db.close()
 }

@@ -32,6 +32,8 @@ interface VisualRoute {
     auth?: boolean
     /** 为每次用例创建独立账号，避免同一账号的会话在用例间累积 */
     isolatedAccount?: boolean
+    /** 页面就绪选择器，默认 `.auth-card`（授权同意页用 `.oauth-consent`） */
+    readySelector?: string
     /** 异步加载页面：等待该文案出现后再截图 */
     readyText?: string
     /** 提交按钮可见文案；缺省则不跑校验错误态 */
@@ -86,6 +88,14 @@ const ROUTES: readonly VisualRoute[] = [
         submitLabel: '邮箱快速登录',
         errorAnchor: '请输入邮箱',
         tabs: [['短信验证码', 'phone']],
+    },
+    {
+        path: '/oauth/consent?client_id=visual-client&redirect_uri=http%3A%2F%2F127.0.0.1%3A3100%2Fcallback&response_type=code&scope=openid%20profile%20email&state=visual',
+        slug: 'oauth-consent',
+        auth: true,
+        isolatedAccount: true,
+        readySelector: '.oauth-consent',
+        readyText: '视觉测试应用',
     },
     {
         path: '/security',
@@ -178,11 +188,11 @@ async function open(page: Page, route: VisualRoute, theme: VisualTheme): Promise
     }
     await applyTheme(page, theme)
     await page.goto(route.path, { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('.auth-card')).toBeVisible()
+    await expect(page.locator(route.readySelector ?? '.auth-card')).toBeVisible()
     /* 先等网络空闲（完成 hydration），再断言主题；重页面在负载下可能超过默认 5s */
     await waitForVisualStable(page)
     if (route.readyText) {
-        await expect(page.getByText(route.readyText)).toBeVisible()
+        await expect(page.getByText(route.readyText).first()).toBeVisible()
     }
     if (theme === 'dark') {
         await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 15000 })
