@@ -23,9 +23,32 @@ export const HARDCODED_ALLOWLIST_PATH = path.join(projectRoot, 'i18n', 'hardcode
 
 const IGNORED_DIRECTORIES = new Set(['node_modules', '.nuxt', '.output', 'dist', 'coverage', 'test-results', 'playwright-report', '.git'])
 
-const HTML_COMMENT_PATTERN = /<!--[\s\S]*?-->/gu
 const TS_BLOCK_COMMENT_PATTERN = /\/\*[\s\S]*?\*\//gu
 const TS_LINE_COMMENT_PATTERN = /^\s*\/\/.*$/gmu
+
+/**
+ * 逐段移除 HTML 注释，避免单次正则替换留下的 `<!--` 片段。
+ * 扫描器只做行计数，不做 HTML 输出；这里仍按完整注释区间消费输入。
+ * @param {string} text
+ */
+function stripHtmlComments(text) {
+    let result = ''
+    let cursor = 0
+    while (cursor < text.length) {
+        const start = text.indexOf('<!--', cursor)
+        if (start === -1) {
+            result += text.slice(cursor)
+            break
+        }
+        result += text.slice(cursor, start)
+        const end = text.indexOf('-->', start + 4)
+        if (end === -1) {
+            break
+        }
+        cursor = end + 3
+    }
+    return result
+}
 
 /**
  * 提取 `.vue` 的根模板。使用最后一个 `</template>` 以保留嵌套的 `<template #slot>`。
@@ -53,9 +76,9 @@ export function countHardcodedLines(filePath, source) {
     const extension = path.extname(filePath)
     let text = source
     if (extension === '.vue') {
-        text = extractVueTemplate(source).replace(HTML_COMMENT_PATTERN, '')
+        text = stripHtmlComments(extractVueTemplate(source))
     } else if (extension === '.mjml') {
-        text = source.replace(HTML_COMMENT_PATTERN, '')
+        text = stripHtmlComments(source)
     } else {
         text = source
             .replace(TS_BLOCK_COMMENT_PATTERN, '')

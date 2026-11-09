@@ -108,6 +108,16 @@ const label = '脚本里的中文'
         expect(countHardcodedLines('components/dialog.vue', source)).toBe(1)
     })
 
+    it('完整移除嵌套 / 连续 HTML 注释', () => {
+        const source = `<template>
+    <div>登录</div>
+    <!-- <!-- 注释里的中文 -->
+    <!-- 另一个注释 -->
+    <span>注册</span>
+</template>`
+        expect(countHardcodedLines('pages/auth.vue', source)).toBe(2)
+    })
+
     it('TypeScript 忽略块注释与整行注释', () => {
         const source = `// 整行注释
 /* 块注释
