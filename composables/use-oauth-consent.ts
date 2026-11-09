@@ -1,5 +1,5 @@
 import { ref, computed, watch } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 
 interface ApplicationInfo {
@@ -108,12 +108,7 @@ export async function useOAuthConsent() {
     watch([() => clientId, fetchError], ([newClientId, newError]) => {
         if (!newClientId) {
             hasError.value = true
-            toast.add({
-                severity: 'error',
-                summary: '错误',
-                detail: '缺少必需参数：client_id',
-                life: 3000,
-            })
+            toast.danger({ title: '错误', description: '缺少必需参数：client_id', duration: 3000 })
             return
         }
 
@@ -121,20 +116,10 @@ export async function useOAuthConsent() {
             // 如果是 404 或 403 错误，显示特定错误信息
             if (newError.statusCode === 404) {
                 hasError.value = true
-                toast.add({
-                    severity: 'error',
-                    summary: '错误',
-                    detail: '应用不存在，请检查授权链接是否正确',
-                    life: 3000,
-                })
+                toast.danger({ title: '错误', description: '应用不存在，请检查授权链接是否正确', duration: 3000 })
             } else if (newError.statusCode === 403) {
                 hasError.value = true
-                toast.add({
-                    severity: 'error',
-                    summary: '错误',
-                    detail: '该应用已被禁用，无法进行授权',
-                    life: 3000,
-                })
+                toast.danger({ title: '错误', description: '该应用已被禁用，无法进行授权', duration: 3000 })
             } else {
                 // 对于其他错误，记录警告但不阻止用户继续（使用备用应用信息）
                 console.warn('获取应用详细信息失败，使用默认信息:', newError)
@@ -160,23 +145,13 @@ export async function useOAuthConsent() {
             if (error) {
                 throw new Error(error.message)
             }
-            toast.add({
-                severity: 'success',
-                summary: '授权成功',
-                detail: '您已成功授权该应用访问您的账户',
-                life: 3000,
-            })
+            toast.success({ title: '授权成功', description: '您已成功授权该应用访问您的账户', duration: 3000 })
             // better-auth 1.7 起由服务端返回重定向地址（data.url）
             if (data?.url) {
                 window.location.href = data.url
             }
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: '错误',
-                detail: error.message || '授权失败',
-                life: 3000,
-            })
+            toast.danger({ title: '错误', description: error.message || '授权失败', duration: 3000 })
         } finally {
             submitting.value = false
         }
@@ -205,24 +180,14 @@ export async function useOAuthConsent() {
             if (data?.url) {
                 window.location.href = data.url
             } else {
-                toast.add({
-                    severity: 'info',
-                    summary: '已拒绝授权',
-                    detail: '您已拒绝该应用访问您的账户',
-                    life: 3000,
-                })
+                toast.info({ title: '已拒绝授权', description: '您已拒绝该应用访问您的账户', duration: 3000 })
                 // 可以重定向到首页或其他页面
                 setTimeout(() => {
                     navigateTo('/profile')
                 }, 2000)
             }
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: '错误',
-                detail: error.message || '拒绝授权失败',
-                life: 3000,
-            })
+            toast.danger({ title: '错误', description: error.message || '拒绝授权失败', duration: 3000 })
         } finally {
             submitting.value = false
         }

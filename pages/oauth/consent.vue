@@ -15,7 +15,9 @@
                 <i class="error-icon mdi mdi-alert-circle" />
                 <h2>授权请求无效</h2>
                 <p>无法处理此授权请求，请检查链接是否正确或联系应用提供方。</p>
-                <Button label="返回首页" @click="handleGoHome" />
+                <CaomeiButton @click="handleGoHome">
+                    返回首页
+                </CaomeiButton>
             </div>
         </div>
 
@@ -129,20 +131,22 @@
                 </p>
             </div>
             <div class="consent-footer">
-                <Button
-                    label="拒绝"
+                <CaomeiButton
+                    variant="secondary"
                     class="btn-deny"
-                    severity="secondary"
                     :disabled="submitting"
                     @click="denyConsent"
-                />
-                <Button
-                    :label="submitting ? '处理中...' : '授权'"
+                >
+                    拒绝
+                </CaomeiButton>
+                <CaomeiButton
                     class="btn-allow"
                     :loading="submitting"
                     :disabled="submitting"
                     @click="allowConsent"
-                />
+                >
+                    {{ submitting ? '处理中...' : '授权' }}
+                </CaomeiButton>
             </div>
         </div>
     </div>
@@ -382,20 +386,7 @@ const {
         gap: 1rem;
         justify-content: flex-end;
 
-        .btn-deny {
-            &:hover {
-                background-color: var(--surface-hover);
-            }
-        }
-
         .btn-allow {
-            color: var(--primary-color-text);
-            background-color: var(--primary-color);
-
-            &:hover:not(:disabled) {
-                background-color: var(--primary-600);
-            }
-
             &:disabled {
                 cursor: not-allowed;
                 opacity: 0.6;

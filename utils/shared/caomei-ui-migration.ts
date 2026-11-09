@@ -6,7 +6,7 @@
  *
  * 初值：`/login`（P2 试点）、`/register`（P3 / M3-1）、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`（M3-2 / M3-3 / M4-1）；P3 / P4 按批次继续登记，P5 收尾时清空并删除本文件。
  */
-export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = ['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security']
+export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = ['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent']
 
 /**
  * 判断路径是否命中 caomei-ui 白名单。
