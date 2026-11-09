@@ -1,28 +1,26 @@
 <template>
-    <BaseDialog
+    <BaseDialogV2
         v-model:visible="visible"
         :title="user.phoneVerified ? '修改手机号' : '绑定手机号'"
-        width="450px"
-        :show-footer="false"
     >
         <div class="form-group">
-            <BasePhoneInput
+            <BasePhoneInputV2
+                id="phone"
                 v-model="phone"
-                v-tooltip.top="'输入新的手机号'"
                 placeholder="请输入新手机号"
                 :error="errors.phone"
+                title="输入新的手机号"
             />
         </div>
-        <BaseInput
+        <BaseInputV2
             id="phoneCode"
             v-model="phoneCode"
-            v-tooltip.top="'输入收到的短信验证码'"
             placeholder="验证码"
             :error="errors.code"
+            title="输入收到的短信验证码"
         >
             <template #append>
-                <SendCodeButton
-                    v-tooltip.top="'点击发送验证码到新手机号'"
+                <SendCodeButtonV2
                     :on-send="sendPhoneCode"
                     :duration="60"
                     :disabled="phoneCodeSending || !!errors.phone"
@@ -31,35 +29,37 @@
                     resend-text="重新发送"
                 />
             </template>
-        </BaseInput>
+        </BaseInputV2>
         <Captcha ref="phoneCaptcha" />
-        <Message
+        <CaomeiMessage
             v-if="errors.captcha"
-            severity="error"
-            size="small"
+            tone="danger"
+            size="sm"
             variant="simple"
         >
             {{ errors.captcha }}
-        </Message>
+        </CaomeiMessage>
         <div class="form-group">
-            <Button
-                v-tooltip.top="'点击确认修改手机号信息'"
-                label="确认修改"
+            <CaomeiButton
                 class="btn btn-primary w-full"
+                block
                 :loading="bindingPhone"
+                title="点击确认修改手机号信息"
                 @click="bindPhone"
-            />
+            >
+                确认修改
+            </CaomeiButton>
         </div>
-    </BaseDialog>
+    </BaseDialogV2>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { usePhoneOtp } from '@/composables/use-otp'
 import Captcha from '@/components/captcha.vue'
-import SendCodeButton from '@/components/send-code-button.vue'
+import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
 import type { CaptchaExpose } from '@/utils/web/captcha'
 import { useForm } from '@/composables/core/use-form'
 import { editPhoneFormSchema } from '@/utils/shared/schemas'
@@ -137,19 +137,10 @@ const bindPhone = async () => {
             })
 
             visible.value = false
-            toast.add({
-                severity: 'success',
-                summary: '手机号修改成功',
-                life: 2000,
-            })
+            toast.success({ title: '手机号修改成功', duration: 2000 })
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '手机号修改时发生未知错误'
-            toast.add({
-                severity: 'error',
-                summary: '手机号修改失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '手机号修改失败', description: errorMessage, duration: 5000 })
         }
     })
 }
