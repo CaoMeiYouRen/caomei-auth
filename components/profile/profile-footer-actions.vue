@@ -1,18 +1,20 @@
 <template>
     <div class="form-group profile-actions">
-        <Button
-            v-tooltip.top="'点击保存修改后的个人信息'"
-            label="保存修改"
+        <CaomeiButton
             class="btn btn-primary"
             :loading="saving"
+            title="点击保存修改后的个人信息"
             @click="emit('save')"
-        />
-        <Button
-            v-tooltip.top="'点击跳转到修改密码页面'"
-            label="修改密码"
-            class="btn btn-link ml-3"
+        >
+            保存修改
+        </CaomeiButton>
+        <CaomeiButton
+            variant="ghost"
+            title="点击跳转到修改密码页面"
             @click="emit('changePassword')"
-        />
+        >
+            修改密码
+        </CaomeiButton>
     </div>
 </template>
 

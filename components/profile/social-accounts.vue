@@ -3,30 +3,36 @@
         <label class="form-label">第三方账号</label>
         <div class="social-list">
             <!-- 已绑定的第三方账号 -->
-            <Button
+            <CaomeiButton
                 v-for="account in userAccounts"
                 :key="account.providerId"
-                v-tooltip.top="privacyMode ? `点击解绑 ${getProviderName(account.providerId)} 账号，ID: ${maskUserId(account.accountId)}` : `点击解绑 ${getProviderName(account.providerId)} 账号，完整 ID: ${account.accountId}`"
+                variant="secondary"
                 class="social-btn"
                 :style="{color: getProviderColor(account.providerId)}"
-                :icon="getProviderIcon(account.providerId)"
-                :label="privacyMode ? `${getProviderName(account.providerId)}(ID: ${maskUserId(account.accountId)})` : `${getProviderName(account.providerId)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})`"
-                outlined
+                :title="privacyMode ? `点击解绑 ${getProviderName(account.providerId)} 账号，ID: ${maskUserId(account.accountId)}` : `点击解绑 ${getProviderName(account.providerId)} 账号，完整 ID: ${account.accountId}`"
                 @click="emit('unlink', account.providerId, account.accountId)"
-            />
+            >
+                <template #icon>
+                    <i :class="getProviderIcon(account.providerId)" />
+                </template>
+                {{ privacyMode ? `${getProviderName(account.providerId)}(ID: ${maskUserId(account.accountId)})` : `${getProviderName(account.providerId)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})` }}
+            </CaomeiButton>
 
             <!-- 绑定新账号   -->
             <template v-for="provider in enabledProviders">
-                <Button
+                <CaomeiButton
                     v-if="!userAccounts.some(account => account.providerId === provider.provider) && !provider.anonymous"
                     :key="provider.provider"
+                    variant="secondary"
                     class="social-btn"
                     :style="{color: provider.color}"
-                    :icon="getProviderIcon(provider.provider)"
-                    :label="`绑定 ${provider.name} 账号`"
-                    outlined
                     @click="emit('link', provider)"
-                />
+                >
+                    <template #icon>
+                        <i :class="getProviderIcon(provider.provider)" />
+                    </template>
+                    绑定 {{ provider.name }} 账号
+                </CaomeiButton>
             </template>
         </div>
     </div>
