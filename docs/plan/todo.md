@@ -33,7 +33,7 @@
 | M3-1 | 注册页迁移 | `pages/register.vue` 及消费者封装 | 已完成（2026-11-08：PrimeVue 节点 0；明暗 / 移动 / 错误 / 手机号 / 密码强度回归通过；captcha 待环境） |
 | M3-2 | 忘记密码 / 重置密码 / 修改密码迁移 | `forgot-password.vue`、`change-password.vue` 及相关组件 | 已完成（2026-11-09：两页 PrimeVue 节点 0；明暗 / 移动 / 校验错误 / Tab 回归通过；参考态 11 张、自基线 25 张入库） |
 | M3-3 | 快速登录迁移与认证页 Toast / Confirm 切换 | `quick-login.vue`、认证相关 `useToast` / `useConfirm` 显式 import | 已完成（2026-11-09：快速登录 PrimeVue 节点 0；6 个认证 composable 切到 caomei `useToast`；参考态 6 张、自基线 31 张） |
-| M4-1 | 个人资料页迁移 | `pages/profile.vue` 及消费者封装 | 待开始 |
+| M4-1 | 个人资料页迁移 | `pages/profile.vue` 及消费者封装 | 已完成（2026-11-09：6 个展示组件 + 3 个对话框迁移；profile flow 切到 caomei Toast / Confirm；参考态 5 张、自基线 36 张） |
 | M4-2 | 安全设置页迁移（2FA / 会话 / 账号绑定） | `pages/security.vue`；超阈值时按 2FA、会话、绑定拆条 | 待开始 |
 | M4-3 | OAuth 同意页迁移 | `pages/oauth/consent.vue`（`oauth/clients` 仍在 P4） | 待开始 |
 | M4-4 | SSO 登录页迁移 | `pages/sso-login.vue` | 待开始 |

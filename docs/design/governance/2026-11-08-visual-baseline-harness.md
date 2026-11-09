@@ -24,9 +24,9 @@
 - **渲染环境固定为容器**：本地与 CI 共用 `mcr.microsoft.com/playwright:v<版本>-noble`。宿主与容器实测约 1% 的整页漂移（12,509 / 1,296,000 px），因此基线只在容器内采集，宿主直接跑仅用于调试。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
-## 3. 视觉矩阵（每层 31 张）
+## 3. 视觉矩阵（每层 36 张）
 
-同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 31 张。
+同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 36 张。
 
 | 路由 | 主题 | 视口 | 状态 | 快照 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -44,6 +44,8 @@
 | `/quick-login` | 浅 / 暗 | 1440×900 / 390×844 | 默认（邮箱验证码 Tab） | `quick-login-{theme}-{viewport}-default` |
 | `/quick-login` | 浅 | 1440×900 | 校验错误 | `quick-login-light-desktop-error` |
 | `/quick-login` | 浅 | 1440×900 | 短信验证码 Tab | `quick-login-light-desktop-tab-phone` |
+| `/profile` | 浅 / 暗 | 1440×900 / 390×844 | 默认（需登录，ID 遮蔽） | `profile-{theme}-{viewport}-default` |
+| `/profile` | 浅 | 1440×900 | 隐私模式 | `profile-light-desktop-privacy` |
 
 P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前提交上采集参考态，与本批迁移提交同批入库。
 
@@ -232,11 +234,31 @@ pnpm test:visual --grep "login 默认态"
 
 **接受项**：与其余认证页一致（按钮 41.4 → 40px、圆角 8 → 6px、卡片居中位移、移动端 Tab 单行）。Toast 已切到 caomei 组件，样式差异（圆角 / 内边距 / 标题字号）沿用迁移评估 §7.3 的登记，视觉矩阵不覆盖浮层。
 
+### 6.4 2026-11-09 M4-1 批次（个人资料）
+
+**范围**：`/profile` 5 张参考态，采自迁移前提交 `4d94931`。用户 ID 每次运行随机，`user-basic-info` 的 ID 输入加 `data-visual-mask`，截图以遮罩块呈现。
+
+**迁移面**：`profile-header` / `user-avatar` / `user-basic-info` / `user-contact-info` / `social-accounts` / `profile-footer-actions` + 3 个对话框；新增 `BaseDialogV2`（CaomeiDialog）供本批使用，`base-dialog.vue` 保留给未迁移页。`useProfileFlow` 的 11 处 Toast 与 2 处 Confirm 切到 caomei（`confirm.require` 回调改为 `await confirm.open()` 返回布尔）。
+
+**验证**：容器内探针确认邮箱对话框打开 / Esc 关闭、退出确认打开 / 取消、caomei Toast 渲染、隐私模式切换与遮罩生效；`user-avatar` 改为 CaomeiImage（preview）+ 原生 file input。
+
+**差异（像素 / 占比）**
+
+| 快照 | 像素 / 占比 |
+| :--- | ---: |
+| `profile-light-desktop-default` | 50,945 / 4% |
+| `profile-dark-desktop-default` | 86,836 / 7% |
+| `profile-light-mobile-default` | 36,758 / 12% |
+| `profile-dark-mobile-default` | 72,539 / 23% |
+| `profile-light-desktop-privacy` | 59,227 / 5% |
+
+**接受项**：操作按钮改为 caomei 尺度（原 PrimeVue 蓝 / 黄实心按钮改为主色 / 描边）、头像预览指示器与上传按钮形态、`CaomeiMessage` 语气底色；移动端 4 个操作按钮纵向换行与迁移前一致（非本批引入）。
+
 ## 7. 已知限制
 
 - **跨环境已用镜像固定**：本地与 CI 共用同一 Playwright 镜像；宿主直跑与容器相差约 1% 像素，故宿主结果不作判定依据。镜像升级或 playwright 版本变化时，必须重采自基线并在 PR 中说明。
 - **未覆盖状态**：2FA 弹窗视觉（需已启用 2FA 的测试账号）、验证码启用态（需 captcha provider）、提交中 / 提交成功 Toast（需真实后端）。这些状态在环境具备后追加，并同批补参考态。
-- **已覆盖五页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`；其余 P3 页面（个人资料、安全设置、OAuth 同意、SSO）在各自迁移前补采。
+- **已覆盖六页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`；其余 P3 页面（安全设置、OAuth 同意、SSO）在各自迁移前补采。
 - **无预算分级**：当前用统一 `maxDiffPixels 200`，未按 `reader` / `admin` 分档；P4 数据页前评估。
 
 ## 8. 与既有文档的关系
