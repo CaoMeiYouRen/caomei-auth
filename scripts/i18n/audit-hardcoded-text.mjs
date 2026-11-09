@@ -13,7 +13,9 @@ const USAGE = `用法：node scripts/i18n/audit-hardcoded-text.mjs [选项]
 
 选项：
   --update   按当前扫描结果重写基线（翻译完成后用于收紧）
-  --help     显示帮助`
+  --help     显示帮助
+
+位置参数（lint-staged 传入的文件路径）会被忽略，脚本始终扫描全量目标。`
 
 function printEntries(title, entries, formatter) {
     if (entries.length === 0) {
@@ -32,10 +34,11 @@ async function main() {
         return
     }
     const update = args.includes('--update')
-    const unknown = args.filter((arg) => arg !== '--update' && arg !== '--help')
+    const unknown = args.filter((arg) => arg.startsWith('-') && arg !== '--update' && arg !== '--help')
     if (unknown.length > 0) {
         throw new Error(`未知参数：${unknown.join(', ')}`)
     }
+    // 位置参数为 lint-staged 传入的文件路径；硬编码审计始终扫描全量目标
 
     const current = await scanHardcodedText()
     const totalLines = [...current.values()].reduce((total, count) => total + count, 0)

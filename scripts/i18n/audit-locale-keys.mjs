@@ -16,7 +16,9 @@ const USAGE = `用法：node scripts/i18n/audit-locale-keys.mjs [选项]
   --fail-on-missing                       存在缺失键时退出码为 1
   --fail-on-unused                        存在未使用键时退出码为 1
   --fail-on-untranslated                  存在未翻译候选时退出码为 1
-  --help                                  显示帮助`
+  --help                                  显示帮助
+
+位置参数（lint-staged 传入的文件路径）会被忽略，脚本始终审计全量语言包。`
 
 function parseArgs(argv) {
     const options = {
@@ -38,9 +40,10 @@ function parseArgs(argv) {
             options.failOnUnused = true
         } else if (arg === '--fail-on-untranslated') {
             options.failOnUntranslated = true
-        } else {
+        } else if (arg.startsWith('-')) {
             throw new Error(`未知参数：${arg}`)
         }
+        // 其余位置参数为 lint-staged 传入的文件路径；语言包审计始终覆盖全量
     }
 
     if (!['all', 'missing', 'unused', 'untranslated'].includes(options.only)) {
