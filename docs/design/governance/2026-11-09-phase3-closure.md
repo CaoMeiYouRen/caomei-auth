@@ -124,7 +124,7 @@
 | 2FA 弹窗 / 验证码启用态 / Toast 视觉 | 需测试账号与 captcha provider；转入 [backlog](../../plan/backlog.md) 视觉覆盖候选 |
 | P4 Admin 数据页与 `oauth/clients` | 未授权候选；需重新评估白名单、包体与视觉差异台账 |
 | P5 卸载 PrimeVue | 未授权候选；依赖 P4 完成 |
-| i18n 页面文案 / 邮件 / `User.locale` / SEO | 未授权候选；见 [backlog §1.2](../../plan/backlog.md#12-i18n-全量落地) |
+| i18n 页面文案 / 邮件 / `User.locale` / SEO | 未授权候选；见 [backlog §1.1](../../plan/backlog.md#11-i18n-全量落地) |
 
 ## 10. 关联文档
 

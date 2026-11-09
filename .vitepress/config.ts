@@ -60,8 +60,7 @@ export default defineConfig({
                 text: '项目计划',
                 items: [
                     { text: '待办事项', link: '/docs/plan/todo' },
-                    { text: '路线图', link: '/docs/plan/roadmap' },
-                    { text: '重构方案', link: '/docs/plan/refactor' }
+                    { text: '路线图', link: '/docs/plan/roadmap' }
                 ]
             },
             {
@@ -188,7 +187,7 @@ export default defineConfig({
                     items: [
                         { text: '待办事项 (Todo)', link: '/docs/plan/todo' },
                         { text: '路线图 (Roadmap)', link: '/docs/plan/roadmap' },
-                        { text: '重构计划 (Refactor)', link: '/docs/plan/refactor' }
+                        { text: '候选池 (Backlog)', link: '/docs/plan/backlog' }
                     ]
                 }
             ],
@@ -209,7 +208,9 @@ export default defineConfig({
                 {
                     text: '历史归档',
                     items: [
-                        { text: '已完成工作', link: '/docs/archive/completed-work' }
+                        { text: '已完成工作', link: '/docs/archive/completed-work' },
+                        { text: '重构总结', link: '/docs/archive/refactor' },
+                        { text: 'Zod 迁移记录', link: '/docs/archive/zod-migration' }
                     ]
                 }
             ],

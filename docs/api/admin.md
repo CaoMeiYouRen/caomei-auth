@@ -20,7 +20,7 @@ Authorization: Bearer <access_token>
 
 ## 参数校验
 
-本文件中的路径参数、查询参数与请求体均由 Zod Schema 校验（实现与规则见 [Zod 迁移计划](../plan/zod-migration.md)）。参数不合法时，按所在 handler 的返回风格给出两种形态之一：
+本文件中的路径参数、查询参数与请求体均由 Zod Schema 校验（实现与规则见 [Zod 迁移计划](../archive/zod-migration.md)）。参数不合法时，按所在 handler 的返回风格给出两种形态之一：
 
 -   抛出 400（`statusCode` / `statusMessage`），适用于查询参数与路径参数接口；
 -   返回业务响应对象：

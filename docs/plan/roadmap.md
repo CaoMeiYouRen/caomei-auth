@@ -84,7 +84,7 @@ _目标：启动组件库正式替换（P2 试点 → P3 认证 / 个人 / 安�
 ## 跨阶段候选方向（未授权）
 
 - **caomei-ui 后续批次**：P4 Admin 数据页与剩余页面、P5 卸载 PrimeVue；P2–P3 已进入阶段 3。见 [backlog §2.1](./backlog.md#21-组件库迁移到-caomei-ui)。
-- **i18n 后续**：i18n M2 页面文案（待 P2 试点完成后准入）、i18n M4 剩余（Admin 文案、邮件模板、`User.locale`、API 其余错误面）、i18n M5 治理与 SEO 放量。见 [backlog §1.2](./backlog.md#12-i18n-全量落地)。
+- **i18n 后续**：i18n M2 页面文案（待 P2 试点完成后准入）、i18n M4 剩余（Admin 文案、邮件模板、`User.locale`、API 其余错误面）、i18n M5 治理与 SEO 放量。见 [backlog §1.1](./backlog.md#11-i18n-全量落地)。
 - **体验与性能**：时区设置、注册控制、Admin 日志高级筛选、性能审计、Demo 数据增强。见 [backlog §2.2–§2.6](./backlog.md#2-功能性需求feature-backlog)。
 
 ---
