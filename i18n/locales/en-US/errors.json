@@ -1,0 +1,29 @@
+{
+    "errors": {
+        "auth": {
+            "loginRequired": "Please sign in first",
+            "unauthorized": "Unauthorized",
+            "forbidden": "Access denied",
+            "demoAdminRequired": "Demo mode: administrator privileges required",
+            "rateLimited": "Too many requests, please try again later",
+            "oauthRegisterAdminOnly": "Only administrators can access the app registration endpoint",
+            "oauthManageAdminOnly": "Only administrators can manage OAuth applications",
+            "ssoManageAdminOnly": "Only administrators can access SSO provider management"
+        },
+        "oauth": {
+            "consentsFetchFailed": "Failed to load authorized applications",
+            "revokeSucceeded": "Authorization revoked successfully",
+            "consentNotFound": "No authorization record found for this application",
+            "revokeFailed": "Failed to revoke authorization",
+            "validationFailed": "Parameter validation failed",
+            "clientNotFound": "Application does not exist or has been disabled",
+            "clientFetchFailed": "Failed to load application information"
+        },
+        "sso": {
+            "methodNotAllowed": "Method not allowed"
+        },
+        "server": {
+            "internal": "Internal server error"
+        }
+    }
+}

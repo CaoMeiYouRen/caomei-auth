@@ -1,6 +1,7 @@
 import { H3Event } from 'h3'
 
 import { limiterStorage } from '@/server/database/storage'
+import { createLocalizedError } from '@/server/utils/i18n'
 import { normalizeAuthPath } from '@/utils/shared/auth-paths'
 
 interface RateLimitOptions {
@@ -18,9 +19,9 @@ export async function rateLimit(event: H3Event, options: RateLimitOptions) {
     const count = await $store.increment(key, options.window)
 
     if (count > options.max) {
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 429,
-            message: '请求过于频繁，请稍后再试',
+            key: 'errors.auth.rateLimited',
         })
     }
 }

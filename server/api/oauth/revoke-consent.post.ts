@@ -2,10 +2,13 @@ import { defineEventHandler, readBody } from 'h3'
 import { OAuthConsent } from '@/server/entities/oauth-consent'
 import { dataSource } from '@/server/database'
 import { getUserSession } from '@/server/utils/get-user-session'
+import { getServerI18n } from '@/server/utils/i18n'
 import { revokeConsentSchema } from '@/utils/shared/schemas'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 
 export default defineEventHandler(async (event) => {
+    const { t } = await getServerI18n(event)
     try {
         const userSession = await getUserSession(event)
 
@@ -13,18 +16,18 @@ export default defineEventHandler(async (event) => {
             throw createError({
                 statusCode: 401,
                 statusMessage: 'Unauthorized',
-                message: '请先登录',
+                message: t('errors.auth.loginRequired'),
             })
         }
 
         const body = await readBody(event)
-        const validationResult = revokeConsentSchema.safeParse(body)
+        const validationResult = revokeConsentSchema.safeParse(body, { error: createZodErrorMap(t) })
 
         if (!validationResult.success) {
             return {
                 status: 400,
                 success: false,
-                message: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数验证失败',
+                message: resolveValidationMessage(validationResult.error?.issues[0]?.message, t) || t('errors.oauth.validationFailed'),
                 data: null,
             }
         }
@@ -45,7 +48,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 404,
                 success: false,
-                message: '未找到对该应用的授权记录',
+                message: t('errors.oauth.consentNotFound'),
                 data: null,
             }
         }
@@ -53,7 +56,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 200,
             success: true,
-            message: '成功撤销授权',
+            message: t('errors.oauth.revokeSucceeded'),
             data: null,
         }
     } catch (error) {
@@ -64,7 +67,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 500,
             success: false,
-            message: error instanceof Error ? error.message : '撤销授权失败',
+            message: error instanceof Error ? error.message : t('errors.oauth.revokeFailed'),
             data: null,
         }
     }

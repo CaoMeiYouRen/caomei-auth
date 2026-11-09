@@ -7,6 +7,7 @@ import {
 } from '@/utils/shared/auth-paths'
 import { isSsoManagementAuthPath } from '@/utils/shared/sso-management-paths'
 import { checkAndSyncAdminRoleWithUser, isUserAdmin } from '@/server/utils/admin-role-sync'
+import { createLocalizedError } from '@/server/utils/i18n'
 import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
@@ -42,10 +43,10 @@ export default defineEventHandler(async (event) => {
         // 使用轻量级的权限检查，避免额外的数据库查询
         if (!session?.user || !isUserAdmin(session.user, session.user.id)) {
             // 如果不是管理员，拒绝访问
-            throw createError({
+            throw await createLocalizedError(event, {
                 statusCode: 403,
                 statusMessage: 'Forbidden',
-                message: '仅管理员可以访问注册应用接口',
+                key: 'errors.auth.oauthRegisterAdminOnly',
             })
         }
     }
@@ -62,10 +63,10 @@ export default defineEventHandler(async (event) => {
                     path: event.path,
                 })
             }
-            throw createError({
+            throw await createLocalizedError(event, {
                 statusCode: 403,
                 statusMessage: 'Forbidden',
-                message: '仅管理员可以管理 OAuth 应用',
+                key: 'errors.auth.oauthManageAdminOnly',
             })
         }
     }
@@ -81,10 +82,10 @@ export default defineEventHandler(async (event) => {
                     path: event.path,
                 })
             }
-            throw createError({
+            throw await createLocalizedError(event, {
                 statusCode: 403,
                 statusMessage: 'Forbidden',
-                message: '仅管理员可以访问 SSO 提供商管理接口',
+                key: 'errors.auth.ssoManageAdminOnly',
             })
         }
     }

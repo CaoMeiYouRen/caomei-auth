@@ -3,8 +3,10 @@ import { OAuthConsent } from '@/server/entities/oauth-consent'
 import { OAuthClient } from '@/server/entities/oauth-client'
 import { dataSource } from '@/server/database'
 import { getUserSession } from '@/server/utils/get-user-session'
+import { getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
+    const { t } = await getServerI18n(event)
     try {
         const userSession = await getUserSession(event)
 
@@ -12,7 +14,7 @@ export default defineEventHandler(async (event) => {
             throw createError({
                 statusCode: 401,
                 statusMessage: 'Unauthorized',
-                message: '请先登录',
+                message: t('errors.auth.loginRequired'),
             })
         }
 
@@ -78,7 +80,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 500,
             success: false,
-            message: error instanceof Error ? error.message : '获取授权应用列表失败',
+            message: error instanceof Error ? error.message : t('errors.oauth.consentsFetchFailed'),
             data: null,
         }
     }

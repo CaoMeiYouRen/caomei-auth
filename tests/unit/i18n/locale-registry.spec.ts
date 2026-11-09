@@ -4,6 +4,7 @@ import {
     LOCALE_COOKIE_KEY,
     LOCALE_REGISTRY,
     getLocaleDefinition,
+    matchDetectedLocale,
     normalizeDetectedLocale,
     stripLocalePrefix,
 } from '@/i18n/config/locale-registry'
@@ -32,6 +33,13 @@ describe('i18n/config/locale-registry', () => {
         expect(normalizeDetectedLocale('')).toBe(DEFAULT_LOCALE)
         expect(normalizeDetectedLocale(null)).toBe(DEFAULT_LOCALE)
         expect(normalizeDetectedLocale('fr-FR')).toBe(DEFAULT_LOCALE)
+    })
+
+    it('distinguishes unsupported locales from the default locale', () => {
+        expect(matchDetectedLocale('en-US')).toBe('en-US')
+        expect(matchDetectedLocale('zh-Hans')).toBe('zh-CN')
+        expect(matchDetectedLocale('fr-FR')).toBeUndefined()
+        expect(matchDetectedLocale('')).toBeUndefined()
     })
 
     it('maps better-auth locales at the boundary', () => {
