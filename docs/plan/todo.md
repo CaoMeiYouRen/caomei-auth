@@ -38,7 +38,7 @@
 | M4-3 | OAuth 同意页迁移 | `pages/oauth/consent.vue`（`oauth/clients` 仍在 P4） | 已完成（2026-11-09：同意页按钮与 7 处 Toast 迁移；参考态 4 张、自基线 46 张） |
 | M4-4 | SSO 登录页迁移 | `pages/sso-login.vue` | 已完成（2026-11-09：4 个登录表单 + Provider 卡片 + 6 处 Toast 迁移；参考态 4 张、自基线 50 张） |
 | M5-1 | Zod 错误本地化前置 | 移除 74 处（评估口径）schema 级中文 `message`；补齐 `validation.*` 全量键（`zh-CN` / `en-US` 同构） | 已完成（2026-11-09：76 个键 zh/en 同构；schema 消息改为键；边界统一 `resolveValidationMessage`，缺翻译回退 zh-CN） |
-| M5-2 | i18n 治理脚本与门禁 | `scripts/i18n/audit-*.mjs`、`i18n:audit:*`、`i18n:check-*`、CI 与 `lint-staged` 接入 | 待开始 |
+| M5-2 | i18n 治理脚本与门禁 | `scripts/i18n/audit-*.mjs`、`i18n:audit:*`、`i18n:check-*`、CI 与 `lint-staged` 接入 | 已完成（2026-11-09：5 个脚本 + 共享 lib；`i18n:check` 接入 3 个 workflow 与 lint-staged；硬编码中文基线 121 文件 / 1449 行；12 个单测） |
 | M5-3 | 服务端错误消息接入（认证类试点） | `errors.*` 键、`useTranslation(event)`、`Content-Language` / `Vary`；不可用时回退并登记 | 待开始 |
 | M6-1 | 批次收口与质量门 | 白名单、包体复测、迁移记录、文档同步、回退验证 | 待开始 |
 

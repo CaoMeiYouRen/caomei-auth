@@ -58,7 +58,7 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         routePrefix: '/en-US',
         readiness: 'ui-ready',
         switchable: true,
-        indexable: true,
+        indexable: false,
         files: ['en-US/common.json', 'en-US/validation.json'],
     },
 ]

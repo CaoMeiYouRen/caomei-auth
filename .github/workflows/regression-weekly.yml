@@ -155,6 +155,9 @@ jobs:
       - name: Check caomei-ui imports
         run: pnpm run migration:check-imports
 
+      - name: Check i18n governance
+        run: pnpm run i18n:check
+
       - name: Typecheck
         run: pnpm run typecheck
 

@@ -7,6 +7,14 @@
     "migration:usage": "node scripts/migration/primevue-usage.mjs",
     "migration:check-imports": "node scripts/migration/check-caomei-imports.mjs",
     "migration:measure": "node scripts/migration/measure-bundle.mjs",
+    "i18n:audit": "node scripts/i18n/audit-locale-keys.mjs",
+    "i18n:audit:missing": "node scripts/i18n/audit-locale-keys.mjs --only=missing --fail-on-missing",
+    "i18n:audit:duplicates": "node scripts/i18n/audit-duplicate-messages.mjs",
+    "i18n:audit:hardcoded": "node scripts/i18n/audit-hardcoded-text.mjs",
+    "i18n:audit:hardcoded:update": "node scripts/i18n/audit-hardcoded-text.mjs --update",
+    "i18n:check-sync": "node scripts/i18n/check-locale-parity.mjs",
+    "i18n:check-fallback": "node scripts/i18n/check-locale-fallback.mjs",
+    "i18n:check": "pnpm i18n:audit:missing && pnpm i18n:check-sync && pnpm i18n:check-fallback && pnpm i18n:audit:hardcoded",
     "security:alerts": "node scripts/security/check-alerts.mjs",
     "setup:ai": "node scripts/setup-ai.mjs",
     "setup:switch-models": "node scripts/setup/switch-models.mjs",
@@ -195,6 +203,13 @@
     "*.{js,ts,vue}": [
       "npm run lint",
       "git add"
+    ],
+    "i18n/locales/**/*.json": [
+      "node scripts/i18n/audit-locale-keys.mjs --only=missing --fail-on-missing",
+      "node scripts/i18n/check-locale-parity.mjs"
+    ],
+    "{app.vue,pages/**/*.vue,components/**/*.vue,layouts/**/*.vue,composables/**/*.ts,server/api/**/*.ts,server/utils/**/*.ts,server/routes/**/*.ts,server/middleware/**/*.ts,server/templates/**/*.{ts,mjml}}": [
+      "node scripts/i18n/audit-hardcoded-text.mjs"
     ]
   },
   "version": "1.16.0",
