@@ -240,7 +240,9 @@ pnpm test:visual --grep "login 默认态"
 
 **迁移面**：`profile-header` / `user-avatar` / `user-basic-info` / `user-contact-info` / `social-accounts` / `profile-footer-actions` + 3 个对话框；新增 `BaseDialogV2`（CaomeiDialog）供本批使用，`base-dialog.vue` 保留给未迁移页。`useProfileFlow` 的 11 处 Toast 与 2 处 Confirm 切到 caomei（`confirm.require` 回调改为 `await confirm.open()` 返回布尔）。
 
-**验证**：容器内探针确认邮箱对话框打开 / Esc 关闭、退出确认打开 / 取消、caomei Toast 渲染、隐私模式切换与遮罩生效；`user-avatar` 改为 CaomeiImage（preview）+ 原生 file input。
+**验证**：容器内探针确认邮箱对话框打开 / Esc 关闭、退出确认打开 / 取消、caomei Toast 渲染、隐私模式切换与遮罩生效；`user-avatar` 改为 CaomeiImage（preview）+ 原生 file input。迁移后 `/profile` 的 PrimeVue 节点为 0（含对话框）。
+
+**同批修复**：路由白名单补齐 `/forgot-password`、`/change-password`、`/quick-login`、`/profile`——此前批次只改了页面未登记白名单，这些路由仍渲染 PrimeVue 主题切换；`migration:check-imports` 改为允许 `useToast` / `useConfirm` 显式来自 `primevue/*` 或 `caomei-ui`。
 
 **差异（像素 / 占比）**
 

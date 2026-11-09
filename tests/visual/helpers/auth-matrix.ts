@@ -137,15 +137,16 @@ async function open(page: Page, route: VisualRoute, theme: VisualTheme): Promise
     await applyTheme(page, theme)
     await page.goto(route.path, { waitUntil: 'domcontentloaded' })
     await expect(page.locator('.auth-card')).toBeVisible()
+    /* 先等网络空闲（完成 hydration），再断言主题；重页面在负载下可能超过默认 5s */
+    await waitForVisualStable(page)
     if (route.readyText) {
         await expect(page.getByText(route.readyText)).toBeVisible()
     }
     if (theme === 'dark') {
-        await expect(page.locator('html')).toHaveClass(/dark/)
+        await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 15000 })
     } else {
-        await expect(page.locator('html')).not.toHaveClass(/dark/)
+        await expect(page.locator('html')).not.toHaveClass(/dark/, { timeout: 15000 })
     }
-    await waitForVisualStable(page)
     await assertReferenceSource(page)
 }
 

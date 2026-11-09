@@ -44,6 +44,11 @@ if (process.env.VISUAL_IN_CONTAINER === '1' || existsSync('/ms-playwright')) {
 
 const workDir = process.env.VISUAL_WORK_DIR || '/tmp/opencode/caomei-auth-visual'
 
+/* 上一次构建被中断时会留下 .nuxt / .output 锁，直接复用会拒绝启动；构建产物每次都会重建 */
+rmSync(join(workDir, '.nuxt'), { recursive: true, force: true })
+rmSync(join(workDir, '.output'), { recursive: true, force: true })
+rmSync(join(workDir, 'node_modules/.cache/nuxt'), { recursive: true, force: true })
+
 syncSource()
 run('docker', [
     'run', '--rm', '--init', '--ipc=host',

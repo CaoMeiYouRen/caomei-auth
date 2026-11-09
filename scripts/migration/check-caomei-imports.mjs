@@ -8,8 +8,8 @@ const projectRoot = path.resolve(__dirname, '..', '..')
 
 /** 迁移期：双库并存时，同名 composable 由显式 import 决定来源，禁止依赖自动导入 */
 export const REQUIRED_IMPORTS = [
-    { name: 'useToast', source: 'primevue/usetoast' },
-    { name: 'useConfirm', source: 'primevue/useconfirm' },
+    { name: 'useToast', sources: ['primevue/usetoast', 'caomei-ui'] },
+    { name: 'useConfirm', sources: ['primevue/useconfirm', 'caomei-ui'] },
 ]
 
 /** 只扫描应用运行时代码；测试与脚本另有 mock，不参与判定 */
@@ -23,12 +23,15 @@ const SCAN_EXTENSIONS = ['.vue', '.ts']
  * @param {{ name: string, source: string }} requirement
  */
 export function hasExplicitImport(source, requirement) {
-    const escapedSource = requirement.source.replaceAll('/', '\\/')
-    const pattern = new RegExp(
-        `import\\s*\\{[^}]*\\b${requirement.name}\\b[^}]*\\}\\s*from\\s*['"]${escapedSource}['"]`,
-        'u',
-    )
-    return pattern.test(source)
+    const candidates = requirement.sources ?? [requirement.source]
+    return candidates.some((candidate) => {
+        const escapedSource = candidate.replaceAll('/', '\\/')
+        const pattern = new RegExp(
+            `import\\s*\\{[^}]*\\b${requirement.name}\\b[^}]*\\}\\s*from\\s*['"]${escapedSource}['"]`,
+            'u',
+        )
+        return pattern.test(source)
+    })
 }
 
 /**
@@ -109,7 +112,7 @@ export async function checkProject({ root = projectRoot, roots = SCAN_ROOTS, req
 
 function formatViolations(violations) {
     return violations
-        .map(({ file, missing }) => `- ${file}: 缺少 ${missing.map((item) => `\`${item.name}\` from '${item.source}'`).join('、')}`)
+        .map(({ file, missing }) => `- ${file}: 缺少 ${missing.map((item) => `\`${item.name}\` from ${(item.sources ?? [item.source]).map((source) => `'${source}'`).join(' / ')}`).join('、')}`)
         .join('\n')
 }
 

@@ -32,7 +32,7 @@ const toast = useToast()
         const source = 'const toast = useToast()'
 
         expect(findMissingImports(source)).toEqual([
-            { name: 'useToast', source: 'primevue/usetoast' },
+            { name: 'useToast', sources: ['primevue/usetoast', 'caomei-ui'] },
         ])
     })
 
@@ -40,13 +40,21 @@ const toast = useToast()
         expect(findMissingImports('const value = 1')).toEqual([])
     })
 
-    it('ignores imports from other packages', () => {
+    it('accepts caomei-ui as an explicit source', () => {
         const source = `
 import { useToast } from 'caomei-ui'
 const toast = useToast()
 `
+        expect(findMissingImports(source)).toEqual([])
+    })
+
+    it('ignores imports from other packages', () => {
+        const source = `
+import { useToast } from 'some-ui'
+const toast = useToast()
+`
         expect(findMissingImports(source)).toEqual([
-            { name: 'useToast', source: 'primevue/usetoast' },
+            { name: 'useToast', sources: ['primevue/usetoast', 'caomei-ui'] },
         ])
     })
 
@@ -86,7 +94,7 @@ useConfirm()
         const violations = await checkProject({ root: tempDir, roots: ['composables'] })
 
         expect(violations).toEqual([
-            { file: 'composables/bad.ts', missing: [{ name: 'useConfirm', source: 'primevue/useconfirm' }] },
+            { file: 'composables/bad.ts', missing: [{ name: 'useConfirm', sources: ['primevue/useconfirm', 'caomei-ui'] }] },
         ])
     })
 })
