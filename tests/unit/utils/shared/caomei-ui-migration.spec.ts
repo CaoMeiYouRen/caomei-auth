@@ -4,7 +4,7 @@ import { CAOMEI_UI_ROUTE_PREFIXES, isCaomeiUiRoute } from '@/utils/shared/caomei
 
 describe('utils/shared/caomei-ui-migration', () => {
     it('默认白名单包含 P2/P3 试点路由', () => {
-        expect(CAOMEI_UI_ROUTE_PREFIXES).toEqual(['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile'])
+        expect(CAOMEI_UI_ROUTE_PREFIXES).toEqual(['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security'])
         expect(isCaomeiUiRoute('/login')).toBe(true)
         expect(isCaomeiUiRoute('/')).toBe(false)
     })

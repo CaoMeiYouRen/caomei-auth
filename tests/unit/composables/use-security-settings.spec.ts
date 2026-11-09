@@ -13,7 +13,11 @@ const {
     mockNavigateTo,
 } = vi.hoisted(() => ({
     mockUseToast: {
-        add: vi.fn(),
+        show: vi.fn(),
+        success: vi.fn(),
+        danger: vi.fn(),
+        warning: vi.fn(),
+        info: vi.fn(),
     },
     mockAuthClient: {
         useSession: vi.fn(),
@@ -35,7 +39,7 @@ const {
 
 mockNuxtImport('navigateTo', () => mockNavigateTo)
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: () => mockUseToast,
 }))
 
@@ -117,9 +121,8 @@ describe('useSecuritySettings', () => {
             password.value = ''
             await onPasswordConfirm()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'warn',
-                summary: '警告',
+            expect(mockUseToast.warning).toHaveBeenCalledWith(expect.objectContaining({
+                title: '警告',
             }))
             expect(mockAuthClient.twoFactor.enable).not.toHaveBeenCalled()
         })
@@ -148,9 +151,7 @@ describe('useSecuritySettings', () => {
             expect(qrCodeUrl.value).toBe('data:image/png;base64,...')
             expect(backupCodes.value).toEqual(['code1', 'code2'])
             expect(showTotpSetup.value).toBe(true)
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'info',
-            }))
+            expect(mockUseToast.info).toHaveBeenCalled()
         })
 
         it('should handle enable 2FA error', async () => {
@@ -166,9 +167,8 @@ describe('useSecuritySettings', () => {
 
             await onPasswordConfirm()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: expect.stringContaining('Invalid password'),
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: expect.stringContaining('Invalid password'),
             }))
         })
 
@@ -187,9 +187,7 @@ describe('useSecuritySettings', () => {
 
             expect(mockAuthClient.twoFactor.disable).toHaveBeenCalledWith({ password: 'password123' })
             expect(showPasswordDialog.value).toBe(false)
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-            }))
+            expect(mockUseToast.success).toHaveBeenCalled()
         })
 
         it('should verify TOTP and show backup codes', async () => {
@@ -207,9 +205,7 @@ describe('useSecuritySettings', () => {
             expect(mockAuthClient.twoFactor.verifyTotp).toHaveBeenCalledWith({ code: '123456' })
             expect(showTotpSetup.value).toBe(false)
             expect(showBackupCodes.value).toBe(true)
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-            }))
+            expect(mockUseToast.success).toHaveBeenCalled()
         })
 
         it('should warn if verification code is empty', async () => {
@@ -219,9 +215,7 @@ describe('useSecuritySettings', () => {
 
             await verifyAndEnable2FA()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'warn',
-            }))
+            expect(mockUseToast.warning).toHaveBeenCalled()
             expect(mockAuthClient.twoFactor.verifyTotp).not.toHaveBeenCalled()
         })
 
@@ -233,9 +227,7 @@ describe('useSecuritySettings', () => {
             copyBackupCodes()
 
             expect(navigator.clipboard.writeText).toHaveBeenCalledWith('code1\ncode2')
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-            }))
+            expect(mockUseToast.success).toHaveBeenCalled()
         })
 
         it('should download backup codes', () => {
@@ -473,9 +465,8 @@ describe('useSecuritySettings', () => {
 
             await onPasswordConfirm()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: expect.stringContaining('Invalid password'),
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: expect.stringContaining('Invalid password'),
             }))
         })
     })
@@ -493,9 +484,8 @@ describe('useSecuritySettings', () => {
 
             await verifyAndEnable2FA()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: expect.stringContaining('Invalid code'),
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: expect.stringContaining('Invalid code'),
             }))
             expect(showTotpSetup.value).toBe(true)
         })

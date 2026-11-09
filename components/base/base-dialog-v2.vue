@@ -4,8 +4,12 @@
         :title="title"
         size="md"
         @update:open="$emit('update:visible', $event)"
+        @hide="$emit('hide')"
     >
         <slot />
+        <div v-if="$slots.footer" class="dialog-footer">
+            <slot name="footer" />
+        </div>
     </CaomeiDialog>
 </template>
 
@@ -24,5 +28,15 @@ withDefaults(defineProps<{
 
 defineEmits<{
     (e: 'update:visible', value: boolean): void
+    (e: 'hide'): void
 }>()
 </script>
+
+<style scoped lang="scss">
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+</style>

@@ -1,5 +1,5 @@
 import { ref, computed, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import dayjs from 'dayjs'
 import type { Prettify } from 'better-auth'
 import { authClient } from '@/lib/auth-client'
@@ -89,19 +89,9 @@ export function useSecuritySettings() {
 
             showTotpSetup.value = true
 
-            toast.add({
-                severity: 'info',
-                summary: '提示',
-                detail: '请使用身份验证器应用扫描二维码',
-                life: 5000,
-            })
+            toast.info({ title: '提示', description: '请使用身份验证器应用扫描二维码', duration: 5000 })
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: '错误',
-                detail: `设置失败：${error.message || '未知错误'}`,
-                life: 3000,
-            })
+            toast.danger({ title: '错误', description: `设置失败：${error.message || '未知错误'}`, duration: 3000 })
         }
     }
 
@@ -116,30 +106,15 @@ export function useSecuritySettings() {
             }
 
             showPasswordDialog.value = false
-            toast.add({
-                severity: 'success',
-                summary: '成功',
-                detail: '双因素认证已成功禁用',
-                life: 3000,
-            })
+            toast.success({ title: '成功', description: '双因素认证已成功禁用', duration: 3000 })
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: '错误',
-                detail: `禁用失败：${error.message || '未知错误'}`,
-                life: 3000,
-            })
+            toast.danger({ title: '错误', description: `禁用失败：${error.message || '未知错误'}`, duration: 3000 })
         }
     }
 
     const onPasswordConfirm = async () => {
         if (!password.value) {
-            toast.add({
-                severity: 'warn',
-                summary: '警告',
-                detail: '请输入密码',
-                life: 3000,
-            })
+            toast.warning({ title: '警告', description: '请输入密码', duration: 3000 })
             return
         }
 
@@ -153,12 +128,7 @@ export function useSecuritySettings() {
     const verifyAndEnable2FA = async () => {
         try {
             if (!verificationCode.value) {
-                toast.add({
-                    severity: 'warn',
-                    summary: '警告',
-                    detail: '请输入验证码',
-                    life: 3000,
-                })
+                toast.warning({ title: '警告', description: '请输入验证码', duration: 3000 })
                 return
             }
 
@@ -173,31 +143,16 @@ export function useSecuritySettings() {
             showTotpSetup.value = false
             showBackupCodes.value = true
 
-            toast.add({
-                severity: 'success',
-                summary: '成功',
-                detail: '双因素认证已成功启用！请保存好备份码',
-                life: 5000,
-            })
+            toast.success({ title: '成功', description: '双因素认证已成功启用！请保存好备份码', duration: 5000 })
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: '错误',
-                detail: `验证失败：${error.message || '未知错误'}`,
-                life: 3000,
-            })
+            toast.danger({ title: '错误', description: `验证失败：${error.message || '未知错误'}`, duration: 3000 })
         }
     }
 
     const copyBackupCodes = () => {
         const codesText = backupCodes.value.join('\n')
         void navigator.clipboard.writeText(codesText)
-        toast.add({
-            severity: 'success',
-            summary: '成功',
-            detail: '备份码已复制到剪贴板',
-            life: 3000,
-        })
+        toast.success({ title: '成功', description: '备份码已复制到剪贴板', duration: 3000 })
     }
 
     const downloadBackupCodes = () => {
@@ -211,12 +166,7 @@ export function useSecuritySettings() {
         a.click()
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
-        toast.add({
-            severity: 'success',
-            summary: '成功',
-            detail: '备份码已下载',
-            life: 3000,
-        })
+        toast.success({ title: '成功', description: '备份码已下载', duration: 3000 })
     }
 
     const finishSetup = () => {

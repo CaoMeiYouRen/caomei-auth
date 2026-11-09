@@ -3,13 +3,16 @@
         <div class="auth-right">
             <div class="auth-card security-card">
                 <div class="security-header-actions">
-                    <Button
-                        label="返回个人中心"
+                    <CaomeiButton
+                        variant="ghost"
                         class="btn btn-link"
-                        icon="mdi mdi-arrow-left"
-                        severity="secondary"
                         @click="goProfile"
-                    />
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-arrow-left" />
+                        </template>
+                        返回个人中心
+                    </CaomeiButton>
                 </div>
                 <h2 class="auth-title">
                     账号安全设置
@@ -55,14 +58,10 @@
                 />
             </div>
         </div>
-        <!-- Toast -->
-        <Toast />
     </div>
 </template>
 
 <script setup lang="ts">
-import Button from 'primevue/button'
-import Toast from 'primevue/toast'
 import TwoFactorPanel from '@/components/security/two-factor-panel.vue'
 import SessionTable from '@/components/security/session-table.vue'
 import { useSecuritySettings } from '@/composables/use-security-settings'

@@ -36,119 +36,105 @@
                 <span data-visual-mask>{{ session.createdAt }}</span>
                 <span data-visual-mask>{{ session.expiresAt }}</span>
                 <span class="device-action-col">
-                    <Button
-                        v-tooltip.top="userSession?.session?.id === session.id ? '无法撤销当前会话' : '点击撤销此会话'"
+                    <CaomeiButton
+                        variant="secondary"
                         class="btn"
-                        label="撤销会话"
-                        icon="mdi mdi-close"
                         :disabled="userSession?.session?.id === session.id"
+                        :title="userSession?.session?.id === session.id ? '无法撤销当前会话' : '点击撤销此会话'"
                         @click="$emit('revokeSession', session.token)"
-                    />
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-close" />
+                        </template>
+                        撤销会话
+                    </CaomeiButton>
                 </span>
             </li>
         </ul>
         <div class="security-actions">
-            <Button
-                v-tooltip.top="'点击撤销除当前会话外的所有其他会话'"
+            <CaomeiButton
                 class="btn"
-                label="撤销其他会话"
-                icon="mdi mdi-logout-variant"
+                title="点击撤销除当前会话外的所有其他会话"
                 @click="$emit('revokeOtherSessions')"
-            />
-            <Button
-                v-tooltip.top="'注意：点击撤销所有会话，包括当前会话！'"
+            >
+                <template #icon>
+                    <i class="mdi mdi-logout-variant" />
+                </template>
+                撤销其他会话
+            </CaomeiButton>
+            <CaomeiButton
                 class="btn"
-                label="撤销所有会话"
-                icon="mdi mdi-logout-variant"
+                title="注意：点击撤销所有会话，包括当前会话！"
                 @click="$emit('revokeAllSessions')"
-            />
+            >
+                <template #icon>
+                    <i class="mdi mdi-logout-variant" />
+                </template>
+                撤销所有会话
+            </CaomeiButton>
         </div>
 
         <!-- 撤销单个会话确认对话框 -->
-        <Dialog
+        <BaseDialogV2
             :visible="showRevokeSessionConfirm"
-            modal
-            header="确认撤销会话"
-            :closable="true"
-            :style="{width: '450px'}"
+            title="确认撤销会话"
             @update:visible="$emit('update:showRevokeSessionConfirm', $event)"
         >
             <p>确定要撤销该会话吗？</p>
             <template #footer>
-                <Button
-                    v-tooltip.top="'点击取消撤销会话操作'"
-                    label="取消"
-                    class="btn btn-secondary"
-                    severity="secondary"
+                <CaomeiButton
+                    variant="secondary"
                     @click="$emit('update:showRevokeSessionConfirm', false)"
-                />
-                <Button
-                    v-tooltip.top="'点击确认撤销会话操作'"
-                    label="确认"
-                    class="btn btn-primary"
-                    @click="$emit('confirmRevokeSession')"
-                />
+                >
+                    取消
+                </CaomeiButton>
+                <CaomeiButton @click="$emit('confirmRevokeSession')">
+                    确认
+                </CaomeiButton>
             </template>
-        </Dialog>
+        </BaseDialogV2>
         <!-- 撤销其他会话确认对话框 -->
-        <Dialog
+        <BaseDialogV2
             :visible="showRevokeOtherSessionsConfirm"
-            modal
-            header="确认撤销其他会话"
-            :closable="true"
-            :style="{width: '450px'}"
+            title="确认撤销其他会话"
             @update:visible="$emit('update:showRevokeOtherSessionsConfirm', $event)"
         >
             <p>确定要撤销除当前会话外的所有其他会话吗？</p>
             <template #footer>
-                <Button
-                    v-tooltip.top="'点击取消撤销其他会话操作'"
-                    label="取消"
-                    class="btn btn-secondary"
-                    severity="secondary"
+                <CaomeiButton
+                    variant="secondary"
                     @click="$emit('update:showRevokeOtherSessionsConfirm', false)"
-                />
-                <Button
-                    v-tooltip.top="'点击确认撤销其他会话操作'"
-                    label="确认"
-                    class="btn btn-primary"
-                    @click="$emit('confirmRevokeOtherSessions')"
-                />
+                >
+                    取消
+                </CaomeiButton>
+                <CaomeiButton @click="$emit('confirmRevokeOtherSessions')">
+                    确认
+                </CaomeiButton>
             </template>
-        </Dialog>
+        </BaseDialogV2>
         <!-- 撤销所有会话确认对话框 -->
-        <Dialog
+        <BaseDialogV2
             :visible="showRevokeAllSessionsConfirm"
-            modal
-            header="确认撤销所有会话"
-            :closable="true"
-            :style="{width: '450px'}"
+            title="确认撤销所有会话"
             @update:visible="$emit('update:showRevokeAllSessionsConfirm', $event)"
         >
             <p>确定要撤销所有会话，包括当前会话吗？</p>
             <template #footer>
-                <Button
-                    v-tooltip.top="'点击取消撤销所有会话操作'"
-                    label="取消"
-                    class="btn btn-secondary"
-                    severity="secondary"
+                <CaomeiButton
+                    variant="secondary"
                     @click="$emit('update:showRevokeAllSessionsConfirm', false)"
-                />
-                <Button
-                    v-tooltip.top="'点击确认撤销所有会话操作'"
-                    label="确认"
-                    class="btn btn-primary"
-                    @click="$emit('confirmRevokeAllSessions')"
-                />
+                >
+                    取消
+                </CaomeiButton>
+                <CaomeiButton @click="$emit('confirmRevokeAllSessions')">
+                    确认
+                </CaomeiButton>
             </template>
-        </Dialog>
+        </BaseDialogV2>
     </div>
 </template>
 
 <script setup lang="ts">
-import Button from 'primevue/button'
-import Dialog from 'primevue/dialog'
-
 defineProps<{
     userSession: any
     sessionList: any[]
