@@ -35,7 +35,7 @@
 | M3-3 | 快速登录迁移与认证页 Toast / Confirm 切换 | `quick-login.vue`、认证相关 `useToast` / `useConfirm` 显式 import | 已完成（2026-11-09：快速登录 PrimeVue 节点 0；6 个认证 composable 切到 caomei `useToast`；参考态 6 张、自基线 31 张） |
 | M4-1 | 个人资料页迁移 | `pages/profile.vue` 及消费者封装 | 已完成（2026-11-09：6 个展示组件 + 3 个对话框迁移；profile flow 切到 caomei Toast / Confirm；参考态 5 张、自基线 36 张） |
 | M4-2 | 安全设置页迁移（2FA / 会话 / 账号绑定） | `pages/security.vue`；超阈值时按 2FA、会话、绑定拆条 | 已完成（2026-11-09：页面 + 2FA 面板 + 会话表 + 10 处 Toast 迁移；参考态 6 张、自基线 42 张） |
-| M4-3 | OAuth 同意页迁移 | `pages/oauth/consent.vue`（`oauth/clients` 仍在 P4） | 待开始 |
+| M4-3 | OAuth 同意页迁移 | `pages/oauth/consent.vue`（`oauth/clients` 仍在 P4） | 已完成（2026-11-09：同意页按钮与 7 处 Toast 迁移；参考态 4 张、自基线 46 张） |
 | M4-4 | SSO 登录页迁移 | `pages/sso-login.vue` | 待开始 |
 | M5-1 | Zod 错误本地化前置 | 移除 74 处（评估口径）schema 级中文 `message`；补齐 `validation.*` 全量键（`zh-CN` / `en-US` 同构） | 待开始 |
 | M5-2 | i18n 治理脚本与门禁 | `scripts/i18n/audit-*.mjs`、`i18n:audit:*`、`i18n:check-*`、CI 与 `lint-staged` 接入 | 待开始 |

@@ -24,9 +24,9 @@
 - **渲染环境固定为容器**：本地与 CI 共用 `mcr.microsoft.com/playwright:v<版本>-noble`。宿主与容器实测约 1% 的整页漂移（12,509 / 1,296,000 px），因此基线只在容器内采集，宿主直接跑仅用于调试。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
-## 3. 视觉矩阵（每层 42 张）
+## 3. 视觉矩阵（每层 46 张）
 
-同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 42 张。
+同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 46 张。
 
 | 路由 | 主题 | 视口 | 状态 | 快照 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -49,6 +49,7 @@
 | `/security` | 浅 / 暗 | 1440×900 / 390×844 | 默认（会话动态列遮蔽） | `security-{theme}-{viewport}-default` |
 | `/security` | 浅 | 1440×900 | 启用 2FA 对话框 | `security-light-desktop-enable-2fa-dialog` |
 | `/security` | 浅 | 1440×900 | 撤销所有会话确认 | `security-light-desktop-revoke-all-confirm` |
+| `/oauth/consent` | 浅 / 暗 | 1440×900 / 390×844 | 默认（预置 `visual-client`） | `oauth-consent-{theme}-{viewport}-default` |
 
 P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前提交上采集参考态，与本批迁移提交同批入库。
 
@@ -278,11 +279,28 @@ pnpm test:visual --grep "login 默认态"
 
 **接受项**：按钮由 PrimeVue 默认改为 caomei 主色 / 描边尺度；`CaomeiMessage` 语气底色与图标替换；对话框标题栏与关闭按钮形态变化。
 
+### 6.6 2026-11-09 M4-3 批次（OAuth 同意页）
+
+**范围**：`/oauth/consent` 4 张参考态，采自迁移前提交 `ca6661d`。测试库在 `prepare-visual-db.mjs` 中预置固定 OAuth 客户端 `visual-client`（名称 / 描述 / 官网 / scopes），授权页才能渲染应用信息；矩阵新增 `readySelector`（该页不使用 `.auth-card` 布局）。
+
+**迁移面**：页面 3 个按钮（返回首页 / 拒绝 / 授权）改 CaomeiButton；`useOAuthConsent` 7 处 Toast 切 caomei。页面原有的 `.btn-allow` PrimeVue CSS 变量配色改为 caomei 变体，仅保留禁用态透明度。
+
+**差异（像素 / 占比）**
+
+| 快照 | 像素 / 占比 |
+| :--- | ---: |
+| `oauth-consent-light-desktop-default` | 12,407 / 1% |
+| `oauth-consent-dark-desktop-default` | 13,595 / 2% |
+| `oauth-consent-light-mobile-default` | 12,534 / 4% |
+| `oauth-consent-dark-mobile-default` | 13,721 / 5% |
+
+**接受项**：按钮由 PrimeVue 默认 / 主色改为 caomei 主色与描边尺度。
+
 ## 7. 已知限制
 
 - **跨环境已用镜像固定**：本地与 CI 共用同一 Playwright 镜像；宿主直跑与容器相差约 1% 像素，故宿主结果不作判定依据。镜像升级或 playwright 版本变化时，必须重采自基线并在 PR 中说明。
 - **未覆盖状态**：2FA 弹窗视觉（需已启用 2FA 的测试账号）、验证码启用态（需 captcha provider）、提交中 / 提交成功 Toast（需真实后端）。这些状态在环境具备后追加，并同批补参考态。
-- **已覆盖七页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`、`/security`；其余 P3 页面（OAuth 同意、SSO）在各自迁移前补采。
+- **已覆盖八页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`、`/security`、`/oauth/consent`；P3 剩余 SSO 登录页在迁移前补采。
 - **无预算分级**：当前用统一 `maxDiffPixels 200`，未按 `reader` / `admin` 分档；P4 数据页前评估。
 
 ## 8. 与既有文档的关系
