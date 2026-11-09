@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import { type Page, expect, test } from '@playwright/test'
 import { visualBaseURL } from './config'
 import { applyTheme, expectPageScreenshot, waitForVisualStable, type VisualTheme } from './visual'
@@ -134,21 +135,22 @@ const VISUAL_ACCOUNT = {
     username: 'visualbaseline',
 }
 
-let isolatedAccountSeq = 0
-
 /** 为登录后页面建立会话；注册与登录都是幂等的，日志不进入截图。 */
 async function ensureSession(page: Page, route: VisualRoute): Promise<void> {
     if (route.isolatedAccount) {
-        /* 会话类页面按用例建号：同一账号反复登录会让会话表行数随用例顺序增长 */
-        isolatedAccountSeq += 1
+        /* 会话类页面按用例建号：同一账号反复登录会让会话表行数随用例顺序增长。
+         * 用随机后缀而非模块计数器——Playwright 可能为不同用例重新加载 spec 模块。 */
+        const suffix = randomUUID().replaceAll('-', '').slice(0, 20)
         const account = {
-            email: `visual-security-${isolatedAccountSeq}@example.com`,
+            email: `visual-security-${suffix}@example.com`,
             password: VISUAL_ACCOUNT.password,
-            name: `Visual Security ${isolatedAccountSeq}`,
-            username: `visualsecurity${isolatedAccountSeq}`,
+            name: `Visual Security ${suffix.slice(0, 8)}`,
+            username: `vs${suffix}`,
         }
         const created = await page.request.post(`${visualBaseURL}/api/auth/sign-up/email`, { data: account })
-        expect(created.ok(), '视觉隔离账号注册失败').toBeTruthy()
+        if (!created.ok()) {
+            expect(created.ok(), `视觉隔离账号注册失败（${account.email} / ${created.status()}）：${await created.text()}`).toBeTruthy()
+        }
         return
     }
     const signUp = await page.request.post(`${visualBaseURL}/api/auth/sign-up/email`, { data: VISUAL_ACCOUNT })

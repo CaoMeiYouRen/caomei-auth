@@ -24,9 +24,9 @@
 - **渲染环境固定为容器**：本地与 CI 共用 `mcr.microsoft.com/playwright:v<版本>-noble`。宿主与容器实测约 1% 的整页漂移（12,509 / 1,296,000 px），因此基线只在容器内采集，宿主直接跑仅用于调试。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
-## 3. 视觉矩阵（每层 36 张）
+## 3. 视觉矩阵（每层 42 张）
 
-同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 36 张。
+同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 42 张。
 
 | 路由 | 主题 | 视口 | 状态 | 快照 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -46,6 +46,9 @@
 | `/quick-login` | 浅 | 1440×900 | 短信验证码 Tab | `quick-login-light-desktop-tab-phone` |
 | `/profile` | 浅 / 暗 | 1440×900 / 390×844 | 默认（需登录，ID 遮蔽） | `profile-{theme}-{viewport}-default` |
 | `/profile` | 浅 | 1440×900 | 隐私模式 | `profile-light-desktop-privacy` |
+| `/security` | 浅 / 暗 | 1440×900 / 390×844 | 默认（会话动态列遮蔽） | `security-{theme}-{viewport}-default` |
+| `/security` | 浅 | 1440×900 | 启用 2FA 对话框 | `security-light-desktop-enable-2fa-dialog` |
+| `/security` | 浅 | 1440×900 | 撤销所有会话确认 | `security-light-desktop-revoke-all-confirm` |
 
 P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前提交上采集参考态，与本批迁移提交同批入库。
 
@@ -256,11 +259,30 @@ pnpm test:visual --grep "login 默认态"
 
 **接受项**：操作按钮改为 caomei 尺度（原 PrimeVue 蓝 / 黄实心按钮改为主色 / 描边）、头像预览指示器与上传按钮形态、`CaomeiMessage` 语气底色；移动端 4 个操作按钮纵向换行与迁移前一致（非本批引入）。
 
+### 6.5 2026-11-09 M4-2 批次（安全设置）
+
+**范围**：`/security` 6 张参考态，采自迁移前提交 `e4428b9`。会话表 token / IP / 创建 / 过期列加 `data-visual-mask`；会话类页面按用例创建独立账号（随机后缀），避免同一账号反复登录让会话行数随用例顺序增长。
+
+**迁移面**：`pages/security.vue` 返回按钮；`two-factor-panel`（Message / Button / InputText / Password / Dialog）；`session-table`（Button / 3 个 Dialog）；`useSecuritySettings` 10 处 Toast 切到 caomei。`BaseDialogV2` 增加 `footer` 插槽与 `hide` 事件转发；会话表的对话框用 `:visible` + `@update:visible` 显式绑定（`v-model` 会触发 `vue/no-mutating-props`）。
+
+**差异（像素 / 占比）**
+
+| 快照 | 像素 / 占比 |
+| :--- | ---: |
+| `security-light-desktop-default` | 26,641 / 3% |
+| `security-dark-desktop-default` | 80,232 / 7% |
+| `security-light-mobile-default` | 21,765 / 7% |
+| `security-dark-mobile-default` | 43,095 / 14% |
+| `security-light-desktop-enable-2fa-dialog` | 62,470 / 5% |
+| `security-light-desktop-revoke-all-confirm` | 68,912 / 6% |
+
+**接受项**：按钮由 PrimeVue 默认改为 caomei 主色 / 描边尺度；`CaomeiMessage` 语气底色与图标替换；对话框标题栏与关闭按钮形态变化。
+
 ## 7. 已知限制
 
 - **跨环境已用镜像固定**：本地与 CI 共用同一 Playwright 镜像；宿主直跑与容器相差约 1% 像素，故宿主结果不作判定依据。镜像升级或 playwright 版本变化时，必须重采自基线并在 PR 中说明。
 - **未覆盖状态**：2FA 弹窗视觉（需已启用 2FA 的测试账号）、验证码启用态（需 captcha provider）、提交中 / 提交成功 Toast（需真实后端）。这些状态在环境具备后追加，并同批补参考态。
-- **已覆盖六页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`；其余 P3 页面（安全设置、OAuth 同意、SSO）在各自迁移前补采。
+- **已覆盖七页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`、`/security`；其余 P3 页面（OAuth 同意、SSO）在各自迁移前补采。
 - **无预算分级**：当前用统一 `maxDiffPixels 200`，未按 `reader` / `admin` 分档；P4 数据页前评估。
 
 ## 8. 与既有文档的关系
