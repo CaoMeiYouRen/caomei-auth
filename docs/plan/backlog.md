@@ -1,13 +1,13 @@
 # 产品 backlog（待办池）
 
-> **状态**：**阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面」进行中**（2026-11-06 授权，见 [阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md)）。本表只保留**尚未进入阶段**的候选；阶段 2 已于 2026-11-06 完成并归档（见 [已完成工作归档](../archive/completed-work.md)）。
+> **状态**：**阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面」已于 2026-11-09 收口**（M0-3 待 2026-11-14 定时验证，见 [阶段 3 收口记录](../design/governance/2026-11-09-phase3-closure.md)）。本表只保留**尚未进入阶段**的候选；阶段 2 已于 2026-11-06 完成并归档（见 [已完成工作归档](../archive/completed-work.md)）。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ## 0. 候选阶段组合（建议，未授权）
 
 > 仅用于范围评估，不构成启动授权，不分配阶段编号。每条候选的详情只在后文一处定义，本节只做组合索引。
 > 原「组合 A：安全与质量收口」已作为阶段 2 完成并归档（2026-11-06），见 [已完成工作归档](../archive/completed-work.md)；本表不再保留。
-> **组合 B / 组合 C 已部分上收**：i18n 非组件面（M2 前置 + 服务端试点）与 caomei-ui P2–P3 已进入阶段 3；本表只保留尚未授权的后续部分。
+> **组合 B / 组合 C 已部分上收**：i18n 非组件面（M2 前置 + 服务端试点）与 caomei-ui P2–P3 已在阶段 3 完成（2026-11-09 收口）；本表只保留尚未授权的后续部分。
 
 ### 组合 B：i18n 全量落地
 
@@ -41,16 +41,16 @@ _详情见 [zod-migration.md](./zod-migration.md)。_
 
 _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实施方案](../design/governance/2026-11-05-i18n-evaluation.md)。_
 
-- **状态**：M1 技术验证已完成（阶段 2 M5，2026-11-06 归档）；**M2 前置（schema message / `validation.*` / 治理脚本）与服务端错误消息试点已进入阶段 3；i18n M2 页面文案、i18n M4 剩余（Admin 文案、邮件模板、`User.locale`、API 其余错误面）仍为候选，未授权**。已引入 `@nuxtjs/i18n` 并建立 Locale Registry 与语言切换原型，但无业务文案翻译；网页 UI、Meta、MJML 邮件与 API 错误消息仍以简体中文硬编码为主。现有 `better-auth-localization` 仅覆盖认证插件边界，`utils/shared/locale.ts` / `server/utils/locale.ts` 提供 locale 检测。
+- **状态**：M1 技术验证已完成（阶段 2 M5，2026-11-06 归档）；**M2 前置（schema message / `validation.*` / 治理脚本）与认证类服务端错误试点已于阶段 3 完成（2026-11-09 收口）；i18n M2 页面文案、i18n M4 剩余（Admin 文案、邮件模板、`User.locale`、API 其余错误面）与 i18n M5 治理 / SEO 放量仍为候选，未授权**。已引入 `@nuxtjs/i18n` 并建立 Locale Registry、语言切换与 `validation.*` / `errors.*` 键，但页面业务文案仍以中文为主。
 - **目标**：建立 `zh-CN` / `en-US` 全量翻译能力，覆盖 Web UI、邮件模板、API 响应、验证错误与通知；服务端与前端共享 Locale Registry。
 - **里程碑**：M1 基础设施 → M2 核心链路 → M3 个人 / 安全 / OAuth / SSO → M4 Admin / 邮件 / API → M5 治理与 SEO。执行口径与验收见 [i18n.md](../standards/i18n.md) §8 / §10。
 - **关键修订**：`@nuxtjs/i18n` v10（`lazy` 已移除）；模块化 `files[]` + Locale Registry + runtime loader；Zod v4 per-parse error map；服务端 `useTranslation(event)`；新增 `User.locale` 支持异步邮件；与组件库迁移建议先组件后 i18n。
 - **风险**：`better-auth-localization` 的 `zh-Hans` / `zh-Hant` 标识需在认证层映射；SSR / SEO / Demo 模式兼容；PrimeVue / caomei-ui locale 需同步。
 - **M2 前置条件**（[M1 技术验证](../design/governance/2026-11-05-i18n-verification.md) §6 结论为有条件通过）：
-    1. 清理 74 处（评估口径）Schema 级中文 `message`，改为标准 Zod 消息或错误键，否则 per-parse error map 不生效；
-    2. 补齐 `validation.*` 全量错误键（`zh-CN` / `en-US` 同构）；
-    3. 引入 key parity / 缺词审计脚本（`scripts/i18n/audit-*.mjs`、`i18n:audit:*`、`lint:i18n`、`test:i18n`）并接入 CI / lint-staged；
-    4. 组件迁移至少完成 P2 试点页，避免在 PrimeVue `label` / `value` 上写 `t()` 后被二次改写；
+    1. ~~清理 74 处（评估口径）Schema 级中文 `message`，改为标准 Zod 消息或错误键~~（M5-1 完成）；
+    2. ~~补齐 `validation.*` 全量错误键（`zh-CN` / `en-US` 同构）~~（M5-1 完成）；
+    3. ~~引入 key parity / 缺词审计脚本（`scripts/i18n/audit-*.mjs`、`i18n:audit:*`）并接入 CI / lint-staged~~（M5-2 完成；`lint:i18n` / `test:i18n` 仍待 M5）；
+    4. ~~组件迁移至少完成 P2 试点页，避免在 PrimeVue `label` / `value` 上写 `t()` 后被二次改写~~（阶段 3 P2–P3 已完成）；
     5. `en-US` 保持 `ui-ready`，key parity + 邮件 + SEO 回归后再升 `seo-ready`。
 - **迁入来源**：原 `todo.md`「高优先级 · 多语言适配」与「未完成项汇总」小节（该小节已于 2026-11-06 移除，见 git 历史）；同时修正 [已完成工作归档](../archive/completed-work.md) 中“i18n 已完成”的错误表述。
 
@@ -62,7 +62,7 @@ _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实�
 
 _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-caomei-ui-migration-evaluation.md)。_
 
-- **状态**：P0/P1 预备已完成（阶段 2 M4，2026-11-06 归档）；**P2–P3 已进入阶段 3（2026-11-06 授权）；P4 / P5 仍为候选，未授权**。迁移目标已升级至 `caomei-ui@1.2.0`（2026-11-08 复核）；DatePicker range、Toast 逐语气 token、Form/FormItem、DataTable 密度与选择列 token 已落地，决策见 [1.2.0 复核记录](../design/governance/2026-11-08-caomei-ui-1.2.0-revaluation.md)。
+- **状态**：P0/P1 预备已完成（阶段 2 M4，2026-11-06 归档）；**P2–P3 已在阶段 3 完成（2026-11-09 收口，九条认证路由，PrimeVue 24 族 / 195 标签 / 31 文件）；P4 / P5 仍为候选，未授权**。迁移目标已升级至 `caomei-ui@1.2.0`（2026-11-08 复核）；DatePicker range、Toast 逐语气 token、Form/FormItem、DataTable 密度与选择列 token 已落地，决策见 [1.2.0 复核记录](../design/governance/2026-11-08-caomei-ui-1.2.0-revaluation.md)；收口结果见 [阶段 3 收口记录](../design/governance/2026-11-09-phase3-closure.md)。
 - **目标**：用 `caomei-ui`（Vue 3 + Reka UI，当前 1.2.0）替换 PrimeVue 4 生态，统一设计 token、主题、暗色模式与组件行为。
 - **现状**：项目依赖 `primevue` 4.x + `@primevue/*` + `@primeuix/*`；Dependabot 已锁定 v4 并阻止 v5 独立升级；31 个组件族 / 304 个开标签 / 52 个 `.vue`；无 `primeicons`；`--p-*` 仅 56 处（Toast）；已有 7 个 `components/base/*` 封装收敛改动。
 - **分阶段建议**：P0 基线与护栏 → P1 接入基座 → P2 主题 / 封装 / 试点 → P3 表单 / 资料 / 安全 / 浮层 → P4 Admin 数据页与剩余页面 → P5 收尾卸载。不要从 admin 数据表开始。
@@ -138,6 +138,7 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
     - 详见 [测试规范](../standards/testing.md)。
 - **jscpd 重复代码检测**：引入代码重复率检测，目标全项目重复率降至 5% 以下。
 - **视觉预算分级与允许清单**：P4 数据页（DataTable 密度 / 选择列 / 空态）引入 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单，避免统一阈值在数据页产生大量噪声。
+- **2FA / captcha / Toast 视觉覆盖**：为 2FA 弹窗、验证码启用态、提交中 / 提交成功 Toast 补充参考态与自基线；需已启用 2FA 的测试账号与 captcha provider。阶段 3 已登记为环境限制，M6-1 收口时迁入本候选（不再保留阶段编号）。
 - **max-lines 基线清理**：消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本节保留 i18n 迁移与 `/api/admin/sso/providers` 系列补录。
 - **迁入来源**：原 `todo.md`「低优先级 · 文档同步」与既有 backlog 质量类条目。

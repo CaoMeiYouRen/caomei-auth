@@ -2,7 +2,7 @@
 
 本文档记录了项目已实现的关键技术升级、功能点及测试覆盖情况，作为项目发展的历史记录。
 
-> **勘误（2026-11-05，2026-11-06 补充）**：本归档此前把 i18n 误记为已完成；截至 2026-11-06 仅完成 M1 基础设施与语言切换原型（阶段 2 M5），M2+ 正式翻译仍在 [backlog §1.2](../plan/backlog.md#12-i18n-全量落地)；其中 M2 前置（schema / 校验键 / 治理脚本）已登记进入阶段 3 范围，状态见 [todo.md](../plan/todo.md) M5-1～M5-3，范围见 [阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md)。归档只保留已完成工作，未完成项不在此登记。
+> **勘误（2026-11-05，2026-11-06 补充，2026-11-09 更新）**：本归档此前把 i18n 误记为已完成；截至 2026-11-06 仅完成 M1 基础设施与语言切换原型（阶段 2 M5）。其中 M2 前置（schema / 校验键 / 治理脚本）与认证类服务端错误试点已在阶段 3 完成（2026-11-09 收口，见 §9），页面文案 M2 与邮件 / `User.locale`（M4）仍在 [backlog §1.2](../plan/backlog.md#12-i18n-全量落地)。归档只保留已完成工作，未完成项不在此登记。
 
 ---
 
@@ -118,3 +118,18 @@ _2026-11-05 授权，2026-11-06 全部原子条目完成并归档；共 5 条主
 -   [x] **M5-1 i18n M1 技术验证**: `@nuxtjs/i18n@10.6.0` + Locale Registry + detector + `prefix_except_default` + `useLocaleHead` + 语言切换原型，见 [i18n 技术验证](../design/governance/2026-11-05-i18n-verification.md)。
 -   [x] **M5-2 Zod per-parse error map 验证**: 1 个表单 + 1 个 API 验证通过；i18n M2 准入结论为「有条件通过」，须先清理 schema 级中文 message。
 -   [x] **阶段内附带修复**: Demo 数据填充中文用户名校验、登录社交按钮 SSR hydration、语言切换位置与暗色主题对比度、better-auth 1.7 PostgreSQL 数据迁移脚本（`database/postgres/2026-11-06-better-auth-1-7-oauth.sql`）。
+
+---
+
+## 9. 阶段 3 · caomei-ui P2–P3 迁移与 i18n 非组件面（2026-11-09 收口）
+
+_2026-11-06 授权，2026-11-09 M6-1 收口；共 6 条主线 / 16 条原子条目 + M0 插队 4 条。交付、包体 / 用量复测、回退证据见 [阶段 3 收口记录](../design/governance/2026-11-09-phase3-closure.md)。**唯一未闭环项**：M0-3 `release.yml` 定时发版验证（2026-11-14 或手动 dispatch）。_
+
+-   [x] **M0 发布链路（插队）**: `docker-build.yml` 复用工作流、`docker.yml` / `release.yml` / `docker-publish.yml` 接入；M0-1 / M0-2 / M0-4 已验证，M0-3 待定时发版验证。
+-   [x] **M1 迁移准备与决策**: `caomei-ui@1.2.0` 基线（30 族 / 301 标签 / 50 文件，入口 JS 431,270 B、`keyCss` 399,733 B）；DatePicker range 与 Toast token 决策回写；视觉参考态基座与 50 张矩阵。
+-   [x] **M2 登录页试点**: `/login` 整页切换 + 5 个 V2 薄封装；白名单登记；三 Tab / 校验 / 密码显隐 / 明暗 / 移动回归。
+-   [x] **M3 认证入口**: `/register`、`/forgot-password`、`/change-password`、`/quick-login` 迁移；认证相关 6 个 composable 切 caomei Toast。
+-   [x] **M4 个人 / 安全 / OAuth / SSO**: `/profile`（6 个展示组件 + 3 个对话框）、`/security`（2FA / 会话 / 绑定）、`/oauth/consent`、`/sso-login` 迁移；P3 认证面 PrimeVue 节点归零。
+-   [x] **M5 i18n 非组件面**: 76 个 `validation.*` 键 + 17 个 `errors.*` 键 zh/en 同构；Zod 错误键与边界回退；5 个治理脚本 + CI / `lint-staged`；认证类 API `useTranslation` + `Content-Language` / `Vary`。
+-   [x] **M6 阶段收口**: 白名单 9 条与页面 / 共享组件零 PrimeVue 校验；用量 24 族 / 195 标签 / 31 文件；入口 CSS +2.87%（预算 +10% 通过）并接入 `migration:check-budget`；视觉 50/50；回退 dry-run 与文档同步。
+-   [x] **收口附带修复**: `useRegisterFlow` / `useForgotPasswordFlow` 绕过 `useValidationMessage` 导致页面显示原始校验键，已修复并复跑视觉 50/50。

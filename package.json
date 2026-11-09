@@ -7,6 +7,7 @@
     "migration:usage": "node scripts/migration/primevue-usage.mjs",
     "migration:check-imports": "node scripts/migration/check-caomei-imports.mjs",
     "migration:measure": "node scripts/migration/measure-bundle.mjs",
+    "migration:check-budget": "node scripts/migration/check-bundle-budget.mjs",
     "i18n:audit": "node scripts/i18n/audit-locale-keys.mjs",
     "i18n:audit:missing": "node scripts/i18n/audit-locale-keys.mjs --only=missing --fail-on-missing",
     "i18n:audit:duplicates": "node scripts/i18n/audit-duplicate-messages.mjs",

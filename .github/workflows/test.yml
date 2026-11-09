@@ -29,6 +29,7 @@ jobs:
       - run: pnpm run i18n:check
       - run: pnpm run typecheck
       - run: pnpm run build
+      - run: pnpm run migration:check-budget
       - run: pnpm run test
       - run: pnpm run test:coverage
 

@@ -301,7 +301,7 @@ pnpm test:visual --grep "login 默认态"
 
 **范围**：`/sso-login` 4 张参考态，采自迁移前提交 `ba07d26`。该页声明 `definePageMeta({ auth: false })`，但全局路由守卫只认 `publicPaths`，未登录会被重定向到 `/login`；同批把 `/sso-login` 加入白名单。
 
-**迁移面**：4 个登录表单（`InputText` → `BaseInputV2` + 标签）、5 个按钮、Provider 卡片 `Badge` → `CaomeiTag`、`useSsoLoginFlow` 6 处 Toast 切 caomei；` :deep(.p-button)` 改为 `:deep(.caomei-button)`。
+**迁移面**：4 个登录表单（`InputText` → `BaseInputV2` + 标签）、5 个按钮、Provider 卡片 `Badge` → `CaomeiTag`、`useSsoLoginFlow` 6 处 Toast 切 caomei；`:deep(.p-button)` 改为 `:deep(.caomei-button)`。
 
 **同批修复（桥接范围）**：表单字号 / 控件尺度桥接此前只作用于 `.auth-card`，独立布局的 `/sso-login`、`/oauth/consent` 仍用 caomei 默认（标签 12px、输入 36px）。把 token 作用域扩为 `.auth-card, .sso-login, .oauth-consent`，字段块外边距仍只在 `.auth-card` 生效。
 
@@ -315,6 +315,14 @@ pnpm test:visual --grep "login 默认态"
 | `sso-login-dark-mobile-default` | 37,149 / 12% |
 
 **接受项**：按钮高度 47 → 40px、卡片内边距与输入框宽度由 caomei token 接管；`/oauth/consent` 的按钮尺度随桥接扩展一并变化（自基线已重采）。
+
+### 6.8 2026-11-09 M6-1 收口
+
+**结果**：参考态 / 自基线各 50 张，`pnpm test:visual` **50/50 通过**；CI `visual` job 保持自基线阻断。
+
+**收口复测发现并修复**：`register 校验错误态` 在页面显示 `validation.emailInvalid` 等原始键。原因是 `useRegisterFlow` 的自定义 `validate` 直接回填 `err.message`，绕过了 `useForm` 的 `useValidationMessage`；同批修复 `use-forgot-password-flow` 发送验证码路径的同类漏点。修复后复测 50/50。
+
+**遗留**：2FA / captcha / Toast 状态仍受环境限制，转入 [backlog](../../plan/backlog.md) 视觉覆盖候选；收口汇总见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md) §5。
 
 ## 7. 已知限制
 

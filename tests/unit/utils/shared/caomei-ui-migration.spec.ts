@@ -1,6 +1,47 @@
+import { readFileSync, readdirSync, statSync } from 'node:fs'
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { stripLocalePrefix } from '@/i18n/config/locale-registry'
 import { CAOMEI_UI_ROUTE_PREFIXES, isCaomeiUiRoute } from '@/utils/shared/caomei-ui-migration'
+
+const PRIMEVUE_TAG_PATTERN = /<(Button|InputText|Select|Dropdown|Textarea|IconField|InputIcon|Accordion|AccordionPanel|AccordionHeader|AccordionContent|Avatar|DataTable|Column|Dialog|Badge|Checkbox|Password|Tag|ConfirmDialog|InputNumber|Menu|MultiSelect|Toast)\b/u
+const PRIMEVUE_IMPORT_PATTERN = /from\s+['"]primevue\//u
+
+const MIGRATED_PAGE_FILES = [
+    'pages/login.vue',
+    'pages/register.vue',
+    'pages/forgot-password.vue',
+    'pages/change-password.vue',
+    'pages/quick-login.vue',
+    'pages/profile.vue',
+    'pages/security.vue',
+    'pages/oauth/consent.vue',
+    'pages/sso-login.vue',
+]
+
+const MIGRATED_SHARED_PATHS = [
+    'components/auth-left.vue',
+    'components/password-strength.vue',
+    'components/captcha.vue',
+    'components/send-code-button-v2.vue',
+    'components/theme-toggle-v2.vue',
+    'components/base/base-dialog-v2.vue',
+    'components/base/input-v2.vue',
+    'components/base/password-v2.vue',
+    'components/base/phone-input-v2.vue',
+    'components/profile',
+    'components/security',
+]
+
+function collectVueFiles(target) {
+    const absolute = path.resolve(process.cwd(), target)
+    const info = statSync(absolute)
+    if (info.isFile()) {
+        return [target]
+    }
+    return readdirSync(absolute, { withFileTypes: true })
+        .flatMap((entry) => collectVueFiles(path.join(target, entry.name)))
+}
 
 describe('utils/shared/caomei-ui-migration', () => {
     it('默认白名单包含 P2/P3 试点路由', () => {
@@ -42,5 +83,30 @@ describe('utils/shared/caomei-ui-migration', () => {
 
         expect(isCaomeiUiRoute('/login', prefixes)).toBe(true)
         expect(isCaomeiUiRoute('/other', prefixes)).toBe(false)
+    })
+
+    it('每个白名单路由都有对应页面文件', () => {
+        for (const prefix of CAOMEI_UI_ROUTE_PREFIXES) {
+            expect(statSync(path.resolve(process.cwd(), `pages${prefix}.vue`)).isFile()).toBe(true)
+        }
+    })
+
+    it('已迁移页面与共享组件不含 PrimeVue 标签或显式导入', () => {
+        const files = [
+            ...MIGRATED_PAGE_FILES,
+            ...MIGRATED_SHARED_PATHS.flatMap((target) => collectVueFiles(target)),
+        ]
+
+        for (const file of files) {
+            const source = readFileSync(path.resolve(process.cwd(), file), 'utf8')
+            expect(source, `${file} 仍包含 PrimeVue 模板标签`).not.toMatch(PRIMEVUE_TAG_PATTERN)
+            expect(source, `${file} 仍显式导入 PrimeVue`).not.toMatch(PRIMEVUE_IMPORT_PATTERN)
+        }
+    })
+
+    it('P4 路由不在白名单内', () => {
+        for (const pathname of ['/', '/about', '/privacy', '/terms', '/index', '/oauth/clients', '/admin/users', '/admin/logs', '/admin/oauth/applications', '/admin/sso/providers']) {
+            expect(isCaomeiUiRoute(pathname), `${pathname} 不应命中白名单`).toBe(false)
+        }
     })
 })

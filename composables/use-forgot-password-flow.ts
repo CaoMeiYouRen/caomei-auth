@@ -70,7 +70,7 @@ export function useForgotPasswordFlow() {
             () => {
                 const res = emailSchema.safeParse(email.value)
                 if (!res.success) {
-                    errors.value.email = res.error.issues[0]?.message || '请输入有效的邮箱地址'
+                    errors.value.email = translate(res.error.issues[0]?.message) || '请输入有效的邮箱地址'
                     return false
                 }
                 return true
@@ -89,7 +89,7 @@ export function useForgotPasswordFlow() {
             () => {
                 const res = phoneSchema.safeParse(phone.value)
                 if (!res.success) {
-                    errors.value.phone = res.error.issues[0]?.message || '请输入有效的手机号'
+                    errors.value.phone = translate(res.error.issues[0]?.message) || '请输入有效的手机号'
                     return false
                 }
                 return true

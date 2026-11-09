@@ -1,6 +1,6 @@
 # 2026-11-06 阶段 3 范围登记：caomei-ui P2–P3 迁移与 i18n 非组件面
 
-> **状态**：已授权启动（2026-11-06 用户选择方向 A「组件库 P2–P3」，并补充「可以先处理组件之外的国际化」；2026-11-08 用户授权插队 M0「发布链路原生多架构」，方案 C 复用工作流）。
+> **状态**：已收口（2026-11-06 授权启动；2026-11-08 授权插队 M0「发布链路原生多架构」；2026-11-09 M6-1 收口，**剩余 M0-3 定时发版验证**，2026-11-14 或手动 dispatch）。交付与回退证据见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md)。
 > **单一事实源**：阶段范围与原子条目见 [todo.md](../../plan/todo.md)；交付摘要收口后归档至 [已完成工作归档](../../archive/completed-work.md)；候选详情见 [backlog.md](../../plan/backlog.md)；阶段方向见 [roadmap.md](../../plan/roadmap.md)。
 > **准入规则**：[规划规范](../../standards/planning.md)。迁移批次依据 [caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md) §8；i18n 依据 [国际化实施方案](../../standards/i18n.md) §8。
 
@@ -59,7 +59,8 @@
 - **M2**：`/login` 无 PrimeVue 在册组件族残留；浅色 / 暗色视觉差异全部归因，「待修」清零；定向测试、SSR / hydration 通过；白名单只登记已迁移路由。
 - **M3 / M4**：每个迁移路由内无两套组件混用；表单校验、提交、2FA、Toast / Confirm、OAuth 同意、SSO 登录行为与迁移前一致；a11y 与暗色通过；每批独立提交并可单独回滚。
 - **M5**：0 处 schema 级中文 `message`；`validation.*` 键 parity 100%；审计脚本可运行并接入 CI / `lint-staged`；认证类 API 在 `en-US` 下返回英文错误并带 `Content-Language`，不可用时显式登记回退。
-- **全阶段**：`pnpm lint` / `pnpm lint:css` / `pnpm typecheck` / `pnpm test` / `pnpm build` 通过；无未关闭 blocker 进入提交。
+- **M6**：白名单与九条已迁移路由一致；入口 CSS 预算 ≤ +10%；迁移记录、包体 / 用量复测、回退证据与文档同步完成；视觉自基线 50/50；遗留项（M0-3、2FA / captcha 视觉、P4/P5）已登记。
+- **全阶段**：`pnpm lint` / `pnpm lint:css` / `pnpm typecheck` / `pnpm test` / `pnpm build` 通过；无未关闭 blocker 进入提交。**2026-11-09 收口**：`lint` 0 error、`typecheck` 通过、967 用例通过、`build` 通过、`keyCss +2.87%`、视觉 50/50；证据见 [收口记录](./2026-11-09-phase3-closure.md) §8。
 
 ## 5. 依赖与风险
 

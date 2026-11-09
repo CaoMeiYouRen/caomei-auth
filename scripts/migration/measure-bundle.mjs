@@ -64,6 +64,24 @@ async function main() {
         args[separator === -1 ? arg.slice(2) : arg.slice(2, separator)] = separator === -1 ? true : arg.slice(separator + 1)
     }
 
+    const result = await measureBundle()
+
+    if (typeof args.json === 'string') {
+        const outputPath = path.resolve(projectRoot, args.json)
+        await writeFile(outputPath, `${JSON.stringify(result, null, 2)}\n`, 'utf8')
+        process.stdout.write(`包体基线已写入 ${path.relative(projectRoot, outputPath)}\n`)
+    }
+
+    if (!args.quiet) {
+        process.stdout.write(`${JSON.stringify(result, null, 2)}\n`)
+    }
+}
+
+/**
+ * 测量当前 `.output` 的入口与全量包体尺寸。
+ * 供 `migration:measure` 与 `migration:check-budget` 共用。
+ */
+export async function measureBundle() {
     const precomputed = await readFile(precomputedPath, 'utf8').catch((error) => {
         throw new Error(`找不到 ${path.relative(projectRoot, precomputedPath)}，请先运行 pnpm build`, { cause: error })
     })
@@ -89,21 +107,12 @@ async function main() {
         totalCss: totals[1].reduce((sum, size) => sum + size, 0),
     })
     const { version: nuxtVersion } = JSON.parse(await readFile(path.join(projectRoot, 'node_modules', 'nuxt', 'package.json'), 'utf8'))
-    const result = {
+
+    return {
         scope: '_nuxt 顶层 JS/CSS + precomputed name:"entry"',
         nuxtVersion,
         ...summary,
         entry: { js: entry.js, css: entry.css },
-    }
-
-    if (typeof args.json === 'string') {
-        const outputPath = path.resolve(projectRoot, args.json)
-        await writeFile(outputPath, `${JSON.stringify(result, null, 2)}\n`, 'utf8')
-        process.stdout.write(`包体基线已写入 ${path.relative(projectRoot, outputPath)}\n`)
-    }
-
-    if (!args.quiet) {
-        process.stdout.write(`${JSON.stringify(result, null, 2)}\n`)
     }
 }
 

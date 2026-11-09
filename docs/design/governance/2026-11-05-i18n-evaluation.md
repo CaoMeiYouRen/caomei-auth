@@ -1,6 +1,6 @@
 # 2026-11-05 i18n 评估与实施方案（基于原规划修订）
 
-> **状态**：`proposal`（评估完成，**M1 技术验证已于 2026-11-05 完成**；M2 前置与服务端错误消息试点已登记进入阶段 3 范围，状态见 [todo.md](../../plan/todo.md) M5-1～M5-3；页面文案与邮件未授权）。本文在 [国际化实施方案](../../standards/i18n.md) 基础上做现状复核与方案修订，并参考 momei / dependfix / caomei-ui 的已验证实现；页面级实施未启动。
+> **状态**：`proposal`（评估完成，**M1 技术验证已于 2026-11-05 完成**；M2 前置与认证类服务端错误消息试点已在阶段 3 完成，见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md)；页面文案与邮件未授权）。本文在 [国际化实施方案](../../standards/i18n.md) 基础上做现状复核与方案修订，并参考 momei / dependfix / caomei-ui 的已验证实现；页面级实施未启动。
 > **验证记录**：[i18n 技术验证记录](./2026-11-05-i18n-verification.md)（M5-1 / M5-2：模块、detector、路由策略、useLocaleHead、语言切换、Zod error map）。
 > **范围**：Web UI、服务端 API、邮件模板、表单校验、Demo 模式、SEO 与治理脚本。
 > **关联**：[backlog §1.2](../../plan/backlog.md#12-i18n-全量落地)｜[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[规划规范](../../standards/planning.md)

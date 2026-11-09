@@ -48,9 +48,9 @@ export function useRegisterFlow() {
                 result.error.issues.forEach((err) => {
                     const path = err.path.join('.')
                     if (path) {
-                        newErrors[path] = err.message
+                        newErrors[path] = translate(err.message)
                     } else {
-                        newErrors._form = err.message
+                        newErrors._form = translate(err.message)
                     }
                 })
             }

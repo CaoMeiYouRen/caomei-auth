@@ -115,7 +115,8 @@ Top 组件：`Button` 141（40 文件）、`InputText` 37（14）、`Column` 31�
 
 > **固定 chunk 白名单实现方式**：不单独落盘名单；由 `.output/server/chunks/virtual/precomputed.mjs` 中 `name:"entry"` 对应的 JS 与 `entry.*.css` 作为固定跟踪项，总 JS/CSS 为 `_nuxt` 顶层全量。若后续 chunk 进入子目录，需改为递归统计。
 > **复测策略**：同名日期文件覆盖更新；跨日复测新增日期文件，不修改历史基线。
-> **预算门禁**：`keyCss` 相对本基线 ≤ +10%，由 M6-1 决定 CI 接入方式；`migration:measure` 当前只输出数据，不主动失败。
+> **预算门禁**：`keyCss` 相对本基线 ≤ +10%；M6-1 已接入 `pnpm migration:check-budget`（见下）。
+> **2026-11-09 M6-1 收口**：已接入 `pnpm migration:check-budget`（`scripts/migration/check-bundle-budget.mjs`），入口 CSS 超 +10% 时失败；`test.yml` / `release.yml` / `regression-weekly.yml` 在构建后执行。收口复测：入口 CSS 411,221 B（+2.87%）、入口 JS 485,133 B（+12.49%，仅记录）、总 JS 3,688,378 B、总 CSS 1,795,225 B；明细见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md) §3。
 > **与 1.2.0 复核记录的差异**：同日 `totalJs` 3,517,449 B → 3,517,848 B（+399 B），由 2026-11-08 07:27–07:43 UTC 的 Dependabot 依赖升级后重建导致，两处不是同一次构建，不可直接对比。
 
 > 快照 `metrics.files` M1-1 时 75 / `deepSelectors` 26（阶段 2 UI 修复后的全量扫描，不是 PrimeVue 使用面增长）；M2-1 后为 76 / 29（新增 V2 组件）；M3-1 后回落至 75 / 29（register.vue 不再计入 PrimeVue 耦合文件）。

@@ -164,6 +164,9 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Check bundle budget
+        run: pnpm run migration:check-budget
+
       - name: Test with coverage
         run: pnpm run test:coverage
 

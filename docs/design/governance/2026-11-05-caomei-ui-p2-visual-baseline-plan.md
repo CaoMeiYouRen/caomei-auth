@@ -1,6 +1,6 @@
 # 2026-11-05 caomei-ui P2 视觉基线方案
 
-> **状态**：方案（P2 开工前执行）；**不建立截图视觉回归工程**。
+> **状态**：已落地（2026-11-09 M6-1 收口）；参考态与自基线各 50 张，CI 自基线阻断。未覆盖的 2FA / captcha / 提交中 Toast 已转入 [backlog](../../plan/backlog.md) 视觉覆盖候选。
 > **关联**：[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md) §8.1、§9｜[P0 基线与护栏](./2026-11-05-caomei-ui-p0-baseline.md)｜[UI/UX 设计](../ui-ux.md)。
 
 ## 1. 目标与边界
