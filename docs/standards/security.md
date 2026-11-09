@@ -138,6 +138,7 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 -   发布前检查：`.github/workflows/release.yml`（semantic-release 与镜像推送）与 `.github/workflows/docker.yml`（master 推送触发的 latest / sha-* 镜像发布及 Jenkins 部署）均在发布动作之前执行，未通过则终止发布。
 -   每周回归检查：`.github/workflows/regression-weekly.yml` 每周一 09:00（UTC+8）运行，内容等价于 `release.yml` 发布前质量门（`install` + `lint` + `lint:css` + `typecheck` + `build` + 测试与覆盖率，另补 `lint:md` / `ai:check` / `lint:duplicate` / `docs:build`，不含 semantic-release 与镜像推送），并同时执行本告警门禁；未通过时自动创建或更新「安全告警追踪」Issue（含阻塞项与豁免到期时间），恢复通过后自动关闭。
 -   读取 Dependabot alerts 必须使用 `GH_TOKEN`（fine-grained PAT：Dependabot alerts: read）；`GITHUB_TOKEN` 无法读取该 API（403），Token 轮换流程见 5.1.2。Code scanning 使用 workflow 的 `GITHUB_TOKEN`（权限 `security-events: read`，环境变量 `CODE_SCANNING_TOKEN`），本地执行时回退 `GH_TOKEN`；两类 token 不共用，避免单一凭据失效同时中断两路扫描。
+-   报告输出：完整 Markdown 写入 `--report` 文件与 GitHub Step Summary；设置 `GITHUB_STEP_SUMMARY` 时 stdout 仅输出一行状态，避免同一份报告同时出现在 Step Summary 与 Step Log。本地运行或显式 `--verbose` 时 stdout 输出完整 Markdown。weekly 的追踪 Issue 仍读取 `security-alert-report.md`，不受影响。
 
 ### 5.2 供应链信任边界 (Supply Chain Trust Boundary)
 
