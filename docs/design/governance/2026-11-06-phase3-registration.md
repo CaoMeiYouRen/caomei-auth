@@ -68,7 +68,7 @@
 | caomei-ui 版本 | 精确锁定 `1.2.0`（2026-11-08 由 1.0.0 升级并复测 typecheck / build），Dependabot `ignore` 同步为 `>1.2.0`；后续升级仍走人工批次并重跑回归 |
 | 视觉基线 | 两层：参考态（迁移前，`tests/visual/reference/`）+ 自基线（当前接受态，`tests/visual/__screenshots__/`），见 [视觉参考态基座](./2026-11-08-visual-baseline-harness.md)；CI 门禁已接入（容器固定，自基线阻断 / 参考态报告） |
 | DatePicker / Toast | 决策已按 1.2.0 修订（range 直接迁移、Toast token 映射）；上游 #28 中 DataTable 密度 / 选择列宽度已交付，Paginator 报表仍为自渲染 |
-| Toast / Confirm 双 Provider | 认证页 6 个 composable、`useProfileFlow`、`useSecuritySettings` 与 `useOAuthConsent` 已切到 caomei `useToast`（profile 另含 `useConfirm`）（`app.vue` 双挂载，PrimeVue 侧保留给未迁移页）；其余页面仍用 PrimeVue，P4/P5 逐批切换；`migration:check-imports` 守卫 |
+| Toast / Confirm 双 Provider | 认证页 6 个 composable、`useProfileFlow`、`useSecuritySettings`、`useOAuthConsent` 与 `useSsoLoginFlow` 已切到 caomei `useToast`（profile 另含 `useConfirm`）（`app.vue` 双挂载，PrimeVue 侧保留给未迁移页）；其余页面仍用 PrimeVue，P4/P5 逐批切换；`migration:check-imports` 守卫 |
 | 安全设置页体量 | 596 行，含 2FA / 会话 / 绑定；若超出原子条目阈值（10 文件 / 800 行新增）必须拆条 |
 | i18n 服务端 | `useTranslation(event)` 属 experimental；若 Nuxt 4.6.3 下不稳定，保留中文兜底并登记，不阻塞组件迁移 |
 | M0 复用工作流 | `docker-build.yml` 需 `packages: write`，调用方显式映射 4 个 secrets（Docker Hub / ACR）。工作流语义只能在推送后验证，本地仅做 YAML / 表达式静态检查与项目质量门 |

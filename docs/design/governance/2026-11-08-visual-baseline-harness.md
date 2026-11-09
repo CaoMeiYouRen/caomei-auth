@@ -24,9 +24,9 @@
 - **渲染环境固定为容器**：本地与 CI 共用 `mcr.microsoft.com/playwright:v<版本>-noble`。宿主与容器实测约 1% 的整页漂移（12,509 / 1,296,000 px），因此基线只在容器内采集，宿主直接跑仅用于调试。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
-## 3. 视觉矩阵（每层 46 张）
+## 3. 视觉矩阵（每层 50 张）
 
-同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 46 张。
+同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）各 50 张。
 
 | 路由 | 主题 | 视口 | 状态 | 快照 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -50,6 +50,7 @@
 | `/security` | 浅 | 1440×900 | 启用 2FA 对话框 | `security-light-desktop-enable-2fa-dialog` |
 | `/security` | 浅 | 1440×900 | 撤销所有会话确认 | `security-light-desktop-revoke-all-confirm` |
 | `/oauth/consent` | 浅 / 暗 | 1440×900 / 390×844 | 默认（预置 `visual-client`） | `oauth-consent-{theme}-{viewport}-default` |
+| `/sso-login` | 浅 / 暗 | 1440×900 / 390×844 | 默认（4 种登录方式） | `sso-login-{theme}-{viewport}-default` |
 
 P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前提交上采集参考态，与本批迁移提交同批入库。
 
@@ -296,11 +297,30 @@ pnpm test:visual --grep "login 默认态"
 
 **接受项**：按钮由 PrimeVue 默认 / 主色改为 caomei 主色与描边尺度。
 
+### 6.7 2026-11-09 M4-4 批次（SSO 登录页）
+
+**范围**：`/sso-login` 4 张参考态，采自迁移前提交 `ba07d26`。该页声明 `definePageMeta({ auth: false })`，但全局路由守卫只认 `publicPaths`，未登录会被重定向到 `/login`；同批把 `/sso-login` 加入白名单。
+
+**迁移面**：4 个登录表单（`InputText` → `BaseInputV2` + 标签）、5 个按钮、Provider 卡片 `Badge` → `CaomeiTag`、`useSsoLoginFlow` 6 处 Toast 切 caomei；` :deep(.p-button)` 改为 `:deep(.caomei-button)`。
+
+**同批修复（桥接范围）**：表单字号 / 控件尺度桥接此前只作用于 `.auth-card`，独立布局的 `/sso-login`、`/oauth/consent` 仍用 caomei 默认（标签 12px、输入 36px）。把 token 作用域扩为 `.auth-card, .sso-login, .oauth-consent`，字段块外边距仍只在 `.auth-card` 生效。
+
+**差异（像素 / 占比）**
+
+| 快照 | 像素 / 占比 |
+| :--- | ---: |
+| `sso-login-light-desktop-default` | 37,250 / 3% |
+| `sso-login-dark-desktop-default` | 60,252 / 5% |
+| `sso-login-light-mobile-default` | 24,798 / 8% |
+| `sso-login-dark-mobile-default` | 37,149 / 12% |
+
+**接受项**：按钮高度 47 → 40px、卡片内边距与输入框宽度由 caomei token 接管；`/oauth/consent` 的按钮尺度随桥接扩展一并变化（自基线已重采）。
+
 ## 7. 已知限制
 
 - **跨环境已用镜像固定**：本地与 CI 共用同一 Playwright 镜像；宿主直跑与容器相差约 1% 像素，故宿主结果不作判定依据。镜像升级或 playwright 版本变化时，必须重采自基线并在 PR 中说明。
 - **未覆盖状态**：2FA 弹窗视觉（需已启用 2FA 的测试账号）、验证码启用态（需 captcha provider）、提交中 / 提交成功 Toast（需真实后端）。这些状态在环境具备后追加，并同批补参考态。
-- **已覆盖八页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`、`/security`、`/oauth/consent`；P3 剩余 SSO 登录页在迁移前补采。
+- **已覆盖九页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`、`/security`、`/oauth/consent`、`/sso-login`；P3 认证面覆盖完毕。
 - **无预算分级**：当前用统一 `maxDiffPixels 200`，未按 `reader` / `admin` 分档；P4 数据页前评估。
 
 ## 8. 与既有文档的关系
