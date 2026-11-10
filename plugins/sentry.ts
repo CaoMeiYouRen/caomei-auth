@@ -6,7 +6,7 @@ export default defineNuxtPlugin(() => {
     if (sentryDsn) {
         Sentry.init({
             dsn: sentryDsn,
-            sendDefaultPii: true,
+            // v11 移除 sendDefaultPii：默认 dataCollection 已等价于 v10 的 sendDefaultPii: true
         })
     }
 })
