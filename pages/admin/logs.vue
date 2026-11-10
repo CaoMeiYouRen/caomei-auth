@@ -106,4 +106,26 @@ const {
 
 // 应用后台页面暗色模式支持
 @include admin-page-dark-theme;
+
+/* P4-0 立即修：PrimeVue 暗色基座生效后，子组件表格用 token 兜底，避免白底白字 */
+@include dark-mode {
+    .admin-logs {
+        :deep(.p-datatable-thead > tr > th) {
+            background: var(--admin-surface-muted) !important;
+            color: var(--admin-text) !important;
+            border-color: var(--admin-border) !important;
+        }
+
+        :deep(.p-datatable-tbody > tr > td) {
+            color: var(--admin-text) !important;
+            border-color: var(--admin-border) !important;
+        }
+
+        :deep(.p-paginator) {
+            background: var(--admin-surface) !important;
+            color: var(--admin-text) !important;
+            border-color: var(--admin-border) !important;
+        }
+    }
+}
 </style>

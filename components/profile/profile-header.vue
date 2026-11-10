@@ -5,34 +5,47 @@
         </h2>
     </div>
     <div class="profile-header-actions">
-        <Button
-            v-tooltip.top="privacyMode ? '关闭隐私模式，显示完整信息' : '开启隐私模式，隐藏敏感信息'"
-            :label="privacyMode ? '隐私模式' : '显示详情'"
-            :icon="privacyMode ? 'mdi mdi-eye-off' : 'mdi mdi-eye'"
-            :severity="privacyMode ? 'warn' : 'info'"
+        <CaomeiButton
+            :variant="privacyMode ? 'secondary' : 'primary'"
+            :tone="privacyMode ? 'warning' : undefined"
+            :title="privacyMode ? '关闭隐私模式，显示完整信息' : '开启隐私模式，隐藏敏感信息'"
             @click="togglePrivacyMode"
-        />
-        <Button
-            v-tooltip.top="'已授权应用管理'"
-            label="授权应用"
-            icon="mdi mdi-key-variant"
-            severity="secondary"
+        >
+            <template #icon>
+                <i :class="privacyMode ? 'mdi mdi-eye-off' : 'mdi mdi-eye'" />
+            </template>
+            {{ privacyMode ? '隐私模式' : '显示详情' }}
+        </CaomeiButton>
+        <CaomeiButton
+            variant="secondary"
+            title="已授权应用管理"
             @click="emit('goOAuthClients')"
-        />
-        <Button
-            v-tooltip.top="'账号安全设置'"
-            label="安全设置"
-            icon="mdi mdi-shield-account"
-            severity="secondary"
+        >
+            <template #icon>
+                <i class="mdi mdi-key-variant" />
+            </template>
+            授权应用
+        </CaomeiButton>
+        <CaomeiButton
+            variant="secondary"
+            title="账号安全设置"
             @click="emit('goSecurity')"
-        />
-        <Button
-            v-tooltip.top="'退出登录'"
-            label="退出登录"
-            icon="mdi mdi-logout"
-            severity="secondary"
+        >
+            <template #icon>
+                <i class="mdi mdi-shield-account" />
+            </template>
+            安全设置
+        </CaomeiButton>
+        <CaomeiButton
+            variant="secondary"
+            title="退出登录"
             @click="emit('logout')"
-        />
+        >
+            <template #icon>
+                <i class="mdi mdi-logout" />
+            </template>
+            退出登录
+        </CaomeiButton>
     </div>
     <p class="auth-subtitle">
         管理您的账号信息

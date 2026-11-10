@@ -1,9 +1,9 @@
 # 2026-11-05 i18n 评估与实施方案（基于原规划修订）
 
-> **状态**：`proposal`（评估完成，**M1 技术验证已于 2026-11-05 完成**；M2 前置与服务端错误消息试点已登记进入阶段 3 范围，状态见 [todo.md](../../plan/todo.md) M5-1～M5-3；页面文案与邮件未授权）。本文在 [国际化实施方案](../../standards/i18n.md) 基础上做现状复核与方案修订，并参考 momei / dependfix / caomei-ui 的已验证实现；页面级实施未启动。
+> **状态**：`proposal`（评估完成，**M1 技术验证已于 2026-11-05 完成**；M2 前置与认证类服务端错误消息试点已在阶段 3 完成，见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md)；页面文案与邮件未授权）。本文在 [国际化实施方案](../../standards/i18n.md) 基础上做现状复核与方案修订，并参考 momei / dependfix / caomei-ui 的已验证实现；页面级实施未启动。
 > **验证记录**：[i18n 技术验证记录](./2026-11-05-i18n-verification.md)（M5-1 / M5-2：模块、detector、路由策略、useLocaleHead、语言切换、Zod error map）。
 > **范围**：Web UI、服务端 API、邮件模板、表单校验、Demo 模式、SEO 与治理脚本。
-> **关联**：[backlog §1.2](../../plan/backlog.md#12-i18n-全量落地)｜[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[规划规范](../../standards/planning.md)
+> **关联**：[backlog §1.1](../../plan/backlog.md#11-i18n-全量落地)｜[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[规划规范](../../standards/planning.md)
 > **单一事实源**：执行口径（目录、模块、里程碑、脚本、验收）以 [i18n.md](../../standards/i18n.md) 为准；本文保留现状取证、取舍理由与风险。
 
 ## 1. 结论摘要
@@ -359,7 +359,7 @@ i18n/
 
 ## 14. 关联文档
 
-- 本项目：[国际化实施方案](../../standards/i18n.md)｜[backlog §1.2](../../plan/backlog.md#12-i18n-全量落地)｜[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[开发规范](../../standards/development.md)｜[测试规范](../../standards/testing.md)｜[规划规范](../../standards/planning.md)
+- 本项目：[国际化实施方案](../../standards/i18n.md)｜[backlog §1.1](../../plan/backlog.md#11-i18n-全量落地)｜[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[开发规范](../../standards/development.md)｜[测试规范](../../standards/testing.md)｜[规划规范](../../standards/planning.md)
 - momei：[国际化系统设计](https://github.com/CaoMeiYouRen/momei/blob/master/docs/design/modules/i18n.md)｜[Locale Registry](https://github.com/CaoMeiYouRen/momei/blob/master/i18n/config/locale-registry.ts)｜[i18n 治理脚本](https://github.com/CaoMeiYouRen/momei/tree/master/scripts/i18n)
 - dependfix：[i18n 规范](https://github.com/dependfix/dependfix/blob/master/docs/standards/i18n.md)｜[i18n 配置](https://github.com/dependfix/dependfix/tree/master/apps/platform/i18n)
 - caomei-ui：[内建文案与语言](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/components/locale.md)

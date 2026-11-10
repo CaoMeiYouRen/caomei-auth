@@ -4,7 +4,7 @@
 > **P1 落地记录**：[P0 基线与护栏](./2026-11-05-caomei-ui-p0-baseline.md) §5（双库并存、包体复测、导入守卫）。
 > **范围**：`caomei-auth` 主应用的 PrimeVue 4 组件、主题、图标、命令式 API、测试与构建接入面。
 > **参考**：momei 迁移方案与第 67–71 阶段归档；dependfix M31 迁移记录；caomei-ui 1.2.0 文档与设计规范 §7。
-> **关联**：[backlog §2.1](../../plan/backlog.md#21-组件库迁移到-caomei-ui)｜[i18n 评估](./2026-11-05-i18n-evaluation.md)｜[规划规范](../../standards/planning.md)
+> **关联**：[阶段 4 登记](./2026-11-10-phase4-registration.md)｜[i18n 评估](./2026-11-05-i18n-evaluation.md)｜[规划规范](../../standards/planning.md)
 > **单一事实源**：执行口径（规划载体、i18n 目录 / 模块 / 里程碑 / 脚本 / 验收）以 [planning.md](../../standards/planning.md) 与 [i18n.md](../../standards/i18n.md) 为准；本文保留取证、取舍理由与迁移批次。
 
 ## 1. 结论摘要
@@ -241,7 +241,7 @@
 | 批次 | 范围 | 产出 | 验收 | 依赖 |
 | :--- | :--- | :--- | :--- | :--- |
 | **P0 基线与护栏** | 用量脚本 / 视觉基线 / 路由白名单 / 版本锁定 / 回退方案 | 可复现的用量快照；浅色 + 暗色截图基线（登录、注册、个人资料、admin 用户、admin 日志、一个弹窗）；`CAOMEI_UI_ROUTE_PREFIXES` 初值；`caomei-ui@1.2.0` 精确锁定 + Dependabot `ignore` | 基线可复现；白名单只含空集 / 试点页；版本锁定生效 | 无 |
-| **P1 接入基座** | 安装 `caomei-ui@1.2.0`、`caomei-ui/nuxt`、`theme.css`、`data-preset="caomei"`、`darkMode: 'class'`；保留 PrimeVue；显式 import `useToast` / `useConfirm` 来源 | 双库可同时构建 / 启动；无组件替换；`keyCss` 与总 JS（固定 chunk 白名单）复测；P0 基线 JSON 与允许增幅（建议 `keyCss` ≤ +10%，越线归因） | `pnpm build` / `typecheck` / `test` 通过；两套库样式加载顺序确认；基础层注入唯一；无自动导入歧义 | P0 |
+| **P1 接入基座** | 安装 `caomei-ui@1.2.0`、`caomei-ui/nuxt`、`theme.css`、`data-preset="caomei"`、`darkMode: 'class'`；保留 PrimeVue；显式 import `useToast` / `useConfirm` 来源 | 双库可同时构建 / 启动；无组件替换；`keyCss` 与 entry chunk / 总 JS 复测；P0 基线 JSON 与允许增幅（建议 `keyCss` ≤ +10%，越线归因） | `pnpm build` / `typecheck` / `test` 通过；两套库样式加载顺序确认；基础层注入唯一；无自动导入歧义 | P0 |
 | **P2 主题 / 试点** | 仅试点路由（建议**登录页**）与它实际消费的 V2 薄封装；不全局替换 `BaseInput` / `BaseDialog` / `BaseTable` | 试点页切换；按需建 V2 封装；试点路由登记白名单；视觉 / 交互回归；测试 mock 改写 | 试点页无 PrimeVue 在册族残留；浅色 / 暗色视觉差异逐项归因；定向测试通过 | P1 |
 | **P3 表单 / 资料 / 安全 / 浮层** | 注册 / 忘记密码 / 快速登录 / 个人资料 / 安全设置 / OAuth 同意 / SSO 登录；Toast / Confirm 服务；按消费者路由建 V2 封装；`BaseFormGroup` → `CaomeiFormItem` | 这些路由整页迁移；`useToast` / `useConfirm` 显式 import 并按路由切换；Toast token 映射落地 | 路由内无混用；表单校验 / 提交 / Toast / Confirm 回归；a11y 与暗色通过 | P2 |
 | **P4 Admin 数据页与剩余页面** | `BaseTable` 随数据页迁移；`admin/users`、`admin/oauth/applications`、`admin/sso/providers`、`admin/logs`、`oauth/clients`、`api-docs-dialog` 等 | DataTable / Column 迁移；选择 / 排序 / 分页 / 列插槽改写；`admin/logs` 的 `DatePicker` 用 1.2.0 `selectionMode="range"`；密度 / 选择列宽度 token 落地 | 每个数据页功能回归；视觉基线；测试 mock 与断言改写 | P3 |
@@ -267,7 +267,7 @@
 | 4.2 | **DataTable 密度 / 选择列宽度** | 表格观感与旧版不一致 | 用 1.2.0 padding / selection width token 覆盖；逐表视觉登记 |
 | 5 | **测试 mock / 选择器大面积失败** | 迁移期 CI 红，掩盖真实回归 | 每批同批改写 mock 与 `.p-*` 断言；按批定向跑，P5 全量 |
 | 6 | **SSR / hydration**：浮层 portal、主题 class、locale provider | hydration mismatch / 样式闪烁 | 受影响路由做 SSR + hydration 复核；e2e / 浏览器验证 |
-| 7 | **包体变化**：双库并存期 CSS / JS 增长 | 性能预算越线 | P1 / 每批复测 `keyCss` / 总 JS（固定 chunk 白名单）；并存期配额显式登记；P5 对比 |
+| 7 | **包体变化**：双库并存期 CSS / JS 增长 | 性能预算越线 | P1 / 每批复测 `keyCss` / entry chunk / 总 JS；并存期配额显式登记；P5 对比 |
 | 8 | **版本漂移**：Dependabot 在精确值上抬版 | 未读 BREAKING 就升级 | 精确锁定 + `ignore`；升级走人工批次，读 CHANGELOG + 重跑回归 |
 | 9 | **与 i18n 冲突**：同页面二次改写 | 返工与冲突 | 按 §8.2 顺序；i18n 只并行基础设施，不并行页面文案 |
 | 10 | **双库并存期混用** | 同路由两套组件，样式 / 行为不一致 | 路由白名单 + 整路由切换；守卫断言在册族零残留 |
@@ -301,12 +301,12 @@
 **P2–P3 已上收**（2026-11-06，阶段 3，见 [阶段 3 登记记录](./2026-11-06-phase3-registration.md)），五项条件均已满足：
 
 1. 用户已明确授权 P2–P3 页面替换（2026-11-06 选择方向 A）。
-2. P0 基线可复现；视觉回归按 [P2 视觉基线方案](./2026-11-05-caomei-ui-p2-visual-baseline-plan.md) 执行（人工基线 + 差异清单，不建截图回归工程）。
+2. P0 基线可复现；视觉回归按 [视觉参考态基座](./2026-11-08-visual-baseline-harness.md) 执行（参考态 14 张 + 自基线 14 张入库，差异逐项归因；CI 接入待 backlog）。
 3. `caomei-ui` 精确锁定 `1.2.0`（2026-11-08 由 1.0.0 升级），Dependabot `ignore` 已同步为 `>1.2.0`。
 4. DatePicker range 与 Toast 样式已裁定（§6.3 / §7.3）。
 5. 顺序已确认：组件迁移先行；i18n 只并行非组件面，不改同一批页面。
 
-**P4 / P5 仍未授权**，需在阶段 3 收口后重新评估白名单、包体与视觉差异台账。
+**P4 / P5 已于 2026-11-10 授权进入阶段 4**，范围与验收见 [阶段 4 登记](./2026-11-10-phase4-registration.md)，P4-0 技术方案见 [Admin 迁移基座](./2026-11-10-p4-admin-migration-plan.md)。阶段 3 已于 2026-11-09 收口，M0-3 定时验证移至 backlog；P4 仍使用 PrimeVue 的 24 族 / 195 标签 / 31 文件为输入。
 
 ## 13. 工作量画像
 
@@ -336,7 +336,7 @@
 
 ## 14. 关联文档
 
-- 本项目：[backlog §2.1](../../plan/backlog.md#21-组件库迁移到-caomei-ui)｜[i18n 评估](./2026-11-05-i18n-evaluation.md)｜[UI/UX 设计](../ui-ux.md)｜[开发规范](../../standards/development.md)｜[测试规范](../../standards/testing.md)｜[规划规范](../../standards/planning.md)
+- 本项目：[阶段 4 登记](./2026-11-10-phase4-registration.md)｜[i18n 评估](./2026-11-05-i18n-evaluation.md)｜[UI/UX 设计](../ui-ux.md)｜[开发规范](../../standards/development.md)｜[测试规范](../../standards/testing.md)｜[规划规范](../../standards/planning.md)
 - caomei-ui：[从 PrimeVue 迁移](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/guide/primevue-migration.md)｜[设计规范 §7](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/design/design-spec.md)｜[快速上手](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/guide/getting-started.md)｜[主题与样式](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/design/theming.md)｜[内建文案](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/components/locale.md)
 - momei：[PrimeVue → caomei-ui 迁移方案](https://github.com/CaoMeiYouRen/momei/blob/master/docs/design/governance/2026-09-18-primevue-to-caomei-ui-migration-plan.md)｜[第 67–71 阶段路线图](https://github.com/CaoMeiYouRen/momei/blob/master/docs/plan/roadmap.md)
 - dependfix：[caomei-ui 迁移评估与方案](https://github.com/dependfix/dependfix/blob/master/docs/design/governance/caomei-ui-migration.md)

@@ -1,0 +1,276 @@
+{
+  "snapshotVersion": 1,
+  "scope": "PrimeVue 组件族 / 开标签 / 类名与 token 耦合（不含 node_modules、构建产物与报告目录）",
+  "totals": {
+    "componentFamilies": 24,
+    "openTags": 195,
+    "files": 31
+  },
+  "components": {
+    "Button": 79,
+    "Column": 31,
+    "InputText": 29,
+    "Select": 6,
+    "Dropdown": 5,
+    "Textarea": 5,
+    "IconField": 4,
+    "InputIcon": 4,
+    "AccordionContent": 3,
+    "AccordionHeader": 3,
+    "AccordionPanel": 3,
+    "Avatar": 3,
+    "DataTable": 3,
+    "Dialog": 3,
+    "Badge": 2,
+    "Checkbox": 2,
+    "Password": 2,
+    "Tag": 2,
+    "Accordion": 1,
+    "ConfirmDialog": 1,
+    "InputNumber": 1,
+    "Menu": 1,
+    "MultiSelect": 1,
+    "Toast": 1
+  },
+  "filesByComponent": {
+    "Button": [
+      "components/admin/logs/logs-header.vue",
+      "components/admin/logs/logs-table.vue",
+      "components/admin/oauth/api-docs-dialog.vue",
+      "components/admin/oauth/application-secret-dialog.vue",
+      "components/admin/oauth/create-application-dialog.vue",
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/admin/sso/provider-detail-dialog.vue",
+      "components/admin/users/ban-user-dialog.vue",
+      "components/admin/users/create-user-dialog.vue",
+      "components/admin/users/user-detail-dialog.vue",
+      "components/admin/users/user-sessions-dialog.vue",
+      "components/base/base-dialog.vue",
+      "components/demo-mode-dialog.vue",
+      "components/send-code-button.vue",
+      "components/theme-toggle.vue",
+      "error.vue",
+      "pages/admin/oauth/applications.vue",
+      "pages/admin/sso/providers.vue",
+      "pages/admin/users.vue",
+      "pages/index.vue",
+      "pages/oauth/clients.vue"
+    ],
+    "Column": [
+      "components/admin/logs/logs-table.vue",
+      "components/admin/logs/provider-stats.vue",
+      "components/admin/users/user-sessions-dialog.vue",
+      "pages/admin/oauth/applications.vue",
+      "pages/admin/sso/providers.vue",
+      "pages/admin/users.vue"
+    ],
+    "InputText": [
+      "components/admin/logs/logs-table.vue",
+      "components/admin/oauth/create-application-dialog.vue",
+      "components/admin/sso/attribute-mapping-form.vue",
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/admin/sso/oidc-config-form.vue",
+      "components/admin/sso/saml-config-form.vue",
+      "components/base/input.vue",
+      "components/base/phone-input.vue",
+      "pages/admin/oauth/applications.vue",
+      "pages/admin/sso/providers.vue",
+      "pages/admin/users.vue"
+    ],
+    "Select": [
+      "components/admin/logs/logs-table.vue",
+      "components/admin/users/ban-user-dialog.vue",
+      "components/admin/users/create-user-dialog.vue",
+      "components/admin/users/user-detail-dialog.vue",
+      "pages/admin/users.vue"
+    ],
+    "Dropdown": [
+      "components/admin/oauth/create-application-dialog.vue",
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/base/phone-input.vue",
+      "pages/admin/sso/providers.vue"
+    ],
+    "Textarea": [
+      "components/admin/oauth/create-application-dialog.vue",
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/admin/sso/saml-config-form.vue",
+      "components/admin/users/ban-user-dialog.vue"
+    ],
+    "IconField": [
+      "components/admin/logs/logs-table.vue",
+      "pages/admin/oauth/applications.vue",
+      "pages/admin/sso/providers.vue",
+      "pages/admin/users.vue"
+    ],
+    "InputIcon": [
+      "components/admin/logs/logs-table.vue",
+      "pages/admin/oauth/applications.vue",
+      "pages/admin/sso/providers.vue",
+      "pages/admin/users.vue"
+    ],
+    "AccordionContent": [
+      "components/admin/oauth/api-docs-dialog.vue"
+    ],
+    "AccordionHeader": [
+      "components/admin/oauth/api-docs-dialog.vue"
+    ],
+    "AccordionPanel": [
+      "components/admin/oauth/api-docs-dialog.vue"
+    ],
+    "Avatar": [
+      "components/admin/logs/logs-table.vue",
+      "pages/admin/oauth/applications.vue",
+      "pages/admin/users.vue"
+    ],
+    "DataTable": [
+      "components/admin/logs/provider-stats.vue",
+      "components/admin/users/user-sessions-dialog.vue",
+      "components/base/table.vue"
+    ],
+    "Dialog": [
+      "components/base/base-dialog.vue",
+      "components/demo-mode-dialog.vue",
+      "pages/oauth/clients.vue"
+    ],
+    "Badge": [
+      "components/admin/sso/provider-detail-dialog.vue",
+      "pages/admin/sso/providers.vue"
+    ],
+    "Checkbox": [
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/admin/sso/oidc-config-form.vue"
+    ],
+    "Password": [
+      "components/admin/sso/oidc-config-form.vue",
+      "components/base/password.vue"
+    ],
+    "Tag": [
+      "components/base/status-badge.vue",
+      "pages/admin/oauth/applications.vue"
+    ],
+    "Accordion": [
+      "components/admin/oauth/api-docs-dialog.vue"
+    ],
+    "ConfirmDialog": [
+      "app.vue"
+    ],
+    "InputNumber": [
+      "components/admin/sso/saml-config-form.vue"
+    ],
+    "Menu": [
+      "pages/admin/users.vue"
+    ],
+    "MultiSelect": [
+      "components/admin/oauth/create-application-dialog.vue"
+    ],
+    "Toast": [
+      "app.vue"
+    ]
+  },
+  "metrics": {
+    "files": 65,
+    "openTags": 195,
+    "useToastFiles": [
+      "components/admin/oauth/api-docs-dialog.vue",
+      "components/admin/oauth/application-secret-dialog.vue",
+      "components/admin/oauth/create-application-dialog.vue",
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/admin/sso/provider-detail-dialog.vue",
+      "components/admin/users/ban-user-dialog.vue",
+      "components/admin/users/create-user-dialog.vue",
+      "components/admin/users/user-detail-dialog.vue",
+      "components/admin/users/user-sessions-dialog.vue",
+      "components/profile/dialogs/edit-email-dialog.vue",
+      "components/profile/dialogs/edit-phone-dialog.vue",
+      "components/profile/dialogs/set-username-dialog.vue",
+      "components/profile/user-avatar.vue",
+      "components/profile/user-contact-info.vue",
+      "composables/admin/use-application-management.ts",
+      "composables/admin/use-logs-management.ts",
+      "composables/admin/use-sso-providers.ts",
+      "composables/admin/use-user-management.ts",
+      "composables/core/use-api.ts",
+      "composables/use-change-password-flow.ts",
+      "composables/use-forgot-password-flow.ts",
+      "composables/use-login-flow.ts",
+      "composables/use-oauth-clients.ts",
+      "composables/use-oauth-consent.ts",
+      "composables/use-otp.ts",
+      "composables/use-profile-flow.ts",
+      "composables/use-quick-login-flow.ts",
+      "composables/use-register-flow.ts",
+      "composables/use-security-settings.ts",
+      "composables/use-sso-login-flow.ts",
+      "composables/utils/use-clipboard.ts",
+      "composables/utils/use-logout.ts",
+      "pages/admin/sso/providers.vue"
+    ],
+    "useConfirmFiles": [
+      "components/admin/users/user-detail-dialog.vue",
+      "components/admin/users/user-sessions-dialog.vue",
+      "composables/admin/use-application-management.ts",
+      "composables/admin/use-user-management.ts",
+      "composables/use-profile-flow.ts",
+      "composables/utils/use-confirm-action.ts",
+      "pages/admin/sso/providers.vue"
+    ],
+    "explicitPrimeVueImportFiles": [
+      "components/admin/oauth/api-docs-dialog.vue",
+      "components/admin/oauth/application-secret-dialog.vue",
+      "components/admin/oauth/create-application-dialog.vue",
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/admin/sso/provider-detail-dialog.vue",
+      "components/admin/users/ban-user-dialog.vue",
+      "components/admin/users/create-user-dialog.vue",
+      "components/admin/users/user-detail-dialog.vue",
+      "components/admin/users/user-sessions-dialog.vue",
+      "components/send-code-button.vue",
+      "composables/admin/use-application-management.ts",
+      "composables/admin/use-logs-management.ts",
+      "composables/admin/use-sso-providers.ts",
+      "composables/admin/use-user-management.ts",
+      "composables/core/use-api.ts",
+      "composables/use-oauth-clients.ts",
+      "composables/utils/use-clipboard.ts",
+      "composables/utils/use-confirm-action.ts",
+      "composables/utils/use-logout.ts",
+      "error.vue",
+      "pages/admin/sso/providers.vue",
+      "pages/index.vue"
+    ],
+    "primeVueMockFiles": [
+      "unit/composables/admin/use-application-management.spec.ts",
+      "unit/composables/admin/use-logs-management.spec.ts",
+      "unit/composables/admin/use-sso-providers.spec.ts",
+      "unit/composables/admin/use-user-management.spec.ts",
+      "unit/composables/core/use-api.spec.ts",
+      "unit/composables/use-api.spec.ts",
+      "unit/composables/use-oauth-clients.spec.ts",
+      "unit/composables/utils/use-clipboard.spec.ts",
+      "unit/composables/utils/use-confirm-action.spec.ts",
+      "unit/composables/utils/use-logout.spec.ts"
+    ],
+    "pTokenOccurrences": 52,
+    "pTokenFiles": [
+      "components/base/language-switcher.vue",
+      "styles/_theme.scss"
+    ],
+    "pClassOccurrences": 121,
+    "pClassFiles": [
+      "components/admin/logs/logs-header.vue",
+      "components/admin/logs/logs-table.vue",
+      "components/admin/logs/provider-stats.vue",
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/base/password.vue",
+      "components/base/phone-input.vue",
+      "pages/admin/oauth/applications.vue",
+      "pages/admin/sso/providers.vue",
+      "pages/admin/users.vue",
+      "styles/_dark-mode.scss",
+      "styles/_form.scss",
+      "styles/_theme.scss"
+    ],
+    "deepSelectors": 30,
+    "e2ePClassAssertions": 0
+  }
+}

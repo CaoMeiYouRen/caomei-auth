@@ -1,0 +1,12 @@
+{
+  "scope": "_nuxt 顶层 JS/CSS + precomputed name:\"entry\"",
+  "nuxtVersion": "4.6.4",
+  "entryJs": 485133,
+  "entryCss": 411221,
+  "totalJs": 3688378,
+  "totalCss": 1795225,
+  "entry": {
+    "js": "0OV8h1oV.js",
+    "css": "entry.D2Wj_ppN.css"
+  }
+}

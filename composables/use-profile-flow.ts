@@ -1,7 +1,6 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useDark } from '@vueuse/core'
-import { useToast } from 'primevue/usetoast'
-import { useConfirm } from 'primevue/useconfirm'
+import { useToast, useConfirm } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { nicknameValidator } from '@/utils/shared/validate'
 import { AUTH_BASE_URL } from '@/utils/shared/env'
@@ -121,12 +120,7 @@ export async function useProfileFlow() {
             userAccounts.value = accounts.data?.filter((account) => account.providerId !== 'credential') || []
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '获取第三方账号信息失败'
-            toast.add({
-                severity: 'error',
-                summary: '获取第三方账号失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '获取第三方账号失败', description: errorMessage, duration: 5000 })
         }
     }
 
@@ -134,12 +128,7 @@ export async function useProfileFlow() {
         const { provider, name, enabled } = socialProvider
 
         if (!enabled) {
-            toast.add({
-                severity: 'warn',
-                summary: '绑定失败',
-                detail: `${name} 登录方式未启用，无法绑定`,
-                life: 5000,
-            })
+            toast.warning({ title: '绑定失败', description: `${name} 登录方式未启用，无法绑定`, duration: 5000 })
             return
         }
 
@@ -152,19 +141,10 @@ export async function useProfileFlow() {
                 throw new Error(result?.error?.message || `${name} 绑定失败`)
             }
             await fetchUserAccounts()
-            toast.add({
-                severity: 'success',
-                summary: `正在绑定 ${name} 中`,
-                life: 2000,
-            })
+            toast.success({ title: `正在绑定 ${name} 中`, duration: 2000 })
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : `${name} 绑定时发生未知错误`
-            toast.add({
-                severity: 'error',
-                summary: `${name} 绑定失败`,
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: `${name} 绑定失败`, description: errorMessage, duration: 5000 })
         }
     }
 
@@ -177,40 +157,29 @@ export async function useProfileFlow() {
                 throw new Error(result.error.message || `${provider} 解绑失败`)
             }
             await fetchUserAccounts()
-            toast.add({
-                severity: 'success',
-                summary: `已解绑${provider}`,
-                life: 2000,
-            })
+            toast.success({ title: `已解绑${provider}`, duration: 2000 })
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : `${provider} 解绑时发生未知错误`
-            toast.add({
-                severity: 'error',
-                summary: `${provider} 解绑失败`,
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: `${provider} 解绑失败`, description: errorMessage, duration: 5000 })
         }
     }
 
-    function confirmUnlink(provider: string, accountId: string) {
+    async function confirmUnlink(provider: string, accountId: string) {
         const providerName = getProviderName(provider)
-        confirm.require({
-            message: `确定要解绑 ${providerName} 平台，ID 为 ${accountId} 的账号吗？`,
-            header: '确认解绑',
-            icon: 'mdi mdi-alert',
-            rejectClass: 'p-button-secondary p-button-outlined',
-            acceptClass: 'p-button-primary',
-            accept: async () => {
-                await unlinkAccount(provider, accountId)
-            },
+        const confirmed = await confirm.open({
+            title: '确认解绑',
+            description: `确定要解绑 ${providerName} 平台，ID 为 ${accountId} 的账号吗？`,
+            tone: 'danger',
         })
+        if (confirmed) {
+            await unlinkAccount(provider, accountId)
+        }
     }
 
     // Profile Actions
     async function saveProfile() {
         if (!nicknameValidator(user.value.nickname)) {
-            toast.add({ severity: 'warn', summary: '昵称格式有误', detail: '昵称长度需在 2 - 36 个字符之间，仅允许中英文、数字和常见标点符号。', life: 5000 })
+            toast.warning({ title: '昵称格式有误', description: '昵称长度需在 2 - 36 个字符之间，仅允许中英文、数字和常见标点符号。', duration: 5000 })
             return
         }
         saving.value = true
@@ -222,15 +191,10 @@ export async function useProfileFlow() {
             if (result.error) {
                 throw new Error(result.error.message || '资料保存失败')
             }
-            toast.add({ severity: 'success', summary: '资料已保存', life: 2000 })
+            toast.success({ title: '资料已保存', duration: 2000 })
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '资料保存时发生未知错误'
-            toast.add({
-                severity: 'error',
-                summary: '资料保存失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '资料保存失败', description: errorMessage, duration: 5000 })
         } finally {
             saving.value = false
         }
@@ -251,30 +215,22 @@ export async function useProfileFlow() {
     async function performLogout() {
         try {
             await authClient.signOut({})
-            toast.add({ severity: 'success', summary: '登出成功', life: 2000 })
+            toast.success({ title: '登出成功', duration: 2000 })
             navigateTo('/login')
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '登出时发生未知错误'
-            toast.add({
-                severity: 'error',
-                summary: '登出失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '登出失败', description: errorMessage, duration: 5000 })
         }
     }
 
-    function handleLogout() {
-        confirm.require({
-            message: '确定要退出登录吗？退出后需要重新登录才能访问您的账户。',
-            header: '确认退出',
-            icon: 'mdi mdi-logout',
-            rejectClass: 'p-button-secondary p-button-outlined',
-            acceptClass: 'p-button-primary',
-            accept: async () => {
-                await performLogout()
-            },
+    async function handleLogout() {
+        const confirmed = await confirm.open({
+            title: '确认退出',
+            description: '确定要退出登录吗？退出后需要重新登录才能访问您的账户。',
         })
+        if (confirmed) {
+            await performLogout()
+        }
     }
 
     if (import.meta.client) {

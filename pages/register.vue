@@ -10,65 +10,72 @@
                     请填写以下信息完成注册
                 </p>
                 <div class="card form-group">
-                    <ButtonGroup>
-                        <Button
-                            label="邮箱"
-                            icon="mdi mdi-email"
-                            :class="{'p-button-outlined': activeTab !== 'email'}"
+                    <CaomeiButtonGroup group-label="注册方式">
+                        <CaomeiButton
+                            :variant="activeTab === 'email' ? 'primary' : 'secondary'"
+                            :aria-pressed="activeTab === 'email'"
                             @click="changeMode('email')"
-                        />
-                        <Button
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-email" />
+                            </template>
+                            邮箱
+                        </CaomeiButton>
+                        <CaomeiButton
                             v-if="phoneEnabled"
-                            v-tooltip.top="'使用手机号注册'"
-                            label="手机号"
-                            icon="mdi mdi-phone"
-                            :class="{'p-button-outlined': activeTab!== 'phone'}"
+                            :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
+                            :aria-pressed="activeTab === 'phone'"
+                            title="使用手机号注册"
                             @click="changeMode('phone')"
-                        />
-                    </ButtonGroup>
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-phone" />
+                            </template>
+                            手机号
+                        </CaomeiButton>
+                    </CaomeiButtonGroup>
                 </div>
 
                 <!-- 邮箱注册表单 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseInput
-                        id="nickname"
+                    <BaseInputV2
+                        id="emailNickname"
                         v-model="nickname"
-                        v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊控制字符。\n昵称将用于展示'"
                         label="昵称"
                         placeholder="请输入昵称"
                         :error="errors.nickname"
                         required
+                        title="昵称长度为2到36个字符，不能包含特殊控制字符。昵称将用于展示"
                     />
                     <div v-if="usernameEnabled">
-                        <BaseInput
-                            id="username"
+                        <BaseInputV2
+                            id="emailUsername"
                             v-model="username"
-                            v-tooltip.top="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。\n用户名将用于登录'"
                             label="用户名"
                             placeholder="请输入用户名"
                             :error="errors.username"
                             required
+                            title="用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。用户名将用于登录"
                         />
                     </div>
-                    <BaseInput
+                    <BaseInputV2
                         id="email"
                         v-model="email"
-                        v-tooltip.top="'请输入有效的邮箱地址，用于接收验证邮件'"
                         label="邮箱"
                         placeholder="example@mail.com"
                         :error="errors.email"
                         required
+                        title="请输入有效的邮箱地址，用于接收验证邮件"
                     />
-                    <BasePassword
+                    <BasePasswordV2
                         id="password"
                         v-model="password"
-                        v-tooltip.top="getPasswordRequirementsShort()"
                         label="密码"
                         placeholder="请输入密码"
                         :error="errors.password"
                         required
                         :feedback="false"
-                        toggle-mask
+                        :title="getPasswordRequirementsShort()"
                     >
                         <template #append>
                             <PasswordStrength
@@ -78,88 +85,86 @@
                                 :min-length-for-display="1"
                             />
                         </template>
-                    </BasePassword>
-                    <BasePassword
+                    </BasePasswordV2>
+                    <BasePasswordV2
                         id="confirmPassword"
                         v-model="confirmPassword"
-                        v-tooltip.top="'请再次输入相同的密码以确认'"
                         label="确认密码"
                         placeholder="请再次输入密码"
                         :error="errors.confirmPassword"
                         required
                         :feedback="false"
-                        toggle-mask
+                        title="请再次输入相同的密码以确认"
                     />
                 </div>
 
                 <!-- 手机号注册表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <BaseInput
-                        id="nickname"
+                    <BaseInputV2
+                        id="phoneNickname"
                         v-model="nickname"
-                        v-tooltip.top="'昵称长度为2到36个字符，不能包含特殊字符。\n昵称将用于展示'"
                         label="昵称"
                         placeholder="请输入昵称"
                         :error="errors.nickname"
                         required
+                        title="昵称长度为2到36个字符，不能包含特殊字符。昵称将用于展示"
                     />
                     <div v-if="usernameEnabled">
-                        <BaseInput
-                            id="username"
+                        <BaseInputV2
+                            id="phoneUsername"
                             v-model="username"
-                            v-tooltip.top="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。\n用户名将用于登录'"
                             label="用户名"
                             placeholder="请输入用户名"
                             :error="errors.username"
                             required
+                            title="用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。用户名将用于登录"
                         />
                     </div>
-                    <BasePhoneInput
+                    <BasePhoneInputV2
                         id="phone"
                         v-model="phone"
-                        v-tooltip.top="'请输入有效的手机号，用于接收短信验证码'"
                         label="手机号"
                         :error="errors.phone"
                         required
+                        title="请输入有效的手机号，用于接收短信验证码"
                     />
-                    <BaseInput
+                    <BaseInputV2
                         id="phoneCode"
                         v-model="phoneCode"
-                        v-tooltip.top="'请输入发送到您手机的短信验证码'"
                         label="短信验证码"
                         placeholder="请输入短信验证码"
                         :error="errors.phoneCode"
                         required
+                        title="请输入发送到您手机的短信验证码"
                     >
                         <template #append>
-                            <SendCodeButton
-                                v-tooltip.top="'点击获取短信验证码，验证码将发送到您输入的手机号'"
+                            <SendCodeButtonV2
                                 :on-send="sendPhoneCode"
                                 :duration="60"
                                 :disabled="phoneCodeSending || !validatePhone(phone)"
                                 :loading="phoneCodeSending"
                                 text="获取验证码"
                                 resend-text="重新发送"
+                                title="点击获取短信验证码，验证码将发送到您输入的手机号"
                             />
                         </template>
-                    </BaseInput>
+                    </BaseInputV2>
                 </div>
 
                 <!-- 用户协议和隐私政策 -->
                 <div class="agreement-section form-group">
-                    <div v-tooltip.top="'勾选表示您已阅读并同意服务条款和隐私政策'" class="agreement-checkbox">
-                        <Checkbox
-                            v-model="agreedToTerms"
-
-                            input-id="agreement"
-                            binary
-                        />
-                        <label for="agreement" class="checkbox-label">
+                    <CaomeiCheckbox
+                        id="agreement"
+                        v-model="agreedToTerms"
+                        title="勾选表示您已阅读并同意服务条款和隐私政策"
+                    >
+                        <span class="checkbox-label">
                             我已阅读并同意
                             <NuxtLink
                                 to="/terms"
                                 target="_blank"
                                 class="agreement-link"
+                                @click.stop
                             >
                                 《服务条款》
                             </NuxtLink>
@@ -168,36 +173,42 @@
                                 to="/privacy"
                                 target="_blank"
                                 class="agreement-link"
+                                @click.stop
                             >
                                 《隐私政策》
                             </NuxtLink>
-                        </label>
-                    </div>
-                    <Message
+                        </span>
+                    </CaomeiCheckbox>
+                    <CaomeiMessage
                         v-if="errors.agreement"
-                        severity="error"
-                        size="small"
+                        tone="danger"
                         variant="simple"
+                        size="sm"
+                        role="alert"
                     >
                         {{ errors.agreement }}
-                    </Message>
+                    </CaomeiMessage>
                 </div>
 
                 <Captcha ref="captcha" />
-                <Message
+                <CaomeiMessage
                     v-if="errors.captcha"
-                    severity="error"
-                    size="small"
+                    tone="danger"
                     variant="simple"
+                    size="sm"
+                    role="alert"
                 >
                     {{ errors.captcha }}
-                </Message>
+                </CaomeiMessage>
 
-                <Button
+                <CaomeiButton
                     class="btn btn-primary mt-2"
-                    label="注册"
+                    block
+                    :loading="loading"
                     @click="register"
-                />
+                >
+                    注册
+                </CaomeiButton>
                 <div class="toggle-login">
                     已有账号？ <NuxtLink
                         :to="`/login?mode=${activeTab}`"
@@ -212,17 +223,11 @@
 </template>
 
 <script lang="ts" setup>
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import Password from 'primevue/password'
-import Message from 'primevue/message'
-import Checkbox from 'primevue/checkbox'
-import ButtonGroup from 'primevue/buttongroup'
 import { validatePhone } from '@/utils/shared/validate'
-import SendCodeButton from '@/components/send-code-button.vue'
+import { getPasswordRequirementsShort } from '@/utils/shared/password'
+import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
 import AuthLeft from '@/components/auth-left.vue'
 import PasswordStrength from '@/components/password-strength.vue'
-import { getPasswordRequirementsShort } from '@/utils/shared/password'
 import Captcha from '@/components/captcha.vue'
 import { useRegisterFlow } from '@/composables/use-register-flow'
 
@@ -249,7 +254,6 @@ const {
 </script>
 
 <style scoped lang="scss">
-
 .auth-container {
     display: flex;
     flex-direction: column-reverse;
@@ -323,62 +327,10 @@ const {
     margin-bottom: 1.5rem;
 }
 
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.form-input {
-    width: 100%;
-    margin-bottom: 0.25rem;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    background-color: $background-light;
-    border: 1px solid $secondary-bg;
-    border-radius: 8px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-input:focus {
-    border-color: $primary;
-    box-shadow: 0 0 0 3px rgb(230 57 70 / 0.2);
-}
-
-.register-btn {
-    display: flex;
-    width: 100%;
-    margin-bottom: 1em;
-}
-
 .card {
     display: flex;
     justify-content: center;
     width: 100%;
-}
-
-.separator {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    justify-content: center;
-    margin: 2rem 0;
-    color: $secondary-light;
-
-    &::before,
-    &::after {
-        flex: 1;
-        border-bottom: 1px solid $secondary-bg;
-        content: "";
-    }
-
-    &::before {
-        margin-right: 1rem;
-    }
-
-    &::after {
-        margin-left: 1rem;
-    }
 }
 
 .toggle-link {
@@ -414,24 +366,6 @@ const {
     background-color: $primary-dark !important;
 }
 
-.p-password {
-    width: 100%;
-    padding: 0;
-}
-
-.code-row {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.code-btn {
-    min-width: 110px;
-    padding: 0.75rem;
-    font-size: 0.95rem;
-    margin-top: -5px;
-}
-
 .toggle-login {
     margin-top: 1em;
 }
@@ -440,14 +374,7 @@ const {
     margin-bottom: 1.2rem;
 }
 
-.agreement-checkbox {
-    display: flex;
-    gap: 0.5rem;
-    align-items: flex-start;
-}
-
 .checkbox-label {
-    color: $secondary;
     font-size: 0.9rem;
     line-height: 1.5;
     cursor: pointer;

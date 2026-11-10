@@ -258,9 +258,9 @@ const {
 }
 
 .clients-container {
-    background: white;
+    background: var(--admin-surface);
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    box-shadow: var(--admin-shadow);
     padding: 1.5rem;
 }
 
@@ -274,19 +274,19 @@ const {
         .clients-title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #1a202c;
+            color: var(--admin-text);
             margin: 0 0 0.5rem;
         }
 
         .clients-subtitle {
-            color: #718096;
+            color: var(--admin-muted);
             margin: 0 0 0.5rem;
             font-size: 0.875rem;
         }
 
         .text-muted {
             font-size: 0.75rem;
-            color: #a0aec0;
+            color: var(--admin-muted);
             display: block;
             max-width: 600px;
         }
@@ -324,18 +324,31 @@ const {
         }
 
         .p-datatable-thead > tr > th {
-            background: #f8fafc;
-            color: #4a5568;
+            background: var(--admin-surface-muted);
+            color: var(--admin-text);
             font-weight: 600;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--admin-border);
         }
 
         .p-datatable-tbody > tr {
+            background: var(--admin-surface);
+            color: var(--admin-text);
             transition: background-color 0.2s;
 
-            &:hover {
-                background-color: #f8fafc;
+            > td {
+                color: var(--admin-text);
+                border-color: var(--admin-border);
             }
+
+            &:hover {
+                background-color: var(--admin-surface-muted);
+            }
+        }
+
+        .p-paginator {
+            background: var(--admin-surface);
+            color: var(--admin-text);
+            border-color: var(--admin-border);
         }
     }
 }
@@ -347,7 +360,7 @@ const {
 
     .table-title {
         font-weight: 600;
-        color: #4a5568;
+        color: var(--admin-text);
     }
 }
 
@@ -377,11 +390,11 @@ const {
 
         .application-name {
             font-weight: 600;
-            color: #2d3748;
+            color: var(--admin-text);
         }
 
         .application-description {
-            color: #718096;
+            color: var(--admin-muted);
             font-size: 0.75rem;
             max-width: 300px;
             white-space: nowrap;
@@ -393,11 +406,11 @@ const {
 
 .client-id {
     font-family: monospace;
-    background: #edf2f7;
+    background: var(--admin-surface-muted);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     font-size: 0.875rem;
-    color: #4a5568;
+    color: var(--admin-text);
 }
 
 .scope-tags {
@@ -421,12 +434,12 @@ const {
     align-items: center;
     justify-content: center;
     padding: 3rem;
-    color: #718096;
+    color: var(--admin-muted);
     gap: 1rem;
 
     i {
         font-size: 3rem;
-        color: #cbd5e0;
+        color: var(--admin-border);
     }
 
     p {

@@ -9,8 +9,9 @@
 -   [项目路线图 (Roadmap)](./plan/roadmap.md)
 -   [待办事项 (Todo)](./plan/todo.md)
 -   [候选池 (Backlog)](./plan/backlog.md)
--   [重构方案 (Refactor)](./plan/refactor.md)
 -   [已完成工作归档](./archive/completed-work.md)
+-   [重构总结（归档）](./archive/refactor.md)
+-   [Zod 迁移记录（归档）](./archive/zod-migration.md)
 
 ### 2. [项目规范 (Standards)](./standards/)
 

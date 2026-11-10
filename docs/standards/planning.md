@@ -11,7 +11,7 @@
 | Backlog | [backlog.md](../plan/backlog.md) | 已评估候选池、候选阶段组合、未完成项汇总与已决策但尚未登记阶段的过渡态 |
 | 已完成归档 | [completed-work.md](../archive/completed-work.md) | 已完成工作与阶段交付摘要的唯一去处 |
 
-> 不再新增与上述四类职责重叠的规划文件。专项子规划（如 `zod-migration.md`）保留为对应候选的详情载体，由 backlog 引用；`refactor.md` 为历史重构归档，不参与新条目流转，新重构候选统一登记 backlog。
+> 不再新增与上述四类职责重叠的规划文件。已完成 / 已收口的专项子规划（如 [zod-migration.md](../archive/zod-migration.md)）与历史重构总结（[refactor.md](../archive/refactor.md)）统一迁入 `docs/archive/`，由归档或 backlog 引用；新重构候选统一登记 backlog。
 
 ## 2. 流转
 

@@ -81,6 +81,7 @@ import { useToast } from 'primevue/usetoast'
 import { authClient } from '@/lib/auth-client'
 import { createUserFormSchema } from '@/utils/shared/schemas'
 import { useUserTable } from '@/composables/admin/use-user-table'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 
 const props = defineProps<{
     visible: boolean
@@ -92,6 +93,7 @@ const emit = defineEmits<{
 }>()
 
 const toast = useToast()
+const translate = useValidationMessage()
 const { roleOptions } = useUserTable()
 
 const createLoading = ref(false)
@@ -125,7 +127,7 @@ watch(() => props.visible, (newValue) => {
 // Helper function to get first Zod error
 function getFirstZodError(result: { success: boolean, error?: { issues: Array<{ message: string, path: (string | number)[] }> } }): string | null {
     if (result.success) return null
-    return result.error?.issues[0]?.message || '校验失败'
+    return translate(result.error?.issues[0]?.message) || '校验失败'
 }
 
 const createUser = async () => {

@@ -1,12 +1,18 @@
 import { defineEventHandler } from 'h3'
 import { OAuthClient } from '@/server/entities/oauth-client'
 import { dataSource } from '@/server/database'
+import { getServerI18n } from '@/server/utils/i18n'
 import { validateParamsSafe } from '@/server/utils/validation'
 import { idParamSchema } from '@/utils/shared/api-schemas'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 
 export default defineEventHandler(async (event) => {
+    const { t } = await getServerI18n(event)
     try {
-        const paramsResult = await validateParamsSafe(event, idParamSchema)
+        const paramsResult = await validateParamsSafe(event, idParamSchema, {
+            errorMap: createZodErrorMap(t),
+            translate: t,
+        })
 
         if (!paramsResult.success) {
             return paramsResult.error
@@ -24,7 +30,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 404,
                 success: false,
-                message: '应用不存在或已被禁用',
+                message: t('errors.oauth.clientNotFound'),
                 data: null,
             }
         }
@@ -53,7 +59,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 500,
             success: false,
-            message: error instanceof Error ? error.message : '获取应用信息失败',
+            message: error instanceof Error ? error.message : t('errors.oauth.clientFetchFailed'),
             data: null,
         }
     }

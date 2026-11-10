@@ -321,9 +321,9 @@ const {
 }
 
 .users-container {
-    background: white;
+    background: var(--admin-surface);
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    box-shadow: var(--admin-shadow);
     padding: 1.5rem;
 }
 
@@ -337,12 +337,12 @@ const {
         .users-title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #1a202c;
+            color: var(--admin-text);
             margin: 0 0 0.5rem;
         }
 
         .users-subtitle {
-            color: #718096;
+            color: var(--admin-muted);
             margin: 0;
             font-size: 0.875rem;
         }
@@ -381,18 +381,31 @@ const {
         }
 
         .p-datatable-thead > tr > th {
-            background: #f8fafc;
-            color: #4a5568;
+            background: var(--admin-surface-muted);
+            color: var(--admin-text);
             font-weight: 600;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--admin-border);
         }
 
         .p-datatable-tbody > tr {
+            background: var(--admin-surface);
+            color: var(--admin-text);
             transition: background-color 0.2s;
 
-            &:hover {
-                background-color: #f8fafc;
+            > td {
+                color: var(--admin-text);
+                border-color: var(--admin-border);
             }
+
+            &:hover {
+                background-color: var(--admin-surface-muted);
+            }
+        }
+
+        .p-paginator {
+            background: var(--admin-surface);
+            color: var(--admin-text);
+            border-color: var(--admin-border);
         }
     }
 }
@@ -404,14 +417,14 @@ const {
 
     .table-title {
         font-weight: 600;
-        color: #4a5568;
+        color: var(--admin-text);
         display: flex;
         align-items: center;
         gap: 0.5rem;
 
         .sort-info {
             font-weight: normal;
-            color: #718096;
+            color: var(--admin-muted);
             font-size: 0.875rem;
         }
     }
@@ -436,12 +449,12 @@ const {
 
         .user-name {
             font-weight: 500;
-            color: #2d3748;
+            color: var(--admin-text);
             font-size: 0.875rem;
         }
 
         .user-email {
-            color: #718096;
+            color: var(--admin-muted);
             font-size: 0.75rem;
         }
     }
@@ -459,12 +472,12 @@ const {
     align-items: center;
     justify-content: center;
     padding: 3rem;
-    color: #718096;
+    color: var(--admin-muted);
     gap: 1rem;
 
     i {
         font-size: 3rem;
-        color: #cbd5e0;
+        color: var(--admin-border);
     }
 
     p {

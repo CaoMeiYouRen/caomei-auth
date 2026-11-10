@@ -8,8 +8,8 @@ import { resolveCaptchaToken } from '@/utils/web/captcha'
 import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
 
 // Mock Nuxt composables
-const { config, useToastMock, useFetchMock, useNuxtAppMock, toastAddMock } = vi.hoisted(() => {
-    const addMock = vi.fn()
+const { config, useToastMock, useFetchMock, useNuxtAppMock, toastMocks } = vi.hoisted(() => {
+    const hoistedToastMocks = { show: vi.fn(), success: vi.fn(), danger: vi.fn(), warning: vi.fn(), info: vi.fn() }
     return {
         config: {
             public: {
@@ -17,10 +17,8 @@ const { config, useToastMock, useFetchMock, useNuxtAppMock, toastAddMock } = vi.
                 usernameEnabled: true,
             },
         },
-        toastAddMock: addMock,
-        useToastMock: vi.fn(() => ({
-            add: addMock,
-        })),
+        toastMocks: hoistedToastMocks,
+        useToastMock: vi.fn(() => hoistedToastMocks),
         useFetchMock: vi.fn(() => ({
             data: ref({ providers: [] }),
         })),
@@ -41,7 +39,7 @@ vi.mock('#app/nuxt', async (importOriginal) => {
 
 mockNuxtImport('useFetch', () => useFetchMock)
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: useToastMock,
 }))
 
@@ -104,6 +102,19 @@ describe('useLoginFlow', () => {
         expect(activeTab.value).toBe('phone')
     })
 
+    it('resets captcha only when a token exists', () => {
+        const { captcha, changeMode } = useLoginFlow()
+        const reset = vi.fn()
+
+        captcha.value = { token: '', reset, loading: false } as never
+        changeMode('email')
+        expect(reset).not.toHaveBeenCalled()
+
+        captcha.value = { token: ref('captcha-token'), reset, loading: false } as never
+        changeMode('phone')
+        expect(reset).toHaveBeenCalledOnce()
+    })
+
     it('validates disabled modes', () => {
         config.public.phoneEnabled = false
         config.public.usernameEnabled = false
@@ -112,7 +123,7 @@ describe('useLoginFlow', () => {
 
         changeMode('phone')
         expect(activeTab.value).toBe('username') // Should not change
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error' }))
+        expect(toastMocks.danger).toHaveBeenCalled()
 
         // Reset config
         config.public.phoneEnabled = true
@@ -231,9 +242,8 @@ describe('useLoginFlow', () => {
 
         await login()
 
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'error',
-            detail: 'Invalid credentials',
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({
+            description: 'Invalid credentials',
         }))
     })
 
@@ -297,7 +307,7 @@ describe('useLoginFlow', () => {
         const { sendOtp } = useLoginFlow()
 
         expect(await sendOtp()).toBe(false)
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error', detail: '发送失败' }))
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '发送失败' }))
     })
 
     it('requires a 2FA code before verifying', async () => {
@@ -353,7 +363,7 @@ describe('useLoginFlow', () => {
 
         await loginWithSocial({ provider: 'github', name: 'GitHub', enabled: false } as any)
 
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'warn', detail: expect.stringContaining('GitHub') }))
+        expect(toastMocks.warning).toHaveBeenCalledWith(expect.objectContaining({ description: expect.stringContaining('GitHub') }))
     })
 
     it('delegates anonymous provider to anonymous login', async () => {
@@ -373,7 +383,7 @@ describe('useLoginFlow', () => {
         const { loginWithSocial } = useLoginFlow()
         await loginWithSocial({ provider: 'github', name: 'GitHub', enabled: true } as any)
 
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error', detail: 'OAuth 失败' }))
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({ description: 'OAuth 失败' }))
     })
 
     it('validates email before sending the login code', async () => {

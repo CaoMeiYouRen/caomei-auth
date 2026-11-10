@@ -9,32 +9,38 @@
 
         <!-- 未启用状态 -->
         <div v-if="!userSession?.user.twoFactorEnabled && !showTotpSetup && !showBackupCodes">
-            <Message severity="warn" icon="mdi mdi-shield-alert">
+            <CaomeiMessage tone="warning">
                 <span>建议启用双因素认证以提高账号安全性</span>
-            </Message>
+            </CaomeiMessage>
             <div class="security-actions">
-                <Button
+                <CaomeiButton
                     class="btn btn-primary"
-                    label="启用双因素认证"
-                    icon="mdi mdi-shield-check-outline"
                     @click="$emit('enable')"
-                />
+                >
+                    <template #icon>
+                        <i class="mdi mdi-shield-check-outline" />
+                    </template>
+                    启用双因素认证
+                </CaomeiButton>
             </div>
         </div>
 
         <!-- 已启用状态 -->
         <div v-if="userSession?.user.twoFactorEnabled && !showTotpSetup && !showBackupCodes">
-            <Message severity="success" icon="mdi mdi-shield-check">
+            <CaomeiMessage tone="success">
                 <span>已启用双因素认证，您的账号受到更好的保护</span>
-            </Message>
+            </CaomeiMessage>
             <div class="security-actions">
-                <Button
+                <CaomeiButton
                     class="btn btn-danger"
-                    label="禁用双因素认证"
-                    icon="mdi mdi-shield-off-outline"
-                    severity="danger"
+                    tone="danger"
                     @click="$emit('disable')"
-                />
+                >
+                    <template #icon>
+                        <i class="mdi mdi-shield-off-outline" />
+                    </template>
+                    禁用双因素认证
+                </CaomeiButton>
             </div>
         </div>
 
@@ -54,24 +60,22 @@
             </div>
 
             <div class="mb-4 verification-input">
-                <span class="p-float-label">
-                    <InputText
-                        id="verification-code"
-                        :model-value="verificationCode"
-                        class="w-full"
-                        maxlength="6"
-                        @update:model-value="(val) => $emit('update:verificationCode', val as string)"
-                    />
-                    <label for="verification-code">输入 6 位验证码</label>
-                </span>
+                <BaseInputV2
+                    id="verification-code"
+                    :model-value="verificationCode"
+                    label="输入 6 位验证码"
+                    maxlength="6"
+                    @update:model-value="(val) => $emit('update:verificationCode', val)"
+                />
             </div>
 
             <div class="security-actions">
-                <Button
-                    label="验证并继续"
-                    icon="mdi mdi-check"
-                    @click="$emit('verify')"
-                />
+                <CaomeiButton @click="$emit('verify')">
+                    <template #icon>
+                        <i class="mdi mdi-check" />
+                    </template>
+                    验证并继续
+                </CaomeiButton>
             </div>
         </div>
 
@@ -80,9 +84,9 @@
             <h4 class="backup-title mb-3">
                 备份恢复码
             </h4>
-            <Message severity="info" icon="mdi mdi-information">
+            <CaomeiMessage tone="primary">
                 <span>请妥善保管以下恢复码，当您无法访问验证器时，可使用这些恢复码登录。每个恢复码只能使用一次。</span>
-            </Message>
+            </CaomeiMessage>
 
             <div class="backup-codes-list mb-4">
                 <div
@@ -95,71 +99,70 @@
             </div>
 
             <div class="security-actions">
-                <Button
-                    label="复制恢复码"
-                    icon="mdi mdi-content-copy"
+                <CaomeiButton
+                    variant="secondary"
                     class="mr-2"
                     @click="$emit('copyBackupCodes')"
-                />
-                <Button
-                    label="下载恢复码"
-                    icon="mdi mdi-download"
+                >
+                    <template #icon>
+                        <i class="mdi mdi-content-copy" />
+                    </template>
+                    复制恢复码
+                </CaomeiButton>
+                <CaomeiButton
+                    variant="secondary"
                     class="mr-2"
                     @click="$emit('downloadBackupCodes')"
-                />
-                <Button
-                    label="完成设置"
-                    icon="mdi mdi-check"
-                    @click="$emit('finishSetup')"
-                />
+                >
+                    <template #icon>
+                        <i class="mdi mdi-download" />
+                    </template>
+                    下载恢复码
+                </CaomeiButton>
+                <CaomeiButton @click="$emit('finishSetup')">
+                    <template #icon>
+                        <i class="mdi mdi-check" />
+                    </template>
+                    完成设置
+                </CaomeiButton>
             </div>
         </div>
 
         <!-- 双因素认证密码确认对话框 -->
-        <Dialog
+        <BaseDialogV2
             :visible="showPasswordDialog"
-            modal
-            :header="passwordDialogMode === 'enable' ? '启用双因素认证' : '禁用双因素认证'"
-            :closable="true"
-            :style="{width: '450px'}"
+            :title="passwordDialogMode === 'enable' ? '启用双因素认证' : '禁用双因素认证'"
             @update:visible="$emit('update:showPasswordDialog', $event)"
             @hide="$emit('passwordDialogHide')"
         >
-            <div class="p-fluid">
-                <p class="mb-3">
-                    {{ passwordDialogMode === 'enable'
-                        ? '为了确保是您本人操作，请输入密码以启用双因素认证'
-                        : '为了确保是您本人操作，请输入密码以禁用双因素认证' }}
-                </p>
-                <div class="field">
-                    <Password
-                        :model-value="password"
-                        :feedback="false"
-                        :toggle-mask="true"
-                        placeholder="请输入密码"
-                        @update:model-value="$emit('update:password', $event)"
-                    />
-                </div>
-            </div>
+            <p class="mb-3">
+                {{ passwordDialogMode === 'enable'
+                    ? '为了确保是您本人操作，请输入密码以启用双因素认证'
+                    : '为了确保是您本人操作，请输入密码以禁用双因素认证' }}
+            </p>
+            <BasePasswordV2
+                id="security-password"
+                :model-value="password"
+                placeholder="请输入密码"
+                :feedback="false"
+                @update:model-value="$emit('update:password', $event)"
+            />
             <template #footer>
-                <Button
-                    label="取消"
-                    severity="secondary"
+                <CaomeiButton
+                    variant="secondary"
                     @click="$emit('update:showPasswordDialog', false)"
-                />
-                <Button label="确认" @click="$emit('passwordConfirm')" />
+                >
+                    取消
+                </CaomeiButton>
+                <CaomeiButton @click="$emit('passwordConfirm')">
+                    确认
+                </CaomeiButton>
             </template>
-        </Dialog>
+        </BaseDialogV2>
     </div>
 </template>
 
 <script setup lang="ts">
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import Message from 'primevue/message'
-import Dialog from 'primevue/dialog'
-import Password from 'primevue/password'
-
 defineProps<{
     userSession: any
     showTotpSetup: boolean

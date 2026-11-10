@@ -1,5 +1,6 @@
 import { ref, computed, type Ref } from 'vue'
 import { type ZodSchema } from 'zod'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 
 export type ValidatorFn<T> = (values: T) => Promise<Record<string, string> | null> | Record<string, string> | null
 
@@ -14,6 +15,7 @@ export interface UseFormOptions<T> {
 
 export function useForm<T extends Record<string, any> = Record<string, any>>(options: UseFormOptions<T>) {
     const { initialValues, validate, zodSchema, validateOnChange = false, errorMap } = options
+    const translate = useValidationMessage()
 
     const values = ref({ ...initialValues }) as Ref<T>
     const errors: Ref<Record<string, string>> = ref({})
@@ -29,9 +31,9 @@ export function useForm<T extends Record<string, any> = Record<string, any>>(opt
                 result.error.issues.forEach((err) => {
                     const path = err.path.join('.')
                     if (path) {
-                        zodErrors[path] = err.message
+                        zodErrors[path] = translate(err.message)
                     } else {
-                        zodErrors._form = err.message
+                        zodErrors._form = translate(err.message)
                     }
                 })
                 errors.value = zodErrors

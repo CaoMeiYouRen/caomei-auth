@@ -1,0 +1,29 @@
+{
+    "errors": {
+        "auth": {
+            "loginRequired": "请先登录",
+            "unauthorized": "未登录用户",
+            "forbidden": "无权限访问",
+            "demoAdminRequired": "Demo 模式：无管理员权限",
+            "rateLimited": "请求过于频繁，请稍后再试",
+            "oauthRegisterAdminOnly": "仅管理员可以访问注册应用接口",
+            "oauthManageAdminOnly": "仅管理员可以管理 OAuth 应用",
+            "ssoManageAdminOnly": "仅管理员可以访问 SSO 提供商管理接口"
+        },
+        "oauth": {
+            "consentsFetchFailed": "获取授权应用列表失败",
+            "revokeSucceeded": "成功撤销授权",
+            "consentNotFound": "未找到对该应用的授权记录",
+            "revokeFailed": "撤销授权失败",
+            "validationFailed": "参数验证失败",
+            "clientNotFound": "应用不存在或已被禁用",
+            "clientFetchFailed": "获取应用信息失败"
+        },
+        "sso": {
+            "methodNotAllowed": "方法不允许"
+        },
+        "server": {
+            "internal": "服务器内部错误"
+        }
+    }
+}

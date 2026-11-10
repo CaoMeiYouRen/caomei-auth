@@ -1,6 +1,6 @@
 import { ref, onMounted, computed } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { emailSchema, phoneSchema } from '@/utils/shared/validators'
 import {
@@ -9,16 +9,20 @@ import {
     resetPasswordFormSchema,
 } from '@/utils/shared/schemas'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import type { CaptchaExpose } from '@/utils/web/captcha'
 
 // Helper function to get first Zod error
-function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }): string | null {
+function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
     if (result.success) { return null }
-    return result.error?.issues[0]?.message || '校验失败'
+    const message = result.error?.issues[0]?.message
+    return translate ? translate(message) : resolveValidationMessage(message) || '校验失败'
 }
 
 export function useForgotPasswordFlow() {
     const config = useRuntimeConfig().public
+    const translate = useValidationMessage()
     const phoneEnabled = config.phoneEnabled
 
     const email = ref('')
@@ -66,7 +70,7 @@ export function useForgotPasswordFlow() {
             () => {
                 const res = emailSchema.safeParse(email.value)
                 if (!res.success) {
-                    errors.value.email = res.error.issues[0]?.message || '请输入有效的邮箱地址'
+                    errors.value.email = translate(res.error.issues[0]?.message) || '请输入有效的邮箱地址'
                     return false
                 }
                 return true
@@ -85,7 +89,7 @@ export function useForgotPasswordFlow() {
             () => {
                 const res = phoneSchema.safeParse(phone.value)
                 if (!res.success) {
-                    errors.value.phone = res.error.issues[0]?.message || '请输入有效的手机号'
+                    errors.value.phone = translate(res.error.issues[0]?.message) || '请输入有效的手机号'
                     return false
                 }
                 return true
@@ -112,7 +116,7 @@ export function useForgotPasswordFlow() {
                 code: emailCode.value,
             })
             if (!result.success) {
-                const errorMsg = getFirstZodError(result)
+                const errorMsg = getFirstZodError(result, translate)
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -125,7 +129,7 @@ export function useForgotPasswordFlow() {
                 code: phoneCode.value,
             })
             if (!result.success) {
-                const errorMsg = getFirstZodError(result)
+                const errorMsg = getFirstZodError(result, translate)
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -140,7 +144,7 @@ export function useForgotPasswordFlow() {
             confirmPassword: confirmPassword.value,
         })
         if (!passwordResult.success) {
-            const errorMsg = getFirstZodError(passwordResult)
+            const errorMsg = getFirstZodError(passwordResult, translate)
             if (errorMsg) {
                 const path = passwordResult.error.issues[0]?.path[0] as string
                 errors.value[path] = errorMsg
@@ -168,18 +172,13 @@ export function useForgotPasswordFlow() {
                     throw new Error('密码重置失败')
                 }
             }
-            toast.add({ severity: 'success', summary: '密码重置成功', detail: '请使用新密码登录', life: 2500 })
+            toast.success({ title: '密码重置成功', description: '请使用新密码登录', duration: 2500 })
             setTimeout(() => {
                 navigateTo(`/login?mode=${activeTab.value}`)
             }, 1500)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '密码重置失败'
-            toast.add({
-                severity: 'error',
-                summary: '重置失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '重置失败', description: errorMessage, duration: 5000 })
         }
     }
 

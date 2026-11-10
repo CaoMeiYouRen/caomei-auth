@@ -11,80 +11,66 @@
                 </p>
                 <p class="info-note">
                     注意：通过第三方登录、邮箱验证码、短信验证码等方式注册，导致未设置初始密码的用户，请通过<NuxtLink
-                        v-tooltip.top="'点击前往忘记密码页面'"
-                        :to="`/forget-password`"
+                        title="点击前往忘记密码页面"
+                        :to="`/forgot-password`"
                         class="toggle-link"
                     >
                         「忘记密码」
                     </NuxtLink>页面重置初始密码。
                 </p>
+                <BasePasswordV2
+                    id="currentPassword"
+                    v-model="currentPassword"
+                    label="当前密码"
+                    placeholder="请输入当前密码"
+                    :feedback="false"
+                    :error="errors.currentPassword"
+                    title="请输入您当前正在使用的登录密码"
+                />
+                <BasePasswordV2
+                    id="newPassword"
+                    v-model="newPassword"
+                    label="新密码"
+                    placeholder="请输入新密码"
+                    :feedback="false"
+                    :error="errors.newPassword"
+                    :title="getPasswordRequirementsShort()"
+                >
+                    <template #append>
+                        <PasswordStrength
+                            :show-strength="!!newPassword"
+                            :password="newPassword"
+                            :show-score="false"
+                            :min-length-for-display="1"
+                        />
+                    </template>
+                </BasePasswordV2>
+                <BasePasswordV2
+                    id="confirmPassword"
+                    v-model="confirmPassword"
+                    label="确认新密码"
+                    placeholder="请再次输入新密码"
+                    :feedback="false"
+                    :error="errors.confirmPassword"
+                    title="请再次输入相同的新密码以确认"
+                />
                 <div class="form-group">
-                    <label class="form-label" for="currentPassword">当前密码</label>
-                    <Password
-                        id="currentPassword"
-                        v-model="currentPassword"
-                        v-tooltip.top="'请输入您当前正在使用的登录密码'"
-                        class="form-input password-input"
-                        placeholder="请输入当前密码"
-                        :feedback="false"
-                        toggle-mask
-                    />
-                    <div v-if="errors.currentPassword" class="error-message">
-                        {{ errors.currentPassword }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="newPassword">新密码</label>
-                    <Password
-                        id="newPassword"
-                        v-model="newPassword"
-                        v-tooltip.top="getPasswordRequirementsShort()"
-                        class="form-input password-input"
-                        placeholder="请输入新密码"
-                        :feedback="false"
-                        toggle-mask
-                    />
-                    <PasswordStrength
-                        :show-strength="!!newPassword"
-                        :password="newPassword"
-                        :show-score="false"
-                        :min-length-for-display="1"
-                    />
-                    <div v-if="errors.newPassword" class="error-message">
-                        {{ errors.newPassword }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="confirmPassword">确认新密码</label>
-                    <Password
-                        id="confirmPassword"
-                        v-model="confirmPassword"
-                        v-tooltip.top="'请再次输入相同的新密码以确认'"
-                        class="form-input password-input"
-                        placeholder="请再次输入新密码"
-                        :feedback="false"
-                        toggle-mask
-                    />
-                    <div v-if="errors.confirmPassword" class="error-message">
-                        {{ errors.confirmPassword }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <Checkbox
+                    <CaomeiCheckbox
+                        id="revokeSessions"
                         v-model="revokeOtherSessions"
-                        v-tooltip.top="'勾选后，系统将撤销您在其他设备上的所有登录会话'"
-                        input-id="revokeSessions"
-                        binary
+                        text="撤销用户登录的所有其他会话"
+                        title="勾选后，系统将撤销您在其他设备上的所有登录会话"
                     />
-                    <label class="checkbox-label" for="revokeSessions">撤销用户登录的所有其他会话</label>
                 </div>
                 <div class="form-group">
-                    <Button
-                        v-tooltip.top="'点击提交修改密码请求'"
+                    <CaomeiButton
                         class="btn btn-primary mt-2"
-                        label="修改密码"
+                        block
+                        title="点击提交修改密码请求"
                         @click="changePassword"
-                    />
+                    >
+                        修改密码
+                    </CaomeiButton>
                 </div>
                 <div class="toggle-login">
                     <NuxtLink
@@ -201,33 +187,6 @@ const {
     margin-bottom: 1.5rem;
 }
 
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.checkbox-label {
-    position: relative;
-    top: -3px;
-    left: 8px;
-}
-
-.form-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    background-color: $background-light;
-    border: 1px solid $secondary-bg;
-    border-radius: 8px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-input:focus {
-    border-color: $primary;
-    box-shadow: 0 0 0 3px rgb(230 57 70 / 0.2);
-}
-
 .btn {
     width: 100%;
     padding: 0.75rem 0;
@@ -264,20 +223,6 @@ const {
 
     &:hover {
         text-decoration: underline;
-    }
-}
-
-.p-password {
-    width: 100%;
-    padding: 0;
-}
-</style>
-
-<style lang="scss">
-.password-input {
-    .p-password-input {
-        width: 100%;
-        border: none;
     }
 }
 </style>

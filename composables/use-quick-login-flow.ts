@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { emailSchema, phoneSchema } from '@/utils/shared/validators'
 import {
@@ -8,18 +8,22 @@ import {
     quickLoginPhoneFormSchema,
 } from '@/utils/shared/schemas'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
 import type { CaptchaExpose } from '@/utils/web/captcha'
 
 // Helper function to get first Zod error
-function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }): string | null {
+function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
     if (result.success) { return null }
-    return result.error?.issues[0]?.message || '校验失败'
+    const message = result.error?.issues[0]?.message
+    return translate ? translate(message) : resolveValidationMessage(message) || '校验失败'
 }
 
 export function useQuickLoginFlow() {
     // 配置
     const config = useRuntimeConfig().public
+    const translate = useValidationMessage()
     const phoneEnabled = config.phoneEnabled
 
     // 响应式数据
@@ -56,7 +60,7 @@ export function useQuickLoginFlow() {
         () => {
             const result = emailSchema.safeParse(email.value)
             if (!result.success) {
-                errors.value.email = getFirstZodError(result) || '请输入有效的邮箱地址'
+                errors.value.email = getFirstZodError(result, translate) || '请输入有效的邮箱地址'
                 return false
             }
             return true
@@ -75,7 +79,7 @@ export function useQuickLoginFlow() {
         () => {
             const result = phoneSchema.safeParse(phone.value)
             if (!result.success) {
-                errors.value.phone = getFirstZodError(result) || '请输入有效的手机号'
+                errors.value.phone = getFirstZodError(result, translate) || '请输入有效的手机号'
                 return false
             }
             return true
@@ -94,12 +98,7 @@ export function useQuickLoginFlow() {
     const changeTab = (tab: 'email' | 'phone') => {
         // 如果短信功能未启用且尝试切换到手机登录，提示错误并阻止切换
         if (tab === 'phone' && !phoneEnabled) {
-            toast.add({
-                severity: 'error',
-                summary: '功能未启用',
-                detail: '短信功能未启用，请使用邮箱验证码登录',
-                life: 3000,
-            })
+            toast.danger({ title: '功能未启用', description: '短信功能未启用，请使用邮箱验证码登录', duration: 3000 })
             return
         }
 
@@ -116,26 +115,16 @@ export function useQuickLoginFlow() {
 
         const result = emailSchema.safeParse(email.value)
         if (!result.success) {
-            const message = getFirstZodError(result) || '请输入有效的邮箱地址'
+            const message = getFirstZodError(result, translate) || '请输入有效的邮箱地址'
             errors.value.email = message
-            toast.add({
-                severity: 'error',
-                summary: '发送失败',
-                detail: message,
-                life: 5000,
-            })
+            toast.danger({ title: '发送失败', description: message, duration: 5000 })
             return false
         }
 
         const success = await sendEmailCode()
 
         if (success) {
-            toast.add({
-                severity: 'success',
-                summary: '验证码已发送',
-                detail: '验证码已发送到您的邮箱，请注意查收',
-                life: 3000,
-            })
+            toast.success({ title: '验证码已发送', description: '验证码已发送到您的邮箱，请注意查收', duration: 3000 })
             return true
         }
 
@@ -150,26 +139,16 @@ export function useQuickLoginFlow() {
 
         const result = phoneSchema.safeParse(phone.value)
         if (!result.success) {
-            const message = getFirstZodError(result) || '请输入有效的手机号'
+            const message = getFirstZodError(result, translate) || '请输入有效的手机号'
             errors.value.phone = message
-            toast.add({
-                severity: 'error',
-                summary: '发送失败',
-                detail: message,
-                life: 5000,
-            })
+            toast.danger({ title: '发送失败', description: message, duration: 5000 })
             return false
         }
 
         const success = await sendPhoneCode()
 
         if (success) {
-            toast.add({
-                severity: 'success',
-                summary: '验证码已发送',
-                detail: '验证码已发送到您的手机，请注意查收',
-                life: 3000,
-            })
+            toast.success({ title: '验证码已发送', description: '验证码已发送到您的手机，请注意查收', duration: 3000 })
             return true
         }
 
@@ -188,7 +167,7 @@ export function useQuickLoginFlow() {
             code: emailCode.value,
         })
         if (!result.success) {
-            const errorMsg = getFirstZodError(result)
+            const errorMsg = getFirstZodError(result, translate)
             if (errorMsg) {
                 const path = result.error.issues[0]?.path[0] as string
                 errors.value[path] = errorMsg
@@ -207,23 +186,13 @@ export function useQuickLoginFlow() {
                 throw new Error(error.message || '登录失败')
             }
 
-            toast.add({
-                severity: 'success',
-                summary: '登录成功',
-                detail: '欢迎回来！',
-                life: 2000,
-            })
+            toast.success({ title: '登录成功', description: '欢迎回来！', duration: 2000 })
 
             navigateAfterLoginWithDelay()
         } catch (error: any) {
             const message = error.message || '登录失败，请检查验证码是否正确'
             errors.value.emailCode = message
-            toast.add({
-                severity: 'error',
-                summary: '登录失败',
-                detail: message,
-                life: 5000,
-            })
+            toast.danger({ title: '登录失败', description: message, duration: 5000 })
         } finally {
             isEmailLoggingIn.value = false
         }
@@ -238,7 +207,7 @@ export function useQuickLoginFlow() {
             code: phoneCode.value,
         })
         if (!result.success) {
-            const errorMsg = getFirstZodError(result)
+            const errorMsg = getFirstZodError(result, translate)
             if (errorMsg) {
                 const path = result.error.issues[0]?.path[0] as string
                 errors.value[path] = errorMsg
@@ -256,35 +225,32 @@ export function useQuickLoginFlow() {
                 throw new Error(error.message || '登录失败')
             }
 
-            toast.add({
-                severity: 'success',
-                summary: '登录成功',
-                detail: '欢迎回来！',
-                life: 2000,
-            })
+            toast.success({ title: '登录成功', description: '欢迎回来！', duration: 2000 })
 
             navigateAfterLoginWithDelay()
         } catch (error: any) {
             const message = error.message || '登录失败，请检查验证码是否正确'
             errors.value.phoneCode = message
-            toast.add({
-                severity: 'error',
-                summary: '登录失败',
-                detail: message,
-                life: 5000,
-            })
+            toast.danger({ title: '登录失败', description: message, duration: 5000 })
         } finally {
             isPhoneLoggingIn.value = false
         }
     }
 
     const handleEmailCodeInput = () => {
+        // 表单组件换为 CaomeiInput 后，maxlength 落在外层容器上不再生效，这里补齐 6 位上限
+        if (emailCode.value.length > 6) {
+            emailCode.value = emailCode.value.slice(0, 6)
+        }
         if (errors.value.emailCode) {
             errors.value.emailCode = ''
         }
     }
 
     const handlePhoneCodeInput = () => {
+        if (phoneCode.value.length > 6) {
+            phoneCode.value = phoneCode.value.slice(0, 6)
+        }
         if (errors.value.phoneCode) {
             errors.value.phoneCode = ''
         }

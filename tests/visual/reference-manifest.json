@@ -1,0 +1,704 @@
+{
+    "capturedAt": "2026-11-10",
+    "batches": [
+        {
+            "batch": "P2/P3 认证页（login、register）",
+            "branch": "test/visual-baseline",
+            "commit": "fc2201e",
+            "note": "feat(login) 迁移提交 228116c 的父提交"
+        },
+        {
+            "batch": "M3-2（forgot-password、change-password）",
+            "branch": "test/visual-baseline-m3-2",
+            "commit": "bfb5ce3"
+        },
+        {
+            "batch": "M3-3（quick-login）",
+            "branch": "test/visual-baseline-m3-3",
+            "commit": "3f8fdc3"
+        },
+        {
+            "batch": "M4-1（profile）",
+            "branch": "test/visual-baseline-m4-1",
+            "commit": "4d94931",
+            "note": "ID 字段加 data-visual-mask：用户 ID 每次运行随机"
+        },
+        {
+            "batch": "M4-2（security）",
+            "branch": "test/visual-baseline-m4-2",
+            "commit": "e4428b9",
+            "note": "会话表 token / IP / 时间列加 data-visual-mask；会话类页面按用例建独立账号，避免会话行数累积"
+        },
+        {
+            "batch": "M4-3（oauth-consent）",
+            "branch": "test/visual-baseline-m4-3",
+            "commit": "ca6661d",
+            "note": "visual DB 预置固定 OAuth 客户端 visual-client；页面就绪选择器/文案按路由可配"
+        },
+        {
+            "batch": "M4-4（sso-login）",
+            "branch": "test/visual-baseline-m4-4",
+            "commit": "ba07d26",
+            "note": "/sso-login 加入 publicPaths（页面声明 auth:false，但全局守卫只认白名单）"
+        },
+        {
+            "batch": "P4-0（Admin 用户 / 应用 / SSO / 日志、我的应用、首页、错误页）",
+            "branch": "test/p4-visual-reference",
+            "commit": "a6c8d3b",
+            "note": "页面代码基线 a6c8d3b（采集仅额外加载测试夹具与固定时钟）；固定时钟 + 确定性夹具（12 用户 / 3 应用 / 2 SSO / 25 会话）；管理员会话用固定 token 签名 cookie 注入，避免 /sign-in 限流与会话行累积；错误页未接入主题插件，只采浅色。"
+        }
+    ],
+    "purpose": "组件迁移前的 PrimeVue 渲染原貌（参考态）。迁移批次用当前渲染与之比对，差异必须逐项归因。",
+    "tool": {
+        "playwright": "1.64.1",
+        "browser": "chromium 156.0.8078.4 (revision 1248)",
+        "node": "v26.13.0（Playwright v1.64.1-noble 容器）",
+        "platform": "linux x64 (Playwright 容器)"
+    },
+    "environment": {
+        "baseURL": "http://127.0.0.1:3100",
+        "deviceScaleFactor": 1,
+        "locale": "zh-CN",
+        "timezoneId": "Asia/Shanghai",
+        "reducedMotion": "reduce",
+        "animations": "disabled",
+        "caret": "hide",
+        "threshold": 0.2,
+        "maxDiffPixels": 200,
+        "themeInjection": "localStorage vueuse-color-scheme (light|dark)",
+        "fixedClock": "2026-06-15T12:00:00+08:00（服务端 Nitro 插件 + 客户端 page.clock）"
+    },
+    "fixtures": {
+        "database": "按 database/sqlite/create.sql 建表后写入确定性夹具（scripts/testing/visual-fixtures.mjs）；时间以 VISUAL_FIXED_NOW 为锚点，不再使用 datetime('now')",
+        "usernameLogin": true,
+        "phoneLogin": true,
+        "captchaProvider": null,
+        "demoMode": false,
+        "socialProviders": [
+            "github",
+            "google",
+            "wechat"
+        ],
+        "authenticatedUser": "visual-baseline@example.com（登录后页面首次注册、后续登录；不写入截图）",
+        "adminSession": "预置 session 行 visual-admin-session-token；测试侧用 AUTH_SECRET 做 HMAC-SHA256 签名写 cookie，不新增会话行",
+        "adminData": "12 用户（含 1 管理员 / 1 禁用）、3 OAuth 应用、2 SSO 提供商（OIDC + SAML）、25 条会话日志"
+    },
+    "snapshots": [
+        {
+            "name": "login-light-desktop-default",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "login-dark-desktop-default",
+            "route": "/login",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "login-light-mobile-default",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "login-dark-mobile-default",
+            "route": "/login",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "login-light-desktop-error",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "login-light-desktop-tab-username",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "用户名 Tab"
+        },
+        {
+            "name": "login-light-desktop-tab-email",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "邮箱 Tab"
+        },
+        {
+            "name": "login-light-desktop-tab-phone",
+            "route": "/login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "手机号 Tab"
+        },
+        {
+            "name": "register-light-desktop-default",
+            "route": "/register",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "register-dark-desktop-default",
+            "route": "/register",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "register-light-mobile-default",
+            "route": "/register",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "register-dark-mobile-default",
+            "route": "/register",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "register-light-desktop-error",
+            "route": "/register",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "register-light-desktop-tab-phone",
+            "route": "/register",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "手机号 Tab"
+        },
+        {
+            "name": "forgot-password-light-desktop-default",
+            "route": "/forgot-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "forgot-password-dark-desktop-default",
+            "route": "/forgot-password",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "forgot-password-light-mobile-default",
+            "route": "/forgot-password",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "forgot-password-dark-mobile-default",
+            "route": "/forgot-password",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "forgot-password-light-desktop-error",
+            "route": "/forgot-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "forgot-password-light-desktop-tab-phone",
+            "route": "/forgot-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "手机号 Tab"
+        },
+        {
+            "name": "change-password-light-desktop-default",
+            "route": "/change-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "change-password-dark-desktop-default",
+            "route": "/change-password",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "change-password-light-mobile-default",
+            "route": "/change-password",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "change-password-dark-mobile-default",
+            "route": "/change-password",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "change-password-light-desktop-error",
+            "route": "/change-password",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "quick-login-light-desktop-default",
+            "route": "/quick-login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认（邮箱验证码 Tab）"
+        },
+        {
+            "name": "quick-login-dark-desktop-default",
+            "route": "/quick-login",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "quick-login-light-mobile-default",
+            "route": "/quick-login",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "quick-login-dark-mobile-default",
+            "route": "/quick-login",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "quick-login-light-desktop-error",
+            "route": "/quick-login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "校验错误"
+        },
+        {
+            "name": "quick-login-light-desktop-tab-phone",
+            "route": "/quick-login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "短信验证码 Tab"
+        },
+        {
+            "name": "profile-light-desktop-default",
+            "route": "/profile",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "profile-dark-desktop-default",
+            "route": "/profile",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "profile-light-mobile-default",
+            "route": "/profile",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "profile-dark-mobile-default",
+            "route": "/profile",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "profile-light-desktop-privacy",
+            "route": "/profile",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "隐私模式"
+        },
+        {
+            "name": "security-light-desktop-default",
+            "route": "/security",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "security-dark-desktop-default",
+            "route": "/security",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "security-light-mobile-default",
+            "route": "/security",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "security-dark-mobile-default",
+            "route": "/security",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "security-light-desktop-enable-2fa-dialog",
+            "route": "/security",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "启用 2FA 对话框"
+        },
+        {
+            "name": "security-light-desktop-revoke-all-confirm",
+            "route": "/security",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "撤销所有会话确认"
+        },
+        {
+            "name": "oauth-consent-light-desktop-default",
+            "route": "/oauth/consent?client_id=visual-client",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-consent-dark-desktop-default",
+            "route": "/oauth/consent?client_id=visual-client",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-consent-light-mobile-default",
+            "route": "/oauth/consent?client_id=visual-client",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-consent-dark-mobile-default",
+            "route": "/oauth/consent?client_id=visual-client",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "sso-login-light-desktop-default",
+            "route": "/sso-login",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "sso-login-dark-desktop-default",
+            "route": "/sso-login",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "sso-login-light-mobile-default",
+            "route": "/sso-login",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "sso-login-dark-mobile-default",
+            "route": "/sso-login",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "admin-applications-dark-desktop-default",
+            "route": "/admin/oauth/applications",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "admin-applications-dark-mobile-default",
+            "route": "/admin/oauth/applications",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "admin-applications-light-desktop-api-docs-dialog",
+            "route": "/admin/oauth/applications",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "API 文档对话框"
+        },
+        {
+            "name": "admin-applications-light-desktop-create-dialog",
+            "route": "/admin/oauth/applications",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "创建应用对话框"
+        },
+        {
+            "name": "admin-applications-light-desktop-default",
+            "route": "/admin/oauth/applications",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "admin-applications-light-mobile-default",
+            "route": "/admin/oauth/applications",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "admin-logs-dark-desktop-default",
+            "route": "/admin/logs",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "admin-logs-dark-mobile-default",
+            "route": "/admin/logs",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "admin-logs-light-desktop-date-range",
+            "route": "/admin/logs",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "日期范围选择"
+        },
+        {
+            "name": "admin-logs-light-desktop-default",
+            "route": "/admin/logs",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "admin-logs-light-desktop-status-filter",
+            "route": "/admin/logs",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "会话状态筛选"
+        },
+        {
+            "name": "admin-logs-light-mobile-default",
+            "route": "/admin/logs",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "admin-sso-dark-desktop-default",
+            "route": "/admin/sso/providers",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "admin-sso-dark-mobile-default",
+            "route": "/admin/sso/providers",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "admin-sso-light-desktop-create-oidc-dialog",
+            "route": "/admin/sso/providers",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "创建提供商（OIDC）对话框"
+        },
+        {
+            "name": "admin-sso-light-desktop-create-saml-dialog",
+            "route": "/admin/sso/providers",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "创建提供商（SAML）对话框"
+        },
+        {
+            "name": "admin-sso-light-desktop-default",
+            "route": "/admin/sso/providers",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "admin-sso-light-desktop-detail-dialog",
+            "route": "/admin/sso/providers",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "提供商详情对话框"
+        },
+        {
+            "name": "admin-sso-light-mobile-default",
+            "route": "/admin/sso/providers",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "admin-users-dark-desktop-default",
+            "route": "/admin/users",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "admin-users-dark-mobile-default",
+            "route": "/admin/users",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "admin-users-light-desktop-ban-dialog",
+            "route": "/admin/users",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "禁用用户对话框"
+        },
+        {
+            "name": "admin-users-light-desktop-create-dialog",
+            "route": "/admin/users",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "创建用户对话框"
+        },
+        {
+            "name": "admin-users-light-desktop-default",
+            "route": "/admin/users",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "admin-users-light-desktop-detail-dialog",
+            "route": "/admin/users",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "用户详情对话框"
+        },
+        {
+            "name": "admin-users-light-desktop-selection",
+            "route": "/admin/users",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "选择用户行"
+        },
+        {
+            "name": "admin-users-light-desktop-sessions-dialog",
+            "route": "/admin/users",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "用户会话对话框"
+        },
+        {
+            "name": "admin-users-light-mobile-default",
+            "route": "/admin/users",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "error-light-desktop-default",
+            "route": "/visual-not-found",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "error-light-mobile-default",
+            "route": "/visual-not-found",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "home-dark-desktop-default",
+            "route": "/",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "home-dark-mobile-default",
+            "route": "/",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "home-light-desktop-default",
+            "route": "/",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "home-light-mobile-default",
+            "route": "/",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-clients-dark-desktop-default",
+            "route": "/oauth/clients",
+            "theme": "dark",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-clients-dark-mobile-default",
+            "route": "/oauth/clients",
+            "theme": "dark",
+            "viewport": "390x844",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-clients-light-desktop-default",
+            "route": "/oauth/clients",
+            "theme": "light",
+            "viewport": "1440x900",
+            "state": "默认"
+        },
+        {
+            "name": "oauth-clients-light-mobile-default",
+            "route": "/oauth/clients",
+            "theme": "light",
+            "viewport": "390x844",
+            "state": "默认"
+        }
+    ]
+}

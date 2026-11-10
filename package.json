@@ -6,6 +6,16 @@
     "ai:check": "node scripts/ai/check-governance.mjs",
     "migration:usage": "node scripts/migration/primevue-usage.mjs",
     "migration:check-imports": "node scripts/migration/check-caomei-imports.mjs",
+    "migration:measure": "node scripts/migration/measure-bundle.mjs",
+    "migration:check-budget": "node scripts/migration/check-bundle-budget.mjs",
+    "i18n:audit": "node scripts/i18n/audit-locale-keys.mjs",
+    "i18n:audit:missing": "node scripts/i18n/audit-locale-keys.mjs --only=missing --fail-on-missing",
+    "i18n:audit:duplicates": "node scripts/i18n/audit-duplicate-messages.mjs",
+    "i18n:audit:hardcoded": "node scripts/i18n/audit-hardcoded-text.mjs",
+    "i18n:audit:hardcoded:update": "node scripts/i18n/audit-hardcoded-text.mjs --update",
+    "i18n:check-sync": "node scripts/i18n/check-locale-parity.mjs",
+    "i18n:check-fallback": "node scripts/i18n/check-locale-fallback.mjs",
+    "i18n:check": "pnpm i18n:audit:missing && pnpm i18n:check-sync && pnpm i18n:check-fallback && pnpm i18n:audit:hardcoded",
     "security:alerts": "node scripts/security/check-alerts.mjs",
     "setup:ai": "node scripts/setup-ai.mjs",
     "setup:switch-models": "node scripts/setup/switch-models.mjs",
@@ -26,6 +36,14 @@
     "prepare": "husky install",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:visual": "node scripts/testing/run-visual.mjs",
+    "test:visual:update": "node scripts/testing/run-visual.mjs --update",
+    "test:visual:parity": "node scripts/testing/run-visual.mjs --parity",
+    "test:visual:reference": "node scripts/testing/run-visual.mjs --reference",
+    "test:visual:raw": "playwright test --config=playwright.visual.config.ts",
+    "test:visual:raw:update": "playwright test --config=playwright.visual.config.ts --update-snapshots",
+    "test:visual:parity:raw": "playwright test --config=playwright.visual-parity.config.ts",
+    "test:visual:reference:raw": "cross-env VISUAL_REFERENCE_CAPTURE=1 playwright test --config=playwright.visual-parity.config.ts --update-snapshots",
     "docs:dev": "vitepress dev --open",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview",
@@ -94,6 +112,7 @@
     "@lint-md/cli": "^2.5.1",
     "@nuxt/eslint": "^1.17.0",
     "@nuxt/test-utils": "^4.1.0",
+    "@playwright/test": "1.64.1",
     "@primevue/nuxt-module": "^4.5.5",
     "@types/fs-extra": "^11.0.4",
     "@types/google-libphonenumber": "^7.4.30",
@@ -185,6 +204,13 @@
     "*.{js,ts,vue}": [
       "npm run lint",
       "git add"
+    ],
+    "i18n/locales/**/*.json": [
+      "node scripts/i18n/audit-locale-keys.mjs --only=missing --fail-on-missing",
+      "node scripts/i18n/check-locale-parity.mjs"
+    ],
+    "{app.vue,pages/**/*.vue,components/**/*.vue,layouts/**/*.vue,composables/**/*.ts,server/api/**/*.ts,server/utils/**/*.ts,server/routes/**/*.ts,server/middleware/**/*.ts,server/templates/**/*.{ts,mjml}}": [
+      "node scripts/i18n/audit-hardcoded-text.mjs"
     ]
   },
   "version": "1.16.0",

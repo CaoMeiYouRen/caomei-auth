@@ -17,7 +17,7 @@ describe('utils/shared/api-schemas', () => {
             const result = idParamSchema.safeParse({ id: '' })
 
             expect(result.success).toBe(false)
-            expect(result.error?.issues[0]?.message).toBe('ID 不能为空')
+            expect(result.error?.issues[0]?.message).toBe('validation.idRequired')
         })
     })
 

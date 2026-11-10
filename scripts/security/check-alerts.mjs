@@ -454,7 +454,16 @@ async function main(argv = process.argv.slice(2)) {
         evaluation,
     })
 
-    console.info(markdown)
+    const hasStepSummary = typeof process.env.GITHUB_STEP_SUMMARY === 'string' && process.env.GITHUB_STEP_SUMMARY !== ''
+    const verbose = args.verbose === true
+    const printFullMarkdown = verbose || !hasStepSummary
+
+    if (printFullMarkdown) {
+        console.info(markdown)
+    } else {
+        const reportHint = typeof args.report === 'string' && args.report !== '' ? `；报告文件：${args.report}` : ''
+        console.info(`安全告警门禁报告已写入 Step Summary${reportHint}。使用 --verbose 可在日志中输出完整 Markdown。`)
+    }
 
     const failed = evaluation.blocking.length > 0 || evaluation.configErrors.length > 0
 

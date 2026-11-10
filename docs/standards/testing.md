@@ -62,3 +62,11 @@
 
 -   运行单个测试：`pnpm test <path-to-spec>`。
 -   确保测试代码同样通过 `pnpm lint`。
+
+## 5. 视觉回归
+
+-   **门禁**：自基线 `pnpm test:visual`（CI 阻断）；参考态审计 `pnpm test:visual:parity`（迁移批次使用，出报告不阻断）。
+-   **环境**：本地与 CI 共用 Playwright 官方容器（`scripts/testing/run-visual.mjs` 自动调用）；基线只在容器内采集，宿主直跑仅用于调试。
+-   **更新纪律**：差异逐项归因后才可 `pnpm test:visual:update`；参考态快照不可原地刷新。
+-   **升级联动**：升级 `@playwright/test` 必须同批重采自基线并说明差异。
+-   详见 [视觉参考态基座](../design/governance/2026-11-08-visual-baseline-harness.md)。

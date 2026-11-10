@@ -1,6 +1,6 @@
 # 重构总结（已归档）
 
-本文档记录项目历史上已完成的重构工程。当前规划已迁移至 [roadmap.md](./roadmap.md)、[todo.md](./todo.md) 和 [backlog.md](./backlog.md)。
+本文档记录项目历史上已完成的重构工程。当前规划已迁移至 [roadmap.md](../plan/roadmap.md)、[todo.md](../plan/todo.md) 和 [backlog.md](../plan/backlog.md)。
 
 > **重要变更**：所有未完成的重构目标和 Tech Debt 已迁移至 `backlog.md`。本文档仅保留已完成工作的记录。
 
@@ -109,11 +109,11 @@ PR 模板已包含"文档同步"复选框，Review 检查项已覆盖文档更�
 
 | 原目标 | 当前状态 | 迁移至 |
 |--------|----------|--------|
-| 测试覆盖率 ≥ 60% | 🚧 进行中 | [backlog.md](./backlog.md#32-质量与测试) |
-| jscpd 重复代码检测 | 待启动 | [backlog.md](./backlog.md#32-质量与测试) |
-| Dependency Cruiser 依赖分层验证 | 待启动 | [backlog.md](./backlog.md#33-基础设施) |
-| SonarQube / Codecov 集成 | 待启动 | [backlog.md](./backlog.md#33-基础设施) |
-| Nx / Turborepo 调研 | 待启动 | [backlog.md](./backlog.md#33-基础设施) |
+| 测试覆盖率 ≥ 60% | 🚧 进行中 | [backlog.md](../plan/backlog.md#32-质量与测试) |
+| jscpd 重复代码检测 | 待启动 | [backlog.md](../plan/backlog.md#32-质量与测试) |
+| Dependency Cruiser 依赖分层验证 | 待启动 | [backlog.md](../plan/backlog.md#33-基础设施) |
+| SonarQube / Codecov 集成 | 待启动 | [backlog.md](../plan/backlog.md#33-基础设施) |
+| Nx / Turborepo 调研 | 待启动 | [backlog.md](../plan/backlog.md#33-基础设施) |
 
 ---
 

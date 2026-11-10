@@ -155,11 +155,17 @@ jobs:
       - name: Check caomei-ui imports
         run: pnpm run migration:check-imports
 
+      - name: Check i18n governance
+        run: pnpm run i18n:check
+
       - name: Typecheck
         run: pnpm run typecheck
 
       - name: Build
         run: pnpm run build
+
+      - name: Check bundle budget
+        run: pnpm run migration:check-budget
 
       - name: Test with coverage
         run: pnpm run test:coverage
