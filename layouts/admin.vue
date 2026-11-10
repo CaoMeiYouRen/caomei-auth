@@ -159,7 +159,7 @@ const toggleSidebar = () => {
 .admin-layout {
     display: flex;
     min-height: 100vh;
-    background: #f8fafc;
+    background: var(--admin-bg);
 }
 
 .admin-sidebar {
@@ -171,8 +171,8 @@ const toggleSidebar = () => {
     flex-direction: column;
     width: 280px;
     height: 100vh;
-    background: white;
-    border-right: 1px solid #e2e8f0;
+    background: var(--admin-surface);
+    border-right: 1px solid var(--admin-border);
     box-shadow: 2px 0 8px rgb(0 0 0 / 0.1);
     transition: width 0.3s ease;
 
@@ -220,7 +220,7 @@ const toggleSidebar = () => {
 .sidebar-footer {
     padding: 0.75rem 1rem;
     margin-top: auto;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--admin-border);
     display: flex;
     justify-content: flex-start;
 
@@ -259,7 +259,7 @@ const toggleSidebar = () => {
     gap: 1rem;
     align-items: center;
     padding: 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--admin-border);
     transition: all 0.3s ease;
 
     .logo {
@@ -284,7 +284,7 @@ const toggleSidebar = () => {
         flex-shrink: 0;
         margin-left: auto;
         padding: 8px;
-        color: $secondary;
+        color: var(--admin-muted);
         background: none;
         border: none;
         border-radius: 6px;
@@ -293,7 +293,7 @@ const toggleSidebar = () => {
 
         &:hover {
             color: $primary;
-            background: $primary-50;
+            background: var(--admin-primary-soft);
         }
 
         i {
@@ -319,7 +319,7 @@ const toggleSidebar = () => {
 .nav-title {
     margin: 0 0 0.75rem;
     padding: 0 1.5rem;
-    color: $secondary-light;
+    color: var(--admin-muted);
     font-weight: 600;
     font-size: 0.875rem;
     letter-spacing: 0.05em;
@@ -333,20 +333,20 @@ const toggleSidebar = () => {
     align-items: center;
     margin: 0 0.5rem;
     padding: 0.75rem 1.5rem;
-    color: $secondary;
+    color: var(--admin-text);
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.2s ease;
 
     &:hover {
         color: $primary;
-        background: $primary-50;
+        background: var(--admin-primary-soft);
     }
 
     &.active {
         color: $primary;
         font-weight: 600;
-        background: $primary-100;
+        background: var(--admin-primary-soft-strong);
 
         &::before {
             position: absolute;
@@ -366,13 +366,13 @@ const toggleSidebar = () => {
         opacity: 0.5;
 
         &:hover {
-            color: $secondary;
+            color: var(--admin-text);
             background: transparent;
         }
 
         small {
             margin-left: auto;
-            color: $secondary-light;
+            color: var(--admin-muted);
             font-size: 0.75rem;
         }
     }
@@ -433,7 +433,7 @@ const toggleSidebar = () => {
         width: 100%;
         height: auto;
         border-right: none;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid var(--admin-border);
     }
 
     .admin-main {

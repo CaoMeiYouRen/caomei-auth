@@ -121,7 +121,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     padding: 0 12px;
     border: 1px solid var(--p-content-border-color);
     border-radius: 999px;
-    background: var(--p-surface-0);
+    background: var(--p-content-background);
     color: var(--p-text-color);
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
     font-size: 0.875rem;
@@ -171,7 +171,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     padding: 4px;
     border: 1px solid var(--p-content-border-color);
     border-radius: 12px;
-    background: var(--p-surface-0);
+    background: var(--p-content-background);
     box-shadow: 0 12px 28px rgb(0 0 0 / 0.16);
     list-style: none;
 }
@@ -193,7 +193,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     transition: background-color 0.15s ease, color 0.15s ease;
 
     &:hover {
-        background: var(--p-surface-100);
+        background: var(--p-content-hover-background);
     }
 
     &:focus-visible {

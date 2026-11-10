@@ -131,9 +131,11 @@ export default defineNuxtConfig({
         options: {
             theme: {
                 preset: AppPreset,
-                // 当应用使用 html 上的 .dark 类来控制暗色模式时，告诉 PrimeVue 使用该选择器以便自动应用暗色主题
+                // PrimeVue 只接受 class / system 形式的暗色选择器；写成 `html.dark` 会被渲染成
+                // `html.dark :root`（后代选择器），暗色变量永远不生效。应用只切换 <html> 的 .dark 类，
+                // 因此 `.dark` 与 `html.dark` 语义等价。
                 options: {
-                    darkModeSelector: 'html.dark',
+                    darkModeSelector: '.dark',
                 },
             },
             locale: zh_CN,
