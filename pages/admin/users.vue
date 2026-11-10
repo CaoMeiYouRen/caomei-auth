@@ -11,11 +11,12 @@
                     </p>
                 </div>
                 <div class="header-actions">
-                    <Button
-                        label="创建用户"
-                        icon="mdi mdi-plus"
-                        @click="showCreateDialog = true"
-                    />
+                    <CaomeiButton @click="showCreateDialog = true">
+                        <template #icon>
+                            <i class="mdi mdi-plus" />
+                        </template>
+                        创建用户
+                    </CaomeiButton>
                 </div>
             </div>
 
@@ -23,80 +24,197 @@
             <div class="users-filters">
                 <div class="filter-row">
                     <div class="search-wrapper">
-                        <IconField icon-position="left">
-                            <InputIcon class="mdi mdi-magnify" />
-                            <InputText
-                                v-model="searchQuery"
-                                placeholder="搜索用户（有效邮箱或姓名，@开头搜索姓名）"
-                                @input="debouncedSearch"
-                            />
-                        </IconField>
+                        <CaomeiInput
+                            v-model="searchQuery"
+                            placeholder="搜索用户（有效邮箱或姓名，@开头搜索姓名）"
+                            aria-label="搜索用户"
+                            @update:model-value="debouncedSearch"
+                        >
+                            <template #prefix>
+                                <i class="mdi mdi-magnify" aria-hidden="true" />
+                            </template>
+                        </CaomeiInput>
                     </div>
                     <div class="filter-controls">
-                        <Select
-                            v-model="selectedRole"
-                            :options="roleOptions"
-                            option-label="label"
-                            option-value="value"
-                            placeholder="筛选角色"
-                            show-clear
-                            @change="loadUsers"
-                        />
-                        <Select
-                            v-model="selectedStatus"
-                            :options="statusOptions"
-                            option-label="label"
-                            option-value="value"
-                            placeholder="筛选状态"
-                            show-clear
-                            @change="loadUsers"
-                        />
-                        <Button
-                            icon="mdi mdi-refresh"
-                            severity="secondary"
-                            outlined
+                        <div class="filter-item">
+                            <CaomeiSelect
+                                v-model="selectedRole"
+                                :options="roleOptions"
+                                option-label="label"
+                                option-value="value"
+                                placeholder="筛选角色"
+                                aria-label="筛选角色"
+                                show-clear
+                            />
+                        </div>
+                        <div class="filter-item">
+                            <CaomeiSelect
+                                v-model="selectedStatus"
+                                :options="statusOptions"
+                                option-label="label"
+                                option-value="value"
+                                placeholder="筛选状态"
+                                aria-label="筛选状态"
+                                show-clear
+                            />
+                        </div>
+                        <CaomeiButton
+                            icon-only
+                            variant="secondary"
+                            label="刷新"
                             @click="refreshUsers"
-                        />
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-refresh" />
+                            </template>
+                        </CaomeiButton>
                     </div>
                 </div>
             </div>
 
             <!-- 用户列表 -->
             <div class="users-list">
-                <BaseTable
-                    v-model:selection="selectedUsers"
-                    :data="users"
+                <div class="table-header">
+                    <div class="table-title">
+                        用户列表 ({{ totalUsers }})
+                        <small v-if="sortField" class="sort-info">
+                            按{{ getSortFieldLabel(sortField) }}{{ sortOrder === 'asc' ? '升序' : '降序' }}排列
+                        </small>
+                    </div>
+                    <div v-if="selectedUsers.length > 0" class="table-actions">
+                        <CaomeiDropdownMenu>
+                            <CaomeiDropdownMenuTrigger
+                                as-child
+                                unstyled
+                            >
+                                <CaomeiButton variant="secondary">
+                                    <template #icon>
+                                        <i class="mdi mdi-menu-down" />
+                                    </template>
+                                    批量操作
+                                </CaomeiButton>
+                            </CaomeiDropdownMenuTrigger>
+                            <CaomeiDropdownMenuContent align="end">
+                                <CaomeiDropdownMenuItem
+                                    v-for="item in batchMenuItems"
+                                    :key="item.label"
+                                    @select="item.command?.()"
+                                >
+                                    <i :class="item.icon" aria-hidden="true" />
+                                    {{ item.label }}
+                                </CaomeiDropdownMenuItem>
+                            </CaomeiDropdownMenuContent>
+                        </CaomeiDropdownMenu>
+                    </div>
+                </div>
+
+                <CaomeiDataTable
+                    :data="userRows"
+                    :columns="columns"
+                    row-key="id"
                     :loading="loading"
-                    :rows="pageSize"
-                    :total-records="totalUsers"
-                    :sort-field="sortField === 'createdAt' ? 'createdAt' : sortField"
-                    :sort-order="sortOrder === 'asc' ? 1 : -1"
+                    :selection="visibleSelection"
                     selection-mode="multiple"
-                    :meta-key-selection="false"
-                    @page="onPageChange"
-                    @sort="onSort"
+                    paginator
+                    lazy
+                    :rows="pageSize"
+                    :rows-per-page-options="[10, 25, 50]"
+                    :total-records="totalUsers"
+                    :page="currentPage + 1"
+                    :sort-field="sortField"
+                    :sort-order="sortOrder"
+                    @page="onTablePage"
+                    @sort="onTableSort"
+                    @update:selection="onSelectionChange"
                 >
-                    <template #header>
-                        <div class="table-header">
-                            <div class="table-title">
-                                用户列表 ({{ totalUsers }})
-                                <small v-if="sortField" class="sort-info">
-                                    按{{ getSortFieldLabel(sortField) }}{{ sortOrder === 'asc' ? '升序' : '降序' }}排列
-                                </small>
+                    <template #cell-name="{row}">
+                        <div class="user-cell">
+                            <CaomeiAvatar
+                                :src="row.image || undefined"
+                                :fallback="row.name?.charAt(0)?.toUpperCase() || row.email?.charAt(0)?.toUpperCase()"
+                                shape="circle"
+                                size="sm"
+                                class="user-avatar"
+                            />
+                            <div class="user-info">
+                                <span class="user-name">{{ row.name || '未设置昵称' }}</span>
+                                <span class="user-email">{{ row.email }}</span>
                             </div>
-                            <div v-if="selectedUsers.length > 0" class="table-actions">
-                                <Button
-                                    label="批量操作"
-                                    icon="mdi mdi-menu-down"
-                                    severity="secondary"
-                                    @click="toggleBatchMenu"
-                                />
-                                <Menu
-                                    ref="batchMenu"
-                                    :model="batchMenuItems"
-                                    :popup="true"
-                                />
-                            </div>
+                        </div>
+                    </template>
+
+                    <template #cell-role="{row}">
+                        <BaseStatusBadge
+                            variant="role"
+                            :status="row.role"
+                        />
+                    </template>
+
+                    <template #cell-banned="{row}">
+                        <BaseStatusBadge
+                            variant="banned"
+                            :status="row.banned"
+                        />
+                    </template>
+
+                    <template #cell-actions="{row}">
+                        <div class="action-buttons">
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                label="编辑详情"
+                                @click="openDetailDialog(row)"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-pencil" />
+                                </template>
+                            </CaomeiButton>
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                tone="primary"
+                                label="会话管理"
+                                @click="openSessionsDialog(row)"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-shield-account" />
+                                </template>
+                            </CaomeiButton>
+                            <CaomeiButton
+                                v-if="row.banned"
+                                icon-only
+                                variant="ghost"
+                                tone="success"
+                                label="解禁用户"
+                                @click="unbanUser(row)"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-check-circle" />
+                                </template>
+                            </CaomeiButton>
+                            <CaomeiButton
+                                v-else
+                                icon-only
+                                variant="ghost"
+                                tone="warning"
+                                label="禁用用户"
+                                @click="openBanDialog(row)"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-block-helper" />
+                                </template>
+                            </CaomeiButton>
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                tone="danger"
+                                label="删除用户"
+                                @click="deleteUser(row, isCurrentUser(row.id))"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-delete" />
+                                </template>
+                            </CaomeiButton>
                         </div>
                     </template>
 
@@ -104,130 +222,15 @@
                         <div class="empty-state">
                             <i class="mdi mdi-account-search-outline" />
                             <p>未找到匹配的用户</p>
-                            <Button
-                                label="清除筛选"
-                                link
+                            <CaomeiButton
+                                variant="ghost"
                                 @click="refreshUsers"
-                            />
+                            >
+                                清除筛选
+                            </CaomeiButton>
                         </div>
                     </template>
-
-                    <Column selection-mode="multiple" header-style="width: 3rem" />
-
-                    <Column
-                        field="name"
-                        header="用户"
-                        sortable
-                    >
-                        <template #body="{data}">
-                            <div class="user-cell">
-                                <Avatar
-                                    :image="data.image"
-                                    :label="data.name?.charAt(0)?.toUpperCase() || data.email?.charAt(0)?.toUpperCase()"
-                                    shape="circle"
-                                    class="user-avatar"
-                                />
-                                <div class="user-info">
-                                    <span class="user-name">{{ data.name || '未设置昵称' }}</span>
-                                    <span class="user-email">{{ data.email }}</span>
-                                </div>
-                            </div>
-                        </template>
-                    </Column>
-
-                    <Column
-                        field="role"
-                        header="角色"
-                        sortable
-                        style="width: 120px"
-                    >
-                        <template #body="{data}">
-                            <BaseStatusBadge
-                                variant="role"
-                                :status="data.role"
-                            />
-                        </template>
-                    </Column>
-
-                    <Column
-                        field="banned"
-                        header="状态"
-                        sortable
-                        style="width: 100px"
-                    >
-                        <template #body="{data}">
-                            <BaseStatusBadge
-                                variant="banned"
-                                :status="data.banned"
-                            />
-                        </template>
-                    </Column>
-
-                    <Column
-                        field="createdAt"
-                        header="注册时间"
-                        sortable
-                        style="width: 160px"
-                    >
-                        <template #body="{data}">
-                            {{ formatDate(data.createdAt) }}
-                        </template>
-                    </Column>
-
-                    <Column
-                        header="操作"
-                        style="width: 180px"
-                        align-frozen="right"
-                        frozen
-                    >
-                        <template #body="{data}">
-                            <div class="action-buttons">
-                                <Button
-                                    v-tooltip.top="'编辑详情'"
-                                    icon="mdi mdi-pencil"
-                                    text
-                                    rounded
-                                    severity="secondary"
-                                    @click="openDetailDialog(data)"
-                                />
-                                <Button
-                                    v-tooltip.top="'会话管理'"
-                                    icon="mdi mdi-shield-account"
-                                    text
-                                    rounded
-                                    severity="info"
-                                    @click="openSessionsDialog(data)"
-                                />
-                                <Button
-                                    v-if="data.banned"
-                                    v-tooltip.top="'解禁用户'"
-                                    icon="mdi mdi-check-circle"
-                                    text
-                                    rounded
-                                    severity="success"
-                                    @click="unbanUser(data)"
-                                />
-                                <Button
-                                    v-else
-                                    v-tooltip.top="'禁用用户'"
-                                    icon="mdi mdi-block-helper"
-                                    text
-                                    rounded
-                                    severity="warning"
-                                    @click="openBanDialog(data)"
-                                />
-                                <Button
-                                    v-tooltip.top="'删除用户'"
-                                    icon="mdi mdi-delete"
-                                    text
-                                    rounded
-                                    severity="danger"
-                                    @click="deleteUser(data, isCurrentUser(data.id))"
-                                />
-                            </div>
-                        </template>
-                    </Column>
-                </BaseTable>
+                </CaomeiDataTable>
             </div>
         </div>
 
@@ -257,12 +260,25 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent } from 'caomei-ui'
 import { useUserManagement } from '@/composables/admin/use-user-management'
 import { useUserTable } from '@/composables/admin/use-user-table'
 import CreateUserDialog from '@/components/admin/users/create-user-dialog.vue'
 import BanUserDialog from '@/components/admin/users/ban-user-dialog.vue'
 import UserSessionsDialog from '@/components/admin/users/user-sessions-dialog.vue'
 import UserDetailDialog from '@/components/admin/users/user-detail-dialog.vue'
+
+/** 用户列表行（`better-auth` admin listUsers 的最小字段集） */
+interface AdminUser {
+    id: string
+    name?: string | null
+    email: string
+    role?: string | null
+    banned?: boolean | null
+    image?: string | null
+    createdAt: string | Date
+}
 
 definePageMeta({
     layout: 'admin',
@@ -274,6 +290,7 @@ const {
     users,
     totalUsers,
     pageSize,
+    currentPage,
     searchQuery,
     selectedRole,
     selectedStatus,
@@ -287,18 +304,13 @@ const {
     onSort,
     unbanUser,
     deleteUser,
-    batchBanUsers,
-    batchUnbanUsers,
-    batchDeleteUsers,
     // Dialogs & Actions
     showCreateDialog,
     showBanDialog,
     showSessionsDialog,
     showDetailDialog,
     currentUser,
-    batchMenu,
     batchMenuItems,
-    toggleBatchMenu,
     openBanDialog,
     openSessionsDialog,
     openDetailDialog,
@@ -311,6 +323,50 @@ const {
     formatDate,
     getSortFieldLabel,
 } = useUserTable()
+
+const userRows = computed<AdminUser[]>(() => users.value as AdminUser[])
+
+/* 操作列只通过 `#cell-actions` 插槽渲染；`createdAt` 用 accessor 统一格式化，避免大小写插槽名 */
+const columns: DataTableColumn<AdminUser>[] = [
+    { key: 'name', header: '用户', sortable: true },
+    { key: 'role', header: '角色', sortable: true, width: '120px' },
+    { key: 'banned', header: '状态', sortable: true, width: '100px' },
+    {
+        key: 'createdAt',
+        header: '注册时间',
+        sortable: true,
+        width: '160px',
+        accessor: (row) => formatDate(row.createdAt),
+    },
+    { key: 'actions', header: '操作', width: '180px', align: 'right', frozen: 'right' },
+]
+
+/** 当前页可见的选中行：`CaomeiDataTable` 按对象身份匹配勾选态，必须重新绑定到当前页的行对象 */
+const visibleSelection = computed<AdminUser[]>(() => {
+    const selectedIds = new Set(selectedUsers.value.map((user: AdminUser) => user.id))
+    return userRows.value.filter((user) => selectedIds.has(user.id))
+})
+
+/** 分页：`CaomeiDataTable` 的 `first` 为 0 基偏移，页面状态保持 0 基页码 */
+function onTablePage(event: DataTablePageEvent) {
+    onPageChange({ page: event.first / event.rows, rows: event.rows })
+}
+
+/** 排序：`asc` / `desc` 换算为页面状态的 1 / -1 */
+function onTableSort(event: DataTableSortEvent) {
+    if (!event.sortField || !event.sortOrder) {
+        return
+    }
+    onSort({ sortField: event.sortField, sortOrder: event.sortOrder === 'asc' ? 1 : -1 })
+}
+
+/** 选择：组件只回传当前页的选中行，跨页选择按 id 与其它页的历史选择合并 */
+function onSelectionChange(selection: AdminUser | AdminUser[] | null) {
+    const pageIds = new Set(userRows.value.map((user) => user.id))
+    const currentPageSelection = Array.isArray(selection) ? selection : []
+    const otherPagesSelection = selectedUsers.value.filter((user: AdminUser) => !pageIds.has(user.id))
+    selectedUsers.value = [...otherPagesSelection, ...currentPageSelection]
+}
 </script>
 
 <style lang="scss" scoped>
@@ -368,52 +424,26 @@ const {
             display: flex;
             gap: 0.75rem;
             align-items: center;
+
+            .filter-item {
+                width: 9rem;
+            }
         }
     }
 }
 
 .users-list {
-    :deep(.p-datatable) {
-        .p-datatable-header {
-            background: transparent;
-            border: none;
-            padding: 0 0 1rem;
-        }
-
-        .p-datatable-thead > tr > th {
-            background: var(--admin-surface-muted);
-            color: var(--admin-text);
-            font-weight: 600;
-            border-bottom: 1px solid var(--admin-border);
-        }
-
-        .p-datatable-tbody > tr {
-            background: var(--admin-surface);
-            color: var(--admin-text);
-            transition: background-color 0.2s;
-
-            > td {
-                color: var(--admin-text);
-                border-color: var(--admin-border);
-            }
-
-            &:hover {
-                background-color: var(--admin-surface-muted);
-            }
-        }
-
-        .p-paginator {
-            background: var(--admin-surface);
-            color: var(--admin-text);
-            border-color: var(--admin-border);
-        }
-    }
+    /* 表格表面改用 Admin 语义 token，暗色下与卡片保持一致 */
+    --caomei-color-text: var(--admin-text);
+    --caomei-data-table-head-bg: var(--admin-surface-muted);
+    --caomei-data-table-border: var(--admin-border);
 }
 
 .table-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 1rem;
 
     .table-title {
         font-weight: 600;
@@ -436,11 +466,7 @@ const {
     gap: 0.75rem;
 
     .user-avatar {
-        width: 32px;
-        height: 32px;
-        font-size: 0.875rem;
-        background-color: var(--primary-100);
-        color: var(--primary-700);
+        flex-shrink: 0;
     }
 
     .user-info {
@@ -498,7 +524,7 @@ const {
         .header-actions {
             width: 100%;
 
-            .p-button {
+            .caomei-button {
                 width: 100%;
             }
         }
