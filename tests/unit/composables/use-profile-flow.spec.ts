@@ -23,10 +23,14 @@ const {
         signOut: vi.fn(),
     },
     mockUseToast: {
-        add: vi.fn(),
+        show: vi.fn(),
+        success: vi.fn(),
+        danger: vi.fn(),
+        warning: vi.fn(),
+        info: vi.fn(),
     },
     mockUseConfirm: {
-        require: vi.fn(),
+        open: vi.fn(),
     },
     mockUseClarity: {
         identify: vi.fn(),
@@ -41,11 +45,8 @@ vi.mock('@/lib/auth-client', () => ({
     authClient: mockAuthClient,
 }))
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: () => mockUseToast,
-}))
-
-vi.mock('primevue/useconfirm', () => ({
     useConfirm: () => mockUseConfirm,
 }))
 
@@ -147,9 +148,8 @@ describe('useProfileFlow', () => {
         const { fetchUserAccounts } = await useProfileFlow()
         await fetchUserAccounts()
 
-        expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'error',
-            summary: '获取第三方账号失败',
+        expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+            title: '获取第三方账号失败',
         }))
     })
 
@@ -165,9 +165,7 @@ describe('useProfileFlow', () => {
             expect(mockAuthClient.linkSocial).toHaveBeenCalledWith(expect.objectContaining({
                 provider: 'github',
             }))
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-            }))
+            expect(mockUseToast.success).toHaveBeenCalled()
         })
 
         it('should link social account (oauth2: true)', async () => {
@@ -191,9 +189,8 @@ describe('useProfileFlow', () => {
 
             await linkSocialAccount(provider as any)
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: 'Link failed',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'Link failed',
             }))
         })
 
@@ -203,9 +200,7 @@ describe('useProfileFlow', () => {
 
             await linkSocialAccount(provider as any)
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'warn',
-            }))
+            expect(mockUseToast.warning).toHaveBeenCalled()
             expect(mockAuthClient.linkSocial).not.toHaveBeenCalled()
         })
     })
@@ -213,56 +208,39 @@ describe('useProfileFlow', () => {
     describe('Unlink Account', () => {
         it('should confirm unlink', async () => {
             const { confirmUnlink } = await useProfileFlow()
+            mockUseConfirm.open.mockResolvedValue(false)
 
-            confirmUnlink('github', 'gh_123')
+            await confirmUnlink('github', 'gh_123')
 
-            expect(mockUseConfirm.require).toHaveBeenCalledWith(expect.objectContaining({
-                header: '确认解绑',
-                accept: expect.any(Function),
+            expect(mockUseConfirm.open).toHaveBeenCalledWith(expect.objectContaining({
+                title: '确认解绑',
+                description: expect.stringContaining('gh_123'),
             }))
+            expect(mockAuthClient.unlinkAccount).not.toHaveBeenCalled()
         })
 
         it('should unlink account successfully', async () => {
             const { confirmUnlink } = await useProfileFlow()
-
-            // Trigger the accept callback manually
-            let acceptCallback: () => Promise<void> = async () => {}
-            mockUseConfirm.require.mockImplementation((options: any) => {
-                acceptCallback = options.accept
-            })
-
-            confirmUnlink('github', 'gh_123')
-
+            mockUseConfirm.open.mockResolvedValue(true)
             mockAuthClient.unlinkAccount.mockResolvedValue({ data: true })
 
-            await acceptCallback()
+            await confirmUnlink('github', 'gh_123')
 
             expect(mockAuthClient.unlinkAccount).toHaveBeenCalledWith({
                 accountId: 'gh_123',
             })
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-            }))
+            expect(mockUseToast.success).toHaveBeenCalled()
         })
 
         it('should handle unlink error', async () => {
             const { confirmUnlink } = await useProfileFlow()
-
-            // Trigger the accept callback manually
-            let acceptCallback: () => Promise<void> = async () => {}
-            mockUseConfirm.require.mockImplementation((options: any) => {
-                acceptCallback = options.accept
-            })
-
-            confirmUnlink('github', 'gh_123')
-
+            mockUseConfirm.open.mockResolvedValue(true)
             mockAuthClient.unlinkAccount.mockResolvedValue({ error: { message: 'Unlink failed' } })
 
-            await acceptCallback()
+            await confirmUnlink('github', 'gh_123')
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: 'Unlink failed',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'Unlink failed',
             }))
         })
     })
@@ -279,9 +257,7 @@ describe('useProfileFlow', () => {
             expect(mockAuthClient.updateUser).toHaveBeenCalledWith(expect.objectContaining({
                 name: 'NewNickname',
             }))
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-            }))
+            expect(mockUseToast.success).toHaveBeenCalled()
         })
 
         it('should validate nickname before saving', async () => {
@@ -291,9 +267,8 @@ describe('useProfileFlow', () => {
 
             await saveProfile()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'warn',
-                summary: '昵称格式有误',
+            expect(mockUseToast.warning).toHaveBeenCalledWith(expect.objectContaining({
+                title: '昵称格式有误',
             }))
             expect(mockAuthClient.updateUser).not.toHaveBeenCalled()
         })
@@ -306,9 +281,8 @@ describe('useProfileFlow', () => {
 
             await saveProfile()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: 'Update failed',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'Update failed',
             }))
         })
     })
@@ -334,18 +308,12 @@ describe('useProfileFlow', () => {
 
         it('should handle logout', async () => {
             const { handleLogout } = await useProfileFlow()
-
-            let acceptCallback: () => Promise<void> = async () => {}
-            mockUseConfirm.require.mockImplementation((options: any) => {
-                acceptCallback = options.accept
-            })
-
-            handleLogout()
-
+            mockUseConfirm.open.mockResolvedValue(true)
             mockAuthClient.signOut.mockResolvedValue({ data: true })
 
-            await acceptCallback()
+            await handleLogout()
 
+            expect(mockUseConfirm.open).toHaveBeenCalledWith(expect.objectContaining({ title: '确认退出' }))
             expect(mockAuthClient.signOut).toHaveBeenCalled()
             expect(mockNavigateTo).toHaveBeenCalledWith('/login')
         })

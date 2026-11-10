@@ -3,8 +3,8 @@ import { ref, reactive } from 'vue'
 import { useRegisterFlow } from '@/composables/use-register-flow'
 
 // Mock Nuxt composables
-const { config, useToastMock, toastAddMock } = vi.hoisted(() => {
-    const addMock = vi.fn()
+const { config, useToastMock, toastMocks } = vi.hoisted(() => {
+    const hoistedToastMocks = { show: vi.fn(), success: vi.fn(), danger: vi.fn(), warning: vi.fn(), info: vi.fn() }
     return {
         config: {
             public: {
@@ -12,10 +12,8 @@ const { config, useToastMock, toastAddMock } = vi.hoisted(() => {
                 usernameEnabled: true,
             },
         },
-        toastAddMock: addMock,
-        useToastMock: vi.fn(() => ({
-            add: addMock,
-        })),
+        toastMocks: hoistedToastMocks,
+        useToastMock: vi.fn(() => hoistedToastMocks),
     }
 })
 
@@ -27,7 +25,7 @@ vi.mock('#app/nuxt', async (importOriginal) => {
     }
 })
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: useToastMock,
 }))
 
@@ -88,7 +86,7 @@ describe('useRegisterFlow', () => {
         changeMode('phone')
 
         expect(activeTab.value).not.toBe('phone')
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error' }))
+        expect(toastMocks.danger).toHaveBeenCalled()
 
         // Reset config
         config.public.phoneEnabled = true
@@ -180,7 +178,7 @@ describe('useRegisterFlow', () => {
 
         expect(signUpMock).not.toHaveBeenCalled()
         expect(errors.value.captcha).toBe('请先完成验证码验证')
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'warn' }))
+        expect(toastMocks.warning).toHaveBeenCalled()
     })
 
     it('reports email registration api error', async () => {
@@ -198,7 +196,7 @@ describe('useRegisterFlow', () => {
 
         await register()
 
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error', detail: '邮箱已存在' }))
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '邮箱已存在' }))
     })
 
     it('reports phone verification failure', async () => {
@@ -215,7 +213,7 @@ describe('useRegisterFlow', () => {
 
         await register()
 
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error', detail: '手机号码验证失败' }))
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '手机号码验证失败' }))
     })
 
     it('reports update user failure after phone verification', async () => {
@@ -233,7 +231,7 @@ describe('useRegisterFlow', () => {
 
         await register()
 
-        expect(toastAddMock).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error', detail: '更新失败' }))
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '更新失败' }))
     })
 
     it('validates phone before sending the register code', async () => {

@@ -1,6 +1,6 @@
 # 2026-11-08 发布链路原生多架构评估（issue #718）
 
-> **状态**：评估完成，**已排期**；2026-11-08 用户选择「立即插队阶段 3」+「方案 C：提取 reusable workflow」。已在本地实现（未提交），**待推送后由工作流运行验证**；候选登记见 [backlog §3.3](../../plan/backlog.md#33-基础设施)。
+> **状态**：评估完成，**已排期**；2026-11-08 用户选择「立即插队阶段 3」+「方案 C：提取 reusable workflow」。已实现；`docker.yml` 构建 / merge / deploy 与 `docker-publish` rebuild / retag 已远端验证，`release` 待定时发版验证。候选登记见 [backlog §3.3](../../plan/backlog.md#33-基础设施)。
 > **来源**：[CaoMeiYouRen/caomei-auth#718](https://github.com/CaoMeiYouRen/caomei-auth/issues/718)（上游提案 `cmyr-skills-agents@fdda7ef`，能力 `docker-workflow` 的「原生多架构」子约定）。
 > **核验基线**：`adfef8b`（2026-11-08）；工作流运行数据取自 GitHub Actions API。
 
@@ -75,7 +75,20 @@
 | `pnpm typecheck` | 通过 |
 | `pnpm test` | 124 文件 / 917 用例通过 |
 | `pnpm build` | 通过（约 1m22s） |
-| GitHub Actions 语义 | 本地无法执行；待推送后由 `docker.yml` push / `workflow_dispatch`、`release`、`docker-publish` 验证 |
+| GitHub Actions 语义 | 历史快照：本地无法执行；远端结果见 §5.2 |
+
+### 5.2 远端验证（2026-11-08）
+
+| 入口 | 运行 | 结果 |
+| :--- | :--- | :--- |
+| `docker.yml`（push） | [42460267112](https://github.com/CaoMeiYouRen/caomei-auth/actions/runs/42460267112) | Test / gate / Build (amd64) / Build (arm64) / Publish multi-arch manifests 全部通过；GHCR / ACR 的 `sha-491debf`、`latest`、`2026-11-08` 指向同一 digest `sha256:4b8a814c…`，含 `linux/amd64` + `linux/arm64` |
+| `docker.yml` Deploy | [42468248687](https://github.com/CaoMeiYouRen/caomei-auth/actions/runs/42468248687) | `958a2a7` 补回 checkout 后复跑：Docker Hub README 同步 + Jenkins 主站 / Demo 两步全部通过；`sha-248a1a1` / `latest` / `2026-11-08` 同一 digest `sha256:41937d5b…`，双平台 |
+| `docker-publish`（`rebuild=true`，v1.16.0） | [42461119392](https://github.com/CaoMeiYouRen/caomei-auth/actions/runs/42461119392) | Prepare → Build amd64/arm64 → merge → Verify 全部通过；`1.16.0` 与 `2026-11-07`（tag 提交日）指向同一 digest，含双平台；retag 正确跳过 |
+| `docker-publish`（`rebuild=false`，source=`sha-c27806a`） | [42461601204](https://github.com/CaoMeiYouRen/caomei-auth/actions/runs/42461601204) | Retag 与 Verify 通过，Docker 构建正确跳过；`retag` 默认路径行为不变 |
+| `release.yml` | 未运行 | 会触发 semantic-release 正式发版，需用户确认后单独验证 |
+
+> 复用工作流的 `tags` 输出被 GitHub 标记为「may contain secret」并跳过，已移除该未使用输出，避免误导。
+> Docker Hub 在本机网络不可达，三 registry 中仅复核了 GHCR / ACR；Docker Hub 由 merge 日志确认已推送。
 
 ## 6. 关联
 

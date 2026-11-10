@@ -16,31 +16,33 @@
             </div>
             <div class="profile-info-actions">
                 <template v-if="user.emailVerified">
-                    <Button
-                        v-tooltip.top="'点击修改已验证的邮箱地址'"
-                        label="修改"
-                        text
-                        size="small"
+                    <CaomeiButton
+                        variant="ghost"
+                        size="sm"
+                        title="点击修改已验证的邮箱地址"
                         @click="emit('openEmailModal')"
-                    />
+                    >
+                        修改
+                    </CaomeiButton>
                     <span v-tooltip.top="'邮箱已验证，可用于登录和找回密码'" class="verified">已验证</span>
                 </template>
                 <template v-else>
-                    <Button
-                        v-tooltip.top="'点击验证邮箱，验证后可用于登录和找回密码'"
-                        label="验证"
-                        text
-                        size="small"
+                    <CaomeiButton
+                        variant="ghost"
+                        size="sm"
+                        title="点击验证邮箱，验证后可用于登录和找回密码"
                         @click="emit('openEmailModal')"
-                    />
+                    >
+                        验证
+                    </CaomeiButton>
                     <span v-tooltip.top="'邮箱未验证，无法用于登录和找回密码'" class="unverified">未验证</span>
                 </template>
             </div>
         </div>
-        <Message v-if="!user.emailVerified" severity="warn">
+        <CaomeiMessage v-if="!user.emailVerified" tone="warning">
             您当前未验证邮箱，无法通过邮箱登录，也无法通过邮箱找回密码。<br>
             为了您的账号安全，请尽快验证您的邮箱。
-        </Message>
+        </CaomeiMessage>
     </div>
     <div v-if="phoneEnabled" class="form-group">
         <label class="form-label">手机号</label>
@@ -57,23 +59,25 @@
                 >{{ user.phone ? maskPhone(user.phone) : "未绑定" }}</span>
             </div>
             <div class="profile-info-actions">
-                <Button
+                <CaomeiButton
                     v-if="user.phone"
-                    v-tooltip.top="'点击修改已绑定的手机号'"
-                    label="修改"
-                    text
-                    size="small"
+                    variant="ghost"
+                    size="sm"
+                    title="点击修改已绑定的手机号"
                     @click="emit('openPhoneModal')"
-                />
-                <Button
+                >
+                    修改
+                </CaomeiButton>
+                <CaomeiButton
                     v-else
-                    v-tooltip.top="phoneEnabled ? '点击绑定手机号，绑定后可用于登录和验证' : '短信功能未启用，无法绑定手机号'"
-                    label="绑定"
-                    text
-                    size="small"
+                    variant="ghost"
+                    size="sm"
+                    :title="phoneEnabled ? '点击绑定手机号，绑定后可用于登录和验证' : '短信功能未启用，无法绑定手机号'"
                     :disabled="!phoneEnabled"
-                    @click="phoneEnabled ? emit('openPhoneModal') : toast.add({severity: 'error', summary: '功能未启用', detail: '短信功能未启用，暂不支持绑定手机号', life: 3000})"
-                />
+                    @click="phoneEnabled ? emit('openPhoneModal') : toast.danger({title: '功能未启用', description: '短信功能未启用，暂不支持绑定手机号', duration: 3000})"
+                >
+                    绑定
+                </CaomeiButton>
                 <span
                     v-if="user.phoneVerified"
                     v-tooltip.top="'手机号已验证，可用于登录和验证'"
@@ -85,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { maskEmail, maskPhone } from '@/utils/shared/privacy'
 import { formatPhoneNumberInternational } from '@/utils/shared/phone'
 

@@ -2,22 +2,28 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ref } from 'vue'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 
-const { toastAddMock, toastStub, emailOtpServiceMock, phoneOtpServiceMock, resolveCaptchaTokenMock } = vi.hoisted(() => {
-    const hoistedToastAddMock = vi.fn()
+const { toastMocks, toastStub, emailOtpServiceMock, phoneOtpServiceMock, resolveCaptchaTokenMock } = vi.hoisted(() => {
+    const hoistedToastMocks = {
+        show: vi.fn(),
+        success: vi.fn(),
+        danger: vi.fn(),
+        warning: vi.fn(),
+        info: vi.fn(),
+    }
     const hoistedEmailOtpServiceMock = vi.fn()
     const hoistedPhoneOtpServiceMock = vi.fn()
     const hoistedResolveCaptchaTokenMock = vi.fn()
 
     return {
-        toastAddMock: hoistedToastAddMock,
-        toastStub: { add: hoistedToastAddMock },
+        toastMocks: hoistedToastMocks,
+        toastStub: hoistedToastMocks,
         emailOtpServiceMock: hoistedEmailOtpServiceMock,
         phoneOtpServiceMock: hoistedPhoneOtpServiceMock,
         resolveCaptchaTokenMock: hoistedResolveCaptchaTokenMock,
     }
 })
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: () => toastStub,
 }))
 
@@ -31,7 +37,7 @@ vi.mock('@/utils/web/captcha', () => ({
 }))
 
 beforeEach(() => {
-    toastAddMock.mockClear()
+    Object.values(toastMocks).forEach((mock) => mock.mockClear())
     emailOtpServiceMock.mockReset()
     phoneOtpServiceMock.mockReset()
     resolveCaptchaTokenMock.mockReset()
@@ -80,10 +86,9 @@ describe('composables/use-otp', () => {
 
             expect(result).toBe(false)
             expect(errors.value.captcha).toBe('Captcha needed')
-            expect(toastAddMock).toHaveBeenCalledWith({
-                severity: 'warn',
-                summary: '验证码',
-                detail: 'Captcha needed',
+            expect(toastMocks.warning).toHaveBeenCalledWith({
+                title: '验证码',
+                description: 'Captcha needed',
             })
             expect(emailOtpServiceMock).not.toHaveBeenCalled()
             expect(sending.value).toBe(false)
@@ -117,10 +122,9 @@ describe('composables/use-otp', () => {
                 'email-verification',
                 'captcha token',
             )
-            expect(toastAddMock).toHaveBeenCalledWith({
-                severity: 'success',
-                summary: '发送成功',
-                detail: '请查收邮件',
+            expect(toastMocks.success).toHaveBeenCalledWith({
+                title: '发送成功',
+                description: '请查收邮件',
             })
             expect(sending.value).toBe(true)
             await vi.runAllTimersAsync()
@@ -153,10 +157,9 @@ describe('composables/use-otp', () => {
             )
 
             expect(result).toBe(false)
-            expect(toastAddMock).toHaveBeenCalledWith({
-                severity: 'error',
-                summary: '发送失败',
-                detail: '验证码发送失败',
+            expect(toastMocks.danger).toHaveBeenCalledWith({
+                title: '发送失败',
+                description: '验证码发送失败',
             })
             await vi.runAllTimersAsync()
             expect(sending.value).toBe(false)
@@ -199,10 +202,9 @@ describe('composables/use-otp', () => {
 
             expect(result).toBe(false)
             expect(errors.value.captcha).toBe('Captcha missing')
-            expect(toastAddMock).toHaveBeenCalledWith({
-                severity: 'warn',
-                summary: '验证码',
-                detail: 'Captcha missing',
+            expect(toastMocks.warning).toHaveBeenCalledWith({
+                title: '验证码',
+                description: 'Captcha missing',
             })
             expect(phoneOtpServiceMock).not.toHaveBeenCalled()
         })
@@ -234,10 +236,9 @@ describe('composables/use-otp', () => {
                 'forget-password',
                 'captcha token',
             )
-            expect(toastAddMock).toHaveBeenCalledWith({
-                severity: 'success',
-                summary: '发送成功',
-                detail: '请查收短信',
+            expect(toastMocks.success).toHaveBeenCalledWith({
+                title: '发送成功',
+                description: '请查收短信',
             })
             await vi.runAllTimersAsync()
             expect(sending.value).toBe(false)
@@ -269,10 +270,9 @@ describe('composables/use-otp', () => {
             )
 
             expect(result).toBe(false)
-            expect(toastAddMock).toHaveBeenCalledWith({
-                severity: 'error',
-                summary: '发送失败',
-                detail: '短信发送失败',
+            expect(toastMocks.danger).toHaveBeenCalledWith({
+                title: '发送失败',
+                description: '短信发送失败',
             })
             await vi.runAllTimersAsync()
             expect(sending.value).toBe(false)

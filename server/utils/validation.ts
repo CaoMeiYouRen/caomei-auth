@@ -1,11 +1,14 @@
 import { createError, getValidatedQuery, getValidatedRouterParams, readValidatedBody, type H3Event } from 'h3'
 import type { z } from 'zod'
+import { resolveValidationMessage, type ValidationTranslator } from '@/utils/shared/zod-messages'
 
 /** per-parse error map（Zod 4）：用于把校验错误按请求语言翻译 */
 export type ZodErrorMap = (issue: { code: string }) => string | { message: string }
 
 export interface ValidateOptions {
     errorMap?: ZodErrorMap
+    /** 翻译 schema 内自定义的 `validation.*` 消息键 */
+    translate?: ValidationTranslator
 }
 
 function toParseParams(options?: ValidateOptions) {
@@ -25,8 +28,8 @@ export interface ValidationErrorResponse {
 /**
  * Extracts the first error message from Zod validation issues
  */
-export function getFirstZodError(error: z.ZodError): string {
-    return error.issues[0]?.message || '参数校验失败'
+export function getFirstZodError(error: z.ZodError, translate?: ValidationTranslator): string {
+    return resolveValidationMessage(error.issues[0]?.message, translate) || '参数校验失败'
 }
 
 /**
@@ -51,7 +54,7 @@ export async function validateBody<T extends z.ZodType>(event: H3Event, schema: 
     if (!result.success) {
         throw createError({
             statusCode: 400,
-            statusMessage: getFirstZodError(result.error),
+            statusMessage: getFirstZodError(result.error, options?.translate),
         })
     }
 
@@ -72,7 +75,7 @@ export async function validateBodySafe<T extends z.ZodType>(
     if (!result.success) {
         return {
             success: false,
-            error: createValidationError(getFirstZodError(result.error)),
+            error: createValidationError(getFirstZodError(result.error, options?.translate)),
         }
     }
 
@@ -89,7 +92,7 @@ export async function validateQuery<T extends z.ZodType>(event: H3Event, schema:
     if (!result.success) {
         throw createError({
             statusCode: 400,
-            statusMessage: getFirstZodError(result.error),
+            statusMessage: getFirstZodError(result.error, options?.translate),
         })
     }
 
@@ -106,7 +109,7 @@ export async function validateParams<T extends z.ZodType>(event: H3Event, schema
     if (!result.success) {
         throw createError({
             statusCode: 400,
-            statusMessage: getFirstZodError(result.error),
+            statusMessage: getFirstZodError(result.error, options?.translate),
         })
     }
 
@@ -127,7 +130,7 @@ export async function validateParamsSafe<T extends z.ZodType>(
     if (!result.success) {
         return {
             success: false,
-            error: createValidationError(getFirstZodError(result.error)),
+            error: createValidationError(getFirstZodError(result.error, options?.translate)),
         }
     }
 

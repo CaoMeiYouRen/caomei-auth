@@ -8,6 +8,7 @@ describe('utils/public-paths', () => {
             '/register',
             '/privacy',
             '/terms',
+            '/sso-login',
         ]))
     })
 

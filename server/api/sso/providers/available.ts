@@ -1,5 +1,6 @@
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
+import { createLocalizedError } from '@/server/utils/i18n'
 import logger from '@/server/utils/logger'
 
 export default defineEventHandler(async (event) => {
@@ -7,9 +8,10 @@ export default defineEventHandler(async (event) => {
         const method = getMethod(event)
 
         if (method !== 'GET') {
-            throw createError({
+            throw await createLocalizedError(event, {
                 statusCode: 405,
-                statusMessage: '方法不允许',
+                statusMessage: 'Method Not Allowed',
+                key: 'errors.sso.methodNotAllowed',
             })
         }
 
@@ -47,9 +49,10 @@ export default defineEventHandler(async (event) => {
             throw error
         }
 
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 500,
-            statusMessage: error.message || '服务器内部错误',
+            statusMessage: 'Internal Server Error',
+            key: 'errors.server.internal',
         })
     }
 })

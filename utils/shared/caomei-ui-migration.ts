@@ -4,9 +4,12 @@
  * 规则：只有路径命中白名单前缀的路由允许使用 caomei-ui 组件；未登记的路由必须继续使用 PrimeVue，
  * 避免同一路由混用两套组件库（见 docs/design/governance/2026-11-05-caomei-ui-migration-evaluation.md §8）。
  *
- * 初值：空集。P2 试点（登录页）开工时按路由登记，例如 `['/login']`；P5 收尾时清空并删除本文件。
+ * 阶段 3 最终白名单（P2–P3）：`/login`（M2-1）、`/register`（M3-1）、`/forgot-password`、
+ * `/change-password`（M3-2）、`/quick-login`（M3-3）、`/profile`（M4-1）、`/security`（M4-2）、
+ * `/oauth/consent`（M4-3）、`/sso-login`（M4-4）。
+ * P4 的 `/oauth/clients`、`/admin/**` 等未登记；P5 收尾时清空并删除本文件。
  */
-export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = []
+export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = ['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login']
 
 /**
  * 判断路径是否命中 caomei-ui 白名单。

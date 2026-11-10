@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { readBody } from 'h3'
 import handler from '@/server/api/oauth/revoke-consent.post'
 import { dataSource } from '@/server/database'
@@ -34,6 +34,10 @@ describe('server/api/oauth/revoke-consent.post', () => {
         vi.mocked(dataSource.getRepository).mockReturnValue(mockRepo as any)
     })
 
+    afterEach(() => {
+        vi.unstubAllGlobals()
+    })
+
     it('should revoke consent successfully', async () => {
         const userId = 'user-123'
         const clientId = 'client-123'
@@ -55,6 +59,46 @@ describe('server/api/oauth/revoke-consent.post', () => {
             message: '成功撤销授权',
             data: null,
         })
+    })
+
+    it('returns an English message and locale headers for en-US requests', async () => {
+        const userId = 'user-123'
+        const clientId = 'client-123'
+        vi.mocked(getUserSession).mockResolvedValue({
+            user: { id: userId },
+        } as any)
+        vi.mocked(readBody).mockResolvedValue({ clientId })
+        mockRepo.delete.mockResolvedValue({ affected: 1 })
+
+        vi.stubGlobal('useTranslation', vi.fn(async () =>
+            (key: string) => (key === 'errors.oauth.revokeSucceeded'
+                ? 'Authorization revoked successfully'
+                : key),
+        ))
+        vi.stubGlobal('tryQueryLocale', vi.fn(() => null))
+        vi.stubGlobal('tryCookieLocale', vi.fn(() => null))
+        vi.stubGlobal('tryHeaderLocale', vi.fn(() => 'en-US'))
+
+        const headers = new Map<string, string | string[]>()
+        const event = {
+            path: '/api/oauth/revoke-consent',
+            context: {},
+            node: {
+                res: {
+                    setHeader(key: string, value: string | string[]) {
+                        headers.set(key, value)
+                    },
+                    getHeader(key: string) {
+                        return headers.get(key)
+                    },
+                },
+            },
+        }
+        const result = await handler(event as any)
+
+        expect(result.message).toBe('Authorization revoked successfully')
+        expect(headers.get('Content-Language')).toBe('en-US')
+        expect(headers.get('Vary')).toBe('Accept-Language, Cookie')
     })
 
     it('should throw 401 if user is not logged in', async () => {

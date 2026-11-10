@@ -114,23 +114,76 @@ $dark-border-color: #374151;
 }
 
 // 深色主题支持
-@include dark-mode {
+//
+// 注意：不能用 `@include dark-mode { :root { … } }` —— 它会被编译成
+// `html.dark :root{…}`（后代选择器），`:root` 是 <html> 自身，class-only 路径永远不生效。
+// 因此显式区分 `html.dark`（手动切换）与 `@media`（跟随系统）。
+@mixin app-dark-tokens {
+    // 背景色
+    --background: #{$dark-background};
+    --background-light: #{$dark-background-light};
+
+    // 文字颜色
+    --text-primary: #{$dark-secondary};
+    --text-secondary: #{$dark-secondary-light};
+
+    // 边框颜色
+    --border-color: #{$dark-border-color};
+    --color-border: #{$dark-border-color};
+
+    // 辅助色
+    --color-secondary: #{$dark-secondary};
+    --color-secondary-light: #{$dark-secondary-light};
+}
+
+html.dark {
+    @include app-dark-tokens;
+}
+
+@media (prefers-color-scheme: dark) {
     :root {
-        // 背景色
-        --background: #{$dark-background};
-        --background-light: #{$dark-background-light};
+        @include app-dark-tokens;
+    }
+}
 
-        // 文字颜色
-        --text-primary: #{$dark-secondary};
-        --text-secondary: #{$dark-secondary-light};
+// ============================================================
+// Admin 内容区 token 契约（P4-0）
+//
+// 只约束 Admin 布局与数据页的「背景 / 表面 / 边框 / 文本 / 弱化文本」，
+// 不覆盖品牌色与 PrimeVue 自身的暗色 preset（html.dark 由 PrimeVue 同步）。
+// 页面不再直接写 #fff / #f8fafc / #1a202c 等浅色值。
+// ============================================================
+@mixin admin-dark-tokens {
+    --admin-bg: #{$dark-background};
+    --admin-surface: #{$dark-background-light};
+    --admin-surface-muted: #{$dark-background};
+    --admin-border: #{$dark-border-color};
+    --admin-text: #{$dark-secondary};
+    --admin-muted: #{$dark-secondary-light};
+    --admin-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+    --admin-primary-soft: #{$primary-950};
+    --admin-primary-soft-strong: #{$primary-900};
+}
 
-        // 边框颜色
-        --border-color: #{$dark-border-color};
-        --color-border: #{$dark-border-color};
+:root {
+    --admin-bg: #{$background};
+    --admin-surface: #{$background-light};
+    --admin-surface-muted: #{$background};
+    --admin-border: #{$border-color};
+    --admin-text: #{$secondary};
+    --admin-muted: #{$secondary-light};
+    --admin-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    --admin-primary-soft: #{$primary-50};
+    --admin-primary-soft-strong: #{$primary-100};
+}
 
-        // 辅助色
-        --color-secondary: #{$dark-secondary};
-        --color-secondary-light: #{$dark-secondary-light};
+html.dark {
+    @include admin-dark-tokens;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        @include admin-dark-tokens;
     }
 }
 

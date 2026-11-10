@@ -8,6 +8,7 @@ import { hashClientSecret } from '@/server/utils/oauth-client-view'
 import { snowflake } from '@/server/utils/snowflake'
 import logger from '@/server/utils/logger'
 import { oauthApplicationSchema } from '@/utils/shared/schemas'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 400,
                 success: false,
-                message: validationResult.error?.issues[0]?.message || '参数校验失败',
+                message: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数校验失败',
                 data: null,
             }
         }

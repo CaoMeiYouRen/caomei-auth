@@ -46,7 +46,7 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         readiness: 'seo-ready',
         switchable: true,
         indexable: true,
-        files: ['zh-CN/common.json', 'zh-CN/validation.json'],
+        files: ['zh-CN/common.json', 'zh-CN/validation.json', 'zh-CN/errors.json'],
     },
     {
         code: 'en-US',
@@ -58,8 +58,8 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         routePrefix: '/en-US',
         readiness: 'ui-ready',
         switchable: true,
-        indexable: true,
-        files: ['en-US/common.json', 'en-US/validation.json'],
+        indexable: false,
+        files: ['en-US/common.json', 'en-US/validation.json', 'en-US/errors.json'],
     },
 ]
 
@@ -75,16 +75,19 @@ const AUTH_LOCALE_ALIASES: Record<string, LocaleCode> = {
 }
 
 /**
- * 把任意来源的 locale 归一化为 Registry 内的 code，无法识别时回退默认语言。
+ * 把任意来源的 locale 归一化为 Registry 内的 code；无法识别时返回 undefined。
+ *
+ * 与 `normalizeDetectedLocale` 的区别：调用方需要区分“未识别”与“默认语言”时使用，
+ * 例如在语言协商中跳过不支持的语言。
  */
-export function normalizeDetectedLocale(input?: string | null): LocaleCode {
+export function matchDetectedLocale(input?: string | null): LocaleCode | undefined {
     if (!input) {
-        return DEFAULT_LOCALE
+        return undefined
     }
 
     const raw = String(input).trim()
     if (!raw) {
-        return DEFAULT_LOCALE
+        return undefined
     }
 
     const exact = LOCALE_REGISTRY.find((locale) => locale.code.toLowerCase() === raw.toLowerCase())
@@ -92,8 +95,14 @@ export function normalizeDetectedLocale(input?: string | null): LocaleCode {
         return exact.code
     }
 
-    const alias = AUTH_LOCALE_ALIASES[raw] ?? AUTH_LOCALE_ALIASES[raw.split('-')[0] ?? '']
-    return alias ?? DEFAULT_LOCALE
+    return AUTH_LOCALE_ALIASES[raw] ?? AUTH_LOCALE_ALIASES[raw.split('-')[0] ?? '']
+}
+
+/**
+ * 把任意来源的 locale 归一化为 Registry 内的 code，无法识别时回退默认语言。
+ */
+export function normalizeDetectedLocale(input?: string | null): LocaleCode {
+    return matchDetectedLocale(input) ?? DEFAULT_LOCALE
 }
 
 export function getLocaleDefinition(code: string): LocaleDefinition | undefined {

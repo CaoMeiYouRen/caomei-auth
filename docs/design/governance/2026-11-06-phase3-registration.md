@@ -1,6 +1,6 @@
 # 2026-11-06 阶段 3 范围登记：caomei-ui P2–P3 迁移与 i18n 非组件面
 
-> **状态**：已授权启动（2026-11-06 用户选择方向 A「组件库 P2–P3」，并补充「可以先处理组件之外的国际化」；2026-11-08 用户授权插队 M0「发布链路原生多架构」，方案 C 复用工作流）。
+> **状态**：已收口（2026-11-06 授权启动；2026-11-08 授权插队 M0「发布链路原生多架构」；2026-11-09 M6-1 收口，**M0-3 定时发版验证已移至 backlog**，2026-11-14 或手动 dispatch）。交付与回退证据见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md)。
 > **单一事实源**：阶段范围与原子条目见 [todo.md](../../plan/todo.md)；交付摘要收口后归档至 [已完成工作归档](../../archive/completed-work.md)；候选详情见 [backlog.md](../../plan/backlog.md)；阶段方向见 [roadmap.md](../../plan/roadmap.md)。
 > **准入规则**：[规划规范](../../standards/planning.md)。迁移批次依据 [caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md) §8；i18n 依据 [国际化实施方案](../../standards/i18n.md) §8。
 
@@ -17,7 +17,7 @@
 | 主线 | 原子条目 | 交付面 |
 | :--- | :--- | :--- |
 | **M0 发布链路插队（不计入主线）** | M0-1 新增 `docker-build.yml` 复用工作流；M0-2 `docker.yml` 改为调用；M0-3 `release.yml` 去 QEMU；M0-4 `docker-publish.yml` build 路径修复 | 4 个 workflow、[评估记录](./2026-11-08-native-multiarch-docker-review.md)、验证与回滚说明 |
-| **M1 迁移准备与决策** | M1-1 用量快照复测、白名单与包体基线复核（含 1.0.0 → 1.2.0 升级验证） | `pnpm migration:usage` 快照、`CAOMEI_UI_ROUTE_PREFIXES`、`keyCss` / 总 JS（固定 chunk 白名单）基线、[1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md) |
+| **M1 迁移准备与决策** | M1-1 用量快照复测、白名单与包体基线复核（含 1.0.0 → 1.2.0 升级验证） | `pnpm migration:usage` 快照、`CAOMEI_UI_ROUTE_PREFIXES`、`keyCss` / entry chunk / 总 JS 基线、[1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md) |
 | | M1-2 P2 视觉基线采集与差异清单（`/login`） | 浅色 / 暗色 × 桌面 / 移动 × 默认 / 校验错误 / 2FA / 验证码状态；差异清单 |
 | | M1-3 DatePicker range 与 Toast 语气样式决策裁定（2026-11-08 按 1.2.0 修订） | 回写迁移评估 §6.3 / §7.3；更新 §12 上收条件 |
 | **M2 P2 登录页试点** | M2-1 登录页整页迁移 + login 专用 V2 薄封装 | `pages/login.vue`、按需 V2 封装、白名单 `/login` |
@@ -55,20 +55,21 @@
 ## 4. 验收标准
 
 - **M1**：用量快照可复现；白名单与包体基线与阶段 2 记录一致或有归因；P2 视觉基线覆盖矩阵，差异清单可逐项对照。
-- **M0**：`release.yml` 主路径无 `setup-qemu-action`，`build` matrix 为 amd64 / arm64 原生 runner；`docker-publish.yml` `mode=build` 不再单 runner 构建双架构，`mode=retag` 行为不变；`docker.yml` 行为不变；`imagetools inspect` 显示 amd64 + arm64，版本 / `latest` / 日期 / `sha-*` 指向同一 manifest；各架构缓存 scope 独立；全量 lint / typecheck / test / build 通过。工作流改动只能在推送后由 `workflow_dispatch` / push 验证，未验证前不得标记完成。
+- **M0**：`release.yml` 主路径无 `setup-qemu-action`，`build` matrix 为 amd64 / arm64 原生 runner；`docker-publish.yml` `mode=build` 不再单 runner 构建双架构，`mode=retag` 行为不变；`docker.yml` 行为不变；`imagetools inspect` 显示 amd64 + arm64，版本 / `latest` / 日期 / `sha-*` 指向同一 manifest；各架构缓存 scope 独立；全量 lint / typecheck / test / build 通过。工作流改动只能在推送后由 `workflow_dispatch` / push 验证，未验证前不得标记完成。**2026-11-08 进展**：`docker-build.yml`、`docker.yml` 构建 / merge、`docker-publish` rebuild / retag 均已跑通；`docker.yml` deploy 的 README 缺失已修复并复跑通过（README + Jenkins 两步）；`release.yml` 未单独运行，下一次定时（2026-11-14 20:00 UTC+8）或手动 dispatch 会正式发版并完成验证。证据见 [复核记录](./2026-11-08-native-multiarch-docker-review.md) §5.2。
 - **M2**：`/login` 无 PrimeVue 在册组件族残留；浅色 / 暗色视觉差异全部归因，「待修」清零；定向测试、SSR / hydration 通过；白名单只登记已迁移路由。
 - **M3 / M4**：每个迁移路由内无两套组件混用；表单校验、提交、2FA、Toast / Confirm、OAuth 同意、SSO 登录行为与迁移前一致；a11y 与暗色通过；每批独立提交并可单独回滚。
 - **M5**：0 处 schema 级中文 `message`；`validation.*` 键 parity 100%；审计脚本可运行并接入 CI / `lint-staged`；认证类 API 在 `en-US` 下返回英文错误并带 `Content-Language`，不可用时显式登记回退。
-- **全阶段**：`pnpm lint` / `pnpm lint:css` / `pnpm typecheck` / `pnpm test` / `pnpm build` 通过；无未关闭 blocker 进入提交。
+- **M6**：白名单与九条已迁移路由一致；入口 CSS 预算 ≤ +10%；迁移记录、包体 / 用量复测、回退证据与文档同步完成；视觉自基线 50/50；遗留项（M0-3、2FA / captcha 视觉、P4/P5）已登记。
+- **全阶段**：`pnpm lint` / `pnpm lint:css` / `pnpm typecheck` / `pnpm test` / `pnpm build` 通过；无未关闭 blocker 进入提交。**2026-11-09 收口**：`lint` 0 error、`typecheck` 通过、967 用例通过、`build` 通过、`keyCss +2.87%`、视觉 50/50；证据见 [收口记录](./2026-11-09-phase3-closure.md) §8。
 
 ## 5. 依赖与风险
 
 | 项 | 说明 |
 | :--- | :--- |
 | caomei-ui 版本 | 精确锁定 `1.2.0`（2026-11-08 由 1.0.0 升级并复测 typecheck / build），Dependabot `ignore` 同步为 `>1.2.0`；后续升级仍走人工批次并重跑回归 |
-| 视觉基线 | 沿用 [P2 视觉基线方案](./2026-11-05-caomei-ui-p2-visual-baseline-plan.md)，不建截图回归工程；差异只登记结论 |
+| 视觉基线 | 两层：参考态（迁移前，`tests/visual/reference/`）+ 自基线（当前接受态，`tests/visual/__screenshots__/`），见 [视觉参考态基座](./2026-11-08-visual-baseline-harness.md)；CI 门禁已接入（容器固定，自基线阻断 / 参考态报告） |
 | DatePicker / Toast | 决策已按 1.2.0 修订（range 直接迁移、Toast token 映射）；上游 #28 中 DataTable 密度 / 选择列宽度已交付，Paginator 报表仍为自渲染 |
-| Toast / Confirm 双 Provider | 所有调用点显式 import 来源，`migration:check-imports` 守卫；禁止依赖自动导入 |
+| Toast / Confirm 双 Provider | 认证页 6 个 composable、`useProfileFlow`、`useSecuritySettings`、`useOAuthConsent` 与 `useSsoLoginFlow` 已切到 caomei `useToast`（profile 另含 `useConfirm`）（`app.vue` 双挂载，PrimeVue 侧保留给未迁移页）；其余页面仍用 PrimeVue，P4/P5 逐批切换；`migration:check-imports` 守卫 |
 | 安全设置页体量 | 596 行，含 2FA / 会话 / 绑定；若超出原子条目阈值（10 文件 / 800 行新增）必须拆条 |
 | i18n 服务端 | `useTranslation(event)` 属 experimental；若 Nuxt 4.6.3 下不稳定，保留中文兜底并登记，不阻塞组件迁移 |
 | M0 复用工作流 | `docker-build.yml` 需 `packages: write`，调用方显式映射 4 个 secrets（Docker Hub / ACR）。工作流语义只能在推送后验证，本地仅做 YAML / 表达式静态检查与项目质量门 |

@@ -374,7 +374,7 @@ function formatRelativeTime(date: string | Date) {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 2rem;
-    background: white;
+    background: var(--admin-surface);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
@@ -389,12 +389,12 @@ function formatRelativeTime(date: string | Date) {
     .sso-title {
         font-size: 2rem;
         font-weight: 700;
-        color: var(--primary-color);
+        color: var(--admin-text);
         margin: 0 0 0.5rem;
     }
 
     .sso-subtitle {
-        color: #718096;
+        color: var(--admin-muted);
         margin: 0;
         font-size: 1.1rem;
     }
@@ -414,7 +414,7 @@ function formatRelativeTime(date: string | Date) {
 }
 
 .sso-filters {
-    background: white;
+    background: var(--admin-surface);
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
@@ -451,7 +451,7 @@ function formatRelativeTime(date: string | Date) {
 }
 
 .sso-list {
-    background: white;
+    background: var(--admin-surface);
     border-radius: 12px;
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     overflow: hidden;
@@ -461,12 +461,12 @@ function formatRelativeTime(date: string | Date) {
         justify-content: space-between;
         align-items: center;
         padding: 1rem 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid var(--admin-border);
 
         .table-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #4a5568;
+            color: var(--admin-text);
             margin: 0;
             display: flex;
             align-items: center;
@@ -480,27 +480,32 @@ function formatRelativeTime(date: string | Date) {
         }
 
         .p-datatable-thead>tr>th {
-            background: #f8fafc;
-            border-bottom: 2px solid #e2e8f0;
-            color: #4a5568;
+            background: var(--admin-surface-muted);
+            border-bottom: 2px solid var(--admin-border);
+            color: var(--admin-text);
             font-weight: 600;
             padding: 1rem;
         }
 
         .p-datatable-tbody>tr>td {
             padding: 1rem;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--admin-border);
+        }
+
+        .p-datatable-tbody>tr {
+            background: var(--admin-surface);
+            color: var(--admin-text);
         }
 
         .p-datatable-tbody>tr:hover {
-            background: #f8fafc;
+            background: var(--admin-surface-muted);
         }
     }
 
     .provider-info {
         .provider-name {
             font-weight: 600;
-            color: #4a5568;
+            color: var(--admin-text);
             margin-bottom: 0.25rem;
         }
 
@@ -510,7 +515,7 @@ function formatRelativeTime(date: string | Date) {
             align-items: center;
             gap: 0.25rem;
             font-size: 0.875rem;
-            color: #718096;
+            color: var(--admin-muted);
             margin-bottom: 0.125rem;
 
             i {
@@ -522,7 +527,7 @@ function formatRelativeTime(date: string | Date) {
     .date-info {
         small {
             display: block;
-            color: #718096;
+            color: var(--admin-muted);
         }
     }
 
@@ -534,6 +539,12 @@ function formatRelativeTime(date: string | Date) {
             width: 32px;
             height: 32px;
         }
+    }
+}
+
+@include dark-mode {
+    .admin-sso {
+        background: var(--admin-bg);
     }
 }
 
@@ -549,7 +560,7 @@ function formatRelativeTime(date: string | Date) {
 }
 
 .text-muted {
-    color: #718096;
+    color: var(--admin-muted);
     font-size: 0.875rem;
     margin-top: 0.5rem;
 }

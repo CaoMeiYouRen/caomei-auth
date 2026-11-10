@@ -61,11 +61,6 @@ on:
         required: true
       ALIYUN_PASSWORD:
         required: true
-    outputs:
-      tags:
-        description: "生成的完整 tag 列表（换行分隔）"
-        value: ${{ jobs.merge.outputs.tags }}
-
 permissions:
   contents: read
   packages: write
@@ -147,8 +142,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    outputs:
-      tags: ${{ steps.metadata.outputs.tags }}
     steps:
       - name: Download digests
         uses: actions/download-artifact@v8

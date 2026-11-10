@@ -1,32 +1,32 @@
 <template>
-    <BaseDialog
+    <BaseDialogV2
         v-model:visible="visible"
         title="设置用户名"
-        width="450px"
-        :show-footer="false"
     >
-        <BaseInput
+        <BaseInputV2
             id="newUsername"
             v-model="newUsername"
-            v-tooltip.top="'输入新的用户名，用于用户名密码登录'"
             placeholder="请输入新用户名"
             :error="errors.username"
+            title="输入新的用户名，用于用户名密码登录"
         />
         <div class="form-group">
-            <Button
-                v-tooltip.top="'点击确认设置新的用户名'"
-                label="确认设置"
+            <CaomeiButton
                 class="btn btn-primary w-full"
+                block
                 :loading="isSettingUsername"
+                title="点击确认设置新的用户名"
                 @click="setUsername"
-            />
+            >
+                确认设置
+            </CaomeiButton>
         </div>
-    </BaseDialog>
+    </BaseDialogV2>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { useForm } from '@/composables/core/use-form'
 import { setUsernameFormSchema } from '@/utils/shared/schemas'
@@ -77,19 +77,10 @@ async function setUsername() {
             })
 
             visible.value = false
-            toast.add({
-                severity: 'success',
-                summary: '用户名设置成功',
-                life: 2000,
-            })
+            toast.success({ title: '用户名设置成功', duration: 2000 })
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '设置用户名时发生未知错误'
-            toast.add({
-                severity: 'error',
-                summary: '设置用户名失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '设置用户名失败', description: errorMessage, duration: 5000 })
         }
     })
 }

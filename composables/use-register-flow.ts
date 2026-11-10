@@ -1,15 +1,17 @@
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, unref } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import type { z } from 'zod'
 import { registerEmailFormSchema, registerPhoneFormSchema } from '@/utils/shared/schemas'
 import { usePhoneOtp } from '@/composables/use-otp'
 import { authClient } from '@/lib/auth-client'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 import { useForm } from '@/composables/core/use-form'
 
 export function useRegisterFlow() {
     const config = useRuntimeConfig().public
+    const translate = useValidationMessage()
     const phoneEnabled = config.phoneEnabled
     const usernameEnabled = config.usernameEnabled
 
@@ -46,9 +48,9 @@ export function useRegisterFlow() {
                 result.error.issues.forEach((err) => {
                     const path = err.path.join('.')
                     if (path) {
-                        newErrors[path] = err.message
+                        newErrors[path] = translate(err.message)
                     } else {
-                        newErrors._form = err.message
+                        newErrors._form = translate(err.message)
                     }
                 })
             }
@@ -81,7 +83,7 @@ export function useRegisterFlow() {
             () => {
                 const res = registerPhoneFormSchema.shape.phone.safeParse(phone.value)
                 if (!res.success) {
-                    setErrors({ ...errors.value, phone: res.error.issues[0]?.message || '请输入有效的手机号' })
+                    setErrors({ ...errors.value, phone: translate(res.error.issues[0]?.message) || '请输入有效的手机号' })
                     return false
                 }
                 return true
@@ -106,13 +108,16 @@ export function useRegisterFlow() {
 
     const changeMode = (mode: 'email' | 'phone') => {
         if (mode === 'phone' && !phoneEnabled) {
-            toast.add({ severity: 'error', summary: '功能未启用', detail: '短信功能未启用，请使用其他方式注册', life: 3000 })
+            toast.danger({ title: '功能未启用', description: '短信功能未启用，请使用其他方式注册', duration: 3000 })
             return
         }
         params.mode = mode
         activeTab.value = mode
         setErrors({})
-        captcha.value?.reset()
+        const hasCaptchaToken = captcha.value ? Boolean(unref(captcha.value.token)) : false
+        if (hasCaptchaToken) {
+            captcha.value?.reset()
+        }
     }
 
     const register = async () => {
@@ -127,7 +132,7 @@ export function useRegisterFlow() {
                     } catch (error) {
                         const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
                         errors.value.captcha = errorMessage
-                        toast.add({ severity: 'warn', summary: '需要验证码', detail: errorMessage, life: 2500 })
+                        toast.warning({ title: '需要验证码', description: errorMessage, duration: 2500 })
                         return
                     }
 
@@ -175,24 +180,14 @@ export function useRegisterFlow() {
                     }
                 }
 
-                toast.add({
-                    severity: 'success',
-                    summary: '注册成功',
-                    detail: activeTab.value === 'email' ? '验证邮件已发送，请前往邮箱激活账号' : '注册成功，请登录',
-                    life: 2500,
-                })
+                toast.success({ title: '注册成功', description: activeTab.value === 'email' ? '验证邮件已发送，请前往邮箱激活账号' : '注册成功，请登录', duration: 2500 })
 
                 setTimeout(() => {
                     navigateTo(`/login?mode=${activeTab.value}`)
                 }, 500)
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : '注册过程中发生未知错误'
-                toast.add({
-                    severity: 'error',
-                    summary: '注册失败',
-                    detail: errorMessage,
-                    life: 5000,
-                })
+                toast.danger({ title: '注册失败', description: errorMessage, duration: 5000 })
                 // Re-throw to let useForm know it failed? useForm doesn't handle errors from onSubmit unless we throw.
                 // But here we handled it with toast.
             }

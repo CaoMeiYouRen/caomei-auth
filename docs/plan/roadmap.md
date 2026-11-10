@@ -2,7 +2,7 @@
 
 本文档概述草梅 Auth 的中长期发展方向与大颗粒度阶段规划。候选条目、优先级与验收要点见 [backlog.md](./backlog.md)；进行中阶段的原子条目见 [todo.md](./todo.md)；准入与归档规则见 [规划规范](../standards/planning.md)。
 
-> **当前状态**：**阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面（含 M0 发布链路插队）」进行中**（2026-11-06 授权；2026-11-08 授权 M0 插队）。范围与验收见 [阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md)，原子条目见 [todo.md](./todo.md)；阶段 2 已于 2026-11-06 完成并归档，交付摘要见 [已完成工作归档 §8](../archive/completed-work.md)。
+> **当前状态**：**阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」进行中**（2026-11-10 授权）。阶段 3 已于 2026-11-09 收口，M0-3 定时发版验证移至 [backlog §3.3](./backlog.md#33-基础设施)。范围与验收见 [阶段 4 登记记录](../design/governance/2026-11-10-phase4-registration.md)，原子条目见 [todo.md](./todo.md)；P4-0 技术方案见 [Admin 迁移基座方案](../design/governance/2026-11-10-p4-admin-migration-plan.md)。
 
 ---
 
@@ -33,7 +33,7 @@ _2026-11-06：11 条原子条目全部完成并归档，交付摘要见 [已完�
 
 ---
 
-## 阶段 3: caomei-ui P2–P3 迁移与 i18n 非组件面（进行中，2026-11-06 授权；含 M0 插队）
+## 阶段 3: caomei-ui P2–P3 迁移与 i18n 非组件面（已收口 2026-11-09；含 M0 插队）
 
 _目标：启动组件库正式替换（P2 试点 → P3 认证 / 个人 / 安全 / OAuth / SSO），并并行推进不改页面文案的 i18n 前置与服务端能力。_
 
@@ -45,7 +45,22 @@ _目标：启动组件库正式替换（P2 试点 → P3 认证 / 个人 / 安�
 - **M5 i18n 非组件面**：移除 schema 级中文 message、补齐 `validation.*` 键、治理脚本与门禁、服务端错误消息试点。
 - **M6 阶段收口**：白名单、包体复测、迁移记录、文档同步、回退验证。
 
+> **收口**：P2–P3 九条认证路由完成，白名单 9 条，视觉 50/50，入口 CSS `+2.87%`；M0-3 定时验证已移至 backlog。交付与回退证据见 [阶段 3 收口记录](../design/governance/2026-11-09-phase3-closure.md)。
 > **不做**：P4 Admin 数据页、P5 卸载 PrimeVue、页面文案翻译、邮件与 `User.locale`、SEO 放量、体验与性能项。范围与验收见 [阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md)。
+
+
+---
+
+## 阶段 4: caomei-ui P4 Admin 与 P5 单库收尾（进行中，2026-11-10 授权）
+
+_目标：完成剩余 Admin 数据页与共享封装迁移，建立 Admin 视觉基线，并卸载 PrimeVue。_
+
+- **M1 P4-0 基座与视觉**：DataTable / Dialog / Select 适配决策；Admin 浅色 / 暗色 token；Admin 视觉参考态与自基线；Admin 夹具。
+- **M2–M11 P4 页面迁移**：`admin/users`、`admin/oauth/applications`、`admin/sso/providers`、`admin/logs`、`oauth/clients`、`index`、`error`、`components/base/*` V1；每页按“参考态 → 迁移 → 归因 → 自基线 → 文档 → 单提交”推进。
+- **M12 P4 收口**：白名单、包体、视觉、回退、文档。
+- **M13–M15 P5 单库收尾**：移除 PrimeVue 依赖 / Provider / 导入 / 构建配置 / 样式 token / 测试 mock / 白名单；最终包体与视觉回归，阶段归档。
+
+> **不做**：i18n 页面文案、邮件、`User.locale`、SEO（阶段 5）；新产品功能；UI 改版；PrimeVue 5.x 升级。范围与验收见 [阶段 4 登记记录](../design/governance/2026-11-10-phase4-registration.md)。
 
 ---
 
@@ -82,8 +97,7 @@ _目标：启动组件库正式替换（P2 试点 → P3 认证 / 个人 / 安�
 
 ## 跨阶段候选方向（未授权）
 
-- **caomei-ui 后续批次**：P4 Admin 数据页与剩余页面、P5 卸载 PrimeVue；P2–P3 已进入阶段 3。见 [backlog §2.1](./backlog.md#21-组件库迁移到-caomei-ui)。
-- **i18n 后续**：i18n M2 页面文案（待 P2 试点完成后准入）、i18n M4 剩余（Admin 文案、邮件模板、`User.locale`、API 其余错误面）、i18n M5 治理与 SEO 放量。见 [backlog §1.2](./backlog.md#12-i18n-全量落地)。
+- **i18n 后续（阶段 5 候选）**：i18n M2 页面文案、i18n M4 剩余（Admin 文案、邮件模板、`User.locale`、API 其余错误面）、i18n M5 治理与 SEO 放量。见 [backlog §1.1](./backlog.md#11-i18n-全量落地)。
 - **体验与性能**：时区设置、注册控制、Admin 日志高级筛选、性能审计、Demo 数据增强。见 [backlog §2.2–§2.6](./backlog.md#2-功能性需求feature-backlog)。
 
 ---
@@ -97,10 +111,13 @@ _目标：启动组件库正式替换（P2 试点 → P3 认证 / 个人 / 安�
 阶段 2（已完成 2026-11-06）：安全收口 + 迁移预备
         │  M1 安全 → M2 Zod → M3 覆盖率 → M4 caomei-ui 预备 → M5 i18n 预备
         ▼
-阶段 3（进行中）：caomei-ui P2–P3 + i18n 非组件面（+ M0 发布链路插队）
+阶段 3（已收口 2026-11-09）：caomei-ui P2–P3 + i18n 非组件面（+ M0 发布链路插队）
         │  M0 原生多架构 → M1 准备 → M2 登录页 → M3 认证入口 → M4 个人/安全/OAuth/SSO → M5 i18n 前置 → M6 收口
         ▼
-后续方向（未授权）：P4/P5 迁移收尾 / i18n 页面与邮件 / 体验与性能 / 开发者生态 / 安全增强 / 企业级
+阶段 4（进行中）：caomei-ui P4 Admin 与 P5 单库收尾
+        │  P4 基座 → Admin 页面 → P4 收口 → P5 卸载 PrimeVue
+        ▼
+后续方向（未授权）：阶段 5 i18n 页面与邮件 / 体验与性能 / 开发者生态 / 安全增强 / 企业级
         │
         └─ 候选详情：backlog.md
 ```

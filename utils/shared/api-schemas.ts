@@ -8,7 +8,7 @@ import { z } from 'zod'
  * Schema for validating ID path parameters
  */
 export const idParamSchema = z.object({
-    id: z.string().min(1, 'ID 不能为空'),
+    id: z.string().min(1, 'validation.idRequired'),
 })
 
 // ============================================
@@ -20,7 +20,7 @@ export const idParamSchema = z.object({
  */
 const stringToNumber = z
     .string()
-    .regex(/^\d+$/, '必须是数字')
+    .regex(/^\d+$/, 'validation.digitsOnly')
     .transform(Number)
     .or(z.number())
 

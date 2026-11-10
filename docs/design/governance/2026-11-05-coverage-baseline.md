@@ -101,4 +101,4 @@ pnpm test:coverage
 ## 6. 关联文档
 
 -   [阶段 2 范围登记](./2026-11-05-phase2-registration.md)｜[待办事项](../../plan/todo.md)｜[Backlog](../../plan/backlog.md)
--   [测试规范](../../standards/testing.md)｜[Zod 迁移计划](../../plan/zod-migration.md)
+-   [测试规范](../../standards/testing.md)｜[Zod 迁移计划](../../archive/zod-migration.md)

@@ -4,6 +4,7 @@ import { dataSource } from '@/server/database'
 import { User } from '@/server/entities/user'
 import logger from '@/server/utils/logger'
 import { adminRoleSyncSchema } from '@/utils/shared/schemas'
+import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 
 export default defineEventHandler(async (event) => {
     // 验证用户是否已登录
@@ -48,7 +49,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: validationResult.error?.issues[0]?.message || '参数验证失败',
+            message: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数验证失败',
         })
     }
 

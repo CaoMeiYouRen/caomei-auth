@@ -14,8 +14,10 @@ import {
     DOUYIN_CLIENT_ID,
     FACEBOOK_CLIENT_ID,
 } from '@/utils/shared/env'
+import { getServerI18n } from '@/server/utils/i18n'
 import { validateQuery } from '@/server/utils/validation'
 import { socialProvidersQuerySchema, type SocialProvidersQuery } from '@/utils/shared/api-schemas'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 
 // 所有第三方登录的元数据
 const allProviders: SocialProvider[] = [
@@ -122,7 +124,11 @@ const allProviders: SocialProvider[] = [
 
 export default defineEventHandler(async (event) => {
     // 使用 Zod 校验查询参数
-    const query: SocialProvidersQuery = await validateQuery(event, socialProvidersQuerySchema)
+    const { t } = await getServerI18n(event)
+    const query: SocialProvidersQuery = await validateQuery(event, socialProvidersQuerySchema, {
+        errorMap: createZodErrorMap(t),
+        translate: t,
+    })
     const { includeDisabled } = query
 
     return {

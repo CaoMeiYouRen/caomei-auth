@@ -1,41 +1,41 @@
 <template>
-    <BaseDialog
+    <BaseDialogV2
         v-model:visible="visible"
         :title="user.emailVerified ? '修改邮箱' : '绑定邮箱'"
-        width="450px"
-        :show-footer="false"
     >
-        <BaseInput
+        <BaseInputV2
             id="email"
             v-model="email"
-            v-tooltip.top="'输入新的邮箱地址'"
             placeholder="请输入新邮箱"
             :error="errors.email"
+            title="输入新的邮箱地址"
         />
         <Captcha ref="emailCaptcha" />
-        <Message
+        <CaomeiMessage
             v-if="emailCaptchaError"
-            severity="error"
-            size="small"
+            tone="danger"
+            size="sm"
             variant="simple"
         >
             {{ emailCaptchaError }}
-        </Message>
+        </CaomeiMessage>
         <div class="form-group">
-            <Button
-                v-tooltip.top="'点击发送验证链接到新邮箱'"
-                label="发送验证链接"
+            <CaomeiButton
                 class="btn btn-primary w-full"
+                block
                 :loading="bindingEmail"
+                title="点击发送验证链接到新邮箱"
                 @click="bindEmail"
-            />
+            >
+                发送验证链接
+            </CaomeiButton>
         </div>
-    </BaseDialog>
+    </BaseDialogV2>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import Captcha from '@/components/captcha.vue'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
@@ -88,7 +88,7 @@ async function bindEmail() {
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
             emailCaptchaError.value = errorMessage
-            toast.add({ severity: 'warn', summary: '需要验证码', detail: errorMessage, life: 2500 })
+            toast.warning({ title: '需要验证码', description: errorMessage, duration: 2500 })
             return
         }
 
@@ -99,7 +99,7 @@ async function bindEmail() {
                 callbackURL: '/profile', // 验证后重定向
             }, requestOptions)
             if (props.user.emailVerified) {
-                toast.add({ severity: 'info', summary: '验证链接已发送到当前邮箱，请查收', life: 2000 })
+                toast.info({ title: '验证链接已发送到当前邮箱，请查收', duration: 2000 })
                 return
             }
 
@@ -110,20 +110,10 @@ async function bindEmail() {
             })
 
             visible.value = false
-            toast.add({
-                severity: 'success',
-                summary: '验证邮件已发送',
-                detail: '请前往新邮箱查收验证邮件',
-                life: 3000,
-            })
+            toast.success({ title: '验证邮件已发送', description: '请前往新邮箱查收验证邮件', duration: 3000 })
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '绑定邮箱时发生未知错误'
-            toast.add({
-                severity: 'error',
-                summary: '绑定失败',
-                detail: errorMessage,
-                life: 5000,
-            })
+            toast.danger({ title: '绑定失败', description: errorMessage, duration: 5000 })
         }
     })
 }

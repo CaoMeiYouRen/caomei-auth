@@ -40,6 +40,9 @@ node_modules
 .agents
 .claude
 /artifacts
+/playwright-report
+/test-results
+/database/.visual
 
 # OpenCode 运行时配置
 # opencode.json 由 .opencode/configs/ 下的预设通过 scripts/setup/switch-models.mjs 生成，

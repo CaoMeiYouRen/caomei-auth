@@ -1,5 +1,5 @@
 import { ref, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 
 export function useSsoLoginFlow() {
@@ -63,12 +63,7 @@ export function useSsoLoginFlow() {
 
             // 成功时会重定向，不需要额外处理
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: 'SSO 登录失败',
-                detail: error.message || '无法找到匹配的 SSO 提供商',
-                life: 5000,
-            })
+            toast.danger({ title: 'SSO 登录失败', description: error.message || '无法找到匹配的 SSO 提供商', duration: 5000 })
         } finally {
             emailForm.value.loading = false
         }
@@ -89,12 +84,7 @@ export function useSsoLoginFlow() {
                 throw new Error(result.error.message || 'SSO 登录失败')
             }
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: 'SSO 登录失败',
-                detail: error.message || '无法找到匹配的 SSO 提供商',
-                life: 5000,
-            })
+            toast.danger({ title: 'SSO 登录失败', description: error.message || '无法找到匹配的 SSO 提供商', duration: 5000 })
         } finally {
             domainForm.value.loading = false
         }
@@ -115,12 +105,7 @@ export function useSsoLoginFlow() {
                 throw new Error(result.error.message || 'SSO 登录失败')
             }
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: 'SSO 登录失败',
-                detail: error.message || '无法找到匹配的组织',
-                life: 5000,
-            })
+            toast.danger({ title: 'SSO 登录失败', description: error.message || '无法找到匹配的组织', duration: 5000 })
         } finally {
             orgForm.value.loading = false
         }
@@ -141,12 +126,7 @@ export function useSsoLoginFlow() {
                 throw new Error(result.error.message || 'SSO 登录失败')
             }
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: 'SSO 登录失败',
-                detail: error.message || '无法找到指定的 SSO 提供商',
-                life: 5000,
-            })
+            toast.danger({ title: 'SSO 登录失败', description: error.message || '无法找到指定的 SSO 提供商', duration: 5000 })
         } finally {
             providerForm.value.loading = false
         }
@@ -167,12 +147,7 @@ export function useSsoLoginFlow() {
                 throw new Error(result.error.message || 'SSO 登录失败')
             }
         } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: 'SSO 登录失败',
-                detail: error.message || `无法使用 ${provider.name || provider.providerId} 登录`,
-                life: 5000,
-            })
+            toast.danger({ title: 'SSO 登录失败', description: error.message || `无法使用 ${provider.name || provider.providerId} 登录`, duration: 5000 })
         } finally {
             specificProviderLoading.value = ''
         }
@@ -184,12 +159,7 @@ export function useSsoLoginFlow() {
 
         // 检查 URL 参数中的错误信息
         if (route.query.error === 'sso_failed') {
-            toast.add({
-                severity: 'error',
-                summary: 'SSO 登录失败',
-                detail: '身份验证过程中发生错误，请重试或联系管理员',
-                life: 5000,
-            })
+            toast.danger({ title: 'SSO 登录失败', description: '身份验证过程中发生错误，请重试或联系管理员', duration: 5000 })
         }
     })
 

@@ -14,7 +14,11 @@ const {
     mockAuthClient,
 } = vi.hoisted(() => ({
     mockUseToast: {
-        add: vi.fn(),
+        show: vi.fn(),
+        success: vi.fn(),
+        danger: vi.fn(),
+        warning: vi.fn(),
+        info: vi.fn(),
     },
     mockUseFetch: vi.fn(),
     mockUseRoute: vi.fn(),
@@ -25,7 +29,7 @@ const {
     },
 }))
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: () => mockUseToast,
 }))
 
@@ -116,9 +120,8 @@ describe('useOAuthConsent', () => {
             await new Promise((resolve) => setTimeout(resolve, 0))
 
             expect(hasError.value).toBe(true)
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: '缺少必需参数：client_id',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: '缺少必需参数：client_id',
             }))
         })
 
@@ -139,9 +142,8 @@ describe('useOAuthConsent', () => {
             await new Promise((resolve) => setTimeout(resolve, 0))
 
             expect(hasError.value).toBe(true)
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: '应用不存在，请检查授权链接是否正确',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: '应用不存在，请检查授权链接是否正确',
             }))
         })
 
@@ -162,9 +164,8 @@ describe('useOAuthConsent', () => {
             await new Promise((resolve) => setTimeout(resolve, 0))
 
             expect(hasError.value).toBe(true)
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: '该应用已被禁用，无法进行授权',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: '该应用已被禁用，无法进行授权',
             }))
         })
     })
@@ -181,9 +182,7 @@ describe('useOAuthConsent', () => {
             await allowConsent()
 
             expect(mockAuthClient.$fetch).toHaveBeenCalledWith('/oauth2/consent', expect.objectContaining({ method: 'POST', body: { accept: true } }))
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-            }))
+            expect(mockUseToast.success).toHaveBeenCalled()
             expect(window.location.href).toBe('https://app.com/cb?code=123')
         })
 
@@ -197,9 +196,8 @@ describe('useOAuthConsent', () => {
 
             await allowConsent()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: 'Consent failed',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'Consent failed',
             }))
         })
 
@@ -228,9 +226,8 @@ describe('useOAuthConsent', () => {
 
             await denyConsent()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'info',
-                summary: '已拒绝授权',
+            expect(mockUseToast.info).toHaveBeenCalledWith(expect.objectContaining({
+                title: '已拒绝授权',
             }))
 
             vi.runAllTimers()
@@ -248,9 +245,8 @@ describe('useOAuthConsent', () => {
 
             await denyConsent()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: 'Deny failed',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'Deny failed',
             }))
         })
     })

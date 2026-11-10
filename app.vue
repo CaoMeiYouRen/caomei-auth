@@ -1,10 +1,14 @@
 <template>
     <div>
-        <Toast />
-        <ConfirmDialog />
-        <NuxtLayout>
-            <NuxtPage />
-        </NuxtLayout>
+        <CaomeiToastProvider>
+            <CaomeiConfirmDialog>
+                <Toast />
+                <ConfirmDialog />
+                <NuxtLayout>
+                    <NuxtPage />
+                </NuxtLayout>
+            </CaomeiConfirmDialog>
+        </CaomeiToastProvider>
     </div>
 </template>
 

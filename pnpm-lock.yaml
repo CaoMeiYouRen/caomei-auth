@@ -92,11 +92,11 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@better-auth/oauth-provider':
-        specifier: 1.7.15
-        version: 1.7.15(@better-auth/core@1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.17(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.5(zod@4.6.7))
+        specifier: 1.7.17
+        version: 1.7.17(@better-auth/core@1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.17(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.5(zod@4.6.7))
       '@better-auth/sso':
-        specifier: 1.7.14
-        version: 1.7.14(@better-auth/core@1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.17(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.5(zod@4.6.7))
+        specifier: 1.7.17
+        version: 1.7.17(@better-auth/core@1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.17(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.5(zod@4.6.7))
       '@hcaptcha/vue3-hcaptcha':
         specifier: ^1.3.0
         version: 1.3.0(vue@3.5.44(typescript@6.0.3))
@@ -265,7 +265,10 @@ importers:
         version: 1.17.0(@nuxt/schema@4.6.4)(@typescript-eslint/utils@8.67.0(eslint@9.39.2(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(@vue/compiler-sfc@3.5.44)(confbox@0.2.4)(dotenv@17.4.2)(esbuild@0.25.12)(eslint-import-resolver-node@0.3.10(supports-color@10.2.2))(eslint@9.39.2(jiti@2.7.0)(supports-color@10.2.2))(giget@3.3.0)(jiti@2.7.0)(magic-string@1.4.5)(magicast@0.5.4)(oxc-parser@0.141.0)(rolldown@1.2.16)(rollup@4.67.5)(srvx@1.0.8)(supports-color@10.2.2)(typescript@6.0.3)(unplugin@3.7.0(esbuild@0.25.12)(rolldown@1.2.16)(rollup@4.67.5)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1)))(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))
       '@nuxt/test-utils':
         specifier: ^4.1.0
-        version: 4.1.0(patch_hash=b66dc6455b91b461cef5291eca0805d430be2ddd4cc8f917cedaec80a92c69d8)(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+        version: 4.1.0(patch_hash=b66dc6455b91b461cef5291eca0805d430be2ddd4cc8f917cedaec80a92c69d8)(@playwright/test@1.64.1)(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+      '@playwright/test':
+        specifier: 1.64.1
+        version: 1.64.1
       '@primevue/nuxt-module':
         specifier: ^4.5.5
         version: 4.5.5(@babel/parser@7.29.9)(magicast@0.5.4)(supports-color@10.2.2)(vue@3.5.44(typescript@6.0.3))
@@ -483,9 +486,8 @@ packages:
     peerDependencies:
       '@types/json-schema': ^7.0.15
 
-  '@authenio/xml-encryption@2.0.2':
-    resolution: {integrity: sha512-cTlrKttbrRHEw3W+0/I609A2Matj5JQaRvfLtEIGZvlN0RaPi+3ANsMeqAyCAVlH/lUIW2tmtBlSMni74lcXeg==}
-    engines: {node: '>=12'}
+  '@authenio/xml-encryption@6.0.2':
+    resolution: {integrity: sha512-/jv5qO935fH4Ma+fxh5rJLRYZvUM57fd/I74IiSoR8cFm+sgjszXFEEn1PkqZhhBD4MVkH2YT+/UDY+pnW0S0Q==}
 
   '@aws-sdk/checksums@3.1002.2':
     resolution: {integrity: sha512-u57THWR5YOCqjIzg5og8r5dDc54n7hENs2eVy+aw1+Fd+QERa2x72qNlsiMNJI9svSpQp3WevkSKljzIG6x1YA==}
@@ -803,10 +805,10 @@ packages:
       mongodb:
         optional: true
 
-  '@better-auth/oauth-provider@1.7.15':
-    resolution: {integrity: sha512-0SeH4pSTOtfGwFmub9RDHt5/iCLxGQv8qWs/aj7UH0YKThrN+piu8eGIuKnfNUbofppoydk5dk3O5ZEnMyhXNg==}
+  '@better-auth/oauth-provider@1.7.17':
+    resolution: {integrity: sha512-C3VzaGH4KkyynL5fVmehVFl5acw4o8530FuzafGcaFIsC/M7uBlFCBx/ZABoqEuSVkq68bFuqonnnUvU2NdFow==}
     peerDependencies:
-      '@better-auth/core': ^1.7.15
+      '@better-auth/core': ^1.7.17
       '@better-auth/utils': ^0.4.2 || ^0.5.0
       '@better-fetch/fetch': 1.3.3
       better-auth: ^1.7.14
@@ -825,10 +827,10 @@ packages:
       prisma:
         optional: true
 
-  '@better-auth/sso@1.7.14':
-    resolution: {integrity: sha512-sfUzpm6GO5l5MSUA17qRO/E4INthqF+KRmymtj4Hhm+Xsx6CoRgr0BVIDfAic3tSqVhObcVYiiiZ38dXXhkCCw==}
+  '@better-auth/sso@1.7.17':
+    resolution: {integrity: sha512-lMmrds0bQ2rDgCQr3YIyl0On7Gb8JkHN+Iq1ZoKcjZ7scZKSw2n3PoKEK7EvLQFgFhAtH4RtcBDEp2T/5eD/xA==}
     peerDependencies:
-      '@better-auth/core': ^1.7.14
+      '@better-auth/core': ^1.7.17
       '@better-auth/utils': ^0.4.2 || ^0.5.0
       '@better-fetch/fetch': 1.3.3
       better-auth: ^1.7.14
@@ -1697,8 +1699,8 @@ packages:
     resolution: {integrity: sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA==}
     engines: {node: '>= 20.19.0'}
 
-  '@nodable/entities@3.0.0':
-    resolution: {integrity: sha512-8L9xFeTYKhm49xfIypoe2W5wV1m/3Z58kT+7kR9A8OyFxcPduI4VmxaUMQyKYrRjUoLLSXv6EKKID5Tvj9cUVw==}
+  '@nodable/entities@3.1.0':
+    resolution: {integrity: sha512-LsS/DjHr+uDM647Gru/cA8+J3a3HfhttwCKLyuoyN7yXTFCxKBtSgMQBvrW9yNPa2/zDRUNuGPaH5QUFoa4arQ==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2423,6 +2425,11 @@ packages:
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+
+  '@playwright/test@1.64.1':
+    resolution: {integrity: sha512-IaYGml/nSOiZWROfPtuIL7neuu9qDOZ3TNvNljUIrhDMxiGTgPjzj/g9p9RxpS2tSepPDRY+UwAaEeiKtUvIAg==}
+    engines: {node: '>=20'}
+    hasBin: true
 
   '@pnpm/config.env-replace@1.1.0':
     resolution: {integrity: sha512-htyl8TWnKL7K/ESFa1oW2UB5lVDxuF5DpM7tBi6Hu2LNL3mWkIzNLG6N4zoCUP1lCKNxWy/3iu8mS8MvToGd6w==}
@@ -4078,9 +4085,6 @@ packages:
     resolution: {integrity: sha512-BNoCY6SXXPQ7gF2opIP4GBE+Xw7U+pHMYKuzjgCN3GwiaIR09UUeKfheyIry77QtrCBlC0KK0q5/TER/tYh3PQ==}
     engines: {node: '>= 0.4'}
 
-  asn1@0.2.6:
-    resolution: {integrity: sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ==}
-
   assertion-error@2.0.1:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
@@ -5661,8 +5665,8 @@ packages:
   fast-xml-builder@1.3.1:
     resolution: {integrity: sha512-pIM/1n3ntFXKYrUZwW7QCK0gAW7XY+wzj1YMIV3tLDvPj/V+zTGJK5e3/4WJfwj0qWw2ElNXiTixda/R+3YSug==}
 
-  fast-xml-parser@5.11.1:
-    resolution: {integrity: sha512-TBw6K/fxoQGGjCmZDw9w/ZwP3uDcnTM4YH/g+PFRWr8sbe5idXtxNN6vITh4+1ruCZaho6uBFurElsA7F0zzgw==}
+  fast-xml-parser@5.12.0:
+    resolution: {integrity: sha512-/pXxRBtwxY9w8z7YbgsvIPPcPvFDsTbIkWwTQJhzNJPokj+TbN6ftmcv4j/pEQDvOCNnKGDzuk5Bo2oogIOiFg==}
     hasBin: true
 
   fastest-levenshtein@1.0.16:
@@ -6483,8 +6487,8 @@ packages:
     resolution: {integrity: sha512-mE00Gnza5EEB3Ds0HfMyllZzbBrmLOX3vfWoj9A9PEnTfratQ/BcaJOuMhnkhjXvb2+FkY3VuHqtAGpTPmglFQ==}
     engines: {node: '>=18'}
 
-  is-unsafe@2.0.2:
-    resolution: {integrity: sha512-HgbIHPBH0KHHCcjLfGsCvhtPTVxjaAZlXjwdz7/GQC40SjSe4sfQsar8J5VFo8JOSbarkpV0OLG95bbaNd9aAQ==}
+  is-unsafe@2.0.3:
+    resolution: {integrity: sha512-ZBllczCCO267vgdFb6Tq3pv+LhHaCiGMdr+ZsuL+OopruAg7S+3ZDs1vD0RPC0uSrkjzbraxaGjtX1YBxjPeFQ==}
 
   is-utf8@0.2.1:
     resolution: {integrity: sha512-rMYPYvCzsXywIsldgLaSoPlw5PfoB/ssr7hY4pLfcodrA5M/eArza1a9VmTiNIBNMjOGr1Ow9mTyU2o69U6U9Q==}
@@ -6563,9 +6567,6 @@ packages:
 
   jose@5.10.0:
     resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
-
-  jose@6.2.12:
-    resolution: {integrity: sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==}
 
   jose@6.2.15:
     resolution: {integrity: sha512-qdF6ewcZARtef63fJ9AKKZPgxw+t7USH6HLXYcD4CrdmSvDp79rpJSPFEKc90QBeGS63u1KQtN2MZQHC0yDIzA==}
@@ -7484,9 +7485,6 @@ packages:
     resolution: {integrity: sha512-6li2QanLsAXpIH2R6j77MzRyvOyrvdTqlKtO4CgBdHGNvN99ZZfyxszHc5o5+IZBWD5u6Hzwg83JoGXmqZNG9Q==}
     engines: {node: '>=18'}
 
-  node-rsa@1.1.1:
-    resolution: {integrity: sha512-Jd4cvbJMryN21r5HgxQOpMEqv+ooke/korixNNK3mGqfGJmy0M77WDDzo/05969+OkMy3XW1UuZsSmW9KQm7Fw==}
-
   nodemailer@10.3.1:
     resolution: {integrity: sha512-uF0AFsJC07Y1vdW7p580DKAnh7rAO+4UPSSB3mDCPNDufoiaOebV6JmrzpxB14OjEEEiBsNdYoM2Y+fN8M7BBA==}
     engines: {node: '>=20.0.0'}
@@ -8019,6 +8017,11 @@ packages:
 
   playwright-core@1.64.1:
     resolution: {integrity: sha512-BC4s8y6SEVA6Q1rSxZTto8hI1KUI3xXlHGZgvGqP4IqPdI/a6FX9H29IDNz7vKo9l21b6LfYosScPL6M3xxyDQ==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.64.1:
+    resolution: {integrity: sha512-HCrVhHr5QQuwYoswEUGTb7gGp522yflbv/ST8nF4sFWGuLjQCt17Q/EubpGGSNKYn1tsTCPZxqHhHCfVURu7UA==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -8634,8 +8637,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  samlify@2.13.1:
-    resolution: {integrity: sha512-vdYr/zohDGBbfWNU4miEzc1jmWOtkLySPViapC6nfGkv9KxzLq4UlGkKyryzwLw4jVlZk88Rw93HaCRVpe+t+g==}
+  samlify@2.15.1:
+    resolution: {integrity: sha512-peZitMO2cAnf0pY45H0yw0Drqmby7U91yRovH3AH8TdwYCNRnmidVORXIjcK+21cBk3Mjl8EVz8Nvuw/v20rAw==}
 
   sanitize-html@2.18.1:
     resolution: {integrity: sha512-2X5lC8fYla8YaT8g73Nj+HcLWXan5dLyCWLgVvaOmfw7JI78IRsyNtIDytTHdn7hBQbIkCah7Zbmd5jabzeDig==}
@@ -9020,8 +9023,8 @@ packages:
   strip-literal@4.0.0:
     resolution: {integrity: sha512-PaqAvfUZKBwc/SLmNZtHmzK+v19Z4O4eS3cKPeGvbIv/U3pnyEq4Tuw3/4v/FwfM8VQaEawsyCcOQ0P+kpwWWw==}
 
-  strnum@2.4.2:
-    resolution: {integrity: sha512-rDG3Ah4TV0k1hWvLSzkZtMmLN9+eS+h3knq4MP6A42Y3Yh5qGNnOUs1jJkoSr8FG5dsL28c7KgkIBzSEykqtuw==}
+  strnum@2.5.1:
+    resolution: {integrity: sha512-UM4nTLWzQiDBseVxUGxN0wJzIk0UU89Qi7pKXz9qISo+lhviJikTuikBsK/oFRlpvYHvSdz0TVoLyQ+sEpYwxA==}
 
   strtok3@10.7.0:
     resolution: {integrity: sha512-iAqrCpp7UXD2FZiHWhLXqdJ6CmNeVzRkkHAyyhhKMVtbVm2KtPX3D/bJNonvtcyLTHS4rwqP2pz9fsjK1K4z0Q==}
@@ -9248,8 +9251,8 @@ packages:
     resolution: {integrity: sha512-yau8yJdTt989Mm0Bd/236QnzEiPf2xLLTqUZRUJOo/3CB078LSwzei343DgtJVmfJKJE3TMINY1u42SQsP6mXw==}
     engines: {node: '>=14.0.0'}
 
-  tldts-core@7.4.19:
-    resolution: {integrity: sha512-goNXV6Ho9TIOfpJZanTd6CKG5DyYgYAL+k+22T0SLh8l6+KHIfBUPFuePuSZv05UttIaaLmI9tb7TmGIdK5AkQ==}
+  tldts-core@7.4.20:
+    resolution: {integrity: sha512-C630TWXZCZmLq0F2bW4QqwnaaxCQ/svpAqvJwnC4JvgEM5ohhBnGsEzTLSOXcN+xjz+kEaHS5uoWIw2klnqd0A==}
 
   tldts@7.4.19:
     resolution: {integrity: sha512-48dH6aSpQnpbzDUc4vIQZ1VjB8tkK+e8c1yx05/SZK+rkssgjEOlxDd/yU8/a4vGYQ9vRgJr9dwMq9TJ0b3X2Q==}
@@ -10273,8 +10276,8 @@ packages:
     resolution: {integrity: sha512-sqMMuL1rc0FmMBOzCpd0yuy9trqF2yTTVe+E9ogwCSWQCdDEtQUwrZPT6AxqtsFGRNxycgncbP/xmOOSPw5ZUw==}
     engines: {node: '>= 6.0'}
 
-  xml-crypto@6.1.2:
-    resolution: {integrity: sha512-leBOVQdVi8FvPJrMYoum7Ici9qyxfE4kVi+AkpUoYCSXaQF4IlBm1cneTK9oAxR61LpYxTx7lNcsnBIeRpGW2w==}
+  xml-crypto@6.4.0:
+    resolution: {integrity: sha512-d21ModhBO/+QWWAmOjyDeQJuHNmsR/HtOxyBchiTbKfGNKuHYwQNd+SlLhwyyrwoAGLp4Qc6BQ7nAtnM47dHSQ==}
     engines: {node: '>=16'}
 
   xml-escape@1.1.0:
@@ -10295,16 +10298,12 @@ packages:
     resolution: {integrity: sha512-Eux0i2QdDYKbdbA6AM6xE4m6ZTZr4G4xF9kahI2ukSEMCzwce2eX9WlTI5J3s+NU7hpasFsr8hWIONae7LluAQ==}
     engines: {node: '>=6.0'}
 
-  xpath@0.0.32:
-    resolution: {integrity: sha512-rxMJhSIoiO8vXcWvSifKqhvV96GjiD5wYb8/QHdoRyQvraTpp4IEv944nhGausZZ3u7dhQXteZuZbaqfpB7uYw==}
-    engines: {node: '>=0.6.0'}
-
   xpath@0.0.33:
     resolution: {integrity: sha512-NNXnzrkDrAzalLhIUc01jO2mOzXGXh1JwPgkihcLLzw98c0WgYDmmjSh1Kl3wzaxSVWMuA+fe0WTWOBDWCBmNA==}
     engines: {node: '>=0.6.0'}
 
-  xpath@0.0.34:
-    resolution: {integrity: sha512-FxF6+rkr1rNSQrhUNYrAFJpRXNzlDoMxeXN5qI84939ylEv3qqPFKa85Oxr6tDaJKqwW6KKyo2v26TSv3k6LeA==}
+  xpath@0.0.35:
+    resolution: {integrity: sha512-8O+m2N04SwLpGw/1Grz2HD8ejnWDV7M1dMPgKKuOjhYh5W9H4pel/+06kInohIdpS2FeSbL4i8ID8c4tpxwq9Q==}
     engines: {node: '>=0.6.0'}
 
   xtend@4.0.2:
@@ -10538,11 +10537,10 @@ snapshots:
       '@types/json-schema': 7.0.15
       js-yaml: 4.3.2
 
-  '@authenio/xml-encryption@2.0.2':
+  '@authenio/xml-encryption@6.0.2':
     dependencies:
       '@xmldom/xmldom': 0.8.15
       escape-html: 1.0.3
-      xpath: 0.0.32
 
   '@aws-sdk/checksums@3.1002.2':
     dependencies:
@@ -11014,7 +11012,7 @@ snapshots:
       '@better-auth/core': 1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5)
       '@better-auth/utils': 0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86)
 
-  '@better-auth/oauth-provider@1.7.15(@better-auth/core@1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.17(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.5(zod@4.6.7))':
+  '@better-auth/oauth-provider@1.7.17(@better-auth/core@1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.17(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.5(zod@4.6.7))':
     dependencies:
       '@better-auth/core': 1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5)
       '@better-auth/utils': 0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86)
@@ -11029,7 +11027,7 @@ snapshots:
       '@better-auth/core': 1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5)
       '@better-auth/utils': 0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86)
 
-  '@better-auth/sso@1.7.14(@better-auth/core@1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.17(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.5(zod@4.6.7))':
+  '@better-auth/sso@1.7.17(@better-auth/core@1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5))(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(better-auth@1.7.17(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3)))(better-call@1.4.5(zod@4.6.7))':
     dependencies:
       '@better-auth/core': 1.7.17(@better-auth/utils@0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86))(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.15)(kysely@0.28.19)(nanostores@1.5.5)
       '@better-auth/utils': 0.5.1(patch_hash=d12c68095a6cdd20386660657f2f9ccc741670411a76a004715aa4c947fb8d86)
@@ -11037,9 +11035,9 @@ snapshots:
       '@xmldom/xmldom': 0.8.15
       better-auth: 1.7.17(@opentelemetry/api@1.9.1)(mysql2@3.24.6(@types/node@26.6.5))(pg@8.23.1)(vitest@4.1.12)(vue@3.5.44(typescript@6.0.3))
       better-call: 1.4.5(zod@4.6.7)
-      fast-xml-parser: 5.11.1
-      jose: 6.2.12
-      samlify: 2.13.1
+      fast-xml-parser: 5.12.0
+      jose: 6.2.15
+      samlify: 2.15.1
       tldts: 7.4.19
       zod: 4.6.7
 
@@ -11603,9 +11601,9 @@ snapshots:
 
   '@iconify/types@2.0.0': {}
 
-  '@inquirer/external-editor@1.0.0(@types/node@26.6.5)':
+  '@inquirer/external-editor@1.0.0(@types/node@26.6.6)':
     dependencies:
-      '@types/node': 26.6.5
+      '@types/node': 26.6.6
       chardet: 2.1.1
       iconv-lite: 0.6.3
 
@@ -11906,7 +11904,7 @@ snapshots:
 
   '@noble/hashes@2.4.0': {}
 
-  '@nodable/entities@3.0.0': {}
+  '@nodable/entities@3.1.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -12515,7 +12513,7 @@ snapshots:
       rc9: 3.1.0
       std-env: 4.3.0
 
-  '@nuxt/test-utils@4.1.0(patch_hash=b66dc6455b91b461cef5291eca0805d430be2ddd4cc8f917cedaec80a92c69d8)(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)':
+  '@nuxt/test-utils@4.1.0(patch_hash=b66dc6455b91b461cef5291eca0805d430be2ddd4cc8f917cedaec80a92c69d8)(@playwright/test@1.64.1)(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)':
     dependencies:
       '@clack/prompts': 1.7.0
       '@nuxt/devtools-kit': 2.7.0(magicast@0.5.5)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))
@@ -12543,9 +12541,10 @@ snapshots:
       tinyexec: 1.2.4
       ufo: 1.6.4
       unplugin: 3.3.0(esbuild@0.25.12)(rolldown@1.2.16)(rollup@4.67.5)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))
-      vitest-environment-nuxt: 2.0.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+      vitest-environment-nuxt: 2.0.0(@playwright/test@1.64.1)(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       vue: 3.5.44(typescript@6.0.3)
     optionalDependencies:
+      '@playwright/test': 1.64.1
       '@vue/test-utils': 2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3))
       happy-dom: 21.0.4
       playwright-core: 1.64.1
@@ -13037,6 +13036,10 @@ snapshots:
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
+
+  '@playwright/test@1.64.1':
+    dependencies:
+      playwright: 1.64.1
 
   '@pnpm/config.env-replace@1.1.0': {}
 
@@ -14799,10 +14802,6 @@ snapshots:
       get-intrinsic: 1.3.0
       is-array-buffer: 3.0.5
 
-  asn1@0.2.6:
-    dependencies:
-      safer-buffer: 2.1.2
-
   assertion-error@2.0.1: {}
 
   ast-kit@2.2.0:
@@ -15373,7 +15372,7 @@ snapshots:
       find-root: 1.1.0
       fs-extra: 9.1.0
       glob: 10.5.0
-      inquirer: 8.2.7(@types/node@26.6.5)
+      inquirer: 8.2.7(@types/node@26.6.6)
       is-utf8: 0.2.1
       lodash: 4.18.1
       minimist: 1.2.8
@@ -16550,13 +16549,13 @@ snapshots:
       path-expression-matcher: 1.6.2
       xml-naming: 0.3.0
 
-  fast-xml-parser@5.11.1:
+  fast-xml-parser@5.12.0:
     dependencies:
-      '@nodable/entities': 3.0.0
+      '@nodable/entities': 3.1.0
       fast-xml-builder: 1.3.1
-      is-unsafe: 2.0.2
+      is-unsafe: 2.0.3
       path-expression-matcher: 1.6.2
-      strnum: 2.4.2
+      strnum: 2.5.1
       xml-naming: 0.3.0
 
   fastest-levenshtein@1.0.16: {}
@@ -17194,9 +17193,9 @@ snapshots:
 
   ini@6.0.0: {}
 
-  inquirer@8.2.7(@types/node@26.6.5):
+  inquirer@8.2.7(@types/node@26.6.6):
     dependencies:
-      '@inquirer/external-editor': 1.0.0(@types/node@26.6.5)
+      '@inquirer/external-editor': 1.0.0(@types/node@26.6.6)
       ansi-escapes: 4.2.1
       chalk: 4.1.2
       cli-cursor: 3.1.0
@@ -17422,7 +17421,7 @@ snapshots:
 
   is-unicode-supported@2.1.0: {}
 
-  is-unsafe@2.0.2: {}
+  is-unsafe@2.0.3: {}
 
   is-utf8@0.2.1: {}
 
@@ -17489,8 +17488,6 @@ snapshots:
   jiti@2.7.0: {}
 
   jose@5.10.0: {}
-
-  jose@6.2.12: {}
 
   jose@6.2.15: {}
 
@@ -18932,10 +18929,6 @@ snapshots:
 
   node-releases@2.0.63: {}
 
-  node-rsa@1.1.1:
-    dependencies:
-      asn1: 0.2.6
-
   nodemailer@10.3.1: {}
 
   nopt@10.0.1:
@@ -19563,6 +19556,10 @@ snapshots:
       pathe: 2.0.3
 
   playwright-core@1.64.1: {}
+
+  playwright@1.64.1:
+    dependencies:
+      playwright-core: 1.64.1
 
   pluralize@8.0.0: {}
 
@@ -20214,15 +20211,14 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  samlify@2.13.1:
+  samlify@2.15.1:
     dependencies:
-      '@authenio/xml-encryption': 2.0.2
+      '@authenio/xml-encryption': 6.0.2
       '@xmldom/xmldom': 0.8.15
-      node-rsa: 1.1.1
       xml: 1.0.1
-      xml-crypto: 6.1.2
+      xml-crypto: 6.4.0
       xml-escape: 1.1.0
-      xpath: 0.0.34
+      xpath: 0.0.35
 
   sanitize-html@2.18.1:
     dependencies:
@@ -20659,7 +20655,7 @@ snapshots:
     dependencies:
       js-tokens: 10.0.0
 
-  strnum@2.4.2:
+  strnum@2.5.1:
     dependencies:
       anynum: 1.0.1
 
@@ -20948,11 +20944,11 @@ snapshots:
 
   tinyrainbow@3.1.1: {}
 
-  tldts-core@7.4.19: {}
+  tldts-core@7.4.20: {}
 
   tldts@7.4.19:
     dependencies:
-      tldts-core: 7.4.19
+      tldts-core: 7.4.20
 
   to-buffer@1.2.2:
     dependencies:
@@ -21699,9 +21695,9 @@ snapshots:
       - universal-cookie
       - yaml
 
-  vitest-environment-nuxt@2.0.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12):
+  vitest-environment-nuxt@2.0.0(@playwright/test@1.64.1)(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12):
     dependencies:
-      '@nuxt/test-utils': 4.1.0(patch_hash=b66dc6455b91b461cef5291eca0805d430be2ddd4cc8f917cedaec80a92c69d8)(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+      '@nuxt/test-utils': 4.1.0(patch_hash=b66dc6455b91b461cef5291eca0805d430be2ddd4cc8f917cedaec80a92c69d8)(@playwright/test@1.64.1)(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.25.12)(happy-dom@21.0.4)(magicast@0.5.5)(playwright-core@1.64.1)(rolldown@1.2.16)(rollup@4.67.5)(typescript@6.0.3)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@farmfe/core'
@@ -22051,7 +22047,7 @@ snapshots:
     dependencies:
       os-paths: 4.4.0
 
-  xml-crypto@6.1.2:
+  xml-crypto@6.4.0:
     dependencies:
       '@xmldom/is-dom-node': 1.0.1
       '@xmldom/xmldom': 0.8.15
@@ -22067,11 +22063,9 @@ snapshots:
 
   xmlbuilder@13.0.2: {}
 
-  xpath@0.0.32: {}
-
   xpath@0.0.33: {}
 
-  xpath@0.0.34: {}
+  xpath@0.0.35: {}
 
   xtend@4.0.2: {}
 
