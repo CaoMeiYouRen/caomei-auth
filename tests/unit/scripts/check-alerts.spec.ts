@@ -21,11 +21,19 @@ interface GateResult {
     output: string
 }
 
-async function runGate(args: string[]): Promise<GateResult> {
+/** CI 中 GITHUB_STEP_SUMMARY 恒存在，会改变日志输出形态；默认剔除，需要时显式传入 */
+function buildEnv(overrides: Record<string, string> = {}): NodeJS.ProcessEnv {
+    const env: NodeJS.ProcessEnv = { ...process.env }
+    delete env.GITHUB_STEP_SUMMARY
+    return { ...env, ...overrides }
+}
+
+async function runGate(args: string[], envOverrides: Record<string, string> = {}): Promise<GateResult> {
     try {
         const { stdout, stderr } = await execFileAsync(process.execPath, [scriptPath, ...args], {
             cwd: projectRoot,
             encoding: 'utf8',
+            env: buildEnv(envOverrides),
         })
         return { code: 0, output: `${stdout}\n${stderr}` }
     } catch (error) {
@@ -174,5 +182,19 @@ describe('scripts/security/check-alerts', () => {
 
         expect(result.code).toBe(1)
         expect(result.output).toContain('category 必须是')
+    })
+
+    it('writes the report to Step Summary instead of the log when available', async () => {
+        const reportDir = await mkdtemp(path.join(tmpdir(), 'security-alert-gate-summary-'))
+        const summaryPath = path.join(reportDir, 'summary.md')
+        const result = await runGate(
+            [...dependabotOpenArgs, `--exemptions=${fixture('exemptions-high.json')}`],
+            { GITHUB_STEP_SUMMARY: summaryPath },
+        )
+
+        expect(result.code).toBe(0)
+        expect(result.output).toContain('写入 Step Summary')
+        expect(result.output).not.toContain('已豁免的 high 告警')
+        expect(await readFile(summaryPath, 'utf8')).toContain('已豁免的 high 告警')
     })
 })
