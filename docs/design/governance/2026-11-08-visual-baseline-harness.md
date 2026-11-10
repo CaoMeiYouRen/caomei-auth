@@ -328,7 +328,7 @@ pnpm test:visual --grep "login 默认态"
 
 - **跨环境已用镜像固定**：本地与 CI 共用同一 Playwright 镜像；宿主直跑与容器相差约 1% 像素，故宿主结果不作判定依据。镜像升级或 playwright 版本变化时，必须重采自基线并在 PR 中说明。
 - **未覆盖状态**：2FA 弹窗视觉（需已启用 2FA 的测试账号）、验证码启用态（需 captcha provider）、提交中 / 提交成功 Toast（需真实后端）。这些状态在环境具备后追加，并同批补参考态。
-- **已覆盖九页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`、`/security`、`/oauth/consent`、`/sso-login`；P3 认证面覆盖完毕。
+- **已覆盖九页**：`/login`、`/register`、`/forgot-password`、`/change-password`、`/quick-login`、`/profile`、`/security`、`/oauth/consent`、`/sso-login`；P3 认证面覆盖完毕。Admin 页面矩阵由阶段 4 P4-0 扩展，见 [P4-0 技术方案](./2026-11-10-p4-admin-migration-plan.md) §3.5。
 - **无预算分级**：当前用统一 `maxDiffPixels 200`，未按 `reader` / `admin` 分档；P4 数据页前评估。
 
 ## 8. 与既有文档的关系

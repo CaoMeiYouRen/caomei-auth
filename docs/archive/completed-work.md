@@ -123,7 +123,7 @@ _2026-11-05 授权，2026-11-06 全部原子条目完成并归档；共 5 条主
 
 ## 9. 阶段 3 · caomei-ui P2–P3 迁移与 i18n 非组件面（2026-11-09 收口）
 
-_2026-11-06 授权，2026-11-09 M6-1 收口；共 6 条主线 / 16 条原子条目 + M0 插队 4 条。交付、包体 / 用量复测、回退证据见 [阶段 3 收口记录](../design/governance/2026-11-09-phase3-closure.md)。**唯一未闭环项**：M0-3 `release.yml` 定时发版验证（2026-11-14 或手动 dispatch）。_
+_2026-11-06 授权，2026-11-09 M6-1 收口；共 6 条主线 / 16 条原子条目 + M0 插队 4 条。交付、包体 / 用量复测、回退证据见 [阶段 3 收口记录](../design/governance/2026-11-09-phase3-closure.md)。**M0-3 `release.yml` 定时发版验证已移至 [backlog §3.3](../plan/backlog.md#33-基础设施)**。_
 
 -   [x] **M0 发布链路（插队）**: `docker-build.yml` 复用工作流、`docker.yml` / `release.yml` / `docker-publish.yml` 接入；M0-1 / M0-2 / M0-4 已验证，M0-3 待定时发版验证。
 -   [x] **M1 迁移准备与决策**: `caomei-ui@1.2.0` 基线（30 族 / 301 标签 / 50 文件，入口 JS 431,270 B、`keyCss` 399,733 B）；DatePicker range 与 Toast token 决策回写；视觉参考态基座与 50 张矩阵。

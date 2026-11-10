@@ -1,6 +1,6 @@
 # 2026-11-06 阶段 3 范围登记：caomei-ui P2–P3 迁移与 i18n 非组件面
 
-> **状态**：已收口（2026-11-06 授权启动；2026-11-08 授权插队 M0「发布链路原生多架构」；2026-11-09 M6-1 收口，**剩余 M0-3 定时发版验证**，2026-11-14 或手动 dispatch）。交付与回退证据见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md)。
+> **状态**：已收口（2026-11-06 授权启动；2026-11-08 授权插队 M0「发布链路原生多架构」；2026-11-09 M6-1 收口，**M0-3 定时发版验证已移至 backlog**，2026-11-14 或手动 dispatch）。交付与回退证据见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md)。
 > **单一事实源**：阶段范围与原子条目见 [todo.md](../../plan/todo.md)；交付摘要收口后归档至 [已完成工作归档](../../archive/completed-work.md)；候选详情见 [backlog.md](../../plan/backlog.md)；阶段方向见 [roadmap.md](../../plan/roadmap.md)。
 > **准入规则**：[规划规范](../../standards/planning.md)。迁移批次依据 [caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md) §8；i18n 依据 [国际化实施方案](../../standards/i18n.md) §8。
 

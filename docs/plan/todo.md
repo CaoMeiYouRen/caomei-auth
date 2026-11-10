@@ -4,23 +4,35 @@
 
 ## 当前状态
 
-**当前进行中阶段：阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面」已收口（2026-11-09）**
+**当前进行中阶段：阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」（2026-11-10 授权）**
 
-- 范围与验收口径的单一事实源：[阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md)
-- 收口结果与回退证据：[阶段 3 收口记录](../design/governance/2026-11-09-phase3-closure.md)
-- 当前仅剩 **M0-3 `release.yml` 定时发版验证**（2026-11-14 20:00 UTC+8 或手动 dispatch）；其余原子条目已完成并归档。
-- 边界：本阶段只做 P2–P3 页面替换、非组件 i18n 与发布链路修复；P4/P5、页面文案、邮件与 SEO 未授权。
+- 范围与验收口径：[阶段 4 登记记录](../design/governance/2026-11-10-phase4-registration.md)
+- P4-0 技术方案：[Admin 迁移基座方案](../design/governance/2026-11-10-p4-admin-migration-plan.md)
+- 构成：**2 条主线 / 15 条原子条目**（P4 Admin 数据页 + P5 卸载 PrimeVue）
+- 边界：只做 P4/P5 组件迁移与收尾；i18n 页面文案、邮件、SEO 与新产品功能不在本阶段。
 
-## 阶段 3 原子条目
-
-### M0 发布链路插队（2026-11-08 授权，不计入主线）
+## 阶段 4 原子条目
 
 | 编号 | 条目 | 交付面 | 状态 |
 | :--- | :--- | :--- | :--- |
-| M0-3 | `release.yml` 去 QEMU | `release` 输出 tag → `docker` 调用复用工作流；保留 semver / latest / 日期 / `sha-*` | 待验证（定时 2026-11-14 20:00 UTC+8 或手动 dispatch 会正式发版） |
+| M1 | P4-0 Admin 迁移基座与视觉矩阵 | DataTable / Dialog / Select 适配决策、Admin 视觉参考态与自基线、Admin 夹具、暗色 token | 待开始（技术方案已出） |
+| M2 | P4-1 Admin 用户页 | `pages/admin/users.vue`：DataTable / 筛选 / 分页 / 选择 / 批量操作 | 待开始 |
+| M3 | P4-2 Admin 用户对话框 | `components/admin/users/*`：创建 / 封禁 / 详情 / 会话 | 待开始 |
+| M4 | P4-3 Admin OAuth 应用页 | `pages/admin/oauth/applications.vue`：DataTable / 筛选 / 分页 | 待开始 |
+| M5 | P4-4 Admin OAuth 对话框 | `components/admin/oauth/*`：创建 / 密钥 / API 文档 | 待开始 |
+| M6 | P4-5 Admin SSO 提供商页 | `pages/admin/sso/providers.vue`：DataTable / 筛选 / 分页 | 待开始 |
+| M7 | P4-6 Admin SSO 表单 | `components/admin/sso/*`：OIDC / SAML / 属性映射 | 待开始 |
+| M8 | P4-7 Admin SSO 对话框 | `components/admin/sso/*`：创建 / 详情 | 待开始 |
+| M9 | P4-8 Admin 日志页与表格 | `pages/admin/logs.vue`、`components/admin/logs/logs-table.vue`、筛选与 DatePicker range | 待开始 |
+| M10 | P4-9 Admin 日志统计组件 | `components/admin/logs/{stats-overview,period-stats,provider-stats,trend-chart}.vue` | 待开始 |
+| M11 | P4-10 剩余页面与共享封装 | `pages/oauth/clients.vue`、`pages/index.vue`、`error.vue`、`components/base/*` V1 收口 | 待开始 |
+| M12 | P4-11 P4 收口 | 白名单、包体、视觉、回退、文档 | 待开始 |
+| M13 | P5-1 移除 PrimeVue 运行时与依赖 | 依赖、Provider、导入、构建配置、测试 mock | 待开始 |
+| M14 | P5-2 清理样式 / token / 白名单 | `--p-*` / `.p-*`、V1 封装、白名单文件、迁移守卫 | 待开始 |
+| M15 | P5-3 阶段 4 收口与归档 | 最终包体、视觉、文档、Review Gate、归档 | 待开始 |
 
 ## 说明
 
-- 阶段 3 的验收、依赖与风险以 [阶段 3 登记记录](../design/governance/2026-11-06-phase3-registration.md) 为准；本表只登记状态，不重复条款。
+- 阶段 4 的验收、依赖与风险以 [阶段 4 登记记录](../design/governance/2026-11-10-phase4-registration.md) 为准；本表只登记状态，不重复条款。
 - 每个迁移路由整页切换、独立提交、独立回滚；未登记路由继续使用 PrimeVue。
 - 完成态不得早于 Review Gate 结论；未完成事项的登记口径见 [规划规范 §5](../standards/planning.md#5-状态同步)。

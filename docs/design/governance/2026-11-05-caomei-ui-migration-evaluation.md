@@ -4,7 +4,7 @@
 > **P1 落地记录**：[P0 基线与护栏](./2026-11-05-caomei-ui-p0-baseline.md) §5（双库并存、包体复测、导入守卫）。
 > **范围**：`caomei-auth` 主应用的 PrimeVue 4 组件、主题、图标、命令式 API、测试与构建接入面。
 > **参考**：momei 迁移方案与第 67–71 阶段归档；dependfix M31 迁移记录；caomei-ui 1.2.0 文档与设计规范 §7。
-> **关联**：[backlog §2.1](../../plan/backlog.md#21-组件库迁移到-caomei-ui)｜[i18n 评估](./2026-11-05-i18n-evaluation.md)｜[规划规范](../../standards/planning.md)
+> **关联**：[阶段 4 登记](./2026-11-10-phase4-registration.md)｜[i18n 评估](./2026-11-05-i18n-evaluation.md)｜[规划规范](../../standards/planning.md)
 > **单一事实源**：执行口径（规划载体、i18n 目录 / 模块 / 里程碑 / 脚本 / 验收）以 [planning.md](../../standards/planning.md) 与 [i18n.md](../../standards/i18n.md) 为准；本文保留取证、取舍理由与迁移批次。
 
 ## 1. 结论摘要
@@ -306,7 +306,7 @@
 4. DatePicker range 与 Toast 样式已裁定（§6.3 / §7.3）。
 5. 顺序已确认：组件迁移先行；i18n 只并行非组件面，不改同一批页面。
 
-**P4 / P5 仍未授权**，需在阶段 3 收口后重新评估白名单、包体与视觉差异台账。**阶段 3 已于 2026-11-09 收口**（M0-3 待 2026-11-14 定时验证），交付与回退证据见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md)；P4 仍使用 PrimeVue 的 24 族 / 195 标签 / 31 文件为下一批输入。
+**P4 / P5 已于 2026-11-10 授权进入阶段 4**，范围与验收见 [阶段 4 登记](./2026-11-10-phase4-registration.md)，P4-0 技术方案见 [Admin 迁移基座](./2026-11-10-p4-admin-migration-plan.md)。阶段 3 已于 2026-11-09 收口，M0-3 定时验证移至 backlog；P4 仍使用 PrimeVue 的 24 族 / 195 标签 / 31 文件为输入。
 
 ## 13. 工作量画像
 
@@ -336,7 +336,7 @@
 
 ## 14. 关联文档
 
-- 本项目：[backlog §2.1](../../plan/backlog.md#21-组件库迁移到-caomei-ui)｜[i18n 评估](./2026-11-05-i18n-evaluation.md)｜[UI/UX 设计](../ui-ux.md)｜[开发规范](../../standards/development.md)｜[测试规范](../../standards/testing.md)｜[规划规范](../../standards/planning.md)
+- 本项目：[阶段 4 登记](./2026-11-10-phase4-registration.md)｜[i18n 评估](./2026-11-05-i18n-evaluation.md)｜[UI/UX 设计](../ui-ux.md)｜[开发规范](../../standards/development.md)｜[测试规范](../../standards/testing.md)｜[规划规范](../../standards/planning.md)
 - caomei-ui：[从 PrimeVue 迁移](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/guide/primevue-migration.md)｜[设计规范 §7](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/design/design-spec.md)｜[快速上手](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/guide/getting-started.md)｜[主题与样式](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/design/theming.md)｜[内建文案](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/components/locale.md)
 - momei：[PrimeVue → caomei-ui 迁移方案](https://github.com/CaoMeiYouRen/momei/blob/master/docs/design/governance/2026-09-18-primevue-to-caomei-ui-migration-plan.md)｜[第 67–71 阶段路线图](https://github.com/CaoMeiYouRen/momei/blob/master/docs/plan/roadmap.md)
 - dependfix：[caomei-ui 迁移评估与方案](https://github.com/dependfix/dependfix/blob/master/docs/design/governance/caomei-ui-migration.md)

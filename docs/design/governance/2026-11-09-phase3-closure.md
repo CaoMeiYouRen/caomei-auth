@@ -120,10 +120,10 @@
 
 | 项 | 状态 / 去向 |
 | :--- | :--- |
-| M0-3 `release.yml` 定时发版 | 待 2026-11-14 20:00 UTC+8 或手动 dispatch 验证；文档已登记 |
+| M0-3 `release.yml` 定时发版 | 待 2026-11-14 20:00 UTC+8 或手动 dispatch 验证；已移至 [backlog §3.3](../../plan/backlog.md#33-基础设施) |
 | 2FA 弹窗 / 验证码启用态 / Toast 视觉 | 需测试账号与 captcha provider；转入 [backlog](../../plan/backlog.md) 视觉覆盖候选 |
-| P4 Admin 数据页与 `oauth/clients` | 未授权候选；需重新评估白名单、包体与视觉差异台账 |
-| P5 卸载 PrimeVue | 未授权候选；依赖 P4 完成 |
+| P4 Admin 数据页与 `oauth/clients` | 已于 2026-11-10 进入 [阶段 4](./2026-11-10-phase4-registration.md)；P4-0 技术方案见 [Admin 迁移基座](./2026-11-10-p4-admin-migration-plan.md) |
+| P5 卸载 PrimeVue | 已纳入 [阶段 4](./2026-11-10-phase4-registration.md) M13–M15；依赖 P4 完成 |
 | i18n 页面文案 / 邮件 / `User.locale` / SEO | 未授权候选；见 [backlog §1.1](../../plan/backlog.md#11-i18n-全量落地) |
 
 ## 10. 关联文档

@@ -1,21 +1,17 @@
 # 产品 backlog（待办池）
 
-> **状态**：**阶段 3「caomei-ui P2–P3 迁移与 i18n 非组件面」已于 2026-11-09 收口**（M0-3 待 2026-11-14 定时验证，见 [阶段 3 收口记录](../design/governance/2026-11-09-phase3-closure.md)）。本表只保留**尚未进入阶段**的候选；阶段 2 已于 2026-11-06 完成并归档（见 [已完成工作归档](../archive/completed-work.md)）。
+> **状态**：**阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」进行中**（2026-11-10 授权，见 [阶段 4 登记记录](../design/governance/2026-11-10-phase4-registration.md)）。本表只保留**尚未进入阶段**的候选；阶段 3 已于 2026-11-09 收口，M0-3 定时发版验证见 §3.3。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ## 0. 候选阶段组合（建议，未授权）
 
 > 仅用于范围评估，不构成启动授权，不分配阶段编号。每条候选的详情只在后文一处定义，本节只做组合索引。
 > 原「组合 A：安全与质量收口」已作为阶段 2 完成并归档（2026-11-06），见 [已完成工作归档](../archive/completed-work.md)；本表不再保留。
-> **组合 B / 组合 C 已部分上收**：i18n 非组件面（M2 前置 + 服务端试点）与 caomei-ui P2–P3 已在阶段 3 完成（2026-11-09 收口）；本表只保留尚未授权的后续部分。
+> **组合 B 已部分上收**：i18n 非组件面（M2 前置 + 服务端试点）已在阶段 3 完成（2026-11-09）；i18n 页面文案 / 邮件 / SEO 仍为阶段 5 候选。caomei-ui P4/P5 已在阶段 4 启动，不再作为候选。
 
 ### 组合 B：i18n 全量落地
 
 - i18n 页面文案与邮件（M2 / M4 剩余，未授权）→ [§1.1](#11-i18n-全量落地)
-
-### 组合 C：组件库迁移到 caomei-ui
-
-- caomei-ui P4 / P5（未授权）→ [§2.1](#21-组件库迁移到-caomei-ui)
 
 ### 组合 D：体验与性能
 
@@ -51,19 +47,6 @@ _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实�
 ---
 
 ## 2. 功能性需求（Feature Backlog）
-
-### 2.1 组件库迁移到 caomei-ui
-
-_评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-caomei-ui-migration-evaluation.md)。_
-
-- **状态**：P0/P1 预备已完成（阶段 2 M4，2026-11-06 归档）；**P2–P3 已在阶段 3 完成（2026-11-09 收口，九条认证路由，PrimeVue 24 族 / 195 标签 / 31 文件）；P4 / P5 仍为候选，未授权**。迁移目标已升级至 `caomei-ui@1.2.0`（2026-11-08 复核）；DatePicker range、Toast 逐语气 token、Form/FormItem、DataTable 密度与选择列 token 已落地，决策见 [1.2.0 复核记录](../design/governance/2026-11-08-caomei-ui-1.2.0-revaluation.md)；收口结果见 [阶段 3 收口记录](../design/governance/2026-11-09-phase3-closure.md)。
-- **目标**：用 `caomei-ui`（Vue 3 + Reka UI，当前 1.2.0）替换 PrimeVue 4 生态，统一设计 token、主题、暗色模式与组件行为。
-- **现状**：项目依赖 `primevue` 4.x + `@primevue/*` + `@primeuix/*`；Dependabot 已锁定 v4 并阻止 v5 独立升级；31 个组件族 / 304 个开标签 / 52 个 `.vue`；无 `primeicons`；`--p-*` 仅 56 处（Toast）；已有 7 个 `components/base/*` 封装收敛改动。
-- **分阶段建议**：P0 基线与护栏 → P1 接入基座 → P2 主题 / 封装 / 试点 → P3 表单 / 资料 / 安全 / 浮层 → P4 Admin 数据页与剩余页面 → P5 收尾卸载。不要从 admin 数据表开始。
-- **验收要点**：无 PrimeVue 运行时依赖；受影响页面视觉与交互回归通过；主题 / 暗色模式一致；构建、类型检查与测试通过。
-- **依赖与顺序**：建议组件迁移先行（至少完成基座与核心页），再做 i18n 页面文案；i18n 基础设施可并行，不要同时改同一批页面。
-- **风险**：caomei-ui 1.2.0 的组件覆盖与 API 可能不完全等价；`DatePicker` range 不含时间、无 `showClear`；Toast 圆角 / 间距不可覆盖；DataTable 受控状态需回写；迁移面大，必须分批并保留回退路径。复核见 [1.2.0 复核记录](../design/governance/2026-11-08-caomei-ui-1.2.0-revaluation.md)。
-- **上游反馈**：[caomei-ui#28](https://github.com/CaoMeiYouRen/caomei-ui/issues/28)（DatePicker range / Toast 主题 token / Paginator 报表 / DataTable 密度与选择列宽度）。
 
 ### 2.2 时区设置
 
@@ -131,7 +114,7 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
     - 阶段 2 按范围设下限并全部达标：`server/api` ≥95%（95.94%）、`composables` ≥80%（84.35%）、`components/base` ≥75%（90.11%），全局不跌破 75.74%。
     - 详见 [测试规范](../standards/testing.md)。
 - **jscpd 重复代码检测**：引入代码重复率检测，目标全项目重复率降至 5% 以下。
-- **视觉预算分级与允许清单**：P4 数据页（DataTable 密度 / 选择列 / 空态）引入 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单，避免统一阈值在数据页产生大量噪声。
+- **视觉预算分级与允许清单**：P4 收口后评估 Admin 数据页（DataTable 密度 / 选择列 / 空态）的 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单；P4-0 暂用统一阈值，避免在迁移期引入双重标准。
 - **2FA / captcha / Toast 视觉覆盖**：为 2FA 弹窗、验证码启用态、提交中 / 提交成功 Toast 补充参考态与自基线；需已启用 2FA 的测试账号与 captcha provider。阶段 3 已登记为环境限制，M6-1 收口时迁入本候选（不再保留阶段编号）。
 - **max-lines 基线清理**：消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本节保留 i18n 迁移与 `/api/admin/sso/providers` 系列补录。
@@ -139,13 +122,13 @@ _评估与方案见 [caomei-ui 迁移评估](../design/governance/2026-11-05-cao
 
 ### 3.3 基础设施
 
+- **阶段 3 遗留：`release.yml` 定时发版验证**：`release` 输出 tag → `docker` 复用工作流；保留 semver / latest / 日期 / `sha-*`。待 2026-11-14 20:00 UTC+8 定时或手动 dispatch 验证；通过后完成阶段 3 归档复核。
 - **Dependency Cruiser 依赖图**：配置 `depcruise` 验证 `utils/shared` / `server/utils` / `utils/web` 分层约束。
 - **SonarQube / Codecov 集成**：接入外部质量平台，持续追踪覆盖率与代码异味趋势。
 - **Nx / Turborepo 调研**：评估分模块构建的可行性，提升超大项目构建速度。
 
 ### 3.4 UI 与主题
 
-- **Admin 布局暗色主题补全**：暗色模式下侧边栏已切换，但内容区背景、卡片、表格仍为浅色（`layouts/admin.vue` 与 admin 页面存在硬编码浅色背景）。2026-11-05 视觉审查发现，属既有问题，未在本阶段修改。
 - **Demo 模式语言切换偏移验证**：`data-preset` / GitHub 角标与右上角语言切换共存时的偏移仅在 `NUXT_PUBLIC_DEMO_MODE=true` 下可见，需在 Demo 构建中补一次视觉确认。
 
 ---
