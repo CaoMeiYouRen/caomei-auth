@@ -11,10 +11,17 @@ export const visualHost = '127.0.0.1'
 export const visualPort = 3100
 export const visualBaseURL = `http://${visualHost}:${visualPort}`
 
+/** 视觉层固定时钟锚点：与 `scripts/testing/visual-fixtures.mjs` 的默认值一致。 */
+export const visualFixedNow = '2026-06-15T12:00:00+08:00'
+
+/** 视觉层 AUTH_SECRET：同时用于服务端与测试侧会话 cookie 签名。 */
+export const visualAuthSecret = 'visual-reference-secret'
+
 /**
  * 视觉服务环境：两层共用，必须与采集时完全一致。
  * - `NODE_ENV=test`：让 TypeORM `synchronize` 在空库上建表，且不写 SQL 日志；
- * - 每次启动前删除临时库，保证空库起步（页面不依赖任何种子数据）；
+ * - 每次启动前重建临时库、按 `create.sql` 建表并写入确定性夹具；
+ * - `VISUAL_HARNESS=1` + `VISUAL_FIXED_NOW`：仅视觉层启用固定时钟（见 `server/plugins/visual-clock.ts`）；
  * - 显式关闭验证码与 Demo 角标；固定 3 个社交渠道（假凭据）只为稳定渲染社交按钮区。
  */
 export const visualServerEnv = {
@@ -23,8 +30,11 @@ export const visualServerEnv = {
     PORT: String(visualPort),
     DATABASE_TYPE: 'sqlite',
     DATABASE_PATH: 'database/.visual/visual.sqlite',
-    AUTH_SECRET: 'visual-reference-secret',
-    BETTER_AUTH_SECRET: 'visual-reference-secret',
+    AUTH_SECRET: visualAuthSecret,
+    BETTER_AUTH_SECRET: visualAuthSecret,
+    /* 固定时钟：Admin 页面的日期 / 相对时间 / 趋势图不随真实时间漂移 */
+    VISUAL_HARNESS: '1',
+    VISUAL_FIXED_NOW: visualFixedNow,
     NUXT_PUBLIC_AUTH_BASE_URL: visualBaseURL,
     NUXT_PUBLIC_SITE_URL: visualBaseURL,
     NUXT_PUBLIC_DEMO_MODE: 'false',
@@ -66,7 +76,7 @@ export const visualUse = {
 }
 
 export const visualWebServer = {
-    /* 每次启动前重建空库并按 create.sql 建表，避免上一轮残留影响渲染 */
+    /* 重建库、按 create.sql 建表并写入确定性夹具，避免上一轮残留影响渲染 */
     command: 'node scripts/testing/prepare-visual-db.mjs && node .output/server/index.mjs',
     url: visualBaseURL,
     reuseExistingServer: false,
