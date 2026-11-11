@@ -137,8 +137,8 @@ const homeUrl = config.authBaseUrl || window?.location?.origin
 const contactEmail = `mailto:${config.contactEmail}`
 
 // 读取环境变量
-const icpBeianNumber = config.icpBeianNumber
-const publicSecurityBeianNumber = config.publicSecurityBeianNumber
+const icpBeianNumber = computed(() => config.icpBeianNumber)
+const publicSecurityBeianNumber = computed(() => config.publicSecurityBeianNumber)
 </script>
 
 <style scoped lang="scss">
