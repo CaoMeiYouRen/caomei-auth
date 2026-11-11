@@ -118,6 +118,10 @@ _详情见 [国际化实施方案](../standards/i18n.md) 与 [i18n 评估与实�
 - **视觉预算分级与允许清单**：P4 收口后评估 Admin 数据页（DataTable 密度 / 选择列 / 空态）的 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单；P4-0 暂用统一阈值，避免在迁移期引入双重标准。
 - **2FA / captcha / Toast 视觉覆盖**：为 2FA 弹窗、验证码启用态、提交中 / 提交成功 Toast 补充参考态与自基线；需已启用 2FA 的测试账号与 captcha provider。阶段 3 已登记为环境限制，M6-1 收口时迁入本候选（不再保留阶段编号）。
 - **max-lines 基线清理**：消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。
+    - 2026-11-11（P4-2）：`components/admin/users/user-detail-dialog.vue` 由 556 行增至 624 行，新增 1 条 `max-lines`（全仓 3 → 4 条）；详情视图与编辑表单待拆分。
+- **错误信息取值 helper 去重**：`getErrorMessage(error, fallback)`（`error instanceof Error ? error.message : fallback`）目前在 `composables/admin/use-user-management.ts` 与 4 个 Admin 用户对话框各有一份；P4 后续批次（M4–M8）会继续复制，迁移收口时提取到 `utils/shared/`。
+- **Admin 用户对话框定向单测**：P4-2 后封禁时长换算（`0 → undefined` 永久）、详情弹窗动作可见性（自操作保护）、会话撤销仅由视觉层覆盖；建议在 M4 前补最小单测，锁定动作可见性条件。
+- **i18n 硬编码扫描盲区：`<script setup>` 中的文案**：`scripts/i18n/lib/hardcoded-scan.mjs` 对 `.vue` 只扫描模板段，Admin 迁移把列头（`columns` 数组）、选项标签（`roleOptions` 等）移入脚本后不再计入基线。阶段 5（i18n 全量）启动前需扩展扫描面或在清单中显式说明，否则 Admin 文案清点会失真。
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本节保留 i18n 迁移与 `/api/admin/sso/providers` 系列补录。
 - **迁入来源**：原 `todo.md`「低优先级 · 文档同步」与既有 backlog 质量类条目。
 

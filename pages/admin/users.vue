@@ -254,7 +254,10 @@
         <UserDetailDialog
             v-model:visible="showDetailDialog"
             :user="currentUser"
+            :current-user-id="currentUserId"
             @updated="loadUsers"
+            @view-sessions="openSessionsDialog"
+            @ban="openBanDialog"
         />
     </div>
 </template>
@@ -268,17 +271,7 @@ import CreateUserDialog from '@/components/admin/users/create-user-dialog.vue'
 import BanUserDialog from '@/components/admin/users/ban-user-dialog.vue'
 import UserSessionsDialog from '@/components/admin/users/user-sessions-dialog.vue'
 import UserDetailDialog from '@/components/admin/users/user-detail-dialog.vue'
-
-/** 用户列表行（`better-auth` admin listUsers 的最小字段集） */
-interface AdminUser {
-    id: string
-    name?: string | null
-    email: string
-    role?: string | null
-    banned?: boolean | null
-    image?: string | null
-    createdAt: string | Date
-}
+import type { AdminUserRow as AdminUser } from '@/types/admin'
 
 definePageMeta({
     layout: 'admin',
@@ -315,6 +308,7 @@ const {
     openSessionsDialog,
     openDetailDialog,
     isCurrentUser,
+    currentUserId,
 } = useUserManagement()
 
 const {

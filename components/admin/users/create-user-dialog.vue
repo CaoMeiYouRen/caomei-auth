@@ -1,13 +1,12 @@
 <template>
-    <BaseDialog
+    <BaseDialogV2
         :visible="visible"
         title="创建用户"
-        width="500px"
-        :show-footer="false"
+        size="md"
         @update:visible="$emit('update:visible', $event)"
     >
         <form class="create-user-form" @submit.prevent="createUser">
-            <BaseInput
+            <BaseInputV2
                 id="createName"
                 v-model="createForm.name"
                 label="昵称"
@@ -16,7 +15,7 @@
                 required
             />
 
-            <BaseInput
+            <BaseInputV2
                 id="createEmail"
                 v-model="createForm.email"
                 label="邮箱"
@@ -26,7 +25,7 @@
                 required
             />
 
-            <BaseInput
+            <BaseInputV2
                 id="createUsername"
                 v-model="createForm.username"
                 label="用户名"
@@ -34,7 +33,7 @@
                 :error="errors.username || ''"
             />
 
-            <BasePassword
+            <BasePasswordV2
                 id="createPassword"
                 v-model="createForm.password"
                 label="密码"
@@ -43,41 +42,47 @@
                 required
             />
 
-            <BaseFormGroup
+            <CaomeiFormItem
+                id="createRole"
                 label="角色"
-                for="createRole"
                 :error="errors.role || ''"
             >
-                <Select
-                    id="createRole"
-                    v-model="createForm.role"
-                    :options="roleOptions"
-                    option-label="label"
-                    option-value="value"
-                    placeholder="选择用户角色"
-                    class="w-full"
-                />
-            </BaseFormGroup>
+                <template #default="field">
+                    <CaomeiSelect
+                        :id="field.id"
+                        v-model="createForm.role"
+                        :options="roleOptions"
+                        option-label="label"
+                        option-value="value"
+                        placeholder="选择用户角色"
+                        :invalid="field.invalid"
+                        :aria-labelledby="field['aria-labelledby']"
+                        :aria-describedby="field['aria-describedby']"
+                    />
+                </template>
+            </CaomeiFormItem>
 
-            <div class="dialog-footer">
-                <Button
-                    label="取消"
-                    severity="secondary"
+            <div class="create-user-form__footer">
+                <CaomeiButton
+                    variant="secondary"
                     @click="$emit('update:visible', false)"
-                />
-                <Button
-                    label="创建"
+                >
+                    取消
+                </CaomeiButton>
+                <CaomeiButton
                     type="submit"
                     :loading="createLoading"
-                />
+                >
+                    创建
+                </CaomeiButton>
             </div>
         </form>
-    </BaseDialog>
+    </BaseDialogV2>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { createUserFormSchema } from '@/utils/shared/schemas'
 import { useUserTable } from '@/composables/admin/use-user-table'
@@ -124,11 +129,7 @@ watch(() => props.visible, (newValue) => {
     }
 })
 
-// Helper function to get first Zod error
-function getFirstZodError(result: { success: boolean, error?: { issues: Array<{ message: string, path: (string | number)[] }> } }): string | null {
-    if (result.success) return null
-    return translate(result.error?.issues[0]?.message) || '校验失败'
-}
+const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 const createUser = async () => {
     errors.value = {}
@@ -139,7 +140,7 @@ const createUser = async () => {
         result.error.issues.forEach((issue) => {
             const path = issue.path[0] as string
             if (path) {
-                errors.value[path] = issue.message
+                errors.value[path] = translate(issue.message) || '校验失败'
             }
         })
         return
@@ -156,22 +157,20 @@ const createUser = async () => {
         })
 
         if (response.data) {
-            toast.add({
-                severity: 'success',
-                summary: '创建成功',
-                detail: '用户创建成功',
-                life: 3000,
+            toast.success({
+                title: '创建成功',
+                description: '用户创建成功',
+                duration: 3000,
             })
             emit('update:visible', false)
             emit('created')
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('创建用户失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '创建失败',
-            detail: error.message || '创建用户失败',
-            life: 3000,
+        toast.danger({
+            title: '创建失败',
+            description: errorMessage(error, '创建用户失败'),
+            duration: 3000,
         })
     } finally {
         createLoading.value = false
@@ -181,24 +180,17 @@ const createUser = async () => {
 
 <style lang="scss" scoped>
 .create-user-form {
-    .field {
-        margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: $secondary;
-        }
-    }
-
-    .dialog-footer {
+    &__footer {
         display: flex;
         justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 2rem;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
         padding-top: 1rem;
-        border-top: 1px solid #e2e8f0;
+        border-top: 1px solid var(--admin-border);
     }
 }
 </style>

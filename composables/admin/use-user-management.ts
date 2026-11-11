@@ -1,12 +1,14 @@
 import { ref, watch, computed, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
-import { useConfirm } from 'primevue/useconfirm'
+import { useConfirm, useToast } from 'caomei-ui'
 import { debounce } from 'lodash-es'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import { useUserTable } from './use-user-table'
 import { authClient } from '@/lib/auth-client'
 import { validateEmail } from '@/utils/shared/validate'
 import { syncAdminRole } from '@/utils/web/admin-role-client'
+import type { AdminUserProfile, AdminUserRow } from '@/types/admin'
+
+const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 export function useUserManagement() {
     const toast = useToast()
@@ -19,10 +21,10 @@ export function useUserManagement() {
     // 筛选状态 (Specific to this view)
     const selectedRole = ref<string | null>(null)
     const selectedStatus = ref<string | null>(null)
-    const selectedUsers = ref<any[]>([])
+    const selectedUsers = ref<AdminUserRow[]>([])
 
     const fetcher = async (params: DataTableFetchParams) => {
-        const query: any = {
+        const query: Record<string, unknown> = {
             limit: params.limit,
             offset: params.page * params.limit,
         }
@@ -48,7 +50,7 @@ export function useUserManagement() {
         }
 
         // 添加筛选条件
-        const filters: any[] = []
+        const filters: { field: string, operator: string, value: unknown }[] = []
 
         // 添加角色筛选
         if (selectedRole.value) {
@@ -72,9 +74,9 @@ export function useUserManagement() {
         if (filters.length > 1) {
             query.filters = filters
         } else if (filters.length === 1) {
-            query.filterField = filters[0].field
-            query.filterOperator = filters[0].operator
-            query.filterValue = filters[0].value
+            query.filterField = filters[0]!.field
+            query.filterOperator = filters[0]!.operator
+            query.filterValue = filters[0]!.value
         }
 
         // 添加排序参数
@@ -133,107 +135,100 @@ export function useUserManagement() {
     }
 
     // 单个用户操作
-    const unbanUser = async (user: any) => {
+    const unbanUser = async (user: AdminUserProfile) => {
         try {
             const response = await authClient.admin.unbanUser({
                 userId: user.id,
             })
 
             if (response.data) {
-                toast.add({
-                    severity: 'success',
-                    summary: '解禁成功',
-                    detail: '用户已解除禁用',
-                    life: 3000,
+                toast.success({
+                    title: '解禁成功',
+                    description: '用户已解除禁用',
+                    duration: 3000,
                 })
                 loadUsers()
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('解禁用户失败:', error)
-            toast.add({
-                severity: 'error',
-                summary: '解禁失败',
-                detail: error.message || '解禁用户失败',
-                life: 3000,
+            toast.danger({
+                title: '解禁失败',
+                description: errorMessage(error, '解禁用户失败'),
+                duration: 3000,
             })
         }
     }
 
-    const deleteUser = async (user: any, isCurrentUser: boolean) => {
+    const deleteUser = async (user: AdminUserProfile, isSelf: boolean) => {
         // 防止删除自己
-        if (isCurrentUser) {
-            toast.add({
-                severity: 'warn',
-                summary: '操作不允许',
-                detail: '不能删除自己的账户',
-                life: 3000,
+        if (isSelf) {
+            toast.warning({
+                title: '操作不允许',
+                description: '不能删除自己的账户',
+                duration: 3000,
             })
             return
         }
 
-        confirm.require({
-            message: `确定要删除用户 ${user.name || user.email} 吗？此操作不可恢复！`,
-            header: '确认删除',
-            icon: 'mdi mdi-alert',
-            rejectClass: 'p-button-secondary p-button-outlined',
-            acceptClass: 'p-button-danger',
-            accept: async () => {
-                try {
-                    const response = await authClient.admin.removeUser({
-                        userId: user.id,
-                    })
-
-                    if (response.data) {
-                        toast.add({
-                            severity: 'success',
-                            summary: '删除成功',
-                            detail: '用户已被删除',
-                            life: 3000,
-                        })
-                        loadUsers()
-                    }
-                } catch (error: any) {
-                    console.error('删除用户失败:', error)
-                    toast.add({
-                        severity: 'error',
-                        summary: '删除失败',
-                        detail: error.message || '删除用户失败',
-                        life: 3000,
-                    })
-                }
-            },
+        const confirmed = await confirm.open({
+            title: '确认删除',
+            description: `确定要删除用户 ${user.name || user.email} 吗？此操作不可恢复！`,
+            tone: 'danger',
         })
+        if (!confirmed) {
+            return
+        }
+
+        try {
+            const response = await authClient.admin.removeUser({
+                userId: user.id,
+            })
+
+            if (response.data) {
+                toast.success({
+                    title: '删除成功',
+                    description: '用户已被删除',
+                    duration: 3000,
+                })
+                loadUsers()
+            }
+        } catch (error: unknown) {
+            console.error('删除用户失败:', error)
+            toast.danger({
+                title: '删除失败',
+                description: errorMessage(error, '删除用户失败'),
+                duration: 3000,
+            })
+        }
     }
 
-    const syncUserAdminRoleAction = async (user: any) => {
+    const syncUserAdminRoleAction = async (user: AdminUserProfile) => {
         try {
             loading.value = true
             const result = await syncAdminRole(user.id)
 
             if (result.success) {
-                toast.add({
-                    severity: 'success',
-                    summary: '同步成功',
-                    detail: result.message,
-                    life: 3000,
+                toast.success({
+                    title: '同步成功',
+                    description: result.message,
+                    duration: 3000,
                 })
                 // 重新加载用户列表以更新显示
                 await loadUsers()
-            } else {
-                toast.add({
-                    severity: 'warning',
-                    summary: '同步完成',
-                    detail: result.message,
-                    life: 3000,
-                })
+                return
             }
-        } catch (error: any) {
+
+            toast.warning({
+                title: '同步完成',
+                description: result.message,
+                duration: 3000,
+            })
+        } catch (error: unknown) {
             console.error('同步管理员角色失败:', error)
-            toast.add({
-                severity: 'error',
-                summary: '同步失败',
-                detail: error.message || '同步管理员角色失败',
-                life: 3000,
+            toast.danger({
+                title: '同步失败',
+                description: errorMessage(error, '同步管理员角色失败'),
+                duration: 3000,
             })
         } finally {
             loading.value = false
@@ -246,41 +241,39 @@ export function useUserManagement() {
             return
         }
 
-        confirm.require({
-            message: `确定要禁用选中的 ${selectedUsers.value.length} 个用户吗？`,
-            header: '确认批量禁用',
-            icon: 'mdi mdi-alert',
-            rejectClass: 'p-button-secondary p-button-outlined',
-            acceptClass: 'p-button-danger',
-            accept: async () => {
-                try {
-                    for (const user of selectedUsers.value) {
-                        await authClient.admin.banUser({
-                            userId: user.id,
-                            banReason: '批量禁用操作',
-                        })
-                    }
-
-                    toast.add({
-                        severity: 'success',
-                        summary: '禁用成功',
-                        detail: `已禁用 ${selectedUsers.value.length} 个用户`,
-                        life: 3000,
-                    })
-
-                    selectedUsers.value = []
-                    loadUsers()
-                } catch (error: any) {
-                    console.error('批量禁用失败:', error)
-                    toast.add({
-                        severity: 'error',
-                        summary: '批量禁用失败',
-                        detail: error.message || '批量禁用用户失败',
-                        life: 3000,
-                    })
-                }
-            },
+        const confirmed = await confirm.open({
+            title: '确认批量禁用',
+            description: `确定要禁用选中的 ${selectedUsers.value.length} 个用户吗？`,
+            tone: 'danger',
         })
+        if (!confirmed) {
+            return
+        }
+
+        try {
+            for (const user of selectedUsers.value) {
+                await authClient.admin.banUser({
+                    userId: user.id,
+                    banReason: '批量禁用操作',
+                })
+            }
+
+            toast.success({
+                title: '禁用成功',
+                description: `已禁用 ${selectedUsers.value.length} 个用户`,
+                duration: 3000,
+            })
+
+            selectedUsers.value = []
+            loadUsers()
+        } catch (error: unknown) {
+            console.error('批量禁用失败:', error)
+            toast.danger({
+                title: '批量禁用失败',
+                description: errorMessage(error, '批量禁用用户失败'),
+                duration: 3000,
+            })
+        }
     }
 
     const batchUnbanUsers = async () => {
@@ -288,40 +281,38 @@ export function useUserManagement() {
             return
         }
 
-        confirm.require({
-            message: `确定要解禁选中的 ${selectedUsers.value.length} 个用户吗？`,
-            header: '确认批量解禁',
-            icon: 'mdi mdi-alert',
-            rejectClass: 'p-button-secondary p-button-outlined',
-            acceptClass: 'p-button-success',
-            accept: async () => {
-                try {
-                    for (const user of selectedUsers.value) {
-                        await authClient.admin.unbanUser({
-                            userId: user.id,
-                        })
-                    }
-
-                    toast.add({
-                        severity: 'success',
-                        summary: '解禁成功',
-                        detail: `已解禁 ${selectedUsers.value.length} 个用户`,
-                        life: 3000,
-                    })
-
-                    selectedUsers.value = []
-                    loadUsers()
-                } catch (error: any) {
-                    console.error('批量解禁失败:', error)
-                    toast.add({
-                        severity: 'error',
-                        summary: '批量解禁失败',
-                        detail: error.message || '批量解禁用户失败',
-                        life: 3000,
-                    })
-                }
-            },
+        const confirmed = await confirm.open({
+            title: '确认批量解禁',
+            description: `确定要解禁选中的 ${selectedUsers.value.length} 个用户吗？`,
+            tone: 'neutral',
         })
+        if (!confirmed) {
+            return
+        }
+
+        try {
+            for (const user of selectedUsers.value) {
+                await authClient.admin.unbanUser({
+                    userId: user.id,
+                })
+            }
+
+            toast.success({
+                title: '解禁成功',
+                description: `已解禁 ${selectedUsers.value.length} 个用户`,
+                duration: 3000,
+            })
+
+            selectedUsers.value = []
+            loadUsers()
+        } catch (error: unknown) {
+            console.error('批量解禁失败:', error)
+            toast.danger({
+                title: '批量解禁失败',
+                description: errorMessage(error, '批量解禁用户失败'),
+                duration: 3000,
+            })
+        }
     }
 
     const batchDeleteUsers = async () => {
@@ -329,40 +320,38 @@ export function useUserManagement() {
             return
         }
 
-        confirm.require({
-            message: `确定要删除选中的 ${selectedUsers.value.length} 个用户吗？此操作不可恢复！`,
-            header: '确认批量删除',
-            icon: 'mdi mdi-alert',
-            rejectClass: 'p-button-secondary p-button-outlined',
-            acceptClass: 'p-button-danger',
-            accept: async () => {
-                try {
-                    for (const user of selectedUsers.value) {
-                        await authClient.admin.removeUser({
-                            userId: user.id,
-                        })
-                    }
-
-                    toast.add({
-                        severity: 'success',
-                        summary: '删除成功',
-                        detail: `已删除 ${selectedUsers.value.length} 个用户`,
-                        life: 3000,
-                    })
-
-                    selectedUsers.value = []
-                    loadUsers()
-                } catch (error: any) {
-                    console.error('批量删除失败:', error)
-                    toast.add({
-                        severity: 'error',
-                        summary: '批量删除失败',
-                        detail: error.message || '批量删除用户失败',
-                        life: 3000,
-                    })
-                }
-            },
+        const confirmed = await confirm.open({
+            title: '确认批量删除',
+            description: `确定要删除选中的 ${selectedUsers.value.length} 个用户吗？此操作不可恢复！`,
+            tone: 'danger',
         })
+        if (!confirmed) {
+            return
+        }
+
+        try {
+            for (const user of selectedUsers.value) {
+                await authClient.admin.removeUser({
+                    userId: user.id,
+                })
+            }
+
+            toast.success({
+                title: '删除成功',
+                description: `已删除 ${selectedUsers.value.length} 个用户`,
+                duration: 3000,
+            })
+
+            selectedUsers.value = []
+            loadUsers()
+        } catch (error: unknown) {
+            console.error('批量删除失败:', error)
+            toast.danger({
+                title: '批量删除失败',
+                description: errorMessage(error, '批量删除用户失败'),
+                duration: 3000,
+            })
+        }
     }
 
     // Dialog 状态
@@ -370,7 +359,7 @@ export function useUserManagement() {
     const showBanDialog = ref(false)
     const showSessionsDialog = ref(false)
     const showDetailDialog = ref(false)
-    const currentUser = ref<any>(null)
+    const currentUser = ref<AdminUserProfile | null>(null)
 
     // 批量操作菜单
     const batchMenuItems = [
@@ -392,22 +381,25 @@ export function useUserManagement() {
     ]
 
     // Dialog 操作
-    const openBanDialog = (user: any) => {
+    const openBanDialog = (user: AdminUserProfile) => {
         currentUser.value = user
         showBanDialog.value = true
     }
 
-    const openSessionsDialog = (user: any) => {
+    const openSessionsDialog = (user: AdminUserProfile) => {
         currentUser.value = user
         showSessionsDialog.value = true
     }
 
-    const openDetailDialog = (user: any) => {
+    const openDetailDialog = (user: AdminUserProfile) => {
         currentUser.value = user
         showDetailDialog.value = true
     }
 
     const isCurrentUser = (userId: string) => session.value?.user?.id === userId
+
+    /** 当前会话用户 id：详情对话框据此禁用「移除自己的管理员」等自操作 */
+    const currentUserId = computed(() => session.value?.user?.id)
 
     // 初始化
     onMounted(() => {
@@ -448,5 +440,6 @@ export function useUserManagement() {
         openSessionsDialog,
         openDetailDialog,
         isCurrentUser,
+        currentUserId,
     }
 }

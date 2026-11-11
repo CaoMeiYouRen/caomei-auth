@@ -7,9 +7,10 @@
  * 阶段 3 最终白名单（P2–P3）：`/login`（M2-1）、`/register`（M3-1）、`/forgot-password`、
  * `/change-password`（M3-2）、`/quick-login`（M3-3）、`/profile`（M4-1）、`/security`（M4-2）、
  * `/oauth/consent`（M4-3）、`/sso-login`（M4-4）。
- * P4 的 `/oauth/clients`、`/admin/**` 等未登记；P5 收尾时清空并删除本文件。
+ * 阶段 4（P4）：`/admin/users`（M2 页面 + M3 对话框，整路由切齐后登记）；其余 Admin 路由与
+ * `/oauth/clients` 未登记；P5 收尾时清空并删除本文件。
  */
-export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = ['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login']
+export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = ['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login', '/admin/users']
 
 /**
  * 判断路径是否命中 caomei-ui 白名单。

@@ -19,7 +19,7 @@
         "components/admin/users/ban-user-dialog.vue": 8,
         "components/admin/users/create-user-dialog.vue": 13,
         "components/admin/users/user-detail-dialog.vue": 45,
-        "components/admin/users/user-sessions-dialog.vue": 9,
+        "components/admin/users/user-sessions-dialog.vue": 5,
         "components/app-footer.vue": 12,
         "components/base/phone-input-v2.vue": 1,
         "components/base/phone-input.vue": 1,

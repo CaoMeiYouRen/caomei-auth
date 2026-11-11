@@ -1,61 +1,77 @@
 <template>
-    <BaseDialog
+    <BaseDialogV2
         :visible="visible"
         title="禁用用户"
-        width="400px"
-        :show-footer="false"
+        size="sm"
         @update:visible="$emit('update:visible', $event)"
     >
-        <div v-if="user" class="ban-form">
-            <p>确定要禁用用户 <strong>{{ user.name || user.email }}</strong> 吗？</p>
+        <div v-if="user" class="ban-user-form">
+            <p class="ban-user-form__tip">
+                确定要禁用用户 <strong>{{ user.name || user.email }}</strong> 吗？
+            </p>
 
-            <BaseFormGroup label="禁用原因" for="banReason">
-                <Textarea
-                    id="banReason"
-                    v-model="banForm.reason"
-                    placeholder="请输入禁用原因"
-                    rows="3"
-                    class="w-full"
-                />
-            </BaseFormGroup>
+            <CaomeiFormItem
+                id="banReason"
+                label="禁用原因"
+            >
+                <template #default="field">
+                    <CaomeiTextarea
+                        :id="field.id"
+                        v-model="banForm.reason"
+                        placeholder="请输入禁用原因"
+                        :rows="3"
+                        :aria-labelledby="field['aria-labelledby']"
+                        :aria-describedby="field['aria-describedby']"
+                    />
+                </template>
+            </CaomeiFormItem>
 
-            <BaseFormGroup label="禁用时长" for="banDuration">
-                <Select
-                    id="banDuration"
-                    v-model="banForm.duration"
-                    :options="banDurationOptions"
-                    option-label="label"
-                    option-value="value"
-                    placeholder="选择禁用时长"
-                    class="w-full"
-                />
-            </BaseFormGroup>
+            <CaomeiFormItem
+                id="banDuration"
+                label="禁用时长"
+            >
+                <template #default="field">
+                    <CaomeiSelect
+                        :id="field.id"
+                        v-model="banForm.duration"
+                        :options="banDurationOptions"
+                        option-label="label"
+                        option-value="value"
+                        placeholder="选择禁用时长"
+                        :aria-labelledby="field['aria-labelledby']"
+                        :aria-describedby="field['aria-describedby']"
+                    />
+                </template>
+            </CaomeiFormItem>
 
-            <div class="dialog-footer">
-                <Button
-                    label="取消"
-                    severity="secondary"
+            <div class="ban-user-form__footer">
+                <CaomeiButton
+                    variant="secondary"
                     @click="$emit('update:visible', false)"
-                />
-                <Button
-                    label="确认禁用"
-                    severity="danger"
+                >
+                    取消
+                </CaomeiButton>
+                <CaomeiButton
+                    tone="danger"
                     :loading="banLoading"
                     @click="confirmBanUser"
-                />
+                >
+                    确认禁用
+                </CaomeiButton>
             </div>
         </div>
-    </BaseDialog>
+    </BaseDialogV2>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
+import type { AdminUserProfile } from '@/types/admin'
 
 const props = defineProps<{
     visible: boolean
-    user: any
+    user: AdminUserProfile | null
 }>()
 
 const emit = defineEmits<{
@@ -68,11 +84,12 @@ const toast = useToast()
 const banLoading = ref(false)
 const banForm = ref({
     reason: '',
-    duration: null,
+    duration: 0,
 })
 
+/** `CaomeiSelect` 的选项值只接受字符串 / 数字，永久禁用用 `0` 表示（回传时换算为 `undefined`） */
 const banDurationOptions = [
-    { label: '永久', value: null },
+    { label: '永久', value: 0 },
     { label: '1小时', value: 3600 },
     { label: '1天', value: 86400 },
     { label: '7天', value: 604800 },
@@ -83,10 +100,12 @@ watch(() => props.visible, (newValue) => {
     if (newValue) {
         banForm.value = {
             reason: '',
-            duration: null,
+            duration: 0,
         }
     }
 })
+
+const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 const confirmBanUser = async () => {
     if (!props.user) {
@@ -103,22 +122,20 @@ const confirmBanUser = async () => {
         })
 
         if (response.data) {
-            toast.add({
-                severity: 'success',
-                summary: '禁用成功',
-                detail: '用户已被禁用',
-                life: 3000,
+            toast.success({
+                title: '禁用成功',
+                description: '用户已被禁用',
+                duration: 3000,
             })
             emit('update:visible', false)
             emit('banned')
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('禁用用户失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '禁用失败',
-            detail: error.message || '禁用用户失败',
-            life: 3000,
+        toast.danger({
+            title: '禁用失败',
+            description: errorMessage(error, '禁用用户失败'),
+            duration: 3000,
         })
     } finally {
         banLoading.value = false
@@ -127,25 +144,23 @@ const confirmBanUser = async () => {
 </script>
 
 <style lang="scss" scoped>
-.ban-form {
-    .field {
-        margin-bottom: 1.5rem;
+.ban-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: $secondary;
-        }
+    &__tip {
+        margin: 0;
+        color: var(--admin-text);
     }
 
-    .dialog-footer {
+    &__footer {
         display: flex;
         justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 2rem;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
         padding-top: 1rem;
-        border-top: 1px solid #e2e8f0;
+        border-top: 1px solid var(--admin-border);
     }
 }
 </style>

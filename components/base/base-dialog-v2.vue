@@ -2,7 +2,8 @@
     <CaomeiDialog
         :open="visible"
         :title="title"
-        size="md"
+        :size="size"
+        :breakpoints="breakpoints"
         @update:open="$emit('update:visible', $event)"
         @hide="$emit('hide')"
     >
@@ -19,11 +20,19 @@
  *
  * 与 `base-dialog.vue`（PrimeVue）并存：共享封装按消费者路由建 V2，避免未迁移页面被动换库。
  */
+import type { DialogSize } from 'caomei-ui'
+
 withDefaults(defineProps<{
     visible: boolean
     title?: string
+    /** 宽度档位（sm 360 / md 480 / lg 640），按内容密度选择 */
+    size?: DialogSize
+    /** 按视口宽度上限覆盖面板宽度（命中多个时最窄档生效）；用于表格类弹窗放宽桌面宽度 */
+    breakpoints?: Record<string, string>
 }>(), {
     title: '',
+    size: 'md',
+    breakpoints: undefined,
 })
 
 defineEmits<{

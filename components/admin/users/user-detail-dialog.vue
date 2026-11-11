@@ -1,55 +1,59 @@
 <template>
-    <BaseDialog
+    <BaseDialogV2
         :visible="visible"
         :title="isEditing ? '编辑用户' : '用户详情'"
-        width="600px"
-        :show-footer="false"
+        size="lg"
         @update:visible="onClose"
     >
         <div v-if="user" class="user-detail">
             <div v-if="!isEditing">
-                <div class="detail-section">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3>基本信息</h3>
-                        <Button
-                            icon="mdi mdi-pencil"
-                            label="编辑"
-                            size="small"
-                            text
+                <div class="user-detail__section">
+                    <div class="user-detail__section-header">
+                        <h3 class="user-detail__section-title">
+                            基本信息
+                        </h3>
+                        <CaomeiButton
+                            variant="ghost"
+                            size="sm"
                             @click="isEditing = true"
-                        />
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-pencil" />
+                            </template>
+                            编辑
+                        </CaomeiButton>
                     </div>
-                    <div class="detail-grid">
-                        <div class="detail-item">
+                    <div class="user-detail__grid">
+                        <div class="user-detail__item">
                             <label>ID</label>
                             <span>{{ user.id }}</span>
                         </div>
-                        <div class="detail-item">
+                        <div class="user-detail__item">
                             <label>昵称</label>
                             <span>{{ user.name || '未设置' }}</span>
                         </div>
-                        <div class="detail-item">
+                        <div class="user-detail__item">
                             <label>邮箱</label>
                             <span>{{ user.email }}</span>
                         </div>
-                        <div class="detail-item">
+                        <div class="user-detail__item">
                             <label>手机号</label>
                             <span>{{ user.phoneNumber ? formatPhoneNumberInternational(user.phoneNumber) : '未设置' }}</span>
                         </div>
-                        <div class="detail-item">
+                        <div class="user-detail__item">
                             <label>用户名</label>
                             <span>{{ user.username || '未设置' }}</span>
                         </div>
-                        <div class="detail-item">
+                        <div class="user-detail__item">
                             <label>角色</label>
                             <BaseStatusBadge
                                 variant="role"
                                 :status="user.role"
                             />
                         </div>
-                        <div class="detail-item">
+                        <div class="user-detail__item">
                             <label>验证状态</label>
-                            <div class="verification-status">
+                            <div class="user-detail__verification">
                                 <BaseStatusBadge
                                     variant="yes-no"
                                     :status="user.emailVerified"
@@ -71,106 +75,141 @@
                     </div>
                 </div>
 
-                <div class="detail-section">
-                    <h3>账户状态</h3>
-                    <div class="detail-grid">
-                        <div class="detail-item">
+                <div class="user-detail__section">
+                    <h3 class="user-detail__section-title">
+                        账户状态
+                    </h3>
+                    <div class="user-detail__grid">
+                        <div class="user-detail__item">
                             <label>状态</label>
                             <BaseStatusBadge
                                 variant="banned"
                                 :status="user.banned"
                             />
                         </div>
-                        <div v-if="user.banned" class="detail-item">
+                        <div v-if="user.banned" class="user-detail__item">
                             <label>禁用原因</label>
                             <span>{{ user.banReason || '未提供原因' }}</span>
                         </div>
-                        <div v-if="user.banned && user.banExpires" class="detail-item">
+                        <div v-if="user.banned && user.banExpires" class="user-detail__item">
                             <label>禁用到期时间</label>
                             <span>{{ formatDateTime(user.banExpires) }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="detail-section">
-                    <h3>时间信息</h3>
-                    <div class="detail-grid">
-                        <div class="detail-item">
+                <div class="user-detail__section">
+                    <h3 class="user-detail__section-title">
+                        时间信息
+                    </h3>
+                    <div class="user-detail__grid">
+                        <div class="user-detail__item">
                             <label>注册时间</label>
                             <span>{{ formatDateTime(user.createdAt) }}</span>
                         </div>
-                        <div class="detail-item">
+                        <div class="user-detail__item">
                             <label>更新时间</label>
                             <span>{{ formatDateTime(user.updatedAt) }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="detail-actions">
-                    <Button
-                        label="查看会话"
-                        icon="mdi mdi-account-multiple"
-                        severity="info"
-                        @click="$emit('view-sessions', user)"
-                    />
-                    <Button
-                        label="同步管理员角色"
-                        icon="mdi mdi-sync"
-                        severity="secondary"
+                <div class="user-detail__actions">
+                    <CaomeiButton @click="$emit('view-sessions', user)">
+                        <template #icon>
+                            <i class="mdi mdi-account-multiple" />
+                        </template>
+                        查看会话
+                    </CaomeiButton>
+                    <CaomeiButton
+                        variant="secondary"
                         :loading="loading"
                         @click="handleSyncUserAdminRole"
-                    />
-                    <Button
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-sync" />
+                        </template>
+                        同步管理员角色
+                    </CaomeiButton>
+                    <CaomeiButton
                         v-if="!user.role?.includes('admin')"
-                        label="设为管理员"
-                        icon="mdi mdi-shield-account"
-                        severity="help"
+                        variant="secondary"
+                        tone="primary"
                         :loading="loading"
                         @click="handleSetUserAsAdmin"
-                    />
-                    <Button
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-shield-account" />
+                        </template>
+                        设为管理员
+                    </CaomeiButton>
+                    <CaomeiButton
                         v-else-if="user.role?.includes('admin') && !isCurrentUser(user.id)"
-                        label="移除管理员"
-                        icon="mdi mdi-shield-remove"
-                        severity="danger"
+                        variant="secondary"
+                        tone="danger"
                         :loading="loading"
                         @click="handleRemoveUserAdminRole"
-                    />
-                    <Button
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-shield-remove" />
+                        </template>
+                        移除管理员
+                    </CaomeiButton>
+                    <CaomeiButton
                         v-else-if="user.role?.includes('admin') && isCurrentUser(user.id)"
-                        label="不能移除自己的管理员权限"
-                        icon="mdi mdi-shield-remove"
-                        severity="danger"
+                        variant="secondary"
+                        tone="danger"
                         disabled
-                    />
-                    <Button
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-shield-remove" />
+                        </template>
+                        不能移除自己的管理员权限
+                    </CaomeiButton>
+                    <CaomeiButton
                         v-if="!user.banned && user.role !== 'admin' && !isCurrentUser(user.id)"
-                        label="禁用用户"
-                        icon="mdi mdi-block-helper"
-                        severity="warning"
+                        variant="secondary"
+                        tone="warning"
                         @click="$emit('ban', user)"
-                    />
-                    <Button
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-block-helper" />
+                        </template>
+                        禁用用户
+                    </CaomeiButton>
+                    <CaomeiButton
                         v-else-if="user.banned && user.role !== 'admin' && !isCurrentUser(user.id)"
-                        label="解禁用户"
-                        icon="mdi mdi-check-circle"
-                        severity="success"
+                        variant="secondary"
+                        tone="success"
                         @click="handleUnbanUser"
-                    />
-                    <Button
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-check-circle" />
+                        </template>
+                        解禁用户
+                    </CaomeiButton>
+                    <CaomeiButton
                         v-else-if="isCurrentUser(user.id)"
-                        label="不能操作自己的账户"
-                        icon="mdi mdi-account-alert"
-                        severity="warning"
+                        variant="secondary"
+                        tone="warning"
                         disabled
-                    />
-                    <Button
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-account-alert" />
+                        </template>
+                        不能操作自己的账户
+                    </CaomeiButton>
+                    <CaomeiButton
                         v-if="user.role === 'admin' && !user.banned"
-                        label="管理员不可禁用"
-                        icon="mdi mdi-block-helper"
-                        severity="warning"
+                        variant="secondary"
+                        tone="warning"
                         disabled
-                    />
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-block-helper" />
+                        </template>
+                        管理员不可禁用
+                    </CaomeiButton>
                 </div>
             </div>
 
@@ -179,7 +218,7 @@
                 class="edit-user-form"
                 @submit.prevent="updateUser"
             >
-                <BaseInput
+                <BaseInputV2
                     id="editNickname"
                     v-model="editNickname"
                     label="昵称"
@@ -187,7 +226,7 @@
                     :error="errors.nickname"
                     required
                 />
-                <BaseInput
+                <BaseInputV2
                     id="editEmail"
                     v-model="editEmail"
                     label="邮箱"
@@ -196,60 +235,62 @@
                     :error="errors.email"
                     required
                 />
-                <BaseInput
+                <BaseInputV2
                     id="editPhone"
                     v-model="editPhone"
                     label="手机号"
                     placeholder="请输入手机号"
                     :error="errors.phone"
                 />
-                <BaseFormGroup
+                <CaomeiFormItem
+                    id="editRole"
                     label="角色"
-                    for="editRole"
                     :error="errors.role"
                 >
-                    <Select
-                        id="editRole"
-                        v-model="editRole"
-                        :options="roleOptions"
-                        option-label="label"
-                        option-value="value"
-                        placeholder="选择角色"
-                        class="w-full"
-                        :class="{'p-invalid': errors.role}"
-                    />
-                </BaseFormGroup>
-                <BasePassword
+                    <template #default="field">
+                        <CaomeiSelect
+                            :id="field.id"
+                            v-model="editRole"
+                            :options="roleOptions"
+                            option-label="label"
+                            option-value="value"
+                            placeholder="选择角色"
+                            :invalid="field.invalid"
+                            :aria-labelledby="field['aria-labelledby']"
+                            :aria-describedby="field['aria-describedby']"
+                        />
+                    </template>
+                </CaomeiFormItem>
+                <BasePasswordV2
                     id="editPassword"
                     v-model="editPassword"
                     label="新密码"
                     placeholder="留空则不修改密码"
                     :error="errors.password"
-                    :feedback="false"
-                    toggle-mask
                 />
 
-                <div class="border-gray-200 border-t dialog-footer flex gap-2 justify-end mt-4 pt-4">
-                    <Button
-                        label="取消"
-                        severity="secondary"
+                <div class="edit-user-form__footer">
+                    <CaomeiButton
+                        variant="secondary"
                         @click="isEditing = false"
-                    />
-                    <Button
-                        label="保存"
+                    >
+                        取消
+                    </CaomeiButton>
+                    <CaomeiButton
                         type="submit"
                         :loading="updateLoading"
-                    />
+                    >
+                        保存
+                    </CaomeiButton>
                 </div>
             </form>
         </div>
-    </BaseDialog>
+    </BaseDialogV2>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
-import { useConfirm } from 'primevue/useconfirm'
+import { useConfirm, useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/shared/phone'
 import { formatDateTime } from '@/utils/shared/date'
@@ -257,23 +298,24 @@ import { syncAdminRole, addAdminRole, removeAdminRole } from '@/utils/web/admin-
 import { useUserTable } from '@/composables/admin/use-user-table'
 import { useForm } from '@/composables/core/use-form'
 import { updateUserFormSchema } from '@/utils/shared/schemas'
+import type { AdminUserProfile } from '@/types/admin'
 
 const props = defineProps<{
     visible: boolean
-    user: any
+    user: AdminUserProfile | null
     currentUserId?: string
 }>()
 
 const emit = defineEmits<{
     (e: 'update:visible', value: boolean): void
     (e: 'updated'): void
-    (e: 'view-sessions', user: any): void
-    (e: 'ban', user: any): void
+    (e: 'view-sessions', user: AdminUserProfile): void
+    (e: 'ban', user: AdminUserProfile): void
 }>()
 
 const toast = useToast()
 const confirm = useConfirm()
-const { getRoleLabel, getRoleSeverity, roleOptions } = useUserTable()
+const { roleOptions } = useUserTable()
 
 const loading = ref(false)
 const isEditing = ref(false)
@@ -297,6 +339,8 @@ const editPassword = computed({ get: () => editForm.value.password || '', set: (
 
 const isCurrentUser = (userId: string) => props.currentUserId === userId
 
+const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
+
 const onClose = (val: boolean) => {
     emit('update:visible', val)
     if (!val) {
@@ -318,10 +362,13 @@ watch(isEditing, (val) => {
 })
 
 const updateUser = async () => {
+    const targetUser = props.user
+    if (!targetUser) return
+
     await handleSubmit(async (vals) => {
         try {
             const { error } = await authClient.admin.updateUser({
-                userId: props.user.id,
+                userId: targetUser.id,
                 data: {
                     name: vals.nickname,
                     email: vals.email,
@@ -336,43 +383,44 @@ const updateUser = async () => {
                 throw new Error(error.message)
             }
 
-            toast.add({ severity: 'success', summary: '成功', detail: '用户信息更新成功', life: 3000 })
+            toast.success({ title: '成功', description: '用户信息更新成功', duration: 3000 })
             isEditing.value = false
             emit('updated')
-        } catch (error: any) {
-            toast.add({ severity: 'error', summary: '错误', detail: error.message || '更新失败', life: 3000 })
+        } catch (error: unknown) {
+            toast.danger({ title: '错误', description: errorMessage(error, '更新失败'), duration: 3000 })
         }
     })
 }
 
 const handleSyncUserAdminRole = async () => {
+    const targetUser = props.user
+    if (!targetUser) return
+
     try {
         loading.value = true
-        const result = await syncAdminRole(props.user.id)
+        const result = await syncAdminRole(targetUser.id)
 
         if (result.success) {
-            toast.add({
-                severity: 'success',
-                summary: '同步成功',
-                detail: result.message,
-                life: 3000,
+            toast.success({
+                title: '同步成功',
+                description: result.message,
+                duration: 3000,
             })
             emit('updated')
-        } else {
-            toast.add({
-                severity: 'warning',
-                summary: '同步完成',
-                detail: result.message,
-                life: 3000,
-            })
+            return
         }
-    } catch (error: any) {
+
+        toast.warning({
+            title: '同步完成',
+            description: result.message,
+            duration: 3000,
+        })
+    } catch (error: unknown) {
         console.error('同步管理员角色失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '同步失败',
-            detail: error.message || '同步管理员角色失败',
-            life: 3000,
+        toast.danger({
+            title: '同步失败',
+            description: errorMessage(error, '同步管理员角色失败'),
+            duration: 3000,
         })
     } finally {
         loading.value = false
@@ -380,126 +428,128 @@ const handleSyncUserAdminRole = async () => {
 }
 
 const handleSetUserAsAdmin = async () => {
-    confirm.require({
-        message: `确定要将用户 ${props.user.name || props.user.email} 设置为管理员吗？`,
-        header: '确认设置管理员',
-        icon: 'mdi mdi-shield-account',
-        rejectClass: 'p-button-secondary p-button-outlined',
-        acceptClass: 'p-button-success',
-        accept: async () => {
-            try {
-                loading.value = true
-                const result = await addAdminRole(props.user.id)
+    const targetUser = props.user
+    if (!targetUser) return
 
-                if (result.success) {
-                    toast.add({
-                        severity: 'success',
-                        summary: '设置成功',
-                        detail: result.message,
-                        life: 3000,
-                    })
-                    emit('updated')
-                    emit('update:visible', false)
-                } else {
-                    toast.add({
-                        severity: 'warning',
-                        summary: '设置失败',
-                        detail: result.message,
-                        life: 3000,
-                    })
-                }
-            } catch (error: any) {
-                console.error('设置管理员角色失败:', error)
-                toast.add({
-                    severity: 'error',
-                    summary: '设置失败',
-                    detail: error.message || '设置管理员角色失败',
-                    life: 3000,
-                })
-            } finally {
-                loading.value = false
-            }
-        },
+    const confirmed = await confirm.open({
+        title: '确认设置管理员',
+        description: `确定要将用户 ${targetUser.name || targetUser.email} 设置为管理员吗？`,
+        tone: 'neutral',
     })
+    if (!confirmed) {
+        return
+    }
+
+    try {
+        loading.value = true
+        const result = await addAdminRole(targetUser.id)
+
+        if (result.success) {
+            toast.success({
+                title: '设置成功',
+                description: result.message,
+                duration: 3000,
+            })
+            emit('updated')
+            emit('update:visible', false)
+            return
+        }
+
+        toast.warning({
+            title: '设置失败',
+            description: result.message,
+            duration: 3000,
+        })
+    } catch (error: unknown) {
+        console.error('设置管理员角色失败:', error)
+        toast.danger({
+            title: '设置失败',
+            description: errorMessage(error, '设置管理员角色失败'),
+            duration: 3000,
+        })
+    } finally {
+        loading.value = false
+    }
 }
 
 const handleRemoveUserAdminRole = async () => {
-    if (isCurrentUser(props.user.id)) {
-        toast.add({
-            severity: 'warn',
-            summary: '操作不允许',
-            detail: '不能移除自己的管理员权限',
-            life: 3000,
+    const targetUser = props.user
+    if (!targetUser) return
+
+    if (isCurrentUser(targetUser.id)) {
+        toast.warning({
+            title: '操作不允许',
+            description: '不能移除自己的管理员权限',
+            duration: 3000,
         })
         return
     }
 
-    confirm.require({
-        message: `确定要移除用户 ${props.user.name || props.user.email} 的管理员角色吗？`,
-        header: '确认移除管理员角色',
-        icon: 'mdi mdi-shield-remove',
-        rejectClass: 'p-button-secondary p-button-outlined',
-        acceptClass: 'p-button-danger',
-        accept: async () => {
-            try {
-                loading.value = true
-                const result = await removeAdminRole(props.user.id)
-
-                if (result.success) {
-                    toast.add({
-                        severity: 'success',
-                        summary: '移除成功',
-                        detail: result.message,
-                        life: 3000,
-                    })
-                    emit('updated')
-                    emit('update:visible', false)
-                } else {
-                    toast.add({
-                        severity: 'warning',
-                        summary: '移除失败',
-                        detail: result.message,
-                        life: 3000,
-                    })
-                }
-            } catch (error: any) {
-                console.error('移除管理员角色失败:', error)
-                toast.add({
-                    severity: 'error',
-                    summary: '移除失败',
-                    detail: error.message || '移除管理员角色失败',
-                    life: 3000,
-                })
-            } finally {
-                loading.value = false
-            }
-        },
+    const confirmed = await confirm.open({
+        title: '确认移除管理员角色',
+        description: `确定要移除用户 ${targetUser.name || targetUser.email} 的管理员角色吗？`,
+        tone: 'danger',
     })
+    if (!confirmed) {
+        return
+    }
+
+    try {
+        loading.value = true
+        const result = await removeAdminRole(targetUser.id)
+
+        if (result.success) {
+            toast.success({
+                title: '移除成功',
+                description: result.message,
+                duration: 3000,
+            })
+            emit('updated')
+            emit('update:visible', false)
+            return
+        }
+
+        toast.warning({
+            title: '移除失败',
+            description: result.message,
+            duration: 3000,
+        })
+    } catch (error: unknown) {
+        console.error('移除管理员角色失败:', error)
+        toast.danger({
+            title: '移除失败',
+            description: errorMessage(error, '移除管理员角色失败'),
+            duration: 3000,
+        })
+    } finally {
+        loading.value = false
+    }
 }
 
 const handleUnbanUser = async () => {
+    const targetUser = props.user
+    if (!targetUser) return
+
     try {
         const response = await authClient.admin.unbanUser({
-            userId: props.user.id,
+            userId: targetUser.id,
         })
 
         if (response.data) {
-            toast.add({
-                severity: 'success',
-                summary: '解禁成功',
-                detail: '用户已解除禁用',
-                life: 3000,
+            toast.success({
+                title: '解禁成功',
+                description: '用户已解除禁用',
+                duration: 3000,
             })
             emit('updated')
             emit('update:visible', false)
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('解禁用户失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '解禁失败',
-            detail: error.message || '解禁用户失败',
-            life: 3000,
+        toast.danger({
+            title: '解禁失败',
+            description: errorMessage(error, '解禁用户失败'),
+            duration: 3000,
         })
     }
 }
@@ -507,50 +557,72 @@ const handleUnbanUser = async () => {
 
 <style lang="scss" scoped>
 .user-detail {
-    .detail-section {
+    &__section {
         margin-bottom: 2rem;
+    }
 
-        h3 {
-            color: $primary;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
+    &__section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    &__section-title {
+        color: $primary;
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        label {
+            font-weight: 600;
+            color: var(--admin-muted);
+            font-size: 0.9rem;
         }
 
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-
-            .detail-item {
-                display: flex;
-                flex-direction: column;
-                gap: 0.25rem;
-
-                label {
-                    font-weight: 600;
-                    color: $secondary-light;
-                    font-size: 0.9rem;
-                }
-
-                span {
-                    color: $secondary;
-                }
-
-                .verification-status {
-                    display: flex;
-                    gap: 0.5rem;
-                    flex-wrap: wrap;
-                }
-            }
+        span {
+            color: var(--admin-text);
         }
     }
 
-    .detail-actions {
+    &__verification {
         display: flex;
-        gap: 1rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 0.75rem;
         flex-wrap: wrap;
         padding-top: 1rem;
-        border-top: 1px solid #e2e8f0;
+        border-top: 1px solid var(--admin-border);
+    }
+}
+
+.edit-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--admin-border);
     }
 }
 </style>

@@ -1,80 +1,79 @@
 <template>
-    <BaseDialog
+    <BaseDialogV2
         :visible="visible"
         title="用户会话"
-        width="700px"
-        :show-footer="false"
+        size="lg"
+        :breakpoints="{'1920px': '860px'}"
         @update:visible="$emit('update:visible', $event)"
     >
         <div v-if="user" class="user-sessions">
-            <div class="sessions-header">
-                <h4>{{ user.name || user.email }} 的活跃会话</h4>
-                <Button
-                    label="撤销所有会话"
-                    severity="danger"
-                    outlined
-                    size="small"
+            <div class="user-sessions__header">
+                <h4 class="user-sessions__title">
+                    {{ user.name || user.email }} 的活跃会话
+                </h4>
+                <CaomeiButton
+                    variant="secondary"
+                    tone="danger"
+                    size="sm"
                     :loading="revokeAllLoading"
                     @click="revokeAllUserSessions"
-                />
+                >
+                    撤销所有会话
+                </CaomeiButton>
             </div>
 
-            <DataTable :value="userSessions" :loading="sessionsLoading">
-                <Column field="id" header="会话ID">
-                    <template #body="{data}">
-                        <code class="session-id">{{ data.token.substring(0, 16) }}...</code>
-                    </template>
-                </Column>
+            <CaomeiDataTable
+                class="user-sessions__table"
+                :data="userSessions"
+                :columns="columns"
+                row-key="token"
+                :loading="sessionsLoading"
+            >
+                <template #cell-token="{row}">
+                    <code class="user-sessions__session-id">{{ row.token.substring(0, 16) }}...</code>
+                </template>
 
-                <Column field="userAgent" header="设备信息">
-                    <template #body="{data}">
-                        <div class="device-info">
-                            <div>{{ parseUserAgent(data.userAgent).browser }}</div>
-                            <small>{{ parseUserAgent(data.userAgent).os }}</small>
-                        </div>
-                    </template>
-                </Column>
+                <template #cell-userAgent="{row}">
+                    <div class="user-sessions__device">
+                        <div>{{ parseUserAgent(row.userAgent || '').browser }}</div>
+                        <small>{{ parseUserAgent(row.userAgent || '').os }}</small>
+                    </div>
+                </template>
 
-                <Column field="createdAt" header="创建时间">
-                    <template #body="{data}">
-                        {{ formatDateTime(data.createdAt) }}
-                    </template>
-                </Column>
+                <template #cell-actions="{row}">
+                    <CaomeiButton
+                        variant="secondary"
+                        tone="danger"
+                        size="sm"
+                        :loading="revokingSession === row.token"
+                        @click="revokeUserSession(row.token)"
+                    >
+                        撤销
+                    </CaomeiButton>
+                </template>
 
-                <Column field="expiresAt" header="到期时间">
-                    <template #body="{data}">
-                        {{ formatDateTime(data.expiresAt) }}
-                    </template>
-                </Column>
-
-                <Column header="操作">
-                    <template #body="{data}">
-                        <Button
-                            label="撤销"
-                            severity="danger"
-                            outlined
-                            size="small"
-                            :loading="revokingSession === data.token"
-                            @click="revokeUserSession(data.token)"
-                        />
-                    </template>
-                </Column>
-            </DataTable>
+                <template #empty>
+                    <div class="user-sessions__empty">
+                        该用户当前没有活跃会话
+                    </div>
+                </template>
+            </CaomeiDataTable>
         </div>
-    </BaseDialog>
+    </BaseDialogV2>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useToast } from 'primevue/usetoast'
-import { useConfirm } from 'primevue/useconfirm'
+import type { DataTableColumn } from 'caomei-ui'
+import { useConfirm, useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/shared/useragent'
 import { formatDateTime } from '@/utils/shared/date'
+import type { AdminUserProfile, AdminUserSession } from '@/types/admin'
 
 const props = defineProps<{
     visible: boolean
-    user: any
+    user: AdminUserProfile | null
 }>()
 
 const emit = defineEmits<{
@@ -87,7 +86,27 @@ const confirm = useConfirm()
 const sessionsLoading = ref(false)
 const revokeAllLoading = ref(false)
 const revokingSession = ref('')
-const userSessions = ref<any[]>([])
+const userSessions = ref<AdminUserSession[]>([])
+
+const columns: DataTableColumn<AdminUserSession>[] = [
+    { key: 'token', header: '会话ID', width: '170px' },
+    { key: 'userAgent', header: '设备信息', width: '160px' },
+    {
+        key: 'createdAt',
+        header: '创建时间',
+        width: '180px',
+        accessor: (row) => formatDateTime(row.createdAt),
+    },
+    {
+        key: 'expiresAt',
+        header: '到期时间',
+        width: '180px',
+        accessor: (row) => formatDateTime(row.expiresAt),
+    },
+    { key: 'actions', header: '操作', width: '100px', align: 'right' },
+]
+
+const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 const loadUserSessions = async () => {
     if (!props.user) return
@@ -97,14 +116,13 @@ const loadUserSessions = async () => {
         const response = await authClient.admin.listUserSessions({
             userId: props.user.id,
         })
-        userSessions.value = response.data?.sessions || []
-    } catch (error: any) {
+        userSessions.value = (response.data?.sessions || []) as AdminUserSession[]
+    } catch (error: unknown) {
         console.error('加载用户会话失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '加载失败',
-            detail: error.message || '加载用户会话失败',
-            life: 3000,
+        toast.danger({
+            title: '加载失败',
+            description: errorMessage(error, '加载用户会话失败'),
+            duration: 3000,
         })
     } finally {
         sessionsLoading.value = false
@@ -126,21 +144,19 @@ const revokeUserSession = async (sessionToken: string) => {
         })
 
         if (response.data) {
-            toast.add({
-                severity: 'success',
-                summary: '撤销成功',
-                detail: '会话已撤销',
-                life: 3000,
+            toast.success({
+                title: '撤销成功',
+                description: '会话已撤销',
+                duration: 3000,
             })
             loadUserSessions()
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('撤销会话失败:', error)
-        toast.add({
-            severity: 'error',
-            summary: '撤销失败',
-            detail: error.message || '撤销会话失败',
-            life: 3000,
+        toast.danger({
+            title: '撤销失败',
+            description: errorMessage(error, '撤销会话失败'),
+            duration: 3000,
         })
     } finally {
         revokingSession.value = ''
@@ -148,79 +164,93 @@ const revokeUserSession = async (sessionToken: string) => {
 }
 
 const revokeAllUserSessions = async () => {
-    if (!props.user) return
+    const targetUser = props.user
+    if (!targetUser) return
 
-    confirm.require({
-        message: `确定要撤销 ${props.user.name || props.user.email} 的所有会话吗？`,
-        header: '确认撤销',
-        icon: 'mdi mdi-alert',
-        rejectClass: 'p-button-secondary p-button-outlined',
-        acceptClass: 'p-button-danger',
-        accept: async () => {
-            try {
-                revokeAllLoading.value = true
-
-                const response = await authClient.admin.revokeUserSessions({
-                    userId: props.user.id,
-                })
-
-                if (response.data) {
-                    toast.add({
-                        severity: 'success',
-                        summary: '撤销成功',
-                        detail: '所有会话已撤销',
-                        life: 3000,
-                    })
-                    emit('update:visible', false)
-                }
-            } catch (error: any) {
-                console.error('撤销所有会话失败:', error)
-                toast.add({
-                    severity: 'error',
-                    summary: '撤销失败',
-                    detail: error.message || '撤销所有会话失败',
-                    life: 3000,
-                })
-            } finally {
-                revokeAllLoading.value = false
-            }
-        },
+    const confirmed = await confirm.open({
+        title: '确认撤销',
+        description: `确定要撤销 ${targetUser.name || targetUser.email} 的所有会话吗？`,
+        tone: 'danger',
     })
+    if (!confirmed) {
+        return
+    }
+
+    try {
+        revokeAllLoading.value = true
+
+        const response = await authClient.admin.revokeUserSessions({
+            userId: targetUser.id,
+        })
+
+        if (response.data) {
+            toast.success({
+                title: '撤销成功',
+                description: '所有会话已撤销',
+                duration: 3000,
+            })
+            emit('update:visible', false)
+        }
+    } catch (error: unknown) {
+        console.error('撤销所有会话失败:', error)
+        toast.danger({
+            title: '撤销失败',
+            description: errorMessage(error, '撤销所有会话失败'),
+            duration: 3000,
+        })
+    } finally {
+        revokeAllLoading.value = false
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 .user-sessions {
-    .sessions-header {
+    &__header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 1rem;
         margin-bottom: 1rem;
         padding-bottom: 1rem;
-        border-bottom: 1px solid #e2e8f0;
-
-        h4 {
-            margin: 0;
-            color: $primary;
-        }
+        border-bottom: 1px solid var(--admin-border);
     }
 
-    .session-id {
-        background: #f1f5f9;
-        padding: 0.25rem 0.5rem;
+    &__title {
+        margin: 0;
+        color: $primary;
+        font-size: 1rem;
+    }
+
+    /* 表格表面改用 Admin 语义 token，暗色下与弹窗保持一致 */
+    &__table {
+        --caomei-color-text: var(--admin-text);
+        --caomei-data-table-head-bg: var(--admin-surface-muted);
+        --caomei-data-table-border: var(--admin-border);
+    }
+
+    &__session-id {
+        background: var(--admin-surface-muted);
+        white-space: nowrap;
         border-radius: 4px;
+        padding: 0.25rem 0.5rem;
         font-family: 'Courier New', monospace;
         font-size: 0.8rem;
     }
 
-    .device-info {
+    &__device {
         div {
             font-weight: 500;
         }
 
         small {
-            color: $secondary-light;
+            color: var(--admin-muted);
         }
+    }
+
+    &__empty {
+        padding: 2rem;
+        color: var(--admin-muted);
     }
 }
 </style>

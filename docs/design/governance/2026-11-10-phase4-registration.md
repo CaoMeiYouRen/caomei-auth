@@ -50,7 +50,26 @@
 
 > 单条超过 10 文件 / 800 行新增时，按页面内的对话框或统计组件拆条，并在提交说明与阶段登记中补记拆条依据。
 
-> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采），下一批 P4-2（M3）。
+> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采），下一批 P4-3（M4）。
+
+> **M3 有意差异与口径**（详见 P4-0 决策记录 §7 与本节记录）：
+> 1. 弹窗尺寸改用 caomei 档位：创建 `md`（480，原 500）、禁用 `sm`（360，原 400）、详情 `lg`（640，原 600）、会话 `lg` + `breakpoints` 放宽到 860（原 700，会话表 5 列需要）。
+> 2. Toast / Confirm 由 PrimeVue `toast.add({ severity })` / `confirm.require({ accept })` 改为 caomei `toast.success|warning|danger({ title, description })` / `await confirm.open({ title, tone })`；`use-user-management` 作为路由内 composable 同批切换，`/admin/users` 才满足「整路由切齐」。
+> 3. 禁用时长选项的「永久」由 `value: null` 改为 `value: 0`（`CaomeiSelect` 的选项值只接受字符串 / 数字），回传时仍按 `|| undefined` 省略 `banExpiresIn`，语义不变。
+> 4. 确认框按钮文案沿用 caomei 默认「确定 / 取消」，未新增确认框文案；会话弹窗新增 1 条空态文案（「该用户当前没有活跃会话」），且 5 个列头文案由 `<Column header>` 移入 `<script setup>` 的 `columns` 数组（`hardcoded-scan` 只扫模板段，脚本段不计入）→ 硬编码基线 `components/admin/users/user-sessions-dialog.vue` 9 → 5 行的构成是「移出扫描面 5 行 + 新增空态 1 行」。该扫描盲区（`columns` / config 数组里的中文字面量）在阶段 5 i18n 全量前需一并处理。
+> 5. `BaseStatusBadge`（PrimeVue `Tag`）仍在列表 / 详情内使用，是**页面自身组件树内**唯一残留的 PrimeVue 组件；布局级残留（`layouts/admin.vue` 的 `ThemeToggle` → PrimeVue `Button`）同样留在 M11「共享封装 V1 收口」一并处理。
+> 6. **未拆条说明**：本批 13 个源文件 / 约 900 行改动，超过「单条 ≤10 文件 / 800 行」的默认粒度。不拆条的原因是该批次是 P4-0 §7 定义的「整路由切齐」判定点——页面（M2）之外的对话框、路由内 composable 的 toast/confirm 与白名单登记必须同批成立，拆开后任一提交都会留下「白名单已登记但仍有 PrimeVue 依赖」或「对话框已迁移但路由未登记」的中间态。
+> 7. 封禁弹窗「禁用时长」由 `null` + 占位符改为 `value: 0` + 默认选中「永久」，首屏可见态变化（传参语义不变：`0 → undefined` 仍表示永久）；`CaomeiSelect` 的选项值只接受字符串 / 数字，无法保留 `null` 选项。
+> 8. 修复（Review Gate RG-W1）：`pages/admin/users.vue` 此前未订阅 `UserDetailDialog` 的 `@view-sessions` / `@ban`，也未传 `current-user-id`，导致详情弹窗的「查看会话」「禁用用户」点击无效、自操作保护分支永不生效（缺失早于本批）。本批补上事件接线与 `currentUserId`（`useUserManagement` 新增同名 computed 导出）。
+
+> **M3 视觉差异记录**（`pnpm test:visual` 88 passed；`pnpm test:visual:parity` 17 passed / 71 diff，参考态为 P4 开工前 `a6c8d3b` 原貌）：
+> | 场景 | 差异 | 归因 |
+> | :--- | :--- | :--- |
+> | `admin-users` 创建用户对话框 | 弹窗宽度 500 → 480、标题栏 / 关闭按钮换 caomei、输入控件与按钮换 caomei、底部按钮行 token 化 | M3 对话框迁移，自基线已重采 |
+> | `admin-users` 禁用用户对话框 | 宽度 400 → 360、文本域 / 下拉换 caomei、默认选中「永久」、按钮 tone=danger | 同上（含 §3 第 7 条的口径差异） |
+> | `admin-users` 用户详情对话框 | 宽度 600 → 640、分节标题与动作按钮换 caomei、按钮换行方式变化（5 个动作单行排布） | 同上；`BaseStatusBadge`（PrimeVue Tag）整条色块为既有 V1 观感，M11 处理 |
+> | `admin-users` 用户会话对话框 | 宽度 700 → 860（`breakpoints`）、表格换 `CaomeiDataTable`、列宽 / 表头 token 化、设备信息单行 | 同上 |
+> | 其余 71 个用例 | 整页或弹窗大范围差异 | 参考态早于 P4-0 暗色 token、`darkModeSelector` 修复与 M2 页面迁移，属已登记迁移差异；参考态层需在 M12（P4 收口）整体重新采集基准后再逐项归因，非本批引入 |
 
 > **M2 自基线口径修正**：P4-0 §8 第 5 条原定「M2 中间提交不更新自基线」，与 `pnpm test:visual` 阻塞门禁冲突（页面组件替换必然改变像素）。实际按阶段 3 惯例执行：页面迁移同批重采 `admin-users` 9 张自基线并归因（caomei DataTable / 按钮 / 输入控件替换 + Admin token 接管），M3 随对话框再重采一次；路由白名单仍只在整路由（页面 + 对话框）完成后登记。同时记录两处有意差异：分页器新增每页条数选择器；「会话管理」按钮由 PrimeVue `severity="info"`（蓝）改为 caomei `tone="primary"`（主色）。
 

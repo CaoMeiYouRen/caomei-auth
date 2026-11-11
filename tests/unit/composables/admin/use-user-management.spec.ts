@@ -3,16 +3,27 @@ import { ref } from 'vue'
 import { useUserManagement } from '@/composables/admin/use-user-management'
 import { authClient } from '@/lib/auth-client'
 import { syncAdminRole } from '@/utils/web/admin-role-client'
+import type { AdminUserProfile } from '@/types/admin'
+
+/** 用户夹具：省略字段时补齐列表接口必返的 `email` / `createdAt` */
+const buildUser = (overrides: Partial<AdminUserProfile> & { id: string }): AdminUserProfile => ({
+    email: 'test@example.com',
+    createdAt: '2026-01-01T00:00:00.000Z',
+    ...overrides,
+})
 
 // Mock dependencies
-const toast = { add: vi.fn() }
-const confirm = { require: vi.fn() }
+const toast = {
+    success: vi.fn(),
+    danger: vi.fn(),
+    warning: vi.fn(),
+    info: vi.fn(),
+    show: vi.fn(),
+}
+const confirm = { open: vi.fn() }
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: () => toast,
-}))
-
-vi.mock('primevue/useconfirm', () => ({
     useConfirm: () => confirm,
 }))
 
@@ -48,6 +59,8 @@ describe('useUserManagement', () => {
         ;(authClient.admin.listUsers as any).mockResolvedValue({
             data: { users: [], total: 0 },
         })
+        // 确认框默认「确认」
+        confirm.open.mockResolvedValue(true)
     })
 
     it('initializes correctly', () => {
@@ -136,15 +149,14 @@ describe('useUserManagement', () => {
         it('should unban user successfully', async () => {
             ;(authClient.admin.unbanUser as any).mockResolvedValue({ data: { success: true } })
 
-            const { unbanUser, loadUsers } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test User', email: 'test@example.com' }
+            const { unbanUser } = useUserManagement()
+            const mockUser = buildUser({ id: 'user-1', name: 'Test User' })
 
             await unbanUser(mockUser)
 
             expect(authClient.admin.unbanUser).toHaveBeenCalledWith({ userId: 'user-1' })
-            expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-                summary: '解禁成功',
+            expect(toast.success).toHaveBeenCalledWith(expect.objectContaining({
+                title: '解禁成功',
             }))
         })
 
@@ -152,37 +164,37 @@ describe('useUserManagement', () => {
             ;(authClient.admin.unbanUser as any).mockRejectedValue(new Error('Unban failed'))
 
             const { unbanUser } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test User', email: 'test@example.com' }
+            const mockUser = buildUser({ id: 'user-1', name: 'Test User' })
 
             await unbanUser(mockUser)
 
-            expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                summary: '解禁失败',
+            expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                title: '解禁失败',
+                description: 'Unban failed',
             }))
         })
 
         it('should prevent deleting current user', async () => {
             const { deleteUser } = useUserManagement()
-            const mockUser = { id: 'admin-id', name: 'Admin', email: 'admin@example.com' }
+            const mockUser = buildUser({ id: 'admin-id', name: 'Admin', email: 'admin@example.com' })
 
             await deleteUser(mockUser, true)
 
-            expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'warn',
-                summary: '操作不允许',
+            expect(toast.warning).toHaveBeenCalledWith(expect.objectContaining({
+                title: '操作不允许',
             }))
-            expect(confirm.require).not.toHaveBeenCalled()
+            expect(confirm.open).not.toHaveBeenCalled()
         })
 
         it('should show confirmation dialog for delete user', async () => {
             const { deleteUser } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test User', email: 'test@example.com' }
+            const mockUser = buildUser({ id: 'user-1', name: 'Test User' })
 
             await deleteUser(mockUser, false)
 
-            expect(confirm.require).toHaveBeenCalledWith(expect.objectContaining({
-                header: '确认删除',
+            expect(confirm.open).toHaveBeenCalledWith(expect.objectContaining({
+                title: '确认删除',
+                tone: 'danger',
             }))
         })
 
@@ -190,18 +202,39 @@ describe('useUserManagement', () => {
             ;(authClient.admin.removeUser as any).mockResolvedValue({ data: { success: true } })
 
             const { deleteUser } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test User', email: 'test@example.com' }
+            const mockUser = buildUser({ id: 'user-1', name: 'Test User' })
 
             await deleteUser(mockUser, false)
 
-            // Get the accept callback from the confirmation
-            const confirmCall = confirm.require.mock.calls[0]![0]!
-            await confirmCall.accept()
-
             expect(authClient.admin.removeUser).toHaveBeenCalledWith({ userId: 'user-1' })
-            expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-                summary: '删除成功',
+            expect(toast.success).toHaveBeenCalledWith(expect.objectContaining({
+                title: '删除成功',
+            }))
+        })
+
+        it('should not delete user when confirmation is rejected', async () => {
+            confirm.open.mockResolvedValue(false)
+
+            const { deleteUser } = useUserManagement()
+            const mockUser = buildUser({ id: 'user-1', name: 'Test User' })
+
+            await deleteUser(mockUser, false)
+
+            expect(authClient.admin.removeUser).not.toHaveBeenCalled()
+            expect(toast.success).not.toHaveBeenCalled()
+        })
+
+        it('should handle delete user error', async () => {
+            ;(authClient.admin.removeUser as any).mockRejectedValue(new Error('Remove failed'))
+
+            const { deleteUser } = useUserManagement()
+            const mockUser = buildUser({ id: 'user-1', name: 'Test User' })
+
+            await deleteUser(mockUser, false)
+
+            expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                title: '删除失败',
+                description: 'Remove failed',
             }))
         })
     })
@@ -211,14 +244,13 @@ describe('useUserManagement', () => {
             ;(syncAdminRole as any).mockResolvedValue({ success: true, message: 'Synced' })
 
             const { syncUserAdminRoleAction } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test User' }
+            const mockUser = buildUser({ id: 'user-1', name: 'Test User' })
 
             await syncUserAdminRoleAction(mockUser)
 
             expect(syncAdminRole).toHaveBeenCalledWith('user-1')
-            expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-                summary: '同步成功',
+            expect(toast.success).toHaveBeenCalledWith(expect.objectContaining({
+                title: '同步成功',
             }))
         })
 
@@ -226,13 +258,12 @@ describe('useUserManagement', () => {
             ;(syncAdminRole as any).mockResolvedValue({ success: false, message: 'Already synced' })
 
             const { syncUserAdminRoleAction } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test User' }
+            const mockUser = buildUser({ id: 'user-1', name: 'Test User' })
 
             await syncUserAdminRoleAction(mockUser)
 
-            expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'warning',
-                summary: '同步完成',
+            expect(toast.warning).toHaveBeenCalledWith(expect.objectContaining({
+                title: '同步完成',
             }))
         })
 
@@ -240,13 +271,12 @@ describe('useUserManagement', () => {
             ;(syncAdminRole as any).mockRejectedValue(new Error('Sync failed'))
 
             const { syncUserAdminRoleAction } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test User' }
+            const mockUser = buildUser({ id: 'user-1', name: 'Test User' })
 
             await syncUserAdminRoleAction(mockUser)
 
-            expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                summary: '同步失败',
+            expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                title: '同步失败',
             }))
         })
     })
@@ -257,17 +287,18 @@ describe('useUserManagement', () => {
 
             await batchBanUsers()
 
-            expect(confirm.require).not.toHaveBeenCalled()
+            expect(confirm.open).not.toHaveBeenCalled()
         })
 
         it('should show confirmation for batch ban', async () => {
             const { batchBanUsers, selectedUsers } = useUserManagement()
-            selectedUsers.value = [{ id: 'user-1' }, { id: 'user-2' }]
+            selectedUsers.value = [buildUser({ id: 'user-1', email: 'a@example.com' }), buildUser({ id: 'user-2', email: 'b@example.com' })]
 
             await batchBanUsers()
 
-            expect(confirm.require).toHaveBeenCalledWith(expect.objectContaining({
-                header: '确认批量禁用',
+            expect(confirm.open).toHaveBeenCalledWith(expect.objectContaining({
+                title: '确认批量禁用',
+                tone: 'danger',
             }))
         })
 
@@ -275,17 +306,13 @@ describe('useUserManagement', () => {
             ;(authClient.admin.banUser as any).mockResolvedValue({ data: { success: true } })
 
             const { batchBanUsers, selectedUsers } = useUserManagement()
-            selectedUsers.value = [{ id: 'user-1' }, { id: 'user-2' }]
+            selectedUsers.value = [buildUser({ id: 'user-1', email: 'a@example.com' }), buildUser({ id: 'user-2', email: 'b@example.com' })]
 
             await batchBanUsers()
 
-            const confirmCall = confirm.require.mock.calls[0]![0]!
-            await confirmCall.accept()
-
             expect(authClient.admin.banUser).toHaveBeenCalledTimes(2)
-            expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-                summary: '禁用成功',
+            expect(toast.success).toHaveBeenCalledWith(expect.objectContaining({
+                title: '禁用成功',
             }))
         })
 
@@ -294,7 +321,7 @@ describe('useUserManagement', () => {
 
             await batchUnbanUsers()
 
-            expect(confirm.require).not.toHaveBeenCalled()
+            expect(confirm.open).not.toHaveBeenCalled()
         })
 
         it('should not batch delete users when none selected', async () => {
@@ -302,14 +329,14 @@ describe('useUserManagement', () => {
 
             await batchDeleteUsers()
 
-            expect(confirm.require).not.toHaveBeenCalled()
+            expect(confirm.open).not.toHaveBeenCalled()
         })
     })
 
     describe('Dialog Operations', () => {
         it('should open ban dialog', () => {
             const { openBanDialog, showBanDialog, currentUser } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test' }
+            const mockUser = buildUser({ id: 'user-1', name: 'Test' })
 
             openBanDialog(mockUser)
 
@@ -319,7 +346,7 @@ describe('useUserManagement', () => {
 
         it('should open sessions dialog', () => {
             const { openSessionsDialog, showSessionsDialog, currentUser } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test' }
+            const mockUser = buildUser({ id: 'user-1', name: 'Test' })
 
             openSessionsDialog(mockUser)
 
@@ -329,7 +356,7 @@ describe('useUserManagement', () => {
 
         it('should open detail dialog', () => {
             const { openDetailDialog, showDetailDialog, currentUser } = useUserManagement()
-            const mockUser = { id: 'user-1', name: 'Test' }
+            const mockUser = buildUser({ id: 'user-1', name: 'Test' })
 
             openDetailDialog(mockUser)
 
