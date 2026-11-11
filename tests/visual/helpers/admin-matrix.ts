@@ -74,7 +74,9 @@ const ROUTES: readonly AdminRoute[] = [
                 label: '选择用户行',
                 slug: 'selection',
                 action: async (page) => {
-                    await page.locator('tbody tr').first().locator('input[type="checkbox"]').check()
+                    /* CaomeiDataTable 的选择列是 role="checkbox" 的按钮，不是原生 input */
+                    await page.locator('tbody tr').first().getByRole('checkbox').click()
+                    await expect(page.getByRole('checkbox', { name: '选择该行' }).first()).toBeChecked()
                     await expect(page.getByRole('button', { name: '批量操作' })).toBeVisible()
                 },
             },
@@ -90,7 +92,7 @@ const ROUTES: readonly AdminRoute[] = [
                 label: '用户详情对话框',
                 slug: 'detail-dialog',
                 action: async (page) => {
-                    await tableRow(page, 'wang.qiang@example.com').locator('button').nth(0).click()
+                    await tableRow(page, 'wang.qiang@example.com').getByRole('button', { name: '编辑详情' }).click()
                     await expectDialog(page, '用户详情')
                 },
             },
@@ -98,7 +100,7 @@ const ROUTES: readonly AdminRoute[] = [
                 label: '禁用用户对话框',
                 slug: 'ban-dialog',
                 action: async (page) => {
-                    await tableRow(page, 'wang.qiang@example.com').locator('button').nth(2).click()
+                    await tableRow(page, 'wang.qiang@example.com').getByRole('button', { name: '禁用用户' }).click()
                     await expectDialog(page, '禁用用户')
                 },
             },
@@ -106,7 +108,7 @@ const ROUTES: readonly AdminRoute[] = [
                 label: '用户会话对话框',
                 slug: 'sessions-dialog',
                 action: async (page) => {
-                    await tableRow(page, 'wang.qiang@example.com').locator('button').nth(1).click()
+                    await tableRow(page, 'wang.qiang@example.com').getByRole('button', { name: '会话管理' }).click()
                     await expectDialog(page, '用户会话')
                 },
             },

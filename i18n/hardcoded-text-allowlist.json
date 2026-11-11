@@ -64,7 +64,7 @@
         "pages/about.vue": 24,
         "pages/admin/oauth/applications.vue": 18,
         "pages/admin/sso/providers.vue": 19,
-        "pages/admin/users.vue": 22,
+        "pages/admin/users.vue": 21,
         "pages/change-password.vue": 21,
         "pages/forgot-password.vue": 32,
         "pages/index.vue": 12,

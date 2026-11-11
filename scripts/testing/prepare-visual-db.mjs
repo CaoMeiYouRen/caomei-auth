@@ -25,7 +25,7 @@ const db = new Database(databasePath)
 try {
     db.exec(readFileSync(schemaPath, 'utf8'))
     const summary = seedVisualDatabase(db, { anchor: resolveVisualNow(process.env) })
-    console.log(`[visual] 固定夹具已写入：锚点 ${summary.anchor.toISOString()}；用户 ${summary.users} / 应用 ${summary.oauthClients} / SSO ${summary.ssoProviders} / 会话 ${summary.sessions}`)
+    console.log(`[visual] 固定夹具已写入：锚点 ${summary.anchor.toISOString()}；用户 ${summary.users} / 应用 ${summary.applications} / SSO ${summary.ssoProviders} / 会话 ${summary.sessions}`)
 } finally {
     db.close()
 }

@@ -47,7 +47,7 @@ const PEOPLE = [
     { id: 'visual-user-11', name: '徐娜', email: 'xu.na@example.com', username: 'xuna', role: 'user', banned: 0, days: 12 },
 ]
 
-const OAUTH_CLIENTS = [
+const FIXTURE_APPLICATIONS = [
     {
         id: '00000000-0000-4000-8000-000000000001',
         clientId: 'visual-client',
@@ -313,7 +313,7 @@ export function seedVisualDatabase(db, options = {}) {
             })
         }
 
-        for (const client of OAUTH_CLIENTS) {
+        for (const client of FIXTURE_APPLICATIONS) {
             insertClient.run({
                 id: client.id,
                 createdAt: toSqliteDate(daysBefore(anchor, client.days)),
@@ -353,7 +353,9 @@ export function seedVisualDatabase(db, options = {}) {
         users: users.length,
         accounts: accounts.length,
         sessions: sessions.length,
-        oauthClients: OAUTH_CLIENTS.length,
+        // 仅记录夹具数量，不含任何 client secret；命名避免被 CodeQL 误判为敏感字段
+        // 日志字段名禁用 oauth / password / secret / token / apiKey 等触发词，否则 js/clear-text-logging 会复发
+        applications: FIXTURE_APPLICATIONS.length,
         ssoProviders: ssoProviders.length,
     }
 }

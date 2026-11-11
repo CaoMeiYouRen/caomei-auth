@@ -17,6 +17,9 @@ const MIGRATED_PAGE_FILES = [
     'pages/security.vue',
     'pages/oauth/consent.vue',
     'pages/sso-login.vue',
+    /* P4 拆条提交：页面先迁移，路由白名单延后到整路由完成；自基线随批次同批重采
+     * （见 docs/design/governance/2026-11-10-p4-0-decisions.md §7） */
+    'pages/admin/users.vue',
 ]
 
 const MIGRATED_SHARED_PATHS = [

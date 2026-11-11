@@ -373,7 +373,6 @@ export function useUserManagement() {
     const currentUser = ref<any>(null)
 
     // 批量操作菜单
-    const batchMenu = ref()
     const batchMenuItems = [
         {
             label: '禁用选中用户',
@@ -391,10 +390,6 @@ export function useUserManagement() {
             command: () => batchDeleteUsers(),
         },
     ]
-
-    const toggleBatchMenu = (event: any) => {
-        batchMenu.value.toggle(event)
-    }
 
     // Dialog 操作
     const openBanDialog = (user: any) => {
@@ -448,9 +443,7 @@ export function useUserManagement() {
         showSessionsDialog,
         showDetailDialog,
         currentUser,
-        batchMenu,
         batchMenuItems,
-        toggleBatchMenu,
         openBanDialog,
         openSessionsDialog,
         openDetailDialog,
