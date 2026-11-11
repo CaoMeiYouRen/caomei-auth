@@ -137,8 +137,10 @@ const homeUrl = config.authBaseUrl || window?.location?.origin
 const contactEmail = `mailto:${config.contactEmail}`
 
 // 读取环境变量
-const icpBeianNumber = config.icpBeianNumber
-const publicSecurityBeianNumber = config.publicSecurityBeianNumber
+// 用 computed 是因为 vue-tsc 3.3.14 会把模板闭包中的普通 string 变量误补 .value（TS2551）；
+// 上游修复（vuejs/language-tools #6267/#6305/#6322）后可还原为普通常量
+const icpBeianNumber = computed(() => config.icpBeianNumber)
+const publicSecurityBeianNumber = computed(() => config.publicSecurityBeianNumber)
 </script>
 
 <style scoped lang="scss">
