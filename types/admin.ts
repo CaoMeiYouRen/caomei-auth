@@ -57,6 +57,15 @@ export interface AdminOAuthApplicationRow {
     updatedAt?: string | Date | null
 }
 
+/** OAuth 应用创建响应（RFC 7591 风格字段，`/api/admin/oauth/applications` POST 返回） */
+export interface AdminOAuthClientCredentials {
+    client_id: string
+    client_secret: string
+    client_name: string
+    scope?: string
+    redirect_uris?: string[]
+}
+
 /** 用户会话行（`better-auth` admin `listUserSessions` 的最小字段集） */
 export interface AdminUserSession {
     token: string

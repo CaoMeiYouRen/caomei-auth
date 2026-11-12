@@ -85,7 +85,7 @@
                 </div>
 
                 <CaomeiDataTable
-                    :data="applicationRows"
+                    :data="applications"
                     :columns="columns"
                     row-key="id"
                     :loading="loading"
@@ -232,7 +232,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent } from 'caomei-ui'
 import { useApplicationManagement } from '@/composables/admin/use-application-management'
 import CreateApplicationDialog from '@/components/admin/oauth/create-application-dialog.vue'
@@ -271,8 +270,6 @@ const {
     onApplicationUpdated,
     onSearchInput,
 } = useApplicationManagement()
-
-const applicationRows = computed<AdminOAuthApplicationRow[]>(() => applications.value as AdminOAuthApplicationRow[])
 
 /** 操作列只通过 `#cell-actions` 插槽渲染；创建时间用 accessor 统一格式化为 `zh-CN` 本地时间（与迁移前中文环境下的 `toLocaleString` 输出一致） */
 const columns: DataTableColumn<AdminOAuthApplicationRow>[] = [

@@ -1,148 +1,158 @@
 <template>
-    <BaseDialog
-        v-model:visible="visible"
+    <BaseDialogV2
+        :visible="visible"
         title="OIDC API 端点文档"
-        width="800px"
-        :show-footer="false"
-        class="api-docs-dialog"
+        size="lg"
+        @update:visible="visible = $event"
     >
         <div class="api-docs-content">
-            <Accordion :value="['0', '1', '2']" multiple>
-                <AccordionPanel value="0">
-                    <AccordionHeader>
-                        <i class="mdi mdi-api" />
+            <CaomeiAccordion
+                type="multiple"
+                :default-value="['0', '1', '2']"
+            >
+                <CaomeiAccordionItem value="0">
+                    <template #trigger>
+                        <i
+                            class="mdi mdi-api"
+                            aria-hidden="true"
+                        />
                         <span>OpenID Connect Discovery</span>
-                    </AccordionHeader>
-                    <AccordionContent>
-                        <p class="section-description">
-                            OpenID Connect 配置端点，包含所有支持的端点和功能信息。
-                        </p>
-                        <div class="endpoint-group">
-                            <div class="endpoint-item">
-                                <label>Discovery 端点</label>
-                                <div class="endpoint-url">
-                                    <code>{{ authBaseUrl }}/api/auth/.well-known/openid-configuration</code>
-                                    <Button
-                                        icon="mdi mdi-content-copy"
-                                        class="p-button-sm p-button-text"
-                                        @click="copyToClipboard(`${authBaseUrl}/api/auth/.well-known/openid-configuration`)"
-                                    />
-                                </div>
+                    </template>
+                    <p class="api-docs-content__description">
+                        OpenID Connect 配置端点，包含所有支持的端点和功能信息。
+                    </p>
+                    <div class="endpoint-group">
+                        <div class="endpoint-item">
+                            <span class="endpoint-item__label">Discovery 端点</span>
+                            <div class="endpoint-item__url">
+                                <code>{{ authBaseUrl }}/api/auth/.well-known/openid-configuration</code>
+                                <CaomeiButton
+                                    icon-only
+                                    variant="ghost"
+                                    label="复制 Discovery 端点"
+                                    @click="copyToClipboard(`${authBaseUrl}/api/auth/.well-known/openid-configuration`)"
+                                >
+                                    <template #icon>
+                                        <i
+                                            class="mdi mdi-content-copy"
+                                            aria-hidden="true"
+                                        />
+                                    </template>
+                                </CaomeiButton>
                             </div>
                         </div>
-                    </AccordionContent>
-                </AccordionPanel>
+                    </div>
+                </CaomeiAccordionItem>
 
-                <AccordionPanel value="1">
-                    <AccordionHeader>
-                        <i class="mdi mdi-cloud-outline" />
+                <CaomeiAccordionItem value="1">
+                    <template #trigger>
+                        <i
+                            class="mdi mdi-cloud-outline"
+                            aria-hidden="true"
+                        />
                         <span>主要 OAuth 2.0 / OIDC 端点</span>
-                    </AccordionHeader>
-                    <AccordionContent>
-                        <p class="section-description">
-                            以下是平台提供的主要 OAuth 2.0 和 OpenID Connect 端点。
-                        </p>
-                        <div class="endpoint-group">
-                            <div class="endpoint-item">
-                                <label>授权端点</label>
-                                <div class="endpoint-url">
-                                    <code>{{ authBaseUrl }}/api/auth/oauth2/authorize</code>
-                                    <Button
-                                        icon="mdi mdi-content-copy"
-                                        class="p-button-sm p-button-text"
-                                        @click="copyToClipboard(`${authBaseUrl}/api/auth/oauth2/authorize`)"
-                                    />
-                                </div>
-                            </div>
-                            <div class="endpoint-item">
-                                <label>令牌端点</label>
-                                <div class="endpoint-url">
-                                    <code>{{ authBaseUrl }}/api/auth/oauth2/token</code>
-                                    <Button
-                                        icon="mdi mdi-content-copy"
-                                        class="p-button-sm p-button-text"
-                                        @click="copyToClipboard(`${authBaseUrl}/api/auth/oauth2/token`)"
-                                    />
-                                </div>
-                            </div>
-                            <div class="endpoint-item">
-                                <label>用户信息端点</label>
-                                <div class="endpoint-url">
-                                    <code>{{ authBaseUrl }}/api/auth/oauth2/userinfo</code>
-                                    <Button
-                                        icon="mdi mdi-content-copy"
-                                        class="p-button-sm p-button-text"
-                                        @click="copyToClipboard(`${authBaseUrl}/api/auth/oauth2/userinfo`)"
-                                    />
-                                </div>
-                            </div>
-                            <div class="endpoint-item">
-                                <label>JWKS 端点</label>
-                                <div class="endpoint-url">
-                                    <code>{{ authBaseUrl }}/api/auth/jwks</code>
-                                    <Button
-                                        icon="mdi mdi-content-copy"
-                                        class="p-button-sm p-button-text"
-                                        @click="copyToClipboard(`${authBaseUrl}/api/auth/jwks`)"
-                                    />
-                                </div>
+                    </template>
+                    <p class="api-docs-content__description">
+                        以下是平台提供的主要 OAuth 2.0 和 OpenID Connect 端点。
+                    </p>
+                    <div class="endpoint-group">
+                        <div
+                            v-for="endpoint in endpoints"
+                            :key="endpoint.path"
+                            class="endpoint-item"
+                        >
+                            <span class="endpoint-item__label">{{ endpoint.label }}</span>
+                            <div class="endpoint-item__url">
+                                <code>{{ authBaseUrl }}{{ endpoint.path }}</code>
+                                <CaomeiButton
+                                    icon-only
+                                    variant="ghost"
+                                    :label="`复制${endpoint.label}`"
+                                    @click="copyToClipboard(`${authBaseUrl}${endpoint.path}`)"
+                                >
+                                    <template #icon>
+                                        <i
+                                            class="mdi mdi-content-copy"
+                                            aria-hidden="true"
+                                        />
+                                    </template>
+                                </CaomeiButton>
                             </div>
                         </div>
-                    </AccordionContent>
-                </AccordionPanel>
+                    </div>
+                </CaomeiAccordionItem>
 
-                <AccordionPanel value="2">
-                    <AccordionHeader>
-                        <i class="mdi mdi-code-json" />
+                <CaomeiAccordionItem value="2">
+                    <template #trigger>
+                        <i
+                            class="mdi mdi-code-json"
+                            aria-hidden="true"
+                        />
                         <span>Discovery 配置示例</span>
-                    </AccordionHeader>
-                    <AccordionContent>
-                        <p class="section-description">
-                            以下是 OpenID Connect Discovery 端点返回的配置示例。
-                        </p>
-                        <div class="config-example">
-                            <pre><code>{{ JSON.stringify(oidcConfig, null, 2) }}</code></pre>
-                            <Button
-                                icon="mdi mdi-content-copy"
-                                class="copy-config-btn p-button-sm p-button-text"
-                                @click="copyToClipboard(JSON.stringify(oidcConfig, null, 2))"
-                            />
-                        </div>
-                    </AccordionContent>
-                </AccordionPanel>
-            </Accordion>
+                    </template>
+                    <p class="api-docs-content__description">
+                        以下是 OpenID Connect Discovery 端点返回的配置示例。
+                    </p>
+                    <div class="config-example">
+                        <pre><code>{{ oidcConfigJson }}</code></pre>
+                        <CaomeiButton
+                            icon-only
+                            variant="ghost"
+                            label="复制配置示例"
+                            class="config-example__copy"
+                            @click="copyToClipboard(oidcConfigJson)"
+                        >
+                            <template #icon>
+                                <i
+                                    class="mdi mdi-content-copy"
+                                    aria-hidden="true"
+                                />
+                            </template>
+                        </CaomeiButton>
+                    </div>
+                </CaomeiAccordionItem>
+            </CaomeiAccordion>
 
-            <div class="notice-section section">
+            <CaomeiAlert
+                tone="danger"
+                class="api-docs-content__notice"
+            >
                 <h3>
-                    <i class="mdi mdi-information-outline" />
+                    <i
+                        class="mdi mdi-information-outline"
+                        aria-hidden="true"
+                    />
                     注意事项
                 </h3>
-                <div class="notice">
-                    <ul>
-                        <li>当前 OIDC 实现基于 Better Auth，仅支持标准 OpenID Connect 核心功能</li>
-                        <li>支持授权码流程（Authorization Code Flow）和刷新令牌</li>
-                        <li>不支持隐式流程、密码流程、客户端流程等非标准模式</li>
-                        <li>不开放动态客户端注册，OAuth 应用需由管理员在管理后台创建</li>
-                        <li>所有端点都要求使用 HTTPS</li>
-                    </ul>
-                </div>
-            </div>
+                <ul>
+                    <li>当前 OIDC 实现基于 Better Auth，仅支持标准 OpenID Connect 核心功能</li>
+                    <li>支持授权码流程（Authorization Code Flow）和刷新令牌</li>
+                    <li>不支持隐式流程、密码流程、客户端流程等非标准模式</li>
+                    <li>不开放动态客户端注册，OAuth 应用需由管理员在管理后台创建</li>
+                    <li>所有端点都要求使用 HTTPS</li>
+                </ul>
+            </CaomeiAlert>
         </div>
+
         <template #footer>
-            <Button label="关闭" @click="visible = false" />
+            <CaomeiButton @click="visible = false">
+                关闭
+            </CaomeiButton>
         </template>
-    </BaseDialog>
+    </BaseDialogV2>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 
 const props = defineProps<{
     visible: boolean
 }>()
 
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits<{
+    (e: 'update:visible', value: boolean): void
+}>()
 
 const visible = computed({
     get: () => props.visible,
@@ -162,6 +172,14 @@ const authBaseUrl = computed(() => {
     return 'https://example.com'
 })
 
+/** 端点清单：模板与原实现的 4 个端点一一对应，避免重复的复制按钮块 */
+const endpoints = [
+    { label: '授权端点', path: '/api/auth/oauth2/authorize' },
+    { label: '令牌端点', path: '/api/auth/oauth2/token' },
+    { label: '用户信息端点', path: '/api/auth/oauth2/userinfo' },
+    { label: 'JWKS 端点', path: '/api/auth/jwks' },
+]
+
 const oidcConfig = computed(() => ({
     issuer: authBaseUrl.value,
     authorization_endpoint: `${authBaseUrl.value}/api/auth/oauth2/authorize`,
@@ -177,21 +195,21 @@ const oidcConfig = computed(() => ({
     claims_supported: ['sub', 'name', 'email', 'email_verified', 'preferred_username', 'picture'],
 }))
 
+const oidcConfigJson = computed(() => JSON.stringify(oidcConfig.value, null, 2))
+
 async function copyToClipboard(text: string) {
     try {
         await navigator.clipboard.writeText(text)
-        toast.add({
-            severity: 'success',
-            summary: '已复制',
-            detail: '内容已复制到剪贴板',
-            life: 2000,
+        toast.success({
+            title: '已复制',
+            description: '内容已复制到剪贴板',
+            duration: 2000,
         })
-    } catch (error) {
-        toast.add({
-            severity: 'error',
-            summary: '复制失败',
-            detail: '无法复制到剪贴板',
-            life: 2000,
+    } catch {
+        toast.danger({
+            title: '复制失败',
+            description: '无法复制到剪贴板',
+            duration: 2000,
         })
     }
 }
@@ -199,104 +217,92 @@ async function copyToClipboard(text: string) {
 
 <style lang="scss" scoped>
 .api-docs-content {
-    .section-description {
-        color: #718096;
+    &__description {
         margin-bottom: 1rem;
+        color: var(--admin-muted);
     }
 
-    .endpoint-group {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .endpoint-item {
-        label {
-            display: block;
-            font-weight: 600;
-            color: #4a5568;
-            margin-bottom: 0.5rem;
-        }
-
-        .endpoint-url {
-            display: flex;
-            align-items: center;
-            background: #f7fafc;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
-
-            code {
-                flex: 1;
-                font-family: monospace;
-                color: #2d3748;
-                word-break: break-all;
-            }
-        }
-    }
-
-    .config-example {
-        position: relative;
-        background: #2d3748;
-        border-radius: 8px;
-        padding: 1rem;
-        overflow: hidden;
-
-        pre {
-            margin: 0;
-            overflow-x: auto;
-        }
-
-        code {
-            color: #e2e8f0;
-            font-family: monospace;
-            font-size: 0.875rem;
-        }
-
-        .copy-config-btn {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            color: #a0aec0;
-
-            &:hover {
-                color: white;
-                background: rgb(255 255 255 / 0.1);
-            }
-        }
-    }
-
-    .notice-section {
+    &__notice {
         margin-top: 2rem;
-        background: #fff5f5;
-        border: 1px solid #fed7d7;
-        border-radius: 8px;
-        padding: 1rem;
 
         h3 {
             display: flex;
-            align-items: center;
             gap: 0.5rem;
-            color: #c53030;
+            align-items: center;
             margin: 0 0 1rem;
             font-size: 1.1rem;
         }
 
-        .notice {
-            ul {
-                margin: 0;
-                padding-left: 1.5rem;
-                color: #742a2a;
+        ul {
+            margin: 0;
+            padding-left: 1.5rem;
 
-                li {
-                    margin-bottom: 0.5rem;
+            li {
+                margin-bottom: 0.5rem;
 
-                    &:last-child {
-                        margin-bottom: 0;
-                    }
+                &:last-child {
+                    margin-bottom: 0;
                 }
             }
         }
+    }
+}
+
+.endpoint-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.endpoint-item {
+    &__label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--admin-text);
+    }
+
+    &__url {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--admin-border);
+        border-radius: 6px;
+        background: var(--admin-surface-muted);
+
+        code {
+            flex: 1;
+            font-family: monospace;
+            color: var(--admin-text);
+            word-break: break-all;
+        }
+    }
+}
+
+.config-example {
+    position: relative;
+    overflow: hidden;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #2d3748;
+
+    pre {
+        margin: 0;
+        overflow-x: auto;
+    }
+
+    code {
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: #e2e8f0;
+    }
+
+    &__copy {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        color: #a0aec0;
     }
 }
 </style>

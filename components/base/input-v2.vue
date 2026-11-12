@@ -3,6 +3,7 @@
         :id="id"
         :label="label"
         :error="error"
+        :hint="hint"
         :required="required"
         :name="name"
     >
@@ -40,6 +41,7 @@ withDefaults(defineProps<{
     modelValue: string
     placeholder?: string
     error?: string
+    hint?: string
     type?: InputType
     disabled?: boolean
     required?: boolean
@@ -48,6 +50,7 @@ withDefaults(defineProps<{
     label: '',
     placeholder: '',
     error: '',
+    hint: '',
     type: 'text',
     disabled: false,
     required: false,

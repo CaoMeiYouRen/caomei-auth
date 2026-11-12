@@ -50,7 +50,7 @@
 
 > 单条超过 10 文件 / 800 行新增时，按页面内的对话框或统计组件拆条，并在提交说明与阶段登记中补记拆条依据。
 
-> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采）；M4（P4-3）已于 2026-11-12 完成（OAuth 应用页迁移 + 自基线重采，对话框与白名单待 M5），下一批 P4-4（M5）。
+> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采）；M4（P4-3）已于 2026-11-12 完成（OAuth 应用页迁移 + 自基线重采，对话框与白名单待 M5）；M5（P4-4）已于 2026-11-12 完成（3 个 OAuth 对话框迁移 + composable toast/confirm 切换 + `/admin/oauth/applications` 白名单登记 + 自基线重采），下一批 P4-5（M6）。
 
 > **M3 有意差异与口径**（详见 P4-0 决策记录 §7 与本节记录）：
 > 1. 弹窗尺寸改用 caomei 档位：创建 `md`（480，原 500）、禁用 `sm`（360，原 400）、详情 `lg`（640，原 600）、会话 `lg` + `breakpoints` 放宽到 860（原 700，会话表 5 列需要）。
@@ -71,10 +71,22 @@
 > | `admin-users` 用户会话对话框 | 宽度 700 → 860（`breakpoints`）、表格换 `CaomeiDataTable`、列宽 / 表头 token 化、设备信息单行 | 同上 |
 > | 其余 71 个用例 | 整页或弹窗大范围差异 | 参考态早于 P4-0 暗色 token、`darkModeSelector` 修复与 M2 页面迁移，属已登记迁移差异；参考态层需在 M12（P4 收口）整体重新采集基准后再逐项归因，非本批引入 |
 
+> **M5 记录（P4-4 Admin OAuth 对话框，2026-11-12）**：
+> 1. 迁移范围（整路由切齐判定点）：`create-application-dialog`（`BaseDialog` → `BaseDialogV2` `size="lg"`、`BaseInput` / `InputText` → `BaseInputV2`、`BaseFormGroup` + `Textarea` / `Select` / `MultiSelect` → `CaomeiFormItem` + `CaomeiTextarea` / `CaomeiSelect` / `CaomeiMultiSelect`、`Button` → `CaomeiButton`）；`application-secret-dialog`（复制按钮 `CaomeiButton`、警告改 `CaomeiAlert` `warning`）；`api-docs-dialog`（`Accordion` → `CaomeiAccordion type="multiple"` + `CaomeiAccordionItem` `#trigger`、注意事项改 `CaomeiAlert` `danger`、4 个重复的端点块收敛为 `endpoints` 数据驱动）。
+> 2. `use-application-management` 同批切换：`useToast` / `useConfirm` 改为显式 `caomei-ui` 来源；删除确认改 `await confirm.open({ title, description, confirmLabel: '删除', tone: 'danger' })`，toast 改 `success` / `danger({ title, description })`；同时按 M4 审计建议泛型化 `useDataTable<AdminOAuthApplicationRow>` 与 `$fetch` 响应类型，移除 `applications.value as ...` 断言。
+> 3. 路由白名单登记 `/admin/oauth/applications`（`utils/shared/caomei-ui-migration.ts`），守卫测试同步：页面 + `components/admin/oauth` 3 个对话框进入「无 PrimeVue 标签 / 显式导入」断言，`/admin/oauth/applications` 从「P4 路由不在白名单内」用例移出并加入白名单断言。
+> 4. 有意差异：创建对话框 600 → 640（`lg`）、API 文档 800 → 640（`lg`，长 JSON 横向滚动）；表单辅助说明改走 `CaomeiFormItem` 的 `hint`（`aria-describedby` 关联），不再手写 `small.helper-text`；注意事项 / 凭据警告改 `CaomeiAlert`（`danger` / `warning`）；`BaseInputV2` 新增可选 `hint` 透传（复用既有 FormItem 能力，未新增组件）；删除确认框改用 caomei 内建 `danger` 图标与默认按钮样式（原 `mdi mdi-alert-circle` + `rejectClass` / `acceptClass` 不再使用）。
+> 5. i18n 硬编码基线（同批收紧）：`api-docs-dialog` 18 → 17、`create-application-dialog` 34 → 26、`application-secret-dialog` 4 → 6（新增两个复制按钮可访问名与警告分行）、`use-application-management` 12 → 11（确认框 `message` + `header` 合并为 `title` + `description`）。
+> 6. 视觉：自基线重采 2 张（创建应用 / API 文档对话框）；`pnpm test:visual` 88 passed；`pnpm test:visual:parity` 13 passed / 75 diff（与 M4 同口径，2 个对话框用例仍属迁移差异）。
+> 7. 定向验收（容器内临时 Playwright，不提交）：暗色下创建应用 → 密钥对话框显示 `client_id` / `client_secret`（32 位）、两个复制按钮可访问名正确、关闭后列表刷新出现新应用。单测覆盖：`toggleApplicationStatus` / `deleteApplication` 的 toast，以及确认框的「取消不删除」「确认后删除 + 刷新」两条分支（`confirm.open` 分别 `mockResolvedValueOnce(false / true)`，并断言取消时不发请求、确认后末次调用为列表刷新）。
+> 8. 修正（Review Gate RG-B1）：本批一度给「联系邮箱」加了 `type="email"`，与「多个邮箱用逗号分隔」冲突——原生表单校验会在 `submit` 事件前拦下多邮箱，创建流程不可用。已删除该 `type`，恢复到迁移前的纯文本 + Zod 校验（`oauthApplicationFormSchema` 逐项校验邮箱格式）。同时补「取消不删除 / 确认删除」两条单测。
+> 9. 未拆条说明：本批 16 个文件（8 个源文件 + 3 文档 + 2 测试 + i18n 清单 + 2 张自基线），超过「单条 ≤10 文件 / 800 行」默认粒度。不拆的理由与 M3 相同：这是 P4-0 §7 定义的「整路由切齐」判定点——页面已在 M4 迁移，对话框、路由内 composable 的 toast/confirm 与白名单登记必须同批成立，拆开任一段都会留下「白名单已登记但路由内仍有 PrimeVue 依赖」或「对话框已迁移但路由未登记」的中间态。
+> 10. 门禁：`pnpm lint` 0 error / 25 warning、`lint:css` / `ai:check` / `migration:check-imports` / `i18n:check` / `typecheck` / `build` / `migration:check-budget`（keyCss 413,239 B，+3.38%）/ `test` 982 passed（含新增 2 条确认框用例）/ `test:coverage` 约 77.8%（同状态多次运行在 77.7–77.8% 间抖动） / `lint:duplicate`（306 clones）全部通过。
+
 > **M4 记录（P4-3 Admin OAuth 应用页，2026-11-12）**：
 > 1. 页面结构迁移：`BaseTable` + `Column` → `CaomeiDataTable`（`columns` 数组 + `#cell-*` 插槽；`page + 1` 受控分页、`asc/desc` ↔ `1/-1` 排序换算、`row-key="id"`）；`Button` → `CaomeiButton`；`IconField` / `InputText` → `CaomeiInput`（`#prefix` 放大镜）；`Avatar` → `CaomeiAvatar`（`square` / `lg`，失败回退应用名首字符）；`Tag` → `CaomeiTag`（`soft`）；表格工具条按 P4-0 §3.2「无 `#header` 插槽」移到表格上方。
 > 2. 有意差异：分页器保留每页条数选择器，但**没有**「x 到 y 共 n 条」报告（总数保留在表格标题），且**缺失首 / 末页按钮**（`CaomeiDataTable` 1.2.0 未透出 `CaomeiPaginator` 的 `showEdges`，与 P4-0 §3.2「需要时显式开启」冲突，已登记 backlog 待上游透出或 M12 收口复核）；操作列的 PrimeVue `v-tooltip` 改为 `label`（`aria-label`）+ 原生 `title`；应用 Logo 由 `img` / PrimeVue `Avatar` 统一为 `CaomeiAvatar`。
-> 3. 本批**未**迁移（留 M5）：3 个对话框、`use-application-management` 的 toast / confirm 仍来自 PrimeVue（`ConfirmDialog` / `Toast` 仍由 `app.vue` 提供）；状态列继续使用 `BaseStatusBadge`（内部为 PrimeVue `Tag`，与 M3 同口径，M11 处理）；`/admin/oauth/applications` 未登记白名单，仍受「P4 路由不在白名单内」守卫约束。
+> 3. 本批**未**迁移（M5 已补齐）：3 个对话框、`use-application-management` 的 toast / confirm 当时仍来自 PrimeVue（`ConfirmDialog` / `Toast` 仍由 `app.vue` 提供）；状态列继续使用 `BaseStatusBadge`（内部为 PrimeVue `Tag`，与 M3 同口径，M11 处理）；`/admin/oauth/applications` 未登记白名单，仍受「P4 路由不在白名单内」守卫约束。
 > 4. 新增共享类型 `AdminOAuthApplicationRow`（`types/admin.ts`），字段对齐 `toAdminOAuthClientView`，供 M5 对话框复用；未改后端、API 契约或数据库。
 > 5. i18n 硬编码基线 18 → 19 行：模板侧移除 5 行列头（移入 `<script setup>` 的 `columns`，`hardcoded-scan` 只扫模板段，属已登记扫描盲区）与 3 行 `v-tooltip`，新增搜索 `label` 1 行、刷新 `label` / `title` 2 行、3 个操作按钮各 `label` / `title` 6 行（-5，净 +1）。盲区清理仍由阶段 5 i18n 全量接手。
 > 6. 视觉：自基线重采 5 张（`dark-mobile-default` 像素未变）；`pnpm test:visual` 88 passed；`pnpm test:visual:parity` 13 passed / 75 diff（较 M3 的 17 / 71 多 4 条，来自本页 4 个默认态由容差内变为超阈值），6 个 `admin-applications` 用例均为本批有意差异。

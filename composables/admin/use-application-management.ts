@@ -1,26 +1,36 @@
 import { ref } from 'vue'
-import { useToast } from 'primevue/usetoast'
-import { useConfirm } from 'primevue/useconfirm'
+import { useToast, useConfirm } from 'caomei-ui'
 import { debounce } from 'lodash-es'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
+import type { AdminOAuthApplicationRow, AdminOAuthClientCredentials } from '@/types/admin'
+
+interface ApplicationListResponse {
+    success: boolean
+    total?: number
+    data: AdminOAuthApplicationRow[]
+}
 
 export function useApplicationManagement() {
     const toast = useToast()
     const confirm = useConfirm()
 
     const fetcher = async (params: DataTableFetchParams) => {
-        const query: any = {
+        const query: Record<string, string | number> = {
             page: params.page,
             limit: params.limit,
-            sortField: params.sortField,
-            sortOrder: params.sortOrder,
         }
 
+        if (params.sortField) {
+            query.sortField = params.sortField
+        }
+        if (params.sortOrder) {
+            query.sortOrder = params.sortOrder
+        }
         if (params.searchQuery) {
             query.search = params.searchQuery
         }
 
-        const response = await $fetch<any>('/api/admin/oauth/applications', {
+        const response = await $fetch<ApplicationListResponse>('/api/admin/oauth/applications', {
             query,
         })
 
@@ -47,7 +57,7 @@ export function useApplicationManagement() {
         onPage,
         onSort,
         onSearch,
-    } = useDataTable({
+    } = useDataTable<AdminOAuthApplicationRow>({
         fetcher,
         defaultSortField: 'createdAt',
         defaultSortOrder: 'desc',
@@ -62,7 +72,9 @@ export function useApplicationManagement() {
         refreshApplications()
     }
 
-    const toggleApplicationStatus = async (app: any) => {
+    const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
+
+    const toggleApplicationStatus = async (app: AdminOAuthApplicationRow) => {
         try {
             await $fetch(`/api/admin/oauth/applications/${app.id}`, {
                 method: 'PUT',
@@ -71,20 +83,18 @@ export function useApplicationManagement() {
                 },
             })
 
-            toast.add({
-                severity: 'success',
-                summary: '成功',
-                detail: `应用已${app.disabled ? '启用' : '禁用'}`,
-                life: 3000,
+            toast.success({
+                title: '成功',
+                description: `应用已${app.disabled ? '启用' : '禁用'}`,
+                duration: 3000,
             })
 
             await refreshApplications()
-        } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: '错误',
-                detail: error.message || '操作失败',
-                life: 3000,
+        } catch (error: unknown) {
+            toast.danger({
+                title: '错误',
+                description: errorMessage(error, '操作失败'),
+                duration: 3000,
             })
         }
     }
@@ -95,21 +105,19 @@ export function useApplicationManagement() {
                 method: 'DELETE',
             })
 
-            toast.add({
-                severity: 'success',
-                summary: '删除成功',
-                detail: '应用已删除',
-                life: 3000,
+            toast.success({
+                title: '删除成功',
+                description: '应用已删除',
+                duration: 3000,
             })
 
             await refreshApplications()
             return true
-        } catch (error: any) {
-            toast.add({
-                severity: 'error',
-                summary: '删除失败',
-                detail: error.message || '删除失败',
-                life: 3000,
+        } catch (error: unknown) {
+            toast.danger({
+                title: '删除失败',
+                description: errorMessage(error, '删除失败'),
+                duration: 3000,
             })
             return false
         }
@@ -120,8 +128,8 @@ export function useApplicationManagement() {
     const showSecretDialog = ref(false)
     const showApiDocsDialog = ref(false)
 
-    const editingApplication = ref<any>(null)
-    const newApplication = ref<any>(null)
+    const editingApplication = ref<AdminOAuthApplicationRow | null>(null)
+    const newApplication = ref<AdminOAuthClientCredentials | null>(null)
 
     // Actions
     const openCreateDialog = () => {
@@ -129,28 +137,26 @@ export function useApplicationManagement() {
         showCreateDialog.value = true
     }
 
-    const editApplication = (app: any) => {
+    const editApplication = (app: AdminOAuthApplicationRow) => {
         editingApplication.value = app
         showCreateDialog.value = true
     }
 
-    const confirmDelete = (app: any) => {
-        confirm.require({
-            message: `确定要删除应用 "${app.name}" 吗？此操作无法撤销。`,
-            header: '确认删除',
-            icon: 'mdi mdi-alert-circle',
-            rejectLabel: '取消',
-            acceptLabel: '删除',
-            rejectClass: 'p-button-secondary p-button-text',
-            acceptClass: 'p-button-danger',
-            accept: () => {
-                deleteApplication(app.id)
-            },
+    const confirmDelete = async (app: AdminOAuthApplicationRow) => {
+        const confirmed = await confirm.open({
+            title: '确认删除',
+            description: `确定要删除应用 "${app.name}" 吗？此操作无法撤销。`,
+            confirmLabel: '删除',
+            tone: 'danger',
         })
+        if (!confirmed) {
+            return
+        }
+        await deleteApplication(app.id)
     }
 
     // Event handlers
-    const onApplicationCreated = (app: any) => {
+    const onApplicationCreated = (app: AdminOAuthClientCredentials) => {
         newApplication.value = app
         showSecretDialog.value = true
         refreshApplications()
