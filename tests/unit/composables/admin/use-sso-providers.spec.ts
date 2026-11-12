@@ -50,7 +50,7 @@ describe('useSsoProviders', () => {
 
     it('toggles provider status', async () => {
         const { toggleProviderStatus } = useSsoProviders()
-        const provider = { id: '1', enabled: true }
+        const provider = { id: '1', providerId: 'sso-1', name: '测试提供商', type: 'oidc' as const, enabled: true, createdAt: '2026-01-01T00:00:00.000Z' }
 
         fetchMock.mockResolvedValueOnce({ success: true }) // PUT
         fetchMock.mockResolvedValueOnce({ success: true, data: [], total: 0 }) // Refresh
@@ -64,6 +64,33 @@ describe('useSsoProviders', () => {
         expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
             severity: 'success',
         }))
+    })
+
+    it('按字符串筛选值查询类型与状态', async () => {
+        const { typeFilter, statusFilter, refreshProviders } = useSsoProviders()
+
+        typeFilter.value = 'saml'
+        statusFilter.value = 'false'
+        await refreshProviders()
+
+        expect(fetchMock).toHaveBeenCalledWith('/api/admin/sso/providers', expect.objectContaining({
+            query: expect.objectContaining({
+                type: 'saml',
+                enabled: 'false',
+            }),
+        }))
+    })
+
+    it('清空筛选后查询不带类型与状态', async () => {
+        const { typeFilter, statusFilter, refreshProviders } = useSsoProviders()
+
+        typeFilter.value = null
+        statusFilter.value = null
+        await refreshProviders()
+
+        const query = fetchMock.mock.calls.at(-1)?.[1]?.query ?? {}
+        expect(query).not.toHaveProperty('type')
+        expect(query).not.toHaveProperty('enabled')
     })
 
     it('refreshes providers', async () => {

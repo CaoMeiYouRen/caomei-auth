@@ -16,11 +16,12 @@
                     </span>
                 </div>
                 <div class="header-actions">
-                    <Button
-                        label="创建提供商"
-                        icon="mdi mdi-plus"
-                        @click="openCreateDialog"
-                    />
+                    <CaomeiButton @click="openCreateDialog">
+                        <template #icon>
+                            <i class="mdi mdi-plus" aria-hidden="true" />
+                        </template>
+                        创建提供商
+                    </CaomeiButton>
                 </div>
             </div>
 
@@ -28,159 +29,179 @@
             <div class="sso-filters">
                 <div class="filter-row">
                     <div class="search-wrapper">
-                        <IconField icon-position="left">
-                            <InputIcon class="mdi mdi-magnify" />
-                            <InputText
-                                :model-value="searchQuery"
-                                placeholder="搜索提供商名称、域名或 Provider ID..."
-                                @update:model-value="onSearchInput"
-                            />
-                        </IconField>
+                        <CaomeiInput
+                            :model-value="searchQuery"
+                            placeholder="搜索提供商名称、域名或 Provider ID..."
+                            label="搜索提供商"
+                            @update:model-value="onSearchInput"
+                        >
+                            <template #prefix>
+                                <i class="mdi mdi-magnify" aria-hidden="true" />
+                            </template>
+                        </CaomeiInput>
                     </div>
                     <div class="filter-controls">
-                        <Dropdown
-                            v-model="typeFilter"
-                            :options="typeOptions"
-                            option-label="label"
-                            option-value="value"
-                            placeholder="筛选类型"
-                            show-clear
-                        />
-                        <Dropdown
-                            v-model="statusFilter"
-                            :options="statusOptions"
-                            option-label="label"
-                            option-value="value"
-                            placeholder="筛选状态"
-                            show-clear
-                        />
-                        <Button
-                            icon="mdi mdi-refresh"
-                            severity="secondary"
-                            outlined
+                        <div class="filter-item">
+                            <CaomeiSelect
+                                v-model="typeFilter"
+                                :options="typeOptions"
+                                option-label="label"
+                                option-value="value"
+                                placeholder="筛选类型"
+                                aria-label="筛选类型"
+                                show-clear
+                            />
+                        </div>
+                        <div class="filter-item">
+                            <CaomeiSelect
+                                v-model="statusFilter"
+                                :options="statusOptions"
+                                option-label="label"
+                                option-value="value"
+                                placeholder="筛选状态"
+                                aria-label="筛选状态"
+                                show-clear
+                            />
+                        </div>
+                        <CaomeiButton
+                            icon-only
+                            variant="secondary"
+                            label="刷新"
+                            title="刷新"
                             :loading="loading"
                             @click="handleRefreshProviders"
-                        />
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-refresh" aria-hidden="true" />
+                            </template>
+                        </CaomeiButton>
                     </div>
                 </div>
             </div>
 
             <!-- SSO 提供商列表 -->
             <div class="sso-list">
-                <BaseTable
+                <div class="table-header">
+                    <div class="table-title">
+                        SSO 提供商列表 ({{ total }})
+                    </div>
+                </div>
+
+                <CaomeiDataTable
                     :data="providers"
-                    :total-records="total"
+                    :columns="columns"
+                    row-key="id"
                     :loading="loading"
+                    paginator
+                    lazy
                     :rows="pageSize"
-                    :first="page * pageSize"
+                    :rows-per-page-options="[10, 25, 50]"
+                    :total-records="total"
+                    :page="page + 1"
                     :sort-field="sortField"
-                    :sort-order="sortOrder === 'asc' ? 1 : -1"
-                    empty-message="暂无 SSO 提供商"
-                    responsive-layout="scroll"
-                    @page="onPage"
-                    @sort="onSort"
+                    :sort-order="sortOrder"
+                    empty-text="暂无 SSO 提供商"
+                    @page="onTablePage"
+                    @sort="onTableSort"
                 >
-                    <template #header>
-                        <div class="table-header">
-                            <div class="table-title">
-                                SSO 提供商列表 ({{ total }})
+                    <template #cell-name="{row}">
+                        <div class="provider-info">
+                            <span class="provider-name">{{ row.name || row.providerId }}</span>
+                            <small
+                                v-if="row.description"
+                                class="provider-description"
+                            >{{ row.description }}</small>
+                            <div class="provider-meta">
+                                <small class="provider-domain">
+                                    <i class="mdi mdi-domain" aria-hidden="true" />
+                                    {{ row.domain }}
+                                </small>
+                                <small class="provider-issuer">
+                                    <i class="mdi mdi-link" aria-hidden="true" />
+                                    {{ row.issuer }}
+                                </small>
                             </div>
                         </div>
                     </template>
-                    <Column field="name" header="提供商信息">
-                        <template #body="{data}">
-                            <div class="provider-info">
-                                <div class="provider-details">
-                                    <span class="provider-name">{{ data.name || data.providerId }}</span>
-                                    <small
-                                        v-if="data.description"
-                                        class="provider-description"
-                                    >{{ data.description }}</small>
-                                    <div class="provider-meta">
-                                        <small class="provider-domain">
-                                            <i class="mdi mdi-domain" />
-                                            {{ data.domain }}
-                                        </small>
-                                        <small class="provider-issuer">
-                                            <i class="mdi mdi-link" />
-                                            {{ data.issuer }}
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                    </Column>
-                    <Column field="type" header="协议类型">
-                        <template #body="{data}">
-                            <Badge
-                                :value="data.type?.toUpperCase() || 'OIDC'"
-                                :severity="data.type === 'saml' ? 'warning' : 'info'"
-                            />
-                        </template>
-                    </Column>
 
-                    <Column
-                        field="enabled"
-                        header="状态"
-                        sortable
-                    >
-                        <template #body="{data}">
-                            <BaseStatusBadge
-                                variant="enabled"
-                                :status="data.enabled"
-                            />
-                        </template>
-                    </Column>
+                    <template #cell-type="{row}">
+                        <CaomeiTag
+                            :tone="row.type === 'saml' ? 'warning' : 'primary'"
+                            variant="soft"
+                            size="sm"
+                        >
+                            {{ row.type?.toUpperCase() || 'OIDC' }}
+                        </CaomeiTag>
+                    </template>
 
-                    <Column
-                        field="createdAt"
-                        header="创建时间"
-                        sortable
-                    >
-                        <template #body="{data}">
-                            <div class="date-info">
-                                <div>{{ formatDateLocale(data.createdAt) }}</div>
-                                <small class="text-muted">{{ formatRelativeTime(data.createdAt) }}</small>
-                            </div>
-                        </template>
-                    </Column>
+                    <template #cell-enabled="{row}">
+                        <BaseStatusBadge
+                            variant="enabled"
+                            :status="row.enabled"
+                        />
+                    </template>
 
-                    <Column header="操作">
-                        <template #body="{data}">
-                            <div class="action-buttons">
-                                <Button
-                                    v-tooltip="'查看详情'"
-                                    icon="mdi mdi-eye"
-                                    size="small"
-                                    severity="info"
-                                    @click="openViewDialog(data)"
-                                />
-                                <Button
-                                    v-tooltip="'编辑'"
-                                    icon="mdi mdi-pencil"
-                                    size="small"
-                                    severity="warning"
-                                    @click="openEditDialog(data)"
-                                />
-                                <Button
-                                    :icon="data.enabled ? 'mdi mdi-pause' : 'mdi mdi-play'"
-                                    size="small"
-                                    :severity="data.enabled ? 'warning' : 'success'"
-                                    :v-tooltip="data.enabled ? '禁用' : '启用'"
-                                    :loading="togglingId === data.id"
-                                    @click="handleToggleStatus(data)"
-                                />
-                                <Button
-                                    v-tooltip="'删除'"
-                                    icon="mdi mdi-delete"
-                                    size="small"
-                                    severity="danger"
-                                    @click="openDeleteDialog(data)"
-                                />
-                            </div>
-                        </template>
-                    </Column>
-                </BaseTable>
+                    <template #cell-createdAt="{row}">
+                        <div class="date-info">
+                            <div>{{ formatDateLocale(row.createdAt) }}</div>
+                            <small>{{ formatRelativeTime(row.createdAt) }}</small>
+                        </div>
+                    </template>
+
+                    <template #cell-actions="{row}">
+                        <div class="action-buttons">
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                tone="primary"
+                                label="查看详情"
+                                title="查看详情"
+                                @click="openViewDialog(row)"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-eye" aria-hidden="true" />
+                                </template>
+                            </CaomeiButton>
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                tone="warning"
+                                label="编辑"
+                                title="编辑"
+                                @click="openEditDialog(row)"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-pencil" aria-hidden="true" />
+                                </template>
+                            </CaomeiButton>
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                :tone="row.enabled ? 'warning' : 'success'"
+                                :label="row.enabled ? '禁用' : '启用'"
+                                :title="row.enabled ? '禁用' : '启用'"
+                                :loading="togglingId === row.id"
+                                @click="handleToggleStatus(row)"
+                            >
+                                <template #icon>
+                                    <i :class="row.enabled ? 'mdi mdi-pause' : 'mdi mdi-play'" aria-hidden="true" />
+                                </template>
+                            </CaomeiButton>
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                tone="danger"
+                                label="删除"
+                                title="删除"
+                                @click="openDeleteDialog(row)"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-delete" aria-hidden="true" />
+                                </template>
+                            </CaomeiButton>
+                        </div>
+                    </template>
+                </CaomeiDataTable>
             </div>
         </div>
 
@@ -197,18 +218,17 @@
             v-model:visible="showViewDialog"
             :provider="selectedProvider"
         />
-
-        <!-- 确认删除对话框 -->
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
-import { useConfirm } from 'primevue/useconfirm'
+import { ref } from 'vue'
+import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent } from 'caomei-ui'
+import { useConfirm } from 'caomei-ui'
 import { debounce } from 'lodash-es'
 import { formatDateLocale } from '@/utils/shared/date'
 import { useSsoProviders } from '@/composables/admin/use-sso-providers'
+import type { AdminSsoProviderRow } from '@/types/admin'
 
 definePageMeta({
     title: 'SSO 提供商管理 - 草梅 Auth',
@@ -230,7 +250,6 @@ useHead({
     ],
 })
 
-const toast = useToast()
 const confirm = useConfirm()
 const {
     providers,
@@ -257,21 +276,29 @@ const onSearchInput = debounce((value: string | undefined) => {
     onSearch()
 }, 300)
 
-// 筛选选项
+// 筛选选项（`CaomeiSelect` 的值只接受字符串 / 数字，状态用 'true' / 'false' 交服务端解析）
 const typeOptions = [
     { label: 'OIDC/OAuth2', value: 'oidc' },
     { label: 'SAML 2.0', value: 'saml' },
 ]
 
 const statusOptions = [
-    { label: '启用', value: true },
-    { label: '禁用', value: false },
+    { label: '启用', value: 'true' },
+    { label: '禁用', value: 'false' },
+]
+
+const columns: DataTableColumn<AdminSsoProviderRow>[] = [
+    { key: 'name', header: '提供商信息' },
+    { key: 'type', header: '协议类型', width: '120px' },
+    { key: 'enabled', header: '状态', sortable: true, width: '100px' },
+    { key: 'createdAt', header: '创建时间', sortable: true, width: '180px' },
+    { key: 'actions', header: '操作', width: '200px', align: 'right', frozen: 'right' },
 ]
 
 // 对话框状态
 const showCreateDialog = ref(false)
 const showViewDialog = ref(false)
-const selectedProvider = ref<any>(null)
+const selectedProvider = ref<AdminSsoProviderRow | null>(null)
 const togglingId = ref<string | null>(null)
 
 // 打开创建对话框
@@ -281,31 +308,29 @@ function openCreateDialog() {
 }
 
 // 打开编辑对话框
-function openEditDialog(provider: any) {
+function openEditDialog(provider: AdminSsoProviderRow) {
     selectedProvider.value = provider
     showCreateDialog.value = true
 }
 
 // 打开查看对话框
-function openViewDialog(provider: any) {
+function openViewDialog(provider: AdminSsoProviderRow) {
     selectedProvider.value = provider
     showViewDialog.value = true
 }
 
-// 打开删除对话框
-function openDeleteDialog(provider: any) {
-    confirm.require({
-        message: `确定要删除 SSO 提供商 "${provider.name || provider.providerId}" 吗？此操作不可撤销。`,
-        header: '确认删除',
-        icon: 'mdi mdi-alert-circle',
-        rejectLabel: '取消',
-        acceptLabel: '删除',
-        rejectClass: 'p-button-secondary p-button-outlined',
-        acceptClass: 'p-button-danger',
-        accept: async () => {
-            await deleteProvider(provider.id)
-        },
+// 打开删除确认框
+async function openDeleteDialog(provider: AdminSsoProviderRow) {
+    const confirmed = await confirm.open({
+        title: '确认删除',
+        description: `确定要删除 SSO 提供商 "${provider.name || provider.providerId}" 吗？此操作不可撤销。`,
+        confirmLabel: '删除',
+        tone: 'danger',
     })
+    if (!confirmed) {
+        return
+    }
+    await deleteProvider(provider.id)
 }
 
 // 处理创建成功
@@ -319,7 +344,7 @@ function handleUpdated() {
 }
 
 // 处理状态切换
-async function handleToggleStatus(provider: any) {
+async function handleToggleStatus(provider: AdminSsoProviderRow) {
     try {
         togglingId.value = provider.id
         await toggleProviderStatus(provider)
@@ -355,18 +380,33 @@ function formatRelativeTime(date: string | Date) {
     }
     return ''
 }
+
+/** 分页：`CaomeiDataTable` 的 `first` 为 0 基偏移，页面状态保持 0 基页码 */
+function onTablePage(event: DataTablePageEvent) {
+    onPage({ page: event.first / event.rows, rows: event.rows })
+}
+
+/** 排序：`asc` / `desc` 换算为页面状态的 1 / -1 */
+function onTableSort(event: DataTableSortEvent) {
+    if (!event.sortField || !event.sortOrder) {
+        return
+    }
+    onSort({ sortField: event.sortField, sortOrder: event.sortOrder === 'asc' ? 1 : -1 })
+}
 </script>
 
 <style lang="scss" scoped>
 .admin-sso {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    padding: 2rem;
+    padding: 1.5rem;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 .sso-container {
-    max-width: 1400px;
-    margin: 0 auto;
+    background: var(--admin-surface);
+    border-radius: 12px;
+    box-shadow: var(--admin-shadow);
+    padding: 1.5rem;
 }
 
 .sso-header {
@@ -374,194 +414,158 @@ function formatRelativeTime(date: string | Date) {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 2rem;
-    background: var(--admin-surface);
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 
-    @media (width <= 768px) {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-}
-
-.header-content {
-    .sso-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--admin-text);
-        margin: 0 0 0.5rem;
-    }
-
-    .sso-subtitle {
-        color: var(--admin-muted);
-        margin: 0;
-        font-size: 1.1rem;
-    }
-}
-
-.header-actions {
-    display: flex;
-    gap: 1rem;
-
-    @media (width <= 768px) {
-        width: 100%;
-
-        :deep(.p-button) {
-            flex: 1;
+    .header-content {
+        .sso-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--admin-text);
+            margin: 0 0 0.5rem;
         }
+
+        .sso-subtitle {
+            color: var(--admin-muted);
+            margin: 0 0 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .text-muted {
+            display: block;
+            max-width: 600px;
+            color: var(--admin-muted);
+            font-size: 0.75rem;
+        }
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 0.75rem;
     }
 }
 
 .sso-filters {
-    background: var(--admin-surface);
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     margin-bottom: 1.5rem;
 
     .filter-row {
         display: flex;
-        gap: 1rem;
+        justify-content: space-between;
         align-items: center;
-
-        @media (width <= 768px) {
-            flex-direction: column;
-            align-items: stretch;
-        }
-    }
-
-    .search-wrapper {
-        flex: 1;
-        min-width: 300px;
-
-        @media (width <= 768px) {
-            min-width: auto;
-        }
-    }
-
-    .filter-controls {
-        display: flex;
         gap: 1rem;
+        flex-wrap: wrap;
 
-        @media (width <= 768px) {
-            flex-direction: column;
+        .search-wrapper {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+
+            .filter-item {
+                width: 9rem;
+            }
         }
     }
 }
 
 .sso-list {
-    background: var(--admin-surface);
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
-    overflow: hidden;
+    /* 表格表面改用 Admin 语义 token，暗色下与卡片保持一致 */
+    --caomei-color-text: var(--admin-text);
+    --caomei-data-table-head-bg: var(--admin-surface-muted);
+    --caomei-data-table-border: var(--admin-border);
+}
 
-    .table-header {
+.table-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 1rem;
+
+    .table-title {
+        font-weight: 600;
+        color: var(--admin-text);
+    }
+}
+
+.provider-info {
+    display: flex;
+    flex-direction: column;
+
+    .provider-name {
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+        color: var(--admin-text);
+    }
+
+    .provider-description {
+        color: var(--admin-muted);
+        font-size: 0.75rem;
+    }
+
+    .provider-meta {
         display: flex;
-        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 0.25rem;
+    }
+
+    .provider-domain,
+    .provider-issuer {
+        display: flex;
+        gap: 0.25rem;
         align-items: center;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid var(--admin-border);
-
-        .table-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--admin-text);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-    }
-
-    :deep(.p-datatable) {
-        .p-datatable-header {
-            display: none;
-        }
-
-        .p-datatable-thead>tr>th {
-            background: var(--admin-surface-muted);
-            border-bottom: 2px solid var(--admin-border);
-            color: var(--admin-text);
-            font-weight: 600;
-            padding: 1rem;
-        }
-
-        .p-datatable-tbody>tr>td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--admin-border);
-        }
-
-        .p-datatable-tbody>tr {
-            background: var(--admin-surface);
-            color: var(--admin-text);
-        }
-
-        .p-datatable-tbody>tr:hover {
-            background: var(--admin-surface-muted);
-        }
-    }
-
-    .provider-info {
-        .provider-name {
-            font-weight: 600;
-            color: var(--admin-text);
-            margin-bottom: 0.25rem;
-        }
-
-        .provider-domain,
-        .provider-issuer {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.875rem;
-            color: var(--admin-muted);
-            margin-bottom: 0.125rem;
-
-            i {
-                width: 16px;
-            }
-        }
-    }
-
-    .date-info {
-        small {
-            display: block;
-            color: var(--admin-muted);
-        }
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 0.5rem;
-
-        :deep(.p-button) {
-            width: 32px;
-            height: 32px;
-        }
+        font-size: 0.875rem;
+        color: var(--admin-muted);
     }
 }
 
-@include dark-mode {
-    .admin-sso {
-        background: var(--admin-bg);
-    }
+.date-info small {
+    display: block;
+    color: var(--admin-muted);
 }
 
-// 响应式优化
+.action-buttons {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: flex-end;
+}
+
+// 响应式适配
 @media (width <= 768px) {
     .admin-sso {
         padding: 1rem;
     }
 
-    :deep(.p-datatable-wrapper) {
-        overflow-x: auto;
-    }
-}
+    .sso-header {
+        flex-direction: column;
+        gap: 1rem;
 
-.text-muted {
-    color: var(--admin-muted);
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
+        .header-actions {
+            width: 100%;
+
+            .caomei-button {
+                width: 100%;
+            }
+        }
+    }
+
+    .sso-filters {
+        .filter-row {
+            flex-direction: column;
+            align-items: stretch;
+
+            .search-wrapper,
+            .filter-controls {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .filter-controls {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+        }
+    }
 }
 </style>

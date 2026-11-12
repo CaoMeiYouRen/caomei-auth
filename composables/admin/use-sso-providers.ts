@@ -1,27 +1,45 @@
 import { ref, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
+import type { AdminSsoProviderRow } from '@/types/admin'
+
+interface SsoProviderListResponse {
+    success: boolean
+    total?: number
+    data: AdminSsoProviderRow[]
+}
 
 export function useSsoProviders() {
     const toast = useToast()
-    const typeFilter = ref('')
-    const statusFilter = ref<boolean | ''>('')
+    /** `CaomeiSelect` 的选项值只接受字符串 / 数字，筛选值用 `'true'` / `'false'`，服务端按同名 query 解析 */
+    const typeFilter = ref<string | null>('')
+    const statusFilter = ref<'true' | 'false' | null | ''>('')
 
     const fetcher = async (params: DataTableFetchParams) => {
-        const query: any = {
+        const query: Record<string, string | number> = {
             page: params.page,
             limit: params.limit,
-            sortField: params.sortField,
-            sortOrder: params.sortOrder,
-            type: typeFilter.value,
-            enabled: statusFilter.value === '' ? '' : String(statusFilter.value),
         }
 
+        /* 空筛选不发送，交由服务端按「未筛选」处理，避免 `type=&enabled=` 这种空参数 */
+        if (typeFilter.value) {
+            query.type = typeFilter.value
+        }
+        if (statusFilter.value) {
+            query.enabled = statusFilter.value
+        }
+
+        if (params.sortField) {
+            query.sortField = params.sortField
+        }
+        if (params.sortOrder) {
+            query.sortOrder = params.sortOrder
+        }
         if (params.searchQuery) {
             query.search = params.searchQuery
         }
 
-        const response = await $fetch<any>('/api/admin/sso/providers', {
+        const response = await $fetch<SsoProviderListResponse>('/api/admin/sso/providers', {
             query,
         })
 
@@ -48,7 +66,7 @@ export function useSsoProviders() {
         onPage,
         onSort,
         onSearch,
-    } = useDataTable({
+    } = useDataTable<AdminSsoProviderRow>({
         fetcher,
         defaultSortField: 'createdAt',
         defaultSortOrder: 'desc',
@@ -65,10 +83,14 @@ export function useSsoProviders() {
     }
 
     const handleRefreshProviders = async () => {
+        /* 清空筛选由 watch 触发重载；筛选本来就为空时 watch 不触发，这里补一次请求，避免重复发两次 */
+        const hadFilters = Boolean(searchQuery.value) || Boolean(typeFilter.value) || Boolean(statusFilter.value)
         searchQuery.value = ''
         typeFilter.value = ''
         statusFilter.value = ''
-        await refreshProviders()
+        if (!hadFilters) {
+            await refreshProviders()
+        }
         toast.add({
             severity: 'success',
             summary: '刷新成功',
@@ -77,13 +99,15 @@ export function useSsoProviders() {
         })
     }
 
-    const toggleProviderStatus = async (provider: any) => {
+    const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
+
+    const toggleProviderStatus = async (provider: AdminSsoProviderRow) => {
         if (!provider) {
             return
         }
 
         try {
-            const response: any = await $fetch(`/api/admin/sso/providers/${provider.id}`, {
+            const response = await $fetch<{ success: boolean, message?: string }>(`/api/admin/sso/providers/${provider.id}`, {
                 method: 'PUT',
                 body: { enabled: !provider.enabled },
             })
@@ -100,12 +124,11 @@ export function useSsoProviders() {
             })
 
             await refreshProviders()
-        } catch (error: any) {
-            console.error('切换提供商状态失败:', error)
+        } catch (error: unknown) {
             toast.add({
                 severity: 'error',
                 summary: '状态更新失败',
-                detail: error.message || '请检查网络连接或联系管理员',
+                detail: errorMessage(error, '请检查网络连接或联系管理员'),
                 life: 3000,
             })
         }
@@ -113,7 +136,7 @@ export function useSsoProviders() {
 
     const deleteProvider = async (providerId: string) => {
         try {
-            const response: any = await $fetch(`/api/admin/sso/providers/${providerId}`, {
+            const response = await $fetch<{ success: boolean, message?: string }>(`/api/admin/sso/providers/${providerId}`, {
                 method: 'DELETE',
             })
 
@@ -130,12 +153,11 @@ export function useSsoProviders() {
 
             await refreshProviders()
             return true
-        } catch (error: any) {
-            console.error('删除提供商失败:', error)
+        } catch (error: unknown) {
             toast.add({
                 severity: 'error',
                 summary: '删除失败',
-                detail: error.message || '请检查网络连接或联系管理员',
+                detail: errorMessage(error, '请检查网络连接或联系管理员'),
                 life: 5000,
             })
             return false

@@ -50,7 +50,7 @@
 
 > 单条超过 10 文件 / 800 行新增时，按页面内的对话框或统计组件拆条，并在提交说明与阶段登记中补记拆条依据。
 
-> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采）；M4（P4-3）已于 2026-11-12 完成（OAuth 应用页迁移 + 自基线重采，对话框与白名单待 M5）；M5（P4-4）已于 2026-11-12 完成（3 个 OAuth 对话框迁移 + composable toast/confirm 切换 + `/admin/oauth/applications` 白名单登记 + 自基线重采），下一批 P4-5（M6）。
+> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采）；M4（P4-3）已于 2026-11-12 完成（OAuth 应用页迁移 + 自基线重采，对话框与白名单待 M5）；M5（P4-4）已于 2026-11-12 完成（3 个 OAuth 对话框迁移 + composable toast/confirm 切换 + `/admin/oauth/applications` 白名单登记 + 自基线重采）；M6（P4-5）已于 2026-11-12 完成（SSO 提供商页迁移 + 自基线重采，5 个 SSO 组件与白名单待 M7 / M8），下一批 P4-6（M7）。
 
 > **M3 有意差异与口径**（详见 P4-0 决策记录 §7 与本节记录）：
 > 1. 弹窗尺寸改用 caomei 档位：创建 `md`（480，原 500）、禁用 `sm`（360，原 400）、详情 `lg`（640，原 600）、会话 `lg` + `breakpoints` 放宽到 860（原 700，会话表 5 列需要）。
@@ -70,6 +70,19 @@
 > | `admin-users` 用户详情对话框 | 宽度 600 → 640、分节标题与动作按钮换 caomei、按钮换行方式变化（5 个动作单行排布） | 同上；`BaseStatusBadge`（PrimeVue Tag）整条色块为既有 V1 观感，M11 处理 |
 > | `admin-users` 用户会话对话框 | 宽度 700 → 860（`breakpoints`）、表格换 `CaomeiDataTable`、列宽 / 表头 token 化、设备信息单行 | 同上 |
 > | 其余 71 个用例 | 整页或弹窗大范围差异 | 参考态早于 P4-0 暗色 token、`darkModeSelector` 修复与 M2 页面迁移，属已登记迁移差异；参考态层需在 M12（P4 收口）整体重新采集基准后再逐项归因，非本批引入 |
+
+> **M6 记录（P4-5 Admin SSO 提供商页，2026-11-12）**：
+> 1. 页面结构迁移：`BaseTable` + `Column` → `CaomeiDataTable`（`columns` 数组 + `#cell-*`；`page + 1` 受控分页、`asc/desc` ↔ `1/-1`）；`Button` → `CaomeiButton`；`IconField` / `InputText` → `CaomeiInput`（`#prefix`）；两个 `Dropdown` → `CaomeiSelect`（`show-clear`，固定 9rem 宽）；`Badge` → `CaomeiTag`（`soft`，SAML `warning` / OIDC `primary`）；删除确认由 PrimeVue `confirm.require` 改为 `await confirm.open({ tone: 'danger' })`；表格工具条按 P4-0 §3.2 移到表格上方。
+> 2. 布局统一：原「头部 / 筛选 / 列表」三张卡片 + 渐变底色 → 单卡片 + `--admin-*` token（与 `/admin/users`、`/admin/oauth/applications` 一致），标题 2rem → 1.5rem，删除 `@include dark-mode` 覆盖与 `:deep(.p-datatable*)` 样式。
+> 3. 筛选值类型：`CaomeiSelect` 的选项值只接受字符串 / 数字，状态筛选由 `boolean` 改为 `'true'` / `'false'`（服务端 `ssoProvidersQuerySchema` 同名解析），空筛选不再发送 `type` / `enabled` 空参数；composable 同步泛型化 `useDataTable<AdminSsoProviderRow>`、`$fetch` 响应类型化并新增共享类型 `AdminSsoProviderRow`。composable 的 toast 仍在 PrimeVue（随 M8 切换）。
+> 4. 本批**未**迁移（M7 / M8 补齐）：`components/admin/sso/*` 5 个组件（创建 / 编辑、OIDC / SAML / 属性映射表单、详情）仍为 PrimeVue；状态列继续使用 `BaseStatusBadge`（内部为 PrimeVue `Tag`，M3 / M4 同口径，M11 处理）；`/admin/sso/providers` 未登记白名单。
+> 5. 有意差异：操作按钮 `v-tooltip` → `label`（`aria-label`）+ 原生 `title`（顺带修正迁移前 `:v-tooltip` 误绑定的禁用 / 启用提示）；受控排序不支持第三次点击清除（空排序事件被忽略，保持当前排序；迁移前会在清除时回落为 `desc`，口径更接近「不下发非法排序」）；协议类型 `Badge`（`info` / `warning`）→ `CaomeiTag`（`primary` / `warning`，soft）；空态由 `empty-message` 改 `empty-text`（迁移前即纯文本、无动作按钮）；分页器缺「x 到 y 共 n 条」报告与首 / 末页按钮（`CaomeiDataTable` 能力边界，与 M2 / M4 同口径，已登记 backlog）。
+> 6. i18n 硬编码基线：页面 19 → 23 行（列头移入 `columns` 属扫描盲区、操作按钮 `label` / `title`、筛选 `aria-label`），composable 14 → 12 行（错误提示改 `errorMessage` helper、去掉重复文案）。
+> 7. 单测：`use-sso-providers.spec.ts` 新增「按字符串筛选值查询类型与状态」「清空筛选后不带空参数」两条用例（共 6 passed），并把 provider 夹具补全为 `AdminSsoProviderRow`；同时消除 `handleRefreshProviders` 在筛选非空时的重复请求（筛选清空由 `watch` 承担，无筛选时才显式刷新）。
+> 8. 视觉：自基线重采 7 张（4 个默认态 + 3 个对话框背景）；`pnpm test:visual` 88 passed；`pnpm test:visual:parity` 10 passed / 78 diff（较 M5 的 13 / 75 多 3 条，`admin-sso` 默认态由容差内变为超阈值；7 个 `admin-sso` 用例均属本批有意差异）。
+> 9. 交互验证（容器内临时 Playwright，不提交）：状态筛选 → `enabled=false` 且只剩 1 行；清除筛选 → 请求不再携带 `enabled` 且恢复 2 行；每页条数 10 → 25 → `limit=25&page=0`；点击「创建时间」表头 → `sortField=createdAt&sortOrder=asc`；删除先取消 → 无 `DELETE`，再确认 → `DELETE` + 列表刷新、行数减 1。
+> 10. 未拆条说明：本批 9 个非生成文件（页面、composable、类型、2 个测试、i18n 基线、3 份文档）+ 7 张自基线生成物，未超「10 文件 / 800 行」阈值；页面与 composable 不可拆分（筛选值类型、空参数口径与页面绑定同批成立）。
+> 11. 门禁：`pnpm lint` 0 error / 25 warning、`lint:css` / `ai:check` / `migration:check-imports` / `i18n:check` / `typecheck` / `build` / `migration:check-budget`（keyCss 413,239 B，+3.38%）/ `test` 984 passed / `test:coverage` 约 77.9%（同状态多次运行有 ±0.1pp 抖动）/ `lint:duplicate`（310 clones）全部通过。
 
 > **M5 记录（P4-4 Admin OAuth 对话框，2026-11-12）**：
 > 1. 迁移范围（整路由切齐判定点）：`create-application-dialog`（`BaseDialog` → `BaseDialogV2` `size="lg"`、`BaseInput` / `InputText` → `BaseInputV2`、`BaseFormGroup` + `Textarea` / `Select` / `MultiSelect` → `CaomeiFormItem` + `CaomeiTextarea` / `CaomeiSelect` / `CaomeiMultiSelect`、`Button` → `CaomeiButton`）；`application-secret-dialog`（复制按钮 `CaomeiButton`、警告改 `CaomeiAlert` `warning`）；`api-docs-dialog`（`Accordion` → `CaomeiAccordion type="multiple"` + `CaomeiAccordionItem` `#trigger`、注意事项改 `CaomeiAlert` `danger`、4 个重复的端点块收敛为 `endpoints` 数据驱动）。

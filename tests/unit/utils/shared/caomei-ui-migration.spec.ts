@@ -23,6 +23,8 @@ const MIGRATED_PAGE_FILES = [
      * M4 先迁移 `/admin/oauth/applications` 页面，M5 完成 3 个对话框与白名单登记后整路由切齐。 */
     'pages/admin/users.vue',
     'pages/admin/oauth/applications.vue',
+    /* M6 先迁移 SSO 提供商页，5 个 SSO 组件与白名单在 M7 / M8。 */
+    'pages/admin/sso/providers.vue',
 ]
 
 const MIGRATED_SHARED_PATHS = [

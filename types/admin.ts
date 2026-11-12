@@ -57,6 +57,24 @@ export interface AdminOAuthApplicationRow {
     updatedAt?: string | Date | null
 }
 
+/**
+ * Admin SSO 提供商行。
+ *
+ * 字段对齐 `/api/admin/sso/providers` 列表返回（实体直出、敏感字段已打码）。
+ */
+export interface AdminSsoProviderRow {
+    id: string
+    providerId: string
+    name?: string | null
+    description?: string | null
+    domain?: string | null
+    issuer?: string | null
+    type: 'oidc' | 'saml'
+    enabled: boolean
+    createdAt: string | Date
+    updatedAt?: string | Date | null
+}
+
 /** OAuth 应用创建响应（RFC 7591 风格字段，`/api/admin/oauth/applications` POST 返回） */
 export interface AdminOAuthClientCredentials {
     client_id: string
