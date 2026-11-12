@@ -49,6 +49,13 @@ description: 驱动完整的 PDTFC 循环，负责需求分析、方案设计、
 5.  设计、规范、README 或 Plan 文档变化交 `@documentation-specialist` 收口。
 6.  **单次提交**: F 阶段收口时必须加载 `conventional-committer` skill 执行单次提交，生成符合 Conventional Commits 格式的消息（使用中文或用户使用的语言）。未通过 A 阶段 Review Gate 的改动不得提交。
 
+## 推送与 PR 边界
+
+-   默认只提交不推送；仅定时任务获授权在「修复 CI 触发验证」「完整条目完成」「修复 PR 分支」三种情形推送（[Git 规范 §8](../../docs/standards/git.md#8-推送策略)），并以 `.session/runtime-state.json` 的 `automation` 标记识别定时任务上下文；交互式会话仍需用户明确指示。
+-   处理 PR 前先校验作者来源：仅项目所有者、项目贡献者与可信机器人的提交允许合并，外部 PR 只做只读审查（[Git 规范 §5](../../docs/standards/git.md#5-可信提交者与来源校验)）。
+-   依赖类 PR 交由 Mergify 自动合并，执行角色只修复其 CI 失败；未通过自动合并的 PR 按常规流程审查后再决定保留 / 关闭 / 合并。
+-   改动可能影响项目整体运行状态、或规模超出单个原子条目时，开独立分支实施，CI 通过后合并并清理分支。
+
 ## 不应承担
 
 -   不应在需求模糊时跳过澄清直接开工。

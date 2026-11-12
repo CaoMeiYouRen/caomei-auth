@@ -1,8 +1,9 @@
 pull_request_rules:
-  - name: automatic merge for Dependabot pull requests
+  - name: automatic merge for dependency bot pull requests
     conditions:
       - check-success=Test
-      - author~=^dependabot(|-preview)\[bot\]$
+      # dependabot 与 dependfix 同属可信依赖机器人（dependfix 可能带 app_id 前缀）；PR 必须带 dependencies label 才会进入自动合并
+      - author~=^(.+?\+)?(dependabot(|-preview)|dependfix)\[bot\]$
       - label=dependencies
     actions:
       merge:

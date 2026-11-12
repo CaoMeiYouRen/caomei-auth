@@ -75,7 +75,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 
 为了保证交付质量，任何功能开发任务必须严格遵循 PDTFC (Plan-Do-Test-Fix-Commit) 循环：
 
-1.  **P (Plan)**: 需求不清或可能插队时，先交 `@product-manager` 做范围判断；分析任务上下文（`context-analyzer` skill）；按 [规划规范](./docs/standards/planning.md) 核对 `docs/plan/todo.md`、`docs/plan/backlog.md` 与 `docs/plan/roadmap.md` 确认规划归属——新候选先登记 backlog，未经用户明确授权不得进入当前阶段；更新设计文档（`docs/design/`）；输出受影响文件清单与技术路径。
+1.  **P (Plan)**: 需求不清或可能插队时，先交 `@product-manager` 做范围判断；分析任务上下文（`context-analyzer` skill）；按 [规划规范](./docs/standards/planning.md) 核对 `docs/plan/todo.md`、`docs/plan/backlog.md` 与 `docs/plan/roadmap.md` 确认规划归属——新候选先登记 backlog，未经用户明确授权不得进入当前阶段；开始新阶段规划时先拉取最新 issue / PR / Actions 状态并评估影响（[Git 规范 §9](./docs/standards/git.md#9-分支升级与阶段规划联动)）；更新设计文档（`docs/design/`）；输出受影响文件清单与技术路径。
 2.  **D (Do)**: 使用 `nuxt-code-editor` skill 编写代码；必须阅读并严格遵守 [开发规范](./docs/standards/development.md)、[API 规范](./docs/standards/api.md) 与 [测试规范](./docs/standards/testing.md)；始终使用 TypeScript、Vue 3 Composition API、SCSS BEM 和 i18n 规范。
 3.  **T (Test)**: 运行本地测试（`pnpm test`）与 Lint 检查（`pnpm lint`、`pnpm lint:css`、`pnpm typecheck`）；复杂测试增强可移交 `@test-engineer`。
 4.  **F (Fix)**: 分析测试失败原因并修复；修复过程中如有重大逻辑变动，同步记录到 `@documentation-specialist`；同一问题修复失败 >= 2 次时，必须先触发搜索优先流程，不得用同一思路反复重试。
@@ -142,7 +142,7 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 2. **格式要求**：提交消息必须符合 Conventional Commits 规范（`type(scope): description`），且 `description` 统一使用**中文或用户使用的语言**。
 3. **质量前置**：提交前必须确认 `@code-auditor` Review Gate 已放行（核验 `pnpm lint`、`pnpm typecheck` 和必要的定向测试证据），质量门禁未通过时不得提交。
 4. **原子粒度**：一个提交对应一个逻辑变更，关联且仅关联 `docs/plan/todo.md` 中的一个原子条目；规划 / 治理类改动可关联 `docs/plan/backlog.md` 中的对应候选，并在提交说明中注明。
-5. **推送禁令**：`git commit` 后不得自动执行 `git push`，推送仅限用户明确要求时执行。提交完成后应告知用户"已提交到本地，等待推送确认"。
+5. **推送约束**：默认不得执行 `git push`。仅 [§7.5 GitHub 协作与可信来源](#75-github-协作与可信来源) 授权的情形允许推送；其余情况推送必须由用户明确指示，提交完成后应告知用户"已提交到本地，等待推送确认"。
 6. **提交钩子**：提交必须通过 husky 钩子（commitlint / lint-staged），禁止使用 `--no-verify` 跳过。
 
 ### 7.4 发布前安全告警门禁
@@ -151,6 +151,14 @@ AI 代理在遇到以下情况时，**必须优先使用搜索工具获取一手
 -   `high` 豁免必须写入 `.github/security-alert-exemptions.json`，包含 `category`、`reason`、`tracking`（Issue 或待办条目）、`expiresAt`（复核截止日期），且 `category` 必须与告警状态匹配（`open` 用 `no-fix` / `hard-fix`，`dismissed` 用 `false-positive`）；到期自动失效并重新阻塞发布，已修复的豁免必须及时删除。
 -   `medium` / `low` 不阻塞发布，在门禁报告中记录，随后续版本升级修复；Code scanning alerts 与 Dependabot alerts 采用同一口径。
 -   门禁脚本为 `scripts/security/check-alerts.mjs`，由 `.github/workflows/release.yml`、`.github/workflows/docker.yml`（发布前）与 `.github/workflows/regression-weekly.yml`（每周回归：与发布前质量门等价的全量检查，不含正式发布）执行；Dependabot 使用 `GH_TOKEN`，Code Scanning 使用 workflow 的 `GITHUB_TOKEN`（`security-events: read`），两类 token 不共用；扫描未完成（token 失效、权限不足、404、网络异常）视为未通过，禁止把"未扫描"当成"无告警"。详细规范见 [安全开发规范 5.1.3](./docs/standards/security.md#513-发布前安全告警门禁-release-security-alert-gate)。
+
+### 7.5 GitHub 协作与可信来源
+
+-   **来源校验**：处理 issue / PR 前先确认作者；可信提交者为项目所有者、具备 write 权限的贡献者、`dependabot[bot]` / `dependfix[bot]` 等可信机器人。外部来源只做只读审查与公开沟通，不修改、不合并。
+-   **Issue**：默认只做调研；所有者 issue 评估后可入 `backlog.md`，外部 issue 核实后保留或说明依据关闭，进 backlog 与进 `todo.md` 均由用户决策；讨论 / 反馈类不按缺陷流程关闭；已评估且无更新不重复评论；向上游提交 issue 需先查重并经用户授权。
+-   **PR**：依赖类 PR 走 Mergify 自动合并（CI 为门禁），未通过自动合并的按常规流程处理；任何 PR 都必须审查，只有可信来源可合并，可信 PR 仅允许为合并做简单修正。
+-   **推送**：默认不推送；授权情形、目标分支与前置验证以 [Git 规范 §8](./docs/standards/git.md#8-推送策略) 为准，其余情况需用户明确指示。
+-   完整条款以 [Git 规范 §5–§10](./docs/standards/git.md#5-可信提交者与来源校验) 为唯一事实源。
 
 ## 8. 其他要求
 

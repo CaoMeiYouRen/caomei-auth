@@ -86,7 +86,7 @@ metadata:
 - 更新任务状态，按需同步相关文档。
 - 需要提交时，由 conventional-committer 生成并执行提交。
 - 每个原子条目独立提交；A 阶段未放行的改动不得提交。
-- 不自动 push。
+- 不自动 push；仅 [Git 规范](../../../docs/standards/git.md) §8 授权的定时任务情形可推送，其余需用户明确指示。
 
 - **技能**：documentation-specialist、conventional-committer
 
