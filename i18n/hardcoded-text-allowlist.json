@@ -62,7 +62,7 @@
         "composables/utils/use-page-meta.ts": 1,
         "layouts/admin.vue": 20,
         "pages/about.vue": 24,
-        "pages/admin/oauth/applications.vue": 18,
+        "pages/admin/oauth/applications.vue": 19,
         "pages/admin/sso/providers.vue": 19,
         "pages/admin/users.vue": 21,
         "pages/change-password.vue": 21,

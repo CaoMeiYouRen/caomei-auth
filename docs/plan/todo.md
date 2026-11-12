@@ -18,7 +18,7 @@
 | M1 | P4-0 Admin 迁移基座与视觉矩阵 | DataTable / Dialog / Select 适配决策、Admin 视觉参考态与自基线、Admin 夹具、暗色 token | 已完成（2026-11-10） |
 | M2 | P4-1 Admin 用户页 | `pages/admin/users.vue`：DataTable / 筛选 / 分页 / 选择 / 批量操作 | 已完成（2026-11-10） |
 | M3 | P4-2 Admin 用户对话框 | `components/admin/users/*`：创建 / 封禁 / 详情 / 会话 | 已完成（2026-11-11） |
-| M4 | P4-3 Admin OAuth 应用页 | `pages/admin/oauth/applications.vue`：DataTable / 筛选 / 分页 | 待开始 |
+| M4 | P4-3 Admin OAuth 应用页 | `pages/admin/oauth/applications.vue`：DataTable / 筛选 / 分页 | 已完成（2026-11-12） |
 | M5 | P4-4 Admin OAuth 对话框 | `components/admin/oauth/*`：创建 / 密钥 / API 文档 | 待开始 |
 | M6 | P4-5 Admin SSO 提供商页 | `pages/admin/sso/providers.vue`：DataTable / 筛选 / 分页 | 待开始 |
 | M7 | P4-6 Admin SSO 表单 | `components/admin/sso/*`：OIDC / SAML / 属性映射 | 待开始 |

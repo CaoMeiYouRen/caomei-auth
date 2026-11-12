@@ -15,18 +15,27 @@
                     </span>
                 </div>
                 <div class="header-actions">
-                    <Button
-                        label="API 文档"
-                        icon="mdi mdi-book-open-variant"
-                        severity="secondary"
-                        outlined
+                    <CaomeiButton
+                        variant="secondary"
                         @click="showApiDocsDialog = true"
-                    />
-                    <Button
-                        label="创建应用"
-                        icon="mdi mdi-plus"
-                        @click="openCreateDialog"
-                    />
+                    >
+                        <template #icon>
+                            <i
+                                class="mdi mdi-book-open-variant"
+                                aria-hidden="true"
+                            />
+                        </template>
+                        API 文档
+                    </CaomeiButton>
+                    <CaomeiButton @click="openCreateDialog">
+                        <template #icon>
+                            <i
+                                class="mdi mdi-plus"
+                                aria-hidden="true"
+                            />
+                        </template>
+                        创建应用
+                    </CaomeiButton>
                 </div>
             </div>
 
@@ -34,162 +43,172 @@
             <div class="clients-filters">
                 <div class="filter-row">
                     <div class="search-wrapper">
-                        <IconField icon-position="left">
-                            <InputIcon class="mdi mdi-magnify" />
-                            <InputText
-                                :model-value="searchQuery"
-                                placeholder="搜索应用（名称、描述、Client ID）"
-                                @update:model-value="onSearchInput"
-                            />
-                        </IconField>
+                        <CaomeiInput
+                            :model-value="searchQuery"
+                            placeholder="搜索应用（名称、描述、Client ID）"
+                            label="搜索应用"
+                            @update:model-value="onSearchInput"
+                        >
+                            <template #prefix>
+                                <i
+                                    class="mdi mdi-magnify"
+                                    aria-hidden="true"
+                                />
+                            </template>
+                        </CaomeiInput>
                     </div>
                     <div class="filter-controls">
-                        <Button
-                            icon="mdi mdi-refresh"
-                            severity="secondary"
-                            outlined
+                        <CaomeiButton
+                            icon-only
+                            variant="secondary"
+                            label="刷新"
+                            title="刷新"
                             @click="handleRefreshApplications"
-                        />
+                        >
+                            <template #icon>
+                                <i
+                                    class="mdi mdi-refresh"
+                                    aria-hidden="true"
+                                />
+                            </template>
+                        </CaomeiButton>
                     </div>
                 </div>
             </div>
 
             <!-- 应用列表 -->
             <div class="clients-list">
-                <BaseTable
-                    :data="applications"
-                    :total-records="total"
+                <div class="table-header">
+                    <div class="table-title">
+                        应用列表 ({{ total }})
+                    </div>
+                </div>
+
+                <CaomeiDataTable
+                    :data="applicationRows"
+                    :columns="columns"
+                    row-key="id"
                     :loading="loading"
+                    paginator
+                    lazy
                     :rows="pageSize"
-                    :first="page * pageSize"
+                    :rows-per-page-options="[10, 25, 50]"
+                    :total-records="total"
+                    :page="page + 1"
                     :sort-field="sortField"
-                    :sort-order="sortOrder === 'asc' ? 1 : -1"
-                    @page="onPage"
-                    @sort="onSort"
+                    :sort-order="sortOrder"
+                    @page="onTablePage"
+                    @sort="onTableSort"
                 >
-                    <template #header>
-                        <div class="table-header">
-                            <div class="table-title">
-                                应用列表 ({{ total }})
+                    <template #cell-name="{row}">
+                        <div class="application-info">
+                            <CaomeiAvatar
+                                :src="row.logoUri || undefined"
+                                :alt="row.name"
+                                :fallback="getApplicationInitial(row.name)"
+                                shape="square"
+                                size="lg"
+                                class="application-logo"
+                            />
+                            <div class="application-details">
+                                <span class="application-name">{{ row.name }}</span>
+                                <small
+                                    v-if="row.description"
+                                    class="application-description"
+                                >{{ row.description }}</small>
                             </div>
                         </div>
                     </template>
+
+                    <template #cell-clientId="{row}">
+                        <code class="client-id">{{ row.clientId }}</code>
+                    </template>
+
+                    <template #cell-scope="{row}">
+                        <div class="scope-tags">
+                            <CaomeiTag
+                                v-for="scope in splitScopes(row.scope)"
+                                :key="scope"
+                                size="sm"
+                                variant="soft"
+                            >
+                                {{ scope }}
+                            </CaomeiTag>
+                        </div>
+                    </template>
+
+                    <template #cell-disabled="{row}">
+                        <BaseStatusBadge
+                            variant="disabled"
+                            :status="row.disabled"
+                        />
+                    </template>
+
+                    <template #cell-actions="{row}">
+                        <div class="action-buttons">
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                label="编辑"
+                                title="编辑"
+                                @click="editApplication(row)"
+                            >
+                                <template #icon>
+                                    <i
+                                        class="mdi mdi-pencil"
+                                        aria-hidden="true"
+                                    />
+                                </template>
+                            </CaomeiButton>
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                :tone="row.disabled ? 'success' : 'warning'"
+                                :label="row.disabled ? '启用应用' : '禁用应用'"
+                                :title="row.disabled ? '启用应用' : '禁用应用'"
+                                @click="toggleApplicationStatus(row)"
+                            >
+                                <template #icon>
+                                    <i
+                                        :class="row.disabled ? 'mdi mdi-play' : 'mdi mdi-pause'"
+                                        aria-hidden="true"
+                                    />
+                                </template>
+                            </CaomeiButton>
+                            <CaomeiButton
+                                icon-only
+                                variant="ghost"
+                                tone="danger"
+                                label="删除"
+                                title="删除"
+                                @click="confirmDelete(row)"
+                            >
+                                <template #icon>
+                                    <i
+                                        class="mdi mdi-delete"
+                                        aria-hidden="true"
+                                    />
+                                </template>
+                            </CaomeiButton>
+                        </div>
+                    </template>
+
                     <template #empty>
                         <div class="empty-state">
-                            <i class="mdi mdi-application-brackets-outline" />
-                            <p>暂无应用</p>
-                            <Button
-                                label="创建第一个应用"
-                                link
-                                @click="openCreateDialog"
+                            <i
+                                class="mdi mdi-application-brackets-outline"
+                                aria-hidden="true"
                             />
+                            <p>暂无应用</p>
+                            <CaomeiButton
+                                variant="ghost"
+                                @click="openCreateDialog"
+                            >
+                                创建第一个应用
+                            </CaomeiButton>
                         </div>
                     </template>
-                    <Column
-                        field="name"
-                        header="应用名称"
-                        sortable
-                    >
-                        <template #body="{data}">
-                            <div class="application-info">
-                                <img
-                                    v-if="data.logoUri"
-                                    :src="data.logoUri"
-                                    :alt="data.name"
-                                    class="application-logo"
-                                >
-                                <Avatar
-                                    v-else
-                                    :label="data.name?.charAt(0)?.toUpperCase()"
-                                    shape="circle"
-                                    class="application-logo-placeholder"
-                                />
-                                <div class="application-details">
-                                    <span class="application-name">{{ data.name }}</span>
-                                    <small
-                                        v-if="data.description"
-                                        class="application-description"
-                                    >{{ data.description }}</small>
-                                </div>
-                            </div>
-                        </template>
-                    </Column>
-                    <Column
-                        field="clientId"
-                        header="Client ID"
-                    >
-                        <template #body="{data}">
-                            <code class="client-id">{{ data.clientId }}</code>
-                        </template>
-                    </Column>
-                    <Column
-                        field="scope"
-                        header="授权范围"
-                    >
-                        <template #body="{data}">
-                            <div class="scope-tags">
-                                <Tag
-                                    v-for="scope in (data.scope || '').split(' ').filter((s: string) => s)"
-                                    :key="scope"
-                                    :value="scope"
-                                    severity="secondary"
-                                    class="scope-tag"
-                                />
-                            </div>
-                        </template>
-                    </Column>
-                    <Column
-                        field="disabled"
-                        header="状态"
-                        sortable
-                    >
-                        <template #body="{data}">
-                            <BaseStatusBadge
-                                variant="disabled"
-                                :status="data.disabled"
-                            />
-                        </template>
-                    </Column>
-                    <Column
-                        field="createdAt"
-                        header="创建时间"
-                        sortable
-                    >
-                        <template #body="{data}">
-                            {{ new Date(data.createdAt).toLocaleString() }}
-                        </template>
-                    </Column>
-                    <Column header="操作">
-                        <template #body="{data}">
-                            <div class="action-buttons">
-                                <Button
-                                    v-tooltip.top="'编辑'"
-                                    icon="mdi mdi-pencil"
-                                    text
-                                    rounded
-                                    severity="secondary"
-                                    @click="editApplication(data)"
-                                />
-                                <Button
-                                    v-tooltip.top="data.disabled ? '启用应用' : '禁用应用'"
-                                    :icon="data.disabled ? 'mdi mdi-play' : 'mdi mdi-pause'"
-                                    text
-                                    rounded
-                                    :severity="data.disabled ? 'success' : 'warning'"
-                                    @click="toggleApplicationStatus(data)"
-                                />
-                                <Button
-                                    v-tooltip.top="'删除'"
-                                    icon="mdi mdi-delete"
-                                    text
-                                    rounded
-                                    severity="danger"
-                                    @click="confirmDelete(data)"
-                                />
-                            </div>
-                        </template>
-                    </Column>
-                </BaseTable>
+                </CaomeiDataTable>
             </div>
         </div>
 
@@ -213,10 +232,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent } from 'caomei-ui'
 import { useApplicationManagement } from '@/composables/admin/use-application-management'
 import CreateApplicationDialog from '@/components/admin/oauth/create-application-dialog.vue'
 import ApplicationSecretDialog from '@/components/admin/oauth/application-secret-dialog.vue'
 import ApiDocsDialog from '@/components/admin/oauth/api-docs-dialog.vue'
+import { formatDateLocale } from '@/utils/shared/date'
+import type { AdminOAuthApplicationRow } from '@/types/admin'
 
 definePageMeta({
     layout: 'admin',
@@ -248,6 +271,47 @@ const {
     onApplicationUpdated,
     onSearchInput,
 } = useApplicationManagement()
+
+const applicationRows = computed<AdminOAuthApplicationRow[]>(() => applications.value as AdminOAuthApplicationRow[])
+
+/** 操作列只通过 `#cell-actions` 插槽渲染；创建时间用 accessor 统一格式化为 `zh-CN` 本地时间（与迁移前中文环境下的 `toLocaleString` 输出一致） */
+const columns: DataTableColumn<AdminOAuthApplicationRow>[] = [
+    { key: 'name', header: '应用名称', sortable: true },
+    { key: 'clientId', header: 'Client ID', width: '220px' },
+    { key: 'scope', header: '授权范围', width: '220px' },
+    { key: 'disabled', header: '状态', sortable: true, width: '100px' },
+    {
+        key: 'createdAt',
+        header: '创建时间',
+        sortable: true,
+        width: '180px',
+        accessor: (row) => formatDateLocale(row.createdAt),
+    },
+    { key: 'actions', header: '操作', width: '160px', align: 'right', frozen: 'right' },
+]
+
+/** 头像回退文本：取应用名首字符，避免空名时渲染空头像 */
+function getApplicationInitial(name?: string | null) {
+    return name?.charAt(0)?.toUpperCase() || '?'
+}
+
+/** 授权范围按空白拆分为独立标签（服务端以空格拼接） */
+function splitScopes(scope?: string | null) {
+    return (scope || '').split(/\s+/).filter(Boolean)
+}
+
+/** 分页：`CaomeiDataTable` 的 `first` 为 0 基偏移，页面状态保持 0 基页码 */
+function onTablePage(event: DataTablePageEvent) {
+    onPage({ page: event.first / event.rows, rows: event.rows })
+}
+
+/** 排序：`asc` / `desc` 换算为页面状态的 1 / -1 */
+function onTableSort(event: DataTableSortEvent) {
+    if (!event.sortField || !event.sortOrder) {
+        return
+    }
+    onSort({ sortField: event.sortField, sortOrder: event.sortOrder === 'asc' ? 1 : -1 })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -316,47 +380,16 @@ const {
 }
 
 .clients-list {
-    :deep(.p-datatable) {
-        .p-datatable-header {
-            background: transparent;
-            border: none;
-            padding: 0 0 1rem;
-        }
-
-        .p-datatable-thead > tr > th {
-            background: var(--admin-surface-muted);
-            color: var(--admin-text);
-            font-weight: 600;
-            border-bottom: 1px solid var(--admin-border);
-        }
-
-        .p-datatable-tbody > tr {
-            background: var(--admin-surface);
-            color: var(--admin-text);
-            transition: background-color 0.2s;
-
-            > td {
-                color: var(--admin-text);
-                border-color: var(--admin-border);
-            }
-
-            &:hover {
-                background-color: var(--admin-surface-muted);
-            }
-        }
-
-        .p-paginator {
-            background: var(--admin-surface);
-            color: var(--admin-text);
-            border-color: var(--admin-border);
-        }
-    }
+    /* 表格表面改用 Admin 语义 token，暗色下与卡片保持一致 */
+    --caomei-color-text: var(--admin-text);
+    --caomei-data-table-head-bg: var(--admin-surface-muted);
+    --caomei-data-table-border: var(--admin-border);
 }
 
 .table-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    padding-bottom: 1rem;
 
     .table-title {
         font-weight: 600;
@@ -370,18 +403,10 @@ const {
     gap: 1rem;
 
     .application-logo {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        object-fit: cover;
-    }
+        --caomei-avatar-bg: var(--admin-primary-soft);
+        --caomei-avatar-color: var(--admin-text);
 
-    .application-logo-placeholder {
-        width: 40px;
-        height: 40px;
-        background-color: var(--primary-100);
-        color: var(--primary-700);
-        font-size: 1.2rem;
+        flex-shrink: 0;
     }
 
     .application-details {
@@ -417,15 +442,12 @@ const {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
-
-    .scope-tag {
-        font-size: 0.75rem;
-    }
 }
 
 .action-buttons {
     display: flex;
     gap: 0.25rem;
+    justify-content: flex-end;
 }
 
 .empty-state {
@@ -460,7 +482,7 @@ const {
         .header-actions {
             width: 100%;
 
-            .p-button {
+            .caomei-button {
                 flex: 1;
             }
         }

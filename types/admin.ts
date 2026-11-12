@@ -24,6 +24,39 @@ export interface AdminUserProfile extends AdminUserRow {
     updatedAt?: string | Date | null
 }
 
+/**
+ * Admin OAuth 应用行。
+ *
+ * 字段对齐 `server/utils/oauth-client-view.ts` 的 `toAdminOAuthClientView`（管理端沿用 1.6 字段命名）；
+ * 列表与编辑 / 密钥对话框共用同一视图，避免逐组件重复声明。
+ */
+export interface AdminOAuthApplicationRow {
+    id: string
+    clientId: string
+    name: string
+    description?: string | null
+    redirectURLs?: string | null
+    tokenEndpointAuthMethod?: string | null
+    grantTypes?: string | null
+    responseTypes?: string | null
+    clientUri?: string | null
+    logoUri?: string | null
+    scope?: string | null
+    contacts?: string | null
+    tosUri?: string | null
+    policyUri?: string | null
+    jwksUri?: string | null
+    jwks?: Record<string, unknown> | null
+    metadata?: Record<string, unknown> | null
+    softwareId?: string | null
+    softwareVersion?: string | null
+    softwareStatement?: string | null
+    type?: string | null
+    disabled?: boolean | null
+    createdAt: string | Date
+    updatedAt?: string | Date | null
+}
+
 /** 用户会话行（`better-auth` admin `listUserSessions` 的最小字段集） */
 export interface AdminUserSession {
     token: string

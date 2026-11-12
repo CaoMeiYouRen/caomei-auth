@@ -19,8 +19,10 @@ const MIGRATED_PAGE_FILES = [
     'pages/sso-login.vue',
     /* P4 拆条提交：页面先迁移，路由白名单延后到整路由完成；自基线随批次同批重采
      * （见 docs/design/governance/2026-11-10-p4-0-decisions.md §7）。
-     * M3 完成后 `/admin/users` 已整路由切齐，页面与 4 个对话框同列断言。 */
+     * M3 完成后 `/admin/users` 已整路由切齐，页面与 4 个对话框同列断言。
+     * M4 先迁移 `/admin/oauth/applications` 页面，3 个对话框与白名单登记在 M5。 */
     'pages/admin/users.vue',
+    'pages/admin/oauth/applications.vue',
 ]
 
 const MIGRATED_SHARED_PATHS = [

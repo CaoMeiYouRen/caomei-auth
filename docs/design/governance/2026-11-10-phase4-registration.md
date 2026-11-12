@@ -50,7 +50,7 @@
 
 > 单条超过 10 文件 / 800 行新增时，按页面内的对话框或统计组件拆条，并在提交说明与阶段登记中补记拆条依据。
 
-> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采），下一批 P4-3（M4）。
+> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采）；M4（P4-3）已于 2026-11-12 完成（OAuth 应用页迁移 + 自基线重采，对话框与白名单待 M5），下一批 P4-4（M5）。
 
 > **M3 有意差异与口径**（详见 P4-0 决策记录 §7 与本节记录）：
 > 1. 弹窗尺寸改用 caomei 档位：创建 `md`（480，原 500）、禁用 `sm`（360，原 400）、详情 `lg`（640，原 600）、会话 `lg` + `breakpoints` 放宽到 860（原 700，会话表 5 列需要）。
@@ -71,7 +71,18 @@
 > | `admin-users` 用户会话对话框 | 宽度 700 → 860（`breakpoints`）、表格换 `CaomeiDataTable`、列宽 / 表头 token 化、设备信息单行 | 同上 |
 > | 其余 71 个用例 | 整页或弹窗大范围差异 | 参考态早于 P4-0 暗色 token、`darkModeSelector` 修复与 M2 页面迁移，属已登记迁移差异；参考态层需在 M12（P4 收口）整体重新采集基准后再逐项归因，非本批引入 |
 
-> **M2 自基线口径修正**：P4-0 §8 第 5 条原定「M2 中间提交不更新自基线」，与 `pnpm test:visual` 阻塞门禁冲突（页面组件替换必然改变像素）。实际按阶段 3 惯例执行：页面迁移同批重采 `admin-users` 9 张自基线并归因（caomei DataTable / 按钮 / 输入控件替换 + Admin token 接管），M3 随对话框再重采一次；路由白名单仍只在整路由（页面 + 对话框）完成后登记。同时记录两处有意差异：分页器新增每页条数选择器；「会话管理」按钮由 PrimeVue `severity="info"`（蓝）改为 caomei `tone="primary"`（主色）。
+> **M4 记录（P4-3 Admin OAuth 应用页，2026-11-12）**：
+> 1. 页面结构迁移：`BaseTable` + `Column` → `CaomeiDataTable`（`columns` 数组 + `#cell-*` 插槽；`page + 1` 受控分页、`asc/desc` ↔ `1/-1` 排序换算、`row-key="id"`）；`Button` → `CaomeiButton`；`IconField` / `InputText` → `CaomeiInput`（`#prefix` 放大镜）；`Avatar` → `CaomeiAvatar`（`square` / `lg`，失败回退应用名首字符）；`Tag` → `CaomeiTag`（`soft`）；表格工具条按 P4-0 §3.2「无 `#header` 插槽」移到表格上方。
+> 2. 有意差异：分页器保留每页条数选择器，但**没有**「x 到 y 共 n 条」报告（总数保留在表格标题），且**缺失首 / 末页按钮**（`CaomeiDataTable` 1.2.0 未透出 `CaomeiPaginator` 的 `showEdges`，与 P4-0 §3.2「需要时显式开启」冲突，已登记 backlog 待上游透出或 M12 收口复核）；操作列的 PrimeVue `v-tooltip` 改为 `label`（`aria-label`）+ 原生 `title`；应用 Logo 由 `img` / PrimeVue `Avatar` 统一为 `CaomeiAvatar`。
+> 3. 本批**未**迁移（留 M5）：3 个对话框、`use-application-management` 的 toast / confirm 仍来自 PrimeVue（`ConfirmDialog` / `Toast` 仍由 `app.vue` 提供）；状态列继续使用 `BaseStatusBadge`（内部为 PrimeVue `Tag`，与 M3 同口径，M11 处理）；`/admin/oauth/applications` 未登记白名单，仍受「P4 路由不在白名单内」守卫约束。
+> 4. 新增共享类型 `AdminOAuthApplicationRow`（`types/admin.ts`），字段对齐 `toAdminOAuthClientView`，供 M5 对话框复用；未改后端、API 契约或数据库。
+> 5. i18n 硬编码基线 18 → 19 行：模板侧移除 5 行列头（移入 `<script setup>` 的 `columns`，`hardcoded-scan` 只扫模板段，属已登记扫描盲区）与 3 行 `v-tooltip`，新增搜索 `label` 1 行、刷新 `label` / `title` 2 行、3 个操作按钮各 `label` / `title` 6 行（-5，净 +1）。盲区清理仍由阶段 5 i18n 全量接手。
+> 6. 视觉：自基线重采 5 张（`dark-mobile-default` 像素未变）；`pnpm test:visual` 88 passed；`pnpm test:visual:parity` 13 passed / 75 diff（较 M3 的 17 / 71 多 4 条，来自本页 4 个默认态由容差内变为超阈值），6 个 `admin-applications` 用例均为本批有意差异。
+> 7. 交互验证（容器内临时 Playwright 用例，不提交）：初始 `sortField=createdAt&sortOrder=desc`；点击「应用名称」表头 → `name/asc`，再次点击 → `name/desc`；每页条数 10 → 25 触发 `limit=25&page=0`；搜索防抖后带 `search` 参数；「刷新」清空搜索并去掉 `search`。分页翻页未覆盖（夹具只有 3 个应用，不足以产生第二页），由 M12 收口时补测。
+> 8. 已知差异（登记 backlog，M12 复核）：`CaomeiDataTable` 的 `lazy` 只映射 `manualPagination`，未关闭客户端排序（未透出 `manualSorting`），因此当前页 10 条仍会按 `sortField` 在客户端二次排序；`createdAt`（本地化日期串）实测与降序一致，`name` 自然序与 SQLite BINARY 排序存在边界差异。`/admin/users`（M2）同样受影响，非 M4 新引入。
+> 9. 门禁：`pnpm lint` 0 error / 25 warning、`lint:css` / `ai:check` / `migration:check-imports` / `i18n:check` / `typecheck` / `build` / `migration:check-budget`（keyCss 413,239 B，+3.38%）/ `test` 980 passed / `test:coverage` 77.73% / `lint:duplicate`（306 clones）全部通过。
+
+> **M2 自基线口径修正**：P4-0 §8 第 5 条原定「M2 中间提交不更新自基线」，与 `pnpm test:visual` 阻塞门禁冲突（页面组件替换必然改变像素）。实际按阶段 3 惯例执行：页面迁移同批重采 `admin-users` 9 张自基线并归因（caomei DataTable / 按钮 / 输入控件替换 + Admin token 接管），M3 随对话框再重采一次；路由白名单仍只在整路由（页面 + 对话框）完成后登记。同时记录三处有意差异：分页器保留每页条数选择器，但缺失「x 到 y 共 n 条」报告与首 / 末页按钮（`CaomeiDataTable` 未透出 `showEdges`，见 M4 记录 §2）；「会话管理」按钮由 PrimeVue `severity="info"`（蓝）改为 caomei `tone="primary"`（主色）。
 
 ## 4. 验收标准
 
