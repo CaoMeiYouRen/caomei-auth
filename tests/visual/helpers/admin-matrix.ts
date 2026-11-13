@@ -160,8 +160,14 @@ const ROUTES: readonly AdminRoute[] = [
                 action: async (page) => {
                     await page.getByRole('button', { name: '创建提供商' }).click()
                     await expectDialog(page, '添加 SSO 提供商')
-                    /* 协议类型在 CaomeiDialog 内用 CaomeiRadioGroup：CaomeiSelect 的 pointerdown 在对话框中不触发，见 docs/plan/backlog.md */
-                    await page.getByRole('dialog').getByRole('radio', { name: 'SAML 2.0' }).click()
+                    /* 视觉层用 page.clock.setFixedTime 冻结 Date.now()，Vue 的 `_vts` 守卫会丢弃
+                     * 对话框内 Select 的 pointerdown（真实时钟下正常，见 docs/plan/backlog.md）。
+                     * Enter 路径没有前置 keydown 监听，不会命中同一守卫，因此交互态统一用键盘打开下拉再点选项。 */
+                    const typeSelect = page.getByRole('dialog').getByRole('combobox', { name: '协议类型' })
+                    await typeSelect.focus()
+                    await typeSelect.press('Enter')
+                    await expect(page.getByRole('listbox')).toBeVisible()
+                    await page.getByRole('option', { name: 'SAML 2.0' }).click()
                     await expect(page.getByText('SAML 配置', { exact: true })).toBeVisible()
                 },
             },

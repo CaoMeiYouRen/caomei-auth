@@ -12,7 +12,7 @@
         "components/admin/oauth/application-secret-dialog.vue": 6,
         "components/admin/oauth/create-application-dialog.vue": 26,
         "components/admin/sso/attribute-mapping-form.vue": 8,
-        "components/admin/sso/create-provider-dialog.vue": 20,
+        "components/admin/sso/create-provider-dialog.vue": 21,
         "components/admin/sso/oidc-config-form.vue": 13,
         "components/admin/sso/provider-detail-dialog.vue": 19,
         "components/admin/sso/saml-config-form.vue": 8,

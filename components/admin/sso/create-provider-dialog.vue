@@ -26,24 +26,17 @@
                         required
                     >
                         <template #default="field">
-                            <CaomeiRadioGroup
+                            <CaomeiSelect
                                 :id="field.id"
-                                v-model="providerTypeModel"
-                                orientation="horizontal"
+                                v-model="formData.type"
+                                :options="providerTypeOptions"
+                                option-label="label"
+                                option-value="value"
+                                placeholder="选择协议类型"
+                                :disabled="isEditing"
                                 :aria-labelledby="field['aria-labelledby']"
                                 :aria-describedby="field['aria-describedby']"
-                            >
-                                <CaomeiRadioButton
-                                    value="oidc"
-                                    text="OIDC/OAuth2"
-                                    :disabled="isEditing"
-                                />
-                                <CaomeiRadioButton
-                                    value="saml"
-                                    text="SAML 2.0"
-                                    :disabled="isEditing"
-                                />
-                            </CaomeiRadioGroup>
+                            />
                         </template>
                     </CaomeiFormItem>
 
@@ -150,7 +143,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useToast, type RadioValue } from 'caomei-ui'
+import { useToast } from 'caomei-ui'
 import type { AdminSsoProviderDetail } from '@/types/admin'
 import { useSsoProviderForm } from '@/composables/admin/use-sso-provider-form'
 import OidcConfigForm from './oidc-config-form.vue'
@@ -183,6 +176,11 @@ const isEditing = computed(() => Boolean(props.provider))
 const toast = useToast()
 const submitting = ref(false)
 
+const providerTypeOptions: { label: string, value: 'oidc' | 'saml' }[] = [
+    { label: 'OIDC/OAuth2', value: 'oidc' },
+    { label: 'SAML 2.0', value: 'saml' },
+]
+
 const {
     formData,
     oidcFormData,
@@ -193,14 +191,6 @@ const {
     buildPayload,
     validateForm,
 } = useSsoProviderForm()
-
-/** `CaomeiRadioGroup` 的模型是通用 `RadioValue`，收敛回 `'oidc' | 'saml'` 保持表单类型 */
-const providerTypeModel = computed<RadioValue>({
-    get: () => formData.value.type,
-    set: (value) => {
-        formData.value.type = value === 'saml' ? 'saml' : 'oidc'
-    },
-})
 
 const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
