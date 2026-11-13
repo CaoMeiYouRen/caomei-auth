@@ -1,70 +1,58 @@
 <template>
-    <div class="form-section">
-        <h4>属性映射</h4>
-        <p class="text-muted">
+    <section class="config-section">
+        <h4 class="config-section__title">
+            属性映射
+        </h4>
+        <p class="config-section__description">
             配置如何将 SSO 提供商的属性映射到本地用户字段
         </p>
 
-        <div class="form-group">
-            <label for="mappingEmail">邮箱字段</label>
-            <InputText
+        <div class="config-section__fields">
+            <BaseInputV2
                 id="mappingEmail"
                 v-model="localModel.email"
+                label="邮箱字段"
                 placeholder="email"
-                class="w-full"
             />
-        </div>
 
-        <div class="form-group">
-            <label for="mappingName">姓名字段</label>
-            <InputText
+            <BaseInputV2
                 id="mappingName"
                 v-model="localModel.name"
+                label="姓名字段"
                 :placeholder="type === 'saml' ? 'displayName' : 'name'"
-                class="w-full"
             />
-        </div>
 
-        <div v-if="type === 'saml'" class="form-group">
-            <label for="mappingFirstName">名字字段</label>
-            <InputText
+            <BaseInputV2
+                v-if="type === 'saml'"
                 id="mappingFirstName"
                 v-model="localModel.firstName"
+                label="名字字段"
                 placeholder="givenName"
-                class="w-full"
             />
-        </div>
 
-        <div v-if="type === 'saml'" class="form-group">
-            <label for="mappingLastName">姓氏字段</label>
-            <InputText
+            <BaseInputV2
+                v-if="type === 'saml'"
                 id="mappingLastName"
                 v-model="localModel.lastName"
+                label="姓氏字段"
                 placeholder="surname"
-                class="w-full"
             />
-        </div>
 
-        <div class="form-group">
-            <label for="mappingEmailVerified">邮箱验证字段</label>
-            <InputText
+            <BaseInputV2
                 id="mappingEmailVerified"
                 v-model="localModel.emailVerified"
+                label="邮箱验证字段"
                 placeholder="email_verified"
-                class="w-full"
             />
-        </div>
 
-        <div class="form-group">
-            <label for="mappingImage">头像字段</label>
-            <InputText
+            <BaseInputV2
                 id="mappingImage"
                 v-model="localModel.image"
+                label="头像字段"
                 placeholder="picture"
-                class="w-full"
             />
         </div>
-    </div>
+    </section>
 </template>
 
 <script setup lang="ts">
@@ -82,7 +70,9 @@ const props = defineProps<{
     type: 'oidc' | 'saml'
 }>()
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{
+    (e: 'update:modelValue', value: typeof props.modelValue): void
+}>()
 
 // Create a local copy to avoid mutating prop
 const localModel = ref({ ...props.modelValue })
@@ -101,33 +91,28 @@ watch(localModel, (newVal) => {
 </script>
 
 <style lang="scss" scoped>
-.form-section {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #e2e8f0;
+.config-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--admin-border);
 
-    h4 {
-        color: var(--primary-color);
+    &__title {
         margin: 0 0 1rem;
+        color: var(--color-primary);
         font-size: 1.125rem;
         font-weight: 600;
     }
-}
 
-.form-group {
-    margin-bottom: 1.5rem;
-
-    label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: #4a5568;
+    &__description {
+        margin: 0 0 1rem;
+        color: var(--admin-muted);
+        font-size: 0.875rem;
     }
-}
 
-.text-muted {
-    color: #718096;
-    font-size: 0.875rem;
-    margin-bottom: 1rem;
+    &__fields {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
 }
 </style>

@@ -50,7 +50,25 @@
 
 > 单条超过 10 文件 / 800 行新增时，按页面内的对话框或统计组件拆条，并在提交说明与阶段登记中补记拆条依据。
 
-> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采）；M4（P4-3）已于 2026-11-12 完成（OAuth 应用页迁移 + 自基线重采，对话框与白名单待 M5）；M5（P4-4）已于 2026-11-12 完成（3 个 OAuth 对话框迁移 + composable toast/confirm 切换 + `/admin/oauth/applications` 白名单登记 + 自基线重采）；M6（P4-5）已于 2026-11-12 完成（SSO 提供商页迁移 + 自基线重采，5 个 SSO 组件与白名单待 M7 / M8），下一批 P4-6（M7）。
+> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采）；M4（P4-3）已于 2026-11-12 完成（OAuth 应用页迁移 + 自基线重采，对话框与白名单待 M5）；M5（P4-4）已于 2026-11-12 完成（3 个 OAuth 对话框迁移 + composable toast/confirm 切换 + `/admin/oauth/applications` 白名单登记 + 自基线重采）；M6（P4-5）已于 2026-11-12 完成（SSO 提供商页迁移 + 自基线重采，5 个 SSO 组件与白名单待 M7 / M8）；M7（P4-6）已于 2026-11-13 完成（3 个 SSO 表单迁移，对话框与白名单待 M8），下一批 P4-7（M8）。
+
+> **M7 记录（P4-6 Admin SSO 表单，2026-11-13）**：
+> 1. 迁移范围：`oidc-config-form`（`InputText` → `BaseInputV2`、`Password` → `BasePasswordV2`、`Checkbox` → `CaomeiCheckbox`）；`saml-config-form`（`InputText` → `BaseInputV2`、`Textarea` → `CaomeiFormItem` + `CaomeiTextarea`、`InputNumber` → `CaomeiFormItem` + `CaomeiInputNumber`）；`attribute-mapping-form`（6 个 `InputText` → `BaseInputV2`）。字段 id / placeholder / 条件渲染（SAML 专属 `firstName` / `lastName`）保持不变。
+> 2. label / hint 由 `BaseInputV2` 与 `CaomeiFormItem` 统一承载（`aria-labelledby` / `aria-describedby` 自动关联），删除手写 `label` + `<small class="text-muted">`、`.form-group` 与硬编码色 `#e2e8f0` / `#4a5568` / `#718096`；分段容器改 `.config-section` + `--admin-*` token，标题色由 `--primary-color` 改用语义 token `--color-primary`（清掉 P4-0 §10 登记的 3 处残留）。
+> 3. 有意差异：`required` 只做视觉必填标记（`CaomeiFormItem` 不向控件注入 `required`），与迁移前「标签后加 `*`」等价；`CaomeiInputNumber` 默认最大宽度 12rem 且带 +/- 步进按钮（原 `w-full`、PrimeVue `InputNumber` 默认无按钮）；密码显隐按钮由 `CaomeiPassword` 自带，语义等价于原 `toggle-mask` + `:feedback="false"`；分段节奏由 2rem 间距 / 2rem 内边距改为 1.5rem / 1.5rem、字段间距 1.5rem → 1.25rem（父容器 `.create-dialog .form-section` 的规则不再命中子组件根元素，改由各表单 `.config-section` 提供），随 M8 迁移对话框时统一两套节奏。
+> 4. 取值口径：`CaomeiInputNumber` 的 `update:modelValue` 为 `number | null`，清空态回填 `0`，保持 `attributeConsumingServiceIndex` 恒为数字；作用域输入改为 `:model-value` + 单入口 `updateScopesInput`，保留原有「空格分隔 + 去空项」解析，避免 `v-model` 与显式监听重复触发。
+> 5. 本批**未**迁移（M8 补齐）：`create-provider-dialog`（`BaseDialog` / `BaseFormGroup` / `Dropdown` / `BaseInput` / `Button` / PrimeVue toast）与 `provider-detail-dialog` 仍为 PrimeVue；`/admin/sso/providers` 未登记白名单。因此本批提交后该路由仍是「页面 + 3 个表单已迁移、对话框未迁移」的中间态，符合 P4-0 §7「白名单只在整路由完成后登记」。
+> 6. i18n 硬编码基线：3 个文件均保持原值（`oidc-config-form` 13、`saml-config-form` 8、`attribute-mapping-form` 8 行），label / hint 移入组件属性后仍落在模板段，扫描口径不变。
+> 7. 视觉：自基线 88 passed，`admin-sso` 7 个用例（4 默认态 + 3 对话框）无像素变化——OIDC / SAML 配置段位于对话框首屏之外，需在对话框内部滚动才能看到，首屏截图覆盖不到本批改动，故不触发重采。改用容器内临时 Playwright 验收（不提交）：OIDC 字段与 PKCE 勾选、SAML 切换后 `entryPoint` / `certificate`（`rows=8`）/ `signingKey` 渲染、SAML 专属映射字段显隐、索引字段「填 5 保留 / 清空回落 0」、分段标题色 `rgb(230, 57, 70)`、暗色下 label 对比度 > 3:1，并附浅色 OIDC / SAML 与暗色 OIDC 三张截图人工核对。该视觉矩阵盲区（对话框内部滚动区）已登记 backlog。
+> 8. 未拆条说明：本批 3 个源文件 / +162 −194 行，未超「10 文件 / 800 行」阈值；3 个表单互不依赖，但同属 P4-6 原子条目，合批提交便于整体回退。
+> 9. 门禁：`pnpm lint` 0 error / 25 warning、`lint:css` / `ai:check` / `migration:check-imports` / `i18n:check` / `typecheck` / `build` / `migration:check-budget`（keyCss 413,239 B，+3.38%，与 M6 持平）/ `test` 984 passed / `test:coverage` Statements 77.91% / `lint:duplicate`（310 clones）/ `test:visual` 88 passed 全部通过。
+> 10. **Review Gate（Pass，standard）遗留**：
+>     - RG-W1（已落账）：分段节奏变化已补入本记录 §3，两套节奏在 M8 迁移对话框时统一。
+>     - RG-W2（转 M8 承接）：「空格分隔去空项」与「索引清空回落 0」当前仅有一次性容器内验收，无自动化断言；M8 迁移该对话框时补端到端用例锁定，本批不扩写测试文件。
+>     - RG-S1（记录口径）：`samlConfig.attributeConsumingServiceIndex` 在 `ssoProviderFormSchema` 中仍为 `z.number().optional()`，表单入口清空即回填 `0`，`0` 与 `undefined` 在唯一消费方（JSON 存储）等价。
+>     - RG-S2 / RG-S5（登记 backlog）：caomei-ui `FormItem` 的必填语义与 label 点击聚焦、`styles/_dark-mode.scss` 中 `.sso-provider-config` / `.provider-form` 死样式（与 `.config-section` 同名存在误命中风险），随 M8 触达该对话框或 M12 收口处理。
+>     - RG-S3 / RG-S4（已处理）：步进按钮差异补入 §3；`boolean / number` 注释与本记录「首屏之外」措辞已更正。
+>     - RG-S6（不改）：`CaomeiPassword` 默认 `autocomplete="current-password"` 与迁移前浏览器启发式行为一致，非回归。
 
 > **M3 有意差异与口径**（详见 P4-0 决策记录 §7 与本节记录）：
 > 1. 弹窗尺寸改用 caomei 档位：创建 `md`（480，原 500）、禁用 `sm`（360，原 400）、详情 `lg`（640，原 600）、会话 `lg` + `breakpoints` 放宽到 860（原 700，会话表 5 列需要）。

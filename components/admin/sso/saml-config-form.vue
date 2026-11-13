@@ -1,55 +1,70 @@
 <template>
-    <div class="form-section">
-        <h4>SAML 配置</h4>
+    <section class="config-section">
+        <h4 class="config-section__title">
+            SAML 配置
+        </h4>
 
-        <div class="form-group">
-            <label for="entryPoint">入口点 URL *</label>
-            <InputText
+        <div class="config-section__fields">
+            <BaseInputV2
                 id="entryPoint"
                 v-model="localModel.entryPoint"
+                label="入口点 URL"
                 placeholder="SAML IdP 的 SSO 入口点 URL"
-                class="w-full"
+                required
             />
-        </div>
 
-        <div class="form-group">
-            <label for="certificate">X.509 证书 *</label>
-            <Textarea
+            <CaomeiFormItem
                 id="certificate"
-                v-model="localModel.certificate"
-                placeholder="-----BEGIN CERTIFICATE-----&#10;...&#10;-----END CERTIFICATE-----"
-                rows="8"
-                class="w-full"
-            />
-            <small class="text-muted">
-                IdP 的 X.509 证书，用于验证 SAML 响应签名
-            </small>
-        </div>
+                label="X.509 证书"
+                hint="IdP 的 X.509 证书，用于验证 SAML 响应签名"
+                required
+            >
+                <template #default="field">
+                    <CaomeiTextarea
+                        :id="field.id"
+                        v-model="localModel.certificate"
+                        :rows="8"
+                        placeholder="-----BEGIN CERTIFICATE-----&#10;...&#10;-----END CERTIFICATE-----"
+                        :aria-labelledby="field['aria-labelledby']"
+                        :aria-describedby="field['aria-describedby']"
+                    />
+                </template>
+            </CaomeiFormItem>
 
-        <div class="form-group">
-            <label for="signingKey">签名私钥</label>
-            <Textarea
+            <CaomeiFormItem
                 id="signingKey"
-                v-model="localModel.signingKey"
-                placeholder="-----BEGIN PRIVATE KEY-----&#10;...&#10;-----END PRIVATE KEY-----"
-                rows="8"
-                class="w-full"
-            />
-            <small class="text-muted">
-                可选：用于签名 SAML 请求的私钥
-            </small>
-        </div>
+                label="签名私钥"
+                hint="可选：用于签名 SAML 请求的私钥"
+            >
+                <template #default="field">
+                    <CaomeiTextarea
+                        :id="field.id"
+                        v-model="localModel.signingKey"
+                        :rows="8"
+                        placeholder="-----BEGIN PRIVATE KEY-----&#10;...&#10;-----END PRIVATE KEY-----"
+                        :aria-labelledby="field['aria-labelledby']"
+                        :aria-describedby="field['aria-describedby']"
+                    />
+                </template>
+            </CaomeiFormItem>
 
-        <div class="form-group">
-            <label for="attributeConsumingServiceIndex">属性消费服务索引</label>
-            <InputNumber
+            <CaomeiFormItem
                 id="attributeConsumingServiceIndex"
-                v-model="localModel.attributeConsumingServiceIndex"
-                placeholder="0"
-                class="w-full"
-            />
+                label="属性消费服务索引"
+            >
+                <template #default="field">
+                    <CaomeiInputNumber
+                        :id="field.id"
+                        :model-value="localModel.attributeConsumingServiceIndex"
+                        placeholder="0"
+                        :aria-labelledby="field['aria-labelledby']"
+                        :aria-describedby="field['aria-describedby']"
+                        @update:model-value="updateServiceIndex"
+                    />
+                </template>
+            </CaomeiFormItem>
         </div>
-    </div>
+    </section>
 </template>
 
 <script setup lang="ts">
@@ -64,7 +79,9 @@ const props = defineProps<{
     }
 }>()
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{
+    (e: 'update:modelValue', value: typeof props.modelValue): void
+}>()
 
 // Create a local copy to avoid mutating prop
 const localModel = ref({ ...props.modelValue })
@@ -80,30 +97,30 @@ watch(() => props.modelValue, (newVal) => {
 watch(localModel, (newVal) => {
     emit('update:modelValue', { ...newVal })
 }, { deep: true })
+
+/** `CaomeiInputNumber` 的清空态为 `null`，回填为 `0` 保持模型为数字（与迁移前的数字语义一致，`0` 与 `undefined` 在唯一消费方等价） */
+function updateServiceIndex(value: number | null) {
+    localModel.value.attributeConsumingServiceIndex = value ?? 0
+}
 </script>
 
 <style lang="scss" scoped>
-.form-section {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #e2e8f0;
+.config-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--admin-border);
 
-    h4 {
-        color: var(--primary-color);
+    &__title {
         margin: 0 0 1rem;
+        color: var(--color-primary);
         font-size: 1.125rem;
         font-weight: 600;
     }
-}
 
-.form-group {
-    margin-bottom: 1.5rem;
-
-    label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: #4a5568;
+    &__fields {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
     }
 }
 </style>
