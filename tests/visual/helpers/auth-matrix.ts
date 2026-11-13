@@ -44,6 +44,8 @@ interface VisualRoute {
     tabs?: ReadonlyArray<readonly [string, string]>
     /** 额外交互态 */
     states?: readonly VisualState[]
+    /** 是否参与参考态层（迁移前页面才需要）；新增页面设为 false，只维护自基线 */
+    reference?: boolean
 }
 
 const VIEWPORTS: readonly VisualViewport[] = [
@@ -127,6 +129,27 @@ const ROUTES: readonly VisualRoute[] = [
         ],
     },
     {
+        path: '/about',
+        slug: 'about',
+        readySelector: '.auth-title',
+        readyText: '关于草梅 Auth',
+        reference: false,
+    },
+    {
+        path: '/privacy',
+        slug: 'privacy',
+        readySelector: '.auth-title',
+        readyText: '隐私政策',
+        reference: false,
+    },
+    {
+        path: '/terms',
+        slug: 'terms',
+        readySelector: '.auth-title',
+        readyText: '服务条款',
+        reference: false,
+    },
+    {
         path: '/profile',
         slug: 'profile',
         auth: true,
@@ -179,9 +202,12 @@ async function ensureSession(page: Page, route: VisualRoute): Promise<void> {
     expect(signIn.ok(), '视觉账号登录失败').toBeTruthy()
 }
 
+/** 参考态层（含采集）：由 `test:visual:parity*` 脚本设置 `VISUAL_LAYER=parity`。 */
+const isReferenceLayer = () => process.env.VISUAL_LAYER === 'parity'
+
 /** 参考态采集守卫：迁移后的页面不应再用于刷新参考态。 */
 async function assertReferenceSource(page: Page): Promise<void> {
-    if (process.env.VISUAL_REFERENCE_CAPTURE !== '1') {
+    if (!isReferenceLayer() || process.env.VISUAL_REFERENCE_CAPTURE !== '1') {
         return
     }
     const primeVueNodes = await page.locator('.p-button').count()
@@ -221,6 +247,10 @@ function defineDefaultStates(): void {
                 test.use({ colorScheme: theme, viewport: { width: viewport.width, height: viewport.height } })
 
                 for (const route of ROUTES) {
+                    /* 新页面没有迁移前参考态，只在自基线层登记 */
+                    if (route.reference === false && isReferenceLayer()) {
+                        continue
+                    }
                     test(`${route.slug} 默认态（${theme} / ${viewport.name}）`, async ({ page }) => {
                         await open(page, route, theme)
                         await shot(page, `${route.slug}-${theme}-${viewport.name}-default`)
@@ -237,6 +267,9 @@ function defineInteractionStates(): void {
         test.use({ colorScheme: 'light', viewport: { width: 1440, height: 900 } })
 
         for (const route of ROUTES) {
+            if (route.reference === false && isReferenceLayer()) {
+                continue
+            }
             if (route.submitLabel && route.errorAnchor) {
                 const submitLabel = route.submitLabel
                 const errorAnchor = route.errorAnchor
