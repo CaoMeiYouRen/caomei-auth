@@ -160,8 +160,8 @@ const ROUTES: readonly AdminRoute[] = [
                 action: async (page) => {
                     await page.getByRole('button', { name: '创建提供商' }).click()
                     await expectDialog(page, '添加 SSO 提供商')
-                    await page.getByRole('dialog').locator('.p-select').first().click()
-                    await page.getByRole('option', { name: 'SAML 2.0' }).click()
+                    /* 协议类型在 CaomeiDialog 内用 CaomeiRadioGroup：CaomeiSelect 的 pointerdown 在对话框中不触发，见 docs/plan/backlog.md */
+                    await page.getByRole('dialog').getByRole('radio', { name: 'SAML 2.0' }).click()
                     await expect(page.getByText('SAML 配置', { exact: true })).toBeVisible()
                 },
             },

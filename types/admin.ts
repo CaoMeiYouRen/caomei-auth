@@ -69,10 +69,21 @@ export interface AdminSsoProviderRow {
     description?: string | null
     domain?: string | null
     issuer?: string | null
+    organizationId?: string | null
     type: 'oidc' | 'saml'
     enabled: boolean
     createdAt: string | Date
     updatedAt?: string | Date | null
+}
+
+/** SSO 提供商详情（`GET /api/admin/sso/providers/:id` 返回，敏感字段已脱敏为 `***`） */
+export interface AdminSsoProviderDetail extends AdminSsoProviderRow {
+    clientId?: string | null
+    clientSecret?: string | null
+    metadataUrl?: string | null
+    scopes?: string | null
+    oidcConfig?: string | Record<string, unknown> | null
+    samlConfig?: string | Record<string, unknown> | null
 }
 
 /** OAuth 应用创建响应（RFC 7591 风格字段，`/api/admin/oauth/applications` POST 返回） */

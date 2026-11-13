@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useSsoProviders } from '@/composables/admin/use-sso-providers'
 
 // Mock dependencies
-const toast = { add: vi.fn() }
+const toast = { success: vi.fn(), danger: vi.fn(), warning: vi.fn() }
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: () => toast,
 }))
 
@@ -61,8 +61,8 @@ describe('useSsoProviders', () => {
             method: 'PUT',
             body: { enabled: false },
         }))
-        expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-            severity: 'success',
+        expect(toast.success).toHaveBeenCalledWith(expect.objectContaining({
+            title: '状态更新成功',
         }))
     })
 
@@ -93,14 +93,42 @@ describe('useSsoProviders', () => {
         expect(query).not.toHaveProperty('enabled')
     })
 
+    it('删除失败时使用 danger 语气', async () => {
+        const { deleteProvider } = useSsoProviders()
+
+        fetchMock.mockRejectedValueOnce(new Error('网络异常'))
+
+        const result = await deleteProvider('1')
+
+        expect(result).toBe(false)
+        expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+            title: '删除失败',
+        }))
+        expect(toast.success).not.toHaveBeenCalledWith(expect.objectContaining({ title: '删除成功' }))
+    })
+
+    it('状态更新失败时使用 danger 语气', async () => {
+        const { toggleProviderStatus } = useSsoProviders()
+        const provider = { id: '1', providerId: 'sso-1', name: '测试提供商', type: 'oidc' as const, enabled: true, createdAt: '2026-01-01T00:00:00.000Z' }
+
+        fetchMock.mockRejectedValueOnce(new Error('网络异常'))
+
+        await toggleProviderStatus(provider)
+
+        expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+            title: '状态更新失败',
+        }))
+        expect(toast.success).not.toHaveBeenCalledWith(expect.objectContaining({ title: '状态更新成功' }))
+    })
+
     it('refreshes providers', async () => {
         const { handleRefreshProviders } = useSsoProviders()
 
         await handleRefreshProviders()
 
         expect(fetchMock).toHaveBeenCalled()
-        expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({
-            summary: '刷新成功',
+        expect(toast.success).toHaveBeenCalledWith(expect.objectContaining({
+            title: '刷新成功',
         }))
     })
 })

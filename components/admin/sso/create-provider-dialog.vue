@@ -1,116 +1,116 @@
 <template>
-    <BaseDialog
-        v-model:visible="visible"
+    <BaseDialogV2
+        :visible="visible"
         :title="isEditing ? '编辑 SSO 提供商' : '添加 SSO 提供商'"
-        width="900px"
-        :show-footer="false"
-        class="create-dialog"
+        size="lg"
+        @update:visible="visible = $event"
     >
-        <div class="form-header">
-            <p>{{ isEditing ? '修改 SSO 提供商配置' : '配置新的 SSO 提供商，支持 OIDC 和 SAML 协议' }}</p>
-        </div>
+        <form
+            class="provider-form"
+            @submit.prevent="submitProvider"
+        >
+            <p class="provider-form__intro">
+                {{ isEditing ? '修改 SSO 提供商配置' : '配置新的 SSO 提供商，支持 OIDC 和 SAML 协议' }}
+            </p>
 
-        <form @submit.prevent="submitProvider">
             <!-- 基本信息 -->
-            <div class="form-section">
-                <h4>基本信息</h4>
+            <section class="config-section">
+                <h4 class="config-section__title">
+                    基本信息
+                </h4>
 
-                <BaseFormGroup
-                    label="协议类型"
-                    for="providerType"
-                    required
-                >
-                    <Dropdown
+                <div class="config-section__fields">
+                    <CaomeiFormItem
                         id="providerType"
-                        v-model="formData.type"
-                        :options="[
-                            {label: 'OIDC/OAuth2', value: 'oidc'},
-                            {label: 'SAML 2.0', value: 'saml'}
-                        ]"
-                        option-label="label"
-                        option-value="value"
-                        placeholder="选择协议类型"
-                        :disabled="isEditing"
-                        class="w-full"
-                    />
-                </BaseFormGroup>
+                        label="协议类型"
+                        required
+                    >
+                        <template #default="field">
+                            <CaomeiRadioGroup
+                                :id="field.id"
+                                v-model="providerTypeModel"
+                                orientation="horizontal"
+                                :aria-labelledby="field['aria-labelledby']"
+                                :aria-describedby="field['aria-describedby']"
+                            >
+                                <CaomeiRadioButton
+                                    value="oidc"
+                                    text="OIDC/OAuth2"
+                                    :disabled="isEditing"
+                                />
+                                <CaomeiRadioButton
+                                    value="saml"
+                                    text="SAML 2.0"
+                                    :disabled="isEditing"
+                                />
+                            </CaomeiRadioGroup>
+                        </template>
+                    </CaomeiFormItem>
 
-                <BaseFormGroup
-                    label="Provider ID"
-                    for="providerId"
-                    required
-                >
-                    <InputText
+                    <BaseInputV2
                         id="providerId"
                         v-model="formData.providerId"
+                        label="Provider ID"
+                        hint="唯一标识符，用于生成回调 URL。编辑时不可修改。"
                         placeholder="例如：company-sso、google-workspace"
                         :disabled="isEditing"
-                        class="w-full"
+                        required
                     />
-                    <small class="text-muted">
-                        唯一标识符，用于生成回调 URL。编辑时不可修改。
-                    </small>
-                </BaseFormGroup>
 
-                <BaseInput
-                    id="name"
-                    v-model="formData.name"
-                    label="显示名称"
-                    placeholder="例如：公司 SSO、Google Workspace"
-                />
+                    <BaseInputV2
+                        id="name"
+                        v-model="formData.name"
+                        label="显示名称"
+                        placeholder="例如：公司 SSO、Google Workspace"
+                    />
 
-                <BaseFormGroup label="描述" for="description">
-                    <Textarea
+                    <CaomeiFormItem
                         id="description"
-                        v-model="formData.description"
-                        placeholder="SSO 提供商的详细描述"
-                        rows="3"
-                        class="w-full"
+                        label="描述"
+                    >
+                        <template #default="field">
+                            <CaomeiTextarea
+                                :id="field.id"
+                                v-model="formData.description"
+                                :rows="3"
+                                placeholder="SSO 提供商的详细描述"
+                                :aria-labelledby="field['aria-labelledby']"
+                                :aria-describedby="field['aria-describedby']"
+                            />
+                        </template>
+                    </CaomeiFormItem>
+
+                    <BaseInputV2
+                        id="issuer"
+                        v-model="formData.issuer"
+                        label="发行者 URL"
+                        placeholder="例如：https://accounts.google.com、https://company.okta.com"
+                        required
                     />
-                </BaseFormGroup>
 
-                <BaseInput
-                    id="issuer"
-                    v-model="formData.issuer"
-                    label="发行者 URL"
-                    placeholder="例如：https://accounts.google.com、https://company.okta.com"
-                    required
-                />
-
-                <BaseFormGroup
-                    label="域名"
-                    for="domain"
-                    required
-                >
-                    <InputText
+                    <BaseInputV2
                         id="domain"
                         v-model="formData.domain"
+                        label="域名"
+                        hint="用于域名匹配，用户邮箱域名与此匹配时会使用此 SSO 提供商"
                         placeholder="例如：company.com、example.org"
-                        class="w-full"
+                        required
                     />
-                    <small class="text-muted">
-                        用于域名匹配，用户邮箱域名与此匹配时会使用此 SSO 提供商
-                    </small>
-                </BaseFormGroup>
 
-                <BaseInput
-                    id="organizationId"
-                    v-model="formData.organizationId"
-                    label="关联组织 ID"
-                    placeholder="可选：关联到特定组织"
-                />
+                    <BaseInputV2
+                        id="organizationId"
+                        v-model="formData.organizationId"
+                        label="关联组织 ID"
+                        placeholder="可选：关联到特定组织"
+                    />
 
-                <div class="form-group">
-                    <div class="field-checkbox">
-                        <Checkbox
-                            id="enabled"
-                            v-model="formData.enabled"
-                            binary
-                        />
-                        <label for="enabled">启用此 SSO 提供商</label>
-                    </div>
+                    <CaomeiCheckbox
+                        id="enabled"
+                        v-model="formData.enabled"
+                        text="启用此 SSO 提供商"
+                    />
                 </div>
-            </div>
+            </section>
 
             <!-- OIDC 配置 -->
             <OidcConfigForm
@@ -130,186 +130,103 @@
                 :type="formData.type"
             />
 
-            <div class="form-actions">
-                <Button
-                    type="button"
-                    label="取消"
-                    severity="secondary"
+            <div class="provider-form__actions">
+                <CaomeiButton
+                    variant="secondary"
                     @click="visible = false"
-                />
-                <Button
+                >
+                    取消
+                </CaomeiButton>
+                <CaomeiButton
                     type="submit"
-                    :label="isEditing ? '更新' : '创建'"
                     :loading="submitting"
-                />
+                >
+                    {{ isEditing ? '更新' : '创建' }}
+                </CaomeiButton>
             </div>
         </form>
-    </BaseDialog>
+    </BaseDialogV2>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { useToast } from 'primevue/usetoast'
-import { ssoProviderFormSchema } from '@/utils/shared/schemas'
+import { computed, ref, watch } from 'vue'
+import { useToast, type RadioValue } from 'caomei-ui'
+import type { AdminSsoProviderDetail } from '@/types/admin'
+import { useSsoProviderForm } from '@/composables/admin/use-sso-provider-form'
 import OidcConfigForm from './oidc-config-form.vue'
 import SamlConfigForm from './saml-config-form.vue'
 import AttributeMappingForm from './attribute-mapping-form.vue'
 
+interface SsoProviderResponse {
+    success: boolean
+    message?: string
+    data?: AdminSsoProviderDetail
+}
+
 const props = defineProps<{
     visible: boolean
-    provider?: any
+    provider?: AdminSsoProviderDetail | null
 }>()
 
-const emit = defineEmits(['update:visible', 'created', 'updated'])
+const emit = defineEmits<{
+    (e: 'update:visible', value: boolean): void
+    (e: 'created', provider?: AdminSsoProviderDetail): void
+    (e: 'updated'): void
+}>()
 
 const visible = computed({
     get: () => props.visible,
     set: (value) => emit('update:visible', value),
 })
 
-const isEditing = computed(() => !!props.provider)
+const isEditing = computed(() => Boolean(props.provider))
 const toast = useToast()
 const submitting = ref(false)
 
-// 表单数据
-const formData = ref({
-    type: 'oidc' as 'oidc' | 'saml',
-    providerId: '',
-    name: '',
-    description: '',
-    issuer: '',
-    domain: '',
-    organizationId: '',
-    enabled: true,
+const {
+    formData,
+    oidcFormData,
+    samlFormData,
+    mappingFormData,
+    resetForm,
+    applyProviderDetail,
+    buildPayload,
+    validateForm,
+} = useSsoProviderForm()
+
+/** `CaomeiRadioGroup` 的模型是通用 `RadioValue`，收敛回 `'oidc' | 'saml'` 保持表单类型 */
+const providerTypeModel = computed<RadioValue>({
+    get: () => formData.value.type,
+    set: (value) => {
+        formData.value.type = value === 'saml' ? 'saml' : 'oidc'
+    },
 })
 
-// OIDC 配置
-const oidcFormData = ref({
-    clientId: '',
-    clientSecret: '',
-    discoveryEndpoint: '',
-    authorizationEndpoint: '',
-    tokenEndpoint: '',
-    userInfoEndpoint: '',
-    jwksEndpoint: '',
-    scopes: ['openid', 'profile', 'email'] as string[],
-    pkce: true,
-})
-
-// SAML 配置
-const samlFormData = ref({
-    entryPoint: '',
-    certificate: '',
-    signingKey: '',
-    attributeConsumingServiceIndex: 0,
-})
-
-// 属性映射
-const mappingFormData = ref({
-    email: 'email',
-    emailVerified: 'email_verified',
-    name: '',
-    firstName: '',
-    lastName: '',
-    image: 'picture',
-})
+const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 // 监听 provider 变化，初始化表单
 watch(() => props.provider, async (provider) => {
-    if (provider) {
-        try {
-            // 从API获取最新的提供商数据
-            const response: any = await $fetch(`/api/admin/sso/providers/${provider.id}`)
-
-            if (!response?.success) {
-                throw new Error('获取提供商数据失败')
-            }
-
-            const latestProvider = response.data
-
-            formData.value = {
-                type: latestProvider.type || 'oidc',
-                providerId: latestProvider.providerId || '',
-                name: latestProvider.name || '',
-                description: latestProvider.description || '',
-                issuer: latestProvider.issuer || '',
-                domain: latestProvider.domain || '',
-                organizationId: latestProvider.organizationId || '',
-                enabled: latestProvider.enabled !== false,
-            }
-
-            // 解析配置
-            if (latestProvider.type === 'oidc' && latestProvider.oidcConfig) {
-                try {
-                    const oidcConfig = typeof latestProvider.oidcConfig === 'string'
-                        ? JSON.parse(latestProvider.oidcConfig)
-                        : latestProvider.oidcConfig
-
-                    oidcFormData.value = {
-                        clientId: oidcConfig.clientId || latestProvider.clientId || '',
-                        clientSecret: oidcConfig.clientSecret || latestProvider.clientSecret || '',
-                        discoveryEndpoint: oidcConfig.discoveryEndpoint || latestProvider.metadataUrl || '',
-                        authorizationEndpoint: oidcConfig.authorizationEndpoint || '',
-                        tokenEndpoint: oidcConfig.tokenEndpoint || '',
-                        userInfoEndpoint: oidcConfig.userInfoEndpoint || '',
-                        jwksEndpoint: oidcConfig.jwksEndpoint || '',
-                        scopes: oidcConfig.scopes || latestProvider.scopes?.split(' ') || ['openid', 'profile', 'email'],
-                        pkce: oidcConfig.pkce !== false,
-                    }
-
-                    // 解析映射配置
-                    if (oidcConfig.mapping) {
-                        mappingFormData.value = {
-                            email: oidcConfig.mapping.email || 'email',
-                            emailVerified: oidcConfig.mapping.emailVerified || 'email_verified',
-                            name: oidcConfig.mapping.name || 'name',
-                            firstName: '',
-                            lastName: '',
-                            image: oidcConfig.mapping.image || 'picture',
-                        }
-                    }
-                } catch (error) {
-                    console.error('解析 OIDC 配置失败:', error)
-                }
-            } else if (latestProvider.type === 'saml' && latestProvider.samlConfig) {
-                try {
-                    const samlConfig = typeof latestProvider.samlConfig === 'string'
-                        ? JSON.parse(latestProvider.samlConfig)
-                        : latestProvider.samlConfig
-
-                    samlFormData.value = {
-                        entryPoint: samlConfig.entryPoint || '',
-                        certificate: samlConfig.certificate || '',
-                        signingKey: samlConfig.signingKey || '',
-                        attributeConsumingServiceIndex: samlConfig.attributeConsumingServiceIndex || 0,
-                    }
-
-                    // 解析映射配置
-                    if (samlConfig.mapping) {
-                        mappingFormData.value = {
-                            email: samlConfig.mapping.email || 'email',
-                            emailVerified: '',
-                            name: samlConfig.mapping.name || 'displayName',
-                            firstName: samlConfig.mapping.firstName || 'givenName',
-                            lastName: samlConfig.mapping.lastName || 'surname',
-                            image: '',
-                        }
-                    }
-                } catch (error) {
-                    console.error('解析 SAML 配置失败:', error)
-                }
-            }
-        } catch (error: any) {
-            console.error('获取提供商编辑数据失败:', error)
-            toast.add({
-                severity: 'error',
-                summary: '获取数据失败',
-                detail: error.message || '无法获取提供商数据进行编辑',
-                life: 3000,
-            })
-        }
-    } else {
+    if (!provider) {
         resetForm()
+        return
+    }
+
+    try {
+        // 从API获取最新的提供商数据
+        const response = await $fetch<SsoProviderResponse>(`/api/admin/sso/providers/${provider.id}`)
+
+        if (!response?.success || !response.data) {
+            throw new Error('获取提供商数据失败')
+        }
+
+        applyProviderDetail(response.data)
+    } catch (error: unknown) {
+        console.error('获取提供商编辑数据失败:', error)
+        toast.danger({
+            title: '获取数据失败',
+            description: errorMessage(error, '无法获取提供商数据进行编辑'),
+            duration: 3000,
+        })
     }
 }, { immediate: true })
 
@@ -320,194 +237,37 @@ watch(visible, (val) => {
     }
 })
 
-function resetForm() {
-    formData.value = {
-        type: 'oidc',
-        providerId: '',
-        name: '',
-        description: '',
-        issuer: '',
-        domain: '',
-        organizationId: '',
-        enabled: true,
-    }
-
-    oidcFormData.value = {
-        clientId: '',
-        clientSecret: '',
-        discoveryEndpoint: '',
-        authorizationEndpoint: '',
-        tokenEndpoint: '',
-        userInfoEndpoint: '',
-        jwksEndpoint: '',
-        scopes: ['openid', 'profile', 'email'],
-        pkce: true,
-    }
-
-    samlFormData.value = {
-        entryPoint: '',
-        certificate: '',
-        signingKey: '',
-        attributeConsumingServiceIndex: 0,
-    }
-
-    mappingFormData.value = {
-        email: 'email',
-        emailVerified: 'email_verified',
-        name: '',
-        firstName: '',
-        lastName: '',
-        image: 'picture',
-    }
-}
-
-// 表单验证
-function validateForm(): string[] {
-    const errors: string[] = []
-
-    // 构建符合 schema 的数据结构
-    const formToValidate: any = {
-        type: formData.value.type,
-        providerId: formData.value.providerId,
-        name: formData.value.name,
-        description: formData.value.description,
-        issuer: formData.value.issuer,
-        domain: formData.value.domain,
-        organizationId: formData.value.organizationId,
-        enabled: formData.value.enabled,
-    }
-
-    // 根据类型添加配置
-    if (formData.value.type === 'oidc') {
-        formToValidate.oidcConfig = {
-            clientId: oidcFormData.value.clientId,
-            clientSecret: oidcFormData.value.clientSecret,
-            discoveryEndpoint: oidcFormData.value.discoveryEndpoint,
-            authorizationEndpoint: oidcFormData.value.authorizationEndpoint,
-            tokenEndpoint: oidcFormData.value.tokenEndpoint,
-            userInfoEndpoint: oidcFormData.value.userInfoEndpoint,
-            jwksEndpoint: oidcFormData.value.jwksEndpoint,
-            scopes: oidcFormData.value.scopes,
-            pkce: oidcFormData.value.pkce,
-            mapping: {
-                email: mappingFormData.value.email,
-                emailVerified: mappingFormData.value.emailVerified,
-                name: mappingFormData.value.name,
-                image: mappingFormData.value.image,
-            },
-        }
-    } else if (formData.value.type === 'saml') {
-        formToValidate.samlConfig = {
-            entryPoint: samlFormData.value.entryPoint,
-            certificate: samlFormData.value.certificate,
-            signingKey: samlFormData.value.signingKey,
-            attributeConsumingServiceIndex: samlFormData.value.attributeConsumingServiceIndex,
-            mapping: {
-                email: mappingFormData.value.email,
-                name: mappingFormData.value.name,
-                firstName: mappingFormData.value.firstName,
-                lastName: mappingFormData.value.lastName,
-            },
-        }
-    }
-
-    const result = ssoProviderFormSchema.safeParse(formToValidate)
-    if (!result.success) {
-        for (const issue of result.error.issues) {
-            errors.push(issue.message)
-        }
-    }
-
-    return errors
-}
-
 // 提交表单
 async function submitProvider() {
     try {
         submitting.value = true
 
-        // 表单验证
         const validationErrors = validateForm()
         if (validationErrors.length > 0) {
-            toast.add({
-                severity: 'error',
-                summary: '表单验证失败',
-                detail: validationErrors.join('\n'),
-                life: 5000,
+            toast.danger({
+                title: '表单验证失败',
+                description: validationErrors.join('；'),
+                duration: 5000,
             })
             return
         }
 
-        // 构建请求数据
-        const payload: any = {
-            type: formData.value.type,
-            providerId: formData.value.providerId,
-            name: formData.value.name,
-            description: formData.value.description,
-            issuer: formData.value.issuer,
-            domain: formData.value.domain,
-            organizationId: formData.value.organizationId || undefined,
-            enabled: formData.value.enabled,
-        }
-
-        // 添加协议特定配置
-        if (formData.value.type === 'oidc') {
-            payload.oidcConfig = {
-                clientId: oidcFormData.value.clientId,
-                clientSecret: oidcFormData.value.clientSecret,
-                discoveryEndpoint: oidcFormData.value.discoveryEndpoint || undefined,
-                authorizationEndpoint: oidcFormData.value.authorizationEndpoint || undefined,
-                tokenEndpoint: oidcFormData.value.tokenEndpoint || undefined,
-                userInfoEndpoint: oidcFormData.value.userInfoEndpoint || undefined,
-                jwksEndpoint: oidcFormData.value.jwksEndpoint || undefined,
-                scopes: oidcFormData.value.scopes,
-                pkce: oidcFormData.value.pkce,
-                mapping: {
-                    email: mappingFormData.value.email || 'email',
-                    emailVerified: mappingFormData.value.emailVerified || 'email_verified',
-                    name: mappingFormData.value.name || 'name',
-                    image: mappingFormData.value.image || 'picture',
-                },
-            }
-        } else if (formData.value.type === 'saml') {
-            payload.samlConfig = {
-                entryPoint: samlFormData.value.entryPoint,
-                certificate: samlFormData.value.certificate,
-                signingKey: samlFormData.value.signingKey || undefined,
-                attributeConsumingServiceIndex: samlFormData.value.attributeConsumingServiceIndex,
-                mapping: {
-                    email: mappingFormData.value.email || 'email',
-                    name: mappingFormData.value.name || 'displayName',
-                    firstName: mappingFormData.value.firstName || 'givenName',
-                    lastName: mappingFormData.value.lastName || 'surname',
-                },
-            }
-        }
-
-        let response: any
-        if (isEditing.value) {
-            // 更新提供商 - 使用 PUT 方法
-            response = await $fetch(`/api/admin/sso/providers/${props.provider.id}`, {
-                method: 'PUT',
-                body: payload,
-            })
-        } else {
-            // 创建提供商 - 使用 POST 方法
-            response = await $fetch('/api/admin/sso/providers', {
-                method: 'POST',
-                body: payload,
-            })
-        }
+        const response = await $fetch<SsoProviderResponse>(
+            isEditing.value ? `/api/admin/sso/providers/${props.provider?.id}` : '/api/admin/sso/providers',
+            {
+                method: isEditing.value ? 'PUT' : 'POST',
+                body: buildPayload(),
+            },
+        )
 
         if (!response.success) {
             throw new Error(response.message || '操作失败')
         }
 
-        toast.add({
-            severity: 'success',
-            summary: isEditing.value ? '更新成功' : '创建成功',
-            detail: `SSO 提供商 ${formData.value.name || formData.value.providerId} ${isEditing.value ? '更新' : '创建'}成功`,
-            life: 3000,
+        toast.success({
+            title: isEditing.value ? '更新成功' : '创建成功',
+            description: `SSO 提供商 ${formData.value.name || formData.value.providerId} ${isEditing.value ? '更新' : '创建'}成功`,
+            duration: 3000,
         })
 
         visible.value = false
@@ -516,12 +276,11 @@ async function submitProvider() {
         } else {
             emit('created', response.data)
         }
-    } catch (error: any) {
-        toast.add({
-            severity: 'error',
-            summary: isEditing.value ? '更新失败' : '创建失败',
-            detail: error.message || '请检查网络连接或联系管理员',
-            life: 5000,
+    } catch (error: unknown) {
+        toast.danger({
+            title: isEditing.value ? '更新失败' : '创建失败',
+            description: errorMessage(error, '请检查网络连接或联系管理员'),
+            duration: 5000,
         })
     } finally {
         submitting.value = false
@@ -530,63 +289,55 @@ async function submitProvider() {
 </script>
 
 <style lang="scss" scoped>
-.create-dialog {
-    .form-header {
-        margin-bottom: 2rem;
+.provider-form {
+    display: flex;
+    flex-direction: column;
 
-        p {
-            color: #718096;
-            margin: 0;
-        }
+    &__intro {
+        margin: 0 0 1.5rem;
+        color: var(--admin-muted);
     }
 
-    .form-section {
-        margin-bottom: 2rem;
-        padding-bottom: 2rem;
-        border-bottom: 1px solid #e2e8f0;
-
-        &:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        h4 {
-            color: var(--primary-color);
-            margin: 0 0 1rem;
-            font-size: 1.125rem;
-            font-weight: 600;
-        }
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: #4a5568;
-        }
-    }
-
-    .form-actions {
+    &__actions {
         display: flex;
         justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e2e8f0;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+    }
+
+    :deep(.config-section:last-of-type) {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
     }
 
     @media (width <= 768px) {
-        .form-actions {
-            flex-direction: column;
+        &__actions {
+            flex-direction: column-reverse;
 
-            :deep(.p-button) {
+            :deep(button) {
                 width: 100%;
             }
         }
+    }
+}
+
+.config-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--admin-border);
+
+    &__title {
+        margin: 0 0 1rem;
+        color: var(--color-primary);
+        font-size: 1.125rem;
+        font-weight: 600;
+    }
+
+    &__fields {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
     }
 }
 </style>

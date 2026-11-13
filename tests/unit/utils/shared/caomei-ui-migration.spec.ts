@@ -23,7 +23,7 @@ const MIGRATED_PAGE_FILES = [
      * M4 先迁移 `/admin/oauth/applications` 页面，M5 完成 3 个对话框与白名单登记后整路由切齐。 */
     'pages/admin/users.vue',
     'pages/admin/oauth/applications.vue',
-    /* M6 先迁移 SSO 提供商页，5 个 SSO 组件与白名单在 M7 / M8。 */
+    /* M6 迁移 SSO 提供商页，M7 迁移 3 个表单，M8 完成 2 个对话框与白名单登记后整路由切齐。 */
     'pages/admin/sso/providers.vue',
 ]
 
@@ -39,6 +39,7 @@ const MIGRATED_SHARED_PATHS = [
     'components/base/phone-input-v2.vue',
     'components/admin/users',
     'components/admin/oauth',
+    'components/admin/sso',
     'components/profile',
     'components/security',
 ]
@@ -55,10 +56,11 @@ function collectVueFiles(target) {
 
 describe('utils/shared/caomei-ui-migration', () => {
     it('默认白名单包含 P2/P3 试点路由与 P4 已切齐的 Admin 路由', () => {
-        expect(CAOMEI_UI_ROUTE_PREFIXES).toEqual(['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login', '/admin/users', '/admin/oauth/applications'])
+        expect(CAOMEI_UI_ROUTE_PREFIXES).toEqual(['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login', '/admin/users', '/admin/oauth/applications', '/admin/sso/providers'])
         expect(isCaomeiUiRoute('/login')).toBe(true)
         expect(isCaomeiUiRoute('/admin/users')).toBe(true)
         expect(isCaomeiUiRoute('/admin/oauth/applications')).toBe(true)
+        expect(isCaomeiUiRoute('/admin/sso/providers')).toBe(true)
         expect(isCaomeiUiRoute('/')).toBe(false)
     })
 
@@ -117,7 +119,7 @@ describe('utils/shared/caomei-ui-migration', () => {
     })
 
     it('P4 路由不在白名单内', () => {
-        for (const pathname of ['/', '/about', '/privacy', '/terms', '/index', '/oauth/clients', '/admin/logs', '/admin/sso/providers']) {
+        for (const pathname of ['/', '/about', '/privacy', '/terms', '/index', '/oauth/clients', '/admin/logs']) {
             expect(isCaomeiUiRoute(pathname), `${pathname} 不应命中白名单`).toBe(false)
         }
     })

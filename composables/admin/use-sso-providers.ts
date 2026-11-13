@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import type { AdminSsoProviderRow } from '@/types/admin'
 
@@ -91,11 +91,10 @@ export function useSsoProviders() {
         if (!hadFilters) {
             await refreshProviders()
         }
-        toast.add({
-            severity: 'success',
-            summary: '刷新成功',
-            detail: 'SSO提供商列表已刷新',
-            life: 2000,
+        toast.success({
+            title: '刷新成功',
+            description: 'SSO提供商列表已刷新',
+            duration: 2000,
         })
     }
 
@@ -116,20 +115,18 @@ export function useSsoProviders() {
                 throw new Error(response.message || '状态更新失败')
             }
 
-            toast.add({
-                severity: 'success',
-                summary: '状态更新成功',
-                detail: `SSO 提供商已${!provider.enabled ? '启用' : '禁用'}`,
-                life: 3000,
+            toast.success({
+                title: '状态更新成功',
+                description: `SSO 提供商已${!provider.enabled ? '启用' : '禁用'}`,
+                duration: 3000,
             })
 
             await refreshProviders()
         } catch (error: unknown) {
-            toast.add({
-                severity: 'error',
-                summary: '状态更新失败',
-                detail: errorMessage(error, '请检查网络连接或联系管理员'),
-                life: 3000,
+            toast.danger({
+                title: '状态更新失败',
+                description: errorMessage(error, '请检查网络连接或联系管理员'),
+                duration: 3000,
             })
         }
     }
@@ -144,21 +141,19 @@ export function useSsoProviders() {
                 throw new Error(response.message || '删除失败')
             }
 
-            toast.add({
-                severity: 'success',
-                summary: '删除成功',
-                detail: 'SSO 提供商已成功删除',
-                life: 3000,
+            toast.success({
+                title: '删除成功',
+                description: 'SSO 提供商已成功删除',
+                duration: 3000,
             })
 
             await refreshProviders()
             return true
         } catch (error: unknown) {
-            toast.add({
-                severity: 'error',
-                summary: '删除失败',
-                detail: errorMessage(error, '请检查网络连接或联系管理员'),
-                life: 5000,
+            toast.danger({
+                title: '删除失败',
+                description: errorMessage(error, '请检查网络连接或联系管理员'),
+                duration: 5000,
             })
             return false
         }
