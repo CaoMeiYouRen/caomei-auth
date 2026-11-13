@@ -113,16 +113,16 @@
                 <Column header="操作">
                     <template #body="{data}">
                         <div class="action-buttons">
-                            <Button
-                                v-if="data.isActive"
-                                v-tooltip.top="'撤销会话'"
-                                icon="mdi mdi-logout"
-                                text
-                                rounded
-                                severity="danger"
-                                :loading="revokingSession === data.sessionToken"
-                                @click="$emit('revoke', data)"
-                            />
+                            <BaseTooltip v-if="data.isActive" content="撤销会话">
+                                <Button
+                                    icon="mdi mdi-logout"
+                                    text
+                                    rounded
+                                    severity="danger"
+                                    :loading="revokingSession === data.sessionToken"
+                                    @click="$emit('revoke', data)"
+                                />
+                            </BaseTooltip>
                         </div>
                     </template>
                 </Column>

@@ -13,29 +13,30 @@
                 <div class="login-btn mb-4">
                     <div class="card flex justify-center">
                         <CaomeiButtonGroup group-label="快速登录方式">
-                            <CaomeiButton
-                                :variant="activeTab === 'email' ? 'primary' : 'secondary'"
-                                :aria-pressed="activeTab === 'email'"
-                                title="使用邮箱验证码登录"
-                                @click="changeTab('email')"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-email" />
-                                </template>
-                                邮箱验证码
-                            </CaomeiButton>
-                            <CaomeiButton
-                                v-if="phoneEnabled"
-                                :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
-                                :aria-pressed="activeTab === 'phone'"
-                                title="使用短信验证码登录"
-                                @click="changeTab('phone')"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-phone" />
-                                </template>
-                                短信验证码
-                            </CaomeiButton>
+                            <BaseTooltip :content="'使用邮箱验证码登录'">
+                                <CaomeiButton
+                                    :variant="activeTab === 'email' ? 'primary' : 'secondary'"
+                                    :aria-pressed="activeTab === 'email'"
+                                    @click="changeTab('email')"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-email" />
+                                    </template>
+                                    邮箱验证码
+                                </CaomeiButton>
+                            </BaseTooltip>
+                            <BaseTooltip v-if="phoneEnabled" :content="'使用短信验证码登录'">
+                                <CaomeiButton
+                                    :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
+                                    :aria-pressed="activeTab === 'phone'"
+                                    @click="changeTab('phone')"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-phone" />
+                                    </template>
+                                    短信验证码
+                                </CaomeiButton>
+                            </BaseTooltip>
                         </CaomeiButtonGroup>
                     </div>
                 </div>

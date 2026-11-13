@@ -17,16 +17,17 @@
                 >
                     草梅 Auth
                 </h2>
-                <button
-                    class="collapse-btn"
-                    :title="isCollapsed ? '展开侧边栏' : '收缩侧边栏'"
-                    @click="toggleSidebar"
-                >
-                    <i
-                        class="mdi"
-                        :class="isCollapsed ? 'mdi-menu' : 'mdi-menu-open'"
-                    />
-                </button>
+                <BaseTooltip :content="isCollapsed ? '展开侧边栏' : '收缩侧边栏'">
+                    <button
+                        class="collapse-btn"
+                        @click="toggleSidebar"
+                    >
+                        <i
+                            class="mdi"
+                            :class="isCollapsed ? 'mdi-menu' : 'mdi-menu-open'"
+                        />
+                    </button>
+                </BaseTooltip>
             </div>
 
             <nav class="sidebar-nav">
@@ -37,42 +38,46 @@
                     >
                         管理后台
                     </h3>
-                    <NuxtLink
-                        v-tooltip.right="isCollapsed ? '用户管理' : ''"
-                        to="/admin/users"
-                        class="nav-item"
-                        active-class="active"
-                    >
-                        <i class="mdi mdi-account-multiple" />
-                        <span v-show="!isCollapsed">用户管理</span>
-                    </NuxtLink>
-                    <NuxtLink
-                        v-tooltip.right="isCollapsed ? '应用管理' : ''"
-                        to="/admin/oauth/applications"
-                        class="nav-item"
-                        active-class="active"
-                    >
-                        <i class="mdi mdi-application" />
-                        <span v-show="!isCollapsed">应用管理</span>
-                    </NuxtLink>
-                    <NuxtLink
-                        v-tooltip.right="isCollapsed ? 'SSO 管理' : ''"
-                        to="/admin/sso/providers"
-                        class="nav-item"
-                        active-class="active"
-                    >
-                        <i class="mdi mdi-account-network" />
-                        <span v-show="!isCollapsed">SSO 管理</span>
-                    </NuxtLink>
-                    <NuxtLink
-                        v-tooltip.right="isCollapsed ? '登录统计' : ''"
-                        to="/admin/logs"
-                        class="nav-item"
-                        active-class="active"
-                    >
-                        <i class="mdi mdi-chart-line" />
-                        <span v-show="!isCollapsed">登录统计</span>
-                    </NuxtLink>
+                    <BaseTooltip side="right" :content="isCollapsed ? '用户管理' : ''">
+                        <NuxtLink
+                            to="/admin/users"
+                            class="nav-item"
+                            active-class="active"
+                        >
+                            <i class="mdi mdi-account-multiple" />
+                            <span v-show="!isCollapsed">用户管理</span>
+                        </NuxtLink>
+                    </BaseTooltip>
+                    <BaseTooltip side="right" :content="isCollapsed ? '应用管理' : ''">
+                        <NuxtLink
+                            to="/admin/oauth/applications"
+                            class="nav-item"
+                            active-class="active"
+                        >
+                            <i class="mdi mdi-application" />
+                            <span v-show="!isCollapsed">应用管理</span>
+                        </NuxtLink>
+                    </BaseTooltip>
+                    <BaseTooltip side="right" :content="isCollapsed ? 'SSO 管理' : ''">
+                        <NuxtLink
+                            to="/admin/sso/providers"
+                            class="nav-item"
+                            active-class="active"
+                        >
+                            <i class="mdi mdi-account-network" />
+                            <span v-show="!isCollapsed">SSO 管理</span>
+                        </NuxtLink>
+                    </BaseTooltip>
+                    <BaseTooltip side="right" :content="isCollapsed ? '登录统计' : ''">
+                        <NuxtLink
+                            to="/admin/logs"
+                            class="nav-item"
+                            active-class="active"
+                        >
+                            <i class="mdi mdi-chart-line" />
+                            <span v-show="!isCollapsed">登录统计</span>
+                        </NuxtLink>
+                    </BaseTooltip>
                 </div>
 
                 <div class="nav-section">
@@ -82,41 +87,45 @@
                     >
                         快速访问
                     </h3>
-                    <NuxtLink
-                        v-tooltip.right="isCollapsed ? '个人中心' : ''"
-                        to="/profile"
-                        class="nav-item"
-                    >
-                        <i class="mdi mdi-account-circle" />
-                        <span v-show="!isCollapsed">个人中心</span>
-                    </NuxtLink>
-                    <NuxtLink
-                        v-tooltip.right="isCollapsed ? '我的应用' : ''"
-                        to="/oauth/clients"
-                        class="nav-item"
-                    >
-                        <i class="mdi mdi-key-variant" />
-                        <span v-show="!isCollapsed">我的应用</span>
-                    </NuxtLink>
-                    <NuxtLink
-                        v-tooltip.right="isCollapsed ? '项目文档' : ''"
-                        to="https://auth-docs.cmyr.dev/"
-                        external
-                        target="_blank"
-                        class="nav-item"
-                    >
-                        <i class="mdi mdi-book-open-variant" />
-                        <span v-show="!isCollapsed">项目文档</span>
-                        <i v-show="!isCollapsed" class="external-icon mdi mdi-open-in-new" />
-                    </NuxtLink>
-                    <NuxtLink
-                        v-tooltip.right="isCollapsed ? '返回首页' : ''"
-                        to="/"
-                        class="nav-item"
-                    >
-                        <i class="mdi mdi-home" />
-                        <span v-show="!isCollapsed">返回首页</span>
-                    </NuxtLink>
+                    <BaseTooltip side="right" :content="isCollapsed ? '个人中心' : ''">
+                        <NuxtLink
+                            to="/profile"
+                            class="nav-item"
+                        >
+                            <i class="mdi mdi-account-circle" />
+                            <span v-show="!isCollapsed">个人中心</span>
+                        </NuxtLink>
+                    </BaseTooltip>
+                    <BaseTooltip side="right" :content="isCollapsed ? '我的应用' : ''">
+                        <NuxtLink
+                            to="/oauth/clients"
+                            class="nav-item"
+                        >
+                            <i class="mdi mdi-key-variant" />
+                            <span v-show="!isCollapsed">我的应用</span>
+                        </NuxtLink>
+                    </BaseTooltip>
+                    <BaseTooltip side="right" :content="isCollapsed ? '项目文档' : ''">
+                        <NuxtLink
+                            to="https://auth-docs.cmyr.dev/"
+                            external
+                            target="_blank"
+                            class="nav-item"
+                        >
+                            <i class="mdi mdi-book-open-variant" />
+                            <span v-show="!isCollapsed">项目文档</span>
+                            <i v-show="!isCollapsed" class="external-icon mdi mdi-open-in-new" />
+                        </NuxtLink>
+                    </BaseTooltip>
+                    <BaseTooltip side="right" :content="isCollapsed ? '返回首页' : ''">
+                        <NuxtLink
+                            to="/"
+                            class="nav-item"
+                        >
+                            <i class="mdi mdi-home" />
+                            <span v-show="!isCollapsed">返回首页</span>
+                        </NuxtLink>
+                    </BaseTooltip>
                 </div>
             </nav>
             <div class="sidebar-footer">

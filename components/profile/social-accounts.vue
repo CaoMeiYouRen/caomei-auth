@@ -3,20 +3,23 @@
         <label class="form-label">第三方账号</label>
         <div class="social-list">
             <!-- 已绑定的第三方账号 -->
-            <CaomeiButton
+            <BaseTooltip
                 v-for="account in userAccounts"
                 :key="account.providerId"
-                variant="secondary"
-                class="social-btn"
-                :style="{color: getProviderColor(account.providerId)}"
-                :title="privacyMode ? `点击解绑 ${getProviderName(account.providerId)} 账号，ID: ${maskUserId(account.accountId)}` : `点击解绑 ${getProviderName(account.providerId)} 账号，完整 ID: ${account.accountId}`"
-                @click="emit('unlink', account.providerId, account.accountId)"
+                :content="privacyMode ? `点击解绑 ${getProviderName(account.providerId)} 账号，ID: ${maskUserId(account.accountId)}` : `点击解绑 ${getProviderName(account.providerId)} 账号，完整 ID: ${account.accountId}`"
             >
-                <template #icon>
-                    <i :class="getProviderIcon(account.providerId)" />
-                </template>
-                {{ privacyMode ? `${getProviderName(account.providerId)}(ID: ${maskUserId(account.accountId)})` : `${getProviderName(account.providerId)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})` }}
-            </CaomeiButton>
+                <CaomeiButton
+                    variant="secondary"
+                    class="social-btn"
+                    :style="{color: getProviderColor(account.providerId)}"
+                    @click="emit('unlink', account.providerId, account.accountId)"
+                >
+                    <template #icon>
+                        <i :class="getProviderIcon(account.providerId)" />
+                    </template>
+                    {{ privacyMode ? `${getProviderName(account.providerId)}(ID: ${maskUserId(account.accountId)})` : `${getProviderName(account.providerId)}(ID: ${account.accountId.slice(0, 10)}${account.accountId.length > 10 ? '...' : ''})` }}
+                </CaomeiButton>
+            </BaseTooltip>
 
             <!-- 绑定新账号   -->
             <template v-for="provider in enabledProviders">

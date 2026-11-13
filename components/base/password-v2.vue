@@ -15,9 +15,9 @@
                 :disabled="disabled"
                 :feedback="feedback"
                 :invalid="field.invalid"
+                v-bind="$attrs"
                 :aria-labelledby="field['aria-labelledby']"
                 :aria-describedby="field['aria-describedby']"
-                v-bind="$attrs"
                 @update:model-value="$emit('update:modelValue', $event)"
             />
             <slot name="append" />

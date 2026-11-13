@@ -21,57 +21,63 @@
                 :key="session.id"
                 class="device-list-row"
             >
-                <span
+                <BaseTooltip
                     v-if="userSession?.session?.id === session.id"
-                    v-tooltip.top="'当前正在使用的会话，令牌为：' + session.id"
-                >当前会话</span>
-                <span
+                    :content="'当前正在使用的会话，令牌为：' + session.id"
+                >
+                    <span>当前会话</span>
+                </BaseTooltip>
+                <BaseTooltip
                     v-else
-                    v-tooltip.top="'会话令牌：' + session.id"
-                    data-visual-mask
-                >{{ session.id }}</span>
+                    :content="'会话令牌：' + session.id"
+                >
+                    <span data-visual-mask>{{ session.id }}</span>
+                </BaseTooltip>
                 <span>{{ session.browser }}</span>
                 <span>{{ session.os }}</span>
                 <span data-visual-mask>{{ session.ipAddress }}</span>
                 <span data-visual-mask>{{ session.createdAt }}</span>
                 <span data-visual-mask>{{ session.expiresAt }}</span>
                 <span class="device-action-col">
-                    <CaomeiButton
-                        variant="secondary"
-                        class="btn"
-                        :disabled="userSession?.session?.id === session.id"
-                        :title="userSession?.session?.id === session.id ? '无法撤销当前会话' : '点击撤销此会话'"
-                        @click="$emit('revokeSession', session.token)"
-                    >
-                        <template #icon>
-                            <i class="mdi mdi-close" />
-                        </template>
-                        撤销会话
-                    </CaomeiButton>
+                    <BaseTooltip :content="userSession?.session?.id === session.id ? '无法撤销当前会话' : '点击撤销此会话'">
+                        <CaomeiButton
+                            variant="secondary"
+                            class="btn"
+                            :disabled="userSession?.session?.id === session.id"
+                            @click="$emit('revokeSession', session.token)"
+                        >
+                            <template #icon>
+                                <i class="mdi mdi-close" />
+                            </template>
+                            撤销会话
+                        </CaomeiButton>
+                    </BaseTooltip>
                 </span>
             </li>
         </ul>
         <div class="security-actions">
-            <CaomeiButton
-                class="btn"
-                title="点击撤销除当前会话外的所有其他会话"
-                @click="$emit('revokeOtherSessions')"
-            >
-                <template #icon>
-                    <i class="mdi mdi-logout-variant" />
-                </template>
-                撤销其他会话
-            </CaomeiButton>
-            <CaomeiButton
-                class="btn"
-                title="注意：点击撤销所有会话，包括当前会话！"
-                @click="$emit('revokeAllSessions')"
-            >
-                <template #icon>
-                    <i class="mdi mdi-logout-variant" />
-                </template>
-                撤销所有会话
-            </CaomeiButton>
+            <BaseTooltip content="点击撤销除当前会话外的所有其他会话">
+                <CaomeiButton
+                    class="btn"
+                    @click="$emit('revokeOtherSessions')"
+                >
+                    <template #icon>
+                        <i class="mdi mdi-logout-variant" />
+                    </template>
+                    撤销其他会话
+                </CaomeiButton>
+            </BaseTooltip>
+            <BaseTooltip content="注意：点击撤销所有会话，包括当前会话！">
+                <CaomeiButton
+                    class="btn"
+                    @click="$emit('revokeAllSessions')"
+                >
+                    <template #icon>
+                        <i class="mdi mdi-logout-variant" />
+                    </template>
+                    撤销所有会话
+                </CaomeiButton>
+            </BaseTooltip>
         </div>
 
         <!-- 撤销单个会话确认对话框 -->

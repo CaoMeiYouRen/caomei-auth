@@ -1,21 +1,22 @@
 <template>
-    <CaomeiButton
-        class="theme-toggle"
-        type="button"
-        :label="buttonLabel"
-        :aria-pressed="effectiveDark"
-        :title="buttonLabel"
-        icon-only
-        @click="toggle()"
-    >
-        <template #icon>
-            <i
-                class="mdi"
-                :class="iconClass"
-                aria-hidden="true"
-            />
-        </template>
-    </CaomeiButton>
+    <BaseTooltip :content="buttonLabel">
+        <CaomeiButton
+            class="theme-toggle"
+            type="button"
+            :label="buttonLabel"
+            :aria-pressed="effectiveDark"
+            icon-only
+            @click="toggle()"
+        >
+            <template #icon>
+                <i
+                    class="mdi"
+                    :class="iconClass"
+                    aria-hidden="true"
+                />
+            </template>
+        </CaomeiButton>
+    </BaseTooltip>
 </template>
 
 <script setup lang="ts">

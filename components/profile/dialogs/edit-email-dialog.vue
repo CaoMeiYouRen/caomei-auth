@@ -3,13 +3,14 @@
         v-model:visible="visible"
         :title="user.emailVerified ? '修改邮箱' : '绑定邮箱'"
     >
-        <BaseInputV2
-            id="email"
-            v-model="email"
-            placeholder="请输入新邮箱"
-            :error="errors.email"
-            title="输入新的邮箱地址"
-        />
+        <BaseTooltip content="输入新的邮箱地址">
+            <BaseInputV2
+                id="email"
+                v-model="email"
+                placeholder="请输入新邮箱"
+                :error="errors.email"
+            />
+        </BaseTooltip>
         <Captcha ref="emailCaptcha" />
         <CaomeiMessage
             v-if="emailCaptchaError"
@@ -20,15 +21,16 @@
             {{ emailCaptchaError }}
         </CaomeiMessage>
         <div class="form-group">
-            <CaomeiButton
-                class="btn btn-primary w-full"
-                block
-                :loading="bindingEmail"
-                title="点击发送验证链接到新邮箱"
-                @click="bindEmail"
-            >
-                发送验证链接
-            </CaomeiButton>
+            <BaseTooltip content="点击发送验证链接到新邮箱">
+                <CaomeiButton
+                    class="btn btn-primary w-full"
+                    block
+                    :loading="bindingEmail"
+                    @click="bindEmail"
+                >
+                    发送验证链接
+                </CaomeiButton>
+            </BaseTooltip>
         </div>
     </BaseDialogV2>
 </template>

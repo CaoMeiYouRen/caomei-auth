@@ -4,32 +4,34 @@
         :title="user.phoneVerified ? '修改手机号' : '绑定手机号'"
     >
         <div class="form-group">
-            <BasePhoneInputV2
-                id="phone"
-                v-model="phone"
-                placeholder="请输入新手机号"
-                :error="errors.phone"
-                title="输入新的手机号"
-            />
-        </div>
-        <BaseInputV2
-            id="phoneCode"
-            v-model="phoneCode"
-            placeholder="验证码"
-            :error="errors.code"
-            title="输入收到的短信验证码"
-        >
-            <template #append>
-                <SendCodeButtonV2
-                    :on-send="sendPhoneCode"
-                    :duration="60"
-                    :disabled="phoneCodeSending || !!errors.phone"
-                    :loading="phoneCodeSending"
-                    text="发送验证码"
-                    resend-text="重新发送"
+            <BaseTooltip content="输入新的手机号">
+                <BasePhoneInputV2
+                    id="phone"
+                    v-model="phone"
+                    placeholder="请输入新手机号"
+                    :error="errors.phone"
                 />
-            </template>
-        </BaseInputV2>
+            </BaseTooltip>
+        </div>
+        <BaseTooltip content="输入收到的短信验证码">
+            <BaseInputV2
+                id="phoneCode"
+                v-model="phoneCode"
+                placeholder="验证码"
+                :error="errors.code"
+            >
+                <template #append>
+                    <SendCodeButtonV2
+                        :on-send="sendPhoneCode"
+                        :duration="60"
+                        :disabled="phoneCodeSending || !!errors.phone"
+                        :loading="phoneCodeSending"
+                        text="发送验证码"
+                        resend-text="重新发送"
+                    />
+                </template>
+            </BaseInputV2>
+        </BaseTooltip>
         <Captcha ref="phoneCaptcha" />
         <CaomeiMessage
             v-if="errors.captcha"
@@ -40,15 +42,16 @@
             {{ errors.captcha }}
         </CaomeiMessage>
         <div class="form-group">
-            <CaomeiButton
-                class="btn btn-primary w-full"
-                block
-                :loading="bindingPhone"
-                title="点击确认修改手机号信息"
-                @click="bindPhone"
-            >
-                确认修改
-            </CaomeiButton>
+            <BaseTooltip content="点击确认修改手机号信息">
+                <CaomeiButton
+                    class="btn btn-primary w-full"
+                    block
+                    :loading="bindingPhone"
+                    @click="bindPhone"
+                >
+                    确认修改
+                </CaomeiButton>
+            </BaseTooltip>
         </div>
     </BaseDialogV2>
 </template>

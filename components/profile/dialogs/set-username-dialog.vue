@@ -3,23 +3,25 @@
         v-model:visible="visible"
         title="设置用户名"
     >
-        <BaseInputV2
-            id="newUsername"
-            v-model="newUsername"
-            placeholder="请输入新用户名"
-            :error="errors.username"
-            title="输入新的用户名，用于用户名密码登录"
-        />
+        <BaseTooltip content="输入新的用户名，用于用户名密码登录">
+            <BaseInputV2
+                id="newUsername"
+                v-model="newUsername"
+                placeholder="请输入新用户名"
+                :error="errors.username"
+            />
+        </BaseTooltip>
         <div class="form-group">
-            <CaomeiButton
-                class="btn btn-primary w-full"
-                block
-                :loading="isSettingUsername"
-                title="点击确认设置新的用户名"
-                @click="setUsername"
-            >
-                确认设置
-            </CaomeiButton>
+            <BaseTooltip content="点击确认设置新的用户名">
+                <CaomeiButton
+                    class="btn btn-primary w-full"
+                    block
+                    :loading="isSettingUsername"
+                    @click="setUsername"
+                >
+                    确认设置
+                </CaomeiButton>
+            </BaseTooltip>
         </div>
     </BaseDialogV2>
 </template>

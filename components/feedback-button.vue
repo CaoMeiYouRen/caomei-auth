@@ -4,17 +4,18 @@
         class="feedback-button-container"
         :class="{inline: variant === 'inline'}"
     >
-        <NuxtLink
-            :to="feedbackUrl"
-            external
-            target="_blank"
-            class="feedback-button"
-            :title="title"
-            :aria-label="title"
-        >
-            <i v-tooltip.top="text" class="mdi mdi-message-text-outline" />
-            <!-- <span class="feedback-text">{{ text }}</span> -->
-        </NuxtLink>
+        <BaseTooltip :content="text">
+            <NuxtLink
+                :to="feedbackUrl"
+                external
+                target="_blank"
+                class="feedback-button"
+                :aria-label="title"
+            >
+                <i class="mdi mdi-message-text-outline" />
+                <!-- <span class="feedback-text">{{ text }}</span> -->
+            </NuxtLink>
+        </BaseTooltip>
     </div>
 </template>
 

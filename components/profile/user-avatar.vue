@@ -1,13 +1,30 @@
 <template>
     <div class="avatar-block">
-        <CaomeiImage
-            class="avatar-image"
-            :src="showAvatar"
-            alt="avatar"
-            preview
-            fit="cover"
-            ratio="1"
-        />
+        <div class="avatar-block__media">
+            <CaomeiImage
+                class="avatar-block__image"
+                :src="showAvatar"
+                alt="avatar"
+                preview
+                fit="cover"
+                ratio="1"
+            />
+            <BaseTooltip content="点击上传新的头像">
+                <CaomeiButton
+                    class="avatar-block__upload"
+                    variant="secondary"
+                    size="sm"
+                    icon-only
+                    rounded
+                    label="上传头像"
+                    @click="onSelectAvatar"
+                >
+                    <template #icon>
+                        <i class="mdi mdi-camera" />
+                    </template>
+                </CaomeiButton>
+            </BaseTooltip>
+        </div>
         <input
             ref="fileinput"
             type="file"
@@ -15,20 +32,6 @@
             hidden
             @change="onFileSelect"
         >
-        <CaomeiButton
-            class="avatar-btn"
-            variant="secondary"
-            size="sm"
-            icon-only
-            rounded
-            label="上传头像"
-            title="点击上传新的头像"
-            @click="onSelectAvatar"
-        >
-            <template #icon>
-                <i class="mdi mdi-camera" />
-            </template>
-        </CaomeiButton>
     </div>
 </template>
 
@@ -118,21 +121,46 @@ async function onFileSelect(event: Event) {
 .avatar-block {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
     margin-bottom: 1.5rem;
-    position: relative;
 
-    .avatar-image {
+    &__media {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        flex: none;
+    }
+
+    &__image {
         width: 96px;
         height: 96px;
         overflow: hidden;
         border-radius: 50%;
     }
 
-    .avatar-btn {
+    &__upload {
         position: absolute;
-        bottom: -13px;
-        left: 38px;
+        right: 0;
+        bottom: 0;
+
+        /* 从 28px 档位再收一档，避免遮挡头像；描边与卡片底色一致 */
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        box-shadow: 0 0 0 2px var(--background-light);
+
+        /* 视觉保持 24px，用伪元素把命中区扩到 32px（WCAG 2.5.8 下限）；
+         * 副作用：头像右下 4px 环从「预览」变为「上传」，与可见按钮边界一致 */
+        &::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+        }
+
+        :deep(.mdi) {
+            font-size: 0.875rem;
+            line-height: 1;
+        }
     }
 }
 </style>

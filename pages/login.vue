@@ -12,45 +12,45 @@
                 <div class="login-btn mb-4">
                     <div class="card flex justify-center">
                         <CaomeiButtonGroup group-label="登录方式">
-                            <CaomeiButton
-                                v-if="usernameEnabled"
-                                :variant="activeTab === 'username' ? 'primary' : 'secondary'"
-                                :aria-pressed="activeTab === 'username'"
-                                title="使用用户名登录"
-                                @click="changeMode('username')"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-account" />
-                                </template>
-                                用户名
-                            </CaomeiButton>
-                            <CaomeiButton
-                                :variant="activeTab === 'email' ? 'primary' : 'secondary'"
-                                :aria-pressed="activeTab === 'email'"
-                                title="使用邮箱登录"
-                                @click="changeMode('email')"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-email" />
-                                </template>
-                                邮箱
-                            </CaomeiButton>
-                            <CaomeiButton
-                                v-if="phoneEnabled"
-                                :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
-                                :aria-pressed="activeTab === 'phone'"
-                                title="使用手机号登录"
-                                @click="changeMode('phone')"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-phone" />
-                                </template>
-                                手机号
-                            </CaomeiButton>
+                            <BaseTooltip v-if="usernameEnabled" :content="'使用用户名登录'">
+                                <CaomeiButton
+                                    :variant="activeTab === 'username' ? 'primary' : 'secondary'"
+                                    :aria-pressed="activeTab === 'username'"
+                                    @click="changeMode('username')"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-account" />
+                                    </template>
+                                    用户名
+                                </CaomeiButton>
+                            </BaseTooltip>
+                            <BaseTooltip :content="'使用邮箱登录'">
+                                <CaomeiButton
+                                    :variant="activeTab === 'email' ? 'primary' : 'secondary'"
+                                    :aria-pressed="activeTab === 'email'"
+                                    @click="changeMode('email')"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-email" />
+                                    </template>
+                                    邮箱
+                                </CaomeiButton>
+                            </BaseTooltip>
+                            <BaseTooltip v-if="phoneEnabled" :content="'使用手机号登录'">
+                                <CaomeiButton
+                                    :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
+                                    :aria-pressed="activeTab === 'phone'"
+                                    @click="changeMode('phone')"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-phone" />
+                                    </template>
+                                    手机号
+                                </CaomeiButton>
+                            </BaseTooltip>
                         </CaomeiButtonGroup>
                     </div>
                 </div>
-                <!-- 邮箱登录表单 -->
                 <div v-show="activeTab === 'email'">
                     <BaseInputV2
                         id="email"
@@ -168,12 +168,13 @@
                     </div>
                 </div>
                 <div class="remember-me">
-                    <CaomeiCheckbox
-                        id="remember"
-                        v-model="rememberMe"
-                        text="记住我"
-                        title="勾选后下次登录将自动填充您的账号信息"
-                    />
+                    <BaseTooltip :content="'勾选后下次登录将自动填充您的账号信息'">
+                        <CaomeiCheckbox
+                            id="remember"
+                            v-model="rememberMe"
+                            text="记住我"
+                        />
+                    </BaseTooltip>
                 </div>
                 <Captcha v-show="(activeTab === 'email' && emailUseCode) || (activeTab === 'phone' && phoneUseCode)" ref="captcha" />
                 <div v-if="errors.captcha" class="captcha-error error-message">
@@ -208,24 +209,29 @@
                 </div>
 
                 <template v-if="socialProviders.length">
-                    <div class="separator" title="如果第三方账号未在本站注册，将会注册新的账号">
-                        或者使用以下方式登录
-                    </div>
+                    <BaseTooltip content="如果第三方账号未在本站注册，将会注册新的账号">
+                        <div class="separator">
+                            或者使用以下方式登录
+                        </div>
+                    </BaseTooltip>
                     <div class="social-login">
-                        <CaomeiButton
+                        <BaseTooltip
                             v-for="provider in socialProviders"
                             :key="provider.provider"
-                            :title="provider.tooltip"
-                            class="social-btn"
-                            :style="{'--social-color': provider.color, '--social-color-dark': provider.colorDark}"
-                            variant="secondary"
-                            @click="loginWithSocial(provider)"
+                            :content="provider.tooltip"
                         >
-                            <template #icon>
-                                <i :class="provider.icon || `mdi mdi-${provider.provider}`" />
-                            </template>
-                            {{ provider.label || `使用 ${provider.name} 账号登录` }}
-                        </CaomeiButton>
+                            <CaomeiButton
+                                class="social-btn"
+                                :style="{'--social-color': provider.color, '--social-color-dark': provider.colorDark}"
+                                variant="secondary"
+                                @click="loginWithSocial(provider)"
+                            >
+                                <template #icon>
+                                    <i :class="provider.icon || `mdi mdi-${provider.provider}`" />
+                                </template>
+                                {{ provider.label || `使用 ${provider.name} 账号登录` }}
+                            </CaomeiButton>
+                        </BaseTooltip>
                     </div>
                 </template>
                 <div class="toggle-login">
@@ -282,14 +288,15 @@
                         </p>
                         <div class="field">
                             <div class="code-row">
-                                <CaomeiInput
-                                    v-model="twoFactorCode"
-                                    class="w-full"
-                                    aria-label="一次性验证码"
-                                    placeholder="请输入验证码"
-                                    title="请输入一次性验证码"
-                                    @enter="verify2FA"
-                                />
+                                <BaseTooltip :content="'请输入一次性验证码'">
+                                    <CaomeiInput
+                                        v-model="twoFactorCode"
+                                        class="w-full"
+                                        aria-label="一次性验证码"
+                                        placeholder="请输入验证码"
+                                        @enter="verify2FA"
+                                    />
+                                </BaseTooltip>
                                 <SendCodeButtonV2
                                     :disabled="otpSending"
                                     :loading="otpSending"
@@ -306,14 +313,15 @@
                             如果您失去对手机或电子邮件的访问权限，可以使用备份码验证身份。
                         </p>
                         <div class="field">
-                            <CaomeiInput
-                                v-model="twoFactorCode"
-                                class="w-full"
-                                aria-label="备份码"
-                                placeholder="请输入备份码"
-                                title="请输入您的备份码"
-                                @enter="verify2FA"
-                            />
+                            <BaseTooltip :content="'请输入您的备份码'">
+                                <CaomeiInput
+                                    v-model="twoFactorCode"
+                                    class="w-full"
+                                    aria-label="备份码"
+                                    placeholder="请输入备份码"
+                                    @enter="verify2FA"
+                                />
+                            </BaseTooltip>
                         </div>
                     </CaomeiTabContent>
                 </CaomeiTabs>

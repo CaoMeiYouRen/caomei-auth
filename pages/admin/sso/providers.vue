@@ -63,18 +63,19 @@
                                 show-clear
                             />
                         </div>
-                        <CaomeiButton
-                            icon-only
-                            variant="secondary"
-                            label="刷新"
-                            title="刷新"
-                            :loading="loading"
-                            @click="handleRefreshProviders"
-                        >
-                            <template #icon>
-                                <i class="mdi mdi-refresh" aria-hidden="true" />
-                            </template>
-                        </CaomeiButton>
+                        <BaseTooltip :content="'刷新'">
+                            <CaomeiButton
+                                icon-only
+                                variant="secondary"
+                                label="刷新"
+                                :loading="loading"
+                                @click="handleRefreshProviders"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-refresh" aria-hidden="true" />
+                                </template>
+                            </CaomeiButton>
+                        </BaseTooltip>
                     </div>
                 </div>
             </div>
@@ -150,55 +151,59 @@
 
                     <template #cell-actions="{row}">
                         <div class="action-buttons">
-                            <CaomeiButton
-                                icon-only
-                                variant="ghost"
-                                tone="primary"
-                                label="查看详情"
-                                title="查看详情"
-                                @click="openViewDialog(row)"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-eye" aria-hidden="true" />
-                                </template>
-                            </CaomeiButton>
-                            <CaomeiButton
-                                icon-only
-                                variant="ghost"
-                                tone="warning"
-                                label="编辑"
-                                title="编辑"
-                                @click="openEditDialog(row)"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-pencil" aria-hidden="true" />
-                                </template>
-                            </CaomeiButton>
-                            <CaomeiButton
-                                icon-only
-                                variant="ghost"
-                                :tone="row.enabled ? 'warning' : 'success'"
-                                :label="row.enabled ? '禁用' : '启用'"
-                                :title="row.enabled ? '禁用' : '启用'"
-                                :loading="togglingId === row.id"
-                                @click="handleToggleStatus(row)"
-                            >
-                                <template #icon>
-                                    <i :class="row.enabled ? 'mdi mdi-pause' : 'mdi mdi-play'" aria-hidden="true" />
-                                </template>
-                            </CaomeiButton>
-                            <CaomeiButton
-                                icon-only
-                                variant="ghost"
-                                tone="danger"
-                                label="删除"
-                                title="删除"
-                                @click="openDeleteDialog(row)"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-delete" aria-hidden="true" />
-                                </template>
-                            </CaomeiButton>
+                            <BaseTooltip :content="'查看详情'">
+                                <CaomeiButton
+                                    icon-only
+                                    variant="ghost"
+                                    tone="primary"
+                                    label="查看详情"
+                                    @click="openViewDialog(row)"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-eye" aria-hidden="true" />
+                                    </template>
+                                </CaomeiButton>
+                            </BaseTooltip>
+                            <BaseTooltip :content="'编辑'">
+                                <CaomeiButton
+                                    icon-only
+                                    variant="ghost"
+                                    tone="warning"
+                                    label="编辑"
+                                    @click="openEditDialog(row)"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-pencil" aria-hidden="true" />
+                                    </template>
+                                </CaomeiButton>
+                            </BaseTooltip>
+                            <BaseTooltip :content="row.enabled ? '禁用' : '启用'">
+                                <CaomeiButton
+                                    icon-only
+                                    variant="ghost"
+                                    :tone="row.enabled ? 'warning' : 'success'"
+                                    :label="row.enabled ? '禁用' : '启用'"
+                                    :loading="togglingId === row.id"
+                                    @click="handleToggleStatus(row)"
+                                >
+                                    <template #icon>
+                                        <i :class="row.enabled ? 'mdi mdi-pause' : 'mdi mdi-play'" aria-hidden="true" />
+                                    </template>
+                                </CaomeiButton>
+                            </BaseTooltip>
+                            <BaseTooltip :content="'删除'">
+                                <CaomeiButton
+                                    icon-only
+                                    variant="ghost"
+                                    tone="danger"
+                                    label="删除"
+                                    @click="openDeleteDialog(row)"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-delete" aria-hidden="true" />
+                                    </template>
+                                </CaomeiButton>
+                            </BaseTooltip>
                         </div>
                     </template>
                 </CaomeiDataTable>

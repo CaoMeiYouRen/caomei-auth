@@ -12,128 +12,136 @@
                 <div class="forgot-btn mb-4">
                     <div class="card flex justify-center">
                         <CaomeiButtonGroup group-label="找回密码方式">
-                            <CaomeiButton
-                                :variant="activeTab === 'email' ? 'primary' : 'secondary'"
-                                :aria-pressed="activeTab === 'email'"
-                                title="使用邮箱找回密码"
-                                @click="changeMode('email')"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-email" />
-                                </template>
-                                邮箱
-                            </CaomeiButton>
-                            <CaomeiButton
-                                v-if="phoneEnabled"
-                                :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
-                                :aria-pressed="activeTab === 'phone'"
-                                title="使用手机号找回密码"
-                                @click="changeMode('phone')"
-                            >
-                                <template #icon>
-                                    <i class="mdi mdi-phone" />
-                                </template>
-                                手机号
-                            </CaomeiButton>
+                            <BaseTooltip :content="'使用邮箱找回密码'">
+                                <CaomeiButton
+                                    :variant="activeTab === 'email' ? 'primary' : 'secondary'"
+                                    :aria-pressed="activeTab === 'email'"
+                                    @click="changeMode('email')"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-email" />
+                                    </template>
+                                    邮箱
+                                </CaomeiButton>
+                            </BaseTooltip>
+                            <BaseTooltip v-if="phoneEnabled" :content="'使用手机号找回密码'">
+                                <CaomeiButton
+                                    :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
+                                    :aria-pressed="activeTab === 'phone'"
+                                    @click="changeMode('phone')"
+                                >
+                                    <template #icon>
+                                        <i class="mdi mdi-phone" />
+                                    </template>
+                                    手机号
+                                </CaomeiButton>
+                            </BaseTooltip>
                         </CaomeiButtonGroup>
                     </div>
                 </div>
                 <!-- 邮箱找回密码表单 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseInputV2
-                        id="email"
-                        v-model="email"
-                        label="邮箱"
-                        placeholder="请输入邮箱"
-                        :error="errors.email"
-                        title="请输入注册时使用的邮箱地址"
-                    />
-                    <BaseInputV2
-                        id="emailCode"
-                        v-model="emailCode"
-                        label="邮箱验证码"
-                        placeholder="请输入邮箱验证码"
-                        :error="errors.emailCode"
-                        title="请输入发送到您邮箱的验证码"
-                    >
-                        <template #append>
-                            <SendCodeButtonV2
-                                :on-send="sendEmailCode"
-                                :duration="60"
-                                :disabled="!canSendEmailCode"
-                                :loading="emailCodeSending"
-                                text="获取验证码"
-                                resend-text="重新发送"
-                            />
-                        </template>
-                    </BaseInputV2>
+                    <BaseTooltip :content="'请输入注册时使用的邮箱地址'">
+                        <BaseInputV2
+                            id="email"
+                            v-model="email"
+                            label="邮箱"
+                            placeholder="请输入邮箱"
+                            :error="errors.email"
+                        />
+                    </BaseTooltip>
+                    <BaseTooltip :content="'请输入发送到您邮箱的验证码'">
+                        <BaseInputV2
+                            id="emailCode"
+                            v-model="emailCode"
+                            label="邮箱验证码"
+                            placeholder="请输入邮箱验证码"
+                            :error="errors.emailCode"
+                        >
+                            <template #append>
+                                <SendCodeButtonV2
+                                    :on-send="sendEmailCode"
+                                    :duration="60"
+                                    :disabled="!canSendEmailCode"
+                                    :loading="emailCodeSending"
+                                    text="获取验证码"
+                                    resend-text="重新发送"
+                                />
+                            </template>
+                        </BaseInputV2>
+                    </BaseTooltip>
                 </div>
                 <!-- 手机号找回密码表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <BasePhoneInputV2
-                        id="phone"
-                        v-model="phone"
-                        label="手机号"
-                        :error="errors.phone"
-                        title="请输入注册时使用的手机号"
-                    />
-                    <BaseInputV2
-                        id="phoneCode"
-                        v-model="phoneCode"
-                        label="短信验证码"
-                        placeholder="请输入短信验证码"
-                        :error="errors.phoneCode"
-                        title="请输入发送到您手机的短信验证码"
+                    <BaseTooltip :content="'请输入注册时使用的手机号'">
+                        <BasePhoneInputV2
+                            id="phone"
+                            v-model="phone"
+                            label="手机号"
+                            :error="errors.phone"
+                        />
+                    </BaseTooltip>
+                    <BaseTooltip :content="'请输入发送到您手机的短信验证码'">
+                        <BaseInputV2
+                            id="phoneCode"
+                            v-model="phoneCode"
+                            label="短信验证码"
+                            placeholder="请输入短信验证码"
+                            :error="errors.phoneCode"
+                        >
+                            <template #append>
+                                <SendCodeButtonV2
+                                    :on-send="sendPhoneCode"
+                                    :duration="60"
+                                    :disabled="!canSendPhoneCode"
+                                    :loading="phoneCodeSending"
+                                    text="获取验证码"
+                                    resend-text="重新发送"
+                                />
+                            </template>
+                        </BaseInputV2>
+                    </BaseTooltip>
+                </div>
+                <BaseTooltip :content="getPasswordRequirementsShort()">
+                    <BasePasswordV2
+                        id="newPassword"
+                        v-model="newPassword"
+                        label="新密码"
+                        placeholder="请输入新密码"
+                        :feedback="false"
+                        :error="errors.newPassword"
                     >
                         <template #append>
-                            <SendCodeButtonV2
-                                :on-send="sendPhoneCode"
-                                :duration="60"
-                                :disabled="!canSendPhoneCode"
-                                :loading="phoneCodeSending"
-                                text="获取验证码"
-                                resend-text="重新发送"
+                            <PasswordStrength
+                                :show-strength="!!newPassword"
+                                :password="newPassword"
+                                :show-score="false"
+                                :min-length-for-display="1"
                             />
                         </template>
-                    </BaseInputV2>
-                </div>
-                <BasePasswordV2
-                    id="newPassword"
-                    v-model="newPassword"
-                    label="新密码"
-                    placeholder="请输入新密码"
-                    :feedback="false"
-                    :error="errors.newPassword"
-                    :title="getPasswordRequirementsShort()"
-                >
-                    <template #append>
-                        <PasswordStrength
-                            :show-strength="!!newPassword"
-                            :password="newPassword"
-                            :show-score="false"
-                            :min-length-for-display="1"
-                        />
-                    </template>
-                </BasePasswordV2>
-                <BasePasswordV2
-                    id="confirmPassword"
-                    v-model="confirmPassword"
-                    label="确认新密码"
-                    placeholder="请再次输入新密码"
-                    :feedback="false"
-                    :error="errors.confirmPassword"
-                    title="请再次输入相同的新密码以确认"
-                />
+                    </BasePasswordV2>
+                </BaseTooltip>
+                <BaseTooltip :content="'请再次输入相同的新密码以确认'">
+                    <BasePasswordV2
+                        id="confirmPassword"
+                        v-model="confirmPassword"
+                        label="确认新密码"
+                        placeholder="请再次输入新密码"
+                        :feedback="false"
+                        :error="errors.confirmPassword"
+                    />
+                </BaseTooltip>
                 <Captcha ref="captcha" />
                 <div class="form-group">
-                    <CaomeiButton
-                        class="btn btn-primary mt-2"
-                        block
-                        title="点击提交信息重置密码"
-                        @click="resetPassword"
-                    >
-                        重置密码
-                    </CaomeiButton>
+                    <BaseTooltip :content="'点击提交信息重置密码'">
+                        <CaomeiButton
+                            class="btn btn-primary mt-2"
+                            block
+                            @click="resetPassword"
+                        >
+                            重置密码
+                        </CaomeiButton>
+                    </BaseTooltip>
                 </div>
                 <div class="toggle-login">
                     已有账号？ <NuxtLink

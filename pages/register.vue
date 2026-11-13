@@ -21,164 +21,175 @@
                             </template>
                             邮箱
                         </CaomeiButton>
-                        <CaomeiButton
-                            v-if="phoneEnabled"
-                            :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
-                            :aria-pressed="activeTab === 'phone'"
-                            title="使用手机号注册"
-                            @click="changeMode('phone')"
-                        >
-                            <template #icon>
-                                <i class="mdi mdi-phone" />
-                            </template>
-                            手机号
-                        </CaomeiButton>
+                        <BaseTooltip v-if="phoneEnabled" :content="'使用手机号注册'">
+                            <CaomeiButton
+                                :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
+                                :aria-pressed="activeTab === 'phone'"
+                                @click="changeMode('phone')"
+                            >
+                                <template #icon>
+                                    <i class="mdi mdi-phone" />
+                                </template>
+                                手机号
+                            </CaomeiButton>
+                        </BaseTooltip>
                     </CaomeiButtonGroup>
                 </div>
 
                 <!-- 邮箱注册表单 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseInputV2
-                        id="emailNickname"
-                        v-model="nickname"
-                        label="昵称"
-                        placeholder="请输入昵称"
-                        :error="errors.nickname"
-                        required
-                        title="昵称长度为2到36个字符，不能包含特殊控制字符。昵称将用于展示"
-                    />
-                    <div v-if="usernameEnabled">
+                    <BaseTooltip :content="'昵称长度为2到36个字符，不能包含特殊控制字符。昵称将用于展示'">
                         <BaseInputV2
-                            id="emailUsername"
-                            v-model="username"
-                            label="用户名"
-                            placeholder="请输入用户名"
-                            :error="errors.username"
+                            id="emailNickname"
+                            v-model="nickname"
+                            label="昵称"
+                            placeholder="请输入昵称"
+                            :error="errors.nickname"
                             required
-                            title="用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。用户名将用于登录"
                         />
-                    </div>
-                    <BaseInputV2
-                        id="email"
-                        v-model="email"
-                        label="邮箱"
-                        placeholder="example@mail.com"
-                        :error="errors.email"
-                        required
-                        title="请输入有效的邮箱地址，用于接收验证邮件"
-                    />
-                    <BasePasswordV2
-                        id="password"
-                        v-model="password"
-                        label="密码"
-                        placeholder="请输入密码"
-                        :error="errors.password"
-                        required
-                        :feedback="false"
-                        :title="getPasswordRequirementsShort()"
-                    >
-                        <template #append>
-                            <PasswordStrength
-                                :show-strength="!!password"
-                                :password="password"
-                                :show-score="false"
-                                :min-length-for-display="1"
+                    </BaseTooltip>
+                    <div v-if="usernameEnabled">
+                        <BaseTooltip :content="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。用户名将用于登录'">
+                            <BaseInputV2
+                                id="emailUsername"
+                                v-model="username"
+                                label="用户名"
+                                placeholder="请输入用户名"
+                                :error="errors.username"
+                                required
                             />
-                        </template>
-                    </BasePasswordV2>
-                    <BasePasswordV2
-                        id="confirmPassword"
-                        v-model="confirmPassword"
-                        label="确认密码"
-                        placeholder="请再次输入密码"
-                        :error="errors.confirmPassword"
-                        required
-                        :feedback="false"
-                        title="请再次输入相同的密码以确认"
-                    />
+                        </BaseTooltip>
+                    </div>
+                    <BaseTooltip :content="'请输入有效的邮箱地址，用于接收验证邮件'">
+                        <BaseInputV2
+                            id="email"
+                            v-model="email"
+                            label="邮箱"
+                            placeholder="example@mail.com"
+                            :error="errors.email"
+                            required
+                        />
+                    </BaseTooltip>
+                    <BaseTooltip :content="getPasswordRequirementsShort()">
+                        <BasePasswordV2
+                            id="password"
+                            v-model="password"
+                            label="密码"
+                            placeholder="请输入密码"
+                            :error="errors.password"
+                            required
+                            :feedback="false"
+                        >
+                            <template #append>
+                                <PasswordStrength
+                                    :show-strength="!!password"
+                                    :password="password"
+                                    :show-score="false"
+                                    :min-length-for-display="1"
+                                />
+                            </template>
+                        </BasePasswordV2>
+                    </BaseTooltip>
+                    <BaseTooltip :content="'请再次输入相同的密码以确认'">
+                        <BasePasswordV2
+                            id="confirmPassword"
+                            v-model="confirmPassword"
+                            label="确认密码"
+                            placeholder="请再次输入密码"
+                            :error="errors.confirmPassword"
+                            required
+                            :feedback="false"
+                        />
+                    </BaseTooltip>
                 </div>
 
                 <!-- 手机号注册表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <BaseInputV2
-                        id="phoneNickname"
-                        v-model="nickname"
-                        label="昵称"
-                        placeholder="请输入昵称"
-                        :error="errors.nickname"
-                        required
-                        title="昵称长度为2到36个字符，不能包含特殊字符。昵称将用于展示"
-                    />
-                    <div v-if="usernameEnabled">
+                    <BaseTooltip :content="'昵称长度为2到36个字符，不能包含特殊字符。昵称将用于展示'">
                         <BaseInputV2
-                            id="phoneUsername"
-                            v-model="username"
-                            label="用户名"
-                            placeholder="请输入用户名"
-                            :error="errors.username"
+                            id="phoneNickname"
+                            v-model="nickname"
+                            label="昵称"
+                            placeholder="请输入昵称"
+                            :error="errors.nickname"
                             required
-                            title="用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。用户名将用于登录"
                         />
-                    </div>
-                    <BasePhoneInputV2
-                        id="phone"
-                        v-model="phone"
-                        label="手机号"
-                        :error="errors.phone"
-                        required
-                        title="请输入有效的手机号，用于接收短信验证码"
-                    />
-                    <BaseInputV2
-                        id="phoneCode"
-                        v-model="phoneCode"
-                        label="短信验证码"
-                        placeholder="请输入短信验证码"
-                        :error="errors.phoneCode"
-                        required
-                        title="请输入发送到您手机的短信验证码"
-                    >
-                        <template #append>
-                            <SendCodeButtonV2
-                                :on-send="sendPhoneCode"
-                                :duration="60"
-                                :disabled="phoneCodeSending || !validatePhone(phone)"
-                                :loading="phoneCodeSending"
-                                text="获取验证码"
-                                resend-text="重新发送"
-                                title="点击获取短信验证码，验证码将发送到您输入的手机号"
+                    </BaseTooltip>
+                    <div v-if="usernameEnabled">
+                        <BaseTooltip :content="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。用户名将用于登录'">
+                            <BaseInputV2
+                                id="phoneUsername"
+                                v-model="username"
+                                label="用户名"
+                                placeholder="请输入用户名"
+                                :error="errors.username"
+                                required
                             />
-                        </template>
-                    </BaseInputV2>
+                        </BaseTooltip>
+                    </div>
+                    <BaseTooltip :content="'请输入有效的手机号，用于接收短信验证码'">
+                        <BasePhoneInputV2
+                            id="phone"
+                            v-model="phone"
+                            label="手机号"
+                            :error="errors.phone"
+                            required
+                        />
+                    </BaseTooltip>
+                    <BaseTooltip :content="'请输入发送到您手机的短信验证码'">
+                        <BaseInputV2
+                            id="phoneCode"
+                            v-model="phoneCode"
+                            label="短信验证码"
+                            placeholder="请输入短信验证码"
+                            :error="errors.phoneCode"
+                            required
+                        >
+                            <template #append>
+                                <BaseTooltip content="点击获取短信验证码，验证码将发送到您输入的手机号">
+                                    <SendCodeButtonV2
+                                        :on-send="sendPhoneCode"
+                                        :duration="60"
+                                        :disabled="phoneCodeSending || !validatePhone(phone)"
+                                        :loading="phoneCodeSending"
+                                        text="获取验证码"
+                                        resend-text="重新发送"
+                                    />
+                                </BaseTooltip>
+                            </template>
+                        </BaseInputV2>
+                    </BaseTooltip>
                 </div>
 
                 <!-- 用户协议和隐私政策 -->
                 <div class="agreement-section form-group">
-                    <CaomeiCheckbox
-                        id="agreement"
-                        v-model="agreedToTerms"
-                        title="勾选表示您已阅读并同意服务条款和隐私政策"
-                    >
-                        <span class="checkbox-label">
-                            我已阅读并同意
-                            <NuxtLink
-                                to="/terms"
-                                target="_blank"
-                                class="agreement-link"
-                                @click.stop
-                            >
-                                《服务条款》
-                            </NuxtLink>
-                            和
-                            <NuxtLink
-                                to="/privacy"
-                                target="_blank"
-                                class="agreement-link"
-                                @click.stop
-                            >
-                                《隐私政策》
-                            </NuxtLink>
-                        </span>
-                    </CaomeiCheckbox>
+                    <BaseTooltip :content="'勾选表示您已阅读并同意服务条款和隐私政策'">
+                        <CaomeiCheckbox
+                            id="agreement"
+                            v-model="agreedToTerms"
+                        >
+                            <span class="checkbox-label">
+                                我已阅读并同意
+                                <NuxtLink
+                                    to="/terms"
+                                    target="_blank"
+                                    class="agreement-link"
+                                    @click.stop
+                                >
+                                    《服务条款》
+                                </NuxtLink>
+                                和
+                                <NuxtLink
+                                    to="/privacy"
+                                    target="_blank"
+                                    class="agreement-link"
+                                    @click.stop
+                                >
+                                    《隐私政策》
+                                </NuxtLink>
+                            </span>
+                        </CaomeiCheckbox>
+                    </BaseTooltip>
                     <CaomeiMessage
                         v-if="errors.agreement"
                         tone="danger"

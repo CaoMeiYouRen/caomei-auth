@@ -10,76 +10,83 @@
                     请输入相关信息以修改密码
                 </p>
                 <p class="info-note">
-                    注意：通过第三方登录、邮箱验证码、短信验证码等方式注册，导致未设置初始密码的用户，请通过<NuxtLink
-                        title="点击前往忘记密码页面"
-                        :to="`/forgot-password`"
-                        class="toggle-link"
-                    >
-                        「忘记密码」
-                    </NuxtLink>页面重置初始密码。
+                    注意：通过第三方登录、邮箱验证码、短信验证码等方式注册，导致未设置初始密码的用户，请通过<BaseTooltip :content="'点击前往忘记密码页面'">
+                        <NuxtLink
+                            :to="`/forgot-password`"
+                            class="toggle-link"
+                        >
+                            「忘记密码」
+                        </NuxtLink>
+                    </BaseTooltip>页面重置初始密码。
                 </p>
-                <BasePasswordV2
-                    id="currentPassword"
-                    v-model="currentPassword"
-                    label="当前密码"
-                    placeholder="请输入当前密码"
-                    :feedback="false"
-                    :error="errors.currentPassword"
-                    title="请输入您当前正在使用的登录密码"
-                />
-                <BasePasswordV2
-                    id="newPassword"
-                    v-model="newPassword"
-                    label="新密码"
-                    placeholder="请输入新密码"
-                    :feedback="false"
-                    :error="errors.newPassword"
-                    :title="getPasswordRequirementsShort()"
-                >
-                    <template #append>
-                        <PasswordStrength
-                            :show-strength="!!newPassword"
-                            :password="newPassword"
-                            :show-score="false"
-                            :min-length-for-display="1"
-                        />
-                    </template>
-                </BasePasswordV2>
-                <BasePasswordV2
-                    id="confirmPassword"
-                    v-model="confirmPassword"
-                    label="确认新密码"
-                    placeholder="请再次输入新密码"
-                    :feedback="false"
-                    :error="errors.confirmPassword"
-                    title="请再次输入相同的新密码以确认"
-                />
-                <div class="form-group">
-                    <CaomeiCheckbox
-                        id="revokeSessions"
-                        v-model="revokeOtherSessions"
-                        text="撤销用户登录的所有其他会话"
-                        title="勾选后，系统将撤销您在其他设备上的所有登录会话"
+                <BaseTooltip :content="'请输入您当前正在使用的登录密码'">
+                    <BasePasswordV2
+                        id="currentPassword"
+                        v-model="currentPassword"
+                        label="当前密码"
+                        placeholder="请输入当前密码"
+                        :feedback="false"
+                        :error="errors.currentPassword"
                     />
+                </BaseTooltip>
+                <BaseTooltip :content="getPasswordRequirementsShort()">
+                    <BasePasswordV2
+                        id="newPassword"
+                        v-model="newPassword"
+                        label="新密码"
+                        placeholder="请输入新密码"
+                        :feedback="false"
+                        :error="errors.newPassword"
+                    >
+                        <template #append>
+                            <PasswordStrength
+                                :show-strength="!!newPassword"
+                                :password="newPassword"
+                                :show-score="false"
+                                :min-length-for-display="1"
+                            />
+                        </template>
+                    </BasePasswordV2>
+                </BaseTooltip>
+                <BaseTooltip :content="'请再次输入相同的新密码以确认'">
+                    <BasePasswordV2
+                        id="confirmPassword"
+                        v-model="confirmPassword"
+                        label="确认新密码"
+                        placeholder="请再次输入新密码"
+                        :feedback="false"
+                        :error="errors.confirmPassword"
+                    />
+                </BaseTooltip>
+                <div class="form-group">
+                    <BaseTooltip :content="'勾选后，系统将撤销您在其他设备上的所有登录会话'">
+                        <CaomeiCheckbox
+                            id="revokeSessions"
+                            v-model="revokeOtherSessions"
+                            text="撤销用户登录的所有其他会话"
+                        />
+                    </BaseTooltip>
                 </div>
                 <div class="form-group">
-                    <CaomeiButton
-                        class="btn btn-primary mt-2"
-                        block
-                        title="点击提交修改密码请求"
-                        @click="changePassword"
-                    >
-                        修改密码
-                    </CaomeiButton>
+                    <BaseTooltip :content="'点击提交修改密码请求'">
+                        <CaomeiButton
+                            class="btn btn-primary mt-2"
+                            block
+                            @click="changePassword"
+                        >
+                            修改密码
+                        </CaomeiButton>
+                    </BaseTooltip>
                 </div>
                 <div class="toggle-login">
-                    <NuxtLink
-                        v-tooltip.top="'点击返回个人中心页面'"
-                        :to="`/profile`"
-                        class="toggle-link"
-                    >
-                        返回个人中心
-                    </NuxtLink>
+                    <BaseTooltip :content="'点击返回个人中心页面'">
+                        <NuxtLink
+                            :to="`/profile`"
+                            class="toggle-link"
+                        >
+                            返回个人中心
+                        </NuxtLink>
+                    </BaseTooltip>
                 </div>
             </div>
         </div>

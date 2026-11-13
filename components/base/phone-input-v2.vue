@@ -25,9 +25,9 @@
                     :name="field.name"
                     :placeholder="placeholder"
                     :invalid="field.invalid"
+                    v-bind="$attrs"
                     :aria-labelledby="field['aria-labelledby']"
                     :aria-describedby="field['aria-describedby']"
-                    v-bind="$attrs"
                     @update:model-value="formatPhone"
                 />
             </div>

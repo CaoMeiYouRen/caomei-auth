@@ -1,19 +1,20 @@
 <template>
-    <Button
-        class="theme-toggle"
-        type="button"
-        :aria-label="buttonLabel"
-        :aria-pressed="effectiveDark"
-        :title="buttonLabel"
-        @click="toggle()"
-    >
-        <i
-            class="mdi"
-            :class="iconClass"
-            aria-hidden="true"
-        />
-        <span class="sr-only">{{ buttonLabel }}</span>
-    </Button>
+    <BaseTooltip :content="buttonLabel">
+        <Button
+            class="theme-toggle"
+            type="button"
+            :aria-label="buttonLabel"
+            :aria-pressed="effectiveDark"
+            @click="toggle()"
+        >
+            <i
+                class="mdi"
+                :class="iconClass"
+                aria-hidden="true"
+            />
+            <span class="sr-only">{{ buttonLabel }}</span>
+        </Button>
+    </BaseTooltip>
 </template>
 
 <script setup lang="ts">

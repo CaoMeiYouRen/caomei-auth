@@ -2,10 +2,16 @@ import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref, nextTick } from 'vue'
 import ThemeToggle from '@/components/theme-toggle.vue'
+import BaseTooltip from '@/components/base/base-tooltip.vue'
 
 // Mock PrimeVue Button
 const ButtonStub = {
     template: '<button><slot /></button>',
+}
+
+/* tooltip 依赖 Reka 的 Provider 与浏览器环境；组件测试只关心触发器与属性传递 */
+const TooltipStub = {
+    template: '<span><slot /></span>',
 }
 
 // Mock @vueuse/core：useAppTheme 依赖 useColorMode + usePreferredDark
@@ -21,6 +27,9 @@ const mountToggle = () => mount(ThemeToggle, {
     global: {
         stubs: {
             Button: ButtonStub,
+            CaomeiTooltip: TooltipStub,
+            CaomeiTooltipTrigger: TooltipStub,
+            CaomeiTooltipContent: TooltipStub,
         },
     },
 })
@@ -36,7 +45,7 @@ describe('ThemeToggle', () => {
         await nextTick()
 
         expect(wrapper.find('.mdi-white-balance-sunny').exists()).toBe(true)
-        expect(wrapper.find('button').attributes('title')).toBe('切换为暗色模式')
+        expect(wrapper.findComponent(BaseTooltip).props('content')).toBe('切换为暗色模式')
         expect(wrapper.find('button').attributes('aria-label')).toBe('切换为暗色模式')
     })
 
@@ -46,7 +55,7 @@ describe('ThemeToggle', () => {
         await nextTick()
 
         expect(wrapper.find('.mdi-weather-night').exists()).toBe(true)
-        expect(wrapper.find('button').attributes('title')).toBe('切换为亮色模式')
+        expect(wrapper.findComponent(BaseTooltip).props('content')).toBe('切换为亮色模式')
         expect(wrapper.find('button').attributes('aria-pressed')).toBe('true')
     })
 

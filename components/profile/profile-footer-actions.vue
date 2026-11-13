@@ -1,20 +1,22 @@
 <template>
     <div class="form-group profile-actions">
-        <CaomeiButton
-            class="btn btn-primary"
-            :loading="saving"
-            title="点击保存修改后的个人信息"
-            @click="emit('save')"
-        >
-            保存修改
-        </CaomeiButton>
-        <CaomeiButton
-            variant="ghost"
-            title="点击跳转到修改密码页面"
-            @click="emit('changePassword')"
-        >
-            修改密码
-        </CaomeiButton>
+        <BaseTooltip content="点击保存修改后的个人信息">
+            <CaomeiButton
+                class="btn btn-primary"
+                :loading="saving"
+                @click="emit('save')"
+            >
+                保存修改
+            </CaomeiButton>
+        </BaseTooltip>
+        <BaseTooltip content="点击跳转到修改密码页面">
+            <CaomeiButton
+                variant="ghost"
+                @click="emit('changePassword')"
+            >
+                修改密码
+            </CaomeiButton>
+        </BaseTooltip>
     </div>
 </template>
 

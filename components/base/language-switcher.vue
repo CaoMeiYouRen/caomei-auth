@@ -4,25 +4,26 @@
         class="language-switcher"
         :class="{'language-switcher--compact': compact}"
     >
-        <button
-            ref="trigger"
-            type="button"
-            class="language-switcher__trigger"
-            :aria-label="t('language.label')"
-            :title="t('language.label')"
-            aria-haspopup="listbox"
-            :aria-expanded="open"
-            @click="toggle"
-        >
-            <i class="language-switcher__icon mdi mdi-translate" aria-hidden="true" />
-            <span v-if="!compact" class="language-switcher__code">{{ t('language.short') }}</span>
-            <i
-                v-if="!compact"
-                class="language-switcher__chevron mdi mdi-chevron-down"
-                :class="{'language-switcher__chevron--open': open}"
-                aria-hidden="true"
-            />
-        </button>
+        <BaseTooltip :content="t('language.label')">
+            <button
+                ref="trigger"
+                type="button"
+                class="language-switcher__trigger"
+                :aria-label="t('language.label')"
+                aria-haspopup="listbox"
+                :aria-expanded="open"
+                @click="toggle"
+            >
+                <i class="language-switcher__icon mdi mdi-translate" aria-hidden="true" />
+                <span v-if="!compact" class="language-switcher__code">{{ t('language.short') }}</span>
+                <i
+                    v-if="!compact"
+                    class="language-switcher__chevron mdi mdi-chevron-down"
+                    :class="{'language-switcher__chevron--open': open}"
+                    aria-hidden="true"
+                />
+            </button>
+        </BaseTooltip>
 
         <ul
             v-if="open"

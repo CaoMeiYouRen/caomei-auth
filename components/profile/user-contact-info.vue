@@ -3,39 +3,47 @@
         <label class="form-label">邮箱</label>
         <div class="profile-row">
             <div class="profile-info-content">
-                <span
+                <BaseTooltip
                     v-if="!privacyMode"
-                    v-tooltip.top="`完整邮箱地址：${user.email}`"
-                    class="privacy-value"
-                >{{ user.email || "未绑定" }}</span>
-                <span
+                    :content="`完整邮箱地址：${user.email}`"
+                >
+                    <span class="privacy-value">{{ user.email || "未绑定" }}</span>
+                </BaseTooltip>
+                <BaseTooltip
                     v-else
-                    v-tooltip.top="'邮箱信息已隐藏，点击顶部隐私模式开关可显示'"
-                    class="privacy-hidden"
-                >{{ user.email ? maskEmail(user.email) : "未绑定" }}</span>
+                    content="邮箱信息已隐藏，点击顶部隐私模式开关可显示"
+                >
+                    <span class="privacy-hidden">{{ user.email ? maskEmail(user.email) : "未绑定" }}</span>
+                </BaseTooltip>
             </div>
             <div class="profile-info-actions">
                 <template v-if="user.emailVerified">
-                    <CaomeiButton
-                        variant="ghost"
-                        size="sm"
-                        title="点击修改已验证的邮箱地址"
-                        @click="emit('openEmailModal')"
-                    >
-                        修改
-                    </CaomeiButton>
-                    <span v-tooltip.top="'邮箱已验证，可用于登录和找回密码'" class="verified">已验证</span>
+                    <BaseTooltip content="点击修改已验证的邮箱地址">
+                        <CaomeiButton
+                            variant="ghost"
+                            size="sm"
+                            @click="emit('openEmailModal')"
+                        >
+                            修改
+                        </CaomeiButton>
+                    </BaseTooltip>
+                    <BaseTooltip content="邮箱已验证，可用于登录和找回密码">
+                        <span class="verified">已验证</span>
+                    </BaseTooltip>
                 </template>
                 <template v-else>
-                    <CaomeiButton
-                        variant="ghost"
-                        size="sm"
-                        title="点击验证邮箱，验证后可用于登录和找回密码"
-                        @click="emit('openEmailModal')"
-                    >
-                        验证
-                    </CaomeiButton>
-                    <span v-tooltip.top="'邮箱未验证，无法用于登录和找回密码'" class="unverified">未验证</span>
+                    <BaseTooltip content="点击验证邮箱，验证后可用于登录和找回密码">
+                        <CaomeiButton
+                            variant="ghost"
+                            size="sm"
+                            @click="emit('openEmailModal')"
+                        >
+                            验证
+                        </CaomeiButton>
+                    </BaseTooltip>
+                    <BaseTooltip content="邮箱未验证，无法用于登录和找回密码">
+                        <span class="unverified">未验证</span>
+                    </BaseTooltip>
                 </template>
             </div>
         </div>
@@ -52,37 +60,45 @@
                     v-if="!privacyMode"
                     class="privacy-value"
                 >{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
-                <span
+                <BaseTooltip
                     v-else
-                    v-tooltip.top="'手机号信息已隐藏，点击顶部隐私模式开关可显示'"
-                    class="privacy-hidden"
-                >{{ user.phone ? maskPhone(user.phone) : "未绑定" }}</span>
+                    content="手机号信息已隐藏，点击顶部隐私模式开关可显示"
+                >
+                    <span class="privacy-hidden">{{ user.phone ? maskPhone(user.phone) : "未绑定" }}</span>
+                </BaseTooltip>
             </div>
             <div class="profile-info-actions">
-                <CaomeiButton
+                <BaseTooltip
                     v-if="user.phone"
-                    variant="ghost"
-                    size="sm"
-                    title="点击修改已绑定的手机号"
-                    @click="emit('openPhoneModal')"
+                    content="点击修改已绑定的手机号"
                 >
-                    修改
-                </CaomeiButton>
-                <CaomeiButton
+                    <CaomeiButton
+                        variant="ghost"
+                        size="sm"
+                        @click="emit('openPhoneModal')"
+                    >
+                        修改
+                    </CaomeiButton>
+                </BaseTooltip>
+                <BaseTooltip
                     v-else
-                    variant="ghost"
-                    size="sm"
-                    :title="phoneEnabled ? '点击绑定手机号，绑定后可用于登录和验证' : '短信功能未启用，无法绑定手机号'"
-                    :disabled="!phoneEnabled"
-                    @click="phoneEnabled ? emit('openPhoneModal') : toast.danger({title: '功能未启用', description: '短信功能未启用，暂不支持绑定手机号', duration: 3000})"
+                    :content="phoneEnabled ? '点击绑定手机号，绑定后可用于登录和验证' : '短信功能未启用，无法绑定手机号'"
                 >
-                    绑定
-                </CaomeiButton>
-                <span
+                    <CaomeiButton
+                        variant="ghost"
+                        size="sm"
+                        :disabled="!phoneEnabled"
+                        @click="phoneEnabled ? emit('openPhoneModal') : toast.danger({title: '功能未启用', description: '短信功能未启用，暂不支持绑定手机号', duration: 3000})"
+                    >
+                        绑定
+                    </CaomeiButton>
+                </BaseTooltip>
+                <BaseTooltip
                     v-if="user.phoneVerified"
-                    v-tooltip.top="'手机号已验证，可用于登录和验证'"
-                    class="verified"
-                >已验证</span>
+                    content="手机号已验证，可用于登录和验证"
+                >
+                    <span class="verified">已验证</span>
+                </BaseTooltip>
             </div>
         </div>
     </div>
