@@ -102,3 +102,49 @@ export interface AdminUserSession {
     createdAt: string | Date
     expiresAt: string | Date
 }
+
+/**
+ * 登录日志行。
+ *
+ * 字段对齐 `/api/admin/logs/sessions` 列表返回：`device` 为服务端 `parseUserAgent`
+ * 解析后的摘要，`isActive` 由 `expiresAt` 是否晚于当前时间得出。
+ */
+export interface AdminLogSession {
+    id: string
+    userId: string
+    user: {
+        id: string
+        name?: string | null
+        email: string
+        image?: string | null
+    }
+    loginTime: string | Date
+    expiresAt: string | Date
+    isActive: boolean
+    ipAddress?: string | null
+    location?: string
+    device?: {
+        browser: string
+        os: string
+    } | null
+    provider?: string
+    sessionToken: string
+}
+
+/** 登录统计（`/api/admin/logs/stats` 返回） */
+export interface AdminLogStats {
+    overview: {
+        totalUsers: number
+        totalSessions: number
+        activeSessions: number
+        activeUsers: number
+    }
+    periods: {
+        today: number
+        yesterday: number
+        week: number
+        month: number
+    }
+    providers: Array<{ provider: string, count: number }>
+    trend: Array<{ date: string, count: number }>
+}

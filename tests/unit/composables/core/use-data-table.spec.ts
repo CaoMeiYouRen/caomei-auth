@@ -68,6 +68,36 @@ describe('useDataTable', () => {
         }))
     })
 
+    it('ignores the stale page event re-emitted with the previous page size', () => {
+        const { onPage, onRowsChange, page, pageSize } = useDataTable({
+            fetcher: mockFetcher,
+            immediate: false,
+        })
+
+        /* 第 2 页把每页条数从 20 改成 10：组件先抛 update:rows，再抛携带新条数的 page，
+         * 分页器随后补发的事件仍带旧条数（20），必须丢弃 */
+        onRowsChange(10)
+        onPage({ page: 2, rows: 10 })
+        onPage({ page: 2, rows: 20 })
+
+        expect(page.value).toBe(2)
+        expect(pageSize.value).toBe(10)
+        expect(mockFetcher).toHaveBeenCalledTimes(1)
+        expect(mockFetcher).toHaveBeenCalledWith(expect.objectContaining({
+            page: 2,
+            limit: 10,
+        }))
+
+        /* 后续正常翻页仍使用新条数 */
+        onPage({ page: 3, rows: 10 })
+
+        expect(page.value).toBe(3)
+        expect(mockFetcher).toHaveBeenLastCalledWith(expect.objectContaining({
+            page: 3,
+            limit: 10,
+        }))
+    })
+
     it('handles sorting', async () => {
         const { onSort, sortField, sortOrder } = useDataTable({
             fetcher: mockFetcher,

@@ -35,6 +35,7 @@
                 @refresh="refreshSessions"
                 @revoke="revokeSession"
                 @page="onPage"
+                @rows-change="onRowsChange"
                 @sort="onSort"
                 @filter-change="onSearch"
             />
@@ -74,6 +75,7 @@ const {
     refreshSessions,
     revokeSession,
     onPage,
+    onRowsChange,
     onSort,
     onSearch,
     // Stats
@@ -88,7 +90,7 @@ const {
 <style lang="scss" scoped>
 .admin-logs {
     min-height: 100vh;
-    background: linear-gradient(135deg, $background 0%, $secondary-bg 100%);
+    background: var(--admin-bg);
     padding: 2rem;
 }
 
@@ -104,10 +106,15 @@ const {
     }
 }
 
-// 应用后台页面暗色模式支持
+/* 统计组件（stats-overview / period-stats / provider-stats / trend-chart）在统计组件批次
+ * （`docs/design/governance/2026-11-10-phase4-registration.md` M10）迁移前仍是浅色外观，
+ * 且 provider-stats 内部还有 PrimeVue 表格。保留该 mixin 维持暗色可读性，M10 完成统计组件
+ * token 化后随整页一并删除。 */
 @include admin-page-dark-theme;
 
-/* P4-0 立即修：PrimeVue 暗色基座生效后，子组件表格用 token 兜底，避免白底白字 */
+/* 同上：`admin-page-dark-theme` 的 class 分支在 Vue scoped 下无法命中子组件，
+ * class-only 暗色（手动切换、系统浅色）时 provider-stats 的 PrimeVue 表头仍是浅色。
+ * 迁移前的 P4-0 立即修块在这里兜底，统计组件批次迁移后与上一条一起删除。 */
 @include dark-mode {
     .admin-logs {
         :deep(.p-datatable-thead > tr > th) {

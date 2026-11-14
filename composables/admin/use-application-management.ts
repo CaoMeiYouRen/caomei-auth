@@ -55,6 +55,7 @@ export function useApplicationManagement() {
         searchQuery,
         load: loadApplications,
         onPage,
+        onRowsChange,
         onSort,
         onSearch,
     } = useDataTable<AdminOAuthApplicationRow>({
@@ -185,6 +186,7 @@ export function useApplicationManagement() {
         toggleApplicationStatus,
         deleteApplication,
         onPage,
+        onRowsChange,
         onSort,
         onSearch,
         // Dialogs & Actions

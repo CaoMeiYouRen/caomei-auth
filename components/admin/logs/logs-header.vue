@@ -9,14 +9,16 @@
             </p>
         </div>
         <div class="header-actions">
-            <Button
-                icon="mdi mdi-refresh"
-                label="刷新数据"
-                severity="secondary"
-                outlined
+            <CaomeiButton
+                variant="secondary"
                 :loading="loading"
                 @click="$emit('refresh')"
-            />
+            >
+                <template #icon>
+                    <i class="mdi mdi-refresh" aria-hidden="true" />
+                </template>
+                刷新数据
+            </CaomeiButton>
         </div>
     </div>
 </template>
@@ -37,10 +39,10 @@ defineEmits<{
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 2rem;
-    background: $background-light;
+    background: var(--admin-surface);
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    box-shadow: var(--admin-shadow);
 
     @media (width <= 768px) {
         flex-direction: column;
@@ -52,12 +54,12 @@ defineEmits<{
     .logs-title {
         font-size: 2rem;
         font-weight: 700;
-        color: $primary;
+        color: var(--color-primary);
         margin: 0 0 0.5rem;
     }
 
     .logs-subtitle {
-        color: $secondary-light;
+        color: var(--admin-muted);
         margin: 0;
         font-size: 1.1rem;
     }
@@ -69,10 +71,6 @@ defineEmits<{
 
     @media (width <= 768px) {
         width: 100%;
-
-        :deep(.p-button) {
-            flex: 1;
-        }
     }
 }
 </style>

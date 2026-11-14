@@ -1,16 +1,38 @@
 import { ref, watch, computed, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast, type DatePickerRange } from 'caomei-ui'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import { authClient } from '@/lib/auth-client'
+import type { AdminLogSession, AdminLogStats } from '@/types/admin'
+
+interface LogSessionsResponse {
+    success: boolean
+    data: {
+        sessions: AdminLogSession[]
+        pagination: {
+            page: number
+            limit: number
+            total: number
+            totalPages: number
+        }
+    }
+}
+
+interface LogStatsResponse {
+    success: boolean
+    data: AdminLogStats
+}
+
+const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 export function useLogsManagement() {
     const toast = useToast()
-    const selectedStatus = ref<string>()
-    const dateRange = ref<Date[]>()
+    const selectedStatus = ref<string | undefined>(undefined)
+    /** 日期区间只在两端齐全时由 `CaomeiDatePicker` 抛值；`null` 表示未筛选 */
+    const dateRange = ref<DatePickerRange | null>(null)
     const revokingSessionId = ref<string>('')
 
     const fetcher = async (params: DataTableFetchParams) => {
-        const query: any = {
+        const query: Record<string, string | number> = {
             page: params.page + 1,
             limit: params.limit,
         }
@@ -23,12 +45,12 @@ export function useLogsManagement() {
             query.status = selectedStatus.value
         }
 
-        if (dateRange.value?.length === 2) {
-            query.startDate = dateRange.value[0]?.toISOString()
-            query.endDate = dateRange.value[1]?.toISOString()
+        if (dateRange.value) {
+            query.startDate = dateRange.value[0].toISOString()
+            query.endDate = dateRange.value[1].toISOString()
         }
 
-        const response = await $fetch<any>('/api/admin/logs/sessions', {
+        const response = await $fetch<LogSessionsResponse>('/api/admin/logs/sessions', {
             query,
         })
 
@@ -49,9 +71,10 @@ export function useLogsManagement() {
         searchQuery,
         load: loadSessions,
         onPage,
+        onRowsChange,
         onSort,
         onSearch,
-    } = useDataTable({
+    } = useDataTable<AdminLogSession>({
         fetcher,
         defaultPageSize: 20,
     })
@@ -65,7 +88,7 @@ export function useLogsManagement() {
         await loadSessions()
     }
 
-    const revokeSession = async (session: any) => {
+    const revokeSession = async (session: AdminLogSession) => {
         try {
             revokingSessionId.value = session.sessionToken
 
@@ -73,21 +96,18 @@ export function useLogsManagement() {
                 sessionToken: session.sessionToken,
             })
 
-            toast.add({
-                severity: 'success',
-                summary: '撤销成功',
-                detail: '会话已撤销',
-                life: 3000,
+            toast.success({
+                title: '撤销成功',
+                description: '会话已撤销',
+                duration: 3000,
             })
 
             await loadSessions()
-        } catch (error: any) {
-            console.error('撤销会话失败:', error)
-            toast.add({
-                severity: 'error',
-                summary: '撤销失败',
-                detail: error.message || '撤销会话失败',
-                life: 3000,
+        } catch (error: unknown) {
+            toast.danger({
+                title: '撤销失败',
+                description: errorMessage(error, '撤销会话失败'),
+                duration: 3000,
             })
         } finally {
             revokingSessionId.value = ''
@@ -95,26 +115,24 @@ export function useLogsManagement() {
     }
 
     // 统计数据
-    const statsData = ref<any>(null)
+    const statsData = ref<AdminLogStats | null>(null)
     const statsLoading = ref(false)
 
     // 计算属性
-    const providerStatsData = computed(() => (statsData.value?.providers || []).sort((a: any, b: any) => b.count - a.count))
+    const providerStatsData = computed(() => [...(statsData.value?.providers || [])].sort((a, b) => b.count - a.count))
     const trendData = computed(() => statsData.value?.trend || [])
 
     // 加载统计数据
     const loadStats = async () => {
         try {
             statsLoading.value = true
-            const { data } = await $fetch<any>('/api/admin/logs/stats')
+            const { data } = await $fetch<LogStatsResponse>('/api/admin/logs/stats')
             statsData.value = data
-        } catch (error: any) {
-            console.error('加载统计数据失败:', error)
-            toast.add({
-                severity: 'error',
-                summary: '加载失败',
-                detail: error.message || '加载统计数据失败',
-                life: 3000,
+        } catch (error: unknown) {
+            toast.danger({
+                title: '加载失败',
+                description: errorMessage(error, '加载统计数据失败'),
+                duration: 3000,
             })
         } finally {
             statsLoading.value = false
@@ -147,6 +165,7 @@ export function useLogsManagement() {
         refreshSessions,
         revokeSession,
         onPage,
+        onRowsChange,
         onSort,
         onSearch,
         // Stats

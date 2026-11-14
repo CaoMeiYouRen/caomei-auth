@@ -192,7 +192,7 @@ const ROUTES: readonly AdminRoute[] = [
                 label: '会话状态筛选',
                 slug: 'status-filter',
                 action: async (page) => {
-                    await page.locator('.detail-filters .p-select').click()
+                    await page.locator('.detail-filters').getByRole('combobox', { name: '会话状态' }).click()
                     await page.getByRole('option', { name: '已过期' }).click()
                     await expect(page.locator('.logs-detail .table-title')).toContainText('登录日志')
                     /* 显式滚到日志区：筛选状态要展示筛选结果，而不是页头统计卡 */
@@ -203,10 +203,10 @@ const ROUTES: readonly AdminRoute[] = [
                 label: '日期范围选择',
                 slug: 'date-range',
                 action: async (page) => {
-                    await page.getByPlaceholder('选择日期范围').click()
-                    await expect(page.locator('.p-datepicker').first()).toBeVisible()
+                    await page.getByRole('button', { name: '选择日期范围' }).click()
+                    await expect(page.locator('.caomei-date-picker__content')).toBeVisible()
                     /* 日历浮层跟随输入框；显式滚到可见区域，避免截图只截到页头 */
-                    await page.getByPlaceholder('选择日期范围').scrollIntoViewIfNeeded()
+                    await page.getByRole('button', { name: '选择日期范围' }).scrollIntoViewIfNeeded()
                 },
             },
         ],

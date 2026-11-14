@@ -99,6 +99,7 @@
                     :sort-field="sortField"
                     :sort-order="sortOrder"
                     @page="onTablePage"
+                    @update:rows="onRowsChange"
                     @sort="onTableSort"
                 >
                     <template #cell-name="{row}">
@@ -260,6 +261,7 @@ const {
     handleRefreshApplications,
     toggleApplicationStatus,
     onPage,
+    onRowsChange,
     onSort,
     // Dialogs & Actions
     showCreateDialog,

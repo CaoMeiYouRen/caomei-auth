@@ -23,7 +23,7 @@
 | M6 | P4-5 Admin SSO 提供商页 | `pages/admin/sso/providers.vue`：DataTable / 筛选 / 分页 | 已完成（2026-11-12） |
 | M7 | P4-6 Admin SSO 表单 | `components/admin/sso/*`：OIDC / SAML / 属性映射 | 已完成（2026-11-13） |
 | M8 | P4-7 Admin SSO 对话框 | `components/admin/sso/*`：创建 / 详情 | 已完成（2026-11-13） |
-| M9 | P4-8 Admin 日志页与表格 | `pages/admin/logs.vue`、`components/admin/logs/logs-table.vue`、筛选与 DatePicker range | 待开始 |
+| M9 | P4-8 Admin 日志页与表格 | `pages/admin/logs.vue`、`components/admin/logs/logs-table.vue`、筛选与 DatePicker range | 已完成（2026-11-14） |
 | M10 | P4-9 Admin 日志统计组件 | `components/admin/logs/{stats-overview,period-stats,provider-stats,trend-chart}.vue` | 待开始 |
 | M11 | P4-10 剩余页面与共享封装 | `pages/oauth/clients.vue`、`pages/index.vue`、`error.vue`、`components/base/*` V1 收口 | 待开始 |
 | M12 | P4-11 P4 收口 | 白名单、包体、视觉、回退、文档 | 待开始 |

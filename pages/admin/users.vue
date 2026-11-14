@@ -124,6 +124,7 @@
                     :sort-field="sortField"
                     :sort-order="sortOrder"
                     @page="onTablePage"
+                    @update:rows="onRowsChange"
                     @sort="onTableSort"
                     @update:selection="onSelectionChange"
                 >
@@ -294,6 +295,7 @@ const {
     debouncedSearch,
     refreshUsers,
     onPageChange,
+    onRowsChange,
     onSort,
     unbanUser,
     deleteUser,

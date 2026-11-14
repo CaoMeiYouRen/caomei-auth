@@ -103,6 +103,7 @@
                     :sort-order="sortOrder"
                     empty-text="暂无 SSO 提供商"
                     @page="onTablePage"
+                    @update:rows="onRowsChange"
                     @sort="onTableSort"
                 >
                     <template #cell-name="{row}">
@@ -272,6 +273,7 @@ const {
     deleteProvider,
     toggleProviderStatus,
     onPage,
+    onRowsChange,
     onSort,
     onSearch,
 } = useSsoProviders()

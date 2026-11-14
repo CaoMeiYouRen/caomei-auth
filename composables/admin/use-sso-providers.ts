@@ -64,6 +64,7 @@ export function useSsoProviders() {
         searchQuery,
         load: loadProviders,
         onPage,
+        onRowsChange,
         onSort,
         onSearch,
     } = useDataTable<AdminSsoProviderRow>({
@@ -175,6 +176,7 @@ export function useSsoProviders() {
         toggleProviderStatus,
         deleteProvider,
         onPage,
+        onRowsChange,
         onSort,
         onSearch,
     }

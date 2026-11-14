@@ -25,6 +25,8 @@ const MIGRATED_PAGE_FILES = [
     'pages/admin/oauth/applications.vue',
     /* M6 迁移 SSO 提供商页，M7 迁移 3 个表单，M8 完成 2 个对话框与白名单登记后整路由切齐。 */
     'pages/admin/sso/providers.vue',
+    /* M9 迁移日志页与表格（页头 + 表格）；统计组件与白名单待 M10 完成整路由切齐。 */
+    'pages/admin/logs.vue',
 ]
 
 const MIGRATED_SHARED_PATHS = [
@@ -40,6 +42,8 @@ const MIGRATED_SHARED_PATHS = [
     'components/admin/users',
     'components/admin/oauth',
     'components/admin/sso',
+    'components/admin/logs/logs-header.vue',
+    'components/admin/logs/logs-table.vue',
     'components/profile',
     'components/security',
 ]
