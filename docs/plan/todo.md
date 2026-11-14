@@ -28,7 +28,7 @@
 | M11 | P4-10 剩余页面与共享封装 | `pages/oauth/clients.vue`、`pages/index.vue`、`error.vue`、`components/base/*` V1 收口 | 已完成（2026-11-14） |
 | M12 | P4-11 P4 收口 | 白名单、包体、视觉、回退、文档 | 已完成（2026-11-14） |
 | M13 | P5-1 移除 PrimeVue 运行时与依赖 | 依赖、Provider、导入、构建配置、测试 mock | 已完成（2026-11-14） |
-| M14 | P5-2 清理样式 / token / 白名单 | `--p-*` / `.p-*`、白名单文件、迁移守卫简化（V1 封装与 send-code-button / demo-mode-dialog 已在 M13 删除） | 待开始 |
+| M14 | P5-2 清理样式 / token / 白名单 | `--p-*` / `.p-*`、白名单文件、迁移守卫简化（V1 封装与 send-code-button / demo-mode-dialog 已在 M13 删除） | 已完成（2026-11-14） |
 | M15 | P5-3 阶段 4 收口与归档 | 最终包体、视觉、文档、Review Gate、归档 | 待开始 |
 
 ## 说明

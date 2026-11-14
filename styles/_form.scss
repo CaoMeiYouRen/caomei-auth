@@ -49,9 +49,7 @@
         box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3);
     }
 
-    // PrimeVue Password 组件和所有输入框类型的优化（合并重复选择器）
-    .form-group .p-password-input,
-    .p-password-input,
+    // 输入框类型的暗色优化（合并重复选择器）
     .form-group input[type="text"],
     .form-group input[type="password"],
     .form-group input[type="email"],
@@ -65,8 +63,6 @@
         border-color: #{$dark-border-color};
     }
 
-    .form-group .p-password-input::placeholder,
-    .p-password-input::placeholder,
     .form-group input[type="text"]::placeholder,
     .form-group input[type="password"]::placeholder,
     .form-group input[type="email"]::placeholder,
@@ -139,10 +135,6 @@
     cursor: pointer;
     transition: background-color 0.2s;
     font-size: 1rem;
-
-    .p-button-icon {
-        margin-right: 0.75rem;
-    }
 }
 
 // 深色主题下的其他元素优化
