@@ -5,7 +5,7 @@
         "components/admin/logs/logs-header.vue": 3,
         "components/admin/logs/logs-table.vue": 15,
         "components/admin/logs/period-stats.vue": 5,
-        "components/admin/logs/provider-stats.vue": 4,
+        "components/admin/logs/provider-stats.vue": 2,
         "components/admin/logs/stats-overview.vue": 4,
         "components/admin/logs/trend-chart.vue": 1,
         "components/admin/oauth/api-docs-dialog.vue": 17,

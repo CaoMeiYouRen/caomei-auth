@@ -131,6 +131,18 @@ export interface AdminLogSession {
     sessionToken: string
 }
 
+/** 登录方式统计行 */
+export interface AdminLogProviderStat {
+    provider: string
+    count: number
+}
+
+/** 每日登录趋势点 */
+export interface AdminLogTrendPoint {
+    date: string
+    count: number
+}
+
 /** 登录统计（`/api/admin/logs/stats` 返回） */
 export interface AdminLogStats {
     overview: {
@@ -145,6 +157,6 @@ export interface AdminLogStats {
         week: number
         month: number
     }
-    providers: Array<{ provider: string, count: number }>
-    trend: Array<{ date: string, count: number }>
+    providers: AdminLogProviderStat[]
+    trend: AdminLogTrendPoint[]
 }

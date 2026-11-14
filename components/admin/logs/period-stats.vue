@@ -43,31 +43,33 @@
 </template>
 
 <script setup lang="ts">
+import type { AdminLogStats } from '@/types/admin'
+
 defineProps<{
-    stats: any
+    stats: AdminLogStats | null
 }>()
 </script>
 
 <style lang="scss" scoped>
 .period-stats {
-    background: $background-light;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     margin-bottom: 2rem;
     overflow: hidden;
+    background: var(--admin-surface);
+    border-radius: 12px;
+    box-shadow: var(--admin-shadow);
 }
 
 .section-header {
     padding: 1.5rem 2rem;
-    border-bottom: 1px solid $border-color;
-    background: linear-gradient(135deg, $background 0%, $background-light 100%);
+    background: var(--admin-surface-muted);
+    border-bottom: 1px solid var(--admin-border);
 }
 
 .section-title {
+    margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
-    color: $primary;
-    margin: 0;
+    color: var(--color-primary);
 }
 
 .period-cards {
@@ -80,7 +82,7 @@ defineProps<{
 .period-card {
     padding: 2rem;
     text-align: center;
-    border-right: 1px solid $border-color;
+    border-right: 1px solid var(--admin-border);
     transition: background-color 0.2s ease;
 
     &:last-child {
@@ -88,21 +90,21 @@ defineProps<{
     }
 
     &:hover {
-        background: $background;
+        background: var(--admin-surface-muted);
     }
 
     .period-label {
-        color: $secondary-light;
+        margin-bottom: 0.75rem;
         font-size: 0.9rem;
         font-weight: 500;
-        margin-bottom: 0.75rem;
+        color: var(--admin-muted);
     }
 
     .period-value {
         font-size: 1.75rem;
         font-weight: 700;
-        color: $blue-dark;
         line-height: 1;
+        color: var(--color-blue);
     }
 }
 
@@ -113,10 +115,10 @@ defineProps<{
 
     .period-card {
         border-right: none;
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px solid var(--admin-border);
 
         &:nth-child(odd) {
-            border-right: 1px solid $border-color;
+            border-right: 1px solid var(--admin-border);
         }
 
         &:last-child,
@@ -135,7 +137,7 @@ defineProps<{
         border-right: none;
 
         &:not(:last-child) {
-            border-bottom: 1px solid $border-color;
+            border-bottom: 1px solid var(--admin-border);
         }
     }
 }

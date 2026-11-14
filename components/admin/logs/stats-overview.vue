@@ -2,7 +2,7 @@
     <div class="stats-overview">
         <div class="stat-card">
             <div class="stat-icon">
-                <i class="mdi mdi-account-group" />
+                <i class="mdi mdi-account-group" aria-hidden="true" />
             </div>
             <div class="stat-content">
                 <div class="stat-value">
@@ -15,7 +15,7 @@
         </div>
         <div class="stat-card">
             <div class="stat-icon">
-                <i class="mdi mdi-login" />
+                <i class="mdi mdi-login" aria-hidden="true" />
             </div>
             <div class="stat-content">
                 <div class="stat-value">
@@ -28,7 +28,7 @@
         </div>
         <div class="stat-card">
             <div class="stat-icon">
-                <i class="mdi mdi-account-check" />
+                <i class="mdi mdi-account-check" aria-hidden="true" />
             </div>
             <div class="stat-content">
                 <div class="stat-value">
@@ -41,7 +41,7 @@
         </div>
         <div class="stat-card">
             <div class="stat-icon">
-                <i class="mdi mdi-account-heart" />
+                <i class="mdi mdi-account-heart" aria-hidden="true" />
             </div>
             <div class="stat-content">
                 <div class="stat-value">
@@ -56,8 +56,10 @@
 </template>
 
 <script setup lang="ts">
+import type { AdminLogStats } from '@/types/admin'
+
 defineProps<{
-    stats: any
+    stats: AdminLogStats | null
 }>()
 </script>
 
@@ -70,13 +72,13 @@ defineProps<{
 }
 
 .stat-card {
-    background: $background-light;
-    border-radius: 12px;
-    padding: 2rem;
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    padding: 2rem;
+    background: var(--admin-surface);
+    border-radius: 12px;
+    box-shadow: var(--admin-shadow);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
@@ -85,16 +87,16 @@ defineProps<{
     }
 
     .stat-icon {
-        background: linear-gradient(135deg, $blue-50 0%, $blue-100 100%);
-        color: $blue;
-        width: 4rem;
-        height: 4rem;
-        border-radius: 12px;
         display: flex;
+        flex-shrink: 0;
         align-items: center;
         justify-content: center;
+        width: 4rem;
+        height: 4rem;
         font-size: 1.75rem;
-        flex-shrink: 0;
+        color: var(--color-blue);
+        background: color-mix(in srgb, var(--color-blue) 14%, transparent);
+        border-radius: 12px;
     }
 
     .stat-content {
@@ -102,17 +104,17 @@ defineProps<{
     }
 
     .stat-value {
+        margin-bottom: 0.25rem;
         font-size: 2rem;
         font-weight: 700;
-        color: $secondary;
         line-height: 1;
-        margin-bottom: 0.25rem;
+        color: var(--admin-text);
     }
 
     .stat-label {
-        color: $secondary-light;
         font-size: 0.95rem;
         font-weight: 500;
+        color: var(--admin-muted);
     }
 }
 

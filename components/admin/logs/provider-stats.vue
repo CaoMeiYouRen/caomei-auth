@@ -6,106 +6,90 @@
             </h2>
         </div>
         <div class="provider-chart">
-            <DataTable
-                :value="providerStats"
-                :rows="10"
-                striped-rows
-                responsive-layout="scroll"
+            <CaomeiDataTable
+                :data="providerStats"
+                :columns="columns"
+                row-key="provider"
+                striped
+                empty-text="暂无登录方式数据"
             >
-                <Column field="provider" header="登录方式">
-                    <template #body="{data}">
-                        <div class="provider-cell">
-                            <i
-                                :class="getProviderIcon(data.provider)"
-                                :style="{color: getProviderColor(data.provider)}"
+                <template #cell-provider="{row}">
+                    <div class="provider-cell">
+                        <i
+                            :class="getProviderIcon(row.provider)"
+                            :style="{color: getProviderColor(row.provider)}"
+                            aria-hidden="true"
+                        />
+                        <span>{{ getProviderName(row.provider) }}</span>
+                    </div>
+                </template>
+
+                <template #cell-count="{row}">
+                    <div class="count-cell">
+                        <span class="count-value">{{ row.count }}</span>
+                        <div class="count-bar">
+                            <div
+                                class="count-progress"
+                                :style="{width: `${(row.count / maxProviderCount) * 100}%`}"
                             />
-                            <span>{{ getProviderName(data.provider) }}</span>
                         </div>
-                    </template>
-                </Column>
-                <Column field="count" header="登录次数">
-                    <template #body="{data}">
-                        <div class="count-cell">
-                            <span class="count-value">{{ data.count }}</span>
-                            <div class="count-bar">
-                                <div
-                                    class="count-progress"
-                                    :style="{width: `${(data.count / maxProviderCount) * 100}%`}"
-                                />
-                            </div>
-                        </div>
-                    </template>
-                </Column>
-                <Column field="percentage" header="占比">
-                    <template #body="{data}">
-                        {{ ((data.count / totalProviderCount) * 100).toFixed(1) }}%
-                    </template>
-                </Column>
-            </DataTable>
+                    </div>
+                </template>
+            </CaomeiDataTable>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { DataTableColumn } from 'caomei-ui'
 import { getProviderIcon, getProviderColor, getProviderName } from '@/utils/web/social-provider-helpers'
+import type { AdminLogProviderStat } from '@/types/admin'
 
 const props = defineProps<{
-    providerStats: any[]
+    providerStats: AdminLogProviderStat[]
 }>()
 
-const maxProviderCount = computed(() => Math.max(...(props.providerStats || []).map((item: any) => item.count), 1))
-const totalProviderCount = computed(() => (props.providerStats || []).reduce((sum: number, item: any) => sum + item.count, 0))
+const maxProviderCount = computed(() => Math.max(...(props.providerStats || []).map((item) => item.count), 1))
+const totalProviderCount = computed(() => (props.providerStats || []).reduce((sum, item) => sum + item.count, 0))
+
+const columns: DataTableColumn<AdminLogProviderStat>[] = [
+    { key: 'provider', header: '登录方式' },
+    { key: 'count', header: '登录次数' },
+    {
+        key: 'percentage',
+        header: '占比',
+        width: '120px',
+        accessor: (row) => `${((row.count / (totalProviderCount.value || 1)) * 100).toFixed(1)}%`,
+    },
+]
 </script>
 
 <style lang="scss" scoped>
 .provider-stats {
-    background: $background-light;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    /* 表格表面改用 Admin 语义 token，暗色下与卡片保持一致 */
+    --caomei-color-text: var(--admin-text);
+    --caomei-data-table-head-bg: var(--admin-surface-muted);
+    --caomei-data-table-border: var(--admin-border);
+
     margin-bottom: 2rem;
     overflow: hidden;
+    background: var(--admin-surface);
+    border-radius: 12px;
+    box-shadow: var(--admin-shadow);
 }
 
 .section-header {
     padding: 1.5rem 2rem;
-    border-bottom: 1px solid $border-color;
-    background: linear-gradient(135deg, $background 0%, $background-light 100%);
+    background: var(--admin-surface-muted);
+    border-bottom: 1px solid var(--admin-border);
 }
 
 .section-title {
+    margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
-    color: $primary;
-    margin: 0;
-}
-
-.provider-chart {
-    padding: 0;
-
-    :deep(.p-datatable) {
-        border: none;
-        border-radius: 0;
-    }
-
-    :deep(.p-datatable-header) {
-        background: transparent;
-        border: none;
-        padding: 1.5rem 2rem;
-    }
-
-    :deep(.p-datatable-tbody > tr > td) {
-        padding: 1rem 2rem;
-        border-color: $border-color;
-    }
-
-    :deep(.p-datatable-thead > tr > th) {
-        background: $background;
-        color: $secondary;
-        font-weight: 600;
-        padding: 1rem 2rem;
-        border-color: $border-color;
-    }
+    color: var(--color-primary);
 }
 
 .provider-cell {
@@ -125,22 +109,22 @@ const totalProviderCount = computed(() => (props.providerStats || []).reduce((su
     gap: 1rem;
 
     .count-value {
-        font-weight: 600;
-        color: $secondary;
         min-width: 3rem;
+        font-weight: 600;
+        color: var(--admin-text);
     }
 
     .count-bar {
         flex: 1;
-        height: 8px;
-        background: $border-color;
-        border-radius: 4px;
-        overflow: hidden;
         min-width: 100px;
+        height: 8px;
+        overflow: hidden;
+        background: var(--admin-border);
+        border-radius: 4px;
 
         .count-progress {
             height: 100%;
-            background: linear-gradient(90deg, $blue 0%, $blue-light 100%);
+            background: linear-gradient(90deg, var(--color-blue) 0%, var(--color-blue-light) 100%);
             transition: width 0.3s ease;
         }
     }

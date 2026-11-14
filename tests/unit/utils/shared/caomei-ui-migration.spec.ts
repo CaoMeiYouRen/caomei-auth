@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { stripLocalePrefix } from '@/i18n/config/locale-registry'
 import { CAOMEI_UI_ROUTE_PREFIXES, isCaomeiUiRoute } from '@/utils/shared/caomei-ui-migration'
 
-const PRIMEVUE_TAG_PATTERN = /<(Button|InputText|Select|Dropdown|Textarea|IconField|InputIcon|Accordion|AccordionPanel|AccordionHeader|AccordionContent|Avatar|DataTable|Column|Dialog|Badge|Checkbox|Password|Tag|ConfirmDialog|InputNumber|Menu|MultiSelect|Toast)\b/u
+const PRIMEVUE_TAG_PATTERN = /<(Button|InputText|Select|Dropdown|Textarea|IconField|InputIcon|Accordion|AccordionPanel|AccordionHeader|AccordionContent|Avatar|DataTable|Column|Dialog|Badge|Checkbox|Password|Tag|ConfirmDialog|InputNumber|Menu|MultiSelect|Toast|Chart)\b/u
 const PRIMEVUE_IMPORT_PATTERN = /from\s+['"]primevue\//u
 
 const MIGRATED_PAGE_FILES = [
@@ -25,7 +25,7 @@ const MIGRATED_PAGE_FILES = [
     'pages/admin/oauth/applications.vue',
     /* M6 迁移 SSO 提供商页，M7 迁移 3 个表单，M8 完成 2 个对话框与白名单登记后整路由切齐。 */
     'pages/admin/sso/providers.vue',
-    /* M9 迁移日志页与表格（页头 + 表格）；统计组件与白名单待 M10 完成整路由切齐。 */
+    /* M9 迁移日志页与表格，M10 完成统计组件与白名单登记后整路由切齐。 */
     'pages/admin/logs.vue',
 ]
 
@@ -42,8 +42,7 @@ const MIGRATED_SHARED_PATHS = [
     'components/admin/users',
     'components/admin/oauth',
     'components/admin/sso',
-    'components/admin/logs/logs-header.vue',
-    'components/admin/logs/logs-table.vue',
+    'components/admin/logs',
     'components/profile',
     'components/security',
 ]
@@ -60,11 +59,12 @@ function collectVueFiles(target) {
 
 describe('utils/shared/caomei-ui-migration', () => {
     it('默认白名单包含 P2/P3 试点路由与 P4 已切齐的 Admin 路由', () => {
-        expect(CAOMEI_UI_ROUTE_PREFIXES).toEqual(['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login', '/admin/users', '/admin/oauth/applications', '/admin/sso/providers'])
+        expect(CAOMEI_UI_ROUTE_PREFIXES).toEqual(['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login', '/admin/users', '/admin/oauth/applications', '/admin/sso/providers', '/admin/logs'])
         expect(isCaomeiUiRoute('/login')).toBe(true)
         expect(isCaomeiUiRoute('/admin/users')).toBe(true)
         expect(isCaomeiUiRoute('/admin/oauth/applications')).toBe(true)
         expect(isCaomeiUiRoute('/admin/sso/providers')).toBe(true)
+        expect(isCaomeiUiRoute('/admin/logs')).toBe(true)
         expect(isCaomeiUiRoute('/')).toBe(false)
     })
 
@@ -122,8 +122,8 @@ describe('utils/shared/caomei-ui-migration', () => {
         }
     })
 
-    it('P4 路由不在白名单内', () => {
-        for (const pathname of ['/', '/about', '/privacy', '/terms', '/index', '/oauth/clients', '/admin/logs']) {
+    it('尚未迁移的路由不在白名单内', () => {
+        for (const pathname of ['/', '/about', '/privacy', '/terms', '/index', '/oauth/clients']) {
             expect(isCaomeiUiRoute(pathname), `${pathname} 不应命中白名单`).toBe(false)
         }
     })
