@@ -1,0 +1,127 @@
+{
+  "snapshotVersion": 1,
+  "scope": "PrimeVue 组件族 / 开标签 / 类名与 token 耦合（不含 node_modules、构建产物与报告目录）",
+  "totals": {
+    "componentFamilies": 8,
+    "openTags": 13,
+    "files": 8
+  },
+  "components": {
+    "Button": 4,
+    "Dialog": 2,
+    "InputText": 2,
+    "ConfirmDialog": 1,
+    "DataTable": 1,
+    "Dropdown": 1,
+    "Password": 1,
+    "Toast": 1
+  },
+  "filesByComponent": {
+    "Button": [
+      "components/base/base-dialog.vue",
+      "components/demo-mode-dialog.vue",
+      "components/send-code-button.vue"
+    ],
+    "Dialog": [
+      "components/base/base-dialog.vue",
+      "components/demo-mode-dialog.vue"
+    ],
+    "InputText": [
+      "components/base/input.vue",
+      "components/base/phone-input.vue"
+    ],
+    "ConfirmDialog": [
+      "app.vue"
+    ],
+    "DataTable": [
+      "components/base/table.vue"
+    ],
+    "Dropdown": [
+      "components/base/phone-input.vue"
+    ],
+    "Password": [
+      "components/base/password.vue"
+    ],
+    "Toast": [
+      "app.vue"
+    ]
+  },
+  "metrics": {
+    "files": 51,
+    "openTags": 13,
+    "useToastFiles": [
+      "components/admin/oauth/api-docs-dialog.vue",
+      "components/admin/oauth/application-secret-dialog.vue",
+      "components/admin/oauth/create-application-dialog.vue",
+      "components/admin/sso/create-provider-dialog.vue",
+      "components/admin/sso/provider-detail-dialog.vue",
+      "components/admin/users/ban-user-dialog.vue",
+      "components/admin/users/create-user-dialog.vue",
+      "components/admin/users/user-detail-dialog.vue",
+      "components/admin/users/user-sessions-dialog.vue",
+      "components/profile/dialogs/edit-email-dialog.vue",
+      "components/profile/dialogs/edit-phone-dialog.vue",
+      "components/profile/dialogs/set-username-dialog.vue",
+      "components/profile/user-avatar.vue",
+      "components/profile/user-contact-info.vue",
+      "composables/admin/use-application-management.ts",
+      "composables/admin/use-logs-management.ts",
+      "composables/admin/use-sso-providers.ts",
+      "composables/admin/use-user-management.ts",
+      "composables/core/use-api.ts",
+      "composables/use-change-password-flow.ts",
+      "composables/use-forgot-password-flow.ts",
+      "composables/use-login-flow.ts",
+      "composables/use-oauth-clients.ts",
+      "composables/use-oauth-consent.ts",
+      "composables/use-otp.ts",
+      "composables/use-profile-flow.ts",
+      "composables/use-quick-login-flow.ts",
+      "composables/use-register-flow.ts",
+      "composables/use-security-settings.ts",
+      "composables/use-sso-login-flow.ts",
+      "composables/utils/use-clipboard.ts",
+      "composables/utils/use-logout.ts"
+    ],
+    "useConfirmFiles": [
+      "components/admin/users/user-detail-dialog.vue",
+      "components/admin/users/user-sessions-dialog.vue",
+      "composables/admin/use-application-management.ts",
+      "composables/admin/use-user-management.ts",
+      "composables/use-profile-flow.ts",
+      "composables/utils/use-confirm-action.ts",
+      "pages/admin/sso/providers.vue"
+    ],
+    "explicitPrimeVueImportFiles": [
+      "components/send-code-button.vue",
+      "composables/core/use-api.ts",
+      "composables/use-oauth-clients.ts",
+      "composables/utils/use-clipboard.ts",
+      "composables/utils/use-confirm-action.ts",
+      "composables/utils/use-logout.ts"
+    ],
+    "primeVueMockFiles": [
+      "unit/composables/core/use-api.spec.ts",
+      "unit/composables/use-api.spec.ts",
+      "unit/composables/use-oauth-clients.spec.ts",
+      "unit/composables/utils/use-clipboard.spec.ts",
+      "unit/composables/utils/use-confirm-action.spec.ts",
+      "unit/composables/utils/use-logout.spec.ts"
+    ],
+    "pTokenOccurrences": 52,
+    "pTokenFiles": [
+      "components/base/language-switcher.vue",
+      "styles/_theme.scss"
+    ],
+    "pClassOccurrences": 92,
+    "pClassFiles": [
+      "components/base/password.vue",
+      "components/base/phone-input.vue",
+      "styles/_dark-mode.scss",
+      "styles/_form.scss",
+      "styles/_theme.scss"
+    ],
+    "deepSelectors": 15,
+    "e2ePClassAssertions": 0
+  }
+}
