@@ -58,7 +58,7 @@
     "@microsoft/clarity": "^1.0.2",
     "@nuxtjs/i18n": "10.6.0",
     "@sentry/nuxt": "^11.10.0",
-    "@vercel/blob": "^2.8.2",
+    "@vercel/blob": "^2.9.0",
     "@vueuse/core": "^15.0.0",
     "animate.css": "^4.1.1",
     "better-auth": "~1.7.20",
