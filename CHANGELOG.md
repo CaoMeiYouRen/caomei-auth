@@ -1,5 +1,54 @@
 # caomei-auth
 
+# [1.17.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.16.0...v1.17.0) (2026-11-14)
+
+
+### ✨ 新功能
+
+* **admin:** 建立 P4-0 Admin 迁移基座与暗色 token ([811a4eb](https://github.com/CaoMeiYouRen/caomei-auth/commit/811a4eb))
+* **auth:** 忘记密码与修改密码迁移到 caomei-ui（P3-2） ([a9d1081](https://github.com/CaoMeiYouRen/caomei-auth/commit/a9d1081))
+* **auth:** 快速登录迁移到 caomei-ui（P3-3） ([76dbce9](https://github.com/CaoMeiYouRen/caomei-auth/commit/76dbce9))
+* **i18n:** Zod 校验消息改为错误键（M5-1） ([c7eb7d7](https://github.com/CaoMeiYouRen/caomei-auth/commit/c7eb7d7))
+* **i18n:** 新增 i18n 治理脚本与门禁（M5-2） ([c241e98](https://github.com/CaoMeiYouRen/caomei-auth/commit/c241e98))
+* **i18n:** 认证类 API 错误消息接入（M5-3） ([417510f](https://github.com/CaoMeiYouRen/caomei-auth/commit/417510f))
+* **login:** 登录页迁移到 caomei-ui（P2 试点） ([228116c](https://github.com/CaoMeiYouRen/caomei-auth/commit/228116c))
+* **oauth:** 授权同意页迁移到 caomei-ui（M4-3） ([422f8d9](https://github.com/CaoMeiYouRen/caomei-auth/commit/422f8d9))
+* **profile:** 个人资料展示组件迁移到 caomei-ui（M4-1） ([f7ab000](https://github.com/CaoMeiYouRen/caomei-auth/commit/f7ab000))
+* **profile:** 资料对话框与 Toast/Confirm 迁移到 caomei-ui ([8f97d3f](https://github.com/CaoMeiYouRen/caomei-auth/commit/8f97d3f))
+* **register:** 注册页迁移到 caomei-ui（P3-1） ([0169d40](https://github.com/CaoMeiYouRen/caomei-auth/commit/0169d40))
+* **security:** 安全设置页迁移到 caomei-ui（M4-2） ([2016e05](https://github.com/CaoMeiYouRen/caomei-auth/commit/2016e05))
+* **sso:** SSO 登录页迁移到 caomei-ui（M4-4） ([9c9ee98](https://github.com/CaoMeiYouRen/caomei-auth/commit/9c9ee98))
+* **ui:** 统一组件 tooltip 并修正头像上传按钮 ([73f0f55](https://github.com/CaoMeiYouRen/caomei-auth/commit/73f0f55))
+
+
+### 🐛 Bug 修复
+
+* **auth:** 恢复认证页表单字号与密度 ([faa6b0b](https://github.com/CaoMeiYouRen/caomei-auth/commit/faa6b0b))
+* **ci:** 恢复 deploy 作业 checkout 以同步 Docker Hub README ([958a2a7](https://github.com/CaoMeiYouRen/caomei-auth/commit/958a2a7))
+* **i18n:** 修复硬编码扫描器触发 CodeQL 告警 ([d874ac6](https://github.com/CaoMeiYouRen/caomei-auth/commit/d874ac6))
+* **i18n:** 治理脚本忽略 lint-staged 文件参数 ([76fdc96](https://github.com/CaoMeiYouRen/caomei-auth/commit/76fdc96))
+* **migration:** 补齐已迁移路由白名单与 Toast 来源守卫 ([e4428b9](https://github.com/CaoMeiYouRen/caomei-auth/commit/e4428b9))
+* **security:** 避免门禁报告在 Step Summary 与日志重复 ([e383b0e](https://github.com/CaoMeiYouRen/caomei-auth/commit/e383b0e))
+* **sentry:** 适配 v11 移除 sendDefaultPii 的配置 ([cc3eb74](https://github.com/CaoMeiYouRen/caomei-auth/commit/cc3eb74))
+
+
+### 📦 代码重构
+
+* **admin:** Admin OAuth 对话框迁移并切齐 /admin/oauth/applications（P4-4） ([685ab73](https://github.com/CaoMeiYouRen/caomei-auth/commit/685ab73))
+* **admin:** Admin OAuth 应用页迁移到 caomei-ui（P4-3） ([15ec28d](https://github.com/CaoMeiYouRen/caomei-auth/commit/15ec28d)), closes [#header](https://github.com/CaoMeiYouRen/caomei-auth/issues/header)
+* **admin:** Admin SSO 提供商页迁移到 caomei-ui（P4-5） ([b34e4ce](https://github.com/CaoMeiYouRen/caomei-auth/commit/b34e4ce))
+* **admin:** Admin 用户对话框迁移到 caomei-ui 并切齐 /admin/users（P4-2） ([67e724c](https://github.com/CaoMeiYouRen/caomei-auth/commit/67e724c))
+* **admin:** Admin 用户页迁移到 caomei-ui（P4-1） ([be19ad4](https://github.com/CaoMeiYouRen/caomei-auth/commit/be19ad4))
+* **admin:** SSO 创建/详情对话框迁移到 caomei-ui（P4-7） ([2dd0c02](https://github.com/CaoMeiYouRen/caomei-auth/commit/2dd0c02))
+* **admin:** SSO 表单迁移到 caomei-ui（P4-6） ([9831c4d](https://github.com/CaoMeiYouRen/caomei-auth/commit/9831c4d))
+* **admin:** 回退 SSO 协议类型为 CaomeiSelect 并修正视觉层误判 ([0eda6db](https://github.com/CaoMeiYouRen/caomei-auth/commit/0eda6db))
+* **admin:** 日志统计组件迁移并登记日志路由（P4-9） ([dc8967a](https://github.com/CaoMeiYouRen/caomei-auth/commit/dc8967a))
+* **admin:** 日志页与表格迁移到 caomei-ui（P4-8） ([77fa378](https://github.com/CaoMeiYouRen/caomei-auth/commit/77fa378))
+* **auth:** 找回/修改密码与 OTP Toast 切换到 caomei-ui ([836f8a3](https://github.com/CaoMeiYouRen/caomei-auth/commit/836f8a3))
+* **auth:** 登录/注册 Toast 切换到 caomei-ui ([74e683a](https://github.com/CaoMeiYouRen/caomei-auth/commit/74e683a))
+* **styles:** 清理 PrimeVue 样式 token 与迁移白名单（P5-2） ([9fc5739](https://github.com/CaoMeiYouRen/caomei-auth/commit/9fc5739))
+* **ui:** 收口剩余页面与共享封装（P4-10） ([47b7c8c](https://github.com/CaoMeiYouRen/caomei-auth/commit/47b7c8c))
+
 # [1.16.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.15.0...v1.16.0) (2026-11-07)
 
 
