@@ -1,19 +1,33 @@
 <template>
-    <Tag
-        :value="config.label"
-        :severity="config.severity"
-        :class="['status-badge', `status-${variant}`]"
-    />
+    <CaomeiTag
+        :tone="config.tone"
+        variant="soft"
+        class="status-badge"
+    >
+        {{ config.label }}
+    </CaomeiTag>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { ComponentTone } from 'caomei-ui'
 
 type Severity = 'success' | 'info' | 'warning' | 'danger' | 'secondary' | 'contrast' | undefined
 
 interface StatusConfig {
     label: string
-    severity: Severity
+    tone: ComponentTone
+}
+
+/** PrimeVue severity → caomei tone（迁移期共用同一 StatusBadge API） */
+const SEVERITY_TO_TONE: Record<Exclude<Severity, undefined>, ComponentTone> = {
+    success: 'success',
+    /* caomei 无独立 info 色调；用 neutral 避免与 danger（红）撞色 */
+    info: 'neutral',
+    warning: 'warning',
+    danger: 'danger',
+    secondary: 'neutral',
+    contrast: 'neutral',
 }
 
 const props = withDefaults(defineProps<{
@@ -31,7 +45,7 @@ const props = withDefaults(defineProps<{
     falseSeverity: undefined,
 })
 
-const presets: Record<string, (val: any) => StatusConfig> = {
+const presets: Record<string, (val: any) => { label: string, severity: Severity }> = {
     // 启用状态 (true=好, false=坏)
     enabled: (val: boolean) => ({
         label: val ? '已启用' : '已禁用',
@@ -59,7 +73,7 @@ const presets: Record<string, (val: any) => StatusConfig> = {
     }),
     // 角色映射
     role: (val: string) => {
-        const map: Record<string, StatusConfig> = {
+        const map: Record<string, { label: string, severity: Severity }> = {
             admin: { label: '管理员', severity: 'danger' },
             user: { label: '用户', severity: 'info' },
         }
@@ -68,32 +82,27 @@ const presets: Record<string, (val: any) => StatusConfig> = {
 }
 
 const config = computed<StatusConfig>(() => {
-    // 1. 优先使用 Preset
     const presetHandler = presets[props.variant]
-    if (presetHandler) {
-        const result = presetHandler(props.status)
 
-        // 2. 允许 Props 覆盖 (仅针对布尔值类型的 Preset)
-        if (typeof props.status === 'boolean') {
-            if (props.status) {
-                return {
-                    label: props.trueLabel ?? result.label,
-                    severity: props.trueSeverity ?? result.severity,
-                }
-            } else {
-                return {
-                    label: props.falseLabel ?? result.label,
-                    severity: props.falseSeverity ?? result.severity,
-                }
-            }
-        }
-        return result
+    if (!presetHandler) {
+        return { label: String(props.status), tone: 'neutral' }
     }
 
-    // 默认回退
+    const result = presetHandler(props.status)
+    let severity = result.severity
+
+    // Props 覆盖仅针对布尔值类型的 Preset
+    if (typeof props.status === 'boolean') {
+        severity = props.status
+            ? props.trueSeverity ?? result.severity
+            : props.falseSeverity ?? result.severity
+    }
+
     return {
-        label: String(props.status),
-        severity: 'secondary',
+        label: typeof props.status === 'boolean'
+            ? (props.status ? props.trueLabel ?? result.label : props.falseLabel ?? result.label)
+            : result.label,
+        tone: severity ? SEVERITY_TO_TONE[severity] : 'neutral',
     }
 })
 </script>

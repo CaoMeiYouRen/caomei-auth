@@ -194,7 +194,8 @@ const ROUTES: readonly AdminRoute[] = [
                 action: async (page) => {
                     await page.locator('.detail-filters').getByRole('combobox', { name: '会话状态' }).click()
                     await page.getByRole('option', { name: '已过期' }).click()
-                    await expect(page.locator('.logs-detail .table-title')).toContainText('登录日志')
+                    /* 等筛选结果落表，避免截到「加载中」空表 */
+                    await expect(page.locator('.logs-detail tbody tr').first()).toContainText('已过期')
                     /* 显式滚到日志区：筛选状态要展示筛选结果，而不是页头统计卡 */
                     await page.locator('.logs-detail').scrollIntoViewIfNeeded()
                 },

@@ -4,6 +4,9 @@
         :title="title"
         :size="size"
         :breakpoints="breakpoints"
+        :closable="closable"
+        :close-on-esc="closeOnEsc"
+        :close-on-overlay="closeOnOverlay"
         @update:open="$emit('update:visible', $event)"
         @hide="$emit('hide')"
     >
@@ -29,10 +32,19 @@ withDefaults(defineProps<{
     size?: DialogSize
     /** 按视口宽度上限覆盖面板宽度（命中多个时最窄档生效）；用于表格类弹窗放宽桌面宽度 */
     breakpoints?: Record<string, string>
+    /** 是否显示右上角关闭按钮（撤销 / 提交中由调用方置为 false） */
+    closable?: boolean
+    /** Esc 是否关闭 */
+    closeOnEsc?: boolean
+    /** 点击遮罩是否关闭 */
+    closeOnOverlay?: boolean
 }>(), {
     title: '',
     size: 'md',
     breakpoints: undefined,
+    closable: true,
+    closeOnEsc: true,
+    closeOnOverlay: true,
 })
 
 defineEmits<{

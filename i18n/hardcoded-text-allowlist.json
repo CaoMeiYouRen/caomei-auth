@@ -69,7 +69,7 @@
         "pages/forgot-password.vue": 32,
         "pages/index.vue": 12,
         "pages/login.vue": 62,
-        "pages/oauth/clients.vue": 23,
+        "pages/oauth/clients.vue": 22,
         "pages/oauth/consent.vue": 25,
         "pages/privacy.vue": 58,
         "pages/profile.vue": 1,

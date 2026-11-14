@@ -27,21 +27,19 @@
                     {{ error.data.message }}
                 </div>
                 <div class="error-actions">
-                    <Button
-                        class="btn btn-primary"
+                    <CaomeiButton
                         aria-label="返回首页"
                         @click="goHome"
                     >
                         返回首页
-                    </Button>
-                    <Button
-                        class="btn btn-secondary"
-                        outlined
+                    </CaomeiButton>
+                    <CaomeiButton
+                        variant="secondary"
                         aria-label="返回上一页"
                         @click="goBack"
                     >
                         返回上一页
-                    </Button>
+                    </CaomeiButton>
                 </div>
             </div>
         </div>
@@ -51,7 +49,6 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
-import Button from 'primevue/button'
 import type { NuxtError } from '#app'
 import AuthLeft from '@/components/auth-left.vue'
 
@@ -139,12 +136,6 @@ function goBack() {
     gap: 1.2rem;
     justify-content: center;
     margin-top: 2.5rem;
-}
-
-.btn-secondary {
-    color: $secondary !important;
-    background: $secondary-bg !important;
-    border: 1px solid $secondary-bg !important;
 }
 
 .error-message {

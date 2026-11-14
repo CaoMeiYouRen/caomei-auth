@@ -28,45 +28,64 @@
                 </h2>
                 <div class="button-group">
                     <!-- 如果是管理员，显示管理后台按钮 -->
-                    <Button
+                    <CaomeiButton
                         v-if="session?.user?.role?.includes('admin')"
-                        label="管理后台"
-                        icon="mdi mdi-cog"
-                        class="btn btn-admin"
+                        block
+                        tone="warning"
                         @click="toAdmin"
-                    />
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-cog" aria-hidden="true" />
+                        </template>
+                        管理后台
+                    </CaomeiButton>
                     <!-- 如果session 存在，则显示跳转资料页-->
-                    <Button
+                    <CaomeiButton
                         v-if="session?.user"
-                        label="前往个人中心"
-                        icon="mdi mdi-account"
-                        class="btn btn-primary"
+                        block
                         @click="toProfile"
-                    />
-                    <Button
-                        label="前往登录页"
-                        icon="mdi mdi-login"
-                        class="btn btn-primary"
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-account" aria-hidden="true" />
+                        </template>
+                        前往个人中心
+                    </CaomeiButton>
+                    <CaomeiButton
+                        block
                         @click="toLogin"
-                    />
-                    <Button
-                        label="前往快速登录页"
-                        icon="mdi mdi-flash"
-                        class="btn btn-primary"
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-login" aria-hidden="true" />
+                        </template>
+                        前往登录页
+                    </CaomeiButton>
+                    <CaomeiButton
+                        block
                         @click="toQuickLogin"
-                    />
-                    <Button
-                        label="前往注册页"
-                        icon="mdi mdi-account-plus"
-                        class="btn btn-primary"
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-flash" aria-hidden="true" />
+                        </template>
+                        前往快速登录页
+                    </CaomeiButton>
+                    <CaomeiButton
+                        block
                         @click="toRegister"
-                    />
-                    <Button
-                        label="前往忘记密码页"
-                        icon="mdi mdi-lock-reset"
-                        class="btn btn-primary"
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-account-plus" aria-hidden="true" />
+                        </template>
+                        前往注册页
+                    </CaomeiButton>
+                    <CaomeiButton
+                        block
                         @click="toForgotPassword"
-                    />
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-lock-reset" aria-hidden="true" />
+                        </template>
+                        前往忘记密码页
+                    </CaomeiButton>
                 </div>
                 <div class="separator">
                     GitHub源码
@@ -86,7 +105,6 @@
 </template>
 
 <script lang="ts" setup>
-import Button from 'primevue/button'
 import AuthLeft from '@/components/auth-left.vue'
 import { useIndexFlow } from '@/composables/use-index-flow'
 
@@ -204,41 +222,6 @@ const {
     flex-direction: column;
     gap: 1.2rem;
     width: 100%;
-}
-
-.btn {
-    width: 100%;
-    padding: 0.75rem 0;
-    font-weight: 500;
-    font-size: 1rem;
-    text-align: center;
-    border-radius: 8px;
-}
-
-.btn-primary {
-    min-height: 44px;
-    color: $background-light !important;
-    background-color: $primary !important;
-    border: none !important;
-    box-shadow: none;
-    transition: background 0.2s;
-}
-
-.btn-primary:hover {
-    background-color: $primary-dark !important;
-}
-
-.btn-admin {
-    min-height: 44px;
-    color: $background-light !important;
-    background-color: #ff6b35 !important;
-    border: none !important;
-    box-shadow: none;
-    transition: background 0.2s;
-}
-
-.btn-admin:hover {
-    background-color: #e55a2e !important;
 }
 
 .separator {

@@ -27,6 +27,10 @@ const MIGRATED_PAGE_FILES = [
     'pages/admin/sso/providers.vue',
     /* M9 迁移日志页与表格，M10 完成统计组件与白名单登记后整路由切齐。 */
     'pages/admin/logs.vue',
+    /* M11 收口剩余页面：已授权应用、首页与错误页（错误页无路由前缀，不登记白名单）。 */
+    'pages/oauth/clients.vue',
+    'pages/index.vue',
+    'error.vue',
 ]
 
 const MIGRATED_SHARED_PATHS = [
@@ -34,11 +38,13 @@ const MIGRATED_SHARED_PATHS = [
     'components/password-strength.vue',
     'components/captcha.vue',
     'components/send-code-button-v2.vue',
-    'components/theme-toggle-v2.vue',
     'components/base/base-dialog-v2.vue',
     'components/base/input-v2.vue',
     'components/base/password-v2.vue',
     'components/base/phone-input-v2.vue',
+    'components/base/status-badge.vue',
+    'components/base/language-switcher.vue',
+    'components/theme-toggle.vue',
     'components/admin/users',
     'components/admin/oauth',
     'components/admin/sso',
@@ -58,19 +64,28 @@ function collectVueFiles(target) {
 }
 
 describe('utils/shared/caomei-ui-migration', () => {
-    it('默认白名单包含 P2/P3 试点路由与 P4 已切齐的 Admin 路由', () => {
-        expect(CAOMEI_UI_ROUTE_PREFIXES).toEqual(['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login', '/admin/users', '/admin/oauth/applications', '/admin/sso/providers', '/admin/logs'])
+    it('默认白名单包含已迁移的认证、Admin 与收口页面路由', () => {
+        expect(CAOMEI_UI_ROUTE_PREFIXES).toEqual(['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login', '/admin/users', '/admin/oauth/applications', '/admin/sso/providers', '/admin/logs', '/oauth/clients', '/'])
         expect(isCaomeiUiRoute('/login')).toBe(true)
         expect(isCaomeiUiRoute('/admin/users')).toBe(true)
         expect(isCaomeiUiRoute('/admin/oauth/applications')).toBe(true)
         expect(isCaomeiUiRoute('/admin/sso/providers')).toBe(true)
         expect(isCaomeiUiRoute('/admin/logs')).toBe(true)
-        expect(isCaomeiUiRoute('/')).toBe(false)
+        expect(isCaomeiUiRoute('/oauth/clients')).toBe(true)
+        expect(isCaomeiUiRoute('/')).toBe(true)
     })
 
     it('带 locale 前缀时按去前缀后的路径命中', () => {
         expect(isCaomeiUiRoute(stripLocalePrefix('/en-US/login'))).toBe(true)
         expect(isCaomeiUiRoute(stripLocalePrefix('/en-US/register'))).toBe(true)
+    })
+
+    it('根路径只精确命中首页', () => {
+        const prefixes = ['/']
+
+        expect(isCaomeiUiRoute('/', prefixes)).toBe(true)
+        expect(isCaomeiUiRoute('/about', prefixes)).toBe(false)
+        expect(isCaomeiUiRoute('/admin/users', prefixes)).toBe(false)
     })
 
     it('按路径段匹配前缀', () => {
@@ -105,7 +120,9 @@ describe('utils/shared/caomei-ui-migration', () => {
 
     it('每个白名单路由都有对应页面文件', () => {
         for (const prefix of CAOMEI_UI_ROUTE_PREFIXES) {
-            expect(statSync(path.resolve(process.cwd(), `pages${prefix}.vue`)).isFile()).toBe(true)
+            /* 根路由对应 pages/index.vue，其余按路径拼页面文件 */
+            const file = prefix === '/' ? 'pages/index.vue' : `pages${prefix}.vue`
+            expect(statSync(path.resolve(process.cwd(), file)).isFile()).toBe(true)
         }
     })
 
@@ -123,7 +140,7 @@ describe('utils/shared/caomei-ui-migration', () => {
     })
 
     it('尚未迁移的路由不在白名单内', () => {
-        for (const pathname of ['/', '/about', '/privacy', '/terms', '/index', '/oauth/clients']) {
+        for (const pathname of ['/about', '/privacy', '/terms', '/index']) {
             expect(isCaomeiUiRoute(pathname), `${pathname} 不应命中白名单`).toBe(false)
         }
     })

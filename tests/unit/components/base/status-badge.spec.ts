@@ -5,9 +5,9 @@ import StatusBadge from '@/components/base/status-badge.vue'
 describe('StatusBadge', () => {
     const global = {
         stubs: {
-            Tag: {
-                template: '<span class="p-tag-stub" :data-severity="severity">{{ value }}</span>',
-                props: ['value', 'severity'],
+            CaomeiTag: {
+                template: '<span class="caomei-tag-stub" :data-tone="tone" :data-variant="variant"><slot /></span>',
+                props: ['tone', 'variant'],
             },
         },
     }
@@ -17,15 +17,16 @@ describe('StatusBadge', () => {
             props: { status: true, variant: 'enabled' },
             global,
         })
-        expect(wrapperTrue.find('.p-tag-stub').text()).toBe('已启用')
-        expect(wrapperTrue.find('.p-tag-stub').attributes('data-severity')).toBe('success')
+        expect(wrapperTrue.find('.caomei-tag-stub').text()).toBe('已启用')
+        expect(wrapperTrue.find('.caomei-tag-stub').attributes('data-tone')).toBe('success')
+        expect(wrapperTrue.find('.caomei-tag-stub').attributes('data-variant')).toBe('soft')
 
         const wrapperFalse = mount(StatusBadge, {
             props: { status: false, variant: 'enabled' },
             global,
         })
-        expect(wrapperFalse.find('.p-tag-stub').text()).toBe('已禁用')
-        expect(wrapperFalse.find('.p-tag-stub').attributes('data-severity')).toBe('danger')
+        expect(wrapperFalse.find('.caomei-tag-stub').text()).toBe('已禁用')
+        expect(wrapperFalse.find('.caomei-tag-stub').attributes('data-tone')).toBe('danger')
     })
 
     it('renders disabled variant correctly', () => {
@@ -33,8 +34,8 @@ describe('StatusBadge', () => {
             props: { status: true, variant: 'disabled' },
             global,
         })
-        expect(wrapperTrue.find('.p-tag-stub').text()).toBe('已禁用')
-        expect(wrapperTrue.find('.p-tag-stub').attributes('data-severity')).toBe('danger')
+        expect(wrapperTrue.find('.caomei-tag-stub').text()).toBe('已禁用')
+        expect(wrapperTrue.find('.caomei-tag-stub').attributes('data-tone')).toBe('danger')
     })
 
     it('renders role variant correctly', () => {
@@ -42,15 +43,15 @@ describe('StatusBadge', () => {
             props: { status: 'admin', variant: 'role' },
             global,
         })
-        expect(wrapperAdmin.find('.p-tag-stub').text()).toBe('管理员')
-        expect(wrapperAdmin.find('.p-tag-stub').attributes('data-severity')).toBe('danger')
+        expect(wrapperAdmin.find('.caomei-tag-stub').text()).toBe('管理员')
+        expect(wrapperAdmin.find('.caomei-tag-stub').attributes('data-tone')).toBe('danger')
 
         const wrapperUser = mount(StatusBadge, {
             props: { status: 'user', variant: 'role' },
             global,
         })
-        expect(wrapperUser.find('.p-tag-stub').text()).toBe('用户')
-        expect(wrapperUser.find('.p-tag-stub').attributes('data-severity')).toBe('info')
+        expect(wrapperUser.find('.caomei-tag-stub').text()).toBe('用户')
+        expect(wrapperUser.find('.caomei-tag-stub').attributes('data-tone')).toBe('neutral')
     })
 
     it('allows custom overrides', () => {
@@ -63,7 +64,7 @@ describe('StatusBadge', () => {
             },
             global,
         })
-        expect(wrapper.find('.p-tag-stub').text()).toBe('Active')
-        expect(wrapper.find('.p-tag-stub').attributes('data-severity')).toBe('info')
+        expect(wrapper.find('.caomei-tag-stub').text()).toBe('Active')
+        expect(wrapper.find('.caomei-tag-stub').attributes('data-tone')).toBe('neutral')
     })
 })

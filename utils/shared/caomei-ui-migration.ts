@@ -9,10 +9,10 @@
  * `/oauth/consent`（M4-3）、`/sso-login`（M4-4）。
  * 阶段 4（P4）：`/admin/users`（M2 页面 + M3 对话框）、`/admin/oauth/applications`
  * （M4 页面 + M5 对话框）、`/admin/sso/providers`（M6 页面 + M7 表单 + M8 对话框）、
- * `/admin/logs`（M9 页面 + 表格 + M10 统计组件，均整路由切齐后登记）；
- * 其余 Admin 路由与 `/oauth/clients` 未登记；P5 收尾时清空并删除本文件。
+ * `/admin/logs`（M9 页面 + 表格 + M10 统计组件）、`/oauth/clients` 与 `/`（M11 剩余页面）；
+ * P5 收尾时清空并删除本文件。
  */
-export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = ['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login', '/admin/users', '/admin/oauth/applications', '/admin/sso/providers', '/admin/logs']
+export const CAOMEI_UI_ROUTE_PREFIXES: readonly string[] = ['/login', '/register', '/forgot-password', '/change-password', '/quick-login', '/profile', '/security', '/oauth/consent', '/sso-login', '/admin/users', '/admin/oauth/applications', '/admin/sso/providers', '/admin/logs', '/oauth/clients', '/']
 
 /**
  * 判断路径是否命中 caomei-ui 白名单。
@@ -23,6 +23,11 @@ export function isCaomeiUiRoute(path: string, prefixes: readonly string[] = CAOM
     const pathname = path.split(/[?#]/u)[0] || '/'
 
     return prefixes.some((prefix) => {
+        /* 根路径是精确匹配：`/` 只命中首页，不把全部路由都算作白名单 */
+        if (prefix === '/') {
+            return pathname === '/'
+        }
+
         const normalized = prefix.endsWith('/') ? prefix.slice(0, -1) : prefix
         if (!normalized) {
             return false

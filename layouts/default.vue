@@ -18,20 +18,14 @@
         <GithubCorner v-if="demoMode" />
         <!-- 反馈按钮 -->
         <FeedbackButton />
-        <!-- 主题切换按钮 -->
-        <ThemeToggleV2 v-if="isCaomeiUiPage" />
-        <ThemeToggle v-else />
+        <!-- 主题切换按钮（全站共用同一实现，不再按路由白名单分叉） -->
+        <ThemeToggle />
     </div>
 </template>
 
 <script setup lang="ts">
-import { stripLocalePrefix } from '@/i18n/config/locale-registry'
-import { isCaomeiUiRoute } from '@/utils/shared/caomei-ui-migration'
-
 const config = useRuntimeConfig()
 const demoMode = computed(() => config.public.demoMode)
-const route = useRoute()
-const isCaomeiUiPage = computed(() => isCaomeiUiRoute(stripLocalePrefix(route.path)))
 </script>
 
 <style scoped lang="scss">

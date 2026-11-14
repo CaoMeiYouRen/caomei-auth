@@ -13,13 +13,15 @@
                     </p>
                 </div>
                 <div class="header-actions">
-                    <Button
-                        label="返回个人中心"
-                        icon="mdi mdi-arrow-left"
-                        outlined
-                        severity="secondary"
+                    <CaomeiButton
+                        variant="secondary"
                         @click="goProfile"
-                    />
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-arrow-left" aria-hidden="true" />
+                        </template>
+                        返回个人中心
+                    </CaomeiButton>
                 </div>
             </div>
 
@@ -91,28 +93,31 @@
 
                     <div class="app-actions">
                         <div class="app-links">
-                            <Button
+                            <CaomeiButton
                                 v-if="app.application.tosUri"
-                                label="服务条款"
-                                size="small"
-                                text
+                                variant="ghost"
+                                size="sm"
                                 @click="openLink(app.application.tosUri)"
-                            />
-                            <Button
+                            >
+                                服务条款
+                            </CaomeiButton>
+                            <CaomeiButton
                                 v-if="app.application.policyUri"
-                                label="隐私政策"
-                                size="small"
-                                text
+                                variant="ghost"
+                                size="sm"
                                 @click="openLink(app.application.policyUri)"
-                            />
+                            >
+                                隐私政策
+                            </CaomeiButton>
                         </div>
-                        <Button
-                            label="撤销授权"
-                            severity="danger"
-                            size="small"
+                        <CaomeiButton
+                            tone="danger"
+                            size="sm"
                             :loading="revokingApps.has(app.clientId)"
                             @click="confirmRevokeAuthorization(app)"
-                        />
+                        >
+                            撤销授权
+                        </CaomeiButton>
                     </div>
                 </div>
             </div>
@@ -123,62 +128,56 @@
                     <i class="empty-icon mdi mdi-key-variant" />
                     <h3>暂无授权应用</h3>
                     <p>您还没有授权任何第三方应用访问您的账户</p>
-                    <Button
-                        label="了解更多"
-                        outlined
+                    <CaomeiButton
+                        variant="secondary"
                         @click="goDocs"
-                    />
+                    >
+                        了解更多
+                    </CaomeiButton>
                 </div>
             </div>
         </div>
 
         <!-- 撤销授权确认对话框 -->
-        <Dialog
+        <BaseDialogV2
             v-model:visible="showRevokeDialog"
-            modal
-            header="撤销授权"
-            :style="{width: '450px'}"
+            title="撤销授权"
+            size="md"
             :closable="!revoking"
+            :close-on-esc="!revoking"
+            :close-on-overlay="!revoking"
         >
-            <template #header>
-                <div class="dialog-header">
-                    <i class="mdi mdi-alert-circle-outline" />
-                    <span>撤销授权</span>
-                </div>
-            </template>
-
             <div class="revoke-dialog-content">
                 <p>您确定要撤销对 <strong>{{ selectedApp?.application?.name }}</strong> 的授权吗？</p>
-                <div class="warning-notice">
-                    <i class="mdi mdi-information-outline" />
-                    <div>
-                        <p><strong>撤销后：</strong></p>
-                        <ul>
-                            <li>该应用将无法继续访问您的账户信息</li>
-                            <li>您可能需要重新登录该应用</li>
-                            <li>已获取的数据不会被自动删除</li>
-                        </ul>
-                    </div>
-                </div>
+                <CaomeiAlert
+                    tone="warning"
+                    title="撤销后："
+                >
+                    <ul>
+                        <li>该应用将无法继续访问您的账户信息</li>
+                        <li>您可能需要重新登录该应用</li>
+                        <li>已获取的数据不会被自动删除</li>
+                    </ul>
+                </CaomeiAlert>
             </div>
 
             <template #footer>
-                <div class="dialog-footer">
-                    <Button
-                        label="取消"
-                        severity="secondary"
-                        :disabled="revoking"
-                        @click="showRevokeDialog = false"
-                    />
-                    <Button
-                        label="确认撤销"
-                        severity="danger"
-                        :loading="revoking"
-                        @click="revokeAuthorization"
-                    />
-                </div>
+                <CaomeiButton
+                    variant="secondary"
+                    :disabled="revoking"
+                    @click="showRevokeDialog = false"
+                >
+                    取消
+                </CaomeiButton>
+                <CaomeiButton
+                    tone="danger"
+                    :loading="revoking"
+                    @click="revokeAuthorization"
+                >
+                    确认撤销
+                </CaomeiButton>
             </template>
-        </Dialog>
+        </BaseDialogV2>
     </div>
 </template>
 
@@ -210,7 +209,7 @@ const {
 
 .oauth-clients-page {
     min-height: 100vh;
-    background-color: var(--surface-ground);
+    background-color: var(--admin-bg);
 
     .container {
         max-width: 1200px;
@@ -233,17 +232,17 @@ const {
                 gap: 0.75rem;
                 align-items: center;
                 margin-bottom: 0.5rem;
-                color: var(--text-color);
+                color: var(--admin-text);
                 font-weight: 600;
                 font-size: 2rem;
 
                 i {
-                    color: var(--primary-color);
+                    color: var(--color-primary);
                 }
             }
 
             .page-description {
-                color: var(--text-color-secondary);
+                color: var(--admin-muted);
                 font-size: 1.1rem;
             }
         }
@@ -264,12 +263,12 @@ const {
 
             .loading-icon {
                 margin-bottom: 1rem;
-                color: var(--primary-color);
+                color: var(--color-primary);
                 font-size: 3rem;
             }
 
             p {
-                color: var(--text-color-secondary);
+                color: var(--admin-muted);
                 font-size: 1.1rem;
             }
         }
@@ -283,14 +282,14 @@ const {
 
     .app-card {
         padding: 1.5rem;
-        background: var(--surface-card);
-        border: 1px solid var(--surface-border);
+        background: var(--admin-surface);
+        border: 1px solid var(--admin-border);
         border-radius: 1rem;
-        box-shadow: var(--card-shadow);
+        box-shadow: var(--admin-shadow);
         transition: all 0.2s ease;
 
         &:hover {
-            box-shadow: var(--card-hover-shadow);
+            box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
             transform: translateY(-2px);
         }
 
@@ -306,7 +305,7 @@ const {
                 justify-content: center;
                 width: 60px;
                 height: 60px;
-                background: var(--surface-100);
+                background: var(--admin-surface-muted);
                 border-radius: 0.75rem;
 
                 img {
@@ -317,7 +316,7 @@ const {
                 }
 
                 i {
-                    color: var(--text-color-secondary);
+                    color: var(--admin-muted);
                     font-size: 2rem;
                 }
             }
@@ -328,7 +327,7 @@ const {
 
                 .app-name {
                     margin-bottom: 0.5rem;
-                    color: var(--text-color);
+                    color: var(--admin-text);
                     font-weight: 600;
                     font-size: 1.25rem;
                 }
@@ -337,7 +336,7 @@ const {
                     display: -webkit-box;
                     margin-bottom: 0.5rem;
                     overflow: hidden;
-                    color: var(--text-color-secondary);
+                    color: var(--admin-muted);
                     font-size: 0.9rem;
                     line-height: 1.4;
                     line-clamp: 2;
@@ -348,7 +347,7 @@ const {
                     display: inline-flex;
                     gap: 0.25rem;
                     align-items: center;
-                    color: var(--primary-color);
+                    color: var(--color-primary);
                     font-size: 0.85rem;
                     text-decoration: none;
 
@@ -376,12 +375,12 @@ const {
                 strong {
                     display: block;
                     margin-bottom: 0.5rem;
-                    color: var(--text-color);
+                    color: var(--admin-text);
                     font-size: 0.9rem;
                 }
 
                 >span {
-                    color: var(--text-color-secondary);
+                    color: var(--admin-muted);
                     font-size: 0.9rem;
                 }
 
@@ -392,15 +391,15 @@ const {
 
                     .scope-tag {
                         padding: 0.25rem 0.5rem;
-                        color: var(--primary-700);
+                        color: var(--color-primary);
                         font-weight: 500;
                         font-size: 0.8rem;
-                        background: var(--primary-50);
+                        background: var(--admin-primary-soft);
                         border-radius: 0.375rem;
                     }
 
                     .no-scopes {
-                        color: var(--text-color-secondary);
+                        color: var(--admin-muted);
                         font-size: 0.85rem;
                         font-style: italic;
                     }
@@ -413,7 +412,7 @@ const {
             align-items: center;
             justify-content: space-between;
             padding-top: 1rem;
-            border-top: 1px solid var(--surface-border);
+            border-top: 1px solid var(--admin-border);
 
             .app-links {
                 display: flex;
@@ -434,32 +433,22 @@ const {
 
             .empty-icon {
                 margin-bottom: 1.5rem;
-                color: var(--text-color-secondary);
+                color: var(--admin-muted);
                 font-size: 4rem;
                 opacity: 0.6;
             }
 
             h3 {
                 margin-bottom: 1rem;
-                color: var(--text-color);
+                color: var(--admin-text);
                 font-size: 1.5rem;
             }
 
             p {
                 margin-bottom: 2rem;
-                color: var(--text-color-secondary);
+                color: var(--admin-muted);
                 line-height: 1.6;
             }
-        }
-    }
-
-    .dialog-header {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-
-        i {
-            color: var(--orange-500);
         }
     }
 
@@ -469,48 +458,16 @@ const {
             line-height: 1.6;
         }
 
-        .warning-notice {
-            display: flex;
-            gap: 0.75rem;
-            padding: 1rem;
-            background: var(--yellow-50);
-            border: 1px solid var(--yellow-200);
-            border-radius: 0.5rem;
+        ul {
+            margin: 0;
+            padding-left: 1.2rem;
 
-            i {
-                flex-shrink: 0;
-                margin-top: 0.1rem;
-                color: var(--yellow-600);
-                font-size: 1.2rem;
-            }
-
-            div {
-                flex: 1;
-
-                p {
-                    margin-bottom: 0.5rem;
-                    color: var(--text-color);
-                    font-weight: 500;
-                }
-
-                ul {
-                    margin: 0;
-                    padding-left: 1.2rem;
-
-                    li {
-                        margin-bottom: 0.25rem;
-                        color: var(--text-color-secondary);
-                        font-size: 0.9rem;
-                    }
-                }
+            li {
+                margin-bottom: 0.25rem;
+                color: var(--admin-muted);
+                font-size: 0.9rem;
             }
         }
-    }
-
-    .dialog-footer {
-        display: flex;
-        gap: 0.75rem;
-        justify-content: flex-end;
     }
 
     // 响应式设计

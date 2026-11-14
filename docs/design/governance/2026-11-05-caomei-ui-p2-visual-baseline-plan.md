@@ -48,7 +48,7 @@ P2 试点（登录页）先执行，P3 / P4 逐批扩展到对应路由。
 - **方式**：同一生产 server + Playwright headless Chromium，截图存 `artifacts/visual-baseline/2026-11-08/p2-after/`（不入库）。
 - **覆盖**：与 §2.1 相同的 8 个状态（三 Tab、明暗、桌面 / 移动、校验错误）。
 - **结果**：
-    - `/login` 页面内 PrimeVue 组件节点 **0**（`.p-button` / `.p-inputtext` / `.p-dialog` / `.p-tabview` / `.p-checkbox`）；主题切换改用 `ThemeToggleV2`（CaomeiButton），页面级 `<Toast />` 移除，Toast 服务仍为 PrimeVue 并在 M3-3 统一切换。
+    - `/login` 页面内 PrimeVue 组件节点 **0**（`.p-button` / `.p-inputtext` / `.p-dialog` / `.p-tabview` / `.p-checkbox`）；主题切换改用 `ThemeToggleV2`（CaomeiButton；该实现已在阶段 4 M11 合并回 `components/theme-toggle.vue` 并删除 V2 文件），页面级 `<Toast />` 移除，Toast 服务仍为 PrimeVue 并在 M3-3 统一切换。
     - 交互回归通过：三 Tab 切换、邮箱格式校验（「请输入有效的邮箱地址」）、密码显隐、验证码登录切换、明暗切换；验证码未启用时控制台 0 error。
     - 桌面 / 移动均无横向溢出；暗色卡片 `rgb(30,30,30)`、浅色 `rgb(255,255,255)`。
     - 包体：[bundle-after-m2-1-2026-11-08.json](./bundle-after-m2-1-2026-11-08.json)：`entryJs` 431,229 B、`totalJs` 3,650,596 B（较 M1-1 +3.77%）、`totalCss` 1,703,412 B（+5.88%），`keyCss` 399,733 B 不变；增量来自 login 首次引入 Caomei 组件，P5 卸载 PrimeVue 后回收。

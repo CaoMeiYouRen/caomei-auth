@@ -4,9 +4,10 @@ import { ref, nextTick } from 'vue'
 import ThemeToggle from '@/components/theme-toggle.vue'
 import BaseTooltip from '@/components/base/base-tooltip.vue'
 
-// Mock PrimeVue Button
+/* CaomeiButton 把 `label` 映射为 aria-label；测试只关心按钮属性与图标插槽 */
 const ButtonStub = {
-    template: '<button><slot /></button>',
+    props: ['label'],
+    template: '<button :aria-label="label" v-bind="$attrs"><slot name="icon" /><slot /></button>',
 }
 
 /* tooltip 依赖 Reka 的 Provider 与浏览器环境；组件测试只关心触发器与属性传递 */
@@ -26,7 +27,7 @@ vi.mock('@vueuse/core', () => ({
 const mountToggle = () => mount(ThemeToggle, {
     global: {
         stubs: {
-            Button: ButtonStub,
+            CaomeiButton: ButtonStub,
             CaomeiTooltip: TooltipStub,
             CaomeiTooltipTrigger: TooltipStub,
             CaomeiTooltipContent: TooltipStub,
@@ -68,6 +69,23 @@ describe('ThemeToggle', () => {
 
         await wrapper.find('button').trigger('click')
         expect(mode.value).toBe('light')
+    })
+
+    it('renders the real CaomeiButton with accessible name and type', async () => {
+        const wrapper = mount(ThemeToggle, {
+            global: {
+                stubs: {
+                    CaomeiTooltip: TooltipStub,
+                    CaomeiTooltipTrigger: TooltipStub,
+                    CaomeiTooltipContent: TooltipStub,
+                },
+            },
+        })
+        await nextTick()
+
+        const button = wrapper.get('button')
+        expect(button.attributes('aria-label')).toBe('切换为暗色模式')
+        expect(button.attributes('type')).toBe('button')
     })
 
     it('follows system preference in auto mode', async () => {
