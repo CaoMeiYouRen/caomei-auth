@@ -51,6 +51,12 @@ describe('i18n/config/locale-registry', () => {
         expect(normalizeDetectedLocale('zh-cn')).toBe('zh-CN')
     })
 
+    it('ignores inherited object properties when mapping aliases', () => {
+        expect(matchDetectedLocale('toString')).toBeUndefined()
+        expect(matchDetectedLocale('constructor')).toBeUndefined()
+        expect(normalizeDetectedLocale('toString')).toBe(DEFAULT_LOCALE)
+    })
+
     it('strips locale prefixes for route guards', () => {
         expect(stripLocalePrefix('/en-US/login')).toBe('/login')
         expect(stripLocalePrefix('/en-US')).toBe('/')

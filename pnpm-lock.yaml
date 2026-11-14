@@ -134,8 +134,8 @@ importers:
         specifier: ^12.11.1
         version: 12.11.1
       caomei-ui:
-        specifier: 1.2.0
-        version: 1.2.0(@nuxt/kit@4.6.4(@nuxt/schema@4.6.4)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.0)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.19)(unplugin@3.7.0(esbuild@0.25.12)(rolldown@1.2.19)(rollup@4.67.5)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))))(vue@3.5.45(typescript@6.0.3))
+        specifier: 1.3.0
+        version: 1.3.0(@nuxt/kit@4.6.4(@nuxt/schema@4.6.4)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.0)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.19)(unplugin@3.7.0(esbuild@0.25.12)(rolldown@1.2.19)(rollup@4.67.5)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))))(vue@3.5.45(typescript@6.0.3))
       chart.js:
         specifier: ^4.6.1
         version: 4.6.1
@@ -292,7 +292,7 @@ importers:
         version: 1.0.1
       conventional-changelog-cmyr-config:
         specifier: ^3.0.0
-        version: 3.0.0(supports-color@10.2.2)
+        version: 3.1.2(supports-color@10.2.2)
       cross-env:
         specifier: ^10.1.0
         version: 10.1.0
@@ -1297,8 +1297,10 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
-  '@floating-ui/vue@1.1.11':
-    resolution: {integrity: sha512-HzHKCNVxnGS35r9fCHBc3+uCnjw9IWIlCPL683cGgM9Kgj2BiAl8x1mS7vtvP6F9S/e/q4O6MApwSHj8hNLGfw==}
+  '@floating-ui/vue@2.0.1':
+    resolution: {integrity: sha512-043dyEKD9TDSfz080YH2vobubgg+NIo/9Fw4RAl7sEMpD8Am1DNrrSTl/GpMBjyGHoD/FbJY2QLawY+HSQsEIA==}
+    peerDependencies:
+      vue: '>=3.3.0'
 
   '@hcaptcha/vue3-hcaptcha@1.3.0':
     resolution: {integrity: sha512-IEonS6JiYdU7uy6aeib8cYtMO4nj8utwStbA9bWHyYbOvOvhpkV+AW8vfSKh6SntYxqle/TRwhv+kU9p92CfsA==}
@@ -4355,8 +4357,8 @@ packages:
   caniuse-lite@1.0.30001820:
     resolution: {integrity: sha512-gfWD6MxqVCqAOwmODfZf7DchWvlrA+SRdNX7ceLfg3xRqe5ssjjpF7EgslC/0tiLiNTajdaNN/q8c/5u/7Gz8w==}
 
-  caomei-ui@1.2.0:
-    resolution: {integrity: sha512-j6jLEMtFFPDOz5X96LfJbU4ec3p6qJo0OQDSBa2VWosWuXm1DGCBlte/3ZNUZeI4wOGPO4p3Gx7kahkCsv1C0w==}
+  caomei-ui@1.3.0:
+    resolution: {integrity: sha512-ZuKjaQRCr8YdKigpCNGzIwyy6Vy117eBMgmFvgvQAK6JmAXOPeuJoHf9kycBWfV+Roo2ocRYxWyrIo3xw2D8HA==}
     engines: {node: '>=22'}
     peerDependencies:
       '@nuxt/kit': ^4.0.0
@@ -4633,8 +4635,8 @@ packages:
     resolution: {integrity: sha512-HdxRxuS8bBXVIuo4V82gvSwAXT0vYQUizrjs/izmPg5JdDstr8v8I5hduGL3iQbG+o310dUDxC4+LetuS5hu9w==}
     engines: {node: '>=22'}
 
-  conventional-changelog-cmyr-config@3.0.0:
-    resolution: {integrity: sha512-QhD/0545XRgspCcopi2d5L8ffFdiqsaqqcQfGRprv18CVH0NUQUtfORpbNqEOWwl1VxYj1pZUcVyxHTSfam1Xg==}
+  conventional-changelog-cmyr-config@3.1.2:
+    resolution: {integrity: sha512-9roTUAub9cFrBEK5KsKXlGabEIAC2BrhxRx0lq1r/f/CElob1KHI+MoZ41xKsuxLQbZqTWaPb7BiVX9C/PAVvQ==}
     engines: {node: '>=18'}
 
   conventional-changelog-conventionalcommits@10.4.1:
@@ -8375,8 +8377,8 @@ packages:
     resolution: {integrity: sha512-NgRBy2Nx/bE+9F27nVHnqcN5HjyLmecqsqx2PJHu3/IEtADD4WuxuXIVExD5PoSDFVrl78dOonfcOe5O+5nbzQ==}
     hasBin: true
 
-  reka-ui@2.10.4:
-    resolution: {integrity: sha512-kbS5GAbkHkYj0EVKAg5ZPEPndhBjeUFSa1Aq5m5ftQwyHnB1v5tw8X6fcwfKH/ry3StPXblMWM1DW82MVS71cw==}
+  reka-ui@2.11.0:
+    resolution: {integrity: sha512-ilkpm4bIAol4jwzm4tpm3WVcffyGOpqksNZL1k1qO9QmIwAA+q8jroxjkUGLEn/GddfdExFfvofWfQiKZszUeQ==}
     peerDependencies:
       vue: '>= 3.4.0'
 
@@ -11387,14 +11389,11 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@floating-ui/vue@1.1.11(vue@3.5.45(typescript@6.0.3))':
+  '@floating-ui/vue@2.0.1(vue@3.5.45(typescript@6.0.3))':
     dependencies:
       '@floating-ui/dom': 1.8.0
       '@floating-ui/utils': 0.2.12
-      vue-demi: 0.14.10(vue@3.5.45(typescript@6.0.3))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
+      vue: 3.5.45(typescript@6.0.3)
 
   '@hcaptcha/vue3-hcaptcha@1.3.0(vue@3.5.45(typescript@6.0.3))':
     dependencies:
@@ -14840,18 +14839,17 @@ snapshots:
 
   caniuse-lite@1.0.30001820: {}
 
-  caomei-ui@1.2.0(@nuxt/kit@4.6.4(@nuxt/schema@4.6.4)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.0)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.19)(unplugin@3.7.0(esbuild@0.25.12)(rolldown@1.2.19)(rollup@4.67.5)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))))(vue@3.5.45(typescript@6.0.3)):
+  caomei-ui@1.3.0(@nuxt/kit@4.6.4(@nuxt/schema@4.6.4)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.0)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.19)(unplugin@3.7.0(esbuild@0.25.12)(rolldown@1.2.19)(rollup@4.67.5)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))))(vue@3.5.45(typescript@6.0.3)):
     dependencies:
       '@internationalized/date': 3.12.4
       '@lucide/vue': 1.68.0(vue@3.5.45(typescript@6.0.3))
       '@tanstack/vue-table': 9.2.4(vue@3.5.45(typescript@6.0.3))
       '@vavt/cm-extension': 2.0.0
-      reka-ui: 2.10.4(vue@3.5.45(typescript@6.0.3))
+      reka-ui: 2.11.0(vue@3.5.45(typescript@6.0.3))
       vue: 3.5.45(typescript@6.0.3)
     optionalDependencies:
       '@nuxt/kit': 4.6.4(@nuxt/schema@4.6.4)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.0)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.19)(unplugin@3.7.0(esbuild@0.25.12)(rolldown@1.2.19)(rollup@4.67.5)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1)))
     transitivePeerDependencies:
-      - '@vue/composition-api'
       - md-editor-rt
 
   ccount@2.0.1: {}
@@ -15129,10 +15127,11 @@ snapshots:
     dependencies:
       '@conventional-changelog/template': 1.4.0
 
-  conventional-changelog-cmyr-config@3.0.0(supports-color@10.2.2):
+  conventional-changelog-cmyr-config@3.1.2(supports-color@10.2.2):
     dependencies:
       compare-func: 2.0.0
       debug: 4.4.3(supports-color@10.2.2)
+      handlebars: 4.7.10
     transitivePeerDependencies:
       - supports-color
 
@@ -19708,10 +19707,9 @@ snapshots:
     dependencies:
       jsesc: 3.1.0
 
-  reka-ui@2.10.4(vue@3.5.45(typescript@6.0.3)):
+  reka-ui@2.11.0(vue@3.5.45(typescript@6.0.3)):
     dependencies:
-      '@floating-ui/dom': 1.8.0
-      '@floating-ui/vue': 1.1.11(vue@3.5.45(typescript@6.0.3))
+      '@floating-ui/vue': 2.0.1(vue@3.5.45(typescript@6.0.3))
       '@internationalized/date': 3.12.4
       '@internationalized/number': 3.6.9
       '@tanstack/vue-virtual': 3.13.52(vue@3.5.45(typescript@6.0.3))
@@ -19721,8 +19719,6 @@ snapshots:
       defu: 6.1.7
       ohash: 2.0.12
       vue: 3.5.45(typescript@6.0.3)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
 
   require-directory@2.1.1: {}
 
@@ -19929,7 +19925,7 @@ snapshots:
     dependencies:
       '@semantic-release/changelog': 7.0.0(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))
       '@semantic-release/git': 11.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)
-      conventional-changelog-cmyr-config: 3.0.0(supports-color@10.2.2)
+      conventional-changelog-cmyr-config: 3.1.2(supports-color@10.2.2)
       semantic-release: 25.0.9(supports-color@10.2.2)(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color

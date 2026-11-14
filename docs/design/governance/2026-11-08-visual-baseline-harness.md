@@ -144,6 +144,7 @@ pnpm test:visual --grep "login 默认态"
 
 - 工件：`visual-regression`（`test-results/visual*`、`playwright-report/visual*`、`reference-manifest.json`），保留 7 天。
 - **基线只能在容器内更新**：本地 `pnpm test:visual:update` 会进入同一镜像执行并回写 `__screenshots__`；禁止用宿主直跑的结果更新基线。
+- **重采必须在代码定稿后执行，并追加一次 verify 留痕**：`pnpm test:visual:update` 通过后必须再跑一次不带 `--update-snapshots` 的 `pnpm test:visual`，确认基线能反向校验当前渲染；否则「update 全绿」无法区分「基线正确」与「基线被写成实际渲染」（`47b7c8c` 的 4 张弹窗基线即此类时序事故）。
 - **镜像版本与 `@playwright/test` 精确绑定**：升级 Playwright 必须同批重采自基线（浏览器与字体随镜像变化）。
 - 容器 job 以 root 运行，Chromium 依赖镜像自带的沙箱配置；`--ipc=host` 用于避免小 `/dev/shm` 导致的渲染抖动。
 

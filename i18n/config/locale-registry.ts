@@ -74,6 +74,11 @@ const AUTH_LOCALE_ALIASES: Record<string, LocaleCode> = {
     default: DEFAULT_LOCALE,
 }
 
+/** 认证层别名查表：用 `hasOwn` 过滤 `toString` / `constructor` 这类原型链键。 */
+function matchAuthLocaleAlias(input: string): LocaleCode | undefined {
+    return Object.hasOwn(AUTH_LOCALE_ALIASES, input) ? AUTH_LOCALE_ALIASES[input] : undefined
+}
+
 /**
  * 把任意来源的 locale 归一化为 Registry 内的 code；无法识别时返回 undefined。
  *
@@ -95,7 +100,7 @@ export function matchDetectedLocale(input?: string | null): LocaleCode | undefin
         return exact.code
     }
 
-    return AUTH_LOCALE_ALIASES[raw] ?? AUTH_LOCALE_ALIASES[raw.split('-')[0] ?? '']
+    return matchAuthLocaleAlias(raw) ?? matchAuthLocaleAlias(raw.split('-')[0] ?? '')
 }
 
 /**

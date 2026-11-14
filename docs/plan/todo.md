@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-**阶段 5「i18n 全量落地与体验收口」已授权启动（2026-11-14），实施未开始（M1–M19 全部 pending）。** 范围、口径与验收见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)；阶段 4 已于 2026-11-14 收口，见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)。
+**阶段 5「i18n 全量落地与体验收口」进行中（2026-11-14 授权）：M1 已完成（2026-11-15），M2–M19 pending。** 范围、口径与验收见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)，M1 交付与差异归因见 [M1 记录](../design/governance/2026-11-15-m1-caomei-ui-1.3.0.md)；阶段 4 已于 2026-11-14 收口，见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)。
 
 ## 阶段 5 原子条目
 
@@ -12,7 +12,7 @@
 
 | 编号 | 条目 | 验收要点 | 状态 |
 | :--- | :--- | :--- | :--- |
-| M1 | 基座对齐：caomei-ui 1.3.0 与内建文案 locale 桥接 | 英文下组件内建文案为英文；受影响视觉基线重采；`test` / `test:visual` 全绿 | pending |
+| M1 | 基座对齐：caomei-ui 1.3.0 与内建文案 locale 桥接 | 英文下组件内建文案为英文；受影响视觉基线重采；`test` / `test:visual` 全绿 | 已完成（2026-11-15） |
 | M2 | 消息模块化与按需加载 | `locale-modules` / `locale-runtime-loader`；17 模块拆分；core 首屏 + 路由懒加载；loader 单测 | pending |
 | M3 | 治理门禁与既有缺陷 | 扫描覆盖 `<script setup>`；`lint:i18n` / `test:i18n` 接入；Admin `validation.*` 直显修复；`usePageMeta` / `app.head` 接入 | pending |
 | M4 | 认证入口文案 | 5 个认证页 + 共享组件 + 5 个 flow composable + `auth` 模块双语 | pending |
