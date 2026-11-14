@@ -7,6 +7,7 @@ import {
 import {
     countHardcodedLines,
     diffHardcodedAllowlist,
+    extractVueScripts,
     extractVueTemplate,
 } from '../../../scripts/i18n/lib/hardcoded-scan.mjs'
 import { validateLocaleRegistry } from '../../../scripts/i18n/lib/registry-rules.mjs'
@@ -82,7 +83,7 @@ describe('i18n 治理脚本：语言数据工具', () => {
 })
 
 describe('i18n 治理脚本：硬编码中文扫描', () => {
-    it('只统计 Vue 模板中的中文，忽略脚本与注释', () => {
+    it('统计模板与脚本中的中文，忽略注释', () => {
         const source = `<template>
     <div>登录</div>
     <!-- 注释里的中文 -->
@@ -94,7 +95,8 @@ const label = '脚本里的中文'
 </script>
 `
         expect(extractVueTemplate(source)).toContain('登录')
-        expect(countHardcodedLines('pages/login.vue', source)).toBe(2)
+        /* 模板 2 行 + 脚本 1 行；注释不计入 */
+        expect(countHardcodedLines('pages/login.vue', source)).toBe(3)
     })
 
     it('保留嵌套 template slot 中的内容', () => {
@@ -116,6 +118,60 @@ const label = '脚本里的中文'
     <span>注册</span>
 </template>`
         expect(countHardcodedLines('pages/auth.vue', source)).toBe(2)
+    })
+
+    it('把 `<script setup>` 中的文案计入基线', () => {
+        const source = `<template>
+    <div>用户管理</div>
+</template>
+
+<script setup lang="ts">
+const columns = [
+    { key: 'role', header: '角色' },
+    { key: 'status', header: '状态' },
+]
+</script>`
+        expect(extractVueScripts(source)).toContain('角色')
+        expect(countHardcodedLines('pages/admin/users.vue', source)).toBe(3)
+    })
+
+    it('脚本块中的注释不计入基线', () => {
+        const source = `<template>
+    <div>标题</div>
+</template>
+
+<script setup lang="ts">
+// 中文注释
+/* 块注释里的中文 */
+const label = '保存'
+</script>`
+        expect(countHardcodedLines('pages/example.vue', source)).toBe(2)
+    })
+
+    it('模板与多个脚本块合并计数', () => {
+        const source = `<template><div>甲</div></template>
+<script lang="ts">const a = '乙'</script>
+<script setup lang="ts">const b = '丙'</script>`
+        expect(countHardcodedLines('components/example.vue', source)).toBe(3)
+    })
+
+    it('HTML 注释中的 `<script>` 不计入，字符串中的 `</script>` 按 SFC 同口径截断', () => {
+        const source = `<template>
+    <div>标题</div>
+</template>
+
+<!-- <script setup lang="ts">const hidden = '注释里的中文'</script> -->
+<script setup lang="ts">
+const label = '保存'
+const close = '</script>'
+const after = '截断后的中文'
+</script>`
+        const scripts = extractVueScripts(source)
+        expect(scripts).not.toContain('注释里的中文')
+        expect(scripts).toContain('保存')
+        expect(scripts).not.toContain('截断后的中文')
+        /* 模板 1 行 + 截断前的脚本 1 行 */
+        expect(countHardcodedLines('components/edge.vue', source)).toBe(2)
     })
 
     it('TypeScript 忽略块注释与整行注释', () => {

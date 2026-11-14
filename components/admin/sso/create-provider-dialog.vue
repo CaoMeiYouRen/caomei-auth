@@ -192,6 +192,7 @@ const {
     validateForm,
 } = useSsoProviderForm()
 
+const { t } = useI18n()
 const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 // 监听 provider 变化，初始化表单
@@ -236,7 +237,7 @@ async function submitProvider() {
         if (validationErrors.length > 0) {
             toast.danger({
                 title: '表单验证失败',
-                description: validationErrors.join('；'),
+                description: validationErrors.join(t('common.listSeparator')),
                 duration: 5000,
             })
             return

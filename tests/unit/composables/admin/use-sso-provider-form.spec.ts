@@ -1,3 +1,5 @@
+import { mount } from '@vue/test-utils'
+import { defineComponent } from 'vue'
 import { describe, it, expect } from 'vitest'
 import { useSsoProviderForm } from '@/composables/admin/use-sso-provider-form'
 import type { AdminSsoProviderDetail } from '@/types/admin'
@@ -134,13 +136,38 @@ describe('useSsoProviderForm', () => {
         })
     })
 
-    it('validateForm 返回共享 schema 的错误信息', () => {
+    it('validateForm 使用当前语言的译文（注入 $t）', () => {
+        const Host = defineComponent({
+            setup() {
+                const { validateForm } = useSsoProviderForm()
+                return { validateForm }
+            },
+            template: '<div />',
+        })
+        const wrapper = mount(Host, {
+            global: {
+                config: {
+                    // 只注入 `$t`：`ComponentCustomProperties` 还要求 recaptcha 等全局属性，测试无需实现
+                    globalProperties: {
+                        $t: (key: string) => (key === 'validation.providerIdRequired' ? 'Provider ID is required' : key),
+                    } as never,
+                },
+            },
+        })
+
+        const errors = (wrapper.vm as unknown as { validateForm: () => string[] }).validateForm()
+
+        expect(errors).toContain('Provider ID is required')
+        expect(errors.some((message) => message.startsWith('validation.'))).toBe(false)
+    })
+
+    it('无 i18n 上下文时回退 zh-CN 译文', () => {
         const { validateForm } = useSsoProviderForm()
 
         const errors = validateForm()
 
-        expect(errors.length).toBeGreaterThan(0)
-        expect(errors).toContain('validation.providerIdRequired')
+        expect(errors).toContain('Provider ID 不能为空')
+        expect(errors.some((message) => message.startsWith('validation.'))).toBe(false)
     })
 
     it('validateForm 在必填项齐全时通过', () => {

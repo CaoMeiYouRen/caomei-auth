@@ -153,6 +153,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useToast } from 'caomei-ui'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import { oauthApplicationFormSchema } from '@/utils/shared/schemas'
 import type { AdminOAuthApplicationRow, AdminOAuthClientCredentials } from '@/types/admin'
 
@@ -174,6 +175,8 @@ const visible = computed({
 
 const isEditing = computed(() => Boolean(props.application))
 const toast = useToast()
+const translateValidation = useValidationMessage()
+const { t } = useI18n()
 const submitting = ref(false)
 
 const redirectUrlsInput = ref('')
@@ -293,7 +296,8 @@ function validateForm(): string[] {
     const result = oauthApplicationFormSchema.safeParse(formData.value)
     if (!result.success) {
         for (const issue of result.error.issues) {
-            errors.push(issue.message)
+            /* `validation.*` 键在边界统一翻译，避免 Toast 直接显示键名 */
+            errors.push(translateValidation(issue.message))
         }
     }
 
@@ -313,7 +317,7 @@ async function submitApplication() {
         if (validationErrors.length > 0) {
             toast.danger({
                 title: '表单验证失败',
-                description: validationErrors.join('；'),
+                description: validationErrors.join(t('common.listSeparator')),
                 duration: 5000,
             })
             return

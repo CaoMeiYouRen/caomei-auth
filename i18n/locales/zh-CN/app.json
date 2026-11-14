@@ -1,6 +1,7 @@
 {
     "app": {
-        "name": "草梅 Auth"
+        "name": "草梅 Auth",
+        "title": "草梅 Auth 统一登录平台"
     },
     "language": {
         "label": "语言",

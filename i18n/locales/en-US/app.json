@@ -1,6 +1,7 @@
 {
     "app": {
-        "name": "Caomei Auth"
+        "name": "Caomei Auth",
+        "title": "Caomei Auth Unified Sign-In Platform"
     },
     "language": {
         "label": "Language",

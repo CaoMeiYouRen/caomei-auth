@@ -68,6 +68,32 @@ export function extractVueTemplate(source) {
 }
 
 /**
+ * 提取 `.vue` 的全部 `<script>` 块（含 `<script setup>`）。
+ *
+ * 页面文案常写在 `columns` / `options` / `useHead` 等脚本对象里，只扫模板会漏计，
+ * 使迁移后的基线「隐性下降」。脚本块与模板一样去注释后计入基线。
+ * @param {string} source
+ */
+export function extractVueScripts(source) {
+    /* 先剔除 HTML 注释：模板注释里的 `<script>` 不是 SFC 脚本块 */
+    const content = stripHtmlComments(source)
+    const scripts = []
+    const openTagPattern = /<script\b[^>]*>/gu
+    let match
+    while ((match = openTagPattern.exec(content))) {
+        const start = match.index + match[0].length
+        /* 与 Vue SFC 同口径：脚本块在第一个 `</script>` 处结束（字符串内也会截断） */
+        const end = content.indexOf('</script>', start)
+        if (end === -1) {
+            break
+        }
+        scripts.push(content.slice(start, end))
+        openTagPattern.lastIndex = end + '</script>'.length
+    }
+    return scripts.join('\n')
+}
+
+/**
  * 去掉注释后统计包含中文的行数。
  * @param {string} filePath 相对路径，用于判断文件类型
  * @param {string} source
@@ -76,7 +102,11 @@ export function countHardcodedLines(filePath, source) {
     const extension = path.extname(filePath)
     let text = source
     if (extension === '.vue') {
-        text = stripHtmlComments(extractVueTemplate(source))
+        const template = stripHtmlComments(extractVueTemplate(source))
+        const scripts = extractVueScripts(source)
+            .replace(TS_BLOCK_COMMENT_PATTERN, '')
+            .replace(TS_LINE_COMMENT_PATTERN, '')
+        text = `${template}\n${scripts}`
     } else if (extension === '.mjml') {
         text = stripHtmlComments(source)
     } else {

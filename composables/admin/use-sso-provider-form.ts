@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import { ssoProviderFormSchema } from '@/utils/shared/schemas'
 import type { AdminSsoProviderDetail } from '@/types/admin'
 
@@ -310,13 +311,18 @@ export function useSsoProviderForm() {
         return payload
     }
 
-    /** 用共享 schema 校验即将提交的请求体（空字符串与缺省等价，见 `ssoProviderFormSchema`） */
+    const translateValidation = useValidationMessage()
+
+    /**
+     * 用共享 schema 校验即将提交的请求体（空字符串与缺省等价，见 `ssoProviderFormSchema`）。
+     * `validation.*` 键在边界统一翻译，避免把键名直接显示给用户。
+     */
     function validateForm(): string[] {
         const result = ssoProviderFormSchema.safeParse(buildPayload())
         if (result.success) {
             return []
         }
-        return result.error.issues.map((issue) => issue.message)
+        return result.error.issues.map((issue) => translateValidation(issue.message))
     }
 
     return {

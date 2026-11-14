@@ -233,22 +233,18 @@ import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent } from 'ca
 import { useConfirm } from 'caomei-ui'
 import { debounce } from 'lodash-es'
 import { formatDateLocale } from '@/utils/shared/date'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 import { useSsoProviders } from '@/composables/admin/use-sso-providers'
 import type { AdminSsoProviderRow } from '@/types/admin'
 
 definePageMeta({
-    title: 'SSO 提供商管理 - 草梅 Auth',
     layout: 'admin',
 })
 
-// 设置页面 SEO
+// 页面标题 / 描述走 i18n 键（见 docs/standards/i18n.md §7）；关键词仍为中文 SEO 文案，见 SEO 批次
+usePageMeta('admin.sso.providers.title', 'admin.sso.providers.description')
 useHead({
-    title: 'SSO 提供商管理',
     meta: [
-        {
-            name: 'description',
-            content: '管理单点登录（SSO）提供商，支持 OIDC 和 SAML 协议的配置和管理',
-        },
         {
             name: 'keywords',
             content: 'SSO,单点登录,OIDC,SAML,身份验证,提供商管理',

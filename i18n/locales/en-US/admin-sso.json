@@ -1,1 +1,10 @@
-{}
+{
+    "admin": {
+        "sso": {
+            "providers": {
+                "title": "SSO Providers",
+                "description": "Manage single sign-on (SSO) providers with OIDC and SAML configuration"
+            }
+        }
+    }
+}

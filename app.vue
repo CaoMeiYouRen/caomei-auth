@@ -23,9 +23,13 @@ const publicConfig = runtimeConfig.public
 // 组件库内建文案跟随应用 locale（Select 空态 / Paginator / DataTable 空态 / Toast / Confirm）
 const caomeiLocale = useCaomeiLocale()
 
+// 默认站点标题跟随语言；页面可用 usePageMeta 覆盖
+const { t } = useI18n()
+
 // SEO / html lang：由 Locale Registry 驱动的 useLocaleHead 输出（M5 技术验证）
 const i18nHead = useLocaleHead({ seo: true })
 useHead(() => ({
+    title: t('app.title'),
     htmlAttrs: {
         lang: i18nHead.value.htmlAttrs?.lang,
         dir: i18nHead.value.htmlAttrs?.dir,

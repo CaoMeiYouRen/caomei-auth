@@ -1,1 +1,10 @@
-{}
+{
+    "admin": {
+        "sso": {
+            "providers": {
+                "title": "SSO 提供商管理",
+                "description": "管理单点登录（SSO）提供商，支持 OIDC 和 SAML 协议的配置和管理"
+            }
+        }
+    }
+}

@@ -39,7 +39,7 @@ export default defineNuxtConfig({
     ],
     app: {
         head: {
-            title: '草梅 Auth 统一登录平台',
+            // 标题由 app.vue 的 useHead 按语言输出（`app.title`），页面可用 usePageMeta 覆盖
             htmlAttrs: {
                 lang: 'zh-CN',
                 'data-preset': 'caomei',
