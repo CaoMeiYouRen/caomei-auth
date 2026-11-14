@@ -19,11 +19,6 @@ export default defineVitestConfig({
         // Nuxt 测试环境（@nuxt/test-utils 4.x setupNuxt）首次构建 nitro 较慢，放宽 vitest 默认超时
         hookTimeout: 120000,
         testTimeout: 60000,
-        server: {
-            deps: {
-                inline: ['primevue'],
-            },
-        },
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],

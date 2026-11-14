@@ -120,10 +120,10 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     gap: 6px;
     height: 36px;
     padding: 0 12px;
-    border: 1px solid var(--p-content-border-color);
+    border: 1px solid var(--admin-border);
     border-radius: 999px;
-    background: var(--p-content-background);
-    color: var(--p-text-color);
+    background: var(--admin-surface);
+    color: var(--admin-text);
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
     font-size: 0.875rem;
     font-weight: 500;
@@ -132,20 +132,20 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 
     &:hover {
-        border-color: var(--p-primary-color);
+        border-color: var(--color-primary);
         box-shadow: 0 4px 12px rgb(0 0 0 / 0.12);
         transform: translateY(-1px);
     }
 
     &:focus-visible {
-        outline: 2px solid var(--p-primary-color);
+        outline: 2px solid var(--color-primary);
         outline-offset: 2px;
     }
 }
 
 .language-switcher__icon {
     font-size: 1.125rem;
-    color: var(--p-primary-color);
+    color: var(--color-primary);
 }
 
 .language-switcher__code {
@@ -170,9 +170,9 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     min-width: 10.5rem;
     margin: 0;
     padding: 4px;
-    border: 1px solid var(--p-content-border-color);
+    border: 1px solid var(--admin-border);
     border-radius: 12px;
-    background: var(--p-content-background);
+    background: var(--admin-surface);
     box-shadow: 0 12px 28px rgb(0 0 0 / 0.16);
     list-style: none;
 }
@@ -187,23 +187,23 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     border: none;
     border-radius: 8px;
     background: transparent;
-    color: var(--p-text-color);
+    color: var(--admin-text);
     font-size: 0.875rem;
     text-align: left;
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease;
 
     &:hover {
-        background: var(--p-content-hover-background);
+        background: var(--admin-surface-muted);
     }
 
     &:focus-visible {
-        outline: 2px solid var(--p-primary-color);
+        outline: 2px solid var(--color-primary);
         outline-offset: -2px;
     }
 
     &--active {
-        color: var(--p-primary-color);
+        color: var(--color-primary);
         font-weight: 600;
     }
 }

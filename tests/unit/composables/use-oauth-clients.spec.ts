@@ -12,14 +12,16 @@ const {
     mockNavigateTo,
 } = vi.hoisted(() => ({
     mockUseToast: {
-        add: vi.fn(),
+        success: vi.fn(),
+        danger: vi.fn(),
+        warning: vi.fn(),
     },
     mockUseFetch: vi.fn(),
     mockFetch: vi.fn(),
     mockNavigateTo: vi.fn(),
 }))
 
-vi.mock('primevue/usetoast', () => ({
+vi.mock('caomei-ui', () => ({
     useToast: () => mockUseToast,
 }))
 
@@ -100,9 +102,8 @@ describe('useOAuthClients', () => {
             // Wait for watch to trigger
             await new Promise((resolve) => setTimeout(resolve, 0))
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: 'Network Error',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'Network Error',
             }))
         })
     })
@@ -157,9 +158,8 @@ describe('useOAuthClients', () => {
                 body: { clientId: 'c1' },
             }))
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'success',
-                detail: expect.stringContaining('App 1'),
+            expect(mockUseToast.success).toHaveBeenCalledWith(expect.objectContaining({
+                description: expect.stringContaining('App 1'),
             }))
 
             expect(refreshMock).toHaveBeenCalled()
@@ -177,9 +177,8 @@ describe('useOAuthClients', () => {
 
             await revokeAuthorization()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: 'Revoke failed',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'Revoke failed',
             }))
 
             expect(showRevokeDialog.value).toBe(false)
@@ -195,9 +194,22 @@ describe('useOAuthClients', () => {
 
             await revokeAuthorization()
 
-            expect(mockUseToast.add).toHaveBeenCalledWith(expect.objectContaining({
-                severity: 'error',
-                detail: 'Network Error',
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'Network Error',
+            }))
+        })
+
+        it('should fall back when the rejection is not an Error instance', async () => {
+            const { confirmRevokeAuthorization, revokeAuthorization } = await useOAuthClients()
+            const app = { id: '1', clientId: 'c1', application: { name: 'App 1' } } as any
+
+            confirmRevokeAuthorization(app)
+            mockFetch.mockRejectedValue('boom')
+
+            await revokeAuthorization()
+
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: '撤销授权失败',
             }))
         })
 

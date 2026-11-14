@@ -1,51 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import Lara from '@primeuix/themes/lara'
-import { definePreset } from '@primeuix/themes'
-import { zh_CN } from 'primelocale/js/zh_CN.js'
 import { DEFAULT_LOCALE, LOCALE_COOKIE_KEY, LOCALE_REGISTRY } from './i18n/config/locale-registry'
-
-const AppPreset = definePreset(Lara, {
-    semantic: {
-        primary: {
-            '50': '#ffe5e9',
-            '100': '#ffccd3',
-            '200': '#ffb3bd',
-            '300': '#ff8a9e',
-            '400': '#ff6b6b', // 主色浅
-            '500': '#e63946', // 主色
-            '600': '#d12f3a',
-            '700': '#a52834', // 主色深
-            '800': '#7c1d28',
-            '900': '#5a151d',
-            '950': '#3a0c12',
-        },
-        colorScheme: {
-            light: {
-                surface: {
-                    '0': '#ffffff',
-                    '50': '#f8fafc', // 背景色
-                    '100': '#f1f5f9',
-                    '200': '#e2e8f0', // 辅助色
-                    '300': '#cbd5e1',
-                    '400': '#94a3b8',
-                    '500': '#718096', // 辅助色
-                    '600': '#64748b',
-                    '700': '#475569',
-                    '800': '#2d3748', // 辅助色
-                    '900': '#1e293b',
-                    '950': '#0f172a',
-                },
-            },
-        },
-    },
-})
 
 export default defineNuxtConfig({
     compatibilityDate: '2025-06-30',
     devtools: { enabled: false },
     modules: [
-        '@primevue/nuxt-module',
-        // caomei-ui 基座（迁移期与 PrimeVue 双库并存；页面组件未迁移，见 docs/design/governance/2026-11-05-caomei-ui-p0-baseline.md）
+        // caomei-ui 基座（PrimeVue 已在阶段 4 P5 下线；见 docs/design/governance/2026-11-14-p4-closure.md）
         'caomei-ui/nuxt',
         // i18n 技术验证（M5）：先接基础设施与语言切换原型，页面文案翻译在 M2+ 进行
         '@nuxtjs/i18n',
@@ -59,18 +19,6 @@ export default defineNuxtConfig({
             'better-sqlite3',
             'ms',
             (ctx) => !ctx.isDev && 'google-libphonenumber',
-            // PrimeVue/PrimeUIX 生态包的 exports 仅含 import/default 条件，
-            // Nitro nft trace（过滤 import/default 条件）无法完整复制其文件，
-            // 导致 .output/server/node_modules 缺文件、生产运行时 ERR_MODULE_NOT_FOUND
-            // （如 @primeuix/styles/dist/base/index.mjs、@primevue/core/index.mjs）。
-            // 同时需要在 nitro.externals.inline 中用正则覆盖（含传递依赖），
-            // 字符串形式对 pnpm 虚拟 store 内的传递依赖（如 @primeuix/styled）无法匹配。
-            '@primeuix/styles',
-            '@primeuix/themes',
-            '@primeuix/styled',
-            '@primeuix/utils',
-            '@primevue/core',
-            '@primevue/forms',
             // sanitize-html 为 CJS 包，但依赖 ESM-only 的 htmlparser2@12，
             // 在不支持 require(esm) 的 Node 版本（< 20.19 / < 22.12）上抛 ERR_REQUIRE_ESM。
             // 内联后由 rollup 处理 CJS/ESM 互操作。
@@ -125,24 +73,8 @@ export default defineNuxtConfig({
             hcaptchaSiteKey: process.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY,
         },
     },
-    primevue: {
-        autoImport: true,
-        // components: [],
-        options: {
-            theme: {
-                preset: AppPreset,
-                // PrimeVue 只接受 class / system 形式的暗色选择器；写成 `html.dark` 会被渲染成
-                // `html.dark :root`（后代选择器），暗色变量永远不生效。应用只切换 <html> 的 .dark 类，
-                // 因此 `.dark` 与 `html.dark` 语义等价。
-                options: {
-                    darkModeSelector: '.dark',
-                },
-            },
-            locale: zh_CN,
-        },
-    },
     caomeiUI: {
-        // 与 PrimeVue 一致的暗色策略：由 VueUse useDark() 在 <html> 上切换 .dark
+        // 暗色策略：由 VueUse useDark() 在 <html> 上切换 .dark
         darkMode: 'class',
         // 基础层由模块注入一次（组件自动导入不携带基础层）
         injectStyles: true,
@@ -251,15 +183,6 @@ export default defineNuxtConfig({
                 /^@better-auth\//,
                 /^@better-fetch\//,
                 'better-call',
-                // PrimeVue/PrimeUIX 生态（含 @primevue/core、@primeuix/styled 等传递依赖）：
-                // 其 package.json exports 仅含 import/default 条件，Nitro 的 nft trace
-                // （条件集过滤 import/default）无法解析，导致 .output/server/node_modules
-                // 缺文件、生产运行时 ERR_MODULE_NOT_FOUND。
-                // 使用函数匹配以同时覆盖裸包名与 pnpm 虚拟 store 真实路径
-                // （node_modules/.pnpm/@primeuix+styled@0.7.4/node_modules/...），
-                // 避免字符串/正则前缀匹配在真实路径下失效。
-                (id) => id.startsWith('@primeuix/') || id.includes('@primeuix+'),
-                (id) => id.startsWith('@primevue/') || id.includes('@primevue+'),
                 // sanitize-html 为 CJS 包但依赖 ESM-only 的 htmlparser2@12，
                 // 在不支持 require(esm) 的 Node 版本（< 20.19 / < 22.12）上抛 ERR_REQUIRE_ESM。
                 // 内联后由 rollup 处理 CJS/ESM 互操作；htmlparser2 链（ESM-only）一并内联。

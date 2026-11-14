@@ -140,8 +140,9 @@ html.dark {
     @include app-dark-tokens;
 }
 
+/* 显式浅色（`html.light`）优先于系统深色，避免 `useColorMode` 写入 light 后仍被媒体查询覆盖 */
 @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not(.light) {
         @include app-dark-tokens;
     }
 }
@@ -182,7 +183,7 @@ html.dark {
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not(.light) {
         @include admin-dark-tokens;
     }
 }

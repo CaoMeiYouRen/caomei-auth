@@ -21,7 +21,7 @@
 /**
  * caomei-ui 版对话框封装（迁移批次专用）。
  *
- * 与 `base-dialog.vue`（PrimeVue）并存：共享封装按消费者路由建 V2，避免未迁移页面被动换库。
+ * 共享对话框封装的唯一实现（PrimeVue 版 `base-dialog.vue` 已在阶段 4 P5 删除，见 docs/design/governance/2026-11-14-p4-closure.md）。
  */
 import type { DialogSize } from 'caomei-ui'
 

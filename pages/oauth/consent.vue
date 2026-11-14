@@ -179,15 +179,15 @@ const {
     justify-content: center;
     min-height: 100vh;
     padding: 2rem;
-    background-color: var(--surface-ground);
+    background-color: var(--admin-bg);
 
     .consent-container {
         width: 100%;
         max-width: 600px;
         padding: 2rem;
-        background: var(--surface-card);
+        background: var(--admin-surface);
         border-radius: 1rem;
-        box-shadow: var(--card-shadow);
+        box-shadow: var(--admin-shadow);
     }
 
     .loading-container,
@@ -204,14 +204,14 @@ const {
     .error-content {
         padding: 3rem 2rem;
         text-align: center;
-        background: var(--surface-card);
+        background: var(--admin-surface);
         border-radius: 1rem;
-        box-shadow: var(--card-shadow);
+        box-shadow: var(--admin-shadow);
     }
 
     .loading-icon {
         margin-bottom: 1rem;
-        color: var(--primary-color);
+        color: var(--color-primary);
         font-size: 3rem;
     }
 
@@ -223,13 +223,13 @@ const {
 
     .error-content h2 {
         margin-bottom: 1rem;
-        color: var(--text-color);
+        color: var(--admin-text);
         font-size: 1.5rem;
     }
 
     .error-content p {
         margin-bottom: 2rem;
-        color: var(--text-color-secondary);
+        color: var(--admin-muted);
         line-height: 1.6;
     }
 
@@ -239,13 +239,13 @@ const {
 
         .consent-title {
             margin-bottom: 0.5rem;
-            color: var(--text-color);
+            color: var(--admin-text);
             font-weight: 600;
             font-size: 1.5rem;
         }
 
         .consent-subtitle {
-            color: var(--text-color-secondary);
+            color: var(--admin-muted);
         }
     }
 
@@ -268,18 +268,18 @@ const {
         .application-info {
             margin-bottom: 1.5rem;
             padding: 1rem;
-            background: var(--surface-100);
+            background: var(--admin-surface-muted);
             border-radius: 0.5rem;
 
             h3 {
                 margin-bottom: 0.75rem;
-                color: var(--text-color);
+                color: var(--admin-text);
                 font-size: 1rem;
             }
 
             .info-item {
                 margin-bottom: 0.5rem;
-                color: var(--text-color-secondary);
+                color: var(--admin-muted);
                 font-size: 0.9rem;
 
                 &:last-child {
@@ -287,11 +287,11 @@ const {
                 }
 
                 strong {
-                    color: var(--text-color);
+                    color: var(--admin-text);
                 }
 
                 a {
-                    color: var(--primary-color);
+                    color: var(--color-primary);
                     text-decoration: none;
 
                     &:hover {
@@ -333,10 +333,10 @@ const {
                     gap: 0.5rem;
                     align-items: center;
                     padding: 0.5rem 0;
-                    color: var(--text-color-secondary);
+                    color: var(--admin-muted);
 
                     i {
-                        color: var(--primary-color);
+                        color: var(--color-primary);
                     }
                 }
             }
@@ -344,12 +344,12 @@ const {
             .no-scopes {
                 padding: 1rem;
                 text-align: center;
-                background: var(--surface-100);
+                background: var(--admin-surface-muted);
                 border-radius: 0.5rem;
 
                 p {
                     margin: 0;
-                    color: var(--text-color-secondary);
+                    color: var(--admin-muted);
                 }
             }
         }
@@ -364,13 +364,13 @@ const {
 
         .legal-text {
             margin: 0;
-            color: var(--text-color-secondary);
+            color: var(--admin-muted);
             font-size: 0.9rem;
             line-height: 1.5;
             text-align: center;
 
             .legal-link {
-                color: var(--primary-color);
+                color: var(--color-primary);
                 font-weight: 500;
                 text-decoration: none;
 
@@ -398,27 +398,27 @@ const {
     .debug-info {
         margin-top: 1.5rem;
         padding-top: 1.5rem;
-        border-top: 1px solid var(--surface-border);
+        border-top: 1px solid var(--admin-border);
 
         details {
             padding: 0.75rem;
-            background: var(--surface-100);
+            background: var(--admin-surface-muted);
             border-radius: 0.5rem;
 
             summary {
-                color: var(--text-color-secondary);
+                color: var(--admin-muted);
                 font-weight: 500;
                 cursor: pointer;
                 user-select: none;
 
                 &:hover {
-                    color: var(--text-color);
+                    color: var(--admin-text);
                 }
             }
 
             pre {
                 margin-top: 0.75rem;
-                color: var(--text-color-secondary);
+                color: var(--admin-muted);
                 font-size: 0.8rem;
                 white-space: pre-wrap;
                 word-break: break-all;

@@ -21,10 +21,10 @@ describe('scripts/migration/check-caomei-imports', () => {
 
     it('accepts explicit imports', () => {
         const source = `
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 const toast = useToast()
 `
-        expect(hasExplicitImport(source, { name: 'useToast', source: 'primevue/usetoast' })).toBe(true)
+        expect(hasExplicitImport(source, { name: 'useToast', source: 'caomei-ui' })).toBe(true)
         expect(findMissingImports(source)).toEqual([])
     })
 
@@ -32,7 +32,7 @@ const toast = useToast()
         const source = 'const toast = useToast()'
 
         expect(findMissingImports(source)).toEqual([
-            { name: 'useToast', sources: ['primevue/usetoast', 'caomei-ui'] },
+            { name: 'useToast', sources: ['caomei-ui'] },
         ])
     })
 
@@ -54,17 +54,17 @@ import { useToast } from 'some-ui'
 const toast = useToast()
 `
         expect(findMissingImports(source)).toEqual([
-            { name: 'useToast', sources: ['primevue/usetoast', 'caomei-ui'] },
+            { name: 'useToast', sources: ['caomei-ui'] },
         ])
     })
 
     it('handles multi-import statements', () => {
         const source = `
-import { useConfirm, useToast } from 'primevue/usetoast'
+import { useConfirm, useToast } from 'caomei-ui'
 useToast()
 useConfirm()
 `
-        expect(hasExplicitImport(source, { name: 'useConfirm', source: 'primevue/usetoast' })).toBe(true)
+        expect(hasExplicitImport(source, { name: 'useConfirm', source: 'caomei-ui' })).toBe(true)
     })
 
     it('collects source files from roots', async () => {
@@ -87,14 +87,14 @@ useConfirm()
         await mkdir(path.join(tempDir, 'composables'), { recursive: true })
         await writeFile(
             path.join(tempDir, 'composables', 'ok.ts'),
-            'import { useToast } from \'primevue/usetoast\'\nuseToast()\n',
+            'import { useToast } from \'caomei-ui\'\nuseToast()\n',
         )
         await writeFile(path.join(tempDir, 'composables', 'bad.ts'), 'useConfirm()\n')
 
         const violations = await checkProject({ root: tempDir, roots: ['composables'] })
 
         expect(violations).toEqual([
-            { file: 'composables/bad.ts', missing: [{ name: 'useConfirm', sources: ['primevue/useconfirm', 'caomei-ui'] }] },
+            { file: 'composables/bad.ts', missing: [{ name: 'useConfirm', sources: ['caomei-ui'] }] },
         ])
     })
 })

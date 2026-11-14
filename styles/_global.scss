@@ -1,3 +1,16 @@
+/*
+ * 全局盒模型重置。
+ *
+ * PrimeVue 下线后不再有组件库注入的 `box-sizing: border-box`；项目内的
+ * `.auth-card` 等容器依赖 `width: 100% + max-width + padding` 的 border-box 语义，
+ * 缺失会让所有页面内容区变宽。放在全局样式最前，保持与迁移前一致的布局。
+ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 .social-btn {
     .icon-discord-simple {
         padding-top: 2px;

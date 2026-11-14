@@ -1,5 +1,5 @@
 import { ref, computed, watch } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useToast } from 'caomei-ui'
 import { formatDateTime } from '@/utils/shared/date'
 
 interface AuthorizedApp {
@@ -74,11 +74,10 @@ export async function useOAuthClients() {
     // 处理错误
     watch(error, (newError) => {
         if (newError) {
-            toast.add({
-                severity: 'error',
-                summary: '错误',
-                detail: newError.message || '获取授权应用列表失败',
-                life: 3000,
+            toast.danger({
+                title: '错误',
+                description: newError.message || '获取授权应用列表失败',
+                duration: 3000,
             })
         }
     })
@@ -117,23 +116,21 @@ export async function useOAuthClients() {
             })
 
             if (response.success) {
-                toast.add({
-                    severity: 'success',
-                    summary: '撤销成功',
-                    detail: `已成功撤销对 ${selectedApp.value.application.name} 的授权`,
-                    life: 3000,
+                toast.success({
+                    title: '撤销成功',
+                    description: `已成功撤销对 ${selectedApp.value.application.name} 的授权`,
+                    duration: 3000,
                 })
 
                 await loadAuthorizedApps()
             } else {
                 throw new Error(response.message || '撤销授权失败')
             }
-        } catch (revokeError: any) {
-            toast.add({
-                severity: 'error',
-                summary: '撤销失败',
-                detail: revokeError.message || '撤销授权失败',
-                life: 3000,
+        } catch (revokeError: unknown) {
+            toast.danger({
+                title: '撤销失败',
+                description: revokeError instanceof Error && revokeError.message ? revokeError.message : '撤销授权失败',
+                duration: 3000,
             })
         } finally {
             revoking.value = false

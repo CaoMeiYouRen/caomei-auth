@@ -3,8 +3,6 @@
         <CaomeiTooltipProvider>
             <CaomeiToastProvider>
                 <CaomeiConfirmDialog>
-                    <Toast />
-                    <ConfirmDialog />
                     <NuxtLayout>
                         <NuxtPage />
                     </NuxtLayout>

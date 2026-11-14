@@ -6,10 +6,10 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(__dirname, '..', '..')
 
-/** 迁移期：双库并存时，同名 composable 由显式 import 决定来源，禁止依赖自动导入 */
+/** P5 后唯一来源：同名 composable 必须显式 import `caomei-ui`，禁止回退到 PrimeVue（见 docs/design/governance/2026-11-14-p4-closure.md） */
 export const REQUIRED_IMPORTS = [
-    { name: 'useToast', sources: ['primevue/usetoast', 'caomei-ui'] },
-    { name: 'useConfirm', sources: ['primevue/useconfirm', 'caomei-ui'] },
+    { name: 'useToast', sources: ['caomei-ui'] },
+    { name: 'useConfirm', sources: ['caomei-ui'] },
 ]
 
 /** 只扫描应用运行时代码；测试与脚本另有 mock，不参与判定 */
