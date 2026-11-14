@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { useDemoMode, useDemoModeGuard, useDemoBanner } from '../../../composables/use-demo-mode'
+import { useDemoMode, useDemoBanner } from '../../../composables/use-demo-mode'
 
 // Hoist the mock state so it can be used in the mock
 const { mockState } = vi.hoisted(() => ({
@@ -40,30 +40,6 @@ describe('useDemoMode', () => {
         mockState.demoMode = true
         const { isDemoMode } = useDemoMode()
         expect(isDemoMode.value).toBe(true)
-    })
-})
-
-describe('useDemoModeGuard', () => {
-    beforeEach(() => {
-        mockState.demoMode = false
-        vi.clearAllMocks()
-    })
-
-    it('should return false (not blocked) when demo mode is disabled', () => {
-        mockState.demoMode = false
-        const { checkDemoMode, showDemoDialog } = useDemoModeGuard()
-        const result = checkDemoMode()
-        expect(result).toBe(false)
-        expect(showDemoDialog.value).toBe(false)
-    })
-
-    it('should return true (blocked) and show dialog when demo mode is enabled', () => {
-        mockState.demoMode = true
-        const { checkDemoMode, showDemoDialog, demoMessage } = useDemoModeGuard()
-        const result = checkDemoMode('test message')
-        expect(result).toBe(true)
-        expect(showDemoDialog.value).toBe(true)
-        expect(demoMessage.value).toBe('test message')
     })
 })
 

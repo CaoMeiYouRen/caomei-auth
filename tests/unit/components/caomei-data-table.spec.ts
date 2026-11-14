@@ -6,7 +6,7 @@ import { CaomeiDataTable, type DataTableColumn } from 'caomei-ui'
 /**
  * P4-0 DataTable spike（可复现证据）。
  *
- * 目的：在迁移第一个 Admin 数据页前，锁定 `CaomeiDataTable` 与现有 `BaseTable`（PrimeVue）
+ * 目的：在迁移第一个 Admin 数据页前，锁定 `CaomeiDataTable` 与当时 `BaseTable`（PrimeVue，已在阶段 4 P5 删除，见 docs/design/governance/2026-11-14-phase4-closure.md）
  * 的映射语义：列定义、插槽优先级、多选 / 全选、受控分页与 `page` / `first` 换算、
  * lazy 不切片、排序方向、空态与加载态。
  *

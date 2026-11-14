@@ -2,7 +2,7 @@
 
 本文档概述草梅 Auth 的中长期发展方向与大颗粒度阶段规划。候选条目、优先级与验收要点见 [backlog.md](./backlog.md)；进行中阶段的原子条目见 [todo.md](./todo.md)；准入与归档规则见 [规划规范](../standards/planning.md)。
 
-> **当前状态**：**阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」进行中**（2026-11-10 授权）。阶段 3 已于 2026-11-09 收口，M0-3 定时发版验证移至 [backlog §3.3](./backlog.md#33-基础设施)。范围与验收见 [阶段 4 登记记录](../design/governance/2026-11-10-phase4-registration.md)，原子条目见 [todo.md](./todo.md)；P4-0 技术方案见 [Admin 迁移基座方案](../design/governance/2026-11-10-p4-admin-migration-plan.md)。
+> **当前状态**：**阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口**，PrimeVue 已完整下线；下一阶段（i18n 页面与邮件）**未授权**。收口记录见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)，P4 摘要见 [P4 交付摘要](../design/governance/2026-11-14-p4-closure.md)；候选见 [backlog.md](./backlog.md)。
 
 ---
 
@@ -51,7 +51,7 @@ _目标：启动组件库正式替换（P2 试点 → P3 认证 / 个人 / 安�
 
 ---
 
-## 阶段 4: caomei-ui P4 Admin 与 P5 单库收尾（进行中，2026-11-10 授权）
+## 阶段 4: caomei-ui P4 Admin 与 P5 单库收尾（已完成 2026-11-14）
 
 _目标：完成剩余 Admin 数据页与共享封装迁移，建立 Admin 视觉基线，并卸载 PrimeVue。_
 
@@ -114,7 +114,7 @@ _目标：完成剩余 Admin 数据页与共享封装迁移，建立 Admin 视�
 阶段 3（已收口 2026-11-09）：caomei-ui P2–P3 + i18n 非组件面（+ M0 发布链路插队）
         │  M0 原生多架构 → M1 准备 → M2 登录页 → M3 认证入口 → M4 个人/安全/OAuth/SSO → M5 i18n 前置 → M6 收口
         ▼
-阶段 4（进行中）：caomei-ui P4 Admin 与 P5 单库收尾
+阶段 4（已完成 2026-11-14）：caomei-ui P4 Admin 与 P5 单库收尾
         │  P4 基座 → Admin 页面 → P4 收口 → P5 卸载 PrimeVue
         ▼
 后续方向（未授权）：阶段 5 i18n 页面与邮件 / 体验与性能 / 开发者生态 / 安全增强 / 企业级

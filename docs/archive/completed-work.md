@@ -47,11 +47,11 @@
 
 ### G3 · 复用率提升
 
--   [x] **基础组件库** (`components/base`): `BaseInput`、`BasePassword`、`BasePhoneInput`、`BaseTable`、`BaseDialog`、`BaseFormGroup`、`StatusBadge`。
--   [x] **通用 Composables** (`composables/core` + `composables/utils`): `useDataTable`、`useForm`、`useApi`、`useClipboard`、`useConfirmAction`、`usePageMeta`、`useLogout`、`useStorage`。
+-   [x] **基础组件库** (`components/base`): `StatusBadge`（CaomeiTag）、`BaseTooltip`、`LanguageSwitcher`、V2 表单 / 对话框封装（`BaseDialogV2` / `BaseInputV2` / `BasePasswordV2` / `BasePhoneInputV2`）；PrimeVue 版 V1 封装已在阶段 4 P5 删除。
+-   [x] **通用 Composables** (`composables/core` + `composables/utils`): `useDataTable`、`useForm`、`usePageMeta`、`useStorage`；零消费者的 `useApi` / `useClipboard` / `useConfirmAction` / `useLogout` 已在阶段 4 P5 删除。
 -   [x] **Zod 校验同构**: 前后端共用 `utils/shared/validators.ts` 中的 Schema，表单层与 API 层校验规则一致。
 -   [x] **utils 分层**: `utils/shared/`、`utils/web/`、`server/utils/` 分层策略建立，单向依赖约束。
--   [x] **PrimeVue ConfirmService**: 移除冗余 `logout-confirm-dialog`、`delete-*-dialog` 等确认类组件，统一使用 `useConfirm()`。
+-   [x] **确认框收敛**: 移除冗余 `logout-confirm-dialog`、`delete-*-dialog` 等确认类组件，统一使用 `useConfirm()`（阶段 4 P5 后为 caomei-ui 实现）。
 
 ---
 
@@ -133,3 +133,18 @@ _2026-11-06 授权，2026-11-09 M6-1 收口；共 6 条主线 / 16 条原子条�
 -   [x] **M5 i18n 非组件面**: 76 个 `validation.*` 键 + 17 个 `errors.*` 键 zh/en 同构；Zod 错误键与边界回退；5 个治理脚本 + CI / `lint-staged`；认证类 API `useTranslation` + `Content-Language` / `Vary`。
 -   [x] **M6 阶段收口**: 白名单 9 条与页面 / 共享组件零 PrimeVue 校验；用量 24 族 / 195 标签 / 31 文件；入口 CSS +2.87%（预算 +10% 通过）并接入 `migration:check-budget`；视觉 50/50；回退 dry-run 与文档同步。
 -   [x] **收口附带修复**: `useRegisterFlow` / `useForgotPasswordFlow` 绕过 `useValidationMessage` 导致页面显示原始校验键，已修复并复跑视觉 50/50。
+
+---
+
+## 10. 阶段 4 · caomei-ui P4 Admin 与 P5 单库收尾（2026-11-14 收口）
+
+_2026-11-10 授权，2026-11-14 M1–M15 全部完成；共 15 条原子条目。收口记录见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)，P4 交付摘要见 [P4 交付摘要](../design/governance/2026-11-14-p4-closure.md)。_
+
+-   [x] **P4-0 基座**：`CaomeiDataTable` / `BaseDialogV2` / `CaomeiSelect` / `CaomeiDatePicker(range)` 决策与适配；`--admin-*` token；PrimeVue `darkModeSelector` 修复；Admin 视觉参考态与自基线 38 张；管理员会话与确定性夹具。
+-   [x] **P4 页面迁移**：`/admin/users`、`/admin/oauth/applications`、`/admin/sso/providers`、`/admin/logs`、`/oauth/clients`、首页、错误页；对应 12 个对话框 / 表单 + 4 个统计组件 + 页头 / 表格；6 个路由白名单登记后已随 P5 删除。
+-   [x] **P4 收口**：参考态 88 张差异按「P4-0 全局基座 / 逐批迁移 / 共享壳组件 / 夹具 / 认证桥接」归因；自基线 100 张 + 2 条 hover 对比度断言；包体与回退说明落盘。
+-   [x] **P5 依赖清理**：移除 `primevue`、`@primevue/*`、`@primeuix/*`、`primelocale` 共 9 个依赖；删除 Provider / 主题预设 / 构建配置 / 测试 mock；入口 JS P4 起点 485,133 / P4 收口 417,394 → **343,374 B**，总 JS P4 起点 3,688,378 / P4 收口 3,977,764 → **2,162,010 B**。
+-   [x] **P5 样式清理**：`--p-*` / `.p-*` / `:deep(.p-*)` 归零；删除 `admin-page-dark-theme` / SSO 死样式 / PrimeVue Toast 主题段；`keyCss` P0 基线 399,733 → **399,427 B**（低于 P0 基线）。
+-   [x] **护栏终态**：`migration:check-imports`（toast / confirm 显式 import caomei-ui）与 `migration:check-budget` 保留；路由白名单模块删除；自基线 `test:visual` 102 passed 为唯一阻断视觉门禁。
+-   [x] **附带修复**：共享分页 `update:rows` 旧事件导致越界请求（M9 Review Gate）、主题切换暗色分叉与 hover 对比度（M11 Review Gate）、显式浅色 + 系统深色的 token 覆盖（M13）。
+-   [x] **遗留**：i18n 页面 / 邮件 / `User.locale` 交下一阶段（未授权）；`CaomeiDataTable` 能力、视觉固定时钟、i18n 扫描盲区、stylelint 18 升级保留 backlog。

@@ -50,8 +50,8 @@ jobs:
   # 因此渲染环境固定为 Playwright 官方镜像，本地采集与 CI 判定同源。
   #
   # - 自基线（tests/visual/__screenshots__）是阻断门禁；
-  # - 参考态审计（tests/visual/parity）按迁移批次使用，当前仍有已登记的有意差异，
-  #   因此只产出报告与工件，不阻断。
+  # - 参考态快照（tests/visual/reference）自 P5 起仅作历史证据，CI 不再执行 parity；
+  #   自基线是唯一阻断视觉门禁。
   # ===============================================================
   visual:
     name: Visual Regression
@@ -71,10 +71,6 @@ jobs:
         run: pnpm run build
       - name: Visual baseline gate
         run: pnpm run test:visual:raw
-      - name: Visual parity audit (report only)
-        if: always()
-        continue-on-error: true
-        run: pnpm run test:visual:parity:raw
       - name: Upload visual artifacts
         if: always()
         uses: actions/upload-artifact@v7
@@ -83,8 +79,5 @@ jobs:
           path: |
             test-results/visual/
             playwright-report/visual/
-            test-results/visual-parity/
-            playwright-report/visual-parity/
-            tests/visual/reference-manifest.json
           retention-days: 7
           if-no-files-found: ignore

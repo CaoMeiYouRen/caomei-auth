@@ -65,7 +65,7 @@
 
 ## 5. 视觉回归
 
--   **门禁**：自基线 `pnpm test:visual`（CI 阻断）；参考态审计 `pnpm test:visual:parity`（迁移批次使用，出报告不阻断）。
+-   **门禁**：自基线 `pnpm test:visual`（CI 阻断）；参考态快照自阶段 4 P5 起仅作历史证据，CI 不再执行 parity（本地 `pnpm test:visual:parity` 仍可审计）。
 -   **环境**：本地与 CI 共用 Playwright 官方容器（`scripts/testing/run-visual.mjs` 自动调用）；基线只在容器内采集，宿主直跑仅用于调试。
 -   **更新纪律**：差异逐项归因后才可 `pnpm test:visual:update`；参考态快照不可原地刷新。
 -   **升级联动**：升级 `@playwright/test` 必须同批重采自基线并说明差异。

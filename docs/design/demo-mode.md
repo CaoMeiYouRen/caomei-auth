@@ -78,10 +78,8 @@ export const DATABASE_PATH = DEMO_MODE ? ':memory:' : (process.env.DATABASE_PATH
 - **功能**：在页面顶部显示 Demo 模式提示
 - **位置**：所有页面（default.vue 和 admin.vue 布局）
 
-#### Demo 模式对话框
-- **组件**：`components/demo-mode-dialog.vue`
-- **功能**：拦截操作时显示提示对话框
-- **触发**：当用户尝试执行修改操作时
+#### Demo 模式对话框（已移除）
+- `components/demo-mode-dialog.vue` 与 `useDemoModeGuard` 在阶段 4 P5 作为零消费者代码删除；当前 Demo 模式只保留顶部横幅提示，写操作由服务端中间件拦截。
 
 ### 组合式函数
 
@@ -92,26 +90,6 @@ export function useDemoMode() {
     const config = useRuntimeConfig()
     const isDemoMode = computed(() => config.public.demoMode)
     return { isDemoMode }
-}
-```
-
-#### useDemoModeGuard
-```typescript
-export function useDemoModeGuard() {
-    const { isDemoMode } = useDemoMode()
-    const showDemoDialog = ref(false)
-    const demoMessage = ref('')
-
-    const checkDemoMode = (message?: string): boolean => {
-        if (isDemoMode.value) {
-            demoMessage.value = message || ''
-            showDemoDialog.value = true
-            return true
-        }
-        return false
-    }
-
-    // 其他方法...
 }
 ```
 
@@ -179,7 +157,7 @@ Demo 模式对敏感数据进行脱敏处理：
 ### 安全机制
 
 1. **内存数据库**：所有数据存储在内存中，重启后自动清空
-2. **操作拦截**：前端和后端双重拦截危险操作
+2. **操作拦截**：由服务端中间件统一拦截写操作（前端对话框已删除）
 3. **假数据**：使用生成的假数据，不涉及真实用户信息
 4. **只读模式**：确保不会对系统造成任何实际影响
 
@@ -188,7 +166,7 @@ Demo 模式对敏感数据进行脱敏处理：
 ### 界面提示
 
 1. **横幅提示**：页面顶部显示 Demo 模式横幅
-2. **操作反馈**：执行操作时显示友好的提示对话框
+2. **操作反馈**：写操作被服务端拒绝时返回统一错误，前端以 Toast / 文案提示（不再使用独立对话框）
 3. **功能完整**：保持所有界面功能完整性
 4. **视觉标识**：明确的 Demo 模式视觉标识
 
@@ -223,19 +201,9 @@ Demo 模式对敏感数据进行脱敏处理：
 
 如果你需要为新功能添加 Demo 模式支持：
 
-#### 1. 前端操作拦截
+#### 1. 前端提示
 
-```typescript
-// 在组件中使用
-const { checkDemoMode } = useDemoModeGuard()
-
-const handleDelete = () => {
-    if (checkDemoMode('删除操作在 Demo 模式下不可用')) {
-        return
-    }
-    // 执行实际删除操作
-}
-```
+前端不再提供操作拦截对话框；需要提示时使用顶部横幅或页面内文案，写操作统一交给服务端拒绝。
 
 #### 2. 后端 API 保护
 
@@ -261,7 +229,7 @@ export default defineEventHandler(async (event) => {
 
 ### 最佳实践
 
-1. **保持一致性**：所有需要拦截的操作都应该使用统一的拦截机制
+1. **保持一致性**：所有写操作统一由服务端 Demo 守卫拦截，前端不重复实现拦截逻辑
 2. **友好提示**：为用户提供清晰的操作限制说明
 3. **功能完整**：确保 Demo 模式下界面功能的完整性
 4. **安全第一**：确保不会泄露真实数据或造成安全风险
@@ -295,7 +263,6 @@ A: 删除或设置 `NUXT_PUBLIC_DEMO_MODE=false` 环境变量，然后重启应�
 
 - `composables/use-demo-mode.ts` - Demo 模式组合式函数
 - `components/demo-mode-banner.vue` - Demo 模式横幅组件
-- `components/demo-mode-dialog.vue` - Demo 模式对话框组件
 - `server/utils/demo-data-generator.ts` - 假数据生成器
 - `types/demo.d.ts` - Demo 模式类型定义
 - `utils/env.ts` - 环境变量配置

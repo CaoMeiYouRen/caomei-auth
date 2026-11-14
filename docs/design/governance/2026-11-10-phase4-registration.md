@@ -1,6 +1,6 @@
 # 2026-11-10 阶段 4 范围登记：caomei-ui P4 Admin 与 P5 单库收尾
 
-> **状态**：已授权启动（2026-11-10 用户选择 A+B；按依赖拆为阶段 4「P4 Admin + P5 单库」与阶段 5「i18n 全量」）。
+> **状态**：已完成（2026-11-14，M1–M15 全部收口；收口记录见 [阶段 4 收口记录](./2026-11-14-phase4-closure.md)）。
 > **单一事实源**：阶段范围、原子条目与验收见本文；P4-0 技术方案见 [P4-0 Admin 迁移基座方案](./2026-11-10-p4-admin-migration-plan.md)；候选详情见 [backlog.md](../../plan/backlog.md)；方向见 [roadmap.md](../../plan/roadmap.md)。
 > **前置阶段**：[阶段 3 收口记录](./2026-11-09-phase3-closure.md)（仅 M0-3 定时发版验证移至 backlog）；[迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md) §8 / §12。
 > **准入规则**：[规划规范](../../standards/planning.md)。
@@ -50,7 +50,15 @@
 
 > 单条超过 10 文件 / 800 行新增时，按页面内的对话框或统计组件拆条，并在提交说明与阶段登记中补记拆条依据。
 
-> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采）；M4（P4-3）已于 2026-11-12 完成（OAuth 应用页迁移 + 自基线重采，对话框与白名单待 M5）；M5（P4-4）已于 2026-11-12 完成（3 个 OAuth 对话框迁移 + composable toast/confirm 切换 + `/admin/oauth/applications` 白名单登记 + 自基线重采）；M6（P4-5）已于 2026-11-12 完成（SSO 提供商页迁移 + 自基线重采，5 个 SSO 组件与白名单待 M7 / M8）；M7（P4-6）已于 2026-11-13 完成（3 个 SSO 表单迁移，对话框与白名单待 M8）；M8（P4-7）已于 2026-11-13 完成（创建 / 详情对话框迁移 + composable toast 切换 + `/admin/sso/providers` 白名单登记 + 自基线重采）；M9（P4-8）已于 2026-11-14 完成（日志页 + 页头 + 表格迁移、composable toast 切换与日期区间筛选），M10（P4-9）已于 2026-11-14 完成（4 个统计组件迁移 + `/admin/logs` 白名单登记 + 自基线重采）；M11（P4-10）已于 2026-11-14 完成（`/oauth/clients`、首页、错误页与 `components/base/*` 消费者收口）；M12（P4-11）已于 2026-11-14 完成（白名单、包体、视觉、回退与 P4 交付摘要，见 [P4 交付摘要](./2026-11-14-p4-closure.md)），P4 收口；M13（P5-1）已于 2026-11-14 完成（移除 PrimeVue 运行时 / 依赖 / 构建配置与测试 mock）；M14（P5-2）已于 2026-11-14 完成（清理 `--p-*` / `.p-*` / 白名单 / 迁移守卫），下一批 P5-3（M15）。
+> **进度**：M1（P4-0）已于 2026-11-10 完成，结论与证据见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md)；M2（P4-1）已于 2026-11-10 完成（页面迁移 + 自基线重采）；M3（P4-2）已于 2026-11-11 完成（4 个用户对话框迁移 + 路由内 toast/confirm 切换 + `/admin/users` 白名单登记 + 自基线重采）；M4（P4-3）已于 2026-11-12 完成（OAuth 应用页迁移 + 自基线重采，对话框与白名单待 M5）；M5（P4-4）已于 2026-11-12 完成（3 个 OAuth 对话框迁移 + composable toast/confirm 切换 + `/admin/oauth/applications` 白名单登记 + 自基线重采）；M6（P4-5）已于 2026-11-12 完成（SSO 提供商页迁移 + 自基线重采，5 个 SSO 组件与白名单待 M7 / M8）；M7（P4-6）已于 2026-11-13 完成（3 个 SSO 表单迁移，对话框与白名单待 M8）；M8（P4-7）已于 2026-11-13 完成（创建 / 详情对话框迁移 + composable toast 切换 + `/admin/sso/providers` 白名单登记 + 自基线重采）；M9（P4-8）已于 2026-11-14 完成（日志页 + 页头 + 表格迁移、composable toast 切换与日期区间筛选），M10（P4-9）已于 2026-11-14 完成（4 个统计组件迁移 + `/admin/logs` 白名单登记 + 自基线重采）；M11（P4-10）已于 2026-11-14 完成（`/oauth/clients`、首页、错误页与 `components/base/*` 消费者收口）；M12（P4-11）已于 2026-11-14 完成（白名单、包体、视觉、回退与 P4 交付摘要，见 [P4 交付摘要](./2026-11-14-p4-closure.md)），P4 收口；M13（P5-1）已于 2026-11-14 完成（移除 PrimeVue 运行时 / 依赖 / 构建配置与测试 mock）；M14（P5-2）已于 2026-11-14 完成（清理 `--p-*` / `.p-*` / 白名单 / 迁移守卫）；M15（P5-3）已于 2026-11-14 完成（最终包体、视觉、文档、Review Gate 与归档，见 [阶段 4 收口记录](./2026-11-14-phase4-closure.md)），阶段 4 全部收口。
+
+> **M15 记录（P5-3 阶段 4 收口与归档，2026-11-14）**：
+> 1. 收口记录：[阶段 4 收口记录](./2026-11-14-phase4-closure.md)（交付、最终包体、视觉、护栏终态、验证、回退、遗留与 Review Gate）。
+> 2. 清理：删除零消费者的 `useDemoModeGuard`（Demo 前端拦截对话框已无宿主）与 2 条单测，Demo 模式改为「横幅提示 + 服务端写入拦截」；CI `test.yml` 移除参考态 parity 步骤与对应工件（参考态快照保留为历史证据）；`docs/standards/i18n.md`、`docs/design/demo-mode.md`、`docs/usage/demo.md` 与 `completed-work.md` 同步到 caomei / 已删除组件的事实。
+> 3. 最终数据：`keyCss` 399,427 B（较 P0 −0.08%）、入口 JS 343,374 B（较 P4 起点 −29.2%）、总 JS 2,162,010 B、总 CSS 1,447,469 B；`test` 937 passed、`test:visual` 102 passed、`coverage` Statements 77.96%、`lint:duplicate` 299 clones。
+> 4. 归档：`todo.md` 原子条目表迁入 [已完成工作归档](../../archive/completed-work.md) §10；`roadmap.md` 阶段 4 标记完成，阶段 5（i18n）保持未授权。
+> 5. 遗留：`AGENTS.md` §3 的「UI 设计：SCSS (BEM) + PrimeVue」需用户确认后改为 caomei-ui；`CaomeiDataTable` 能力、视觉固定时钟、i18n 扫描盲区、stylelint 18 升级保留 backlog。
+> 6. 门禁：同第 3 条，另 `lint` 0 error / 25 warning、`lint:css`、`lint:md`、`typecheck`、`build`、`budget`、`i18n:check` / `migration:check-imports` / `ai:check` 全部通过。
 
 > **M14 记录（P5-2 清理样式 / token / 白名单，2026-11-14）**：
 > 1. 样式：删除 `styles/_theme.scss` 的 PrimeVue Toast 主题段（`--p-toast-*` 与 `.p-toast*`，89 行）；`styles/_dark-mode.scss` 删除无人引用的 `admin-page-dark-theme` 宏（约 500 行）、`dark-border` 宏，以及 `auth-page-dark-theme` / `auth-page-extended-dark-theme` 中所有 `.p-inputtext` / `.p-password*` / `.p-checkbox` / `.p-button*` 选择器；`styles/_form.scss` 删除 `.p-password-input` / `.p-button-icon` 规则。`styles` / `pages` / `components` / `layouts` 内的 `--p-*` / `.p-*` / `:deep(.p-*)` 归零（`tests/visual/helpers` 的 `.p-button` 参考态守卫属已下线的 parity harness，交 M15 删除）。

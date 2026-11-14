@@ -1,6 +1,7 @@
 # 2026-11-08 视觉参考态基座（Visual Reference Harness）
 
 > **状态**：参考态与自基线两层均已建立；2026-11-10 起覆盖 P2–P4 Admin；2026-11-14 自基线补充 about / privacy / terms（自基线 100 张 = 认证 62 + Admin 38；参考态 88 张 = 认证 50 + Admin 38，新页面只维护自基线）。
+> **2026-11-14 收口更新**：阶段 4 P5 完成后 PrimeVue 已下线，自基线（`pnpm test:visual`，102 passed）是唯一阻断门禁；参考态快照保留为历史证据，CI 不再执行 parity（`test.yml` 已移除该步骤），`test:visual:reference*` 已不可再采集（无迁移前页面）。
 > **替代关系**：本文替代 [P2 视觉基线方案](./2026-11-05-caomei-ui-p2-visual-baseline-plan.md) §1 的「不建截图工程 / 截图不入库 / 不做像素判定」口径。
 > **关联**：[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md) §8.1 / §9 / §12｜[P2 视觉基线方案](./2026-11-05-caomei-ui-p2-visual-baseline-plan.md)｜[测试规范](../../standards/testing.md)。
 
@@ -373,5 +374,5 @@ pnpm test:visual --grep "login 默认态"
 
 ## 9. 退出条件
 
-- P5 收尾（无页面使用 PrimeVue）后，参考态不再承担迁移比对职责；**保留** `tests/visual/reference/` 作为历史证据，删除 `artifacts/visual-baseline/` 本地目录。
+- **已达成（2026-11-14）**：P5 收尾后参考态不再承担迁移比对职责；`tests/visual/reference/` 保留为历史证据，CI parity 步骤已移除，自基线为唯一视觉门禁。
 - 若届时已建立自基线层，迁移方案文档完成归档，本文并入 [测试规范 §视觉回归](../../standards/testing.md)。

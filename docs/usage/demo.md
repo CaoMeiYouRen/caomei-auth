@@ -85,15 +85,15 @@
 **改造内容：**
 
 -   添加 Demo 模式标识和提示
--   在执行操作时显示"Demo 模式，操作已被阻止"的提示
+-   写操作由服务端中间件拒绝，前端以 Toast / 文案提示（操作拦截对话框已删除）
 -   保持界面功能完整，但实际不执行修改操作
 
 ### 6. UI 组件和提示
 
-**创建新组件：**
+**前端组件：**
 
 1. `components/demo-mode-banner.vue` - Demo 模式横幅提示
-2. `components/demo-mode-dialog.vue` - Demo 模式操作拦截对话框
+2. `components/demo-mode-dialog.vue` 与 `useDemoModeGuard` 已在阶段 4 P5 删除，不再新增前端拦截对话框
 
 **修改布局：**
 
