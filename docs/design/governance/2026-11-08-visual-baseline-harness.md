@@ -81,7 +81,7 @@ P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前�
 
 | 维度 | 取值 | 说明 |
 | :--- | :--- | :--- |
-| 浏览器 | chromium 156.0.8078.4（revision 1248） | Playwright 1.64.1 绑定版本，不跟随系统 Chrome |
+| 浏览器 | Playwright 1.65.0 绑定的 chromium | 由 `package.json` 的 `@playwright/test` 版本决定，不跟随系统 Chrome；升级时必须同步 CI 容器版本并重采基线 |
 | 视口 / DSF | 1440×900 / 390×844，DSF 1 | 每个 describe 显式 `test.use` |
 | locale / 时区 | `zh-CN` / `Asia/Shanghai` | 避免文案与日期格式漂移 |
 | 主题 | `localStorage['vueuse-color-scheme']=light\|dark` | 不依赖系统 `prefers-color-scheme`；暗色额外断言 `html.dark` 生效 |
