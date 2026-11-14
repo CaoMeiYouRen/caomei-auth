@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { DEFAULT_LOCALE, LOCALE_COOKIE_KEY, LOCALE_REGISTRY } from './i18n/config/locale-registry'
+import { getEagerLocaleMessageFilePaths } from './i18n/config/locale-modules'
 
 export default defineNuxtConfig({
     compatibilityDate: '2025-06-30',
@@ -84,13 +85,14 @@ export default defineNuxtConfig({
         defaultLocale: DEFAULT_LOCALE,
         // hreflang / canonical 需要绝对地址
         baseUrl: process.env.NUXT_PUBLIC_AUTH_BASE_URL || 'http://localhost:3000',
-        // locales 由 Locale Registry 生成，禁止手写第二份
+        // locales 由 Locale Registry 生成，禁止手写第二份；
+        // files 只装 core 模块（阶段 5 M2），其余模块由 i18n-modules 中间件按路由懒加载
         locales: LOCALE_REGISTRY.map((locale) => ({
             code: locale.code,
             name: locale.nativeName,
             language: locale.code,
             dir: locale.dir,
-            files: locale.files,
+            files: getEagerLocaleMessageFilePaths(locale.code),
         })),
         detectBrowserLanguage: {
             useCookie: true,

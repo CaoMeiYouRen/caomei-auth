@@ -6,6 +6,9 @@
  * - better-auth 的 `zh-Hans` / `zh-Hant` / `default` 只在认证边界映射，不进入本表。
  */
 
+/* 治理脚本用 Node 类型擦除直接 import 本文件，相对 import 必须带 `.ts` 扩展名 */
+import { getLocaleMessageFilePaths } from './locale-modules.ts'
+
 export const DEFAULT_LOCALE = 'zh-CN'
 
 export const LOCALE_COOKIE_KEY = 'i18n_locale'
@@ -46,7 +49,7 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         readiness: 'seo-ready',
         switchable: true,
         indexable: true,
-        files: ['zh-CN/common.json', 'zh-CN/validation.json', 'zh-CN/errors.json'],
+        files: getLocaleMessageFilePaths('zh-CN'),
     },
     {
         code: 'en-US',
@@ -59,7 +62,7 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         readiness: 'ui-ready',
         switchable: true,
         indexable: false,
-        files: ['en-US/common.json', 'en-US/validation.json', 'en-US/errors.json'],
+        files: getLocaleMessageFilePaths('en-US'),
     },
 ]
 

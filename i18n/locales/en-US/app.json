@@ -1,0 +1,14 @@
+{
+    "app": {
+        "name": "Caomei Auth"
+    },
+    "language": {
+        "label": "Language",
+        "short": "EN",
+        "zh-CN": "简体中文",
+        "en-US": "English"
+    },
+    "footer": {
+        "tagline": "Unified sign-in platform · Secure, convenient, extensible"
+    }
+}

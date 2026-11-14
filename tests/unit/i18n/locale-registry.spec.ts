@@ -8,6 +8,7 @@ import {
     normalizeDetectedLocale,
     stripLocalePrefix,
 } from '@/i18n/config/locale-registry'
+import { getLocaleMessageFilePaths } from '@/i18n/config/locale-modules'
 
 describe('i18n/config/locale-registry', () => {
     it('exposes two locales with a single default', () => {
@@ -26,6 +27,8 @@ describe('i18n/config/locale-registry', () => {
         for (const locale of LOCALE_REGISTRY) {
             expect(locale.files.length).toBeGreaterThan(0)
             expect(locale.files.every((file) => file.startsWith(`${locale.code}/`))).toBe(true)
+            /* Registry 的文件清单由模块表派生，防止两处各写一份 */
+            expect(locale.files).toEqual(getLocaleMessageFilePaths(locale.code))
         }
     })
 

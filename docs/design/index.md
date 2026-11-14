@@ -32,6 +32,7 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [PrimeVue → caomei-ui 迁移评估](./governance/2026-11-05-caomei-ui-migration-evaluation.md): 组件库迁移的现状盘点、逐组件映射、主题 / 测试耦合、分阶段计划与风险。
 -   [caomei-ui 1.2.0 复核记录](./governance/2026-11-08-caomei-ui-1.2.0-revaluation.md): 1.1.0 / 1.2.0 能力变化、导出面差分、对 DatePicker / Toast / Form / DataTable 口径的修订与升级验证。
 -   [阶段 5 M1：caomei-ui 1.3.0 升级与 locale 桥接](./governance/2026-11-15-m1-caomei-ui-1.3.0.md): 1.3.0 依赖与 lockfile 归因、`CaomeiConfigProvider` 接线、视觉差异归因与自基线重采、内建文案双语抽检。
+-   [阶段 5 M2：消息模块化与按需加载](./governance/2026-11-15-m2-locale-modules.md): 17 模块注册表、core / 懒加载边界、路由中间件、端到端按需加载验证与包体归因。
 -   [发布链路原生多架构评估](./governance/2026-11-08-native-multiarch-docker-review.md): issue #718 的入口核验、方案比较与方案 C 复用工作流落地（已排期阶段 3 插队，待工作流验证）。
 -   [i18n 评估与实施方案](./governance/2026-11-05-i18n-evaluation.md): 原 i18n 规划的复核修订、Locale Registry、模块化消息、Zod v4 错误本地化、服务端 / 邮件方案与批次。
 -   [阶段 2 范围登记：安全收口与迁移预备](./governance/2026-11-05-phase2-registration.md): 阶段 2 的 5 条主线 / 11 条原子条目、验收与边界（2026-11-06 完成归档）。
