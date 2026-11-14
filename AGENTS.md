@@ -18,7 +18,7 @@
 
 -   **项目名称**: 草梅 Auth 统一登录平台
 -   **核心框架**: Nuxt 4.x (Vue 3.x + TypeScript)
--   **UI 设计**: SCSS (BEM) + PrimeVue
+-   **UI 设计**: SCSS (BEM) + caomei-ui
 -   **后端**: better-auth + TypeORM + Nitro Server Routes
 -   **数据校验**: Zod（单一事实来源，前后端共享 Schema）
 -   **包管理器**: PNPM
