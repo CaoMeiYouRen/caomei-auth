@@ -127,7 +127,7 @@
     "eslint-plugin-vue": "^10.12.1",
     "happy-dom": "^21.0.4",
     "husky": "^9.1.7",
-    "jscpd": "^5.4.2",
+    "jscpd": "^5.4.3",
     "lint-staged": "^17.6.0",
     "pkg-types": "^2.4.0",
     "playwright-core": "^1.64.1",
