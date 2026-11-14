@@ -1,6 +1,6 @@
 # 2026-11-05 caomei-ui 迁移评估与方案（PrimeVue 4 → caomei-ui 1.2.0）
 
-> **状态**：`proposal`（评估完成，**P0/P1 已于 2026-11-05 接入**；**P2–P3 已于 2026-11-06 授权进入阶段 3**，见 [阶段 3 登记记录](./2026-11-06-phase3-registration.md)；P4/P5 未授权）。**2026-11-08 按 caomei-ui 1.2.0 重新评估**，证据见 [1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md)。本文只做评估与规划；后续批次是否上收由用户决策。
+> **状态**：`proposal`（评估完成，**P0/P1 已于 2026-11-05 接入**；P2–P3 已于阶段 3 完成，P4/P5 已随 [阶段 4](./2026-11-10-phase4-registration.md) 完成（2026-11-14），PrimeVue 已下线）。**2026-11-08 按 caomei-ui 1.2.0 重新评估**，证据见 [1.2.0 复核记录](./2026-11-08-caomei-ui-1.2.0-revaluation.md)；caomei-ui 1.3.0 升级与 `CaomeiConfigProvider` locale 桥接已纳入 [阶段 5](./2026-11-14-phase5-registration.md) M1。本文只做评估与规划；后续批次是否上收由用户决策。
 > **P1 落地记录**：[P0 基线与护栏](./2026-11-05-caomei-ui-p0-baseline.md) §5（双库并存、包体复测、导入守卫）。
 > **范围**：`caomei-auth` 主应用的 PrimeVue 4 组件、主题、图标、命令式 API、测试与构建接入面。
 > **参考**：momei 迁移方案与第 67–71 阶段归档；dependfix M31 迁移记录；caomei-ui 1.2.0 文档与设计规范 §7。

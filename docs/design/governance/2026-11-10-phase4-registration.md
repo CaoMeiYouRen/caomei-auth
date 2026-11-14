@@ -56,7 +56,7 @@
 > 1. 收口记录：[阶段 4 收口记录](./2026-11-14-phase4-closure.md)（交付、最终包体、视觉、护栏终态、验证、回退、遗留与 Review Gate）。
 > 2. 清理：删除零消费者的 `useDemoModeGuard`（Demo 前端拦截对话框已无宿主）与 2 条单测，Demo 模式改为「横幅提示 + 服务端写入拦截」；CI `test.yml` 移除参考态 parity 步骤与对应工件（参考态快照保留为历史证据）；`docs/standards/i18n.md`、`docs/design/demo-mode.md`、`docs/usage/demo.md` 与 `completed-work.md` 同步到 caomei / 已删除组件的事实。
 > 3. 最终数据：`keyCss` 399,427 B（较 P0 −0.08%）、入口 JS 343,374 B（较 P4 起点 −29.2%）、总 JS 2,162,010 B、总 CSS 1,447,469 B；`test` 937 passed、`test:visual` 102 passed、`coverage` Statements 77.96%、`lint:duplicate` 299 clones。
-> 4. 归档：`todo.md` 原子条目表迁入 [已完成工作归档](../../archive/completed-work.md) §10；`roadmap.md` 阶段 4 标记完成，阶段 5（i18n）保持未授权。
+> 4. 归档：`todo.md` 原子条目表迁入 [已完成工作归档](../../archive/completed-work.md) §10；`roadmap.md` 阶段 4 标记完成，阶段 5（i18n）保持未授权（2026-11-14 晚已授权启动，见 [阶段 5 范围登记](./2026-11-14-phase5-registration.md)）。
 > 5. 遗留：`AGENTS.md` §3 的「UI 设计：SCSS (BEM) + PrimeVue」需用户确认后改为 caomei-ui；`CaomeiDataTable` 能力、视觉固定时钟、i18n 扫描盲区、stylelint 18 升级保留 backlog。
 > 6. 门禁：同第 3 条，另 `lint` 0 error / 25 warning、`lint:css`、`lint:md`、`typecheck`、`build`、`budget`、`i18n:check` / `migration:check-imports` / `ai:check` 全部通过。
 

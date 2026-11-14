@@ -1,7 +1,7 @@
 # 阶段 4 收口记录：caomei-ui P4 Admin 与 P5 单库收尾
 
 > **状态**：已完成（2026-11-14）。阶段 4 共 15 条原子条目全部完成；P4 交付摘要见 [P4 交付摘要](./2026-11-14-p4-closure.md)，范围与验收见 [阶段 4 登记](./2026-11-10-phase4-registration.md)。
-> **结论**：PrimeVue 已从依赖、运行时、构建配置、样式 token 与测试 mock 中完整移除；`keyCss` 回落到 P0 基线以下；Admin 与认证面自基线全绿（102 条）；i18n 页面文案、邮件与 `User.locale` 留给下一阶段（未授权）。
+> **结论**：PrimeVue 已从依赖、运行时、构建配置、样式 token 与测试 mock 中完整移除；`keyCss` 回落到 P0 基线以下；Admin 与认证面自基线全绿（102 条）；i18n 页面文案、邮件与 `User.locale` 留给下一阶段（2026-11-14 已作为 [阶段 5](./2026-11-14-phase5-registration.md) 授权启动）。
 
 ## 1. 交付摘要
 
@@ -70,7 +70,7 @@
 
 | 项 | 去向 |
 | :--- | :--- |
-| i18n 页面文案、邮件模板、`User.locale`、SEO / sitemap | 阶段 5（未授权；见 [roadmap](../../plan/roadmap.md)） |
+| i18n 页面文案、邮件模板、`User.locale`、SEO / sitemap | 阶段 5（2026-11-14 已授权启动；见 [阶段 5 范围登记](./2026-11-14-phase5-registration.md)） |
 | `CaomeiDataTable` 未透出 `showEdges` / `manualSorting`，分页器无「x 到 y 共 n 条」 | backlog，上游透出后统一升级 |
 | 视觉层固定时钟下对话框内 `CaomeiSelect` 鼠标交互失败 | backlog（视觉环境限制） |
 | `columns` / `options` 数组中的中文列头不在硬编码扫描面 | 阶段 5（i18n 全量） |

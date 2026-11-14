@@ -124,7 +124,7 @@
 | 2FA 弹窗 / 验证码启用态 / Toast 视觉 | 需测试账号与 captcha provider；转入 [backlog](../../plan/backlog.md) 视觉覆盖候选 |
 | P4 Admin 数据页与 `oauth/clients` | 已于 2026-11-10 进入 [阶段 4](./2026-11-10-phase4-registration.md)；P4-0 技术方案见 [Admin 迁移基座](./2026-11-10-p4-admin-migration-plan.md) |
 | P5 卸载 PrimeVue | 已纳入 [阶段 4](./2026-11-10-phase4-registration.md) M13–M15；依赖 P4 完成 |
-| i18n 页面文案 / 邮件 / `User.locale` / SEO | 未授权候选；见 [backlog §1.1](../../plan/backlog.md#11-i18n-全量落地) |
+| i18n 页面文案 / 邮件 / `User.locale` / SEO | 阶段 3 时未授权；2026-11-14 已作为 [阶段 5](./2026-11-14-phase5-registration.md) 启动 |
 
 ## 10. 关联文档
 

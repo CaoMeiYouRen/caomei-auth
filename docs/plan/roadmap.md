@@ -2,7 +2,7 @@
 
 本文档概述草梅 Auth 的中长期发展方向与大颗粒度阶段规划。候选条目、优先级与验收要点见 [backlog.md](./backlog.md)；进行中阶段的原子条目见 [todo.md](./todo.md)；准入与归档规则见 [规划规范](../standards/planning.md)。
 
-> **当前状态**：**阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口**，PrimeVue 已完整下线；下一阶段（i18n 页面与邮件）**未授权**。收口记录见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)，P4 摘要见 [P4 交付摘要](../design/governance/2026-11-14-p4-closure.md)；候选见 [backlog.md](./backlog.md)。
+> **当前状态**：**阶段 5「i18n 全量落地与体验收口」已于 2026-11-14 授权启动（M1–M19，实施中）**。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线。阶段 5 范围见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)；阶段 4 记录见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)，P4 摘要见 [P4 交付摘要](../design/governance/2026-11-14-p4-closure.md)；未启动候选见 [backlog.md](./backlog.md)。
 
 ---
 
@@ -64,6 +64,22 @@ _目标：完成剩余 Admin 数据页与共享封装迁移，建立 Admin 视�
 
 ---
 
+## 阶段 5: i18n 全量落地与体验收口（已授权，2026-11-14 启动）
+
+_目标：完成 i18n 页面文案、邮件与 `User.locale`、API 错误面与 SEO 放量，建立双语质量门，并收口组件库内建文案与个人中心导航。_
+
+- **M1 基座对齐**：caomei-ui 1.3.0 升级 + `CaomeiConfigProvider` locale 桥接 + 受影响视觉基线重采。
+- **M2–M3 基础设施与门禁**：消息模块化与按需加载；扫描盲区修复；`lint:i18n` / `test:i18n`；Admin 校验键直显与 `usePageMeta` / `app.head`。
+- **M4–M10 页面文案**：认证入口、SSO 与错误页、个人中心、安全设置、OAuth、首页与静态页、§2.10 导航互联。
+- **M11–M14 Admin 文案**：用户、OAuth、SSO、日志四个业务域。
+- **M15–M16 服务端**：邮件模板与 `User.locale`；API 错误面与内容协商。
+- **M17–M19 治理 / SEO / 收口**：未用键清理与双语视觉回归；sitemap / hreflang 与 `en-US` 升 `seo-ready`；阶段收口与归档。
+
+> **不做**：新增第三语言 / RTL、日志与内部错误翻译、UI 改版、认证流程与权限模型变更、sitemap 之外的新 SEO 平台。范围与验收见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)。
+> **检查点**：M14 完成后复核剩余容量，是否拆分由用户决策。
+
+---
+
 ## 后续方向（未授权）
 
 以下方向不属于当前阶段，作为中长期方向保留；候选详情与触发条件见 [backlog.md](./backlog.md)。未授权方向不构成启动授权。
@@ -97,8 +113,8 @@ _目标：完成剩余 Admin 数据页与共享封装迁移，建立 Admin 视�
 
 ## 跨阶段候选方向（未授权）
 
-- **i18n 后续（阶段 5 候选）**：i18n M2 页面文案、i18n M4 剩余（Admin 文案、邮件模板、`User.locale`、API 其余错误面）、i18n M5 治理与 SEO 放量。见 [backlog §1.1](./backlog.md#11-i18n-全量落地)。
 - **体验与性能**：时区设置、注册控制、Admin 日志高级筛选、性能审计、Demo 数据增强。见 [backlog §2.2–§2.6](./backlog.md#2-功能性需求feature-backlog)。
+- **个人中心导航互联**已作为 [阶段 5](./todo.md) M10 启动，不再保留为候选。
 
 ---
 
@@ -117,7 +133,10 @@ _目标：完成剩余 Admin 数据页与共享封装迁移，建立 Admin 视�
 阶段 4（已完成 2026-11-14）：caomei-ui P4 Admin 与 P5 单库收尾
         │  P4 基座 → Admin 页面 → P4 收口 → P5 卸载 PrimeVue
         ▼
-后续方向（未授权）：阶段 5 i18n 页面与邮件 / 体验与性能 / 开发者生态 / 安全增强 / 企业级
+阶段 5（已授权 2026-11-14）：i18n 全量落地与体验收口
+        │  基座 1.3.0 → 模块化 / 门禁 → 页面文案 → Admin → 邮件 / API → SEO → 收口
+        ▼
+后续方向（未授权）：体验与性能 / 开发者生态 / 安全增强 / 企业级
         │
         └─ 候选详情：backlog.md
 ```

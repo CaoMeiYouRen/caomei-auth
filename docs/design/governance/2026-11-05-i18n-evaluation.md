@@ -1,9 +1,9 @@
 # 2026-11-05 i18n 评估与实施方案（基于原规划修订）
 
-> **状态**：`proposal`（评估完成，**M1 技术验证已于 2026-11-05 完成**；M2 前置与认证类服务端错误消息试点已在阶段 3 完成，见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md)；页面文案与邮件未授权）。本文在 [国际化实施方案](../../standards/i18n.md) 基础上做现状复核与方案修订，并参考 momei / dependfix / caomei-ui 的已验证实现；页面级实施未启动。
+> **状态**：`proposal`（评估完成，**M1 技术验证已于 2026-11-05 完成**；M2 前置与认证类服务端错误消息试点已在阶段 3 完成，见 [阶段 3 收口记录](./2026-11-09-phase3-closure.md)；页面文案、邮件 / `User.locale`、API 错误面与 SEO 放量已随 [阶段 5](./2026-11-14-phase5-registration.md) 授权，2026-11-14）。本文在 [国际化实施方案](../../standards/i18n.md) 基础上做现状复核与方案修订，并参考 momei / dependfix / caomei-ui 的已验证实现。
 > **验证记录**：[i18n 技术验证记录](./2026-11-05-i18n-verification.md)（M5-1 / M5-2：模块、detector、路由策略、useLocaleHead、语言切换、Zod error map）。
 > **范围**：Web UI、服务端 API、邮件模板、表单校验、Demo 模式、SEO 与治理脚本。
-> **关联**：[backlog §1.1](../../plan/backlog.md#11-i18n-全量落地)｜[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[规划规范](../../standards/planning.md)
+> **关联**：[阶段 5 范围登记](./2026-11-14-phase5-registration.md)｜[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[规划规范](../../standards/planning.md)
 > **单一事实源**：执行口径（目录、模块、里程碑、脚本、验收）以 [i18n.md](../../standards/i18n.md) 为准；本文保留现状取证、取舍理由与风险。
 
 ## 1. 结论摘要
@@ -338,11 +338,11 @@ i18n/
 
 ## 12. 上收触发条件
 
-1. 用户明确授权启动 i18n；
-2. 组件库迁移顺序已确认（建议组件迁移先行，至少完成核心页）；
-3. `@nuxtjs/i18n@10` + Nuxt 4.6.3 的兼容性在本地验证通过；
-4. Zod per-parse error map 方案在 1 个表单 + 1 个 API 上完成技术验证；
-5. 用户语言偏好字段的迁移方案（nullable / 默认值）已确认。
+1. ~~用户明确授权启动 i18n~~（2026-11-14 已授权启动阶段 5）；
+2. ~~组件库迁移顺序已确认~~（阶段 4 已完成 caomei-ui 单库收尾）；
+3. ~~`@nuxtjs/i18n@10` + Nuxt 4.6.3 的兼容性在本地验证通过~~（阶段 2 M5 已验证）；
+4. ~~Zod per-parse error map 方案完成技术验证~~（阶段 3 M5-1 已落地）；
+5. `User.locale` 迁移方案（nullable / 默认 `null`）在阶段 5 M15 落地前最终确认。
 
 ## 13. 工作量画像
 
@@ -359,7 +359,7 @@ i18n/
 
 ## 14. 关联文档
 
-- 本项目：[国际化实施方案](../../standards/i18n.md)｜[backlog §1.1](../../plan/backlog.md#11-i18n-全量落地)｜[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[开发规范](../../standards/development.md)｜[测试规范](../../standards/testing.md)｜[规划规范](../../standards/planning.md)
+- 本项目：[国际化实施方案](../../standards/i18n.md)｜[阶段 5 范围登记](./2026-11-14-phase5-registration.md)｜[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md)｜[开发规范](../../standards/development.md)｜[测试规范](../../standards/testing.md)｜[规划规范](../../standards/planning.md)
 - momei：[国际化系统设计](https://github.com/CaoMeiYouRen/momei/blob/master/docs/design/modules/i18n.md)｜[Locale Registry](https://github.com/CaoMeiYouRen/momei/blob/master/i18n/config/locale-registry.ts)｜[i18n 治理脚本](https://github.com/CaoMeiYouRen/momei/tree/master/scripts/i18n)
 - dependfix：[i18n 规范](https://github.com/dependfix/dependfix/blob/master/docs/standards/i18n.md)｜[i18n 配置](https://github.com/dependfix/dependfix/tree/master/apps/platform/i18n)
 - caomei-ui：[内建文案与语言](https://github.com/CaoMeiYouRen/caomei-ui/blob/master/docs/components/locale.md)
