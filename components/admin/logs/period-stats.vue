@@ -2,13 +2,13 @@
     <div class="period-stats">
         <div class="section-header">
             <h2 class="section-title">
-                时间段统计
+                {{ t('admin.logs.period.title') }}
             </h2>
         </div>
         <div class="period-cards">
             <div class="period-card">
                 <div class="period-label">
-                    今日登录
+                    {{ t('admin.logs.period.today') }}
                 </div>
                 <div class="period-value">
                     {{ stats?.periods?.today || 0 }}
@@ -16,7 +16,7 @@
             </div>
             <div class="period-card">
                 <div class="period-label">
-                    昨日登录
+                    {{ t('admin.logs.period.yesterday') }}
                 </div>
                 <div class="period-value">
                     {{ stats?.periods?.yesterday || 0 }}
@@ -24,7 +24,7 @@
             </div>
             <div class="period-card">
                 <div class="period-label">
-                    本周登录
+                    {{ t('admin.logs.period.week') }}
                 </div>
                 <div class="period-value">
                     {{ stats?.periods?.week || 0 }}
@@ -32,7 +32,7 @@
             </div>
             <div class="period-card">
                 <div class="period-label">
-                    本月登录
+                    {{ t('admin.logs.period.month') }}
                 </div>
                 <div class="period-value">
                     {{ stats?.periods?.month || 0 }}
@@ -44,6 +44,8 @@
 
 <script setup lang="ts">
 import type { AdminLogStats } from '@/types/admin'
+
+const { t } = useI18n()
 
 defineProps<{
     stats: AdminLogStats | null

@@ -1,7 +1,12 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick, ref } from 'vue'
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import TrendChart from '@/components/admin/logs/trend-chart.vue'
+import { useI18nText } from '@/tests/mocks/i18n-text'
+
+const localeRef = ref('zh-CN')
+mockNuxtImport('useI18n', () => () => ({ t: useI18nText(), locale: localeRef }))
 
 /* Chart.js 只在浏览器里渲染 canvas，单测替换构造器并记录配置对象 */
 const chartMock = vi.hoisted(() => {
@@ -43,6 +48,7 @@ describe('TrendChart', () => {
         chartMock.destroy.mockClear()
         isDark.value = false
         isDemoMode.value = false
+        localeRef.value = 'zh-CN'
         /* happy-dom 默认没有 matchMedia；组件用它判断减少动态偏好 */
         vi.stubGlobal('matchMedia', vi.fn(() => ({
             matches: false,
@@ -96,6 +102,22 @@ describe('TrendChart', () => {
 
         expect(chartMock.ctor).toHaveBeenCalledTimes(2)
         expect(chartMock.destroy).toHaveBeenCalled()
+    })
+
+    it('rebuilds demo labels in the active locale', async () => {
+        isDemoMode.value = true
+        mountChart([])
+
+        const zhLabels = lastConfig().data.labels
+        expect(zhLabels[0]).toMatch(/月/u)
+
+        localeRef.value = 'en-US'
+        await nextTick()
+        await nextTick()
+
+        const enLabels = lastConfig().data.labels
+        expect(enLabels[0]).toMatch(/^[A-Z][a-z]{2} \d{1,2}$/u)
+        expect(chartMock.ctor).toHaveBeenCalledTimes(2)
     })
 
     it('destroys the chart instance on unmount', () => {

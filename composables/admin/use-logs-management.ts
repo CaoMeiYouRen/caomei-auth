@@ -3,6 +3,7 @@ import { useToast, type DatePickerRange } from 'caomei-ui'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import { authClient } from '@/lib/auth-client'
 import type { AdminLogSession, AdminLogStats } from '@/types/admin'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 interface LogSessionsResponse {
     success: boolean
@@ -25,6 +26,7 @@ interface LogStatsResponse {
 const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 export function useLogsManagement() {
+    const t = useI18nText()
     const toast = useToast()
     const selectedStatus = ref<string | undefined>(undefined)
     /** 日期区间只在两端齐全时由 `CaomeiDatePicker` 抛值；`null` 表示未筛选 */
@@ -97,16 +99,16 @@ export function useLogsManagement() {
             })
 
             toast.success({
-                title: '撤销成功',
-                description: '会话已撤销',
+                title: t('admin.logs.flow.revokeSuccessTitle'),
+                description: t('admin.logs.flow.revokeSuccess'),
                 duration: 3000,
             })
 
             await loadSessions()
         } catch (error: unknown) {
             toast.danger({
-                title: '撤销失败',
-                description: errorMessage(error, '撤销会话失败'),
+                title: t('admin.logs.flow.revokeFailed'),
+                description: errorMessage(error, t('admin.logs.flow.revokeFailedDescription')),
                 duration: 3000,
             })
         } finally {
@@ -130,8 +132,8 @@ export function useLogsManagement() {
             statsData.value = data
         } catch (error: unknown) {
             toast.danger({
-                title: '加载失败',
-                description: errorMessage(error, '加载统计数据失败'),
+                title: t('admin.logs.flow.statsFailed'),
+                description: errorMessage(error, t('admin.logs.flow.statsFailedDescription')),
                 duration: 3000,
             })
         } finally {

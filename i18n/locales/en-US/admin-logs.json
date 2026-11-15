@@ -1,1 +1,77 @@
-{}
+{
+    "admin": {
+        "logs": {
+            "page": {
+                "title": "Login statistics",
+                "subtitle": "Review login logs, active users and failed sign-in reports",
+                "refresh": "Refresh data"
+            },
+            "overview": {
+                "totalUsers": "Total users",
+                "totalSessions": "Total sign-ins",
+                "activeSessions": "Active sessions",
+                "activeUsers": "Active users (7 days)"
+            },
+            "period": {
+                "title": "Sign-ins by period",
+                "today": "Today",
+                "yesterday": "Yesterday",
+                "week": "This week",
+                "month": "This month"
+            },
+            "providers": {
+                "title": "Sign-ins by method",
+                "empty": "No sign-in method data yet",
+                "columns": {
+                    "provider": "Method",
+                    "count": "Sign-ins",
+                    "share": "Share"
+                }
+            },
+            "trend": {
+                "title": "Sign-in trend (last 30 days)",
+                "series": "Sign-ins",
+                "tooltipDate": "Date: {date}",
+                "tooltipValue": "Sign-ins: {count}",
+                "axisDate": "Date",
+                "axisCount": "Sign-ins"
+            },
+            "table": {
+                "sectionTitle": "Login logs",
+                "title": "Login logs ({count})",
+                "searchPlaceholder": "Search by user or IP address",
+                "searchLabel": "Search by user or IP address",
+                "statusPlaceholder": "Session status",
+                "statusLabel": "Session status",
+                "dateRangePlaceholder": "Select a date range",
+                "dateRangeLabel": "Select a date range",
+                "clearDateRange": "Clear date range",
+                "refresh": "Refresh",
+                "empty": "No login logs yet",
+                "revoke": "Revoke session",
+                "columns": {
+                    "user": "User",
+                    "loginTime": "Sign-in time",
+                    "ipAddress": "IP address",
+                    "device": "Device",
+                    "status": "Status",
+                    "actions": "Actions"
+                },
+                "statusOptions": {
+                    "all": "All statuses",
+                    "active": "Active",
+                    "expired": "Expired"
+                },
+                "unknownDevice": "Unknown device"
+            },
+            "flow": {
+                "revokeSuccessTitle": "Revoked",
+                "revokeSuccess": "The session was revoked",
+                "revokeFailed": "Revoke failed",
+                "revokeFailedDescription": "Could not revoke the session",
+                "statsFailed": "Load failed",
+                "statsFailedDescription": "Could not load statistics"
+            }
+        }
+    }
+}

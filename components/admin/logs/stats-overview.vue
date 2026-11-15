@@ -9,7 +9,7 @@
                     {{ stats?.overview?.totalUsers || 0 }}
                 </div>
                 <div class="stat-label">
-                    总用户数
+                    {{ t('admin.logs.overview.totalUsers') }}
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
                     {{ stats?.overview?.totalSessions || 0 }}
                 </div>
                 <div class="stat-label">
-                    总登录次数
+                    {{ t('admin.logs.overview.totalSessions') }}
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
                     {{ stats?.overview?.activeSessions || 0 }}
                 </div>
                 <div class="stat-label">
-                    活跃会话
+                    {{ t('admin.logs.overview.activeSessions') }}
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
                     {{ stats?.overview?.activeUsers || 0 }}
                 </div>
                 <div class="stat-label">
-                    活跃用户（7天）
+                    {{ t('admin.logs.overview.activeUsers') }}
                 </div>
             </div>
         </div>
@@ -57,6 +57,8 @@
 
 <script setup lang="ts">
 import type { AdminLogStats } from '@/types/admin'
+
+const { t } = useI18n()
 
 defineProps<{
     stats: AdminLogStats | null

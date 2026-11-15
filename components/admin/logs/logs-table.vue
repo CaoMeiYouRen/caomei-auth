@@ -3,7 +3,7 @@
         <div class="detail-header">
             <div class="header-content">
                 <h2 class="section-title">
-                    登录日志
+                    {{ t('admin.logs.table.sectionTitle') }}
                 </h2>
             </div>
             <div class="detail-filters">
@@ -11,8 +11,8 @@
                     <div class="search-wrapper">
                         <CaomeiInput
                             v-model="searchQuery"
-                            placeholder="搜索用户或IP地址"
-                            label="搜索用户或IP地址"
+                            :placeholder="t('admin.logs.table.searchPlaceholder')"
+                            :label="t('admin.logs.table.searchLabel')"
                             clearable
                             @update:model-value="onSearch"
                         >
@@ -28,8 +28,8 @@
                                 :options="statusOptions"
                                 option-label="label"
                                 option-value="value"
-                                placeholder="会话状态"
-                                label="会话状态"
+                                :placeholder="t('admin.logs.table.statusPlaceholder')"
+                                :label="t('admin.logs.table.statusLabel')"
                                 show-clear
                                 @update:model-value="onStatusChange"
                             />
@@ -38,17 +38,17 @@
                             <CaomeiDatePicker
                                 v-model="dateRange"
                                 selection-mode="range"
-                                placeholder="选择日期范围"
-                                label="选择日期范围"
+                                :placeholder="t('admin.logs.table.dateRangePlaceholder')"
+                                :label="t('admin.logs.table.dateRangeLabel')"
                             />
                             <BaseTooltip
                                 v-if="dateRange"
-                                content="清除日期范围"
+                                :content="t('admin.logs.table.clearDateRange')"
                             >
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
-                                    label="清除日期范围"
+                                    :label="t('admin.logs.table.clearDateRange')"
                                     @click="dateRange = null"
                                 >
                                     <template #icon>
@@ -57,11 +57,11 @@
                                 </CaomeiButton>
                             </BaseTooltip>
                         </div>
-                        <BaseTooltip content="刷新">
+                        <BaseTooltip :content="t('admin.logs.table.refresh')">
                             <CaomeiButton
                                 icon-only
                                 variant="secondary"
-                                label="刷新"
+                                :label="t('admin.logs.table.refresh')"
                                 @click="$emit('refresh')"
                             >
                                 <template #icon>
@@ -77,7 +77,7 @@
         <div class="sessions-list">
             <div class="table-header">
                 <div class="table-title">
-                    登录日志 ({{ totalRecords }})
+                    {{ t('admin.logs.table.title', {count: totalRecords}) }}
                 </div>
             </div>
 
@@ -94,7 +94,7 @@
                 :page="page + 1"
                 :sort-field="sortField"
                 :sort-order="sortOrder"
-                empty-text="暂无登录日志"
+                :empty-text="t('admin.logs.table.empty')"
                 @page="onTablePage"
                 @sort="onTableSort"
                 @update:rows="onTableRows"
@@ -123,7 +123,7 @@
                 <template #cell-device="{row}">
                     <div class="device-cell">
                         <i :class="getDeviceIcon(row.device)" aria-hidden="true" />
-                        <span>{{ formatDevice(row.device) }}</span>
+                        <span>{{ formatDevice(row.device) || t('admin.logs.table.unknownDevice') }}</span>
                     </div>
                 </template>
 
@@ -138,13 +138,13 @@
                     <div class="action-buttons">
                         <BaseTooltip
                             v-if="row.isActive"
-                            content="撤销会话"
+                            :content="t('admin.logs.table.revoke')"
                         >
                             <CaomeiButton
                                 icon-only
                                 variant="ghost"
                                 tone="danger"
-                                label="撤销会话"
+                                :label="t('admin.logs.table.revoke')"
                                 :loading="revokingSession === row.sessionToken"
                                 @click="$emit('revoke', row)"
                             >
@@ -161,6 +161,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { debounce } from 'lodash-es'
 import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent, DatePickerRange } from 'caomei-ui'
 import { formatDateTime } from '@/utils/shared/date'
@@ -191,26 +192,28 @@ const searchQuery = defineModel<string>('searchQuery', { required: true })
 const selectedStatus = defineModel<string | undefined>('selectedStatus', { required: true })
 const dateRange = defineModel<DatePickerRange | null>('dateRange', { required: true })
 
-const statusOptions = [
-    { label: '全部状态', value: 'all' },
-    { label: '活跃会话', value: 'active' },
-    { label: '已过期', value: 'expired' },
-]
+const { t } = useI18n()
+
+const statusOptions = computed(() => [
+    { label: t('admin.logs.table.statusOptions.all'), value: 'all' },
+    { label: t('admin.logs.table.statusOptions.active'), value: 'active' },
+    { label: t('admin.logs.table.statusOptions.expired'), value: 'expired' },
+])
 
 /* 操作列只通过 `#cell-actions` 插槽渲染；时间列用 accessor 统一格式化，避免大小写插槽名 */
-const columns: DataTableColumn<AdminLogSession>[] = [
-    { key: 'user', header: '用户' },
+const columns = computed<DataTableColumn<AdminLogSession>[]>(() => [
+    { key: 'user', header: t('admin.logs.table.columns.user') },
     {
         key: 'loginTime',
-        header: '登录时间',
+        header: t('admin.logs.table.columns.loginTime'),
         width: '180px',
         accessor: (row) => formatDateTime(row.loginTime),
     },
-    { key: 'ipAddress', header: 'IP地址', width: '150px' },
-    { key: 'device', header: '设备信息' },
-    { key: 'isActive', header: '状态', width: '100px' },
-    { key: 'actions', header: '操作', width: '90px', align: 'right', frozen: 'right' },
-]
+    { key: 'ipAddress', header: t('admin.logs.table.columns.ipAddress'), width: '150px' },
+    { key: 'device', header: t('admin.logs.table.columns.device') },
+    { key: 'isActive', header: t('admin.logs.table.columns.status'), width: '100px' },
+    { key: 'actions', header: t('admin.logs.table.columns.actions'), width: '90px', align: 'right', frozen: 'right' },
+])
 
 const onSearch = debounce(() => {
     emit('filter-change')

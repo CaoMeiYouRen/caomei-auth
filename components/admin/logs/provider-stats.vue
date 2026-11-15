@@ -2,7 +2,7 @@
     <div class="provider-stats">
         <div class="section-header">
             <h2 class="section-title">
-                登录方式统计
+                {{ t('admin.logs.providers.title') }}
             </h2>
         </div>
         <div class="provider-chart">
@@ -11,7 +11,7 @@
                 :columns="columns"
                 row-key="provider"
                 striped
-                empty-text="暂无登录方式数据"
+                :empty-text="t('admin.logs.providers.empty')"
             >
                 <template #cell-provider="{row}">
                     <div class="provider-cell">
@@ -53,16 +53,18 @@ const props = defineProps<{
 const maxProviderCount = computed(() => Math.max(...(props.providerStats || []).map((item) => item.count), 1))
 const totalProviderCount = computed(() => (props.providerStats || []).reduce((sum, item) => sum + item.count, 0))
 
-const columns: DataTableColumn<AdminLogProviderStat>[] = [
-    { key: 'provider', header: '登录方式' },
-    { key: 'count', header: '登录次数' },
+const { t } = useI18n()
+
+const columns = computed<DataTableColumn<AdminLogProviderStat>[]>(() => [
+    { key: 'provider', header: t('admin.logs.providers.columns.provider') },
+    { key: 'count', header: t('admin.logs.providers.columns.count') },
     {
         key: 'percentage',
-        header: '占比',
+        header: t('admin.logs.providers.columns.share'),
         width: '120px',
         accessor: (row) => `${((row.count / (totalProviderCount.value || 1)) * 100).toFixed(1)}%`,
     },
-]
+])
 </script>
 
 <style lang="scss" scoped>

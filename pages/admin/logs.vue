@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 import { useLogsManagement } from '@/composables/admin/use-logs-management'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 
 // Components
 import LogsHeader from '@/components/admin/logs/logs-header.vue'
@@ -54,11 +55,11 @@ import ProviderStats from '@/components/admin/logs/provider-stats.vue'
 import TrendChart from '@/components/admin/logs/trend-chart.vue'
 import LogsTable from '@/components/admin/logs/logs-table.vue'
 
-// 页面元数据
 definePageMeta({
-    title: '登录统计 - 草梅 Auth',
     layout: 'admin',
 })
+
+usePageMeta('admin.logs.page.title', 'admin.logs.page.subtitle')
 
 const {
     loading: sessionsLoading,

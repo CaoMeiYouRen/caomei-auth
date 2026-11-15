@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-**阶段 5「i18n 全量落地与体验收口」进行中（2026-11-14 授权）：M1–M13 已完成（2026-11-15），M14–M19 pending。** 范围、口径与验收见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)，已交付条目见 [M1](../design/governance/2026-11-15-m1-caomei-ui-1.3.0.md) / [M2](../design/governance/2026-11-15-m2-locale-modules.md) / [M3](../design/governance/2026-11-15-m3-governance-gates.md) / [M4](../design/governance/2026-11-15-m4-auth-text.md) / [M5](../design/governance/2026-11-15-m5-sso-error-reset.md) / [M6](../design/governance/2026-11-15-m6-profile-text.md) / [M7](../design/governance/2026-11-15-m7-security-text.md) / [M8](../design/governance/2026-11-15-m8-oauth-text.md) / [M9](../design/governance/2026-11-15-m9-static-text.md) / [M10](../design/governance/2026-11-15-m10-cross-links.md) / [M11](../design/governance/2026-11-15-m11-admin-users-text.md) / [M12](../design/governance/2026-11-15-m12-admin-oauth-text.md) / [M13](../design/governance/2026-11-15-m13-admin-sso-text.md) 记录；阶段 4 已于 2026-11-14 收口，见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)。
+**阶段 5「i18n 全量落地与体验收口」进行中（2026-11-14 授权）：M1–M14 已完成（2026-11-15），M15–M19 pending。** 范围、口径与验收见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)，已交付条目见 [M1](../design/governance/2026-11-15-m1-caomei-ui-1.3.0.md) / [M2](../design/governance/2026-11-15-m2-locale-modules.md) / [M3](../design/governance/2026-11-15-m3-governance-gates.md) / [M4](../design/governance/2026-11-15-m4-auth-text.md) / [M5](../design/governance/2026-11-15-m5-sso-error-reset.md) / [M6](../design/governance/2026-11-15-m6-profile-text.md) / [M7](../design/governance/2026-11-15-m7-security-text.md) / [M8](../design/governance/2026-11-15-m8-oauth-text.md) / [M9](../design/governance/2026-11-15-m9-static-text.md) / [M10](../design/governance/2026-11-15-m10-cross-links.md) / [M11](../design/governance/2026-11-15-m11-admin-users-text.md) / [M12](../design/governance/2026-11-15-m12-admin-oauth-text.md) / [M13](../design/governance/2026-11-15-m13-admin-sso-text.md) / [M14](../design/governance/2026-11-15-m14-admin-logs-text.md) 记录；阶段 4 已于 2026-11-14 收口，见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)。
 
 ## 阶段 5 原子条目
 
@@ -25,7 +25,7 @@
 | M11 | Admin 用户域文案 | 页面 + 4 个对话框 + 2 个 composable 双语 | 已完成（2026-11-15） |
 | M12 | Admin OAuth 域文案 | 页面 + 3 个对话框双语 | 已完成（2026-11-15） |
 | M13 | Admin SSO 域文案 | 页面 + 5 个组件双语 | 已完成（2026-11-15） |
-| M14 | Admin 日志域文案 | 页面 + 6 个组件双语 | pending |
+| M14 | Admin 日志域文案 | 页面 + 6 个组件双语 | 已完成（2026-11-15） |
 | M15 | 邮件模板与用户语言偏好 | `User.locale`；8 个邮件方法 + 6 个 MJML 参数化；同步 / 异步语言优先级 | pending |
 | M16 | API 错误面与内容协商 | `createError` 中文清零；`Content-Language` / `Vary` 扩展；双语言测试 | pending |
 | M17 | 治理清理与双语回归 | 未用 / 重复键清理；allowlist 收紧；核心页 `en-US` 视觉基线 | pending |

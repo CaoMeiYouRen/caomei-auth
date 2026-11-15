@@ -17,7 +17,7 @@ export const getDeviceIcon = (device: any) => {
 
 export const formatDevice = (device: any) => {
     if (!device) {
-        return '未知设备'
+        return ''
     }
 
     const parts: string[] = []
@@ -28,5 +28,5 @@ export const formatDevice = (device: any) => {
         parts.push(device.os)
     }
 
-    return parts.join(' / ') || '未知设备'
+    return parts.join(' / ')
 }

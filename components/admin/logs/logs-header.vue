@@ -2,10 +2,10 @@
     <div class="logs-header">
         <div class="header-content">
             <h1 class="logs-title">
-                登录统计
+                {{ t('admin.logs.page.title') }}
             </h1>
             <p class="logs-subtitle">
-                查看登录日志、活跃用户、异常登录等统计报表
+                {{ t('admin.logs.page.subtitle') }}
             </p>
         </div>
         <div class="header-actions">
@@ -17,7 +17,7 @@
                 <template #icon>
                     <i class="mdi mdi-refresh" aria-hidden="true" />
                 </template>
-                刷新数据
+                {{ t('admin.logs.page.refresh') }}
             </CaomeiButton>
         </div>
     </div>
@@ -27,6 +27,8 @@
 defineProps<{
     loading: boolean
 }>()
+
+const { t } = useI18n()
 
 defineEmits<{
     (e: 'refresh'): void

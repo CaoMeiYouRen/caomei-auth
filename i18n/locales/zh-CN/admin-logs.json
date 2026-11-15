@@ -1,1 +1,77 @@
-{}
+{
+    "admin": {
+        "logs": {
+            "page": {
+                "title": "登录统计",
+                "subtitle": "查看登录日志、活跃用户、异常登录等统计报表",
+                "refresh": "刷新数据"
+            },
+            "overview": {
+                "totalUsers": "总用户数",
+                "totalSessions": "总登录次数",
+                "activeSessions": "活跃会话",
+                "activeUsers": "活跃用户（7天）"
+            },
+            "period": {
+                "title": "时间段统计",
+                "today": "今日登录",
+                "yesterday": "昨日登录",
+                "week": "本周登录",
+                "month": "本月登录"
+            },
+            "providers": {
+                "title": "登录方式统计",
+                "empty": "暂无登录方式数据",
+                "columns": {
+                    "provider": "登录方式",
+                    "count": "登录次数",
+                    "share": "占比"
+                }
+            },
+            "trend": {
+                "title": "登录趋势（最近30天）",
+                "series": "登录次数",
+                "tooltipDate": "日期: {date}",
+                "tooltipValue": "登录次数: {count}",
+                "axisDate": "日期",
+                "axisCount": "登录次数"
+            },
+            "table": {
+                "sectionTitle": "登录日志",
+                "title": "登录日志 ({count})",
+                "searchPlaceholder": "搜索用户或IP地址",
+                "searchLabel": "搜索用户或IP地址",
+                "statusPlaceholder": "会话状态",
+                "statusLabel": "会话状态",
+                "dateRangePlaceholder": "选择日期范围",
+                "dateRangeLabel": "选择日期范围",
+                "clearDateRange": "清除日期范围",
+                "refresh": "刷新",
+                "empty": "暂无登录日志",
+                "revoke": "撤销会话",
+                "columns": {
+                    "user": "用户",
+                    "loginTime": "登录时间",
+                    "ipAddress": "IP地址",
+                    "device": "设备信息",
+                    "status": "状态",
+                    "actions": "操作"
+                },
+                "statusOptions": {
+                    "all": "全部状态",
+                    "active": "活跃会话",
+                    "expired": "已过期"
+                },
+                "unknownDevice": "未知设备"
+            },
+            "flow": {
+                "revokeSuccessTitle": "撤销成功",
+                "revokeSuccess": "会话已撤销",
+                "revokeFailed": "撤销失败",
+                "revokeFailedDescription": "撤销会话失败",
+                "statsFailed": "加载失败",
+                "statsFailedDescription": "加载统计数据失败"
+            }
+        }
+    }
+}

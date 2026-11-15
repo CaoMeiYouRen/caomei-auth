@@ -2,7 +2,7 @@
     <div class="trend-chart">
         <div class="section-header">
             <h2 id="trend-chart-title" class="section-title">
-                登录趋势（最近30天）
+                {{ t('admin.logs.trend.title') }}
             </h2>
         </div>
         <div class="chart-container">
@@ -29,6 +29,7 @@ const props = defineProps<{
     trendData: AdminLogTrendPoint[]
 }>()
 
+const { t, locale } = useI18n()
 const { isDark } = useAppTheme()
 const { isDemoMode } = useDemoMode()
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -54,9 +55,11 @@ function buildLabelsAndData() {
         if (!demoSeries) {
             const labels: string[] = []
             const data: number[] = []
+            /* 用 Intl 而不是 dayjs 的 locale 化 token：dayjs 全局 locale 固定为 zh-cn，`MMM D` 会渲染成「11月 15」 */
+            const dayFormatter = new Intl.DateTimeFormat(locale.value, { month: 'short', day: 'numeric' })
 
             for (let i = 6; i >= 0; i--) {
-                labels.push(dayjs().subtract(i, 'day').format('MM月DD日'))
+                labels.push(dayFormatter.format(dayjs().subtract(i, 'day').toDate()))
                 data.push(Math.floor(Math.random() * 10) + 1)
             }
             demoSeries = { labels, data }
@@ -88,7 +91,7 @@ function buildConfig(): ChartConfiguration<'line'> {
             labels,
             datasets: [
                 {
-                    label: '登录次数',
+                    label: t('admin.logs.trend.series'),
                     data,
                     fill: true,
                     borderColor: seriesColor,
@@ -130,8 +133,8 @@ function buildConfig(): ChartConfiguration<'line'> {
                     bodyFont: { size: 12 },
                     callbacks: {
                         // `label` 是 Chart.js 约定的回调名，不是 i18n 文案
-                        title: (context) => `日期: ${context[0]?.label ?? ''}`,
-                        label: (context) => `登录次数: ${context.parsed.y}`,
+                        title: (context) => t('admin.logs.trend.tooltipDate', { date: context[0]?.label ?? '' }),
+                        label: (context) => t('admin.logs.trend.tooltipValue', { count: context.parsed.y }),
                     },
                 },
             },
@@ -144,7 +147,7 @@ function buildConfig(): ChartConfiguration<'line'> {
                     display: true,
                     title: {
                         display: true,
-                        text: '日期',
+                        text: t('admin.logs.trend.axisDate'),
                         color: textColor,
                         font: { size: 12, weight: 500 as const },
                     },
@@ -160,7 +163,7 @@ function buildConfig(): ChartConfiguration<'line'> {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: '登录次数',
+                        text: t('admin.logs.trend.axisCount'),
                         color: textColor,
                         font: { size: 12, weight: 500 as const },
                     },
@@ -197,6 +200,13 @@ watch(() => props.trendData, renderChart, { deep: true })
 
 /* 主题切换后重算 token 颜色（暗色 / 浅色 token 在根元素上切换） */
 watch(isDark, () => {
+    nextTick(renderChart)
+})
+
+/* 语言切换后重算图例、坐标轴与 tooltip 文案 */
+watch(locale, () => {
+    /* Demo 示例序列按语言生成，语言切换后需重算标签，否则 x 轴仍是旧语言 */
+    demoSeries = null
     nextTick(renderChart)
 })
 
