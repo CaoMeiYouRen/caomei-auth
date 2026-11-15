@@ -47,6 +47,26 @@
         "en-US": "English"
     },
     "footer": {
-        "tagline": "统一登录平台 · 安全、便捷、可扩展"
+        "tagline": "统一登录平台 · 安全、便捷、可扩展",
+        "copyright": "草梅 Auth © 2025",
+        "ariaGithub": "GitHub",
+        "ariaHome": "主页",
+        "home": "首页",
+        "profile": "个人中心",
+        "admin": "管理后台",
+        "forgotPassword": "忘记密码",
+        "privacy": "隐私政策",
+        "terms": "服务条款",
+        "about": "关于我们",
+        "contact": "联系我们",
+        "docs": "项目文档"
+    },
+    "feedback": {
+        "title": "反馈建议",
+        "text": "问题反馈"
+    },
+    "github": {
+        "title": "在 GitHub 上关注我",
+        "ariaLabel": "在 GitHub 上关注我"
     }
 }

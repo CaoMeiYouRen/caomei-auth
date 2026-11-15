@@ -2,55 +2,62 @@
     <div class="auth-container">
         <div class="auth-main">
             <h1 class="auth-title">
-                关于草梅 Auth 统一登录平台
+                {{ t('static.about.title') }}
             </h1>
             <p class="auth-subtitle">
-                草梅 Auth 是一个基于 Nuxt 全栈框架的现代化统一登录平台，支持 OAuth2.0 协议，集成邮箱、用户名、手机号、验证码、社交媒体等多种登录注册方式，安全、便捷、可扩展。
+                {{ t('static.about.intro') }}
             </p>
             <div class="auth-section">
-                <h2>主要功能特性</h2>
+                <h2>{{ t('static.about.featuresTitle') }}</h2>
                 <ul>
-                    <li>支持 OAuth2.0 协议，便于与各类应用集成</li>
-                    <li>多种登录/注册方式：邮箱、用户名、手机号、验证码、社交媒体等</li>
-                    <li>用户权限管理基于 better-auth</li>
-                    <li>邮件服务基于 nodemailer</li>
-                    <li>响应式设计，用户体验友好</li>
-                    <li>多因子认证与安全性设计</li>
-                    <li>支持 Node.js、Docker、Vercel、Cloudflare Workers 等多种部署</li>
+                    <li>{{ t('static.about.features.oauth') }}</li>
+                    <li>{{ t('static.about.features.methods') }}</li>
+                    <li>{{ t('static.about.features.permissions') }}</li>
+                    <li>{{ t('static.about.features.mail') }}</li>
+                    <li>{{ t('static.about.features.responsive') }}</li>
+                    <li>{{ t('static.about.features.mfa') }}</li>
+                    <li>{{ t('static.about.features.deploy') }}</li>
                 </ul>
             </div>
             <div class="auth-section">
-                <h2>技术栈</h2>
+                <h2>{{ t('static.about.stackTitle') }}</h2>
                 <ul>
-                    <li>全栈框架：Nuxt 3.x（Vue 3.x + SSR + API 路由）</li>
-                    <li>权限与认证：better-auth、OAuth2.0 Server</li>
-                    <li>邮件与短信：nodemailer、第三方短信服务</li>
-                    <li>样式与图标：SCSS、@mdi/font</li>
-                    <li>数据库：PostgreSQL/MySQL/SQLite（可选）</li>
-                    <li>包管理器：pnpm</li>
+                    <li>{{ t('static.about.stack.framework') }}</li>
+                    <li>{{ t('static.about.stack.auth') }}</li>
+                    <li>{{ t('static.about.stack.notification') }}</li>
+                    <li>{{ t('static.about.stack.style') }}</li>
+                    <li>{{ t('static.about.stack.database') }}</li>
+                    <li>{{ t('static.about.stack.packageManager') }}</li>
                 </ul>
             </div>
             <div class="auth-section">
-                <h2>主题色与设计规范</h2>
+                <h2>{{ t('static.about.themeTitle') }}</h2>
                 <p>
-                    平台主色调为红色（#e63946），强调安全与活力，采用完整主色调色板，风格现代明快。样式统一使用 SCSS 变量，便于主题切换和风格统一。
+                    {{ t('static.about.themeText') }}
                 </p>
             </div>
             <div class="auth-section">
-                <h2>开源协议</h2>
+                <h2>{{ t('static.about.licenseTitle') }}</h2>
                 <p>
-                    本项目遵循 <a href="https://github.com/CaoMeiYouRen/caomei-auth/blob/master/LICENSE" target="_blank">MIT
-                        License</a> 开源协议，欢迎贡献与交流。
+                    <i18n-t keypath="static.about.license" tag="span">
+                        <template #license>
+                            <a
+                                href="https://github.com/CaoMeiYouRen/caomei-auth/blob/master/LICENSE"
+                                target="_blank"
+                                rel="noopener"
+                            >{{ t('static.about.licenseName') }}</a>
+                        </template>
+                    </i18n-t>
                 </p>
             </div>
             <div class="auth-author auth-section">
-                <span>作者：</span>
+                <span>{{ t('static.about.authorLabel') }}</span>
                 <a href="https://github.com/CaoMeiYouRen" target="_blank">CaoMeiYouRen</a>
             </div>
             <div class="auth-nav">
                 <NuxtLink to="/" class="back-home-btn">
                     <i class="mdi mdi-home" />
-                    返回首页
+                    {{ t('static.backHome') }}
                 </NuxtLink>
             </div>
         </div>
@@ -58,7 +65,10 @@
 </template>
 
 <script setup lang="ts">
-// about 页面无需特殊逻辑
+import { usePageMeta } from '@/composables/utils/use-page-meta'
+
+const { t } = useI18n()
+usePageMeta('static.about.title', 'static.about.intro')
 </script>
 
 <style scoped lang="scss">

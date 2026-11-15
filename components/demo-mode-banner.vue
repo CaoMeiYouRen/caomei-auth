@@ -4,21 +4,22 @@
         <div class="banner-content">
             <i class="banner-icon mdi mdi-information-outline" />
             <div class="banner-text">
-                <strong>演示模式</strong>
+                <strong>{{ t('demo.title') }}</strong>
                 <span>
                     {{ displayMessage }}
-                    <template v-if="showDocLink">
-                        Demo账号密码详见
-                        <NuxtLink
-                            :to="finalDocUrl"
-                            external
-                            class="external-link"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {{ docText }}
-                        </NuxtLink>
-                    </template>
+                    <i18n-t v-if="showDocLink" keypath="demo.docHint">
+                        <template #link>
+                            <NuxtLink
+                                :to="finalDocUrl"
+                                external
+                                class="external-link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {{ displayDocText }}
+                            </NuxtLink>
+                        </template>
+                    </i18n-t>
                 </span>
             </div>
             <button
@@ -33,6 +34,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
+const { t } = useI18n()
+
 interface Props {
     closable?: boolean
     message?: string
@@ -44,8 +49,10 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
     closable: false,
     showDocLink: true,
-    docText: '文档说明',
+    docText: undefined,
 })
+
+const displayDocText = computed(() => props.docText || t('demo.docText'))
 
 defineEmits<{
     close: []
@@ -54,13 +61,8 @@ defineEmits<{
 const config = useRuntimeConfig()
 const demoMode = computed(() => config.public.demoMode)
 
-// 默认消息文本
-const defaultMessage = '当前为演示模式，您可以浏览所有功能，但无法进行实际的修改操作。如需体验完整功能，请部署您自己的实例。'
-
 // 显示的消息（不包含文档链接部分）
-const displayMessage = computed(() => {
-    return props.message || defaultMessage
-})
+const displayMessage = computed(() => props.message || t('demo.message'))
 
 // 最终的文档链接
 const finalDocUrl = computed(() => {

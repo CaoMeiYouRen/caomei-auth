@@ -1,6 +1,6 @@
 <template>
     <div class="auth-container">
-        <AuthLeft title="草梅 Auth 统一登录平台" subtitle="基于 Nuxt 3 的现代化统一登录平台，支持多种登录注册方式，安全、便捷、可扩展。">
+        <AuthLeft :title="t('static.home.heroTitle')" :subtitle="t('static.home.heroSubtitle')">
             <template #content>
                 <div class="auth-links">
                     <NuxtLink
@@ -8,7 +8,7 @@
                         target="_blank"
                         class="project-link"
                     >
-                        <i class="mdi mdi-github" /> GitHub 项目地址
+                        <i class="mdi mdi-github" /> {{ t('static.home.githubLink') }}
                     </NuxtLink>
                     <br>
                     <NuxtLink
@@ -16,7 +16,7 @@
                         target="_blank"
                         class="project-link"
                     >
-                        <i class="mdi mdi-book" /> 项目文档
+                        <i class="mdi mdi-book" /> {{ t('static.home.docsLink') }}
                     </NuxtLink>
                 </div>
             </template>
@@ -24,7 +24,7 @@
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
-                    页面入口
+                    {{ t('static.home.entries') }}
                 </h2>
                 <div class="button-group">
                     <!-- 如果是管理员，显示管理后台按钮 -->
@@ -37,7 +37,7 @@
                         <template #icon>
                             <i class="mdi mdi-cog" aria-hidden="true" />
                         </template>
-                        管理后台
+                        {{ t('static.home.admin') }}
                     </CaomeiButton>
                     <!-- 如果session 存在，则显示跳转资料页-->
                     <CaomeiButton
@@ -48,7 +48,7 @@
                         <template #icon>
                             <i class="mdi mdi-account" aria-hidden="true" />
                         </template>
-                        前往个人中心
+                        {{ t('static.home.profile') }}
                     </CaomeiButton>
                     <CaomeiButton
                         block
@@ -57,7 +57,7 @@
                         <template #icon>
                             <i class="mdi mdi-login" aria-hidden="true" />
                         </template>
-                        前往登录页
+                        {{ t('static.home.login') }}
                     </CaomeiButton>
                     <CaomeiButton
                         block
@@ -66,7 +66,7 @@
                         <template #icon>
                             <i class="mdi mdi-flash" aria-hidden="true" />
                         </template>
-                        前往快速登录页
+                        {{ t('static.home.quickLogin') }}
                     </CaomeiButton>
                     <CaomeiButton
                         block
@@ -75,7 +75,7 @@
                         <template #icon>
                             <i class="mdi mdi-account-plus" aria-hidden="true" />
                         </template>
-                        前往注册页
+                        {{ t('static.home.register') }}
                     </CaomeiButton>
                     <CaomeiButton
                         block
@@ -84,11 +84,11 @@
                         <template #icon>
                             <i class="mdi mdi-lock-reset" aria-hidden="true" />
                         </template>
-                        前往忘记密码页
+                        {{ t('static.home.forgotPassword') }}
                     </CaomeiButton>
                 </div>
                 <div class="separator">
-                    GitHub源码
+                    {{ t('static.home.source') }}
                 </div>
                 <div class="auth-links-mobile">
                     <a
@@ -96,7 +96,7 @@
                         target="_blank"
                         class="project-link"
                     >
-                        <i class="mdi mdi-github" /> GitHub 项目地址
+                        <i class="mdi mdi-github" /> {{ t('static.home.githubLink') }}
                     </a>
                 </div>
             </div>
@@ -107,6 +107,8 @@
 <script lang="ts" setup>
 import AuthLeft from '@/components/auth-left.vue'
 import { useIndexFlow } from '@/composables/use-index-flow'
+
+const { t } = useI18n()
 
 const {
     session,

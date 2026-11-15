@@ -1,8 +1,15 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ref, defineComponent } from 'vue'
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import AppFooter from '@/components/app-footer.vue'
 import { authClient } from '@/lib/auth-client'
+import { useI18nText } from '@/tests/mocks/i18n-text'
+
+/** `useI18n` 替身：组件内只用到 `t`，这里指向真实 zh-CN 语言包。 */
+const i18nStub = vi.hoisted(() => ({ t: (key: string) => key }))
+mockNuxtImport('useI18n', () => () => i18nStub)
+i18nStub.t = useI18nText()
 
 // Mock auth-client
 vi.mock('@/lib/auth-client', () => ({

@@ -31,17 +31,24 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 interface Props {
     githubUrl?: string
     title?: string
     ariaLabel?: string
 }
 
+const { t } = useI18n()
+
 const props = withDefaults(defineProps<Props>(), {
     githubUrl: 'https://github.com/CaoMeiYouRen/caomei-auth',
-    title: 'Follow me on GitHub',
-    ariaLabel: 'Follow me on GitHub',
+    title: undefined,
+    ariaLabel: undefined,
 })
+
+const title = computed(() => props.title || t('github.title'))
+const ariaLabel = computed(() => props.ariaLabel || t('github.ariaLabel'))
 </script>
 
 <style lang="scss" scoped>

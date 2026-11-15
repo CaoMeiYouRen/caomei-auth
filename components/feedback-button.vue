@@ -20,17 +20,24 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 interface Props {
     title?: string
     text?: string
     variant?: 'floating' | 'inline'
 }
 
+const { t } = useI18n()
+
 const props = withDefaults(defineProps<Props>(), {
-    title: '反馈建议',
-    text: '问题反馈',
+    title: undefined,
+    text: undefined,
     variant: 'floating',
 })
+
+const title = computed(() => props.title || t('feedback.title'))
+const text = computed(() => props.text || t('feedback.text'))
 
 const config = useRuntimeConfig()
 const feedbackUrl = computed(() => config.public.feedbackUrl)

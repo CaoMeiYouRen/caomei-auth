@@ -1,1 +1,8 @@
-{}
+{
+    "demo": {
+        "title": "Demo mode",
+        "message": "This is a demo. You can explore every feature, but changes are not saved. Deploy your own instance to try the full experience.",
+        "docHint": "Demo credentials are documented in {link}",
+        "docText": "the documentation"
+    }
+}

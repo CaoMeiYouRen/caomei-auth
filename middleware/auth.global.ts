@@ -4,8 +4,9 @@ import { stripLocalePrefix } from '@/i18n/config/locale-registry'
 
 export default defineNuxtRouteMiddleware(async (to) => {
     const localePath = useLocalePath()
-    // 路由守卫按业务路径判断，避免 `/en-US/...` 被当成未登录访问私有页
-    const pathname = stripLocalePrefix(to.path)
+    // 路由守卫按业务路径判断，避免 `/en-US/...` 被当成未登录访问私有页；
+    // 同时去掉尾斜杠，让 `/about/` 与 `/about` 的白名单判断一致
+    const pathname = stripLocalePrefix(to.path).replace(/\/+$/u, '') || '/'
 
     // 白名单路径
     if (publicPaths.some((path) => pathname === path)) {

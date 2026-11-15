@@ -5,7 +5,7 @@
                 <i
                     class="mdi mdi-shield-account mr-2 text-primary text-xl"
                 />
-                <span class="font-medium text-gray-700 text-sm">草梅 Auth © 2025</span>
+                <span class="font-medium text-gray-700 text-sm">{{ t('footer.copyright') }}</span>
             </div>
             <div class="app-footer__links">
                 <NuxtLink
@@ -13,7 +13,7 @@
                     target="_blank"
                     external
                     class="app-footer__link"
-                    aria-label="GitHub"
+                    :aria-label="t('footer.ariaGithub')"
                 >
                     <i class="mdi mdi-github text-xl" />
                 </NuxtLink>
@@ -22,7 +22,7 @@
                     target="_blank"
                     external
                     class="app-footer__link"
-                    aria-label="主页"
+                    :aria-label="t('footer.ariaHome')"
                 >
                     <i class="mdi mdi-web text-xl" />
                 </NuxtLink>
@@ -30,7 +30,7 @@
         </div>
         <div class="app-footer__bottom">
             <div class="text-gray-500 text-sm">
-                统一登录平台 | 安全、便捷、可扩展
+                {{ t('footer.tagline') }}
             </div>
 
             <div class="app-footer__bottom-links">
@@ -38,45 +38,45 @@
                     to="/"
                     class="app-footer__bottom-link"
                 >
-                    首页
+                    {{ t('footer.home') }}
                 </NuxtLink>
                 <NuxtLink
                     v-if="session?.user"
                     to="/profile"
                     class="app-footer__bottom-link"
                 >
-                    个人中心
+                    {{ t('footer.profile') }}
                 </NuxtLink>
                 <NuxtLink
                     v-if="session?.user?.role?.includes('admin')"
                     to="/admin/users"
                     class="app-footer__bottom-link"
                 >
-                    管理后台
+                    {{ t('footer.admin') }}
                 </NuxtLink>
                 <NuxtLink
                     to="/forgot-password"
                     class="app-footer__bottom-link"
                 >
-                    忘记密码
+                    {{ t('footer.forgotPassword') }}
                 </NuxtLink>
                 <NuxtLink
                     to="/privacy"
                     class="app-footer__bottom-link"
                 >
-                    隐私政策
+                    {{ t('footer.privacy') }}
                 </NuxtLink>
                 <NuxtLink
                     to="/terms"
                     class="app-footer__bottom-link"
                 >
-                    服务条款
+                    {{ t('footer.terms') }}
                 </NuxtLink>
                 <NuxtLink
                     to="/about"
                     class="app-footer__bottom-link"
                 >
-                    关于我们
+                    {{ t('footer.about') }}
                 </NuxtLink>
 
                 <NuxtLink
@@ -84,14 +84,14 @@
                     external
                     class="app-footer__bottom-link"
                 >
-                    联系我们
+                    {{ t('footer.contact') }}
                 </NuxtLink>
                 <NuxtLink
                     to="https://auth-docs.cmyr.dev/"
                     external
                     class="app-footer__bottom-link"
                 >
-                    项目文档
+                    {{ t('footer.docs') }}
                 </NuxtLink>
 
                 <!-- ICP 备案号 -->
@@ -123,6 +123,10 @@
 
 <script setup lang="ts">
 import { authClient } from '@/lib/auth-client'
+
+/* 必须在顶层 await 之前调用，保证 setup 上下文可用 */
+const { t } = useI18n()
+
 const { data: session } = await authClient.useSession((url, options) => useFetch(url, {
     ...options,
     headers: {

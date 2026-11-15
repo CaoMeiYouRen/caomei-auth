@@ -15,9 +15,9 @@ import {
 } from '@/i18n/config/locale-modules'
 
 describe('i18n/config/locale-modules', () => {
-    it('registers 17 unique modules with a key group each', () => {
-        expect(LOCALE_MESSAGE_MODULES).toHaveLength(17)
-        expect(new Set(LOCALE_MESSAGE_MODULES).size).toBe(17)
+    it('registers 18 unique modules with a key group each', () => {
+        expect(LOCALE_MESSAGE_MODULES).toHaveLength(18)
+        expect(new Set(LOCALE_MESSAGE_MODULES).size).toBe(18)
         for (const moduleName of LOCALE_MESSAGE_MODULES) {
             expect(LOCALE_MESSAGE_MODULE_KEY_GROUPS[moduleName]?.length).toBeGreaterThan(0)
         }
@@ -68,8 +68,8 @@ describe('i18n/config/locale-modules', () => {
     })
 
     it('resolves core-only routes without optional modules', () => {
-        expect(resolveLocaleMessageModulesForPath('/about')).toEqual([...LOCALE_CORE_MODULES])
-        expect(resolveLocaleMessageModulesForPath('/en-US/index')).toEqual([...LOCALE_CORE_MODULES])
+        expect(resolveLocaleMessageModulesForPath('/unmapped-route')).toEqual([...LOCALE_CORE_MODULES])
+        expect(resolveLocaleMessageModulesForPath('/en-US/callback')).toEqual([...LOCALE_CORE_MODULES])
     })
 
     it('resolves page modules by route', () => {
@@ -79,6 +79,11 @@ describe('i18n/config/locale-modules', () => {
             ['/profile', ['profile']],
             ['/security', ['security']],
             ['/oauth/consent', ['oauth']],
+            ['/', ['static']],
+            ['/about', ['static']],
+            ['/about/', ['static']],
+            ['/privacy', ['static']],
+            ['/terms', ['static']],
             ['/sso-login', ['sso']],
             ['/admin/users', ['admin', 'admin-users']],
             ['/en-US/admin/oauth/applications', ['admin', 'admin-oauth']],

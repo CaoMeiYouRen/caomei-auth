@@ -47,6 +47,26 @@
         "en-US": "English"
     },
     "footer": {
-        "tagline": "Unified sign-in platform · Secure, convenient, extensible"
+        "tagline": "Unified sign-in platform · Secure, convenient, extensible",
+        "copyright": "Caomei Auth © 2025",
+        "ariaGithub": "GitHub",
+        "ariaHome": "Homepage",
+        "home": "Home",
+        "profile": "Profile",
+        "admin": "Admin console",
+        "forgotPassword": "Forgot password",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "about": "About",
+        "contact": "Contact",
+        "docs": "Documentation"
+    },
+    "feedback": {
+        "title": "Send feedback",
+        "text": "Report an issue"
+    },
+    "github": {
+        "title": "Follow me on GitHub",
+        "ariaLabel": "Follow me on GitHub"
     }
 }

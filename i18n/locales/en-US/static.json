@@ -1,0 +1,185 @@
+{
+    "static": {
+        "backHome": "Back to home",
+        "contactLabel": "Contact: ",
+        "colon": ": ",
+        "home": {
+            "heroTitle": "Caomei Auth Unified Sign-In Platform",
+            "heroSubtitle": "A modern unified sign-in platform built on Nuxt 3, supporting multiple sign-in and sign-up methods. Secure, convenient and extensible.",
+            "githubLink": "GitHub repository",
+            "docsLink": "Documentation",
+            "entries": "Page entries",
+            "admin": "Admin console",
+            "profile": "Go to profile",
+            "login": "Go to sign-in",
+            "quickLogin": "Go to quick sign-in",
+            "register": "Go to sign-up",
+            "forgotPassword": "Go to forgot password",
+            "source": "GitHub source"
+        },
+        "about": {
+            "title": "About Caomei Auth Unified Sign-In Platform",
+            "intro": "Caomei Auth is a modern unified sign-in platform built on the Nuxt full-stack framework. It supports OAuth 2.0 and integrates email, username, phone number, verification code and social sign-in methods. Secure, convenient and extensible.",
+            "featuresTitle": "Key features",
+            "features": {
+                "oauth": "OAuth 2.0 support for easy integration with any application",
+                "methods": "Multiple sign-in and sign-up methods: email, username, phone number, codes and social accounts",
+                "permissions": "User permission management powered by better-auth",
+                "mail": "Email delivery powered by nodemailer",
+                "responsive": "Responsive design with a friendly user experience",
+                "mfa": "Multi-factor authentication and security-by-design",
+                "deploy": "Deployable on Node.js, Docker, Vercel, Cloudflare Workers and more"
+            },
+            "stackTitle": "Tech stack",
+            "stack": {
+                "framework": "Full-stack framework: Nuxt 3.x (Vue 3.x + SSR + API routes)",
+                "auth": "Auth and permissions: better-auth, OAuth 2.0 server",
+                "notification": "Email and SMS: nodemailer, third-party SMS providers",
+                "style": "Styles and icons: SCSS, {'@'}mdi/font",
+                "database": "Database: PostgreSQL/MySQL/SQLite (optional)",
+                "packageManager": "Package manager: pnpm"
+            },
+            "themeTitle": "Theme and design",
+            "themeText": "The primary color is red (#e63946), conveying security and energy. The full primary palette is used for a modern, crisp look, and all styles are driven by SCSS variables so themes stay consistent and switchable.",
+            "licenseTitle": "License",
+            "license": "This project is released under the {license}. Contributions and discussions are welcome.",
+            "licenseName": "MIT License",
+            "authorLabel": "Author: "
+        },
+        "privacy": {
+            "title": "Privacy Policy",
+            "collect": {
+                "label": "Data collection",
+                "intro": "We collect the following types of personal information:",
+                "emailLabel": "Email address",
+                "emailText": "Used for account registration, sign-in verification, password reset, security notices, and (with your explicit consent) service information and product updates.",
+                "phoneLabel": "Phone number",
+                "phoneText": "Used for SMS verification, multi-factor authentication and account protection, and (with your explicit consent) security codes and important service notices.",
+                "usernameLabel": "Username",
+                "usernameText": "Used for account identification, profile display and personalization.",
+                "credentialLabel": "Sign-in credentials",
+                "credentialText": "Including hashed passwords and session tokens, used for authentication and account security.",
+                "deviceLabel": "Device information",
+                "deviceText": "Including IP address, browser type and operating system version, used for security monitoring and service improvements."
+            },
+            "use": {
+                "label": "Data usage",
+                "intro": "The personal data we collect is used for the following purposes:",
+                "item1": "Providing account registration, sign-in and authentication",
+                "item2": "Protecting account security, including abnormal sign-in monitoring and multi-factor authentication",
+                "item3": "Sending important security notices and service updates",
+                "item4": "Improving the user experience and service features",
+                "item5": "Complying with legal requirements and preventing security risks",
+                "item6": "Sending product updates and feature announcements with your explicit consent"
+            },
+            "storage": {
+                "label": "Data storage",
+                "intro": "User data is stored on secure servers, with the following safeguards:",
+                "item1": "Sensitive data (such as passwords) is stored encrypted",
+                "item2": "Access is restricted to authorized personnel on a need-to-know basis",
+                "item3": "Data is backed up regularly and audited for security",
+                "item4": "Retention: active accounts are retained indefinitely; inactive accounts may be deleted when the last sign-in is more than one year old"
+            },
+            "marketing": {
+                "label": "Marketing communications:",
+                "item1": "We may use your email address or phone number for important service notices (such as security alerts and service updates)",
+                "item2": "Marketing messages (such as promotions and feature announcements) are only sent with your explicit consent",
+                "item3": "You can unsubscribe at any time through the link in the email or by contacting us",
+                "item4": "Even after unsubscribing from marketing, you will still receive important service and security notices"
+            },
+            "rights": {
+                "label": "Your rights",
+                "intro": "You have the following data rights:",
+                "contact": "To exercise these rights, contact our support team at {email}",
+                "accessLabel": "Access: ",
+                "accessText": "request a copy of the personal data we hold about you",
+                "rectifyLabel": "Rectification: ",
+                "rectifyText": "request correction of inaccurate or incomplete personal data",
+                "eraseLabel": "Erasure: ",
+                "eraseText": "request deletion of your personal data (subject to legal requirements)",
+                "restrictLabel": "Restriction: ",
+                "restrictText": "request that we restrict processing of your personal data",
+                "portabilityLabel": "Portability: ",
+                "portabilityText": "receive your data in a structured, commonly used, machine-readable format",
+                "objectLabel": "Objection: ",
+                "objectText": "object to processing based on our legitimate interests"
+            },
+            "sentry": "Error monitoring: we use {sentry} to monitor system errors and performance issues so the service stays stable. It collects only technical error data and no sensitive personal information.",
+            "clarity": {
+                "label": "Behavior analytics",
+                "text": "We use {clarity} to analyze how users interact with key pages so we can improve the experience. The tool hashes user identifiers automatically to protect privacy. We only collect necessary interaction data on key pages such as sign-in, sign-up and security settings, and never record passwords, email addresses or other sensitive input."
+            },
+            "baidu": {
+                "label": "Traffic statistics",
+                "text": "We use {baidu} to collect site traffic data such as page views, referral sources and visit duration, so we can understand usage and improve the service. It collects anonymous statistics and no personally identifying information. You can block the analytics script through browser settings or extensions.",
+                "name": "Baidu Analytics"
+            },
+            "google": {
+                "label": "Site analytics",
+                "text": "We use {google} to analyze traffic and user behavior so we can understand how the service is used and improve it. Google Analytics collects anonymous usage data including page views, interactions, device information and approximate location. The data is anonymized and does not directly identify you, and Google processes it under its own privacy policy. You can opt out by installing the Google Analytics opt-out add-on or adjusting your browser settings."
+            },
+            "thirdParty": {
+                "label": "Third-party sign-in",
+                "text": "We may integrate the following third-party sign-in services; when a service is enabled, it processes your data under its own privacy policy:",
+                "github": "GitHub sign-in",
+                "google": "Google sign-in",
+                "microsoft": "Microsoft sign-in",
+                "apple": "Apple sign-in",
+                "twitter": "Twitter sign-in",
+                "facebook": "Facebook sign-in",
+                "discord": "Discord sign-in",
+                "wechat": "WeChat sign-in",
+                "qq": "QQ sign-in",
+                "douyin": "Douyin sign-in",
+                "weibo": "Weibo sign-in"
+            },
+            "shareLabel": "Data sharing",
+            "shareText": "we do not sell, rent or share your personal data with third parties without your explicit consent. Data may be shared when required by law or by government authorities, to protect users or the public, or with third-party services you have explicitly authorized.",
+            "cookieLabel": "Cookies",
+            "cookieText": "we use cookies to keep you signed in and to personalize the service. You can manage cookies in your browser settings, though some features may stop working."
+        },
+        "terms": {
+            "title": "Terms of Service",
+            "conduct": {
+                "label": "Code of conduct",
+                "intro": "When using this platform you must follow these rules:",
+                "item1": "Comply with applicable laws and the platform's usage rules",
+                "item2": "Do not use the platform for illegal activities, including but not limited to fraud, money laundering or spreading illegal content",
+                "item3": "Do not attack the system, attempt unauthorized access or interfere with normal operation",
+                "item4": "Do not register with false information or impersonate others",
+                "item5": "Protect your account and never share sign-in credentials"
+            },
+            "privacy": {
+                "label": "Personal information:",
+                "item1": "You agree that we collect, use and protect your personal information in accordance with the Privacy Policy",
+                "item2": "You may view, modify or delete your personal information at any time",
+                "item3": "You may choose whether to receive marketing communications",
+                "item4": "We will not use your personal information for unauthorized commercial purposes"
+            },
+            "marketing": {
+                "label": "Marketing consent:",
+                "item1": "At sign-up you can choose whether to receive product updates and promotions",
+                "item2": "We may send important service notices by email or SMS; these are necessary for account security and normal use of the service",
+                "item3": "You can unsubscribe from marketing messages at any time without affecting your use of the service"
+            },
+            "disclaimer": {
+                "label": "Disclaimer:",
+                "item1": "We work to provide a stable and secure service but cannot guarantee uninterrupted, error-free or vulnerability-free operation",
+                "item2": "We are not liable for interruptions caused by force majeure (such as natural disasters, network failures or government actions)",
+                "item3": "You are responsible for your own actions; we are not liable for losses resulting from your violation of these terms or applicable law",
+                "item4": "We are not directly responsible for the availability or security of third-party services such as third-party sign-in"
+            },
+            "dispute": {
+                "label": "Dispute resolution:",
+                "item1": "Both parties should first attempt to resolve disputes through friendly negotiation",
+                "item2": "If negotiation fails, either party may bring a lawsuit in the court where the platform is located"
+            },
+            "ipLabel": "Intellectual property",
+            "ipText": "all content on the platform (including but not limited to software, interface design, documentation and trademarks) is protected by intellectual property law. Without explicit authorization you may not copy, modify, distribute, sell or otherwise use this content.",
+            "monitoringLabel": "Service monitoring",
+            "monitoringText": "to keep the service reliable and secure we monitor system status and key user operations. Collected data is used only for technical optimization, troubleshooting and security protection, strictly in line with the Privacy Policy.",
+            "changesLabel": "Service changes",
+            "changesText": "we may adjust service features based on business needs, legal requirements or technical developments. For material changes (such as policy updates affecting user rights) we will notify users in advance by email or in-app notice."
+        }
+    }
+}

@@ -21,6 +21,7 @@ export const LOCALE_MESSAGE_MODULES = [
     'security',
     'oauth',
     'sso',
+    'static',
     'admin',
     'admin-users',
     'admin-oauth',
@@ -44,7 +45,7 @@ export const LOCALE_CORE_MODULES = [
 
 /** 模块 → key 前缀（审计归属用；后台业务域沿用 `admin.*` 既有路径） */
 export const LOCALE_MESSAGE_MODULE_KEY_GROUPS: Record<LocaleMessageModule, readonly string[]> = {
-    app: ['app', 'footer', 'language'],
+    app: ['app', 'footer', 'language', 'feedback', 'github'],
     common: ['common'],
     errors: ['errors'],
     validation: ['validation'],
@@ -53,6 +54,7 @@ export const LOCALE_MESSAGE_MODULE_KEY_GROUPS: Record<LocaleMessageModule, reado
     security: ['security'],
     oauth: ['oauth'],
     sso: ['sso'],
+    static: ['static'],
     admin: ['admin'],
     'admin-users': ['admin.users'],
     'admin-oauth': ['admin.oauth'],
@@ -127,6 +129,8 @@ const ROUTE_MODULE_RULES: RouteModuleRule[] = [
     { pattern: /^\/profile(?:\/|$)/u, modules: ['profile'] },
     { pattern: /^\/security(?:\/|$)/u, modules: ['security'] },
     { pattern: /^\/oauth(?:\/|$)/u, modules: ['oauth'] },
+    { pattern: /^\/$/u, modules: ['static'] },
+    { pattern: /^\/(?:about|privacy|terms)(?:\/|$)/u, modules: ['static'] },
     { pattern: /^\/admin(?:\/|$)/u, modules: ['admin'] },
     { pattern: /^\/admin\/users(?:\/|$)/u, modules: ['admin-users'] },
     { pattern: /^\/admin\/oauth(?:\/|$)/u, modules: ['admin-oauth'] },
