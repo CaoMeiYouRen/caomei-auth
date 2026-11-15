@@ -1,19 +1,19 @@
 <template>
     <div class="auth-container">
-        <AuthLeft title="快速登录" subtitle="验证码快速登录，安全便捷。" />
+        <AuthLeft :title="t('auth.quick.heroTitle')" :subtitle="t('auth.quick.heroSubtitle')" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
-                    快速登录
+                    {{ t('auth.quick.title') }}
                 </h2>
                 <p class="auth-subtitle">
-                    使用验证码一键完成登录。未注册的账号将自动创建。
+                    {{ t('auth.quick.subtitle') }}
                 </p>
                 <!-- Tab切换 -->
                 <div class="login-btn mb-4">
                     <div class="card flex justify-center">
-                        <CaomeiButtonGroup group-label="快速登录方式">
-                            <BaseTooltip :content="'使用邮箱验证码登录'">
+                        <CaomeiButtonGroup :group-label="t('auth.quick.methodLabel')">
+                            <BaseTooltip :content="t('auth.quick.emailTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'email' ? 'primary' : 'secondary'"
                                     :aria-pressed="activeTab === 'email'"
@@ -22,10 +22,10 @@
                                     <template #icon>
                                         <i class="mdi mdi-email" />
                                     </template>
-                                    邮箱验证码
+                                    {{ t('auth.quick.methodEmail') }}
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip v-if="phoneEnabled" :content="'使用短信验证码登录'">
+                            <BaseTooltip v-if="phoneEnabled" :content="t('auth.quick.phoneTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
                                     :aria-pressed="activeTab === 'phone'"
@@ -34,7 +34,7 @@
                                     <template #icon>
                                         <i class="mdi mdi-phone" />
                                     </template>
-                                    短信验证码
+                                    {{ t('auth.quick.methodPhone') }}
                                 </CaomeiButton>
                             </BaseTooltip>
                         </CaomeiButtonGroup>
@@ -46,16 +46,16 @@
                     <BaseInputV2
                         id="email"
                         v-model="email"
-                        label="邮箱地址"
-                        placeholder="example@mail.com"
+                        :label="t('auth.quick.fieldEmail')"
+                        :placeholder="t('auth.quick.placeholderEmail')"
                         :error="errors.email"
                     />
 
                     <BaseInputV2
                         id="emailCode"
                         v-model="emailCode"
-                        label="验证码"
-                        placeholder="请输入邮箱验证码"
+                        :label="t('auth.quick.fieldCode')"
+                        :placeholder="t('auth.quick.placeholderEmailCode')"
                         :error="errors.emailCode"
                         maxlength="6"
                         @input="handleEmailCodeInput"
@@ -66,8 +66,6 @@
                                 :duration="60"
                                 :disabled="!canSendEmailCode"
                                 :loading="emailCodeSending"
-                                text="获取验证码"
-                                resend-text="重新发送"
                             />
                         </template>
                     </BaseInputV2>
@@ -79,7 +77,7 @@
                         :loading="isEmailLoggingIn"
                         @click="loginWithEmail"
                     >
-                        邮箱快速登录
+                        {{ t('auth.quick.loginEmail') }}
                     </CaomeiButton>
                 </div>
 
@@ -88,15 +86,15 @@
                     <BasePhoneInputV2
                         id="phone"
                         v-model="phone"
-                        label="手机号"
+                        :label="t('auth.quick.fieldPhone')"
                         :error="errors.phone"
                     />
 
                     <BaseInputV2
                         id="phoneCode"
                         v-model="phoneCode"
-                        label="验证码"
-                        placeholder="请输入短信验证码"
+                        :label="t('auth.quick.fieldCode')"
+                        :placeholder="t('auth.quick.placeholderSmsCode')"
                         :error="errors.phoneCode"
                         maxlength="6"
                         @input="handlePhoneCodeInput"
@@ -107,8 +105,6 @@
                                 :duration="60"
                                 :disabled="!canSendPhoneCode"
                                 :loading="phoneCodeSending"
-                                text="获取验证码"
-                                resend-text="重新发送"
                             />
                         </template>
                     </BaseInputV2>
@@ -120,7 +116,7 @@
                         :loading="isPhoneLoggingIn"
                         @click="loginWithPhone"
                     >
-                        手机快速登录
+                        {{ t('auth.quick.loginPhone') }}
                     </CaomeiButton>
                 </div>
 
@@ -132,31 +128,31 @@
                 <!-- 其他登录方式 -->
                 <div class="toggle-login">
                     <NuxtLink to="/login" class="toggle-link">
-                        使用密码登录
+                        {{ t('auth.quick.passwordLogin') }}
                     </NuxtLink>
                     <span class="divider">|</span>
                     <NuxtLink to="/register" class="toggle-link">
-                        传统注册
+                        {{ t('auth.quick.register') }}
                     </NuxtLink>
                 </div>
 
                 <!-- 用户协议 -->
                 <div class="agreement-notice">
-                    登录即表示您已阅读并同意
+                    {{ t('auth.quick.agreementPrefix') }}
                     <NuxtLink
                         to="/terms"
                         target="_blank"
                         class="agreement-link"
                     >
-                        《服务条款》
+                        {{ t('auth.quick.terms') }}
                     </NuxtLink>
-                    和
+                    {{ t('auth.quick.agreementAnd') }}
                     <NuxtLink
                         to="/privacy"
                         target="_blank"
                         class="agreement-link"
                     >
-                        《隐私政策》
+                        {{ t('auth.quick.privacy') }}
                     </NuxtLink>
                 </div>
             </div>
@@ -166,15 +162,13 @@
 
 <script lang="ts" setup>
 import AuthLeft from '@/components/auth-left.vue'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
 import Captcha from '@/components/captcha.vue'
 import { useQuickLoginFlow } from '@/composables/use-quick-login-flow'
 
-// SEO 设置
-definePageMeta({
-    title: '快速登录 - 草梅 Auth',
-    description: '使用验证码一键完成登录注册，安全便捷',
-})
+const { t } = useI18n()
+usePageMeta('auth.quick.title', 'auth.quick.subtitle')
 
 const {
     activeTab,

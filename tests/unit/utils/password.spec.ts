@@ -75,14 +75,6 @@ describe('utils/password', () => {
     })
 
     describe('presentation helpers', () => {
-        it('maps strength levels to descriptive text', async () => {
-            const { getPasswordStrengthText, PasswordStrength } = await importPasswordModule('strong')
-            expect(getPasswordStrengthText(PasswordStrength.VERY_STRONG)).toBe('非常强')
-            expect(getPasswordStrengthText(PasswordStrength.STRONG)).toBe('强')
-            expect(getPasswordStrengthText(PasswordStrength.MEDIUM)).toBe('中等')
-            expect(getPasswordStrengthText(PasswordStrength.WEAK)).toBe('弱')
-        })
-
         it('maps strength levels to colour palette', async () => {
             const { getPasswordStrengthColor, PasswordStrength } = await importPasswordModule('strong')
             expect(getPasswordStrengthColor(PasswordStrength.VERY_STRONG)).toBe('#22c55e')
@@ -90,41 +82,6 @@ describe('utils/password', () => {
             expect(getPasswordStrengthColor(PasswordStrength.MEDIUM)).toBe('#f59e0b')
             expect(getPasswordStrengthColor(PasswordStrength.WEAK)).toBe('#ef4444')
         })
-
-        it('provides detailed requirements text', async () => {
-            const { getPasswordRequirements, PasswordStrength } = await importPasswordModule('strong')
-            expect(getPasswordRequirements(PasswordStrength.STRONG)).toContain('至少 8 个字符')
-            expect(getPasswordRequirements(PasswordStrength.VERY_STRONG)).toContain('至少 12 个字符')
-        })
-
-        it('provides short requirement hints per strength', async () => {
-            const { getPasswordRequirementsShort, PasswordStrength } = await importPasswordModule('strong')
-            expect(getPasswordRequirementsShort(PasswordStrength.WEAK)).toContain('至少 6 个字符')
-            expect(getPasswordRequirementsShort(PasswordStrength.MEDIUM)).toContain('包含字母和数字')
-            expect(getPasswordRequirementsShort(PasswordStrength.STRONG)).toContain('特殊字符')
-            expect(getPasswordRequirementsShort(PasswordStrength.VERY_STRONG)).toContain('多个大小写字母')
-        })
     })
 
-    describe('getPasswordValidationError', () => {
-        it('enforces minimum length', async () => {
-            const { getPasswordValidationError, PasswordStrength } = await importPasswordModule('strong')
-            expect(getPasswordValidationError('abc', PasswordStrength.STRONG)).toBe('密码长度至少需要 8 个字符，当前为 3 个字符')
-        })
-
-        it('enforces missing character categories', async () => {
-            const { getPasswordValidationError, PasswordStrength } = await importPasswordModule('strong')
-            expect(getPasswordValidationError('abcdefghi', PasswordStrength.STRONG)).toBe('密码还需要包含：1 个大写字母、1 个数字、1 个特殊字符')
-        })
-
-        it('limits password length', async () => {
-            const { getPasswordValidationError, PasswordStrength } = await importPasswordModule('strong')
-            expect(getPasswordValidationError('x'.repeat(65), PasswordStrength.STRONG)).toBe('密码长度不能超过 64 个字符')
-        })
-
-        it('returns null when password meets requirements', async () => {
-            const { getPasswordValidationError, PasswordStrength } = await importPasswordModule('strong')
-            expect(getPasswordValidationError('ValidPass1!', PasswordStrength.STRONG)).toBeNull()
-        })
-    })
 })

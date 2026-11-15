@@ -17,14 +17,10 @@ import { useI18nText } from '@/composables/utils/use-i18n-text'
 const props = withDefaults(defineProps<{
     duration?: number
     onSend: () => Promise<unknown>
-    text?: string
-    resendText?: string
     disabled?: boolean
     loading?: boolean
 }>(), {
     duration: 60,
-    text: '',
-    resendText: '',
     disabled: false,
     loading: false,
 })
@@ -36,9 +32,9 @@ const hasStarted = ref(false)
 
 const btnLabel = computed(() => {
     if (hasStarted.value && remaining.value > 0) {
-        return `${props.resendText || t('auth.code.resend')}(${remaining.value}s)`
+        return `${t('auth.code.resend')}(${remaining.value}s)`
     }
-    return props.text || t('auth.code.get')
+    return t('auth.code.get')
 })
 
 async function handleSend() {

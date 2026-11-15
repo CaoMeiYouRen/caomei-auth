@@ -1,16 +1,16 @@
 <template>
     <div class="auth-container">
-        <AuthLeft title="注册新账号" subtitle="欢迎加入草梅 Auth，支持邮箱、手机号注册，可设置用户名。" />
+        <AuthLeft :title="t('auth.register.heroTitle')" :subtitle="t('auth.register.heroSubtitle')" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
-                    创建新账号
+                    {{ t('auth.register.title') }}
                 </h2>
                 <p class="auth-subtitle">
-                    请填写以下信息完成注册
+                    {{ t('auth.register.subtitle') }}
                 </p>
                 <div class="card form-group">
-                    <CaomeiButtonGroup group-label="注册方式">
+                    <CaomeiButtonGroup :group-label="t('auth.register.methodLabel')">
                         <CaomeiButton
                             :variant="activeTab === 'email' ? 'primary' : 'secondary'"
                             :aria-pressed="activeTab === 'email'"
@@ -19,9 +19,9 @@
                             <template #icon>
                                 <i class="mdi mdi-email" />
                             </template>
-                            邮箱
+                            {{ t('auth.register.methodEmail') }}
                         </CaomeiButton>
-                        <BaseTooltip v-if="phoneEnabled" :content="'使用手机号注册'">
+                        <BaseTooltip v-if="phoneEnabled" :content="t('auth.register.methodPhoneTip')">
                             <CaomeiButton
                                 :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
                                 :aria-pressed="activeTab === 'phone'"
@@ -30,7 +30,7 @@
                                 <template #icon>
                                     <i class="mdi mdi-phone" />
                                 </template>
-                                手机号
+                                {{ t('auth.register.methodPhone') }}
                             </CaomeiButton>
                         </BaseTooltip>
                     </CaomeiButtonGroup>
@@ -38,44 +38,44 @@
 
                 <!-- 邮箱注册表单 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseTooltip :content="'昵称长度为2到36个字符，不能包含特殊控制字符。昵称将用于展示'">
+                    <BaseTooltip :content="t('auth.register.nicknameTip')">
                         <BaseInputV2
                             id="emailNickname"
                             v-model="nickname"
-                            label="昵称"
-                            placeholder="请输入昵称"
+                            :label="t('auth.register.labelNickname')"
+                            :placeholder="t('auth.register.placeholderNickname')"
                             :error="errors.nickname"
                             required
                         />
                     </BaseTooltip>
                     <div v-if="usernameEnabled">
-                        <BaseTooltip :content="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。用户名将用于登录'">
+                        <BaseTooltip :content="t('auth.register.usernameTip')">
                             <BaseInputV2
                                 id="emailUsername"
                                 v-model="username"
-                                label="用户名"
-                                placeholder="请输入用户名"
+                                :label="t('auth.register.labelUsername')"
+                                :placeholder="t('auth.register.placeholderUsername')"
                                 :error="errors.username"
                                 required
                             />
                         </BaseTooltip>
                     </div>
-                    <BaseTooltip :content="'请输入有效的邮箱地址，用于接收验证邮件'">
+                    <BaseTooltip :content="t('auth.register.emailTip')">
                         <BaseInputV2
                             id="email"
                             v-model="email"
-                            label="邮箱"
-                            placeholder="example@mail.com"
+                            :label="t('auth.register.labelEmail')"
+                            :placeholder="t('auth.register.placeholderEmail')"
                             :error="errors.email"
                             required
                         />
                     </BaseTooltip>
-                    <BaseTooltip :content="getPasswordRequirementsShort()">
+                    <BaseTooltip :content="passwordHint">
                         <BasePasswordV2
                             id="password"
                             v-model="password"
-                            label="密码"
-                            placeholder="请输入密码"
+                            :label="t('auth.register.labelPassword')"
+                            :placeholder="t('auth.register.placeholderPassword')"
                             :error="errors.password"
                             required
                             :feedback="false"
@@ -90,12 +90,12 @@
                             </template>
                         </BasePasswordV2>
                     </BaseTooltip>
-                    <BaseTooltip :content="'请再次输入相同的密码以确认'">
+                    <BaseTooltip :content="t('auth.register.passwordConfirmTip')">
                         <BasePasswordV2
                             id="confirmPassword"
                             v-model="confirmPassword"
-                            label="确认密码"
-                            placeholder="请再次输入密码"
+                            :label="t('auth.register.labelConfirmPassword')"
+                            :placeholder="t('auth.register.placeholderConfirmPassword')"
                             :error="errors.confirmPassword"
                             required
                             :feedback="false"
@@ -105,55 +105,53 @@
 
                 <!-- 手机号注册表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <BaseTooltip :content="'昵称长度为2到36个字符，不能包含特殊字符。昵称将用于展示'">
+                    <BaseTooltip :content="t('auth.register.nicknameTipShort')">
                         <BaseInputV2
                             id="phoneNickname"
                             v-model="nickname"
-                            label="昵称"
-                            placeholder="请输入昵称"
+                            :label="t('auth.register.labelNickname')"
+                            :placeholder="t('auth.register.placeholderNickname')"
                             :error="errors.nickname"
                             required
                         />
                     </BaseTooltip>
                     <div v-if="usernameEnabled">
-                        <BaseTooltip :content="'用户名长度为2到36个字符，只能包含字母、数字、下划线和连字符。用户名将用于登录'">
+                        <BaseTooltip :content="t('auth.register.usernameTip')">
                             <BaseInputV2
                                 id="phoneUsername"
                                 v-model="username"
-                                label="用户名"
-                                placeholder="请输入用户名"
+                                :label="t('auth.register.labelUsername')"
+                                :placeholder="t('auth.register.placeholderUsername')"
                                 :error="errors.username"
                                 required
                             />
                         </BaseTooltip>
                     </div>
-                    <BaseTooltip :content="'请输入有效的手机号，用于接收短信验证码'">
+                    <BaseTooltip :content="t('auth.register.phoneTip')">
                         <BasePhoneInputV2
                             id="phone"
                             v-model="phone"
-                            label="手机号"
+                            :label="t('auth.register.labelPhone')"
                             :error="errors.phone"
                             required
                         />
                     </BaseTooltip>
-                    <BaseTooltip :content="'请输入发送到您手机的短信验证码'">
+                    <BaseTooltip :content="t('auth.register.codeTip')">
                         <BaseInputV2
                             id="phoneCode"
                             v-model="phoneCode"
-                            label="短信验证码"
-                            placeholder="请输入短信验证码"
+                            :label="t('auth.register.labelSmsCode')"
+                            :placeholder="t('auth.register.placeholderSmsCode')"
                             :error="errors.phoneCode"
                             required
                         >
                             <template #append>
-                                <BaseTooltip content="点击获取短信验证码，验证码将发送到您输入的手机号">
+                                <BaseTooltip :content="t('auth.register.codeSendTip')">
                                     <SendCodeButtonV2
                                         :on-send="sendPhoneCode"
                                         :duration="60"
                                         :disabled="phoneCodeSending || !validatePhone(phone)"
                                         :loading="phoneCodeSending"
-                                        text="获取验证码"
-                                        resend-text="重新发送"
                                     />
                                 </BaseTooltip>
                             </template>
@@ -163,29 +161,29 @@
 
                 <!-- 用户协议和隐私政策 -->
                 <div class="agreement-section form-group">
-                    <BaseTooltip :content="'勾选表示您已阅读并同意服务条款和隐私政策'">
+                    <BaseTooltip :content="t('auth.register.agreementTip')">
                         <CaomeiCheckbox
                             id="agreement"
                             v-model="agreedToTerms"
                         >
                             <span class="checkbox-label">
-                                我已阅读并同意
+                                {{ t('auth.register.agreementCheckbox') }}
                                 <NuxtLink
                                     to="/terms"
                                     target="_blank"
                                     class="agreement-link"
                                     @click.stop
                                 >
-                                    《服务条款》
+                                    {{ t('auth.register.terms') }}
                                 </NuxtLink>
-                                和
+                                {{ t('auth.register.agreementAnd') }}
                                 <NuxtLink
                                     to="/privacy"
                                     target="_blank"
                                     class="agreement-link"
                                     @click.stop
                                 >
-                                    《隐私政策》
+                                    {{ t('auth.register.privacy') }}
                                 </NuxtLink>
                             </span>
                         </CaomeiCheckbox>
@@ -218,14 +216,14 @@
                     :loading="loading"
                     @click="register"
                 >
-                    注册
+                    {{ t('auth.register.submit') }}
                 </CaomeiButton>
                 <div class="toggle-login">
-                    已有账号？ <NuxtLink
+                    {{ t('auth.register.haveAccount') }} <NuxtLink
                         :to="`/login?mode=${activeTab}`"
                         class="toggle-link"
                     >
-                        立即登录
+                        {{ t('auth.register.loginNow') }}
                     </NuxtLink>
                 </div>
             </div>
@@ -234,13 +232,20 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import { validatePhone } from '@/utils/shared/validate'
-import { getPasswordRequirementsShort } from '@/utils/shared/password'
+import { usePasswordHints } from '@/composables/utils/use-password-hints'
 import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
 import AuthLeft from '@/components/auth-left.vue'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 import PasswordStrength from '@/components/password-strength.vue'
 import Captcha from '@/components/captcha.vue'
 import { useRegisterFlow } from '@/composables/use-register-flow'
+
+const { t } = useI18n()
+usePageMeta('auth.register.title', 'auth.register.subtitle')
+const { requirementHint } = usePasswordHints()
+const passwordHint = computed(() => requirementHint())
 
 const {
     nickname,

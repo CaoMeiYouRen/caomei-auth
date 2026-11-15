@@ -1,40 +1,46 @@
 <template>
     <div class="auth-container">
-        <AuthLeft title="修改密码" subtitle="请输入当前密码和新密码以修改密码。" />
+        <AuthLeft :title="t('auth.changePassword.heroTitle')" :subtitle="t('auth.changePassword.heroSubtitle')" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
-                    修改密码
+                    {{ t('auth.changePassword.title') }}
                 </h2>
                 <p class="auth-subtitle">
-                    请输入相关信息以修改密码
+                    {{ t('auth.changePassword.subtitle') }}
                 </p>
-                <p class="info-note">
-                    注意：通过第三方登录、邮箱验证码、短信验证码等方式注册，导致未设置初始密码的用户，请通过<BaseTooltip :content="'点击前往忘记密码页面'">
-                        <NuxtLink
-                            :to="`/forgot-password`"
-                            class="toggle-link"
-                        >
-                            「忘记密码」
-                        </NuxtLink>
-                    </BaseTooltip>页面重置初始密码。
-                </p>
-                <BaseTooltip :content="'请输入您当前正在使用的登录密码'">
+                <i18n-t
+                    keypath="auth.changePassword.note"
+                    tag="p"
+                    class="info-note"
+                >
+                    <template #link>
+                        <BaseTooltip :content="t('auth.changePassword.forgotTip')">
+                            <NuxtLink
+                                :to="`/forgot-password`"
+                                class="toggle-link"
+                            >
+                                {{ t('auth.changePassword.forgotLink') }}
+                            </NuxtLink>
+                        </BaseTooltip>
+                    </template>
+                </i18n-t>
+                <BaseTooltip :content="t('auth.changePassword.currentTip')">
                     <BasePasswordV2
                         id="currentPassword"
                         v-model="currentPassword"
-                        label="当前密码"
-                        placeholder="请输入当前密码"
+                        :label="t('auth.changePassword.fieldCurrentPassword')"
+                        :placeholder="t('auth.changePassword.placeholderCurrentPassword')"
                         :feedback="false"
                         :error="errors.currentPassword"
                     />
                 </BaseTooltip>
-                <BaseTooltip :content="getPasswordRequirementsShort()">
+                <BaseTooltip :content="passwordHint">
                     <BasePasswordV2
                         id="newPassword"
                         v-model="newPassword"
-                        label="新密码"
-                        placeholder="请输入新密码"
+                        :label="t('auth.changePassword.fieldNewPassword')"
+                        :placeholder="t('auth.changePassword.placeholderNewPassword')"
                         :feedback="false"
                         :error="errors.newPassword"
                     >
@@ -48,43 +54,43 @@
                         </template>
                     </BasePasswordV2>
                 </BaseTooltip>
-                <BaseTooltip :content="'请再次输入相同的新密码以确认'">
+                <BaseTooltip :content="t('auth.changePassword.confirmTip')">
                     <BasePasswordV2
                         id="confirmPassword"
                         v-model="confirmPassword"
-                        label="确认新密码"
-                        placeholder="请再次输入新密码"
+                        :label="t('auth.changePassword.fieldConfirmPassword')"
+                        :placeholder="t('auth.changePassword.placeholderConfirmPassword')"
                         :feedback="false"
                         :error="errors.confirmPassword"
                     />
                 </BaseTooltip>
                 <div class="form-group">
-                    <BaseTooltip :content="'勾选后，系统将撤销您在其他设备上的所有登录会话'">
+                    <BaseTooltip :content="t('auth.changePassword.revokeTip')">
                         <CaomeiCheckbox
                             id="revokeSessions"
                             v-model="revokeOtherSessions"
-                            text="撤销用户登录的所有其他会话"
+                            :text="t('auth.changePassword.revokeSessions')"
                         />
                     </BaseTooltip>
                 </div>
                 <div class="form-group">
-                    <BaseTooltip :content="'点击提交修改密码请求'">
+                    <BaseTooltip :content="t('auth.changePassword.submitTip')">
                         <CaomeiButton
                             class="btn btn-primary mt-2"
                             block
                             @click="changePassword"
                         >
-                            修改密码
+                            {{ t('auth.changePassword.submit') }}
                         </CaomeiButton>
                     </BaseTooltip>
                 </div>
                 <div class="toggle-login">
-                    <BaseTooltip :content="'点击返回个人中心页面'">
+                    <BaseTooltip :content="t('auth.changePassword.backTip')">
                         <NuxtLink
                             :to="`/profile`"
                             class="toggle-link"
                         >
-                            返回个人中心
+                            {{ t('auth.changePassword.backProfile') }}
                         </NuxtLink>
                     </BaseTooltip>
                 </div>
@@ -94,10 +100,17 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import AuthLeft from '@/components/auth-left.vue'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 import PasswordStrength from '@/components/password-strength.vue'
-import { getPasswordRequirementsShort } from '@/utils/shared/password'
+import { usePasswordHints } from '@/composables/utils/use-password-hints'
 import { useChangePasswordFlow } from '@/composables/use-change-password-flow'
+
+const { t } = useI18n()
+usePageMeta('auth.changePassword.title', 'auth.changePassword.subtitle')
+const { requirementHint } = usePasswordHints()
+const passwordHint = computed(() => requirementHint())
 
 const {
     currentPassword,

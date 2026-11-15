@@ -1,18 +1,18 @@
 <template>
     <div class="auth-container">
-        <AuthLeft title="找回密码" subtitle="通过邮箱或手机号重置密码。" />
+        <AuthLeft :title="t('auth.forgot.heroTitle')" :subtitle="t('auth.forgot.heroSubtitle')" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
-                    找回密码
+                    {{ t('auth.forgot.title') }}
                 </h2>
                 <p class="auth-subtitle">
-                    请输入相关信息以重置密码
+                    {{ t('auth.forgot.subtitle') }}
                 </p>
                 <div class="forgot-btn mb-4">
                     <div class="card flex justify-center">
-                        <CaomeiButtonGroup group-label="找回密码方式">
-                            <BaseTooltip :content="'使用邮箱找回密码'">
+                        <CaomeiButtonGroup :group-label="t('auth.forgot.methodLabel')">
+                            <BaseTooltip :content="t('auth.forgot.emailMethodTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'email' ? 'primary' : 'secondary'"
                                     :aria-pressed="activeTab === 'email'"
@@ -21,10 +21,10 @@
                                     <template #icon>
                                         <i class="mdi mdi-email" />
                                     </template>
-                                    邮箱
+                                    {{ t('auth.forgot.methodEmail') }}
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip v-if="phoneEnabled" :content="'使用手机号找回密码'">
+                            <BaseTooltip v-if="phoneEnabled" :content="t('auth.forgot.phoneMethodTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
                                     :aria-pressed="activeTab === 'phone'"
@@ -33,7 +33,7 @@
                                     <template #icon>
                                         <i class="mdi mdi-phone" />
                                     </template>
-                                    手机号
+                                    {{ t('auth.forgot.methodPhone') }}
                                 </CaomeiButton>
                             </BaseTooltip>
                         </CaomeiButtonGroup>
@@ -41,21 +41,21 @@
                 </div>
                 <!-- 邮箱找回密码表单 -->
                 <div v-show="activeTab === 'email'">
-                    <BaseTooltip :content="'请输入注册时使用的邮箱地址'">
+                    <BaseTooltip :content="t('auth.forgot.emailTip')">
                         <BaseInputV2
                             id="email"
                             v-model="email"
-                            label="邮箱"
-                            placeholder="请输入邮箱"
+                            :label="t('auth.forgot.fieldEmail')"
+                            :placeholder="t('auth.forgot.placeholderEmail')"
                             :error="errors.email"
                         />
                     </BaseTooltip>
-                    <BaseTooltip :content="'请输入发送到您邮箱的验证码'">
+                    <BaseTooltip :content="t('auth.forgot.emailCodeTip')">
                         <BaseInputV2
                             id="emailCode"
                             v-model="emailCode"
-                            label="邮箱验证码"
-                            placeholder="请输入邮箱验证码"
+                            :label="t('auth.forgot.fieldEmailCode')"
+                            :placeholder="t('auth.forgot.placeholderEmailCode')"
                             :error="errors.emailCode"
                         >
                             <template #append>
@@ -64,8 +64,6 @@
                                     :duration="60"
                                     :disabled="!canSendEmailCode"
                                     :loading="emailCodeSending"
-                                    text="获取验证码"
-                                    resend-text="重新发送"
                                 />
                             </template>
                         </BaseInputV2>
@@ -73,20 +71,20 @@
                 </div>
                 <!-- 手机号找回密码表单 -->
                 <div v-show="activeTab === 'phone'">
-                    <BaseTooltip :content="'请输入注册时使用的手机号'">
+                    <BaseTooltip :content="t('auth.forgot.phoneTip')">
                         <BasePhoneInputV2
                             id="phone"
                             v-model="phone"
-                            label="手机号"
+                            :label="t('auth.forgot.fieldPhone')"
                             :error="errors.phone"
                         />
                     </BaseTooltip>
-                    <BaseTooltip :content="'请输入发送到您手机的短信验证码'">
+                    <BaseTooltip :content="t('auth.forgot.smsCodeTip')">
                         <BaseInputV2
                             id="phoneCode"
                             v-model="phoneCode"
-                            label="短信验证码"
-                            placeholder="请输入短信验证码"
+                            :label="t('auth.forgot.fieldSmsCode')"
+                            :placeholder="t('auth.forgot.placeholderSmsCode')"
                             :error="errors.phoneCode"
                         >
                             <template #append>
@@ -95,19 +93,17 @@
                                     :duration="60"
                                     :disabled="!canSendPhoneCode"
                                     :loading="phoneCodeSending"
-                                    text="获取验证码"
-                                    resend-text="重新发送"
                                 />
                             </template>
                         </BaseInputV2>
                     </BaseTooltip>
                 </div>
-                <BaseTooltip :content="getPasswordRequirementsShort()">
+                <BaseTooltip :content="passwordHint">
                     <BasePasswordV2
                         id="newPassword"
                         v-model="newPassword"
-                        label="新密码"
-                        placeholder="请输入新密码"
+                        :label="t('auth.forgot.fieldNewPassword')"
+                        :placeholder="t('auth.forgot.placeholderNewPassword')"
                         :feedback="false"
                         :error="errors.newPassword"
                     >
@@ -121,34 +117,34 @@
                         </template>
                     </BasePasswordV2>
                 </BaseTooltip>
-                <BaseTooltip :content="'请再次输入相同的新密码以确认'">
+                <BaseTooltip :content="t('auth.forgot.confirmTip')">
                     <BasePasswordV2
                         id="confirmPassword"
                         v-model="confirmPassword"
-                        label="确认新密码"
-                        placeholder="请再次输入新密码"
+                        :label="t('auth.forgot.fieldConfirmPassword')"
+                        :placeholder="t('auth.forgot.placeholderConfirmPassword')"
                         :feedback="false"
                         :error="errors.confirmPassword"
                     />
                 </BaseTooltip>
                 <Captcha ref="captcha" />
                 <div class="form-group">
-                    <BaseTooltip :content="'点击提交信息重置密码'">
+                    <BaseTooltip :content="t('auth.forgot.submitTip')">
                         <CaomeiButton
                             class="btn btn-primary mt-2"
                             block
                             @click="resetPassword"
                         >
-                            重置密码
+                            {{ t('auth.forgot.submit') }}
                         </CaomeiButton>
                     </BaseTooltip>
                 </div>
                 <div class="toggle-login">
-                    已有账号？ <NuxtLink
+                    {{ t('auth.forgot.haveAccount') }} <NuxtLink
                         :to="`/login?mode=${activeTab}`"
                         class="toggle-link"
                     >
-                        立即登录
+                        {{ t('auth.forgot.loginNow') }}
                     </NuxtLink>
                 </div>
             </div>
@@ -157,12 +153,19 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import AuthLeft from '@/components/auth-left.vue'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
 import PasswordStrength from '@/components/password-strength.vue'
 import Captcha from '@/components/captcha.vue'
-import { getPasswordRequirementsShort } from '@/utils/shared/password'
+import { usePasswordHints } from '@/composables/utils/use-password-hints'
 import { useForgotPasswordFlow } from '@/composables/use-forgot-password-flow'
+
+const { t } = useI18n()
+usePageMeta('auth.forgot.title', 'auth.forgot.subtitle')
+const { requirementHint } = usePasswordHints()
+const passwordHint = computed(() => requirementHint())
 
 const {
     email,

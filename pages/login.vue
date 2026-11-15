@@ -1,18 +1,18 @@
 <template>
     <div class="auth-container">
-        <AuthLeft title="登录到草梅 Auth" subtitle="多方式登录，安全便捷。" />
+        <AuthLeft :title="t('auth.login.heroTitle')" :subtitle="t('auth.login.heroSubtitle')" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
-                    欢迎回来
+                    {{ t('auth.login.title') }}
                 </h2>
                 <p class="auth-subtitle">
-                    请使用您的账号信息登录
+                    {{ t('auth.login.subtitle') }}
                 </p>
                 <div class="login-btn mb-4">
                     <div class="card flex justify-center">
-                        <CaomeiButtonGroup group-label="登录方式">
-                            <BaseTooltip v-if="usernameEnabled" :content="'使用用户名登录'">
+                        <CaomeiButtonGroup :group-label="t('auth.login.methodLabel')">
+                            <BaseTooltip v-if="usernameEnabled" :content="t('auth.login.methodUsernameTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'username' ? 'primary' : 'secondary'"
                                     :aria-pressed="activeTab === 'username'"
@@ -21,10 +21,10 @@
                                     <template #icon>
                                         <i class="mdi mdi-account" />
                                     </template>
-                                    用户名
+                                    {{ t('auth.login.methodUsername') }}
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip :content="'使用邮箱登录'">
+                            <BaseTooltip :content="t('auth.login.methodEmailTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'email' ? 'primary' : 'secondary'"
                                     :aria-pressed="activeTab === 'email'"
@@ -33,10 +33,10 @@
                                     <template #icon>
                                         <i class="mdi mdi-email" />
                                     </template>
-                                    邮箱
+                                    {{ t('auth.login.methodEmail') }}
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip v-if="phoneEnabled" :content="'使用手机号登录'">
+                            <BaseTooltip v-if="phoneEnabled" :content="t('auth.login.methodPhoneTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
                                     :aria-pressed="activeTab === 'phone'"
@@ -45,7 +45,7 @@
                                     <template #icon>
                                         <i class="mdi mdi-phone" />
                                     </template>
-                                    手机号
+                                    {{ t('auth.login.methodPhone') }}
                                 </CaomeiButton>
                             </BaseTooltip>
                         </CaomeiButtonGroup>
@@ -55,8 +55,8 @@
                     <BaseInputV2
                         id="email"
                         v-model="email"
-                        label="邮箱"
-                        placeholder="example@mail.com"
+                        :label="t('auth.login.fieldEmail')"
+                        :placeholder="t('auth.login.placeholderEmail')"
                         :error="errors.email"
                     />
                     <div class="form-group">
@@ -64,8 +64,8 @@
                             <BasePasswordV2
                                 id="emailPassword"
                                 v-model="emailPassword"
-                                label="密码"
-                                placeholder="请输入密码"
+                                :label="t('auth.login.fieldPassword')"
+                                :placeholder="t('auth.login.placeholderPassword')"
                                 :error="errors.emailPassword"
                                 :feedback="false"
                             />
@@ -74,8 +74,8 @@
                             <BaseInputV2
                                 id="emailCode"
                                 v-model="emailCode"
-                                label="验证码"
-                                placeholder="请输入邮箱验证码"
+                                :label="t('auth.login.fieldEmailCode')"
+                                :placeholder="t('auth.login.placeholderEmailCode')"
                                 :error="errors.emailCode"
                             >
                                 <template #append>
@@ -84,8 +84,6 @@
                                         :duration="60"
                                         :disabled="emailCodeSending || !validateEmail(email)"
                                         :loading="emailCodeSending"
-                                        text="获取验证码"
-                                        resend-text="重新发送"
                                     />
                                 </template>
                             </BaseInputV2>
@@ -96,7 +94,7 @@
                             block
                             @click="emailUseCode = !emailUseCode"
                         >
-                            {{ emailUseCode ? '使用密码登录' : '使用验证码登录' }}
+                            {{ emailUseCode ? t('auth.login.switchToPassword') : t('auth.login.switchToCode') }}
                         </CaomeiButton>
                     </div>
                 </div>
@@ -105,15 +103,15 @@
                     <BaseInputV2
                         id="username"
                         v-model="username"
-                        label="用户名"
-                        placeholder="请输入用户名"
+                        :label="t('auth.login.fieldUsername')"
+                        :placeholder="t('auth.login.placeholderUsername')"
                         :error="errors.username"
                     />
                     <BasePasswordV2
                         id="usernamePassword"
                         v-model="usernamePassword"
-                        label="密码"
-                        placeholder="请输入密码"
+                        :label="t('auth.login.fieldPassword')"
+                        :placeholder="t('auth.login.placeholderPassword')"
                         :error="errors.usernamePassword"
                         :feedback="false"
                     />
@@ -123,7 +121,7 @@
                     <BasePhoneInputV2
                         id="phone"
                         v-model="phone"
-                        label="手机号"
+                        :label="t('auth.login.fieldPhone')"
                         :error="errors.phone"
                     />
                     <div class="form-group">
@@ -131,8 +129,8 @@
                             <BasePasswordV2
                                 id="phonePassword"
                                 v-model="phonePassword"
-                                label="密码"
-                                placeholder="请输入密码"
+                                :label="t('auth.login.fieldPassword')"
+                                :placeholder="t('auth.login.placeholderPassword')"
                                 :error="errors.phonePassword"
                                 :feedback="false"
                             />
@@ -141,8 +139,8 @@
                             <BaseInputV2
                                 id="phoneCode"
                                 v-model="phoneCode"
-                                label="验证码"
-                                placeholder="请输入短信验证码"
+                                :label="t('auth.login.fieldSmsCode')"
+                                :placeholder="t('auth.login.placeholderSmsCode')"
                                 :error="errors.phoneCode"
                             >
                                 <template #append>
@@ -151,8 +149,6 @@
                                         :duration="60"
                                         :disabled="phoneCodeSending || !validatePhone(phone)"
                                         :loading="phoneCodeSending"
-                                        text="获取验证码"
-                                        resend-text="重新发送"
                                     />
                                 </template>
                             </BaseInputV2>
@@ -163,16 +159,16 @@
                             block
                             @click="phoneUseCode = !phoneUseCode"
                         >
-                            {{ phoneUseCode ? '使用密码登录' : '使用验证码登录' }}
+                            {{ phoneUseCode ? t('auth.login.switchToPassword') : t('auth.login.switchToCode') }}
                         </CaomeiButton>
                     </div>
                 </div>
                 <div class="remember-me">
-                    <BaseTooltip :content="'勾选后下次登录将自动填充您的账号信息'">
+                    <BaseTooltip :content="t('auth.login.rememberTip')">
                         <CaomeiCheckbox
                             id="remember"
                             v-model="rememberMe"
-                            text="记住我"
+                            :text="t('auth.login.remember')"
                         />
                     </BaseTooltip>
                 </div>
@@ -185,33 +181,33 @@
                     block
                     @click="login"
                 >
-                    登录
+                    {{ t('auth.login.submit') }}
                 </CaomeiButton>
 
                 <!-- 用户协议提示 -->
                 <div class="agreement-notice">
-                    登录即表示您已阅读并同意
+                    {{ t('auth.login.agreementPrefix') }}
                     <NuxtLink
                         to="/terms"
                         target="_blank"
                         class="agreement-link"
                     >
-                        《服务条款》
+                        {{ t('auth.login.terms') }}
                     </NuxtLink>
-                    和
+                    {{ t('auth.login.agreementAnd') }}
                     <NuxtLink
                         to="/privacy"
                         target="_blank"
                         class="agreement-link"
                     >
-                        《隐私政策》
+                        {{ t('auth.login.privacy') }}
                     </NuxtLink>
                 </div>
 
                 <template v-if="socialProviders.length">
-                    <BaseTooltip content="如果第三方账号未在本站注册，将会注册新的账号">
+                    <BaseTooltip :content="t('auth.login.socialTip')">
                         <div class="separator">
-                            或者使用以下方式登录
+                            {{ t('auth.login.socialDivider') }}
                         </div>
                     </BaseTooltip>
                     <div class="social-login">
@@ -229,18 +225,18 @@
                                 <template #icon>
                                     <i :class="provider.icon || `mdi mdi-${provider.provider}`" />
                                 </template>
-                                {{ provider.label || `使用 ${provider.name} 账号登录` }}
+                                {{ provider.label || t('auth.login.socialButton', {name: provider.name}) }}
                             </CaomeiButton>
                         </BaseTooltip>
                     </div>
                 </template>
                 <div class="toggle-login">
-                    还没有账号？ <NuxtLink :to="`/register?mode=${activeTab}`" class="toggle-link">
-                        立即注册
+                    {{ t('auth.login.noAccount') }} <NuxtLink :to="`/register?mode=${activeTab}`" class="toggle-link">
+                        {{ t('auth.login.registerNow') }}
                     </NuxtLink>
                     <span class="divider">|</span>
                     <NuxtLink :to="`/forgot-password?mode=${activeTab}`" class="toggle-link">
-                        忘记密码？
+                        {{ t('auth.login.forgotPassword') }}
                     </NuxtLink>
                 </div>
             </div>
@@ -252,48 +248,48 @@
             :closable="false"
             :close-on-overlay="false"
             size="md"
-            title="双因素认证"
+            :title="t('auth.login.twoFactor.title')"
         >
             <div>
                 <CaomeiTabs v-model="activeAuthTab" :unmount-on-hide="false">
                     <CaomeiTabList>
                         <CaomeiTabTrigger :value="0">
-                            身份验证器
+                            {{ t('auth.login.twoFactor.tabAuthenticator') }}
                         </CaomeiTabTrigger>
                         <CaomeiTabTrigger :value="1">
-                            一次性验证码
+                            {{ t('auth.login.twoFactor.tabOtp') }}
                         </CaomeiTabTrigger>
                         <CaomeiTabTrigger :value="2">
-                            备份码
+                            {{ t('auth.login.twoFactor.tabBackup') }}
                         </CaomeiTabTrigger>
                     </CaomeiTabList>
                     <CaomeiTabContent :value="0">
                         <p class="mb-3">
-                            请输入身份验证器生成的 6 位验证码
+                            {{ t('auth.login.twoFactor.authenticatorHint') }}
                         </p>
                         <div class="field">
                             <CaomeiInput
                                 v-model="twoFactorCode"
                                 class="w-full"
-                                aria-label="身份验证器验证码"
-                                placeholder="请输入验证码"
+                                :aria-label="t('auth.login.twoFactor.authenticatorLabel')"
+                                :placeholder="t('auth.login.twoFactor.codePlaceholder')"
                                 @enter="verify2FA"
                             />
                         </div>
                     </CaomeiTabContent>
                     <CaomeiTabContent :value="1">
                         <p class="mb-3">
-                            如果您无法访问身份验证器，可以使用一次性验证码验证身份。<br>
-                            一次性验证码会发送到已验证的邮箱或手机号(邮箱优先)。
+                            {{ t('auth.login.twoFactor.otpHint1') }}<br>
+                            {{ t('auth.login.twoFactor.otpHint2') }}
                         </p>
                         <div class="field">
                             <div class="code-row">
-                                <BaseTooltip :content="'请输入一次性验证码'">
+                                <BaseTooltip :content="t('auth.login.twoFactor.otpTip')">
                                     <CaomeiInput
                                         v-model="twoFactorCode"
                                         class="w-full"
-                                        aria-label="一次性验证码"
-                                        placeholder="请输入验证码"
+                                        :aria-label="t('auth.login.twoFactor.otpLabel')"
+                                        :placeholder="t('auth.login.twoFactor.codePlaceholder')"
                                         @enter="verify2FA"
                                     />
                                 </BaseTooltip>
@@ -302,23 +298,21 @@
                                     :loading="otpSending"
                                     :on-send="sendOtp"
                                     :duration="60"
-                                    text="获取验证码"
-                                    resend-text="重新发送"
                                 />
                             </div>
                         </div>
                     </CaomeiTabContent>
                     <CaomeiTabContent :value="2">
                         <p class="mb-3">
-                            如果您失去对手机或电子邮件的访问权限，可以使用备份码验证身份。
+                            {{ t('auth.login.twoFactor.backupHint') }}
                         </p>
                         <div class="field">
-                            <BaseTooltip :content="'请输入您的备份码'">
+                            <BaseTooltip :content="t('auth.login.twoFactor.backupTip')">
                                 <CaomeiInput
                                     v-model="twoFactorCode"
                                     class="w-full"
-                                    aria-label="备份码"
-                                    placeholder="请输入备份码"
+                                    :aria-label="t('auth.login.twoFactor.backupLabel')"
+                                    :placeholder="t('auth.login.twoFactor.backupPlaceholder')"
                                     @enter="verify2FA"
                                 />
                             </BaseTooltip>
@@ -334,7 +328,7 @@
                     :loading="verifying2FA"
                     @click="verify2FA"
                 >
-                    验证
+                    {{ t('auth.login.twoFactor.verify') }}
                 </CaomeiButton>
             </template>
         </CaomeiDialog>
@@ -344,8 +338,12 @@
 <script lang="ts" setup>
 import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
 import AuthLeft from '@/components/auth-left.vue'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 import Captcha from '@/components/captcha.vue'
 import { useLoginFlow } from '@/composables/use-login-flow'
+
+const { t } = useI18n()
+usePageMeta('auth.login.title', 'auth.login.subtitle')
 
 const {
     activeTab,

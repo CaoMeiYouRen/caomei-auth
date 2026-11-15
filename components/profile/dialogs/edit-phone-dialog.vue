@@ -26,8 +26,6 @@
                         :duration="60"
                         :disabled="phoneCodeSending || !!errors.phone"
                         :loading="phoneCodeSending"
-                        text="发送验证码"
-                        resend-text="重新发送"
                     />
                 </template>
             </BaseInputV2>

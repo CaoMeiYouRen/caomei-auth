@@ -41,7 +41,7 @@ export function usePasswordHints() {
 
         /**
          * 密码校验失败时的本地化提示；通过时返回 null。
-         * 规则与 `getPasswordValidationError` 保持一致，只把文案换成 i18n 键。
+         * 校验顺序与阈值沿用 `utils/shared/password` 的预设，只把文案换成 i18n 键。
          */
         validationError: (password: string, strength?: PasswordStrength): string | null => {
             if (!password) {
