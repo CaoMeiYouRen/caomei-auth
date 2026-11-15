@@ -32,13 +32,14 @@ afterEach(() => {
 })
 
 describe('server/utils/i18n', () => {
-    it('recognizes auth-related API paths after normalization', () => {
+    it('recognizes every API path after normalization', () => {
         expect(isLocalizedApiPath('/api/auth/session')).toBe(true)
         expect(isLocalizedApiPath('/api/oauth/consents')).toBe(true)
-        expect(isLocalizedApiPath('/api/sso/providers/available')).toBe(true)
-        expect(isLocalizedApiPath('/api/social/providers')).toBe(true)
-        expect(isLocalizedApiPath('/api/admin/logs')).toBe(false)
-        expect(isLocalizedApiPath('/api/auth/../admin/logs')).toBe(false)
+        expect(isLocalizedApiPath('/api/admin/logs')).toBe(true)
+        expect(isLocalizedApiPath('/api/admin/../admin/users')).toBe(true)
+        expect(isLocalizedApiPath('/api')).toBe(true)
+        expect(isLocalizedApiPath('/apiary')).toBe(false)
+        expect(isLocalizedApiPath('/login')).toBe(false)
     })
 
     it('detects the request locale from query, cookie and headers in order', () => {
@@ -107,6 +108,19 @@ describe('server/utils/i18n', () => {
 
         expect(t('errors.auth.unauthorized')).toBe('未登录用户')
         expect(t('errors.auth.unknownKey')).toBe('errors.auth.unknownKey')
+    })
+
+    it('sets locale headers for admin API paths too', async () => {
+        const { event, headers } = createResponseEvent()
+        Object.defineProperty(event, 'path', { value: '/api/admin/logs' })
+        vi.stubGlobal('useTranslation', vi.fn(async () => (key: string) => key))
+        vi.stubGlobal('tryHeaderLocale', vi.fn(() => 'en-US'))
+
+        const i18n = await getServerI18n(event)
+
+        expect(i18n.locale).toBe('en-US')
+        expect(headers.get('Content-Language')).toBe('en-US')
+        expect(headers.get('Vary')).toBe('Accept-Language, Cookie')
     })
 
     it('creates an H3Error with the translated message', async () => {

@@ -3,8 +3,8 @@ import { DEFAULT_LOCALE, LOCALE_COOKIE_KEY, normalizeDetectedLocale, type Locale
 import { getDefaultErrorMessage } from '@/utils/shared/error-messages'
 import { normalizeAuthPath } from '@/utils/shared/auth-paths'
 
-/** 需要返回 `Content-Language` / `Vary` 的认证类 API 前缀 */
-const LOCALIZED_API_PREFIXES = ['/api/auth', '/api/oauth', '/api/sso', '/api/social']
+/** 需要返回 `Content-Language` / `Vary` 的 API 根前缀（覆盖全部 `/api/**`，含管理端错误面） */
+const LOCALIZED_API_PREFIX = '/api'
 
 /** 服务端翻译函数：键不存在时返回键本身，由 `createServerI18n` 兜底 */
 export type ServerTranslator = (key: string, named?: Record<string, unknown>) => string
@@ -26,12 +26,12 @@ export interface LocalizedErrorOptions {
 const serverI18nCache = new WeakMap<H3Event, Promise<ServerI18n>>()
 
 /**
- * 判断请求是否属于认证类 API（认证 / OAuth / SSO / 社交登录）。
+ * 判断请求是否属于本地化 API（全部 `/api/**`）。
  * 使用归一化路径，避免点段路径绕过响应头设置。
  */
 export function isLocalizedApiPath(path: string): boolean {
     const normalized = normalizeAuthPath(path)
-    return LOCALIZED_API_PREFIXES.some((prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`))
+    return normalized === LOCALIZED_API_PREFIX || normalized.startsWith(`${LOCALIZED_API_PREFIX}/`)
 }
 
 function callOptional<T>(callback: () => T | null | undefined, fallback: T): T {
@@ -136,12 +136,24 @@ async function loadTranslator(event: H3Event): Promise<ServerTranslator | undefi
     }
 }
 
+function interpolateMessage(template: string, named?: Record<string, unknown>): string {
+    if (!named) {
+        return template
+    }
+    return template.replace(/\{(\w+)\}/gu, (raw, name: string) => (Object.hasOwn(named, name) ? String(named[name] ?? '') : raw))
+}
+
+/** 无翻译中间件时的兜底：用 zh-CN 文案并支持 `{name}` 插值 */
+function fallbackTranslate(key: string, named?: Record<string, unknown>): string {
+    return interpolateMessage(getDefaultErrorMessage(key), named)
+}
+
 async function createServerI18n(event: H3Event): Promise<ServerI18n> {
     const locale = getRequestLocale(event)
     if (!isLocalizedApiPath(event.path)) {
         return {
             locale,
-            t: (key) => getDefaultErrorMessage(key),
+            t: fallbackTranslate,
         }
     }
 
@@ -152,13 +164,13 @@ async function createServerI18n(event: H3Event): Promise<ServerI18n> {
         locale,
         t: (key, named) => {
             if (!translate) {
-                return getDefaultErrorMessage(key)
+                return fallbackTranslate(key, named)
             }
             try {
                 const translated = translate(key, named)
-                return translated && translated !== key ? translated : getDefaultErrorMessage(key)
+                return translated && translated !== key ? translated : fallbackTranslate(key, named)
             } catch {
-                return getDefaultErrorMessage(key)
+                return fallbackTranslate(key, named)
             }
         },
     }

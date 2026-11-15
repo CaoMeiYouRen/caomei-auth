@@ -167,7 +167,7 @@ describe('server/api/admin/sso/providers/index.post', () => {
         mockRepo.findOne.mockRejectedValue(new Error('Database error'))
 
         const event = { context: {} }
-        await expect(handler(event as any)).rejects.toThrow('Database error')
+        await expect(handler(event as any)).rejects.toThrow('服务器内部错误')
 
         expect(logger.error).toHaveBeenCalledWith('Failed to create SSO provider', {
             error: 'Database error',

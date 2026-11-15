@@ -148,7 +148,7 @@ describe('server/api/admin/oauth/applications/index.post', () => {
 
         expect(result.status).toBe(500)
         expect(result.success).toBe(false)
-        expect(result.message).toBe('Database error')
+        expect(result.message).toBe('创建应用失败')
         expect(logger.business.oauthAppCreateFailed).toHaveBeenCalled()
     })
 })

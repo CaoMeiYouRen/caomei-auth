@@ -6,6 +6,7 @@
 import logger from '@/server/utils/logger'
 import { normalizeAuthPath } from '@/utils/shared/auth-paths'
 import { DEMO_MODE } from '@/utils/shared/env'
+import { getServerI18n } from '@/server/utils/i18n'
 
 /**
  * 检查是否为 Demo 模式
@@ -110,10 +111,12 @@ function isAllowedDemoOperation(url: string, method: string): boolean {
  * Demo 模式守卫中间件
  */
 export default defineEventHandler(async (event) => {
-    // 如果不是 Demo 模式，直接放行
+    // 如果不是 Demo 模式，直接放行（避免非 Demo 部署为每个请求多做一次 locale 探测）
     if (!isDemoMode()) {
         return
     }
+
+    const { t } = await getServerI18n(event)
 
     const { method, url: rawUrl } = getServerContext(event)
     // 与 h3/Nitro 路由口径保持一致：先折叠点段再匹配，否则 `/api/auth/./sign-up`
@@ -131,7 +134,7 @@ export default defineEventHandler(async (event) => {
                 statusMessage: 'Demo Mode',
                 data: {
                     error: 'DEMO_MODE_ADMIN_RESTRICTION',
-                    message: 'Demo 模式下不允许执行管理后台的修改操作',
+                    message: t('errors.demo.adminRestricted'),
                     operation: `${method} ${url}`,
                 },
             })
@@ -149,7 +152,7 @@ export default defineEventHandler(async (event) => {
             statusMessage: 'Demo Mode',
             data: {
                 error: 'DEMO_MODE_RESTRICTION',
-                message: 'Demo 模式下不允许执行此操作',
+                message: t('errors.demo.writeRestricted'),
                 operation: `${method} ${url}`,
             },
         })
@@ -196,7 +199,7 @@ export default defineEventHandler(async (event) => {
             statusMessage: 'Demo Mode Restriction',
             data: {
                 error: 'DEMO_MODE_DANGEROUS_OPERATION',
-                message: 'Demo 模式下不允许执行此危险操作',
+                message: t('errors.demo.dangerousRestricted'),
                 operation: `${method} ${url}`,
             },
         })

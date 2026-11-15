@@ -6,6 +6,7 @@ import { User } from '@/server/entities/user'
 import { Account } from '@/server/entities/account'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
+import { createLocalizedError } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     // 检查管理员权限
@@ -112,10 +113,9 @@ export default defineEventHandler(async (event) => {
         logger.error('Failed to get login stats', {
             error: error instanceof Error ? error.message : String(error),
         })
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 500,
-            statusMessage: 'Internal Server Error',
-            message: '获取登录统计失败',
+            key: 'errors.admin.logsStatsFailed',
         })
     }
 })

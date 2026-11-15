@@ -1,4 +1,4 @@
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler } from 'h3'
 import { In } from 'typeorm'
 import { Account } from '@/server/entities/account'
 import { SSOProvider } from '@/server/entities/sso-provider'
@@ -7,6 +7,7 @@ import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import { isUserAdmin } from '@/server/utils/admin-role-sync'
 import logger from '@/server/utils/logger'
+import { createLocalizedError } from '@/server/utils/i18n'
 
 /**
  * SSO 配置安全排查（只读）。
@@ -83,9 +84,9 @@ export default defineEventHandler(async (event) => {
             throw error
         }
 
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 500,
-            statusMessage: error.message || '服务器内部错误',
+            key: 'errors.server.internal',
         })
     }
 })

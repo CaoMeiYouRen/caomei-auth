@@ -24,6 +24,54 @@
         },
         "server": {
             "internal": "Internal server error"
+        },
+        "admin": {
+            "userNotFound": "Current user not found",
+            "adminOnly": "Only administrators can perform this action",
+            "cannotRemoveSelf": "You cannot remove your own admin role",
+            "roleSyncFailed": "Admin role operation failed",
+            "ssoProviderNotFound": "SSO provider not found",
+            "ssoProviderExists": "Provider ID already exists",
+            "ssoProviderIdRequired": "Missing provider ID",
+            "paramsInvalid": "Invalid parameters",
+            "logsStatsFailed": "Failed to load login statistics",
+            "logsSessionsFailed": "Failed to load login logs",
+            "roleSyncSucceeded": "Admin role synchronized",
+            "roleSyncFailedDescription": "Sync failed: user not found or not an admin",
+            "roleAddSucceeded": "Admin role added",
+            "roleAddFailed": "Add failed: user not found",
+            "roleRemoveSucceeded": "Admin role removed",
+            "roleRemoveFailed": "Remove failed: user not found or operation rejected",
+            "unsupportedAction": "Unsupported action",
+            "oauthAppCreated": "Application created",
+            "oauthAppCreateFailed": "Could not create the application",
+            "oauthAppUpdated": "Application updated",
+            "oauthAppUpdateFailed": "Could not update the application",
+            "oauthAppDeleted": "Deleted",
+            "oauthAppDeleteFailed": "Could not delete the application",
+            "oauthAppNotFound": "Application not found",
+            "oauthAppIncomplete": "Incomplete parameters",
+            "oauthAppEnabled": "Application enabled",
+            "oauthAppDisabled": "Application disabled",
+            "oauthAppListFailed": "Could not load applications",
+            "invalidRedirectUri": "Invalid redirect URI: {uri}",
+            "ssoCreated": "SSO provider created",
+            "ssoUpdated": "SSO provider updated",
+            "ssoDeleted": "SSO provider deleted"
+        },
+        "upload": {
+            "notLoggedIn": "Not signed in",
+            "notFound": "No uploaded file found",
+            "invalid": "Invalid file upload",
+            "tooLarge": "File exceeds the {limit} limit",
+            "dailyLimit": "Daily upload limit reached",
+            "failed": "File upload failed",
+            "userDailyLimit": "Daily upload limit reached for this account"
+        },
+        "demo": {
+            "adminRestricted": "Admin write operations are not allowed in demo mode",
+            "writeRestricted": "This operation is not allowed in demo mode",
+            "dangerousRestricted": "This dangerous operation is not allowed in demo mode"
         }
     }
 }

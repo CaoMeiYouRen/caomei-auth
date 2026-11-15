@@ -7,9 +7,11 @@ import { toAdminOAuthClientView } from '@/server/utils/oauth-client-view'
 import logger from '@/server/utils/logger'
 import { validateQuery } from '@/server/utils/validation'
 import { paginationQuerySchema, type PaginationQuery } from '@/utils/shared/api-schemas'
+import { getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
+    const { t } = await getServerI18n(event)
 
     // 使用 Zod 校验查询参数
     const query: PaginationQuery = await validateQuery(event, paginationQuerySchema)
@@ -50,7 +52,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 500,
             success: false,
-            message: error instanceof Error ? error.message : '获取应用列表失败',
+            message: t('errors.admin.oauthAppListFailed'),
             data: null,
         }
     }

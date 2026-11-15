@@ -232,7 +232,7 @@ describe('server/api/admin/oauth/applications/index.get', () => {
         expect(result).toEqual({
             status: 500,
             success: false,
-            message: 'DB Error',
+            message: '获取应用列表失败',
             data: null,
         })
 

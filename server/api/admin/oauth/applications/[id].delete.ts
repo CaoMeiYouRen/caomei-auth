@@ -9,9 +9,11 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { validateParamsSafe } from '@/server/utils/validation'
 import { idParamSchema } from '@/utils/shared/api-schemas'
+import { getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
+    const { t } = await getServerI18n(event)
     let appId = 'unknown'
     try {
         const paramsResult = await validateParamsSafe(event, idParamSchema)
@@ -33,7 +35,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 404,
                 success: false,
-                message: '应用不存在',
+                message: t('errors.admin.oauthAppNotFound'),
                 data: null,
             }
         }
@@ -49,7 +51,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 200,
             success: true,
-            message: '删除成功',
+            message: t('errors.admin.oauthAppDeleted'),
             data: null,
         }
     } catch (error) {
@@ -60,7 +62,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 500,
             success: false,
-            message: error instanceof Error ? error.message : '删除应用失败',
+            message: t('errors.admin.oauthAppDeleteFailed'),
             data: null,
         }
     }

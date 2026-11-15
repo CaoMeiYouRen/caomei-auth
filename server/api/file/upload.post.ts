@@ -16,6 +16,7 @@ import {
     STORAGE_TYPE,
     BUCKET_PREFIX,
 } from '@/utils/shared/env'
+import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event): Promise<{
     status: number
@@ -23,6 +24,7 @@ export default defineEventHandler(async (event): Promise<{
     message?: string
     url?: string
 }> => {
+    const { t } = await getServerI18n(event)
 
     const session = await auth.api.getSession({
         headers: event.headers,
@@ -32,7 +34,7 @@ export default defineEventHandler(async (event): Promise<{
         return {
             status: 401,
             success: false,
-            message: '未登录',
+            message: t('errors.upload.notLoggedIn'),
         }
     }
 
@@ -42,7 +44,10 @@ export default defineEventHandler(async (event): Promise<{
     )
 
     if (globalCount > UPLOAD_DAILY_LIMIT) {
-        throw new Error('今日上传次数超出限制')
+        throw await createLocalizedError(event, {
+            statusCode: 429,
+            key: 'errors.upload.dailyLimit',
+        })
     }
 
     const userCount = await limiterStorage.increment(
@@ -51,7 +56,10 @@ export default defineEventHandler(async (event): Promise<{
     )
 
     if (userCount > UPLOAD_SINGLE_USER_DAILY_LIMIT) {
-        throw new Error('您今日上传次数超出限制')
+        throw await createLocalizedError(event, {
+            statusCode: 429,
+            key: 'errors.upload.userDailyLimit',
+        })
     }
 
     try {
@@ -65,7 +73,7 @@ export default defineEventHandler(async (event): Promise<{
             return {
                 status: 400,
                 success: false,
-                message: '未找到上传文件',
+                message: t('errors.upload.notFound'),
             }
         }
 
@@ -74,7 +82,7 @@ export default defineEventHandler(async (event): Promise<{
             return {
                 status: 400,
                 success: false,
-                message: '无效的文件上传',
+                message: t('errors.upload.invalid'),
             }
         }
         // 检查文件大小
@@ -82,7 +90,7 @@ export default defineEventHandler(async (event): Promise<{
             return {
                 status: 400,
                 success: false,
-                message: `文件大小超出 ${MAX_UPLOAD_SIZE_TEXT} 限制`,
+                message: t('errors.upload.tooLarge', { limit: MAX_UPLOAD_SIZE_TEXT }),
             }
         }
         // 上传文件
@@ -119,7 +127,7 @@ export default defineEventHandler(async (event): Promise<{
         return {
             status: 400,
             success: false,
-            message: '文件上传失败',
+            message: t('errors.upload.failed'),
         }
     }
 })

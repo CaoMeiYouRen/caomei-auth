@@ -5,18 +5,20 @@ import { User } from '@/server/entities/user'
 import logger from '@/server/utils/logger'
 import { adminRoleSyncSchema } from '@/utils/shared/schemas'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
+    const { t } = await getServerI18n(event)
+
     // 验证用户是否已登录
     const session = await auth.api.getSession({
         headers: event.headers,
     })
 
     if (!session?.user) {
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 401,
-            statusMessage: 'Unauthorized',
-            message: '用户未登录',
+            key: 'errors.auth.unauthorized',
         })
     }
 
@@ -25,20 +27,18 @@ export default defineEventHandler(async (event) => {
     const currentUser = await userRepo.findOne({ where: { id: session.user.id } })
 
     if (!currentUser) {
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 404,
-            statusMessage: 'Not Found',
-            message: '当前用户不存在',
+            key: 'errors.admin.userNotFound',
         })
     }
 
     // 验证用户是否有管理员权限（使用已有的用户对象优化）
     const isCurrentUserAdmin = await checkAndSyncAdminRoleWithUser(currentUser)
     if (!isCurrentUserAdmin) {
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '仅管理员可以执行此操作',
+            key: 'errors.admin.adminOnly',
         })
     }
 
@@ -48,8 +48,7 @@ export default defineEventHandler(async (event) => {
     if (!validationResult.success) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Bad Request',
-            message: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数验证失败',
+            statusMessage: resolveValidationMessage(validationResult.error?.issues[0]?.message, t) || t('errors.admin.paramsInvalid'),
         })
     }
 
@@ -67,26 +66,25 @@ export default defineEventHandler(async (event) => {
                 } else {
                     result = await checkAndSyncAdminRole(userId)
                 }
-                message = result ? '管理员角色同步成功' : '同步失败，用户不存在或非管理员'
+                message = result ? t('errors.admin.roleSyncSucceeded') : t('errors.admin.roleSyncFailedDescription')
                 break
             case 'add':
                 result = await setUserAdminRole(userId)
-                message = result ? '管理员角色添加成功' : '添加失败，用户不存在'
+                message = result ? t('errors.admin.roleAddSucceeded') : t('errors.admin.roleAddFailed')
                 break
             case 'remove':
                 // 防止管理员移除自己的权限
                 if (userId === session.user.id) {
-                    throw createError({
+                    throw await createLocalizedError(event, {
                         statusCode: 400,
-                        statusMessage: 'Bad Request',
-                        message: '不能移除自己的管理员权限',
+                        key: 'errors.admin.cannotRemoveSelf',
                     })
                 }
                 result = await removeUserAdminRole(userId, session.user.id)
-                message = result ? '管理员角色移除成功' : '移除失败，用户不存在或操作被拒绝'
+                message = result ? t('errors.admin.roleRemoveSucceeded') : t('errors.admin.roleRemoveFailed')
                 break
             default:
-                throw new Error('不支持的操作')
+                throw new Error(t('errors.admin.unsupportedAction'))
         }
 
         return {
@@ -106,10 +104,9 @@ export default defineEventHandler(async (event) => {
             userId,
             action,
         })
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 500,
-            statusMessage: 'Internal Server Error',
-            message: '管理员角色操作失败',
+            key: 'errors.admin.roleSyncFailed',
         })
     }
 })

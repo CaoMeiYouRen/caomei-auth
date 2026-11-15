@@ -52,7 +52,7 @@ describe('server/api/admin/sync-admin-role.post', () => {
 
         await expect(handler(mockEvent as H3Event)).rejects.toMatchObject({
             statusCode: 401,
-            message: '用户未登录',
+            message: '未登录用户',
         })
     })
 
@@ -96,7 +96,7 @@ describe('server/api/admin/sync-admin-role.post', () => {
 
         await expect(handler(mockEvent as H3Event)).rejects.toMatchObject({
             statusCode: 400,
-            statusMessage: 'Bad Request',
+            statusMessage: expect.any(String),
         })
     })
 
@@ -116,7 +116,7 @@ describe('server/api/admin/sync-admin-role.post', () => {
 
         await expect(handler(mockEvent as H3Event)).rejects.toMatchObject({
             statusCode: 400,
-            message: '参数验证失败',
+            message: '参数校验失败',
         })
     })
 

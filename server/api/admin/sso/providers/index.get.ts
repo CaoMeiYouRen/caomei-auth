@@ -1,4 +1,4 @@
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler } from 'h3'
 import { Like } from 'typeorm'
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
@@ -6,6 +6,7 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { validateQuery } from '@/server/utils/validation'
 import { ssoProvidersQuerySchema, type SSOProvidersQuery } from '@/utils/shared/api-schemas'
+import { createLocalizedError } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
@@ -105,9 +106,9 @@ export default defineEventHandler(async (event) => {
             error: error.message,
         })
 
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 500,
-            statusMessage: error.message || '服务器内部错误',
+            key: 'errors.server.internal',
         })
     }
 })

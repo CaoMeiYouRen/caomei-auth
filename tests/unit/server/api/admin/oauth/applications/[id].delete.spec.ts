@@ -145,7 +145,7 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
         expect(result).toEqual({
             status: 500,
             success: false,
-            message: 'Database error',
+            message: '删除应用失败',
             data: null,
         })
     })

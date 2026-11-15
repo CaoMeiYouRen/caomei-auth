@@ -161,7 +161,7 @@ describe('server/api/admin/oauth/applications/[id].put', () => {
 
         expect(result.status).toBe(500)
         expect(result.success).toBe(false)
-        expect(result.message).toBe('Database error')
+        expect(result.message).toBe('更新应用失败')
         expect(logger.business.oauthAppUpdated).toHaveBeenCalled()
     })
 })

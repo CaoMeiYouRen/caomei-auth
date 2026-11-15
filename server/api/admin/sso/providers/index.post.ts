@@ -6,9 +6,11 @@ import logger from '@/server/utils/logger'
 import { ssoProviderSchema } from '@/utils/shared/schemas'
 import { snowflake } from '@/server/utils/snowflake'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
+    const { t } = await getServerI18n(event)
 
     let body: any = null
     try {
@@ -19,7 +21,7 @@ export default defineEventHandler(async (event) => {
         if (!validationResult.success) {
             throw createError({
                 statusCode: 400,
-                statusMessage: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数校验失败',
+                statusMessage: resolveValidationMessage(validationResult.error?.issues[0]?.message, t) || t('errors.admin.paramsInvalid'),
             })
         }
 
@@ -52,9 +54,9 @@ export default defineEventHandler(async (event) => {
         })
 
         if (existingProvider) {
-            throw createError({
+            throw await createLocalizedError(event, {
                 statusCode: 409,
-                statusMessage: 'Provider ID 已存在',
+                key: 'errors.admin.ssoProviderExists',
             })
         }
 
@@ -90,7 +92,7 @@ export default defineEventHandler(async (event) => {
         return {
             success: true,
             data: savedProvider,
-            message: 'SSO 提供商创建成功',
+            message: t('errors.admin.ssoCreated'),
         }
     } catch (error: any) {
         logger.error('Failed to create SSO provider', {
@@ -102,9 +104,9 @@ export default defineEventHandler(async (event) => {
             throw error
         }
 
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 500,
-            statusMessage: error.message || '服务器内部错误',
+            key: 'errors.server.internal',
         })
     }
 })

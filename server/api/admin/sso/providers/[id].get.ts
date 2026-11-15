@@ -1,10 +1,11 @@
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler } from 'h3'
 import { SSOProvider } from '@/server/entities/sso-provider'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { validateParams } from '@/server/utils/validation'
 import { idParamSchema } from '@/utils/shared/api-schemas'
+import { createLocalizedError } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
@@ -19,9 +20,9 @@ export default defineEventHandler(async (event) => {
         })
 
         if (!provider) {
-            throw createError({
+            throw await createLocalizedError(event, {
                 statusCode: 404,
-                statusMessage: 'SSO 提供商不存在',
+                key: 'errors.admin.ssoProviderNotFound',
             })
         }
 
@@ -80,9 +81,9 @@ export default defineEventHandler(async (event) => {
             throw error
         }
 
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 500,
-            statusMessage: error.message || '服务器内部错误',
+            key: 'errors.server.internal',
         })
     }
 })

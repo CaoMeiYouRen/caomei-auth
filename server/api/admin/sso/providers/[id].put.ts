@@ -5,16 +5,18 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { ssoProviderUpdateSchema } from '@/utils/shared/schemas'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
+    const { t } = await getServerI18n(event)
 
     try {
         const providerId = getRouterParam(event, 'id')
         if (!providerId) {
-            throw createError({
+            throw await createLocalizedError(event, {
                 statusCode: 400,
-                statusMessage: '缺少提供商 ID',
+                key: 'errors.admin.ssoProviderIdRequired',
             })
         }
 
@@ -24,9 +26,9 @@ export default defineEventHandler(async (event) => {
         })
 
         if (!provider) {
-            throw createError({
+            throw await createLocalizedError(event, {
                 statusCode: 404,
-                statusMessage: 'SSO 提供商不存在',
+                key: 'errors.admin.ssoProviderNotFound',
             })
         }
 
@@ -37,7 +39,7 @@ export default defineEventHandler(async (event) => {
         if (!validationResult.success) {
             throw createError({
                 statusCode: 400,
-                statusMessage: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数校验失败',
+                statusMessage: resolveValidationMessage(validationResult.error?.issues[0]?.message, t) || t('errors.admin.paramsInvalid'),
             })
         }
 
@@ -80,7 +82,7 @@ export default defineEventHandler(async (event) => {
         return {
             success: true,
             data: updatedProvider,
-            message: 'SSO 提供商更新成功',
+            message: t('errors.admin.ssoUpdated'),
         }
     } catch (error: any) {
         logger.error('Failed to update SSO provider', {
@@ -92,9 +94,9 @@ export default defineEventHandler(async (event) => {
             throw error
         }
 
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 500,
-            statusMessage: error.message || '服务器内部错误',
+            key: 'errors.server.internal',
         })
     }
 })

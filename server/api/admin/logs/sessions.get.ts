@@ -1,4 +1,4 @@
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler } from 'h3'
 import dayjs from 'dayjs'
 import { dataSource } from '@/server/database'
 import { Session } from '@/server/entities/session'
@@ -8,6 +8,7 @@ import { isDemoMode, generateDemoSessions } from '@/server/utils/demo-data-gener
 import logger from '@/server/utils/logger'
 import { validateQuery } from '@/server/utils/validation'
 import { sessionLogsQuerySchema, type SessionLogsQuery } from '@/utils/shared/api-schemas'
+import { createLocalizedError } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     // 检查管理员权限
@@ -88,10 +89,9 @@ export default defineEventHandler(async (event) => {
                 error: error instanceof Error ? error.message : String(error),
                 queryParams: { page, limit, userId, startDate, endDate, status, search },
             })
-            throw createError({
+            throw await createLocalizedError(event, {
                 statusCode: 500,
-                statusMessage: 'Internal Server Error',
-                message: '获取登录日志失败',
+                key: 'errors.admin.logsSessionsFailed',
             })
         }
     }
@@ -191,10 +191,9 @@ export default defineEventHandler(async (event) => {
             error: error instanceof Error ? error.message : String(error),
             queryParams: { page, limit, userId, startDate, endDate, status, search },
         })
-        throw createError({
+        throw await createLocalizedError(event, {
             statusCode: 500,
-            statusMessage: 'Internal Server Error',
-            message: '获取登录日志失败',
+            key: 'errors.admin.logsSessionsFailed',
         })
     }
 })

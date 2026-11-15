@@ -24,6 +24,54 @@
         },
         "server": {
             "internal": "服务器内部错误"
+        },
+        "admin": {
+            "userNotFound": "当前用户不存在",
+            "adminOnly": "仅管理员可以执行此操作",
+            "cannotRemoveSelf": "不能移除自己的管理员权限",
+            "roleSyncFailed": "管理员角色操作失败",
+            "ssoProviderNotFound": "SSO 提供商不存在",
+            "ssoProviderExists": "Provider ID 已存在",
+            "ssoProviderIdRequired": "缺少提供商 ID",
+            "paramsInvalid": "参数校验失败",
+            "logsStatsFailed": "获取登录统计失败",
+            "logsSessionsFailed": "获取登录日志失败",
+            "roleSyncSucceeded": "管理员角色同步成功",
+            "roleSyncFailedDescription": "同步失败，用户不存在或非管理员",
+            "roleAddSucceeded": "管理员角色添加成功",
+            "roleAddFailed": "添加失败，用户不存在",
+            "roleRemoveSucceeded": "管理员角色移除成功",
+            "roleRemoveFailed": "移除失败，用户不存在或操作被拒绝",
+            "unsupportedAction": "不支持的操作",
+            "oauthAppCreated": "应用创建成功",
+            "oauthAppCreateFailed": "创建应用失败",
+            "oauthAppUpdated": "应用更新成功",
+            "oauthAppUpdateFailed": "更新应用失败",
+            "oauthAppDeleted": "删除成功",
+            "oauthAppDeleteFailed": "删除应用失败",
+            "oauthAppNotFound": "应用不存在",
+            "oauthAppIncomplete": "参数不完整",
+            "oauthAppEnabled": "应用已启用",
+            "oauthAppDisabled": "应用已禁用",
+            "oauthAppListFailed": "获取应用列表失败",
+            "invalidRedirectUri": "无效的重定向URI：{uri}",
+            "ssoCreated": "SSO 提供商创建成功",
+            "ssoUpdated": "SSO 提供商更新成功",
+            "ssoDeleted": "SSO 提供商删除成功"
+        },
+        "upload": {
+            "notLoggedIn": "未登录",
+            "notFound": "未找到上传文件",
+            "invalid": "无效的文件上传",
+            "tooLarge": "文件大小超出 {limit} 限制",
+            "dailyLimit": "今日上传次数超出限制",
+            "failed": "文件上传失败",
+            "userDailyLimit": "您今日上传次数超出限制"
+        },
+        "demo": {
+            "adminRestricted": "Demo 模式下不允许执行管理后台的修改操作",
+            "writeRestricted": "Demo 模式下不允许执行此操作",
+            "dangerousRestricted": "Demo 模式下不允许执行此危险操作"
         }
     }
 }

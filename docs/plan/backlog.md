@@ -124,6 +124,9 @@
 - **2FA / captcha / Toast 视觉覆盖**：为 2FA 弹窗、验证码启用态、提交中 / 提交成功 Toast 补充参考态与自基线；需已启用 2FA 的测试账号与 captcha provider。阶段 3 已登记为环境限制，M6-1 收口时迁入本候选（不再保留阶段编号）。
 - **max-lines 基线清理**：消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。
     - 2026-11-11（P4-2）：`components/admin/users/user-detail-dialog.vue` 由 556 行增至 624 行，新增 1 条 `max-lines`（全仓 3 → 4 条）；详情视图与编辑表单待拆分。
+- **Admin API 错误文案的读取链路**：`composables/admin/*` 的 `errorMessage()` 只读 `error.message`，而 ofetch 在 500 时给出的是 `[GET] "url": 500 ...` 技术串，服务端本地化的 `message` 位于 `error.data.message`；因此 M16 新增的 500 键对 Toast 不可见（改动前同样不可见）。处理方向：统一 helper 优先读 `error.data?.message`，再接 `errors.*` 兜底。
+- **Admin OAuth 应用接口返回 HTTP 200 + body `status`**：`server/api/admin/oauth/applications/[id].{put,delete}.ts` 用 body 里的 `status: 404/500` 表达失败，前端 `use-application-management` 未校验 `success`，删除 / 启停失败仍弹成功 Toast。处理方向：改为 `createLocalizedError` 抛错，或前端显式校验 `success`。
+- **Admin 校验错误统一 Zod error map**：`resolveValidationMessage` 对非 `validation.*` 文案原样返回，类型级错误（如 `disabled: "x"`）会透出 Zod 默认英文；admin 侧未挂 `createZodErrorMap`（`/api/social` 已挂）。处理方向：admin `safeParse` 前挂 error map，或在边界把非键消息回退为 `errors.admin.paramsInvalid`。
 - **错误信息取值 helper 去重**：`getErrorMessage(error, fallback)`（`error instanceof Error ? error.message : fallback`）目前在 `composables/admin/use-user-management.ts`、`use-application-management.ts` 与 4 个 Admin 用户对话框各有一份；P4 后续批次（M6–M8）会继续复制，迁移收口时提取到 `utils/shared/`。
 - **Admin 用户对话框定向单测**：P4-2 后封禁时长换算（`0 → undefined` 永久）、详情弹窗动作可见性（自操作保护）、会话撤销仅由视觉层覆盖；建议在 M4 前补最小单测，锁定动作可见性条件。
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本条目只保留 `/api/admin/sso/providers` 系列补录（i18n 相关文档随阶段 5 M19 同步）。

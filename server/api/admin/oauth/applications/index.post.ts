@@ -9,9 +9,11 @@ import { snowflake } from '@/server/utils/snowflake'
 import logger from '@/server/utils/logger'
 import { oauthApplicationSchema } from '@/utils/shared/schemas'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
+    const { t } = await getServerI18n(event)
     let body: any = null
     try {
         body = await readBody(event)
@@ -21,7 +23,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 400,
                 success: false,
-                message: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数校验失败',
+                message: resolveValidationMessage(validationResult.error?.issues[0]?.message, t) || t('errors.admin.paramsInvalid'),
                 data: null,
             }
         }
@@ -72,7 +74,7 @@ export default defineEventHandler(async (event) => {
                 return {
                     status: 400,
                     success: false,
-                    message: `无效的重定向URI：${uri}`,
+                    message: t('errors.admin.invalidRedirectUri', { uri }),
                     data: null,
                 }
             }
@@ -140,7 +142,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 201,
             success: true,
-            message: '应用创建成功',
+            message: t('errors.admin.oauthAppCreated'),
             data: response,
         }
     } catch (error) {
@@ -152,7 +154,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 500,
             success: false,
-            message: error instanceof Error ? error.message : '创建应用失败',
+            message: t('errors.admin.oauthAppCreateFailed'),
             data: null,
         }
     }

@@ -122,6 +122,25 @@ const allProviders: SocialProvider[] = [
     },
 ]
 
+/** 需要按语言输出的第三方登录展示名（纯品牌名不需要翻译） */
+const LOCALIZED_PROVIDERS = new Set(['anonymous', 'wechat', 'qq', 'douyin', 'weibo'])
+
+/**
+ * 把内置文案换成当前请求语言的键值；未登记的品牌名保持原样。
+ */
+function localizeProvider(provider: SocialProvider, t: (key: string) => string): SocialProvider {
+    if (!LOCALIZED_PROVIDERS.has(provider.provider)) {
+        return provider
+    }
+    const base = `auth.social.${provider.provider}`
+    return {
+        ...provider,
+        name: t(`${base}.name`),
+        label: provider.label ? t(`${base}.label`) : provider.label,
+        tooltip: provider.tooltip ? t(`${base}.tooltip`) : provider.tooltip,
+    }
+}
+
 export default defineEventHandler(async (event) => {
     // 使用 Zod 校验查询参数
     const { t } = await getServerI18n(event)
@@ -131,9 +150,12 @@ export default defineEventHandler(async (event) => {
     })
     const { includeDisabled } = query
 
+    const providers = (includeDisabled ? allProviders : allProviders.filter((provider) => provider.enabled))
+        .map((provider) => localizeProvider(provider, t))
+
     return {
         status: 200,
         success: true,
-        providers: includeDisabled ? allProviders : allProviders.filter((provider) => provider.enabled),
+        providers,
     }
 })

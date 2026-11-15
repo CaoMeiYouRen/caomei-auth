@@ -6,9 +6,11 @@ import { applyOAuthClientInput, toAdminOAuthClientView } from '@/server/utils/oa
 import logger from '@/server/utils/logger'
 import { oauthApplicationUpdateSchema } from '@/utils/shared/schemas'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
+    const { t } = await getServerI18n(event)
     try {
         const id = event.context.params?.id
         const body = await readBody(event)
@@ -17,7 +19,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 400,
                 success: false,
-                message: '参数不完整',
+                message: t('errors.admin.oauthAppIncomplete'),
                 data: null,
             }
         }
@@ -32,7 +34,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 404,
                 success: false,
-                message: '应用不存在',
+                message: t('errors.admin.oauthAppNotFound'),
                 data: null,
             }
         }
@@ -45,7 +47,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 200,
                 success: true,
-                message: `应用已${body.disabled ? '禁用' : '启用'}`,
+                message: body.disabled ? t('errors.admin.oauthAppDisabled') : t('errors.admin.oauthAppEnabled'),
                 data: toAdminOAuthClientView(application),
             }
         }
@@ -56,7 +58,7 @@ export default defineEventHandler(async (event) => {
             return {
                 status: 400,
                 success: false,
-                message: resolveValidationMessage(validationResult.error?.issues[0]?.message) || '参数校验失败',
+                message: resolveValidationMessage(validationResult.error?.issues[0]?.message, t) || t('errors.admin.paramsInvalid'),
                 data: null,
             }
         }
@@ -86,7 +88,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 200,
             success: true,
-            message: '应用更新成功',
+            message: t('errors.admin.oauthAppUpdated'),
             data: toAdminOAuthClientView(application),
         }
     } catch (error) {
@@ -97,7 +99,7 @@ export default defineEventHandler(async (event) => {
         return {
             status: 500,
             success: false,
-            message: error instanceof Error ? error.message : '更新应用失败',
+            message: t('errors.admin.oauthAppUpdateFailed'),
             data: null,
         }
     }
