@@ -6,7 +6,6 @@
         "tooBig": "Input is too long or value is too large",
         "format": "Invalid input format",
         "invalidValue": "Value is not in the allowed range",
-        "missing": "Required value is missing",
         "emailRequired": "Email is required",
         "emailInvalid": "Enter a valid email address",
         "phoneRequired": "Phone number is required",

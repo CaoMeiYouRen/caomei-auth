@@ -38,13 +38,31 @@
                 "home": "返回首页",
                 "back": "返回上一页"
             }
+        },
+        "admin": {
+            "nav": {
+                "expand": "展开侧边栏",
+                "collapse": "收缩侧边栏",
+                "title": "管理后台",
+                "users": "用户管理",
+                "applications": "应用管理",
+                "sso": "SSO 管理",
+                "logs": "登录统计",
+                "quickAccess": "快速访问",
+                "profile": "个人中心",
+                "myApps": "我的应用",
+                "docs": "项目文档",
+                "home": "返回首页"
+            }
+        },
+        "theme": {
+            "toLight": "切换为亮色模式",
+            "toDark": "切换为暗色模式"
         }
     },
     "language": {
         "label": "语言",
-        "short": "中文",
-        "zh-CN": "简体中文",
-        "en-US": "English"
+        "short": "中文"
     },
     "footer": {
         "tagline": "统一登录平台 · 安全、便捷、可扩展",

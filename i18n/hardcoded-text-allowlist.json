@@ -2,10 +2,9 @@
     "version": 1,
     "description": "存量硬编码中文基线：文件 → 中文行数。新增文件或增加行数会被 i18n:audit:hardcoded 阻断；翻译完成后运行 pnpm i18n:audit:hardcoded:update 收紧。",
     "files": {
-        "components/theme-toggle.vue": 1,
         "composables/admin/use-user-management.ts": 1,
         "composables/use-captcha.ts": 4,
-        "layouts/admin.vue": 20,
+        "layouts/admin.vue": 1,
         "server/api/admin/logs/sessions.get.ts": 2,
         "server/api/admin/oauth/applications/index.post.ts": 2,
         "server/api/admin/sso/providers/index.post.ts": 1,

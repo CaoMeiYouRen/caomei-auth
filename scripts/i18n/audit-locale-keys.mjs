@@ -9,6 +9,21 @@ import {
     loadLocaleRegistry,
 } from './lib/locale-data.mjs'
 
+/**
+ * 动态拼接键白名单：这些键只以模板字符串形式引用，静态扫描无法命中；逐条登记来源，
+ * 避免把「未使用」告警淹没真实问题。
+ */
+const DYNAMIC_KEY_PATTERNS = [
+    {
+        pattern: /^auth\.password\.(?:strength|requirements)\./u,
+        reason: 'composables/utils/use-password-hints.ts 用 `auth.password.strength.${level}` / `requirements.${level}` 拼接',
+    },
+    {
+        pattern: /^auth\.social\./u,
+        reason: 'server/api/social/providers.get.ts 用 `auth.social.${provider}.{name,label,tooltip}` 拼接',
+    },
+]
+
 const USAGE = `用法：node scripts/i18n/audit-locale-keys.mjs [选项]
 
 选项：
@@ -130,8 +145,28 @@ async function main() {
     let unused = []
     if (options.only === 'all' || options.only === 'unused') {
         const sourceText = await collectSourceText()
-        unused = [...base.flat.keys()].filter((key) => !hasKeyReference(sourceText, key)).sort()
+        const dynamicKeys = []
+        unused = [...base.flat.keys()].filter((key) => {
+            if (hasKeyReference(sourceText, key)) {
+                return false
+            }
+            const dynamic = DYNAMIC_KEY_PATTERNS.find((entry) => entry.pattern.test(key))
+            if (dynamic) {
+                dynamicKeys.push(key)
+                return false
+            }
+            return true
+        }).sort()
         printSection('未使用键（源码中找不到完整键名引用；动态拼接会误报）', unused, 'warning')
+        if (dynamicKeys.length > 0) {
+            console.log(`\n[ok] ${dynamicKeys.length} 个动态拼接键已登记（不计入未使用告警）`)
+            for (const entry of DYNAMIC_KEY_PATTERNS) {
+                const matched = dynamicKeys.filter((key) => entry.pattern.test(key))
+                if (matched.length > 0) {
+                    console.log(`  - ${matched.length} 个：${entry.reason}`)
+                }
+            }
+        }
     }
 
     const untranslated = []

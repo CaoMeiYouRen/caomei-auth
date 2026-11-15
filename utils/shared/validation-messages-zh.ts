@@ -11,7 +11,6 @@ export const defaultValidationMessages: Record<string, string> = {
     tooBig: '输入内容过长或数值过大',
     format: '输入格式不正确',
     invalidValue: '输入值不在允许范围内',
-    missing: '缺少必填内容',
     emailRequired: '请输入邮箱',
     emailInvalid: '请输入有效的邮箱地址',
     phoneRequired: '请输入手机号',

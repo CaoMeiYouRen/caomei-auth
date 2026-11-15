@@ -38,13 +38,31 @@
                 "home": "Back to home",
                 "back": "Go back"
             }
+        },
+        "admin": {
+            "nav": {
+                "expand": "Expand sidebar",
+                "collapse": "Collapse sidebar",
+                "title": "Admin",
+                "users": "Users",
+                "applications": "Applications",
+                "sso": "SSO",
+                "logs": "Login stats",
+                "quickAccess": "Quick access",
+                "profile": "Profile",
+                "myApps": "My applications",
+                "docs": "Documentation",
+                "home": "Back to home"
+            }
+        },
+        "theme": {
+            "toLight": "Switch to light mode",
+            "toDark": "Switch to dark mode"
         }
     },
     "language": {
         "label": "Language",
-        "short": "EN",
-        "zh-CN": "简体中文",
-        "en-US": "English"
+        "short": "EN"
     },
     "footer": {
         "tagline": "Unified sign-in platform · Secure, convenient, extensible",

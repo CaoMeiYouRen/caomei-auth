@@ -38,7 +38,7 @@ export function dynamicMask(page: Page): Locator[] {
 }
 
 /** 对整页（viewport）截图并比对，自动应用动态区域掩码。 */
-export async function expectPageScreenshot(page: Page, name: string): Promise<void> {
+export async function expectPageScreenshot(page: Page, name: string, extraMasks: Locator[] = []): Promise<void> {
     const snapshot = name.endsWith('.png') || name.endsWith('.webp') ? name : `${name}.png`
-    await expect(page).toHaveScreenshot(snapshot, { mask: dynamicMask(page) })
+    await expect(page).toHaveScreenshot(snapshot, { mask: [...dynamicMask(page), ...extraMasks] })
 }

@@ -17,7 +17,7 @@
                 >
                     草梅 Auth
                 </h2>
-                <BaseTooltip :content="isCollapsed ? '展开侧边栏' : '收缩侧边栏'">
+                <BaseTooltip :content="isCollapsed ? t('app.admin.nav.expand') : t('app.admin.nav.collapse')">
                     <button
                         class="collapse-btn"
                         @click="toggleSidebar"
@@ -36,46 +36,46 @@
                         v-show="!isCollapsed"
                         class="nav-title"
                     >
-                        管理后台
+                        {{ t('app.admin.nav.title') }}
                     </h3>
-                    <BaseTooltip side="right" :content="isCollapsed ? '用户管理' : ''">
+                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.users') : ''">
                         <NuxtLink
                             to="/admin/users"
                             class="nav-item"
                             active-class="active"
                         >
                             <i class="mdi mdi-account-multiple" />
-                            <span v-show="!isCollapsed">用户管理</span>
+                            <span v-show="!isCollapsed">{{ t('app.admin.nav.users') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? '应用管理' : ''">
+                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.applications') : ''">
                         <NuxtLink
                             to="/admin/oauth/applications"
                             class="nav-item"
                             active-class="active"
                         >
                             <i class="mdi mdi-application" />
-                            <span v-show="!isCollapsed">应用管理</span>
+                            <span v-show="!isCollapsed">{{ t('app.admin.nav.applications') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? 'SSO 管理' : ''">
+                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.sso') : ''">
                         <NuxtLink
                             to="/admin/sso/providers"
                             class="nav-item"
                             active-class="active"
                         >
                             <i class="mdi mdi-account-network" />
-                            <span v-show="!isCollapsed">SSO 管理</span>
+                            <span v-show="!isCollapsed">{{ t('app.admin.nav.sso') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? '登录统计' : ''">
+                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.logs') : ''">
                         <NuxtLink
                             to="/admin/logs"
                             class="nav-item"
                             active-class="active"
                         >
                             <i class="mdi mdi-chart-line" />
-                            <span v-show="!isCollapsed">登录统计</span>
+                            <span v-show="!isCollapsed">{{ t('app.admin.nav.logs') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
                 </div>
@@ -85,27 +85,27 @@
                         v-show="!isCollapsed"
                         class="nav-title"
                     >
-                        快速访问
+                        {{ t('app.admin.nav.quickAccess') }}
                     </h3>
-                    <BaseTooltip side="right" :content="isCollapsed ? '个人中心' : ''">
+                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.profile') : ''">
                         <NuxtLink
                             to="/profile"
                             class="nav-item"
                         >
                             <i class="mdi mdi-account-circle" />
-                            <span v-show="!isCollapsed">个人中心</span>
+                            <span v-show="!isCollapsed">{{ t('app.admin.nav.profile') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? '我的应用' : ''">
+                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.myApps') : ''">
                         <NuxtLink
                             to="/oauth/clients"
                             class="nav-item"
                         >
                             <i class="mdi mdi-key-variant" />
-                            <span v-show="!isCollapsed">我的应用</span>
+                            <span v-show="!isCollapsed">{{ t('app.admin.nav.myApps') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? '项目文档' : ''">
+                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.docs') : ''">
                         <NuxtLink
                             to="https://auth-docs.cmyr.dev/"
                             external
@@ -113,17 +113,17 @@
                             class="nav-item"
                         >
                             <i class="mdi mdi-book-open-variant" />
-                            <span v-show="!isCollapsed">项目文档</span>
+                            <span v-show="!isCollapsed">{{ t('app.admin.nav.docs') }}</span>
                             <i v-show="!isCollapsed" class="external-icon mdi mdi-open-in-new" />
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? '返回首页' : ''">
+                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.home') : ''">
                         <NuxtLink
                             to="/"
                             class="nav-item"
                         >
                             <i class="mdi mdi-home" />
-                            <span v-show="!isCollapsed">返回首页</span>
+                            <span v-show="!isCollapsed">{{ t('app.admin.nav.home') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
                 </div>
@@ -150,6 +150,8 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
+
 // 侧边栏收缩状态管理
 const isCollapsed = ref(false)
 

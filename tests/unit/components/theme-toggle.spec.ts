@@ -1,7 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref, nextTick } from 'vue'
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import ThemeToggle from '@/components/theme-toggle.vue'
+import { useI18nText } from '@/tests/mocks/i18n-text'
+
+mockNuxtImport('useI18n', () => () => ({ t: useI18nText(), locale: { value: 'zh-CN' } }))
 import BaseTooltip from '@/components/base/base-tooltip.vue'
 
 /* CaomeiButton 把 `label` 映射为 aria-label；测试只关心按钮属性与图标插槽 */

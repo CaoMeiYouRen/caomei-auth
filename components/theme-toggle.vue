@@ -39,7 +39,9 @@ onMounted(() => {
 })
 const effectiveDark = computed(() => mounted.value && isDark.value)
 
-const buttonLabel = computed(() => (effectiveDark.value ? '切换为亮色模式' : '切换为暗色模式'))
+const { t } = useI18n()
+
+const buttonLabel = computed(() => (effectiveDark.value ? t('app.theme.toLight') : t('app.theme.toDark')))
 const iconClass = computed(() => (effectiveDark.value ? 'mdi-weather-night' : 'mdi-white-balance-sunny'))
 </script>
 
