@@ -19,7 +19,7 @@ const DYNAMIC_KEY_PATTERNS = [
         reason: 'composables/utils/use-password-hints.ts 用 `auth.password.strength.${level}` / `requirements.${level}` 拼接',
     },
     {
-        pattern: /^auth\.social\./u,
+        pattern: /^auth\.social\.(?:anonymous|wechat|qq|douyin|weibo)\.(?:name|label|tooltip)$/u,
         reason: 'server/api/social/providers.get.ts 用 `auth.social.${provider}.{name,label,tooltip}` 拼接',
     },
 ]

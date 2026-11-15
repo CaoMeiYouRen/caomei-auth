@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { INDEXABLE_LOCALE_CODES, buildRobotsTxt, buildSitemapXml, isIndexableHreflang, isIndexableOgLocale } from '@/utils/shared/seo'
+import { INDEXABLE_LOCALE_CODES, PUBLIC_SITEMAP_PATHS, buildRobotsTxt, buildSitemapXml, isIndexableHreflang, isIndexableOgLocale } from '@/utils/shared/seo'
+import { publicPaths } from '@/utils/shared/public-paths'
 
 describe('utils/shared/seo', () => {
     it('only exposes seo-ready indexable locales', () => {
@@ -19,20 +20,30 @@ describe('utils/shared/seo', () => {
         const xml = buildSitemapXml('https://auth.example.com/')
 
         expect(xml.startsWith('<?xml')).toBe(true)
-        expect(xml).toContain('<loc>https://auth.example.com/</loc>')
-        expect(xml).toContain('<loc>https://auth.example.com/en-US/</loc>')
+        expect(xml).toContain('<loc>https://auth.example.com/login</loc>')
+        expect(xml).toContain('<loc>https://auth.example.com/en-US/login</loc>')
         expect(xml).toContain('<loc>https://auth.example.com/about</loc>')
         expect(xml).toContain('<loc>https://auth.example.com/en-US/about</loc>')
         expect(xml).toContain('hreflang="zh-CN"')
         expect(xml).toContain('hreflang="en-US"')
+        expect(xml).toContain('hreflang="x-default"')
         expect(xml).not.toContain('//en-US')
     })
 
-    it('keeps private routes out of the sitemap', () => {
+    it('keeps private routes and login-gated home out of the sitemap', () => {
         const xml = buildSitemapXml('https://auth.example.com')
 
         for (const path of ['/admin', '/profile', '/security', '/oauth/']) {
             expect(xml).not.toContain(`>https://auth.example.com${path}<`)
+        }
+        /* 首页需要登录（302），不能出现在 sitemap */
+        expect(xml).not.toContain('<loc>https://auth.example.com</loc>')
+        expect(xml).not.toContain('<loc>https://auth.example.com/en-US</loc>')
+    })
+
+    it('only lists routes that are actually public', () => {
+        for (const path of PUBLIC_SITEMAP_PATHS) {
+            expect(publicPaths).toContain(path)
         }
     })
 

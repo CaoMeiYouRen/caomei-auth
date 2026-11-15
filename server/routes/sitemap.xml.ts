@@ -14,10 +14,11 @@ export default defineEventHandler((event) => {
         setResponseHeader(event, 'Cache-Control', 'public, max-age=3600')
         return buildSitemapXml(origin)
     } catch (error) {
+        console.error('[sitemap] generation failed', error)
         throw createError({
             statusCode: 500,
             statusMessage: 'Failed to generate sitemap',
-            message: error instanceof Error ? error.message : String(error),
+            message: 'Failed to generate sitemap',
         })
     }
 })

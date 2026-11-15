@@ -3,14 +3,9 @@ import { LOCALE_REGISTRY, type LocaleCode } from '@/i18n/config/locale-registry'
 /**
  * 可索引语言：只有 `seo-ready` 且 `indexable` 的语言才进入 hreflang / sitemap / `og:locale`。
  */
-export const INDEXABLE_LOCALES = LOCALE_REGISTRY.filter((locale) => locale.readiness === 'seo-ready' && locale.indexable)
+const INDEXABLE_LOCALES = LOCALE_REGISTRY.filter((locale) => locale.readiness === 'seo-ready' && locale.indexable)
 
 export const INDEXABLE_LOCALE_CODES = INDEXABLE_LOCALES.map((locale) => locale.code)
-
-/** 语言码 → 路由前缀（默认语言为空串） */
-const LOCALE_PREFIX: Record<string, string> = Object.fromEntries(
-    LOCALE_REGISTRY.map((locale) => [locale.code, locale.routePrefix]),
-)
 
 const BCP47_BY_CODE: Record<LocaleCode, string[]> = {
     'zh-CN': ['zh-CN', 'zh'],
@@ -33,14 +28,8 @@ export function isIndexableOgLocale(value?: string | null): boolean {
     return INDEXABLE_LOCALE_CODES.some((code) => value === code.replace('-', '_'))
 }
 
-/** 按语言码生成站内绝对路径（默认语言无前缀） */
-export function localePathPrefix(code: string): string {
-    return LOCALE_PREFIX[code] ?? `/${code}`
-}
-
 /** 需要在 sitemap 中公开的静态页面（不含登录后页面与 Admin） */
 export const PUBLIC_SITEMAP_PATHS = [
-    '/',
     '/login',
     '/register',
     '/forgot-password',
@@ -58,20 +47,23 @@ function trimBase(baseUrl: string): string {
 /**
  * 生成 sitemap.xml：每个公开页面 × 每个可索引语言，附带 `xhtml:link` alternates。
  *
- * 只输出可索引语言（阶段 5 M18 起为 zh-CN / en-US），`ui-ready` 语言不会进入索引。
+ * 只输出可索引语言（当前为 zh-CN / en-US），`ui-ready` 语言不会进入索引。
  */
 export function buildSitemapXml(baseUrl: string, paths: readonly string[] = PUBLIC_SITEMAP_PATHS): string {
     const base = trimBase(baseUrl)
     const urls = paths.map((path) => {
         const suffix = path === '/' ? '' : path
-        const alternates = INDEXABLE_LOCALES.map((locale) => {
-            const prefix = locale.routePrefix
-            const href = `${base}${prefix}${suffix || '/'}`
-            return `    <xhtml:link rel="alternate" hreflang="${locale.code}" href="${href}" />`
-        }).join('\n')
+        const alternates = [
+            ...INDEXABLE_LOCALES.map((locale) => {
+                const href = `${base}${locale.routePrefix}${suffix}`
+                return `    <xhtml:link rel="alternate" hreflang="${locale.code}" href="${href}" />`
+            }),
+            /* 与页面 head 一致：x-default 指向默认语言 */
+            `    <xhtml:link rel="alternate" hreflang="x-default" href="${base}${suffix}" />`,
+        ].join('\n')
 
         return INDEXABLE_LOCALES.map((locale) => {
-            const loc = `${base}${locale.routePrefix}${suffix || '/'}`
+            const loc = `${base}${locale.routePrefix}${suffix}`
             return `  <url>\n    <loc>${loc}</loc>\n${alternates}\n  </url>`
         }).join('\n')
     }).join('\n')

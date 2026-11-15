@@ -65,8 +65,8 @@ describe('i18n 语言包运行时门禁', () => {
                 continue
             }
             for (const [key, value] of flattenMessages(mergeModules(locale.code))) {
-                /* `language.<code>` 是语言切换器里的母语名（如 简体中文），允许保留中文 */
-                if (key.startsWith('language.')) {
+                /* `language.short` / `language.label` 是语言切换器里的母语名（如 中文），允许保留中文 */
+                if (key === 'language.short' || key === 'language.label') {
                     continue
                 }
                 expect(CJK_PATTERN.test(value), `${locale.code} 的 ${key} 仍含中文`).toBe(false)

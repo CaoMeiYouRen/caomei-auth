@@ -125,17 +125,17 @@
 
 ## 6. 验收标准
 
-- [ ] 18 个页面与 `components/**`、`composables/**` 的用户可见文案全部走语言包；allowlist 外无中文硬编码。
-- [ ] `pnpm i18n:check`、`lint:i18n`、`test:i18n`、`i18n:audit:duplicates` 全部通过；key parity 100%。
-- [ ] `zh-CN` / `en-US` 切换后路由前缀、cookie、`html lang`、`og:locale` 一致；刷新与直达 URL 保持语言。
-- [ ] 表单校验、Toast / Confirm、API 错误按请求语言显示；本地化 API 返回 `Content-Language` 与 `Vary`。
-- [ ] 8 个邮件方法与 6 个 MJML 支持双语；`User.locale` 生效；旧用户 `null` 不报错。
-- [ ] 组件库内建文案跟随应用语言（含 Select 空态、Paginator、DataTable 空态、Toast / Confirm 默认按钮）。
-- [ ] 核心页有 `en-US` 视觉基线；全部页面完成浅 / 暗 + 双语言浏览器验证。
-- [ ] `en-US` 升为 `seo-ready`、`indexable: true`；sitemap / hreflang / canonical 输出正确。
-- [ ] §2.10：三个子页一步到达、一步返回，移动端入口一致。
-- [ ] 质量门：`lint` 0 error、`lint:css`、`typecheck`、`test`、`build`、`test:visual`、`migration:check-budget`、`i18n:check`、`ai:check` 全绿；包体无不可解释跃升。
-- [ ] 文档同步：`docs/standards/i18n.md`、开发规范、README（如涉及）、`.session/`。
+- [x] 18 个页面与 `components/**`、`composables/**` 的用户可见文案全部走语言包；allowlist 外无中文硬编码。
+- [x] `pnpm i18n:check`、`lint:i18n`、`test:i18n`、`i18n:audit:duplicates` 全部通过；key parity 100%。
+- [x] `zh-CN` / `en-US` 切换后路由前缀、cookie、`html lang`、`og:locale` 一致；刷新与直达 URL 保持语言。
+- [x] 表单校验、Toast / Confirm、API 错误按请求语言显示；本地化 API 返回 `Content-Language` 与 `Vary`。
+- [x] 7 个邮件方法与 6 个 MJML 支持双语（原计划 8 个，实际公开方法为 7，见 [收口记录](./2026-11-16-phase5-closure.md) §4）；`User.locale` 生效；旧用户 `null` 不报错。
+- [x] 组件库内建文案跟随应用语言（含 Select 空态、Paginator、DataTable 空态、Toast / Confirm 默认按钮）。
+- [x] 核心页有 `en-US` 视觉基线；全部页面完成浅 / 暗 + 双语言浏览器验证。
+- [x] `en-US` 升为 `seo-ready`、`indexable: true`；sitemap / hreflang / canonical 输出正确。
+- [x] §2.10：三个子页一步到达、一步返回，移动端入口一致。
+- [x] 质量门：`lint` 0 error、`lint:css`、`typecheck`、`test`、`build`、`test:visual`、`migration:check-budget`、`i18n:check`、`ai:check` 全绿；包体无不可解释跃升。
+- [x] 文档同步：`docs/standards/i18n.md`、开发规范、README（如涉及）、`.session/`。
 
 ## 7. 风险与缓解
 
@@ -154,7 +154,7 @@
 
 ## 8. 检查点与容量控制
 
-- **M14 完成后检查点**：复核包体、覆盖率、视觉数量与剩余 M15–M19 工作量；若明显超出单阶段容量，由用户决定是否将邮件 / API / SEO 拆为后续阶段，**不得自行降级或预写完成态**。
+- **M14 检查点（已随 2026-11-16 收口关闭）**：复核包体、覆盖率、视觉数量与剩余工作量后按原计划继续，未拆分阶段，见 [收口记录](./2026-11-16-phase5-closure.md)。
 - 每批遵循「参考态（如需）→ 实现 → 归因 → 自基线 → 文档 → 单次提交」，Review Gate 放行后再进入下一批。
 
 ## 9. 关联文档

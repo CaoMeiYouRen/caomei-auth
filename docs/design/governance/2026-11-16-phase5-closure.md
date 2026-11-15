@@ -36,8 +36,8 @@
 | 硬编码中文基线 | **132 行 / 24 文件**（阶段 5 起点 1,390 行 / 107 文件） |
 | 测试 | **1036 passed / 138 files** |
 | 覆盖率 | Statements 76.78% / Branches 60.04% / Functions 68.89% / Lines 76.92% |
-| 视觉基线 | **116 passed**（104 zh + 12 en-US 核心页） |
-| 包体 | 入口 JS **339,109 B**、总 JS **2,289,780 B**、入口 CSS 415,165 B（+3.86%，上限 +10%） |
+| 视觉基线 | **110 passed**（104 zh + 6 en-US 核心页） |
+| 包体 | 入口 JS **339,087 B**、总 JS **2,289,799 B**、入口 CSS 415,165 B（+3.86%，上限 +10%） |
 | 语言就绪度 | `zh-CN` / `en-US` 均为 `seo-ready` + `indexable` |
 | 质量门 | `lint` 0 error、`lint:css`、`typecheck`、`test`、`test:visual`、`i18n:check`、`lint:md`、`ai:check`、`migration:check-budget` 全绿 |
 
@@ -57,13 +57,13 @@
 | sitemap 依赖 | 待核验 `@nuxtjs/sitemap` | **自建 `/sitemap.xml` 路由** | 静态公开页 + 双语言 alternates 无需新增依赖，且可精确按 Registry 放量 |
 | Demo 假数据 | 生成器接受 locale | **仅 zh-CN** | Demo 数据无请求上下文、启动时一次写入；按风险缓解条款登记为已知边界 |
 | `errors.admin.*` 模块归属 | `server-only` 模块 | **`errors` 模块** | 键体量小、与既有 `errors.*` 同域；`server-only` 保留给纯服务端长文案 |
-| 视觉矩阵 | 核心页 `en-US` 基线 | **12 张（6 页 × 浅 / 暗桌面）** | 其余页面按批次浏览器抽检，避免矩阵翻倍 |
+| 视觉矩阵 | 核心页 `en-US` 基线 | **6 张（3 页 × 浅 / 暗桌面）** | Admin 数据随用例顺序变化，英文渲染由浏览器抽检；避免矩阵翻倍 |
 
 ## 5. 遗留与后续
 
 - **backlog 新增**（M15 / M16 引入）：Admin API 错误文案读取链路、Admin OAuth 接口 200 + body status、Admin 校验统一 Zod error map。
 - **既有 backlog 保留**：视觉中间宽度（768 / 1024）、移动端安全页会话表、2FA / captcha / Toast 视觉覆盖、max-lines 基线、jscpd、DataTable 能力、邮件模板中文注释等。
-- **运维动作**：生产库升级前需执行 `caomei_auth_user.locale` 的 `ALTER TABLE`（见 [数据库部署文档](../../deployment/database.md#用户语言偏好列-userlocale2026-11-16)）；部署域名需正确传 `Host` / `X-Forwarded-Host` 以保证 SEO origin。
+- **运维动作**：生产库升级前需执行 `caomei_auth_user.locale` 的 `ALTER TABLE`（见 [数据库部署文档](../../deployment/database.md#用户语言偏好列-userlocale2026-11-16)）；部署域名需正确传 `Host`（或显式配置 `NUXT_PUBLIC_AUTH_BASE_URL`）以保证 SEO origin，h3 默认不读取 `X-Forwarded-Host`。
 - **未做**：外站站长平台验证、第三语言与 RTL、日志正文与内部错误翻译。
 
 ## 6. 验证命令

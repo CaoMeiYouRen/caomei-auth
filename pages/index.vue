@@ -105,10 +105,12 @@
 </template>
 
 <script lang="ts" setup>
+import { useNoIndex } from '@/composables/utils/use-no-index'
 import AuthLeft from '@/components/auth-left.vue'
 import { useIndexFlow } from '@/composables/use-index-flow'
 
 const { t } = useI18n()
+useNoIndex()
 
 const {
     session,

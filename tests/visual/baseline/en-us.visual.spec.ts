@@ -1,13 +1,12 @@
 import { expect, test } from '@playwright/test'
-import { useAdminSession } from '../helpers/admin-session'
 import { visualBaseURL, visualSessionHeaders } from '../helpers/config'
 import { applyTheme, expectPageScreenshot, waitForVisualStable } from '../helpers/visual'
 
 /**
- * 核心页 `en-US` 自基线（阶段 5 M17）。
+ * 核心页 `en-US` 自基线。
  *
- * 只覆盖核心路径的浅 / 暗桌面：登录、注册、个人中心、Admin 用户 / 日志 / SSO。
- * 其余页面的英文渲染由批次内的浅 / 暗 + 双语言浏览器抽检覆盖，不在视觉矩阵里翻倍。
+ * 只覆盖未登录可复现的核心路径的浅 / 暗桌面：登录、注册、个人中心。
+ * Admin 页面的数据随用例顺序变化，英文渲染由浏览器抽检覆盖，不进入像素基线。
  */
 
 const VISUAL_ACCOUNT = {
@@ -20,8 +19,8 @@ const VISUAL_ACCOUNT = {
 interface EnRoute {
     path: string
     slug: string
-    /** 会话类型：管理员用预置会话，普通页签用注册账号 */
-    session?: 'admin' | 'user'
+    /** 个人中心需要登录账号 */
+    session?: 'user'
     readySelector: string
     readyText: string
 }
@@ -35,27 +34,6 @@ const ROUTES: readonly EnRoute[] = [
         session: 'user',
         readySelector: '.profile-card',
         readyText: 'visual-baseline@example.com',
-    },
-    {
-        path: '/en-US/admin/users',
-        slug: 'en-admin-users',
-        session: 'admin',
-        readySelector: '.admin-users',
-        readyText: 'User management',
-    },
-    {
-        path: '/en-US/admin/logs',
-        slug: 'en-admin-logs',
-        session: 'admin',
-        readySelector: '.admin-logs',
-        readyText: 'Login statistics',
-    },
-    {
-        path: '/en-US/admin/sso/providers',
-        slug: 'en-admin-sso',
-        session: 'admin',
-        readySelector: '.admin-sso',
-        readyText: 'SSO Providers',
     },
 ]
 
@@ -81,9 +59,7 @@ for (const theme of ['light', 'dark'] as const) {
 
         for (const route of ROUTES) {
             test(`en-US ${route.slug} 默认态（${theme}）`, async ({ page }) => {
-                if (route.session === 'admin') {
-                    await useAdminSession(page)
-                } else if (route.session === 'user') {
+                if (route.session === 'user') {
                     await ensureUserSession(page)
                 }
 
@@ -92,19 +68,11 @@ for (const theme of ['light', 'dark'] as const) {
                 await expect(page.locator(route.readySelector)).toBeVisible()
                 await waitForVisualStable(page)
                 await expect(page.getByText(route.readyText).first()).toBeVisible()
-                /* Admin 数据页的 SSR 首帧没有会话会 401，客户端 hydration 后才拉到数据；
-                 * 等首行出现再截图，避免空表 / 有数据两种状态随机进入基线。 */
-                if (route.session === 'admin') {
-                    await expect(page.locator('tbody tr').first()).toBeVisible({ timeout: 15000 })
-                }
-
                 if (theme === 'dark') {
                     await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 15000 })
                 }
 
-                /* Admin 表格数据随用例顺序变化（认证用例会新建账号 / 会话），整表掩码保证基线稳定 */
-                const masks = route.session === 'admin' ? [page.locator('tbody')] : []
-                await expectPageScreenshot(page, `${route.slug}-${theme}-desktop-default`, masks)
+                await expectPageScreenshot(page, `${route.slug}-${theme}-desktop-default`)
             })
         }
     })

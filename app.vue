@@ -28,7 +28,7 @@ const caomeiLocale = useCaomeiLocale()
 const { t } = useI18n()
 
 // SEO / html lang：由 Locale Registry 驱动的 useLocaleHead 输出；
-// alternates 只保留 `seo-ready` 且可索引的语言（阶段 5 M18），ui-ready 语言不进入索引。
+// alternates 只保留 `seo-ready` 且可索引的语言，ui-ready 语言不进入索引。
 const i18nHead = useLocaleHead({ seo: true })
 
 type HeadLink = { id?: string, hreflang?: string, rel?: string, href?: string }
@@ -37,9 +37,10 @@ type HeadMeta = { id?: string, property?: string, content?: string }
 /* `@nuxtjs/i18n` 的 baseUrl 在构建期固化；部署域名可能与构建环境不同，
  * 这里按运行时请求源重写 canonical / hreflang / og:url 的 origin。 */
 const requestURL = useRequestURL()
-const siteOrigin = ref(requestURL.origin)
+/* 与 sitemap / robots 一致：优先使用部署配置的站点地址，未配置时才信任请求源 */
+const siteOrigin = ref(publicConfig.authBaseUrl || requestURL.origin)
 onMounted(() => {
-    siteOrigin.value = window.location.origin
+    siteOrigin.value = publicConfig.authBaseUrl || window.location.origin
 })
 
 function withRuntimeOrigin(href?: string): string | undefined {
