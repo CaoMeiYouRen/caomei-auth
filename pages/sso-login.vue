@@ -4,10 +4,10 @@
         <div class="sso-container">
             <div class="sso-header">
                 <h1 class="sso-title">
-                    SSO 单点登录
+                    {{ t('sso.title') }}
                 </h1>
                 <p class="sso-subtitle">
-                    通过企业身份提供商进行安全登录
+                    {{ t('sso.subtitle') }}
                 </p>
             </div>
 
@@ -15,9 +15,9 @@
             <div class="sso-methods">
                 <!-- 通过邮箱域名登录 -->
                 <div class="sso-method">
-                    <h3>通过邮箱登录</h3>
+                    <h3>{{ t('sso.emailHeading') }}</h3>
                     <p class="text-muted">
-                        输入您的企业邮箱地址，系统将自动识别对应的 SSO 提供商
+                        {{ t('sso.emailDescription') }}
                     </p>
                     <form @submit.prevent="signInWithEmail">
                         <div class="form-group">
@@ -25,8 +25,8 @@
                                 id="email"
                                 v-model="emailForm.email"
                                 type="email"
-                                label="企业邮箱"
-                                placeholder="例如：user@company.com"
+                                :label="t('sso.emailLabel')"
+                                :placeholder="t('sso.emailPlaceholder')"
                                 :disabled="emailForm.loading"
                                 required
                             />
@@ -39,24 +39,24 @@
                             <template #icon>
                                 <i class="mdi mdi-account-network" />
                             </template>
-                            使用 SSO 登录
+                            {{ t('sso.emailSubmit') }}
                         </CaomeiButton>
                     </form>
                 </div>
 
                 <!-- 通过域名登录 -->
                 <div class="sso-method">
-                    <h3>通过企业域名登录</h3>
+                    <h3>{{ t('sso.domainHeading') }}</h3>
                     <p class="text-muted">
-                        如果您知道企业的域名，可以直接使用域名进行 SSO 登录
+                        {{ t('sso.domainDescription') }}
                     </p>
                     <form @submit.prevent="signInWithDomain">
                         <div class="form-group">
                             <BaseInputV2
                                 id="domain"
                                 v-model="domainForm.domain"
-                                label="企业域名"
-                                placeholder="例如：company.com"
+                                :label="t('sso.domainLabel')"
+                                :placeholder="t('sso.domainPlaceholder')"
                                 :disabled="domainForm.loading"
                                 required
                             />
@@ -69,24 +69,24 @@
                             <template #icon>
                                 <i class="mdi mdi-domain" />
                             </template>
-                            使用域名登录
+                            {{ t('sso.domainSubmit') }}
                         </CaomeiButton>
                     </form>
                 </div>
 
                 <!-- 通过组织登录 -->
                 <div class="sso-method">
-                    <h3>通过组织登录</h3>
+                    <h3>{{ t('sso.orgHeading') }}</h3>
                     <p class="text-muted">
-                        如果您属于特定组织，可以使用组织名称进行登录
+                        {{ t('sso.orgDescription') }}
                     </p>
                     <form @submit.prevent="signInWithOrganization">
                         <div class="form-group">
                             <BaseInputV2
                                 id="organization"
                                 v-model="orgForm.organizationSlug"
-                                label="组织名称"
-                                placeholder="例如：company-org"
+                                :label="t('sso.orgLabel')"
+                                :placeholder="t('sso.orgPlaceholder')"
                                 :disabled="orgForm.loading"
                                 required
                             />
@@ -99,24 +99,24 @@
                             <template #icon>
                                 <i class="mdi mdi-office-building" />
                             </template>
-                            使用组织登录
+                            {{ t('sso.orgSubmit') }}
                         </CaomeiButton>
                     </form>
                 </div>
 
                 <!-- 通过 Provider ID 登录 -->
                 <div class="sso-method">
-                    <h3>通过 Provider ID 登录</h3>
+                    <h3>{{ t('sso.providerHeading') }}</h3>
                     <p class="text-muted">
-                        如果您知道具体的 SSO 提供商 ID，可以直接使用
+                        {{ t('sso.providerDescription') }}
                     </p>
                     <form @submit.prevent="signInWithProvider">
                         <div class="form-group">
                             <BaseInputV2
                                 id="providerId"
                                 v-model="providerForm.providerId"
-                                label="Provider ID"
-                                placeholder="例如：company-sso"
+                                :label="t('sso.providerLabel')"
+                                :placeholder="t('sso.providerPlaceholder')"
                                 :disabled="providerForm.loading"
                                 required
                             />
@@ -129,7 +129,7 @@
                             <template #icon>
                                 <i class="mdi mdi-key-variant" />
                             </template>
-                            使用 Provider 登录
+                            {{ t('sso.providerSubmit') }}
                         </CaomeiButton>
                     </form>
                 </div>
@@ -137,7 +137,7 @@
 
             <!-- 已配置的 SSO 提供商列表 -->
             <div v-if="availableProviders.length > 0" class="available-providers">
-                <h3>可用的 SSO 提供商</h3>
+                <h3>{{ t('sso.availableHeading') }}</h3>
                 <div class="providers-grid">
                     <div
                         v-for="provider in availableProviders"
@@ -172,7 +172,7 @@
                                 <template #icon>
                                     <i class="mdi mdi-login" />
                                 </template>
-                                登录
+                                {{ t('sso.providerLogin') }}
                             </CaomeiButton>
                         </div>
                     </div>
@@ -182,9 +182,9 @@
             <!-- 普通登录链接 -->
             <div class="regular-login">
                 <p class="text-muted">
-                    不使用 SSO 登录？
+                    {{ t('sso.regularPrompt') }}
                     <NuxtLink to="/login" class="login-link">
-                        使用常规方式登录
+                        {{ t('sso.regularLink') }}
                     </NuxtLink>
                 </p>
             </div>
@@ -194,12 +194,14 @@
 
 <script lang="ts" setup>
 import { useSsoLoginFlow } from '@/composables/use-sso-login-flow'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 
 definePageMeta({
-    title: 'SSO 单点登录 - 草梅 Auth',
     layout: 'default',
-    auth: false, // 允许未登录用户访问
 })
+
+const { t } = useI18n()
+usePageMeta('sso.title', 'sso.subtitle')
 
 const {
     emailForm,

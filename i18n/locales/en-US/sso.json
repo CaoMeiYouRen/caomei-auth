@@ -1,1 +1,37 @@
-{}
+{
+    "sso": {
+        "title": "SSO sign-in",
+        "subtitle": "Sign in securely through your enterprise identity provider",
+        "emailHeading": "Sign in with email",
+        "emailDescription": "Enter your work email and the matching SSO provider is selected automatically",
+        "emailLabel": "Work email",
+        "emailPlaceholder": "e.g. user{'@'}company.com",
+        "emailSubmit": "Sign in with SSO",
+        "domainHeading": "Sign in with company domain",
+        "domainDescription": "If you know your company domain, you can start SSO with it directly",
+        "domainLabel": "Company domain",
+        "domainPlaceholder": "e.g. company.com",
+        "domainSubmit": "Sign in with domain",
+        "orgHeading": "Sign in with organization",
+        "orgDescription": "If you belong to a specific organization, sign in with its name",
+        "orgLabel": "Organization name",
+        "orgPlaceholder": "e.g. company-org",
+        "orgSubmit": "Sign in with organization",
+        "providerHeading": "Sign in with provider ID",
+        "providerDescription": "If you know the exact SSO provider ID, you can use it directly",
+        "providerLabel": "Provider ID",
+        "providerPlaceholder": "e.g. company-sso",
+        "providerSubmit": "Sign in with provider",
+        "availableHeading": "Available SSO providers",
+        "providerLogin": "Sign in",
+        "regularPrompt": "Not using SSO?",
+        "regularLink": "Sign in with password",
+        "errorTitle": "SSO sign-in failed",
+        "errorEmail": "No matching SSO provider found",
+        "errorDomain": "No matching SSO provider found",
+        "errorOrg": "No matching organization found",
+        "errorProvider": "The specified SSO provider was not found",
+        "errorSpecific": "Could not sign in with {name}",
+        "errorCallback": "Something went wrong during authentication. Try again or contact your administrator."
+    }
+}

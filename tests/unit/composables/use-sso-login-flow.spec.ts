@@ -17,6 +17,8 @@ vi.mock('caomei-ui', () => ({
     useToast: () => toastMocks,
 }))
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
+
 // Mock onMounted to execute immediately
 vi.mock('vue', async (importOriginal) => {
     const actual = await importOriginal<typeof import('vue')>()

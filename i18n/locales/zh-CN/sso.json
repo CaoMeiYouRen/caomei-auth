@@ -1,1 +1,37 @@
-{}
+{
+    "sso": {
+        "title": "SSO 单点登录",
+        "subtitle": "通过企业身份提供商进行安全登录",
+        "emailHeading": "通过邮箱登录",
+        "emailDescription": "输入您的企业邮箱地址，系统将自动识别对应的 SSO 提供商",
+        "emailLabel": "企业邮箱",
+        "emailPlaceholder": "例如：user{'@'}company.com",
+        "emailSubmit": "使用 SSO 登录",
+        "domainHeading": "通过企业域名登录",
+        "domainDescription": "如果您知道企业的域名，可以直接使用域名进行 SSO 登录",
+        "domainLabel": "企业域名",
+        "domainPlaceholder": "例如：company.com",
+        "domainSubmit": "使用域名登录",
+        "orgHeading": "通过组织登录",
+        "orgDescription": "如果您属于特定组织，可以使用组织名称进行登录",
+        "orgLabel": "组织名称",
+        "orgPlaceholder": "例如：company-org",
+        "orgSubmit": "使用组织登录",
+        "providerHeading": "通过 Provider ID 登录",
+        "providerDescription": "如果您知道具体的 SSO 提供商 ID，可以直接使用",
+        "providerLabel": "Provider ID",
+        "providerPlaceholder": "例如：company-sso",
+        "providerSubmit": "使用 Provider 登录",
+        "availableHeading": "可用的 SSO 提供商",
+        "providerLogin": "登录",
+        "regularPrompt": "不使用 SSO 登录？",
+        "regularLink": "使用常规方式登录",
+        "errorTitle": "SSO 登录失败",
+        "errorEmail": "无法找到匹配的 SSO 提供商",
+        "errorDomain": "无法找到匹配的 SSO 提供商",
+        "errorOrg": "无法找到匹配的组织",
+        "errorProvider": "无法找到指定的 SSO 提供商",
+        "errorSpecific": "无法使用 {name} 登录",
+        "errorCallback": "身份验证过程中发生错误，请重试或联系管理员"
+    }
+}

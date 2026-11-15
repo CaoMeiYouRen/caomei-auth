@@ -1,10 +1,12 @@
 import { ref, onMounted } from 'vue'
 import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 export function useSsoLoginFlow() {
     const toast = useToast()
     const route = useRoute()
+    const t = useI18nText()
 
     // 表单数据
     const emailForm = ref({
@@ -42,7 +44,7 @@ export function useSsoLoginFlow() {
                 availableProviders.value = response.data || []
             }
         } catch (error) {
-            console.error('获取 SSO 提供商列表失败:', error)
+            console.error('Failed to load SSO providers:', error)
         }
     }
 
@@ -58,12 +60,12 @@ export function useSsoLoginFlow() {
             })
 
             if (result.error) {
-                throw new Error(result.error.message || 'SSO 登录失败')
+                throw new Error(result.error.message || t('sso.errorTitle'))
             }
 
             // 成功时会重定向，不需要额外处理
         } catch (error: any) {
-            toast.danger({ title: 'SSO 登录失败', description: error.message || '无法找到匹配的 SSO 提供商', duration: 5000 })
+            toast.danger({ title: t('sso.errorTitle'), description: error.message || t('sso.errorEmail'), duration: 5000 })
         } finally {
             emailForm.value.loading = false
         }
@@ -81,10 +83,10 @@ export function useSsoLoginFlow() {
             })
 
             if (result.error) {
-                throw new Error(result.error.message || 'SSO 登录失败')
+                throw new Error(result.error.message || t('sso.errorTitle'))
             }
         } catch (error: any) {
-            toast.danger({ title: 'SSO 登录失败', description: error.message || '无法找到匹配的 SSO 提供商', duration: 5000 })
+            toast.danger({ title: t('sso.errorTitle'), description: error.message || t('sso.errorDomain'), duration: 5000 })
         } finally {
             domainForm.value.loading = false
         }
@@ -102,10 +104,10 @@ export function useSsoLoginFlow() {
             })
 
             if (result.error) {
-                throw new Error(result.error.message || 'SSO 登录失败')
+                throw new Error(result.error.message || t('sso.errorTitle'))
             }
         } catch (error: any) {
-            toast.danger({ title: 'SSO 登录失败', description: error.message || '无法找到匹配的组织', duration: 5000 })
+            toast.danger({ title: t('sso.errorTitle'), description: error.message || t('sso.errorOrg'), duration: 5000 })
         } finally {
             orgForm.value.loading = false
         }
@@ -123,10 +125,10 @@ export function useSsoLoginFlow() {
             })
 
             if (result.error) {
-                throw new Error(result.error.message || 'SSO 登录失败')
+                throw new Error(result.error.message || t('sso.errorTitle'))
             }
         } catch (error: any) {
-            toast.danger({ title: 'SSO 登录失败', description: error.message || '无法找到指定的 SSO 提供商', duration: 5000 })
+            toast.danger({ title: t('sso.errorTitle'), description: error.message || t('sso.errorProvider'), duration: 5000 })
         } finally {
             providerForm.value.loading = false
         }
@@ -144,10 +146,14 @@ export function useSsoLoginFlow() {
             })
 
             if (result.error) {
-                throw new Error(result.error.message || 'SSO 登录失败')
+                throw new Error(result.error.message || t('sso.errorTitle'))
             }
         } catch (error: any) {
-            toast.danger({ title: 'SSO 登录失败', description: error.message || `无法使用 ${provider.name || provider.providerId} 登录`, duration: 5000 })
+            toast.danger({
+                title: t('sso.errorTitle'),
+                description: error.message || t('sso.errorSpecific', { name: provider.name || provider.providerId }),
+                duration: 5000,
+            })
         } finally {
             specificProviderLoading.value = ''
         }
@@ -159,7 +165,7 @@ export function useSsoLoginFlow() {
 
         // 检查 URL 参数中的错误信息
         if (route.query.error === 'sso_failed') {
-            toast.danger({ title: 'SSO 登录失败', description: '身份验证过程中发生错误，请重试或联系管理员', duration: 5000 })
+            toast.danger({ title: t('sso.errorTitle'), description: t('sso.errorCallback'), duration: 5000 })
         }
     })
 
