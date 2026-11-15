@@ -173,12 +173,7 @@ EMAIL_FROM="Your App <your-email@your-domain.com>"
 内容：您的验证码是：123456
 ```
 
-### 密码重置链接邮件
-
-```
-主题：重置您的密码
-内容：点击链接重置您的密码：[重置链接]
-```
+> **已下线（2026-11-15）**：密码重置只提供验证码邮件，不再发送带链接的重置邮件；`POST /api/auth/request-password-reset` 固定返回 `400 RESET_PASSWORD_DISABLED`。原因与后续启用条件见 [backlog §2.11](../plan/backlog.md)。
 
 ### 邮箱验证链接邮件
 

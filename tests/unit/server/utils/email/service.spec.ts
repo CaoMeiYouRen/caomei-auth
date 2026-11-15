@@ -59,30 +59,6 @@ describe('Server Utils: Email Service', () => {
         })
     })
 
-    describe('Password Reset Email', () => {
-        it('should send password reset email successfully', async () => {
-            vi.mocked(sendEmail).mockResolvedValue(undefined as any)
-
-            await emailService.sendPasswordResetEmail('test@example.com', 'http://reset.com')
-
-            expect(sendEmail).toHaveBeenCalledTimes(1)
-            expect(logger.email.sent).toHaveBeenCalledWith({ type: 'password-reset', email: 'test@example.com' })
-        })
-
-        it('should fail if sending password reset email fails', async () => {
-            vi.mocked(sendEmail).mockRejectedValue(new Error('SMTP error'))
-
-            await expect(emailService.sendPasswordResetEmail('test@example.com', 'http://reset.com'))
-                .rejects.toThrow('SMTP error')
-
-            expect(logger.email.failed).toHaveBeenCalledWith(expect.objectContaining({
-                type: 'password-reset',
-                email: 'test@example.com',
-                error: 'SMTP error',
-            }))
-        })
-    })
-
     describe('Login OTP Email', () => {
         it('should send login OTP email successfully', async () => {
             vi.mocked(sendEmail).mockResolvedValue(undefined as any)

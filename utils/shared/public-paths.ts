@@ -8,7 +8,6 @@ export const publicPaths = [
     '/about',
     '/register',
     '/forgot-password',
-    '/reset-password',
     '/sso-login',
     '/callback',
     '/oauth/consent', // OAuth 同意页面应该是公开的，因为需要在授权流程中访问

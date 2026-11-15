@@ -122,7 +122,7 @@ interface RouteModuleRule {
 
 /** 后台按业务域细分；`admin` 壳层对所有 `/admin/**` 生效 */
 const ROUTE_MODULE_RULES: RouteModuleRule[] = [
-    { pattern: /^\/(?:login|register|forgot-password|change-password|quick-login|reset-password)(?:\/|$)/u, modules: ['auth'] },
+    { pattern: /^\/(?:login|register|forgot-password|change-password|quick-login)(?:\/|$)/u, modules: ['auth'] },
     { pattern: /^\/sso-login(?:\/|$)/u, modules: ['sso'] },
     { pattern: /^\/profile(?:\/|$)/u, modules: ['profile'] },
     { pattern: /^\/security(?:\/|$)/u, modules: ['security'] },

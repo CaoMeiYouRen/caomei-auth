@@ -107,10 +107,10 @@ export const auth = betterAuth({
             '/magic-link': { window: 60, max: 3 },
             '/forget-password': { window: 60, max: 3 },
             '/forget-password/*': { window: 60, max: 3 },
-            '/request-password-reset': { window: 60, max: 3 },
-            '/reset-password': { window: 60, max: 3 },
             '/send-verification-email': { window: 60, max: 3 },
             '/change-email': { window: 60, max: 3 },
+            // 链接重置通道已下线，端点仍存在（无 token 可签发），保留限流作为纵深防御
+            '/reset-password': { window: 60, max: 3 },
             '/delete-user': { window: 60, max: 2 },
             '/get-session': { window: 60, max: 10 },
             '/admin/*': { window: 60, max: 10 },
@@ -126,9 +126,8 @@ export const auth = betterAuth({
         minPasswordLength: 6,
         maxPasswordLength: 64,
         requireEmailVerification: EMAIL_REQUIRE_VERIFICATION, // 是否要求邮箱验证。若启用，则用户必须在登录前验证他们的邮箱。仅在使用邮箱密码登录时生效。
-        sendResetPassword: async ({ user, url }) => {
-            await emailService.sendPasswordResetEmail(user.email, url)
-        },
+        // 不配置 sendResetPassword：邮件链接重置通道已下线（统一走邮箱 / 短信验证码）。
+        // better-auth 在缺失该回调时会让 POST /api/auth/request-password-reset 返回 400 RESET_PASSWORD_DISABLED。
     },
     emailVerification: {
         sendOnSignUp: true, // 注册时发送验证邮件

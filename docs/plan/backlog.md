@@ -76,6 +76,19 @@
 - **组织 / 部门管理**：多级组织架构、角色委派、权限矩阵。
 - **LDAP / AD 集成**：与传统企业目录服务对接，支持同步企业用户。
 
+### 2.11 邮件链接重置（可选通道）
+
+- **现状**：密码重置统一走验证码（邮箱 6 位码 300 秒 / 3 次尝试，短信同规格，均带 captcha 与 3 次/分限流）；`emailAndPassword.sendResetPassword` 已移除，`POST /api/auth/request-password-reset` 返回 `400 RESET_PASSWORD_DISABLED`，`/reset-password` 的白名单、限流与语言模块规则一并通过（2026-11-15，阶段 5 M5）。
+- **重启条件**：出现「换设备 / 邮件客户端内一键完成」的明确需求，或外部集成方要求链接式重置；验证码通道仍保留，作为并列选项而非替代。
+- **实现要点**：
+    1. 恢复 `sendResetPassword` 回调与 `sendPasswordResetEmail` 模板（M15 后需按用户语言渲染两套邮件）。
+    2. 新增 `/reset-password/[token]` 页面：路由 params 取 token，表单复用 `resetPasswordFormSchema`，提交 `authClient.resetPassword({ newPassword, token })`；过期 / 无效 token 给出独立提示。
+    3. 客户端白名单 `middleware/auth.global.ts` 目前是 `pathname === path`，需改为前缀匹配（或新增 `publicPathPrefixes`），否则带 token 的路径会被拦到登录页；服务端中间件已是 `startsWith`。
+    4. token 不随 GET 消费（`GET /api/auth/reset-password/:token` 只重定向），页面必须用 POST 消费，避免企业邮件网关预取把 token 用掉。
+    5. 安全加固：`emailOTP.storeOTP` 切 `hashed`、`rateLimit.storage` 接 Redis（多实例下内存存储按实例计数）、重置成功后强制下线该用户全部会话。
+    6. 补 i18n 键（`auth.resetPassword.*`）、视觉基线与单测（无效 token / 过期 / 弱密码 / 成功跳转）。
+- **迁入来源**：阶段 5 M5 决策记录（2026-11-15 用户确认「验证码已足够，先下线邮件链接」）。
+
 ---
 
 ## 3. 技术债务（Tech Debt）

@@ -46,44 +46,6 @@ export const emailService = {
     },
 
     /**
-     * 发送密码重置邮件
-     */
-    async sendPasswordResetEmail(email: string, resetUrl: string): Promise<void> {
-        try {
-            const { html, text } = await emailTemplateEngine.generateActionEmailTemplate(
-                {
-                    headerIcon: '🔑',
-                    message: `有人请求重置您的 <strong>${APP_NAME}</strong> 账户密码。如果是您本人操作，请点击下方按钮重置密码：`,
-                    buttonText: '重置密码',
-                    actionUrl: resetUrl,
-                    reminderContent: '• 此重置链接将在 <strong>1 小时</strong>后过期<br/>• 如果不是您本人操作，请立即检查您的账户安全<br/>• 建议修改密码并启用两步验证',
-                    securityTip: '如果您没有请求重置密码，请忽略此邮件并检查您的账户安全。',
-                },
-                {
-                    title: `重置您的 ${APP_NAME} 密码`,
-                    preheader: '有人请求重置您的密码，如果是您本人操作请点击链接。',
-                },
-            )
-
-            await sendEmail({
-                to: email,
-                subject: `重置您的 ${APP_NAME} 密码`,
-                html,
-                text,
-            })
-
-            logger.email.sent({ type: 'password-reset', email })
-        } catch (error) {
-            logger.email.failed({
-                type: 'password-reset',
-                email,
-                error: error instanceof Error ? error.message : String(error),
-            })
-            throw error
-        }
-    },
-
-    /**
      * 发送登录验证码邮件
      */
     async sendLoginOTP(email: string, otp: string, expiresInMinutes: number = 5): Promise<void> {
