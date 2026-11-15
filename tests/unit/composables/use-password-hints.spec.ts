@@ -3,7 +3,6 @@ import { PasswordStrength } from '@/utils/shared/password'
 import { usePasswordHints } from '@/composables/utils/use-password-hints'
 
 const messages: Record<string, string> = {
-    'common.listSeparator': '、',
     'auth.password.strength.weak': '弱',
     'auth.password.strength.medium': '中等',
     'auth.password.strength.strong': '强',

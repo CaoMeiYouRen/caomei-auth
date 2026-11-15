@@ -15,10 +15,15 @@ import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
 import type { CaptchaExpose } from '@/utils/web/captcha'
 
 // Helper function to get first Zod error
-function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
+function getFirstZodError(
+    result: { success: boolean, error?: { issues: { message: string }[] } },
+    translate?: (message?: string | null) => string,
+    fallback = '',
+): string | null {
     if (result.success) { return null }
     const message = result.error?.issues[0]?.message
-    return translate ? translate(message) : resolveValidationMessage(message) || message || ''
+    const translated = translate ? translate(message) : resolveValidationMessage(message)
+    return translated || fallback || message || null
 }
 
 export function useQuickLoginFlow() {
@@ -62,7 +67,7 @@ export function useQuickLoginFlow() {
         () => {
             const result = emailSchema.safeParse(email.value)
             if (!result.success) {
-                errors.value.email = getFirstZodError(result, translate) || t('auth.common.invalidEmail')
+                errors.value.email = getFirstZodError(result, translate, t('auth.common.invalidEmail')) ?? t('auth.common.invalidEmail')
                 return false
             }
             return true
@@ -81,7 +86,7 @@ export function useQuickLoginFlow() {
         () => {
             const result = phoneSchema.safeParse(phone.value)
             if (!result.success) {
-                errors.value.phone = getFirstZodError(result, translate) || t('auth.common.invalidPhone')
+                errors.value.phone = getFirstZodError(result, translate, t('auth.common.invalidPhone')) ?? t('auth.common.invalidPhone')
                 return false
             }
             return true
@@ -117,7 +122,7 @@ export function useQuickLoginFlow() {
 
         const result = emailSchema.safeParse(email.value)
         if (!result.success) {
-            const message = getFirstZodError(result, translate) || t('auth.common.invalidEmail')
+            const message = getFirstZodError(result, translate, t('auth.common.invalidEmail')) ?? t('auth.common.invalidEmail')
             errors.value.email = message
             toast.danger({ title: t('auth.common.sendFailed'), description: message, duration: 5000 })
             return false
@@ -126,7 +131,7 @@ export function useQuickLoginFlow() {
         const success = await sendEmailCode()
 
         if (success) {
-            toast.success({ title: t('auth.common.sendSuccess'), description: t('auth.quickLogin.codeSentEmail'), duration: 3000 })
+            toast.success({ title: t('auth.quickLogin.codeSentTitle'), description: t('auth.quickLogin.codeSentEmail'), duration: 3000 })
             return true
         }
 
@@ -141,7 +146,7 @@ export function useQuickLoginFlow() {
 
         const result = phoneSchema.safeParse(phone.value)
         if (!result.success) {
-            const message = getFirstZodError(result, translate) || t('auth.common.invalidPhone')
+            const message = getFirstZodError(result, translate, t('auth.common.invalidPhone')) ?? t('auth.common.invalidPhone')
             errors.value.phone = message
             toast.danger({ title: t('auth.common.sendFailed'), description: message, duration: 5000 })
             return false
@@ -150,7 +155,7 @@ export function useQuickLoginFlow() {
         const success = await sendPhoneCode()
 
         if (success) {
-            toast.success({ title: t('auth.common.sendSuccess'), description: t('auth.quickLogin.codeSentPhone'), duration: 3000 })
+            toast.success({ title: t('auth.quickLogin.codeSentTitle'), description: t('auth.quickLogin.codeSentPhone'), duration: 3000 })
             return true
         }
 
@@ -169,7 +174,7 @@ export function useQuickLoginFlow() {
             code: emailCode.value,
         })
         if (!result.success) {
-            const errorMsg = getFirstZodError(result, translate)
+            const errorMsg = getFirstZodError(result, translate, t('auth.common.validationFailed'))
             if (errorMsg) {
                 const path = result.error.issues[0]?.path[0] as string
                 errors.value[path] = errorMsg
@@ -209,7 +214,7 @@ export function useQuickLoginFlow() {
             code: phoneCode.value,
         })
         if (!result.success) {
-            const errorMsg = getFirstZodError(result, translate)
+            const errorMsg = getFirstZodError(result, translate, t('auth.common.validationFailed'))
             if (errorMsg) {
                 const path = result.error.issues[0]?.path[0] as string
                 errors.value[path] = errorMsg

@@ -423,4 +423,15 @@ describe('useLoginFlow', () => {
         expect(validatePhone('+8613800138000')).toBe(true)
         expect(validatePhone('123')).toBe(false)
     })
+
+    it('社交登录缺少错误信息时使用带渠道名的回退文案', async () => {
+        ;(authClient.signIn as any).social = vi.fn().mockRejectedValue('network down')
+
+        const { loginWithSocial } = useLoginFlow()
+        await loginWithSocial({ provider: 'github', name: 'GitHub', enabled: true } as any)
+
+        expect(toastMocks.danger).toHaveBeenCalledWith(expect.objectContaining({
+            description: 'GitHub 登录时发生未知错误',
+        }))
+    })
 })

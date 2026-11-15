@@ -41,4 +41,12 @@ describe('useI18nText', () => {
 
         expect(useI18nText()('auth.common.sendFailed')).toBe('auth.common.sendFailed')
     })
+
+    it('returns the key when `useNuxtApp` throws outside a Nuxt context', () => {
+        useNuxtAppMock.mockImplementation(() => {
+            throw new Error('no nuxt app')
+        })
+
+        expect(useI18nText()('auth.common.sendFailed')).toBe('auth.common.sendFailed')
+    })
 })

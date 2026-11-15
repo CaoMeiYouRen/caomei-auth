@@ -78,7 +78,7 @@ describe('useQuickLoginFlow', () => {
         sendEmailSpy.mockResolvedValue(true)
         await sendEmailVerificationCode()
         expect(sendEmailSpy).toHaveBeenCalled()
-        expect(toastMocks.success).toHaveBeenCalled()
+        expect(toastMocks.success).toHaveBeenCalledWith(expect.objectContaining({ title: '验证码已发送' }))
     })
 
     it('should handle email code sending failure', async () => {
@@ -111,7 +111,7 @@ describe('useQuickLoginFlow', () => {
         sendPhoneSpy.mockResolvedValue(true)
         await sendPhoneVerificationCode()
         expect(sendPhoneSpy).toHaveBeenCalled()
-        expect(toastMocks.success).toHaveBeenCalled()
+        expect(toastMocks.success).toHaveBeenCalledWith(expect.objectContaining({ title: '验证码已发送' }))
     })
 
     it('should handle phone code sending failure', async () => {

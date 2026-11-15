@@ -20,14 +20,14 @@ export function usePasswordHints() {
 
     const resolveStrength = (strength?: PasswordStrength) => strength ?? getDefaultPasswordStrength()
 
+    const strengthLabel = (strength?: PasswordStrength) => t(`auth.password.strength.${STRENGTH_KEYS[resolveStrength(strength)]}`)
+
     return {
         /** 强度标签（弱 / 中等 / 强 / 非常强） */
-        strengthLabel: (strength?: PasswordStrength) => t(`auth.password.strength.${STRENGTH_KEYS[resolveStrength(strength)]}`),
+        strengthLabel,
 
         /** 带前缀的强度说明（密码强度：强） */
-        strengthSummary: (strength?: PasswordStrength) => t('auth.password.strengthSummary', {
-            level: t(`auth.password.strength.${STRENGTH_KEYS[resolveStrength(strength)]}`),
-        }),
+        strengthSummary: (strength?: PasswordStrength) => t('auth.password.strengthSummary', { level: strengthLabel(strength) }),
 
         /** 输入框旁的要求提示（含最小长度） */
         requirementHint: (strength?: PasswordStrength) => {

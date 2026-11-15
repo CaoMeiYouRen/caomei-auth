@@ -15,10 +15,15 @@ import { useI18nText } from '@/composables/utils/use-i18n-text'
 import type { CaptchaExpose } from '@/utils/web/captcha'
 
 // Helper function to get first Zod error
-function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
+function getFirstZodError(
+    result: { success: boolean, error?: { issues: { message: string }[] } },
+    translate?: (message?: string | null) => string,
+    fallback = '',
+): string | null {
     if (result.success) { return null }
     const message = result.error?.issues[0]?.message
-    return translate ? translate(message) : resolveValidationMessage(message) || message || ''
+    const translated = translate ? translate(message) : resolveValidationMessage(message)
+    return translated || fallback || message || null
 }
 
 export function useForgotPasswordFlow() {
@@ -118,7 +123,7 @@ export function useForgotPasswordFlow() {
                 code: emailCode.value,
             })
             if (!result.success) {
-                const errorMsg = getFirstZodError(result, translate)
+                const errorMsg = getFirstZodError(result, translate, t('auth.common.validationFailed'))
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -131,7 +136,7 @@ export function useForgotPasswordFlow() {
                 code: phoneCode.value,
             })
             if (!result.success) {
-                const errorMsg = getFirstZodError(result, translate)
+                const errorMsg = getFirstZodError(result, translate, t('auth.common.validationFailed'))
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -146,7 +151,7 @@ export function useForgotPasswordFlow() {
             confirmPassword: confirmPassword.value,
         })
         if (!passwordResult.success) {
-            const errorMsg = getFirstZodError(passwordResult, translate)
+            const errorMsg = getFirstZodError(passwordResult, translate, t('auth.common.validationFailed'))
             if (errorMsg) {
                 const path = passwordResult.error.issues[0]?.path[0] as string
                 errors.value[path] = errorMsg

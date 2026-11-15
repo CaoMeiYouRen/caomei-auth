@@ -20,10 +20,15 @@ import { useValidationMessage } from '@/composables/utils/use-validation-message
 import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 // Helper function to get first Zod error
-function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
+function getFirstZodError(
+    result: { success: boolean, error?: { issues: { message: string }[] } },
+    translate?: (message?: string | null) => string,
+    fallback = '',
+): string | null {
     if (result.success) { return null }
     const message = result.error?.issues[0]?.message
-    return translate ? translate(message) : resolveValidationMessage(message) || message || ''
+    const translated = translate ? translate(message) : resolveValidationMessage(message)
+    return translated || fallback || message || null
 }
 
 export function useLoginFlow() {
@@ -210,7 +215,7 @@ export function useLoginFlow() {
 
             const result = schema.safeParse(formData)
             if (!result.success) {
-                const errorMsg = getFirstZodError(result, translate)
+                const errorMsg = getFirstZodError(result, translate, t('auth.common.validationFailed'))
                 if (errorMsg) {
                     // 根据 error path 设置对应的错误字段
                     const path = result.error.issues[0]?.path[0] as string
@@ -255,7 +260,7 @@ export function useLoginFlow() {
                 password: usernamePassword.value,
             })
             if (!result.success) {
-                const errorMsg = getFirstZodError(result, translate)
+                const errorMsg = getFirstZodError(result, translate, t('auth.common.validationFailed'))
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -295,7 +300,7 @@ export function useLoginFlow() {
 
             const result = schema.safeParse(formData)
             if (!result.success) {
-                const errorMsg = getFirstZodError(result, translate)
+                const errorMsg = getFirstZodError(result, translate, t('auth.common.validationFailed'))
                 if (errorMsg) {
                     const path = result.error.issues[0]?.path[0] as string
                     errors.value[path] = errorMsg
@@ -374,7 +379,7 @@ export function useLoginFlow() {
             toast.success({ title: t('auth.login.socialLoggingIn', { name }), description: t('auth.login.socialRedirect'), duration: 2000 })
             navigateAfterLoginWithDelay(600)
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : t('auth.common.loginError')
+            const errorMessage = error instanceof Error ? error.message : t('auth.login.socialError', { name })
             toast.danger({ title: t('auth.login.socialFailed', { name }), description: errorMessage, duration: 5000 })
         }
     }
@@ -390,7 +395,7 @@ export function useLoginFlow() {
             () => {
                 const result = emailSchema.safeParse(email.value)
                 if (!result.success) {
-                    errors.value.email = getFirstZodError(result, translate) || t('auth.common.invalidEmail')
+                    errors.value.email = getFirstZodError(result, translate, t('auth.common.invalidEmail')) ?? t('auth.common.invalidEmail')
                     return false
                 }
                 return true
@@ -409,7 +414,7 @@ export function useLoginFlow() {
             () => {
                 const result = phoneSchema.safeParse(phone.value)
                 if (!result.success) {
-                    errors.value.phone = getFirstZodError(result, translate) || t('auth.common.invalidPhone')
+                    errors.value.phone = getFirstZodError(result, translate, t('auth.common.invalidPhone')) ?? t('auth.common.invalidPhone')
                     return false
                 }
                 return true
