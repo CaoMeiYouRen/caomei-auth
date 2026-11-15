@@ -1,23 +1,23 @@
 <template>
     <BaseDialogV2
         v-model:visible="visible"
-        :title="user.phoneVerified ? '修改手机号' : '绑定手机号'"
+        :title="user.phoneVerified ? t('profile.phoneDialog.titleEdit') : t('profile.phoneDialog.titleBind')"
     >
         <div class="form-group">
-            <BaseTooltip content="输入新的手机号">
+            <BaseTooltip :content="t('profile.phoneDialog.inputTip')">
                 <BasePhoneInputV2
                     id="phone"
                     v-model="phone"
-                    placeholder="请输入新手机号"
+                    :placeholder="t('profile.phoneDialog.placeholder')"
                     :error="errors.phone"
                 />
             </BaseTooltip>
         </div>
-        <BaseTooltip content="输入收到的短信验证码">
+        <BaseTooltip :content="t('profile.phoneDialog.codeTip')">
             <BaseInputV2
                 id="phoneCode"
                 v-model="phoneCode"
-                placeholder="验证码"
+                :placeholder="t('profile.phoneDialog.codePlaceholder')"
                 :error="errors.code"
             >
                 <template #append>
@@ -40,14 +40,14 @@
             {{ errors.captcha }}
         </CaomeiMessage>
         <div class="form-group">
-            <BaseTooltip content="点击确认修改手机号信息">
+            <BaseTooltip :content="t('profile.phoneDialog.submitTip')">
                 <CaomeiButton
                     class="btn btn-primary w-full"
                     block
                     :loading="bindingPhone"
                     @click="bindPhone"
                 >
-                    确认修改
+                    {{ t('profile.phoneDialog.submit') }}
                 </CaomeiButton>
             </BaseTooltip>
         </div>
@@ -79,6 +79,7 @@ const emit = defineEmits<{
 
 const visible = defineModel<boolean>('visible', { required: true })
 
+const { t } = useI18n()
 const toast = useToast()
 const translate = useValidationMessage()
 const phoneCaptcha = ref<CaptchaExpose | null>(null)
@@ -109,7 +110,7 @@ const sendPhoneCode = async () => {
         () => {
             const res = editPhoneFormSchema.shape.phone.safeParse(phone.value)
             if (!res.success) {
-                setErrors({ ...errors.value, phone: translate(res.error.issues[0]?.message) || '请输入有效的手机号' })
+                setErrors({ ...errors.value, phone: translate(res.error.issues[0]?.message) || t('profile.phoneDialog.invalidPhone') })
                 return false
             }
             return true
@@ -130,7 +131,7 @@ const bindPhone = async () => {
             })
 
             if (result.error) {
-                throw new Error(result.error.message || '手机号验证失败')
+                throw new Error(result.error.message || t('profile.phoneDialog.verifyFailed'))
             }
 
             emit('update:user', {
@@ -140,10 +141,10 @@ const bindPhone = async () => {
             })
 
             visible.value = false
-            toast.success({ title: '手机号修改成功', duration: 2000 })
+            toast.success({ title: t('profile.phoneDialog.success'), duration: 2000 })
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '手机号修改时发生未知错误'
-            toast.danger({ title: '手机号修改失败', description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('profile.phoneDialog.failedUnknown')
+            toast.danger({ title: t('profile.phoneDialog.failed'), description: errorMessage, duration: 5000 })
         }
     })
 }

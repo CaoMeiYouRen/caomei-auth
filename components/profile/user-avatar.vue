@@ -4,19 +4,19 @@
             <CaomeiImage
                 class="avatar-block__image"
                 :src="showAvatar"
-                alt="avatar"
+                alt=""
                 preview
                 fit="cover"
                 ratio="1"
             />
-            <BaseTooltip content="点击上传新的头像">
+            <BaseTooltip :content="t('profile.avatar.uploadTip')">
                 <CaomeiButton
                     class="avatar-block__upload"
                     variant="secondary"
                     size="sm"
                     icon-only
                     rounded
-                    label="上传头像"
+                    :label="t('profile.avatar.upload')"
                     @click="onSelectAvatar"
                 >
                     <template #icon>
@@ -52,6 +52,7 @@ const emit = defineEmits<{
     (e: 'refresh'): void
 }>()
 
+const { t } = useI18n()
 const toast = useToast()
 const MAX_AVATAR_SIZE = MAX_UPLOAD_SIZE
 
@@ -74,12 +75,12 @@ async function onFileSelect(event: Event) {
     }
 
     if (!file.type.startsWith('image/')) {
-        toast.danger({ title: '请选择图片文件', duration: 5000 })
+        toast.danger({ title: t('profile.avatar.invalidType'), duration: 5000 })
         return
     }
 
     if (file.size > MAX_AVATAR_SIZE) {
-        toast.danger({ title: `文件大小不能超过 ${MAX_UPLOAD_SIZE_TEXT}`, duration: 5000 })
+        toast.danger({ title: t('profile.avatar.tooLarge', { size: MAX_UPLOAD_SIZE_TEXT }), duration: 5000 })
         return
     }
 
@@ -96,7 +97,7 @@ async function onFileSelect(event: Event) {
                 body: form,
             })
             if (error.value) {
-                throw new Error(error.value.message || '头像上传失败')
+                throw new Error(error.value.message || t('profile.avatar.uploadFailed'))
             }
 
             emit('update:user', {
@@ -104,12 +105,12 @@ async function onFileSelect(event: Event) {
                 avatar: data.value?.url || '',
             })
 
-            toast.success({ title: '头像上传成功', duration: 2000 })
+            toast.success({ title: t('profile.avatar.uploadSuccess'), duration: 2000 })
 
             emit('refresh')
             tempAvatar.value = ''
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '头像上传失败'
+            const errorMessage = error instanceof Error ? error.message : t('profile.avatar.uploadFailed')
             toast.danger({ title: errorMessage, duration: 2000 })
         }
     }

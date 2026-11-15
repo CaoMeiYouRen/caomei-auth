@@ -1,52 +1,54 @@
 <template>
-    <BaseTooltip :content="privacyMode ? '用户ID已隐藏，点击顶部隐私模式开关可显示' : '当前用户的唯一标识，不可编辑'">
+    <BaseTooltip :content="privacyMode ? t('profile.basic.idTipHidden') : t('profile.basic.idTip')">
         <BaseInputV2
             id="id"
             :model-value="privacyMode ? maskUserId(user.id) : user.id"
-            label="ID"
+            :label="t('profile.basic.idLabel')"
             disabled
             data-visual-mask
         />
     </BaseTooltip>
     <BaseTooltip
         v-if="user.username"
-        :content="privacyMode ? '用户名已隐藏，点击顶部隐私模式开关可显示' : '当前使用的用户名，不可编辑'"
+        :content="privacyMode ? t('profile.basic.usernameTipHidden') : t('profile.basic.usernameTip')"
     >
         <BaseInputV2
             id="username"
             :model-value="privacyMode ? maskUsername(user.username) : user.username"
-            label="用户名"
+            :label="t('profile.basic.usernameLabel')"
             disabled
         />
     </BaseTooltip>
     <div v-else class="form-group">
-        <label class="form-label">用户名</label>
+        <label class="form-label">{{ t('profile.basic.usernameLabel') }}</label>
         <div class="align-items-center flex">
-            <BaseTooltip content="点击设置用户名，设置后可使用用户名密码登录">
+            <BaseTooltip :content="t('profile.basic.setUsernameTip')">
                 <CaomeiButton
                     variant="ghost"
                     size="sm"
                     @click="emit('openSetUsernameDialog')"
                 >
-                    设置用户名
+                    {{ t('profile.basic.setUsername') }}
                 </CaomeiButton>
             </BaseTooltip>
         </div>
         <CaomeiMessage tone="warning" class="mt-2">
-            您当前未设置用户名，无法通过用户名密码登录
+            {{ t('profile.basic.unsetWarning') }}
         </CaomeiMessage>
     </div>
-    <BaseTooltip content="您的昵称，可随时修改。2-36个字符。">
+    <BaseTooltip :content="t('profile.basic.nicknameTip')">
         <BaseInputV2
             id="nickname"
             v-model="user.nickname"
-            label="昵称"
+            :label="t('profile.basic.nicknameLabel')"
         />
     </BaseTooltip>
 </template>
 
 <script setup lang="ts">
 import { maskUserId, maskUsername } from '@/utils/shared/privacy'
+
+const { t } = useI18n()
 
 const props = defineProps<{
     privacyMode: boolean

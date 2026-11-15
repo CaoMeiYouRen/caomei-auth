@@ -1,12 +1,12 @@
 <template>
     <div class="form-group">
-        <label class="form-label">第三方账号</label>
+        <label class="form-label">{{ t('profile.social.label') }}</label>
         <div class="social-list">
             <!-- 已绑定的第三方账号 -->
             <BaseTooltip
                 v-for="account in userAccounts"
                 :key="account.providerId"
-                :content="privacyMode ? `点击解绑 ${getProviderName(account.providerId)} 账号，ID: ${maskUserId(account.accountId)}` : `点击解绑 ${getProviderName(account.providerId)} 账号，完整 ID: ${account.accountId}`"
+                :content="privacyMode ? t('profile.social.unlinkTipPrivate', {name: getProviderName(account.providerId), id: maskUserId(account.accountId)}) : t('profile.social.unlinkTipFull', {name: getProviderName(account.providerId), id: account.accountId})"
             >
                 <CaomeiButton
                     variant="secondary"
@@ -34,7 +34,7 @@
                     <template #icon>
                         <i :class="getProviderIcon(provider.provider)" />
                     </template>
-                    绑定 {{ provider.name }} 账号
+                    {{ t('profile.social.bind', {name: provider.name}) }}
                 </CaomeiButton>
             </template>
         </div>
@@ -46,6 +46,8 @@ import { useDark } from '@vueuse/core'
 import { maskUserId } from '@/utils/shared/privacy'
 import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
+
+const { t } = useI18n()
 
 const props = defineProps<{
     userAccounts: {

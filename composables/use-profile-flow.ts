@@ -6,9 +6,11 @@ import { nicknameValidator } from '@/utils/shared/validate'
 import { AUTH_BASE_URL } from '@/utils/shared/env'
 import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 export async function useProfileFlow() {
     const config = useRuntimeConfig().public
+    const t = useI18nText()
     const phoneEnabled = !!config.phoneEnabled
 
     const toast = useToast()
@@ -119,8 +121,8 @@ export async function useProfileFlow() {
             console.log('accounts', accounts.data)
             userAccounts.value = accounts.data?.filter((account) => account.providerId !== 'credential') || []
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '获取第三方账号信息失败'
-            toast.danger({ title: '获取第三方账号失败', description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('profile.flow.accountsLoadFailed')
+            toast.danger({ title: t('profile.flow.accountsLoadFailedTitle'), description: errorMessage, duration: 5000 })
         }
     }
 
@@ -128,7 +130,7 @@ export async function useProfileFlow() {
         const { provider, name, enabled } = socialProvider
 
         if (!enabled) {
-            toast.warning({ title: '绑定失败', description: `${name} 登录方式未启用，无法绑定`, duration: 5000 })
+            toast.warning({ title: t('profile.flow.bindBlockedTitle'), description: t('profile.flow.bindBlocked', { name }), duration: 5000 })
             return
         }
 
@@ -138,13 +140,13 @@ export async function useProfileFlow() {
                 callbackURL: `${AUTH_BASE_URL}/profile`,
             })
             if (!result || result.error) {
-                throw new Error(result?.error?.message || `${name} 绑定失败`)
+                throw new Error(result?.error?.message || t('profile.flow.bindFailed', { name }))
             }
             await fetchUserAccounts()
-            toast.success({ title: `正在绑定 ${name} 中`, duration: 2000 })
+            toast.success({ title: t('profile.flow.bindInProgress', { name }), duration: 2000 })
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : `${name} 绑定时发生未知错误`
-            toast.danger({ title: `${name} 绑定失败`, description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('profile.flow.bindFailedUnknown', { name })
+            toast.danger({ title: t('profile.flow.bindFailed', { name }), description: errorMessage, duration: 5000 })
         }
     }
 
@@ -154,21 +156,21 @@ export async function useProfileFlow() {
                 accountId,
             })
             if (result.error) {
-                throw new Error(result.error.message || `${provider} 解绑失败`)
+                throw new Error(result.error.message || t('profile.flow.unlinkFailed', { provider }))
             }
             await fetchUserAccounts()
-            toast.success({ title: `已解绑${provider}`, duration: 2000 })
+            toast.success({ title: t('profile.flow.unlinked', { provider }), duration: 2000 })
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : `${provider} 解绑时发生未知错误`
-            toast.danger({ title: `${provider} 解绑失败`, description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('profile.flow.unlinkFailedUnknown', { provider })
+            toast.danger({ title: t('profile.flow.unlinkFailed', { provider }), description: errorMessage, duration: 5000 })
         }
     }
 
     async function confirmUnlink(provider: string, accountId: string) {
         const providerName = getProviderName(provider)
         const confirmed = await confirm.open({
-            title: '确认解绑',
-            description: `确定要解绑 ${providerName} 平台，ID 为 ${accountId} 的账号吗？`,
+            title: t('profile.flow.confirmUnlinkTitle'),
+            description: t('profile.flow.confirmUnlink', { provider: providerName, accountId }),
             tone: 'danger',
         })
         if (confirmed) {
@@ -179,7 +181,7 @@ export async function useProfileFlow() {
     // Profile Actions
     async function saveProfile() {
         if (!nicknameValidator(user.value.nickname)) {
-            toast.warning({ title: '昵称格式有误', description: '昵称长度需在 2 - 36 个字符之间，仅允许中英文、数字和常见标点符号。', duration: 5000 })
+            toast.warning({ title: t('profile.flow.nicknameInvalidTitle'), description: t('profile.flow.nicknameInvalid'), duration: 5000 })
             return
         }
         saving.value = true
@@ -189,12 +191,12 @@ export async function useProfileFlow() {
                 name: user.value.nickname,
             })
             if (result.error) {
-                throw new Error(result.error.message || '资料保存失败')
+                throw new Error(result.error.message || t('profile.flow.saveFailed'))
             }
-            toast.success({ title: '资料已保存', duration: 2000 })
+            toast.success({ title: t('profile.flow.saved'), duration: 2000 })
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '资料保存时发生未知错误'
-            toast.danger({ title: '资料保存失败', description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('profile.flow.saveFailedUnknown')
+            toast.danger({ title: t('profile.flow.saveFailed'), description: errorMessage, duration: 5000 })
         } finally {
             saving.value = false
         }
@@ -215,18 +217,18 @@ export async function useProfileFlow() {
     async function performLogout() {
         try {
             await authClient.signOut({})
-            toast.success({ title: '登出成功', duration: 2000 })
+            toast.success({ title: t('profile.flow.logoutSuccess'), duration: 2000 })
             navigateTo('/login')
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '登出时发生未知错误'
-            toast.danger({ title: '登出失败', description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('profile.flow.logoutFailedUnknown')
+            toast.danger({ title: t('profile.flow.logoutFailed'), description: errorMessage, duration: 5000 })
         }
     }
 
     async function handleLogout() {
         const confirmed = await confirm.open({
-            title: '确认退出',
-            description: '确定要退出登录吗？退出后需要重新登录才能访问您的账户。',
+            title: t('profile.flow.confirmLogoutTitle'),
+            description: t('profile.flow.confirmLogout'),
         })
         if (confirmed) {
             await performLogout()

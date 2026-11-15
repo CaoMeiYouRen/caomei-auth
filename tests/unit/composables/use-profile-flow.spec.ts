@@ -41,6 +41,8 @@ const {
 
 mockNuxtImport('navigateTo', () => mockNavigateTo)
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
+
 vi.mock('@/lib/auth-client', () => ({
     authClient: mockAuthClient,
 }))

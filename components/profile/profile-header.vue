@@ -1,11 +1,11 @@
 <template>
     <div class="profile-header">
         <h2 class="auth-title">
-            个人资料
+            {{ t('profile.header.title') }}
         </h2>
     </div>
     <div class="profile-header-actions">
-        <BaseTooltip :content="privacyMode ? '关闭隐私模式，显示完整信息' : '开启隐私模式，隐藏敏感信息'">
+        <BaseTooltip :content="privacyMode ? t('profile.header.privacyDisableTip') : t('profile.header.privacyEnableTip')">
             <CaomeiButton
                 :variant="privacyMode ? 'secondary' : 'primary'"
                 :tone="privacyMode ? 'warning' : undefined"
@@ -14,10 +14,10 @@
                 <template #icon>
                     <i :class="privacyMode ? 'mdi mdi-eye-off' : 'mdi mdi-eye'" />
                 </template>
-                {{ privacyMode ? '隐私模式' : '显示详情' }}
+                {{ privacyMode ? t('profile.header.privacyOn') : t('profile.header.privacyOff') }}
             </CaomeiButton>
         </BaseTooltip>
-        <BaseTooltip content="已授权应用管理">
+        <BaseTooltip :content="t('profile.header.oauthTip')">
             <CaomeiButton
                 variant="secondary"
                 @click="emit('goOAuthClients')"
@@ -25,10 +25,10 @@
                 <template #icon>
                     <i class="mdi mdi-key-variant" />
                 </template>
-                授权应用
+                {{ t('profile.header.oauth') }}
             </CaomeiButton>
         </BaseTooltip>
-        <BaseTooltip content="账号安全设置">
+        <BaseTooltip :content="t('profile.header.securityTip')">
             <CaomeiButton
                 variant="secondary"
                 @click="emit('goSecurity')"
@@ -36,10 +36,10 @@
                 <template #icon>
                     <i class="mdi mdi-shield-account" />
                 </template>
-                安全设置
+                {{ t('profile.header.security') }}
             </CaomeiButton>
         </BaseTooltip>
-        <BaseTooltip content="退出登录">
+        <BaseTooltip :content="t('profile.header.logoutTip')">
             <CaomeiButton
                 variant="secondary"
                 @click="emit('logout')"
@@ -47,16 +47,17 @@
                 <template #icon>
                     <i class="mdi mdi-logout" />
                 </template>
-                退出登录
+                {{ t('profile.header.logout') }}
             </CaomeiButton>
         </BaseTooltip>
     </div>
     <p class="auth-subtitle">
-        管理您的账号信息
+        {{ t('profile.header.subtitle') }}
     </p>
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
 const privacyMode = defineModel<boolean>('privacyMode')
 
 const emit = defineEmits<{

@@ -1,25 +1,25 @@
 <template>
     <BaseDialogV2
         v-model:visible="visible"
-        title="设置用户名"
+        :title="t('profile.usernameDialog.title')"
     >
-        <BaseTooltip content="输入新的用户名，用于用户名密码登录">
+        <BaseTooltip :content="t('profile.usernameDialog.inputTip')">
             <BaseInputV2
                 id="newUsername"
                 v-model="newUsername"
-                placeholder="请输入新用户名"
+                :placeholder="t('profile.usernameDialog.placeholder')"
                 :error="errors.username"
             />
         </BaseTooltip>
         <div class="form-group">
-            <BaseTooltip content="点击确认设置新的用户名">
+            <BaseTooltip :content="t('profile.usernameDialog.submitTip')">
                 <CaomeiButton
                     class="btn btn-primary w-full"
                     block
                     :loading="isSettingUsername"
                     @click="setUsername"
                 >
-                    确认设置
+                    {{ t('profile.usernameDialog.submit') }}
                 </CaomeiButton>
             </BaseTooltip>
         </div>
@@ -46,6 +46,7 @@ const emit = defineEmits<{
 
 const visible = defineModel<boolean>('visible', { required: true })
 
+const { t } = useI18n()
 const toast = useToast()
 
 const { values, errors, submitting: isSettingUsername, handleSubmit, reset, setField } = useForm({
@@ -70,7 +71,7 @@ async function setUsername() {
                 username: vals.username,
             })
             if (result.error) {
-                throw new Error(result.error.message || '设置用户名失败')
+                throw new Error(result.error.message || t('profile.usernameDialog.failed'))
             }
 
             emit('update:user', {
@@ -79,10 +80,10 @@ async function setUsername() {
             })
 
             visible.value = false
-            toast.success({ title: '用户名设置成功', duration: 2000 })
+            toast.success({ title: t('profile.usernameDialog.success'), duration: 2000 })
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '设置用户名时发生未知错误'
-            toast.danger({ title: '设置用户名失败', description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('profile.usernameDialog.failedUnknown')
+            toast.danger({ title: t('profile.usernameDialog.failed'), description: errorMessage, duration: 5000 })
         }
     })
 }

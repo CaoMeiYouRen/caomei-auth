@@ -1,26 +1,28 @@
 <template>
     <div class="form-group profile-actions">
-        <BaseTooltip content="点击保存修改后的个人信息">
+        <BaseTooltip :content="t('profile.actions.saveTip')">
             <CaomeiButton
                 class="btn btn-primary"
                 :loading="saving"
                 @click="emit('save')"
             >
-                保存修改
+                {{ t('profile.actions.save') }}
             </CaomeiButton>
         </BaseTooltip>
-        <BaseTooltip content="点击跳转到修改密码页面">
+        <BaseTooltip :content="t('profile.actions.changePasswordTip')">
             <CaomeiButton
                 variant="ghost"
                 @click="emit('changePassword')"
             >
-                修改密码
+                {{ t('profile.actions.changePassword') }}
             </CaomeiButton>
         </BaseTooltip>
     </div>
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
+
 defineProps<{
     saving: boolean
 }>()

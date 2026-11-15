@@ -1,1 +1,142 @@
-{}
+{
+    "profile": {
+        "page": {
+            "title": "个人中心",
+            "subtitle": "管理您的账号信息。"
+        },
+        "header": {
+            "title": "个人资料",
+            "subtitle": "管理您的账号信息",
+            "privacyEnableTip": "开启隐私模式，隐藏敏感信息",
+            "privacyDisableTip": "关闭隐私模式，显示完整信息",
+            "privacyOn": "隐私模式",
+            "privacyOff": "显示详情",
+            "oauthTip": "已授权应用管理",
+            "oauth": "授权应用",
+            "securityTip": "账号安全设置",
+            "security": "安全设置",
+            "logoutTip": "退出登录",
+            "logout": "退出登录"
+        },
+        "basic": {
+            "idLabel": "ID",
+            "idTipHidden": "用户ID已隐藏，点击顶部隐私模式开关可显示",
+            "idTip": "当前用户的唯一标识，不可编辑",
+            "usernameLabel": "用户名",
+            "usernameTipHidden": "用户名已隐藏，点击顶部隐私模式开关可显示",
+            "usernameTip": "当前使用的用户名，不可编辑",
+            "setUsernameTip": "点击设置用户名，设置后可使用用户名密码登录",
+            "setUsername": "设置用户名",
+            "unsetWarning": "您当前未设置用户名，无法通过用户名密码登录",
+            "nicknameLabel": "昵称",
+            "nicknameTip": "您的昵称，可随时修改。2-36个字符。"
+        },
+        "contact": {
+            "emailLabel": "邮箱",
+            "phoneLabel": "手机号",
+            "fullEmailTip": "完整邮箱地址：{email}",
+            "notBound": "未绑定",
+            "emailHiddenTip": "邮箱信息已隐藏，点击顶部隐私模式开关可显示",
+            "changeVerifiedEmailTip": "点击修改已验证的邮箱地址",
+            "edit": "修改",
+            "emailVerifiedTip": "邮箱已验证，可用于登录和找回密码",
+            "verified": "已验证",
+            "verifyEmailTip": "点击验证邮箱，验证后可用于登录和找回密码",
+            "verify": "验证",
+            "emailUnverifiedTip": "邮箱未验证，无法用于登录和找回密码",
+            "unverified": "未验证",
+            "emailWarning": "您当前未验证邮箱，无法通过邮箱登录，也无法通过邮箱找回密码。",
+            "emailWarningStrong": "为了您的账号安全，请尽快验证您的邮箱。",
+            "phoneHiddenTip": "手机号信息已隐藏，点击顶部隐私模式开关可显示",
+            "changePhoneTip": "点击修改已绑定的手机号",
+            "bindPhoneTip": "点击绑定手机号，绑定后可用于登录和验证",
+            "smsDisabledTip": "短信功能未启用，无法绑定手机号",
+            "bind": "绑定",
+            "phoneVerifiedTip": "手机号已验证，可用于登录和验证"
+        },
+        "social": {
+            "label": "第三方账号",
+            "unlinkTipPrivate": "点击解绑 {name} 账号，ID: {id}",
+            "unlinkTipFull": "点击解绑 {name} 账号，完整 ID: {id}",
+            "bind": "绑定 {name} 账号"
+        },
+        "avatar": {
+            "uploadTip": "点击上传新的头像",
+            "upload": "上传头像",
+            "invalidType": "请选择图片文件",
+            "tooLarge": "文件大小不能超过 {size}",
+            "uploadFailed": "头像上传失败",
+            "uploadSuccess": "头像上传成功"
+        },
+        "actions": {
+            "saveTip": "点击保存修改后的个人信息",
+            "save": "保存修改",
+            "changePasswordTip": "点击跳转到修改密码页面",
+            "changePassword": "修改密码"
+        },
+        "emailDialog": {
+            "titleEdit": "修改邮箱",
+            "titleBind": "绑定邮箱",
+            "inputTip": "输入新的邮箱地址",
+            "placeholder": "请输入新邮箱",
+            "submitTip": "点击发送验证链接到新邮箱",
+            "submit": "发送验证链接",
+            "captchaRequired": "请先完成验证码验证",
+            "captchaNeeded": "需要验证码",
+            "sentToCurrent": "验证链接已发送到当前邮箱，请查收",
+            "sent": "验证邮件已发送",
+            "sentDescription": "请前往新邮箱查收验证邮件",
+            "bindFailed": "绑定失败",
+            "bindFailedUnknown": "绑定邮箱时发生未知错误"
+        },
+        "phoneDialog": {
+            "titleEdit": "修改手机号",
+            "titleBind": "绑定手机号",
+            "inputTip": "输入新的手机号",
+            "placeholder": "请输入新手机号",
+            "codeTip": "输入收到的短信验证码",
+            "codePlaceholder": "验证码",
+            "submitTip": "点击确认修改手机号信息",
+            "submit": "确认修改",
+            "invalidPhone": "请输入有效的手机号",
+            "verifyFailed": "手机号验证失败",
+            "success": "手机号修改成功",
+            "failed": "手机号修改失败",
+            "failedUnknown": "手机号修改时发生未知错误"
+        },
+        "usernameDialog": {
+            "title": "设置用户名",
+            "inputTip": "输入新的用户名，用于用户名密码登录",
+            "placeholder": "请输入新用户名",
+            "submitTip": "点击确认设置新的用户名",
+            "submit": "确认设置",
+            "success": "用户名设置成功",
+            "failed": "设置用户名失败",
+            "failedUnknown": "设置用户名时发生未知错误"
+        },
+        "flow": {
+            "accountsLoadFailedTitle": "获取第三方账号失败",
+            "accountsLoadFailed": "获取第三方账号信息失败",
+            "bindBlockedTitle": "绑定失败",
+            "bindBlocked": "{name} 登录方式未启用，无法绑定",
+            "bindInProgress": "正在绑定 {name} 中",
+            "bindFailed": "{name} 绑定失败",
+            "bindFailedUnknown": "{name} 绑定时发生未知错误",
+            "unlinkFailed": "{provider} 解绑失败",
+            "unlinked": "已解绑{provider}",
+            "unlinkFailedUnknown": "{provider} 解绑时发生未知错误",
+            "confirmUnlinkTitle": "确认解绑",
+            "confirmUnlink": "确定要解绑 {provider} 平台，ID 为 {accountId} 的账号吗？",
+            "nicknameInvalidTitle": "昵称格式有误",
+            "nicknameInvalid": "昵称长度需在 2 - 36 个字符之间，仅允许中英文、数字和常见标点符号。",
+            "saveFailed": "资料保存失败",
+            "saveFailedUnknown": "资料保存时发生未知错误",
+            "saved": "资料已保存",
+            "logoutSuccess": "登出成功",
+            "logoutFailed": "登出失败",
+            "logoutFailedUnknown": "登出时发生未知错误",
+            "confirmLogoutTitle": "确认退出",
+            "confirmLogout": "确定要退出登录吗？退出后需要重新登录才能访问您的账户。"
+        }
+    }
+}

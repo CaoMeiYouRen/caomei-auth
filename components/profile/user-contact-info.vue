@@ -1,103 +1,103 @@
 <template>
     <div class="form-group">
-        <label class="form-label">邮箱</label>
+        <label class="form-label">{{ t('profile.contact.emailLabel') }}</label>
         <div class="profile-row">
             <div class="profile-info-content">
                 <BaseTooltip
                     v-if="!privacyMode"
-                    :content="`完整邮箱地址：${user.email}`"
+                    :content="t('profile.contact.fullEmailTip', {email: user.email})"
                 >
-                    <span class="privacy-value">{{ user.email || "未绑定" }}</span>
+                    <span class="privacy-value">{{ user.email || t('profile.contact.notBound') }}</span>
                 </BaseTooltip>
                 <BaseTooltip
                     v-else
-                    content="邮箱信息已隐藏，点击顶部隐私模式开关可显示"
+                    :content="t('profile.contact.emailHiddenTip')"
                 >
-                    <span class="privacy-hidden">{{ user.email ? maskEmail(user.email) : "未绑定" }}</span>
+                    <span class="privacy-hidden">{{ user.email ? maskEmail(user.email) : t('profile.contact.notBound') }}</span>
                 </BaseTooltip>
             </div>
             <div class="profile-info-actions">
                 <template v-if="user.emailVerified">
-                    <BaseTooltip content="点击修改已验证的邮箱地址">
+                    <BaseTooltip :content="t('profile.contact.changeVerifiedEmailTip')">
                         <CaomeiButton
                             variant="ghost"
                             size="sm"
                             @click="emit('openEmailModal')"
                         >
-                            修改
+                            {{ t('profile.contact.edit') }}
                         </CaomeiButton>
                     </BaseTooltip>
-                    <BaseTooltip content="邮箱已验证，可用于登录和找回密码">
-                        <span class="verified">已验证</span>
+                    <BaseTooltip :content="t('profile.contact.emailVerifiedTip')">
+                        <span class="verified">{{ t('profile.contact.verified') }}</span>
                     </BaseTooltip>
                 </template>
                 <template v-else>
-                    <BaseTooltip content="点击验证邮箱，验证后可用于登录和找回密码">
+                    <BaseTooltip :content="t('profile.contact.verifyEmailTip')">
                         <CaomeiButton
                             variant="ghost"
                             size="sm"
                             @click="emit('openEmailModal')"
                         >
-                            验证
+                            {{ t('profile.contact.verify') }}
                         </CaomeiButton>
                     </BaseTooltip>
-                    <BaseTooltip content="邮箱未验证，无法用于登录和找回密码">
-                        <span class="unverified">未验证</span>
+                    <BaseTooltip :content="t('profile.contact.emailUnverifiedTip')">
+                        <span class="unverified">{{ t('profile.contact.unverified') }}</span>
                     </BaseTooltip>
                 </template>
             </div>
         </div>
         <CaomeiMessage v-if="!user.emailVerified" tone="warning">
-            您当前未验证邮箱，无法通过邮箱登录，也无法通过邮箱找回密码。<br>
-            为了您的账号安全，请尽快验证您的邮箱。
+            {{ t('profile.contact.emailWarning') }}<br>
+            {{ t('profile.contact.emailWarningStrong') }}
         </CaomeiMessage>
     </div>
     <div v-if="phoneEnabled" class="form-group">
-        <label class="form-label">手机号</label>
+        <label class="form-label">{{ t('profile.contact.phoneLabel') }}</label>
         <div class="profile-row">
             <div class="profile-info-content">
                 <span
                     v-if="!privacyMode"
                     class="privacy-value"
-                >{{ user.phone ? formatPhoneNumberInternational(user.phone) : "未绑定" }}</span>
+                >{{ user.phone ? formatPhoneNumberInternational(user.phone) : t('profile.contact.notBound') }}</span>
                 <BaseTooltip
                     v-else
-                    content="手机号信息已隐藏，点击顶部隐私模式开关可显示"
+                    :content="t('profile.contact.phoneHiddenTip')"
                 >
-                    <span class="privacy-hidden">{{ user.phone ? maskPhone(user.phone) : "未绑定" }}</span>
+                    <span class="privacy-hidden">{{ user.phone ? maskPhone(user.phone) : t('profile.contact.notBound') }}</span>
                 </BaseTooltip>
             </div>
             <div class="profile-info-actions">
                 <BaseTooltip
                     v-if="user.phone"
-                    content="点击修改已绑定的手机号"
+                    :content="t('profile.contact.changePhoneTip')"
                 >
                     <CaomeiButton
                         variant="ghost"
                         size="sm"
                         @click="emit('openPhoneModal')"
                     >
-                        修改
+                        {{ t('profile.contact.edit') }}
                     </CaomeiButton>
                 </BaseTooltip>
                 <BaseTooltip
                     v-else
-                    :content="phoneEnabled ? '点击绑定手机号，绑定后可用于登录和验证' : '短信功能未启用，无法绑定手机号'"
+                    :content="phoneEnabled ? t('profile.contact.bindPhoneTip') : t('profile.contact.smsDisabledTip')"
                 >
                     <CaomeiButton
                         variant="ghost"
                         size="sm"
                         :disabled="!phoneEnabled"
-                        @click="phoneEnabled ? emit('openPhoneModal') : toast.danger({title: '功能未启用', description: '短信功能未启用，暂不支持绑定手机号', duration: 3000})"
+                        @click="emit('openPhoneModal')"
                     >
-                        绑定
+                        {{ t('profile.contact.bind') }}
                     </CaomeiButton>
                 </BaseTooltip>
                 <BaseTooltip
                     v-if="user.phoneVerified"
-                    content="手机号已验证，可用于登录和验证"
+                    :content="t('profile.contact.phoneVerifiedTip')"
                 >
-                    <span class="verified">已验证</span>
+                    <span class="verified">{{ t('profile.contact.verified') }}</span>
                 </BaseTooltip>
             </div>
         </div>
@@ -105,9 +105,10 @@
 </template>
 
 <script setup lang="ts">
-import { useToast } from 'caomei-ui'
 import { maskEmail, maskPhone } from '@/utils/shared/privacy'
 import { formatPhoneNumberInternational } from '@/utils/shared/phone'
+
+const { t } = useI18n()
 
 const props = defineProps<{
     privacyMode: boolean
@@ -125,8 +126,6 @@ const emit = defineEmits<{
     (e: 'openEmailModal'): void
     (e: 'openPhoneModal'): void
 }>()
-
-const toast = useToast()
 </script>
 
 <style scoped lang="scss">

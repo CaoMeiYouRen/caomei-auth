@@ -1,6 +1,6 @@
 <template>
     <div class="auth-container">
-        <AuthLeft title="个人中心" subtitle="管理您的账号信息。" />
+        <AuthLeft :title="t('profile.page.title')" :subtitle="t('profile.page.subtitle')" />
         <div class="auth-right">
             <div class="auth-card profile-card">
                 <ProfileHeader
@@ -70,6 +70,7 @@
 
 <script lang="ts" setup>
 import { useProfileFlow } from '@/composables/use-profile-flow'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 import AuthLeft from '@/components/auth-left.vue'
 
 // Components
@@ -82,6 +83,9 @@ import ProfileFooterActions from '@/components/profile/profile-footer-actions.vu
 import EditEmailDialog from '@/components/profile/dialogs/edit-email-dialog.vue'
 import EditPhoneDialog from '@/components/profile/dialogs/edit-phone-dialog.vue'
 import SetUsernameDialog from '@/components/profile/dialogs/set-username-dialog.vue'
+
+const { t } = useI18n()
+usePageMeta('profile.page.title', 'profile.page.subtitle')
 
 const {
     user,

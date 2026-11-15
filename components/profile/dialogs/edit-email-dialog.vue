@@ -1,13 +1,13 @@
 <template>
     <BaseDialogV2
         v-model:visible="visible"
-        :title="user.emailVerified ? '修改邮箱' : '绑定邮箱'"
+        :title="user.emailVerified ? t('profile.emailDialog.titleEdit') : t('profile.emailDialog.titleBind')"
     >
-        <BaseTooltip content="输入新的邮箱地址">
+        <BaseTooltip :content="t('profile.emailDialog.inputTip')">
             <BaseInputV2
                 id="email"
                 v-model="email"
-                placeholder="请输入新邮箱"
+                :placeholder="t('profile.emailDialog.placeholder')"
                 :error="errors.email"
             />
         </BaseTooltip>
@@ -21,14 +21,14 @@
             {{ emailCaptchaError }}
         </CaomeiMessage>
         <div class="form-group">
-            <BaseTooltip content="点击发送验证链接到新邮箱">
+            <BaseTooltip :content="t('profile.emailDialog.submitTip')">
                 <CaomeiButton
                     class="btn btn-primary w-full"
                     block
                     :loading="bindingEmail"
                     @click="bindEmail"
                 >
-                    发送验证链接
+                    {{ t('profile.emailDialog.submit') }}
                 </CaomeiButton>
             </BaseTooltip>
         </div>
@@ -58,6 +58,7 @@ const emit = defineEmits<{
 
 const visible = defineModel<boolean>('visible', { required: true })
 
+const { t } = useI18n()
 const toast = useToast()
 const emailCaptcha = ref<CaptchaExpose | null>(null)
 const emailCaptchaError = ref('')
@@ -88,9 +89,9 @@ async function bindEmail() {
             captchaContext = await resolveCaptchaToken(emailCaptcha)
             emailCaptchaError.value = ''
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
+            const errorMessage = error instanceof Error ? error.message : t('profile.emailDialog.captchaRequired')
             emailCaptchaError.value = errorMessage
-            toast.warning({ title: '需要验证码', description: errorMessage, duration: 2500 })
+            toast.warning({ title: t('profile.emailDialog.captchaNeeded'), description: errorMessage, duration: 2500 })
             return
         }
 
@@ -98,10 +99,11 @@ async function bindEmail() {
             const requestOptions = captchaContext ? { headers: { 'x-captcha-response': captchaContext.token } } : undefined
             await authClient.changeEmail({
                 newEmail: vals.email,
-                callbackURL: '/profile', // 验证后重定向
+                // 验证后重定向
+                callbackURL: '/profile',
             }, requestOptions)
             if (props.user.emailVerified) {
-                toast.info({ title: '验证链接已发送到当前邮箱，请查收', duration: 2000 })
+                toast.info({ title: t('profile.emailDialog.sentToCurrent'), duration: 2000 })
                 return
             }
 
@@ -112,10 +114,10 @@ async function bindEmail() {
             })
 
             visible.value = false
-            toast.success({ title: '验证邮件已发送', description: '请前往新邮箱查收验证邮件', duration: 3000 })
+            toast.success({ title: t('profile.emailDialog.sent'), description: t('profile.emailDialog.sentDescription'), duration: 3000 })
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '绑定邮箱时发生未知错误'
-            toast.danger({ title: '绑定失败', description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('profile.emailDialog.bindFailedUnknown')
+            toast.danger({ title: t('profile.emailDialog.bindFailed'), description: errorMessage, duration: 5000 })
         }
     })
 }

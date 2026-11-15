@@ -1,1 +1,142 @@
-{}
+{
+    "profile": {
+        "page": {
+            "title": "Profile",
+            "subtitle": "Manage your account information."
+        },
+        "header": {
+            "title": "Profile",
+            "subtitle": "Manage your account information",
+            "privacyEnableTip": "Turn on privacy mode to hide sensitive information",
+            "privacyDisableTip": "Turn off privacy mode to show full details",
+            "privacyOn": "Privacy mode",
+            "privacyOff": "Show details",
+            "oauthTip": "Manage authorized applications",
+            "oauth": "Authorized apps",
+            "securityTip": "Account security settings",
+            "security": "Security",
+            "logoutTip": "Sign out",
+            "logout": "Sign out"
+        },
+        "basic": {
+            "idLabel": "ID",
+            "idTipHidden": "User ID is hidden. Use the privacy toggle at the top to show it",
+            "idTip": "Unique identifier of the current user. Read-only",
+            "usernameLabel": "Username",
+            "usernameTipHidden": "Username is hidden. Use the privacy toggle at the top to show it",
+            "usernameTip": "Your current username. Read-only",
+            "setUsernameTip": "Set a username to sign in with username and password",
+            "setUsername": "Set username",
+            "unsetWarning": "No username yet, so you cannot sign in with username and password",
+            "nicknameLabel": "Nickname",
+            "nicknameTip": "Your display name, editable anytime. 2-36 characters."
+        },
+        "contact": {
+            "emailLabel": "Email",
+            "phoneLabel": "Phone",
+            "fullEmailTip": "Full email address: {email}",
+            "notBound": "Not linked",
+            "emailHiddenTip": "Email is hidden. Use the privacy toggle at the top to show it",
+            "changeVerifiedEmailTip": "Change the verified email address",
+            "edit": "Edit",
+            "emailVerifiedTip": "Email verified. Usable for sign-in and password recovery",
+            "verified": "Verified",
+            "verifyEmailTip": "Verify this email to sign in with it and recover your password",
+            "verify": "Verify",
+            "emailUnverifiedTip": "Email not verified. It cannot be used for sign-in or recovery",
+            "unverified": "Unverified",
+            "emailWarning": "Your email is not verified, so you cannot sign in with email or recover your password with it.",
+            "emailWarningStrong": "For your account security, please verify it as soon as possible.",
+            "phoneHiddenTip": "Phone number is hidden. Use the privacy toggle at the top to show it",
+            "changePhoneTip": "Change the linked phone number",
+            "bindPhoneTip": "Link a phone number for sign-in and verification",
+            "smsDisabledTip": "SMS is not enabled, so a phone number cannot be linked",
+            "bind": "Link",
+            "phoneVerifiedTip": "Phone verified. Usable for sign-in and verification"
+        },
+        "social": {
+            "label": "Linked accounts",
+            "unlinkTipPrivate": "Unlink {name} (ID: {id})",
+            "unlinkTipFull": "Unlink {name} (full ID: {id})",
+            "bind": "Link {name} account"
+        },
+        "avatar": {
+            "uploadTip": "Upload a new avatar",
+            "upload": "Upload avatar",
+            "invalidType": "Please choose an image file",
+            "tooLarge": "File size cannot exceed {size}",
+            "uploadFailed": "Avatar upload failed",
+            "uploadSuccess": "Avatar uploaded"
+        },
+        "actions": {
+            "saveTip": "Save the changes to your profile",
+            "save": "Save changes",
+            "changePasswordTip": "Go to the change password page",
+            "changePassword": "Change password"
+        },
+        "emailDialog": {
+            "titleEdit": "Change email",
+            "titleBind": "Link email",
+            "inputTip": "Enter the new email address",
+            "placeholder": "Enter the new email",
+            "submitTip": "Send a verification link to the new email",
+            "submit": "Send verification link",
+            "captchaRequired": "Please complete the captcha first",
+            "captchaNeeded": "Captcha required",
+            "sentToCurrent": "A verification link was sent to your current email",
+            "sent": "Verification email sent",
+            "sentDescription": "Check your new inbox for the verification email",
+            "bindFailed": "Link failed",
+            "bindFailedUnknown": "Unknown error while linking the email"
+        },
+        "phoneDialog": {
+            "titleEdit": "Change phone",
+            "titleBind": "Link phone",
+            "inputTip": "Enter the new phone number",
+            "placeholder": "Enter the new phone number",
+            "codeTip": "Enter the SMS code you received",
+            "codePlaceholder": "Code",
+            "submitTip": "Confirm the phone number change",
+            "submit": "Confirm",
+            "invalidPhone": "Enter a valid phone number",
+            "verifyFailed": "Phone verification failed",
+            "success": "Phone number updated",
+            "failed": "Phone number update failed",
+            "failedUnknown": "Unknown error while updating the phone number"
+        },
+        "usernameDialog": {
+            "title": "Set username",
+            "inputTip": "Enter the new username for username and password sign-in",
+            "placeholder": "Enter the new username",
+            "submitTip": "Confirm the new username",
+            "submit": "Confirm",
+            "success": "Username set",
+            "failed": "Failed to set username",
+            "failedUnknown": "Unknown error while setting the username"
+        },
+        "flow": {
+            "accountsLoadFailedTitle": "Failed to load linked accounts",
+            "accountsLoadFailed": "Failed to load linked account information",
+            "bindBlockedTitle": "Link failed",
+            "bindBlocked": "{name} sign-in is not enabled, so it cannot be linked",
+            "bindInProgress": "Linking {name}",
+            "bindFailed": "{name} link failed",
+            "bindFailedUnknown": "Unknown error while linking {name}",
+            "unlinkFailed": "{provider} unlink failed",
+            "unlinked": "Unlinked {provider}",
+            "unlinkFailedUnknown": "Unknown error while unlinking {provider}",
+            "confirmUnlinkTitle": "Unlink account",
+            "confirmUnlink": "Unlink {provider} (ID: {accountId})?",
+            "nicknameInvalidTitle": "Invalid nickname",
+            "nicknameInvalid": "Nickname must be 2-36 characters and may contain letters, numbers and common punctuation",
+            "saveFailed": "Failed to save the profile",
+            "saveFailedUnknown": "Unknown error while saving the profile",
+            "saved": "Profile saved",
+            "logoutSuccess": "Signed out",
+            "logoutFailed": "Sign out failed",
+            "logoutFailedUnknown": "Unknown error while signing out",
+            "confirmLogoutTitle": "Sign out",
+            "confirmLogout": "Sign out now? You will need to sign in again to access your account."
+        }
+    }
+}
