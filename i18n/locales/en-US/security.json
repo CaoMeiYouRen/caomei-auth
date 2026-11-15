@@ -3,7 +3,8 @@
         "page": {
             "back": "Back to profile",
             "title": "Account security",
-            "subtitle": "Manage your account security: multi-factor authentication, sign-in history, signed-in devices and sessions."
+            "subtitle": "Manage your account security: multi-factor authentication, sign-in history, signed-in devices and sessions.",
+            "oauthClients": "Authorized apps"
         },
         "twoFactor": {
             "title": "Two-factor authentication",

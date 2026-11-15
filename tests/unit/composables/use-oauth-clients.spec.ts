@@ -233,6 +233,14 @@ describe('useOAuthClients', () => {
             expect(mockNavigateTo).toHaveBeenCalledWith('/profile')
         })
 
+        it('should navigate to security settings', async () => {
+            const { goSecurity } = await useOAuthClients()
+
+            goSecurity()
+
+            expect(mockNavigateTo).toHaveBeenCalledWith('/security')
+        })
+
         it('should open docs', async () => {
             const { goDocs } = await useOAuthClients()
 

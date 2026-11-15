@@ -50,7 +50,8 @@
             "revokeWarningLogin": "You may need to sign in to the application again",
             "revokeWarningData": "Data already obtained will not be deleted automatically",
             "cancel": "Cancel",
-            "confirmRevoke": "Revoke access"
+            "confirmRevoke": "Revoke access",
+            "security": "Security"
         },
         "scopes": {
             "describe": {

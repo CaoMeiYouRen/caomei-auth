@@ -22,6 +22,15 @@
                         </template>
                         {{ t('oauth.clients.backProfile') }}
                     </CaomeiButton>
+                    <CaomeiButton
+                        variant="secondary"
+                        @click="goSecurity"
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-shield-account" aria-hidden="true" />
+                        </template>
+                        {{ t('oauth.clients.security') }}
+                    </CaomeiButton>
                 </div>
             </div>
 
@@ -208,6 +217,7 @@ const {
     revokeAuthorization,
     openLink,
     goProfile,
+    goSecurity,
     goDocs,
     formatDateTime,
 } = await useOAuthClients()
@@ -256,7 +266,10 @@ const {
         }
 
         .header-actions {
+            display: flex;
             flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
     }
 
@@ -526,6 +539,7 @@ const {
 
             .header-actions {
                 align-self: flex-start;
+                flex-wrap: wrap;
             }
         }
     }

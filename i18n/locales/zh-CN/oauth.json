@@ -50,7 +50,8 @@
             "revokeWarningLogin": "您可能需要重新登录该应用",
             "revokeWarningData": "已获取的数据不会被自动删除",
             "cancel": "取消",
-            "confirmRevoke": "确认撤销"
+            "confirmRevoke": "确认撤销",
+            "security": "安全设置"
         },
         "scopes": {
             "describe": {

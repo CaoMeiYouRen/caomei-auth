@@ -266,6 +266,10 @@ export function useSecuritySettings() {
         void navigateTo('/profile')
     }
 
+    const goOAuthClients = () => {
+        void navigateTo('/oauth/clients')
+    }
+
     onMounted(() => {
         void listSessions()
     })
@@ -308,5 +312,6 @@ export function useSecuritySettings() {
         confirmRevokeAllSessions,
         revokeAllSessions,
         goProfile,
+        goOAuthClients,
     }
 }

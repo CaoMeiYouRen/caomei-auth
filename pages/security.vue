@@ -5,13 +5,23 @@
                 <div class="security-header-actions">
                     <CaomeiButton
                         variant="ghost"
-                        class="btn btn-link"
+                        class="btn-link"
                         @click="goProfile"
                     >
                         <template #icon>
                             <i class="mdi mdi-arrow-left" />
                         </template>
                         {{ t('security.page.back') }}
+                    </CaomeiButton>
+                    <CaomeiButton
+                        variant="ghost"
+                        class="btn-link"
+                        @click="goOAuthClients"
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-key-variant" aria-hidden="true" />
+                        </template>
+                        {{ t('security.page.oauthClients') }}
                     </CaomeiButton>
                 </div>
                 <h2 class="auth-title">
@@ -107,6 +117,7 @@ const {
     confirmRevokeAllSessions,
     revokeAllSessions,
     goProfile,
+    goOAuthClients,
 } = useSecuritySettings()
 </script>
 
@@ -167,11 +178,13 @@ const {
 
 .security-header-actions {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     justify-content: flex-end;
     margin-bottom: 0.5rem;
 
     .btn-link {
-        max-width: 180px;
+        flex: 0 1 auto;
     }
 }
 
@@ -354,11 +367,13 @@ const {
 
 .security-header-actions {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     justify-content: flex-end;
     margin-bottom: 0.5rem;
 
     .btn-link {
-        max-width: 180px;
+        flex: 0 1 auto;
     }
 }
 

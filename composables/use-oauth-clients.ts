@@ -146,6 +146,10 @@ export async function useOAuthClients() {
         navigateTo('/profile')
     }
 
+    function goSecurity() {
+        navigateTo('/security')
+    }
+
     function goDocs() {
         openLink('https://auth-docs.cmyr.dev/docs/usage/user-management')
     }
@@ -162,6 +166,7 @@ export async function useOAuthClients() {
         revokeAuthorization,
         openLink,
         goProfile,
+        goSecurity,
         goDocs,
         formatDateTime,
     }

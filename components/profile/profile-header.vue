@@ -81,8 +81,15 @@ function togglePrivacyMode() {
 
 .profile-header-actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 0.5rem;
     gap: 0.5rem;
+}
+
+@media (width <= 600px) {
+    .profile-header-actions {
+        justify-content: flex-start;
+    }
 }
 </style>

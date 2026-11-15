@@ -420,6 +420,14 @@ describe('useSecuritySettings', () => {
 
             expect(mockNavigateTo).toHaveBeenCalledWith('/profile')
         })
+
+        it('should navigate to authorized apps', () => {
+            const { goOAuthClients } = useSecuritySettings()
+
+            goOAuthClients()
+
+            expect(mockNavigateTo).toHaveBeenCalledWith('/oauth/clients')
+        })
     })
 
     describe('Session List Computed', () => {
