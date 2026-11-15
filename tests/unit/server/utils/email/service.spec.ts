@@ -59,6 +59,62 @@ describe('Server Utils: Email Service', () => {
         })
     })
 
+    describe('Locale handling', () => {
+        it('sends English copy when the locale is en-US', async () => {
+            vi.mocked(sendEmail).mockResolvedValue(undefined as any)
+
+            await emailService.sendVerificationEmail('test@example.com', 'http://verify.com', { locale: 'en-US' })
+
+            const payload = vi.mocked(sendEmail).mock.calls.at(-1)?.[0] as { subject: string, html: string }
+            expect(payload.subject).toBe('Verify your Test App email address')
+            expect(logger.email.sent).toHaveBeenCalledWith({ type: 'verification', email: 'test@example.com' })
+        })
+
+        it('sends Chinese copy by default', async () => {
+            vi.mocked(sendEmail).mockResolvedValue(undefined as any)
+
+            await emailService.sendVerificationEmail('test@example.com', 'http://verify.com', { locale: 'zh-CN' })
+
+            const payload = vi.mocked(sendEmail).mock.calls.at(-1)?.[0] as { subject: string }
+            expect(payload.subject).toBe('验证您的 Test App 邮箱地址')
+        })
+
+        it('forwards the locale through every email method', async () => {
+            vi.mocked(sendEmail).mockResolvedValue(undefined as any)
+            const engine = await import('@/server/utils/email/templates')
+
+            await emailService.sendVerificationEmail('a@example.com', 'https://x/verify', { locale: 'en-US' })
+            await emailService.sendLoginOTP('a@example.com', '111111', 5, { locale: 'en-US' })
+            await emailService.sendEmailVerificationOTP('a@example.com', '222222', 5, { locale: 'en-US' })
+            await emailService.sendPasswordResetOTP('a@example.com', '333333', 5, { locale: 'en-US' })
+            await emailService.sendMagicLink('a@example.com', 'https://x/magic', { locale: 'en-US' })
+            await emailService.sendEmailChangeVerification('a@example.com', 'b@example.com', 'https://x/change', { locale: 'en-US' })
+            await emailService.sendSecurityNotification('a@example.com', 'Password changed', 'details', { locale: 'en-US' })
+
+            const calls = [
+                ...vi.mocked(engine.emailTemplateEngine.generateActionEmailTemplate).mock.calls,
+                ...vi.mocked(engine.emailTemplateEngine.generateCodeEmailTemplate).mock.calls,
+                ...vi.mocked(engine.emailTemplateEngine.generateSimpleMessageTemplate).mock.calls,
+            ]
+            expect(calls.length).toBeGreaterThanOrEqual(7)
+            expect(calls.every((call) => call[2] === 'en-US')).toBe(true)
+
+            const subjects = vi.mocked(sendEmail).mock.calls.map((call) => (call[0] as { subject: string }).subject)
+            expect(subjects.some((subject) => /[\u4e00-\u9fa5]/u.test(subject))).toBe(false)
+        })
+
+        it('passes the locale through to the template engine', async () => {
+            vi.mocked(sendEmail).mockResolvedValue(undefined as any)
+
+            await emailService.sendMagicLink('test@example.com', 'http://magic.com', { locale: 'en-US' })
+
+            const engine = await import('@/server/utils/email/templates')
+            const args = vi.mocked(engine.emailTemplateEngine.generateActionEmailTemplate).mock.calls.at(-1)
+            expect(args?.[1].title).toBe('Your Test App sign-in link')
+            expect(args?.[2]).toBe('en-US')
+        })
+    })
+
     describe('Login OTP Email', () => {
         it('should send login OTP email successfully', async () => {
             vi.mocked(sendEmail).mockResolvedValue(undefined as any)

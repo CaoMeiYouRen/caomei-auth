@@ -1,1 +1,78 @@
-{}
+{
+    "email": {
+        "chrome": {
+            "headerSubtitle": "Secure · Simple · Unified identity",
+            "greeting": "Hello!",
+            "helpText": "Need help? Contact our support team",
+            "contact": "Contact",
+            "privacy": "Privacy policy",
+            "terms": "Terms of service",
+            "allRightsReserved": "All rights reserved.",
+            "footerNote": "This is an automated message; please do not reply.",
+            "footerNoteCode": "This is an automated verification code message; please do not reply.",
+            "cannotClick": "Cannot click the button?",
+            "copyLinkHint": "Copy the following link into your browser:",
+            "importantReminder": "⚠️ Important:",
+            "securityTipTitle": "🛡️ Security tip",
+            "codeExpiresIn": "Use this code within {minutes} minutes",
+            "fallbackMessage": "Message content",
+            "fallbackButton": "Continue",
+            "defaultSecurityTip": "• Use this code only for this action; never share it\n• If this was not you, ignore this email\n• Complete verification in time or request a new code",
+            "codeTitle": "Your verification code"
+        },
+        "verification": {
+            "subject": "Verify your {appName} email address",
+            "title": "Verify your {appName} email address",
+            "preheader": "Welcome to {appName}! Verify your email address to finish signing up.",
+            "message": "Thanks for signing up for <strong>{appName}</strong>! To keep your account secure, verify your email address with the button below.",
+            "buttonText": "Verify email address",
+            "reminder": "• This link expires in <strong>24 hours</strong><br/>• If you did not create a {appName} account, ignore this email<br/>• Never share this link with anyone to keep your account safe",
+            "securityTip": "{appName} will never ask for your password, verification code or other sensitive information by email."
+        },
+        "loginOtp": {
+            "subject": "Your {appName} sign-in code",
+            "title": "Your {appName} sign-in code",
+            "preheader": "Your sign-in code is {code}",
+            "message": "You are signing in to <strong>{appName}</strong>. Use the code below to continue:",
+            "securityTip": "If this was not you, ignore this email and review your account security."
+        },
+        "emailVerificationOtp": {
+            "subject": "Verify your {appName} email address",
+            "title": "Verify your {appName} email address",
+            "preheader": "Your email verification code is {code}",
+            "message": "Thanks for signing up for <strong>{appName}</strong>! Use the code below to verify your email address:",
+            "securityTip": "If you did not create this account, ignore this email."
+        },
+        "passwordResetOtp": {
+            "subject": "Reset your {appName} password",
+            "title": "Reset your {appName} password",
+            "preheader": "Your password reset code is {code}",
+            "message": "Someone requested a password reset for your <strong>{appName}</strong> account. Use the code below to reset it:",
+            "securityTip": "If this was not you, ignore this email and check your account security right away."
+        },
+        "magicLink": {
+            "subject": "Your {appName} sign-in link",
+            "title": "Your {appName} sign-in link",
+            "preheader": "Click to sign in securely without a password.",
+            "message": "Use the button below to sign in to your <strong>{appName}</strong> account securely, without a password:",
+            "buttonText": "Sign in",
+            "reminder": "• This link expires in <strong>15 minutes</strong><br/>• The link can be used once<br/>• If this was not you, ignore this email",
+            "securityTip": "For your security, do not share this link with anyone."
+        },
+        "emailChange": {
+            "subject": "Confirm your email change - {appName}",
+            "title": "Confirm your email change - {appName}",
+            "preheader": "Confirm changing your email address to {newEmail}",
+            "message": "You are about to change your email address to <strong>{newEmail}</strong>.<br/><br/>To confirm, use the button below:",
+            "buttonText": "Confirm email change",
+            "reminder": "• This link expires in <strong>24 hours</strong><br/>• After the change, sign in with the new email address<br/>• If this was not you, ignore this email",
+            "securityTip": "For your security, this confirmation link was sent to your current email address."
+        },
+        "securityNotification": {
+            "subject": "{appName} account security notice",
+            "title": "{appName} account security notice",
+            "preheader": "There was security activity on your account.",
+            "message": "We detected the following security activity on your <strong>{appName}</strong> account:<br/><br/><strong>{action}</strong>"
+        }
+    }
+}

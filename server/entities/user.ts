@@ -87,6 +87,12 @@ export class User extends BaseEntity {
     banExpires: number
 
     /**
+     * 用户界面语言偏好（zh-CN / en-US），null 表示未设置
+     */
+    @CustomColumn({ type: 'varchar', length: 16, nullable: true })
+    locale: string | null
+
+    /**
      * 是否启用两因素认证
      */
     @CustomColumn({ type: 'boolean', default: false })

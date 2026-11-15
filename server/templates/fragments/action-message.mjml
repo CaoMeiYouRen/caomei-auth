@@ -20,10 +20,10 @@
 
 <!-- Alternative Link Section -->
 <mj-text font-size="14px" color="#4a5568" font-weight="600" padding="30px 0 10px 0">
-  无法点击按钮？
+  {{cannotClick}}
 </mj-text>
 <mj-text font-size="14px" color="#718096" padding="0 0 10px 0">
-  请复制以下链接到浏览器地址栏：
+  {{copyLinkHint}}
 </mj-text>
 <mj-text
   font-size="12px"

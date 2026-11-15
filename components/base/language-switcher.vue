@@ -57,6 +57,7 @@
 
 <script setup lang="ts">
 import { onClickOutside } from '@vueuse/core'
+import { authClient } from '@/lib/auth-client'
 import type { LocaleCode } from '@/i18n/config/locale-registry'
 
 interface Props {
@@ -94,6 +95,8 @@ const selectLocale = async (code: LocaleCode) => {
     }
     cookie.value = code
     await setLocale(code)
+    /* 登录用户把偏好写回账户，供异步邮件选择语言；未登录时请求失败可忽略 */
+    authClient.updateUser({ locale: code }).catch(() => undefined)
 }
 
 const onKeydown = (event: KeyboardEvent) => {

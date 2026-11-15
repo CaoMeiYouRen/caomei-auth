@@ -15,6 +15,7 @@ import {
 import { oauthProvider } from '@better-auth/oauth-provider'
 import { sso } from '@better-auth/sso'
 import { ms } from 'ms'
+import { z } from 'zod'
 import { localization } from 'better-auth-localization'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
 import { sendEmail } from '@/server/utils/email/index'
@@ -133,16 +134,29 @@ export const auth = betterAuth({
         sendOnSignUp: true, // 注册时发送验证邮件
         autoSignInAfterVerification: true, // 验证后自动登录
         // 发送验证邮件
-        sendVerificationEmail: async ({ user, url }) => {
-            await emailService.sendVerificationEmail(user.email, url)
+        sendVerificationEmail: async ({ user, url }, request) => {
+            await emailService.sendVerificationEmail(user.email, url, { request })
         },
     },
     user: {
+        additionalFields: {
+            /* 界面语言偏好：只在登录用户主动切换语言时写入，不参与鉴权 */
+            locale: {
+                type: 'string',
+                required: false,
+                defaultValue: null,
+                input: true,
+                /* 只接受 Registry 内的语言码，避免任意字符串写入库 */
+                validator: {
+                    input: z.enum(['zh-CN', 'en-US']),
+                },
+            },
+        },
         changeEmail: {
             enabled: true, // 启用更改邮箱功能
             // 发送更改邮箱验证邮件（1.7 起由 sendChangeEmailVerification 更名）
-            sendChangeEmailConfirmation: async ({ user, newEmail, url }) => {
-                await emailService.sendEmailChangeVerification(user.email, newEmail, url)
+            sendChangeEmailConfirmation: async ({ user, newEmail, url }, request) => {
+                await emailService.sendEmailChangeVerification(user.email, newEmail, url, { request })
             },
         },
     },
@@ -226,8 +240,8 @@ export const auth = betterAuth({
             expiresIn: EMAIL_EXPIRES_IN, // 链接有效期（秒）
             disableSignUp: false, // 当用户未注册时是否阻止自动注册
             // 支持一次性链接登录
-            sendMagicLink: async ({ email, url }) => {
-                await emailService.sendMagicLink(email, url)
+            sendMagicLink: async ({ email, url }, ctx) => {
+                await emailService.sendMagicLink(email, url, { request: ctx?.request })
             },
         }),
         emailOTP({
@@ -237,26 +251,26 @@ export const auth = betterAuth({
             allowedAttempts: 3, // 允许的 OTP 验证尝试次数
             sendVerificationOnSignUp: false, // 用户注册时是否发送 OTP。因为已经发送验证邮件，所以不需要再发送 OTP。
             // 支持电子邮件 OTP 登录
-            async sendVerificationOTP({ email, otp, type }) {
+            async sendVerificationOTP({ email, otp, type }, ctx) {
                 const expiresInMinutes = Math.floor(EMAIL_EXPIRES_IN / 60)
 
                 if (type === 'sign-in') {
                     // 发送登录用的OTP
-                    await emailService.sendLoginOTP(email, otp, expiresInMinutes)
+                    await emailService.sendLoginOTP(email, otp, expiresInMinutes, { request: ctx?.request })
                     return
                 }
                 if (type === 'email-verification') {
                     // 发送电子邮件验证用的OTP
-                    await emailService.sendEmailVerificationOTP(email, otp, expiresInMinutes)
+                    await emailService.sendEmailVerificationOTP(email, otp, expiresInMinutes, { request: ctx?.request })
                     return
                 }
                 if (type === 'forget-password') {
                     // 发送密码重置用的OTP
-                    await emailService.sendPasswordResetOTP(email, otp, expiresInMinutes)
+                    await emailService.sendPasswordResetOTP(email, otp, expiresInMinutes, { request: ctx?.request })
                     return
                 }
                 // 默认情况使用登录OTP
-                await emailService.sendLoginOTP(email, otp, expiresInMinutes)
+                await emailService.sendLoginOTP(email, otp, expiresInMinutes, { request: ctx?.request })
             },
         }),
         $phoneNumber({

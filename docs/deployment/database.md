@@ -499,6 +499,23 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 \
 
 **回滚**：停止写入后用备份恢复，或把 legacy schema 中的表移回 `public`（需先删除迁移后的新表，且会丢失迁移后产生的新数据）。
 
+### 用户语言偏好列 `user.locale`（2026-11-16）
+
+i18n 全量落地后新增 `locale VARCHAR(16) NULL`（默认 `NULL`），用于异步邮件按用户偏好选择语言。开发 / 测试环境的 `synchronize` 会自动加列；生产环境 `synchronize: false`，升级到含该字段的版本前需手工执行：
+
+```sql
+-- PostgreSQL
+ALTER TABLE caomei_auth_user ADD COLUMN IF NOT EXISTS locale varchar(16) NULL;
+
+-- MySQL
+ALTER TABLE caomei_auth_user ADD COLUMN locale VARCHAR(16) NULL;
+
+-- SQLite（ALTER TABLE 一次只能加一列，重复执行会报 duplicate column，可忽略）
+ALTER TABLE caomei_auth_user ADD COLUMN locale VARCHAR(16);
+```
+
+`database/{sqlite,mysql,postgres}/create.sql` 已同步该列，新装环境无需额外操作。旧用户该列为 `NULL`，邮件回退默认语言，登录不受影响。
+
 ## 最佳实践
 
 1. **定期备份**: 建立自动化备份机制

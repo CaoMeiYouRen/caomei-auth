@@ -6,7 +6,7 @@ export function getFallbackFragment(fragmentName: string): string {
                 <mj-section padding="30px 0">
                     <mj-column>
                         <mj-text align="center" font-size="18px" color="#2d3748" font-weight="600" padding="0 0 20px 0">
-                            您的验证码
+                            {{codeTitle}}
                         </mj-text>
                         <mj-text align="center" padding="20px 0"
                                  font-size="36px"
@@ -19,7 +19,7 @@ export function getFallbackFragment(fragmentName: string): string {
                             {{verificationCode}}
                         </mj-text>
                         <mj-text align="center" font-size="14px" color="#718096" padding="15px 0 0 0">
-                            请在 {{expiresIn}} 分钟内使用此验证码
+                            {{codeExpiresIn}}
                         </mj-text>
                     </mj-column>
                 </mj-section>
@@ -28,7 +28,7 @@ export function getFallbackFragment(fragmentName: string): string {
                 <mj-section padding="20px 0">
                     <mj-column>
                         <mj-text font-size="16px" color="#234e52" font-weight="600" padding="0 0 10px 0">
-                            🛡️ 安全提示
+                            {{securityTipTitle}}
                         </mj-text>
                         <mj-text font-size="14px" color="#234e52" padding="0 0 20px 20px"
                                  background-color="#e6fffa"
@@ -61,7 +61,7 @@ export function getFallbackFragment(fragmentName: string): string {
                 <mj-section padding="20px 0">
                     <mj-column>
                         <mj-text font-size="14px" color="#4a5568" padding="0 0 10px 0">
-                            <strong>无法点击按钮？</strong>请复制以下链接到浏览器地址栏：
+                            <strong>{{cannotClick}}</strong>{{copyLinkHint}}
                         </mj-text>
                         <mj-text font-size="12px"
                                  color="#718096"
@@ -72,7 +72,7 @@ export function getFallbackFragment(fragmentName: string): string {
                             {{actionUrl}}
                         </mj-text>
                         <mj-text font-size="16px" color="#4a5568" padding="20px 0 0 0">
-                            <strong>重要提醒：</strong><br/>
+                            <strong>{{importantReminder}}</strong><br/>
                             {{reminderContent}}
                         </mj-text>
                     </mj-column>
@@ -161,12 +161,12 @@ export function getBaseTemplateFallback(): string {
               {{helpText}}
             </mj-text>
             <mj-text align="center" font-size="14px" padding="0 0 20px 0">
-              <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 12px;">联系方式</a>
-              <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 12px;">隐私政策</a>
-              <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 12px;">服务条款</a>
+              <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 12px;">{{contactLabel}}</a>
+              <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 12px;">{{privacyLabel}}</a>
+              <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 12px;">{{termsLabel}}</a>
             </mj-text>
             <mj-text align="center" font-size="12px" color="#a0aec0" padding="0">
-              © {{currentYear}} {{appName}}. 保留所有权利。
+              © {{currentYear}} {{appName}}. {{allRightsReserved}}
             </mj-text>
             <mj-text align="center" font-size="11px" color="#cbd5e0" padding="10px 0 0 0">
               {{footerNote}}
@@ -203,7 +203,7 @@ export function getEmailVerificationFallback(): string {
               {{appName}}
             </mj-text>
             <mj-text align="center" color="#ffffff" font-size="16px" font-weight="400" padding-top="8px">
-              安全 · 便捷 · 统一的身份认证平台
+              {{headerSubtitle}}
             </mj-text>
           </mj-column>
         </mj-section>
@@ -212,7 +212,7 @@ export function getEmailVerificationFallback(): string {
         <mj-section padding="40px 30px">
           <mj-column>
             <mj-text font-size="18px" color="#2d3748" padding-bottom="20px">
-              您好！
+              {{greeting}}
             </mj-text>
             <mj-text font-size="16px" color="#4a5568" padding-bottom="30px">
               {{message}}
@@ -225,14 +225,14 @@ export function getEmailVerificationFallback(): string {
 
             <!-- Alternative Link -->
             <mj-text font-size="14px" color="#4a5568" padding="30px 0 10px 0">
-              <strong>无法点击按钮？</strong>请复制以下链接到浏览器地址栏：
+              <strong>{{cannotClick}}</strong>{{copyLinkHint}}
             </mj-text>
             <mj-text font-size="12px" color="#718096" font-family="monospace" padding="0 0 20px 0" background-color="#f7fafc">
               {{actionUrl}}
             </mj-text>
 
             <mj-text font-size="16px" color="#4a5568" padding-top="30px">
-              <strong>重要提醒：</strong><br/>
+              <strong>{{importantReminder}}</strong><br/>
               {{reminderContent}}
             </mj-text>
           </mj-column>
@@ -242,15 +242,15 @@ export function getEmailVerificationFallback(): string {
         <mj-section background-color="#f7fafc" padding="30px" border-top="1px solid #e2e8f0">
           <mj-column>
             <mj-text align="center" font-size="14px" color="#718096" padding-bottom="10px">
-              需要帮助？联系我们的客服团队
+              {{helpText}}
             </mj-text>
             <mj-text align="center" font-size="14px" padding-bottom="20px">
-              <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 10px;">联系方式</a>
-              <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 10px;">隐私政策</a>
-              <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 10px;">服务条款</a>
+              <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 10px;">{{contactLabel}}</a>
+              <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 10px;">{{privacyLabel}}</a>
+              <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 10px;">{{termsLabel}}</a>
             </mj-text>
             <mj-text align="center" font-size="12px" color="#a0aec0">
-              © {{currentYear}} {{appName}}. 保留所有权利。
+              © {{currentYear}} {{appName}}. {{allRightsReserved}}
             </mj-text>
           </mj-column>
         </mj-section>
@@ -292,7 +292,7 @@ export function getCodeEmailFallback(): string {
               {{appName}}
             </mj-text>
             <mj-text align="center" color="rgba(255,255,255,0.9)" font-size="16px" font-weight="400" padding="8px 0 0 0">
-              安全 · 便捷 · 统一的身份认证平台
+              {{headerSubtitle}}
             </mj-text>
           </mj-column>
         </mj-section>
@@ -301,7 +301,7 @@ export function getCodeEmailFallback(): string {
         <mj-section padding="40px 30px">
           <mj-column>
             <mj-text font-size="20px" color="#2d3748" font-weight="600" padding="0 0 20px 0">
-              您好！
+              {{greeting}}
             </mj-text>
             <mj-text font-size="16px" color="#4a5568" padding="0 0 20px 0">
               {{message}}
@@ -314,12 +314,12 @@ export function getCodeEmailFallback(): string {
 
             <!-- Expiry Info -->
             <mj-text font-size="14px" color="#718096" align="center" padding="0 0 30px 0">
-              请在 {{expiresIn}} 分钟内使用此验证码
+              {{codeExpiresIn}}
             </mj-text>
 
             <!-- Security Tips -->
             <mj-text font-size="14px" color="#234e52" font-weight="600" padding="0 0 8px 0">
-              🛡️ 安全提示
+              {{securityTipTitle}}
             </mj-text>
             <mj-text font-size="14px" color="#234e52" padding="0 0 20px 0">
               {{securityTip}}
@@ -331,15 +331,15 @@ export function getCodeEmailFallback(): string {
         <mj-section background-color="#f7fafc" padding="30px" border-top="1px solid #e2e8f0">
           <mj-column>
             <mj-text align="center" font-size="14px" color="#718096" padding="0 0 15px 0">
-              需要帮助？联系我们的客服团队
+              {{helpText}}
             </mj-text>
             <mj-text align="center" font-size="14px" padding="0 0 20px 0">
-              <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 12px;">联系方式</a>
-              <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 12px;">隐私政策</a>
-              <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 12px;">服务条款</a>
+              <a href="{{contactEmail}}" style="color: #e63946; text-decoration: none; margin: 0 12px;">{{contactLabel}}</a>
+              <a href="{{baseUrl}}/privacy" style="color: #e63946; text-decoration: none; margin: 0 12px;">{{privacyLabel}}</a>
+              <a href="{{baseUrl}}/terms" style="color: #e63946; text-decoration: none; margin: 0 12px;">{{termsLabel}}</a>
             </mj-text>
             <mj-text align="center" font-size="12px" color="#a0aec0" padding="0">
-              © {{currentYear}} {{appName}}. 保留所有权利。
+              © {{currentYear}} {{appName}}. {{allRightsReserved}}
             </mj-text>
             <mj-text align="center" font-size="11px" color="#cbd5e0" padding="10px 0 0 0">
               {{footerNote}}
@@ -369,7 +369,7 @@ export function getDefaultFallback(): string {
           {{message}}
         </mj-text>
         <mj-text align="center" font-size="12px" color="#666666" padding-top="40px">
-          © {{currentYear}} {{appName}}. 保留所有权利。
+          © {{currentYear}} {{appName}}. {{allRightsReserved}}
         </mj-text>
       </mj-column>
     </mj-section>
@@ -396,7 +396,7 @@ export function generateFallbackHtml(title: string, safeData: any): string {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>${title || '草梅Auth'}</title>
+    <title>${title || safeData.appName || ''}</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -530,17 +530,17 @@ export function generateFallbackHtml(title: string, safeData: any): string {
     <div class="container">
         <div class="header">
             <div class="logo">${safeData.appName}</div>
-            <div class="subtitle">安全 · 便捷 · 统一的身份认证平台</div>
+            <div class="subtitle">${safeData.headerSubtitle ?? ''}</div>
         </div>
         <div class="content">
-            <div class="greeting">您好！</div>
+            <div class="greeting">${safeData.greeting ?? ''}</div>
             <div class="message">${safeData.message}</div>
 
             ${safeData.verificationCode
                     ? `
             <div class="code-section">
                 <div class="code-box">${safeData.verificationCode}</div>
-                ${safeData.expiresIn ? `<div class="code-note">请在 ${safeData.expiresIn} 分钟内使用此验证码</div>` : ''}
+                ${safeData.codeExpiresIn ? `<div class="code-note">${safeData.codeExpiresIn}</div>` : ''}
             </div>
             `
                     : ''
@@ -552,7 +552,7 @@ export function generateFallbackHtml(title: string, safeData: any): string {
                 <a href="${safeData.actionUrl}" class="button">${safeData.buttonText}</a>
             </div>
             <div style="margin-top: 20px; font-size: 14px; color: #4a5568;">
-                <strong>无法点击按钮？</strong>请复制以下链接到浏览器地址栏：<br/>
+                <strong>${safeData.cannotClick ?? ''}</strong>${safeData.copyLinkHint ?? ''}<br/>
                 <div style="background: #f7fafc; padding: 10px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 12px; color: #718096; word-break: break-all;">
                     ${safeData.actionUrl}
                 </div>
@@ -564,7 +564,7 @@ export function generateFallbackHtml(title: string, safeData: any): string {
             ${safeData.securityTip
                     ? `
             <div class="security-tip">
-                <div class="security-tip-title">🛡️ 安全提示</div>
+                <div class="security-tip-title">${safeData.securityTipTitle ?? ''}</div>
                 <div class="security-tip-content">${safeData.securityTip}</div>
             </div>
             `
@@ -573,11 +573,11 @@ export function generateFallbackHtml(title: string, safeData: any): string {
         </div>
         <div class="footer">
             <div class="footer-links">
-                <a href="mailto:${CONTACT_EMAIL}">联系方式</a>
-                <a href="${AUTH_BASE_URL}/privacy">隐私政策</a>
-                <a href="${AUTH_BASE_URL}/terms">服务条款</a>
+                <a href="mailto:${CONTACT_EMAIL}">${safeData.contactLabel ?? ''}</a>
+                <a href="${AUTH_BASE_URL}/privacy">${safeData.privacyLabel ?? ''}</a>
+                <a href="${AUTH_BASE_URL}/terms">${safeData.termsLabel ?? ''}</a>
             </div>
-            <div class="footer-copyright">© ${safeData.currentYear} ${safeData.appName}. 保留所有权利。</div>
+            <div class="footer-copyright">© ${safeData.currentYear} ${safeData.appName}. ${safeData.allRightsReserved ?? ''}</div>
             <div class="footer-note">${safeData.footerNote}</div>
         </div>
     </div>

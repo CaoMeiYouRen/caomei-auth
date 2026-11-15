@@ -45,6 +45,7 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [阶段 5 M12：Admin OAuth 域文案](./governance/2026-11-15-m12-admin-oauth-text.md): `admin-oauth` 113 键、应用页与创建 / 凭据 / API 文档三个对话框双语。
 -   [阶段 5 M13：Admin SSO 域文案](./governance/2026-11-15-m13-admin-sso-text.md): `admin-sso` 142 键、提供商页与创建 / 详情对话框、OIDC / SAML / 属性映射三段表单双语。
 -   [阶段 5 M14：Admin 日志域文案](./governance/2026-11-15-m14-admin-logs-text.md): `admin-logs` 51 键、统计概览 / 时间段 / 登录方式 / 趋势图 / 日志表双语，图表随语言重绘。
+-   [阶段 5 M15：邮件模板与用户语言偏好](./governance/2026-11-16-m15-email-locale.md): `email` 58 键、`User.locale` 持久化、7 个邮件方法与模板双语、生产库 ALTER 说明。
 -   [发布链路原生多架构评估](./governance/2026-11-08-native-multiarch-docker-review.md): issue #718 的入口核验、方案比较与方案 C 复用工作流落地（已排期阶段 3 插队，待工作流验证）。
 -   [i18n 评估与实施方案](./governance/2026-11-05-i18n-evaluation.md): 原 i18n 规划的复核修订、Locale Registry、模块化消息、Zod v4 错误本地化、服务端 / 邮件方案与批次。
 -   [阶段 2 范围登记：安全收口与迁移预备](./governance/2026-11-05-phase2-registration.md): 阶段 2 的 5 条主线 / 11 条原子条目、验收与边界（2026-11-06 完成归档）。

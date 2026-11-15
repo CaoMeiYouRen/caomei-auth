@@ -276,6 +276,7 @@ CREATE TABLE IF NOT EXISTS caomei_auth_user (
                                         DEFAULT (0),
     ban_reason            TEXT,
     ban_expires           INTEGER,
+    locale                VARCHAR (16),
     two_factor_enabled    BOOLEAN       NOT NULL
                                         DEFAULT (0)
 );

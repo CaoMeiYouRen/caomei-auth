@@ -8,6 +8,8 @@ import sanitizeHtml from 'sanitize-html'
 
 import logger from '../logger'
 import { getFallbackFragment, getFallbackMjmlTemplate, generateFallbackHtml } from './templates-fallback'
+import { getEmailTranslator, type EmailTranslator } from './i18n'
+import type { LocaleCode } from '@/i18n/config/locale-registry'
 import { APP_NAME, AUTH_BASE_URL, CONTACT_EMAIL } from '@/utils/shared/env'
 
 type EmailTemplateData = Record<string, string | number | boolean>
@@ -98,12 +100,25 @@ function getTemplateContentFromFs(relativePath: string): string {
 export class EmailTemplateEngine {
     private templateCache = new Map<string, string>()
     private fragmentCache = new Map<string, string>()
+    /** 已告警过的缺失变量，避免同一进程内重复刷日志 */
+    private warnedMissingVariables = new Set<string>()
 
     /**
      * 渲染模板变量
      */
     private renderTemplate(template: string, data: EmailTemplateData): string {
-        return template.replace(/\{\{(\w+)\}\}/g, (match, key) => String(data[key] || match))
+        /* 缺值渲染为空串，避免 `{{preheader}}` 这类占位符直接出现在用户收到的邮件里；
+         * 同时记录一次告警，避免漏传变量（如 actionUrl）静默发出残缺邮件。 */
+        return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+            if (!(key in data)) {
+                if (!this.warnedMissingVariables.has(key)) {
+                    this.warnedMissingVariables.add(key)
+                    logger.warn('Email template variable missing', { key })
+                }
+                return ''
+            }
+            return String(data[key] ?? '')
+        })
     }
 
     /**
@@ -151,20 +166,34 @@ export class EmailTemplateEngine {
     /**
      * 构建基础模板数据
      */
-    private buildBaseTemplateData(config: BaseTemplateConfig, options: TemplateOptions, footerNote?: string): EmailTemplateData {
+    private buildBaseTemplateData(
+        config: BaseTemplateConfig,
+        options: TemplateOptions,
+        footerNote?: string,
+        t: EmailTranslator = getEmailTranslator(),
+    ): EmailTemplateData {
         return {
             appName: APP_NAME,
             baseUrl: AUTH_BASE_URL,
             contactEmail: `mailto:${CONTACT_EMAIL}`,
             currentYear: dayjs().year(),
             headerIcon: config.headerIcon,
-            headerSubtitle: '安全 • 便捷 • 统一的身份认证平台',
-            greeting: '您好！',
-            helpText: '需要帮助？联系我们的客服团队',
-            footerNote: footerNote || '这是一封系统自动发送的邮件，请勿直接回复。',
+            headerSubtitle: t('email.chrome.headerSubtitle'),
+            greeting: t('email.chrome.greeting'),
+            helpText: t('email.chrome.helpText'),
+            footerNote: footerNote || t('email.chrome.footerNote'),
+            contactLabel: t('email.chrome.contact'),
+            privacyLabel: t('email.chrome.privacy'),
+            termsLabel: t('email.chrome.terms'),
+            allRightsReserved: t('email.chrome.allRightsReserved'),
+            cannotClick: t('email.chrome.cannotClick'),
+            copyLinkHint: t('email.chrome.copyLinkHint'),
+            importantReminder: t('email.chrome.importantReminder'),
+            securityTipTitle: t('email.chrome.securityTipTitle'),
+            codeTitle: t('email.chrome.codeTitle'),
             primaryColor: '#e63946',
             message: config.message,
-            securityTip: config.securityTip || '• 验证码仅供本次操作使用，请勿泄露给他人\n• 如果您没有进行此操作，请忽略此邮件\n• 请在规定时间内完成验证，过期需重新获取',
+            securityTip: config.securityTip || t('email.chrome.defaultSecurityTip'),
             ...options,
         }
     }
@@ -203,6 +232,7 @@ export class EmailTemplateEngine {
         fragments: string[],
         templateData: EmailTemplateData,
         options: TemplateOptions,
+        t: EmailTranslator = getEmailTranslator(),
     ): Promise<EmailResult> {
         const baseTemplate = await this.getMjmlTemplate('base-template')
 
@@ -228,7 +258,7 @@ export class EmailTemplateEngine {
         }
 
         // 回退到简单模板
-        return this.generateFallbackTemplate(templateName, finalTemplateData, options)
+        return this.generateFallbackTemplate(templateName, finalTemplateData, options, t)
     }
 
     /**
@@ -237,11 +267,13 @@ export class EmailTemplateEngine {
     public async generateActionEmailTemplate(
         templateConfig: ActionTemplateConfig,
         options: TemplateOptions,
+        locale?: LocaleCode,
     ): Promise<EmailResult> {
-        const templateData = this.buildBaseTemplateData(templateConfig, options)
+        const t = getEmailTranslator(locale)
+        const templateData = this.buildBaseTemplateData(templateConfig, options, undefined, t)
         const fragments = ['action-message', 'important-reminder', 'security-tip']
 
-        return await this.generateTemplate('action-email', fragments, { ...templateData, ...templateConfig }, options)
+        return await this.generateTemplate('action-email', fragments, { ...templateData, ...templateConfig }, options, t)
     }
 
     /**
@@ -250,11 +282,23 @@ export class EmailTemplateEngine {
     public async generateCodeEmailTemplate(
         templateConfig: CodeTemplateConfig,
         options: TemplateOptions,
+        locale?: LocaleCode,
     ): Promise<EmailResult> {
-        const templateData = this.buildBaseTemplateData(templateConfig, options, '这是一封系统自动发送的验证码邮件，请勿直接回复。')
+        const t = getEmailTranslator(locale)
+        const templateData = this.buildBaseTemplateData(templateConfig, options, t('email.chrome.footerNoteCode'), t)
         const fragments = ['verification-code', 'security-tip']
 
-        return await this.generateTemplate('code-email', fragments, { ...templateData, ...templateConfig }, options)
+        return await this.generateTemplate(
+            'code-email',
+            fragments,
+            {
+                ...templateData,
+                ...templateConfig,
+                codeExpiresIn: t('email.chrome.codeExpiresIn', { minutes: templateConfig.expiresIn }),
+            },
+            options,
+            t,
+        )
     }
 
     /**
@@ -263,11 +307,13 @@ export class EmailTemplateEngine {
     public async generateSimpleMessageTemplate(
         templateConfig: SimpleMessageConfig,
         options: TemplateOptions,
+        locale?: LocaleCode,
     ): Promise<EmailResult> {
-        const templateData = this.buildBaseTemplateData(templateConfig, options)
+        const t = getEmailTranslator(locale)
+        const templateData = this.buildBaseTemplateData(templateConfig, options, undefined, t)
         const fragments = ['simple-message']
 
-        return await this.generateTemplate('simple-message', fragments, { ...templateData, ...templateConfig }, options)
+        return await this.generateTemplate('simple-message', fragments, { ...templateData, ...templateConfig }, options, t)
     }
 
     /**
@@ -292,7 +338,12 @@ export class EmailTemplateEngine {
     /**
      * 回退到简单HTML模板
      */
-    private generateFallbackTemplate(templateName: string, data: EmailTemplateData, options: TemplateOptions): EmailResult {
+    private generateFallbackTemplate(
+        templateName: string,
+        data: EmailTemplateData,
+        options: TemplateOptions,
+        t: EmailTranslator = getEmailTranslator(),
+    ): EmailResult {
         // 记录调试信息
         logger.info('Using fallback template', {
             templateName,
@@ -302,16 +353,17 @@ export class EmailTemplateEngine {
             verificationCode: data.verificationCode ? '***' : null,
         })
 
-        // 确保数据存在
+        // 确保数据存在（先铺开模板数据，保留页脚 / 提示等 chrome 字段）
         const safeData = {
+            ...data,
             appName: data.appName || '草梅Auth',
-            message: data.message || '邮件内容',
+            message: data.message || t('email.chrome.fallbackMessage'),
             verificationCode: data.verificationCode || '',
             actionUrl: data.actionUrl || '',
-            buttonText: data.buttonText || '点击操作',
+            buttonText: data.buttonText || t('email.chrome.fallbackButton'),
             securityTip: data.securityTip || '',
             currentYear: data.currentYear || new Date().getFullYear(),
-            footerNote: data.footerNote || '这是一封系统自动发送的邮件，请勿直接回复。',
+            footerNote: data.footerNote || t('email.chrome.footerNote'),
             expiresIn: data.expiresIn || 10,
         }
 

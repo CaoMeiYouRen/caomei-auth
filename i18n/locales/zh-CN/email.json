@@ -1,1 +1,78 @@
-{}
+{
+    "email": {
+        "chrome": {
+            "headerSubtitle": "安全 • 便捷 • 统一的身份认证平台",
+            "greeting": "您好！",
+            "helpText": "需要帮助？联系我们的客服团队",
+            "contact": "联系方式",
+            "privacy": "隐私政策",
+            "terms": "服务条款",
+            "allRightsReserved": "保留所有权利。",
+            "footerNote": "这是一封系统自动发送的邮件，请勿直接回复。",
+            "footerNoteCode": "这是一封系统自动发送的验证码邮件，请勿直接回复。",
+            "cannotClick": "无法点击按钮？",
+            "copyLinkHint": "请复制以下链接到浏览器地址栏：",
+            "importantReminder": "⚠️ 重要提醒：",
+            "securityTipTitle": "🛡️ 安全提示",
+            "codeExpiresIn": "请在 {minutes} 分钟内使用此验证码",
+            "fallbackMessage": "邮件内容",
+            "fallbackButton": "点击操作",
+            "defaultSecurityTip": "• 验证码仅供本次操作使用，请勿泄露给他人\n• 如果您没有进行此操作，请忽略此邮件\n• 请在规定时间内完成验证，过期需重新获取",
+            "codeTitle": "您的验证码"
+        },
+        "verification": {
+            "subject": "验证您的 {appName} 邮箱地址",
+            "title": "验证您的 {appName} 邮箱地址",
+            "preheader": "欢迎注册 {appName}！请验证您的邮箱地址以完成注册。",
+            "message": "感谢您注册 <strong>{appName}</strong>！为了确保您的账户安全，请点击下方按钮验证您的邮箱地址。",
+            "buttonText": "验证邮箱地址",
+            "reminder": "• 此验证链接将在 <strong>24 小时</strong>后过期<br/>• 如果您没有注册 {appName} 账户，请忽略此邮件<br/>• 请勿将此链接分享给他人，以保护您的账户安全",
+            "securityTip": "{appName} 永远不会通过邮件要求您提供密码、验证码或其他敏感信息。"
+        },
+        "loginOtp": {
+            "subject": "您的 {appName} 登录验证码",
+            "title": "您的 {appName} 登录验证码",
+            "preheader": "您的登录验证码是 {code}",
+            "message": "您正在尝试登录 <strong>{appName}</strong>。请使用以下验证码完成登录：",
+            "securityTip": "如果不是您本人操作，请忽略此邮件并检查您的账户安全。"
+        },
+        "emailVerificationOtp": {
+            "subject": "验证您的 {appName} 邮箱地址",
+            "title": "验证您的 {appName} 邮箱地址",
+            "preheader": "您的邮箱验证码是 {code}",
+            "message": "感谢您注册 <strong>{appName}</strong>！请使用以下验证码完成邮箱验证：",
+            "securityTip": "如果您没有注册此账户，请忽略此邮件。"
+        },
+        "passwordResetOtp": {
+            "subject": "重置您的 {appName} 密码",
+            "title": "重置您的 {appName} 密码",
+            "preheader": "您的密码重置验证码是 {code}",
+            "message": "有人请求重置您的 <strong>{appName}</strong> 账户密码。请使用以下验证码完成密码重置：",
+            "securityTip": "如果不是您本人操作，请忽略此邮件并立即检查您的账户安全。"
+        },
+        "magicLink": {
+            "subject": "您的 {appName} 登录链接",
+            "title": "您的 {appName} 登录链接",
+            "preheader": "点击即可安全登录，无需输入密码。",
+            "message": "点击下方按钮，无需密码即可安全登录您的 <strong>{appName}</strong> 账户：",
+            "buttonText": "一键登录",
+            "reminder": "• 此登录链接将在 <strong>15 分钟</strong>后过期<br/>• 链接只能使用一次<br/>• 如果不是您本人操作，请忽略此邮件",
+            "securityTip": "为了您的账户安全，请勿将此链接分享给任何人。"
+        },
+        "emailChange": {
+            "subject": "确认邮箱地址变更 - {appName}",
+            "title": "确认邮箱地址变更 - {appName}",
+            "preheader": "确认将邮箱地址变更为 {newEmail}",
+            "message": "您即将修改邮箱地址为：<strong>{newEmail}</strong><br/><br/>如果确认变更，请点击下方按钮：",
+            "buttonText": "确认邮箱变更",
+            "reminder": "• 此确认链接将在 <strong>24 小时</strong>后过期<br/>• 变更邮箱后，您需要使用新邮箱地址登录<br/>• 如果这不是您的操作，请忽略此邮件",
+            "securityTip": "为了您的账户安全，邮箱变更确认链接已发送到您当前的邮箱地址。"
+        },
+        "securityNotification": {
+            "subject": "{appName} 账户安全通知",
+            "title": "{appName} 账户安全通知",
+            "preheader": "您的账户有安全活动，请查看详情。",
+            "message": "我们检测到您的 <strong>{appName}</strong> 账户有以下安全活动：<br/><br/><strong>{action}</strong>"
+        }
+    }
+}
