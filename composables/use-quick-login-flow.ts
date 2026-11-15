@@ -10,6 +10,7 @@ import {
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
 import type { CaptchaExpose } from '@/utils/web/captcha'
 
@@ -17,13 +18,14 @@ import type { CaptchaExpose } from '@/utils/web/captcha'
 function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
     if (result.success) { return null }
     const message = result.error?.issues[0]?.message
-    return translate ? translate(message) : resolveValidationMessage(message) || '校验失败'
+    return translate ? translate(message) : resolveValidationMessage(message) || message || ''
 }
 
 export function useQuickLoginFlow() {
     // 配置
     const config = useRuntimeConfig().public
     const translate = useValidationMessage()
+    const t = useI18nText()
     const phoneEnabled = config.phoneEnabled
 
     // 响应式数据
@@ -60,7 +62,7 @@ export function useQuickLoginFlow() {
         () => {
             const result = emailSchema.safeParse(email.value)
             if (!result.success) {
-                errors.value.email = getFirstZodError(result, translate) || '请输入有效的邮箱地址'
+                errors.value.email = getFirstZodError(result, translate) || t('auth.common.invalidEmail')
                 return false
             }
             return true
@@ -79,7 +81,7 @@ export function useQuickLoginFlow() {
         () => {
             const result = phoneSchema.safeParse(phone.value)
             if (!result.success) {
-                errors.value.phone = getFirstZodError(result, translate) || '请输入有效的手机号'
+                errors.value.phone = getFirstZodError(result, translate) || t('auth.common.invalidPhone')
                 return false
             }
             return true
@@ -98,7 +100,7 @@ export function useQuickLoginFlow() {
     const changeTab = (tab: 'email' | 'phone') => {
         // 如果短信功能未启用且尝试切换到手机登录，提示错误并阻止切换
         if (tab === 'phone' && !phoneEnabled) {
-            toast.danger({ title: '功能未启用', description: '短信功能未启用，请使用邮箱验证码登录', duration: 3000 })
+            toast.danger({ title: t('auth.common.featureDisabled'), description: t('auth.quickLogin.smsDisabled'), duration: 3000 })
             return
         }
 
@@ -115,21 +117,21 @@ export function useQuickLoginFlow() {
 
         const result = emailSchema.safeParse(email.value)
         if (!result.success) {
-            const message = getFirstZodError(result, translate) || '请输入有效的邮箱地址'
+            const message = getFirstZodError(result, translate) || t('auth.common.invalidEmail')
             errors.value.email = message
-            toast.danger({ title: '发送失败', description: message, duration: 5000 })
+            toast.danger({ title: t('auth.common.sendFailed'), description: message, duration: 5000 })
             return false
         }
 
         const success = await sendEmailCode()
 
         if (success) {
-            toast.success({ title: '验证码已发送', description: '验证码已发送到您的邮箱，请注意查收', duration: 3000 })
+            toast.success({ title: t('auth.common.sendSuccess'), description: t('auth.quickLogin.codeSentEmail'), duration: 3000 })
             return true
         }
 
         if (!errors.value.email) {
-            errors.value.email = errors.value.captcha || '验证码发送失败'
+            errors.value.email = errors.value.captcha || t('auth.quickLogin.codeSendFailed')
         }
         return false
     }
@@ -139,21 +141,21 @@ export function useQuickLoginFlow() {
 
         const result = phoneSchema.safeParse(phone.value)
         if (!result.success) {
-            const message = getFirstZodError(result, translate) || '请输入有效的手机号'
+            const message = getFirstZodError(result, translate) || t('auth.common.invalidPhone')
             errors.value.phone = message
-            toast.danger({ title: '发送失败', description: message, duration: 5000 })
+            toast.danger({ title: t('auth.common.sendFailed'), description: message, duration: 5000 })
             return false
         }
 
         const success = await sendPhoneCode()
 
         if (success) {
-            toast.success({ title: '验证码已发送', description: '验证码已发送到您的手机，请注意查收', duration: 3000 })
+            toast.success({ title: t('auth.common.sendSuccess'), description: t('auth.quickLogin.codeSentPhone'), duration: 3000 })
             return true
         }
 
         if (!errors.value.phone) {
-            errors.value.phone = errors.value.captcha || '验证码发送失败'
+            errors.value.phone = errors.value.captcha || t('auth.quickLogin.codeSendFailed')
         }
         return false
     }
@@ -183,16 +185,16 @@ export function useQuickLoginFlow() {
             })
 
             if (error) {
-                throw new Error(error.message || '登录失败')
+                throw new Error(error.message || t('auth.common.loginFailed'))
             }
 
-            toast.success({ title: '登录成功', description: '欢迎回来！', duration: 2000 })
+            toast.success({ title: t('auth.common.loginSuccess'), description: t('auth.quickLogin.welcomeBack'), duration: 2000 })
 
             navigateAfterLoginWithDelay()
         } catch (error: any) {
-            const message = error.message || '登录失败，请检查验证码是否正确'
+            const message = error.message || t('auth.quickLogin.invalidCode')
             errors.value.emailCode = message
-            toast.danger({ title: '登录失败', description: message, duration: 5000 })
+            toast.danger({ title: t('auth.common.loginFailed'), description: message, duration: 5000 })
         } finally {
             isEmailLoggingIn.value = false
         }
@@ -222,16 +224,16 @@ export function useQuickLoginFlow() {
                 code: phoneCode.value,
             })
             if (error) {
-                throw new Error(error.message || '登录失败')
+                throw new Error(error.message || t('auth.common.loginFailed'))
             }
 
-            toast.success({ title: '登录成功', description: '欢迎回来！', duration: 2000 })
+            toast.success({ title: t('auth.common.loginSuccess'), description: t('auth.quickLogin.welcomeBack'), duration: 2000 })
 
             navigateAfterLoginWithDelay()
         } catch (error: any) {
-            const message = error.message || '登录失败，请检查验证码是否正确'
+            const message = error.message || t('auth.quickLogin.invalidCode')
             errors.value.phoneCode = message
-            toast.danger({ title: '登录失败', description: message, duration: 5000 })
+            toast.danger({ title: t('auth.common.loginFailed'), description: message, duration: 5000 })
         } finally {
             isPhoneLoggingIn.value = false
         }

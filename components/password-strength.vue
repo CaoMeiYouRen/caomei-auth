@@ -24,7 +24,7 @@
             <small class="error-text">{{ errorMessage }}</small>
         </div>
         <div v-else-if="showRequirements && !errorMessage && password" class="strength-requirements">
-            <small class="success-text">✓ 密码强度达标</small>
+            <small class="success-text">{{ requirementsMet }}</small>
         </div>
     </div>
 </template>
@@ -33,13 +33,12 @@
 import { computed } from 'vue'
 import {
     getPasswordStrength,
-    getPasswordStrengthText,
     getPasswordStrengthColor,
-    getPasswordValidationError,
     getPasswordScore,
     getDefaultPasswordStrength,
     PasswordStrength,
 } from '@/utils/shared/password'
+import { usePasswordHints } from '@/composables/utils/use-password-hints'
 
 interface Props {
     /** 密码值 */
@@ -55,6 +54,9 @@ interface Props {
     /** 最小长度（用于显示强度条） */
     minLengthForDisplay?: number
 }
+
+const hints = usePasswordHints()
+const requirementsMet = computed(() => hints.requirementsMet())
 
 const props = withDefaults(defineProps<Props>(), {
     targetStrength: getDefaultPasswordStrength(), // PasswordStrength.STRONG,
@@ -99,7 +101,7 @@ const strengthLabel = computed(() => {
     if (!props.password || props.password.length < props.minLengthForDisplay) {
         return ''
     }
-    return `密码强度：${getPasswordStrengthText(currentStrength.value)}`
+    return hints.strengthSummary(currentStrength.value)
 })
 
 // 强度颜色
@@ -115,7 +117,7 @@ const errorMessage = computed(() => {
     if (!props.password || props.password.length < props.minLengthForDisplay) {
         return null
     }
-    return getPasswordValidationError(props.password, props.targetStrength)
+    return hints.validationError(props.password, props.targetStrength)
 })
 </script>
 

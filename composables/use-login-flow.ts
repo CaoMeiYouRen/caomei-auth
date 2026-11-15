@@ -17,17 +17,19 @@ import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 // Helper function to get first Zod error
 function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
     if (result.success) { return null }
     const message = result.error?.issues[0]?.message
-    return translate ? translate(message) : resolveValidationMessage(message) || '校验失败'
+    return translate ? translate(message) : resolveValidationMessage(message) || message || ''
 }
 
 export function useLoginFlow() {
     const config = useRuntimeConfig().public
     const translate = useValidationMessage()
+    const t = useI18nText()
     const phoneEnabled = config.phoneEnabled
     const usernameEnabled = config.usernameEnabled
     const toast = useToast()
@@ -74,11 +76,11 @@ export function useLoginFlow() {
     // Methods
     const changeMode = (mode: 'username' | 'email' | 'phone') => {
         if (mode === 'phone' && !phoneEnabled) {
-            toast.danger({ title: '功能未启用', description: '短信功能未启用，请使用其他方式登录', duration: 3000 })
+            toast.danger({ title: t('auth.common.featureDisabled'), description: t('auth.login.smsDisabled'), duration: 3000 })
             return
         }
         if (mode === 'username' && !usernameEnabled) {
-            toast.danger({ title: '功能未启用', description: '用户名登录功能未启用，请使用其他方式登录', duration: 3000 })
+            toast.danger({ title: t('auth.common.featureDisabled'), description: t('auth.login.usernameDisabled'), duration: 3000 })
             return
         }
         params.mode = mode
@@ -119,9 +121,9 @@ export function useLoginFlow() {
                 captchaContext = await resolveCaptchaToken(captcha)
                 errors.value.captcha = ''
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
+                const errorMessage = error instanceof Error ? error.message : t('auth.common.captchaRequired')
                 errors.value.captcha = errorMessage
-                toast.warning({ title: '需要验证码', description: errorMessage, duration: 2500 })
+                toast.warning({ title: t('auth.common.captchaNeeded'), description: errorMessage, duration: 2500 })
                 return false
             }
             const { error } = await authClient.twoFactor.sendOtp({
@@ -130,13 +132,13 @@ export function useLoginFlow() {
                 },
             })
             if (error) {
-                throw new Error(error.message || '发送验证码失败')
+                throw new Error(error.message || t('auth.login.codeSendFailed'))
             }
-            toast.success({ title: '发送成功', description: '验证码已发送，请检查您的邮箱', duration: 3000 })
+            toast.success({ title: t('auth.common.sendSuccess'), description: t('auth.login.codeSent'), duration: 3000 })
             return true
         } catch (error: any) {
-            const errorMessage = error instanceof Error ? error.message : '发送验证码失败'
-            toast.danger({ title: '发送失败', description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('auth.login.codeSendFailed')
+            toast.danger({ title: t('auth.common.sendFailed'), description: errorMessage, duration: 5000 })
             return false
         } finally {
             otpSending.value = false
@@ -150,7 +152,7 @@ export function useLoginFlow() {
 
     const verify2FA = async () => {
         if (!twoFactorCode.value) {
-            twoFactorError.value = '请输入验证码'
+            twoFactorError.value = t('auth.login.enterCode')
             return
         }
 
@@ -179,18 +181,18 @@ export function useLoginFlow() {
                     })
                     break
                 default:
-                    throw new Error('未知的验证方式')
+                    throw new Error(t('auth.login.unknownTwoFactorMethod'))
             }
 
             if (result.error) {
-                throw new Error(result.error.message || '验证失败')
+                throw new Error(result.error.message || t('auth.login.verifyFailed'))
             }
 
             reset2FAState()
-            toast.success({ title: '登录成功', description: '即将跳转到首页', duration: 2000 })
+            toast.success({ title: t('auth.common.loginSuccess'), description: t('auth.common.redirectHome'), duration: 2000 })
             navigateAfterLoginWithDelay(600)
         } catch (error: any) {
-            twoFactorError.value = error.message || '验证失败'
+            twoFactorError.value = error.message || t('auth.login.verifyFailed')
         } finally {
             verifying2FA.value = false
         }
@@ -230,18 +232,18 @@ export function useLoginFlow() {
                     })
 
                 if (authResult.error) {
-                    throw new Error(authResult.error.message || '登录失败')
+                    throw new Error(authResult.error.message || t('auth.common.loginFailed'))
                 }
 
                 if (handle2FA(authResult)) {
                     return
                 }
 
-                toast.success({ title: '登录成功', description: '即将跳转到首页', duration: 2000 })
+                toast.success({ title: t('auth.common.loginSuccess'), description: t('auth.common.redirectHome'), duration: 2000 })
                 navigateAfterLoginWithDelay(600)
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
-                toast.danger({ title: '登录失败', description: errorMessage, duration: 5000 })
+                const errorMessage = error instanceof Error ? error.message : t('auth.common.loginError')
+                toast.danger({ title: t('auth.common.loginFailed'), description: errorMessage, duration: 5000 })
             }
             return
         }
@@ -268,18 +270,18 @@ export function useLoginFlow() {
                     rememberMe: rememberMe.value,
                 })
                 if (authResult.error) {
-                    throw new Error(authResult.error.message || '登录失败')
+                    throw new Error(authResult.error.message || t('auth.common.loginFailed'))
                 }
 
                 if (handle2FA(authResult)) {
                     return
                 }
-                toast.success({ title: '登录成功', description: '即将跳转到首页', duration: 2000 })
+                toast.success({ title: t('auth.common.loginSuccess'), description: t('auth.common.redirectHome'), duration: 2000 })
 
                 navigateAfterLoginWithDelay(200)
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
-                toast.danger({ title: '登录失败', description: errorMessage, duration: 2000 })
+                const errorMessage = error instanceof Error ? error.message : t('auth.common.loginError')
+                toast.danger({ title: t('auth.common.loginFailed'), description: errorMessage, duration: 2000 })
             }
             return
         }
@@ -317,18 +319,18 @@ export function useLoginFlow() {
                 }
 
                 if (authResult.error) {
-                    throw new Error(authResult.error.message || '登录失败')
+                    throw new Error(authResult.error.message || t('auth.common.loginFailed'))
                 }
 
                 if (handle2FA(authResult)) {
                     return
                 }
 
-                toast.success({ title: '登录成功', description: '即将跳转到首页', duration: 2000 })
+                toast.success({ title: t('auth.common.loginSuccess'), description: t('auth.common.redirectHome'), duration: 2000 })
                 navigateAfterLoginWithDelay(600)
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : '登录时发生未知错误'
-                toast.danger({ title: '登录失败', description: errorMessage, duration: 2000 })
+                const errorMessage = error instanceof Error ? error.message : t('auth.common.loginError')
+                toast.danger({ title: t('auth.common.loginFailed'), description: errorMessage, duration: 2000 })
             }
         }
     }
@@ -338,14 +340,14 @@ export function useLoginFlow() {
             const result = await authClient.signIn.anonymous()
 
             if (result.error) {
-                throw new Error(result.error.message || '匿名登录失败')
+                throw new Error(result.error.message || t('auth.login.anonymousFailed'))
             }
 
-            toast.success({ title: '匿名登录成功', description: '即将跳转到首页', duration: 2000 })
+            toast.success({ title: t('auth.login.anonymousSuccess'), description: t('auth.common.redirectHome'), duration: 2000 })
             navigateAfterLoginWithDelay(600)
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '匿名登录时发生未知错误'
-            toast.danger({ title: '匿名登录失败', description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('auth.login.anonymousError')
+            toast.danger({ title: t('auth.login.anonymousFailed'), description: errorMessage, duration: 5000 })
         }
     }
 
@@ -353,7 +355,7 @@ export function useLoginFlow() {
         const { provider, name, enabled } = socialProvider
 
         if (enabled === false) {
-            toast.warning({ title: '登录失败', description: `${name} 登录方式未启用，请使用其他方式登录`, duration: 5000 })
+            toast.warning({ title: t('auth.common.loginFailed'), description: t('auth.login.socialDisabled', { name }), duration: 5000 })
             return
         }
 
@@ -367,13 +369,13 @@ export function useLoginFlow() {
                 callbackURL: `${window.location.origin}/profile`,
             })
             if (!result || result.error) {
-                throw new Error(result?.error?.message || `${name} 登录失败`)
+                throw new Error(result?.error?.message || t('auth.login.socialFailed', { name }))
             }
-            toast.success({ title: `正在通过 ${name} 登录`, description: '即将跳转到登录页', duration: 2000 })
+            toast.success({ title: t('auth.login.socialLoggingIn', { name }), description: t('auth.login.socialRedirect'), duration: 2000 })
             navigateAfterLoginWithDelay(600)
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : `${name} 登录时发生未知错误`
-            toast.danger({ title: `${name} 登录失败`, description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('auth.common.loginError')
+            toast.danger({ title: t('auth.login.socialFailed', { name }), description: errorMessage, duration: 5000 })
         }
     }
 
@@ -388,7 +390,7 @@ export function useLoginFlow() {
             () => {
                 const result = emailSchema.safeParse(email.value)
                 if (!result.success) {
-                    errors.value.email = getFirstZodError(result, translate) || '请输入有效的邮箱地址'
+                    errors.value.email = getFirstZodError(result, translate) || t('auth.common.invalidEmail')
                     return false
                 }
                 return true
@@ -407,7 +409,7 @@ export function useLoginFlow() {
             () => {
                 const result = phoneSchema.safeParse(phone.value)
                 if (!result.success) {
-                    errors.value.phone = getFirstZodError(result, translate) || '请输入有效的手机号'
+                    errors.value.phone = getFirstZodError(result, translate) || t('auth.common.invalidPhone')
                     return false
                 }
                 return true

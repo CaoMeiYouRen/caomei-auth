@@ -2,9 +2,11 @@ import { ref, type Ref } from 'vue'
 import { useToast } from 'caomei-ui'
 import { resolveCaptchaToken, type CaptchaExpose } from '@/utils/web/captcha'
 import { sendEmailOtpService, sendPhoneOtpService } from '@/utils/web/otp-service'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 export function useEmailOtp() {
     const toast = useToast()
+    const t = useI18nText()
     const sending = ref(false)
 
     const send = async (
@@ -32,11 +34,11 @@ export function useEmailOtp() {
                         onError('captcha', '')
                     }
                 } catch (e: any) {
-                    const msg = e.message || '验证码错误'
+                    const msg = e.message || t('auth.common.invalidCaptcha')
                     if (onError) {
                         onError('captcha', msg)
                     }
-                    toast.warning({ title: '验证码', description: msg })
+                    toast.warning({ title: t('auth.common.captcha'), description: msg })
                     return false
                 }
             }
@@ -47,10 +49,10 @@ export function useEmailOtp() {
                 throw new Error(error.message)
             }
 
-            toast.success({ title: '发送成功', description: '请查收邮件' })
+            toast.success({ title: t('auth.common.sendSuccess'), description: t('auth.common.checkEmail') })
             return true
         } catch (e: any) {
-            toast.danger({ title: '发送失败', description: e.message })
+            toast.danger({ title: t('auth.common.sendFailed'), description: e.message })
             return false
         } finally {
             if (cooldown) {
@@ -72,6 +74,7 @@ export function useEmailOtp() {
 
 export function usePhoneOtp() {
     const toast = useToast()
+    const t = useI18nText()
     const sending = ref(false)
 
     const send = async (
@@ -99,11 +102,11 @@ export function usePhoneOtp() {
                         onError('captcha', '')
                     }
                 } catch (e: any) {
-                    const msg = e.message || '验证码错误'
+                    const msg = e.message || t('auth.common.invalidCaptcha')
                     if (onError) {
                         onError('captcha', msg)
                     }
-                    toast.warning({ title: '验证码', description: msg })
+                    toast.warning({ title: t('auth.common.captcha'), description: msg })
                     return false
                 }
             }
@@ -114,10 +117,10 @@ export function usePhoneOtp() {
                 throw new Error(error.message)
             }
 
-            toast.success({ title: '发送成功', description: '请查收短信' })
+            toast.success({ title: t('auth.common.sendSuccess'), description: t('auth.common.checkSms') })
             return true
         } catch (e: any) {
-            toast.danger({ title: '发送失败', description: e.message })
+            toast.danger({ title: t('auth.common.sendFailed'), description: e.message })
             return false
         } finally {
             if (cooldown) {

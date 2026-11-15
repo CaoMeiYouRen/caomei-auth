@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useChangePasswordFlow } from '../../../composables/use-change-password-flow'
 import { authClient } from '../../../lib/auth-client'
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 // Mock dependencies
 vi.mock('caomei-ui', () => ({
     useToast: () => ({

@@ -27,7 +27,7 @@ export interface PasswordValidatorOptions extends Omit<StrongPasswordOptions, 'r
 /**
  * 预设的密码强度配置
  */
-const passwordStrengthPresets: Record<PasswordStrength, PasswordValidatorOptions> = {
+export const passwordStrengthPresets: Record<PasswordStrength, PasswordValidatorOptions> = {
     [PasswordStrength.WEAK]: {
         minLength: 6,
         minLowercase: 0,

@@ -12,6 +12,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useCountdown } from '@vueuse/core'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 const props = withDefaults(defineProps<{
     duration?: number
@@ -22,21 +23,22 @@ const props = withDefaults(defineProps<{
     loading?: boolean
 }>(), {
     duration: 60,
-    text: '获取验证码',
-    resendText: '重新发送',
+    text: '',
+    resendText: '',
     disabled: false,
     loading: false,
 })
 
+const t = useI18nText()
 const { remaining, start, reset } = useCountdown(props.duration)
 reset(0)
 const hasStarted = ref(false)
 
 const btnLabel = computed(() => {
     if (hasStarted.value && remaining.value > 0) {
-        return `${props.resendText}(${remaining.value}s)`
+        return `${props.resendText || t('auth.code.resend')}(${remaining.value}s)`
     }
-    return props.text
+    return props.text || t('auth.code.get')
 })
 
 async function handleSend() {

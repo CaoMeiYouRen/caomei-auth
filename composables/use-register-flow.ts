@@ -6,12 +6,14 @@ import { registerEmailFormSchema, registerPhoneFormSchema } from '@/utils/shared
 import { usePhoneOtp } from '@/composables/use-otp'
 import { authClient } from '@/lib/auth-client'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 import { useForm } from '@/composables/core/use-form'
 
 export function useRegisterFlow() {
     const config = useRuntimeConfig().public
     const translate = useValidationMessage()
+    const t = useI18nText()
     const phoneEnabled = config.phoneEnabled
     const usernameEnabled = config.usernameEnabled
 
@@ -56,7 +58,7 @@ export function useRegisterFlow() {
             }
 
             if (!vals.agreement) {
-                newErrors.agreement = '请阅读并同意服务条款和隐私政策'
+                newErrors.agreement = t('auth.register.agreementRequired')
             }
 
             return newErrors
@@ -83,7 +85,7 @@ export function useRegisterFlow() {
             () => {
                 const res = registerPhoneFormSchema.shape.phone.safeParse(phone.value)
                 if (!res.success) {
-                    setErrors({ ...errors.value, phone: translate(res.error.issues[0]?.message) || '请输入有效的手机号' })
+                    setErrors({ ...errors.value, phone: translate(res.error.issues[0]?.message) || t('auth.common.invalidPhone') })
                     return false
                 }
                 return true
@@ -108,7 +110,7 @@ export function useRegisterFlow() {
 
     const changeMode = (mode: 'email' | 'phone') => {
         if (mode === 'phone' && !phoneEnabled) {
-            toast.danger({ title: '功能未启用', description: '短信功能未启用，请使用其他方式注册', duration: 3000 })
+            toast.danger({ title: t('auth.common.featureDisabled'), description: t('auth.register.smsDisabled'), duration: 3000 })
             return
         }
         params.mode = mode
@@ -130,9 +132,9 @@ export function useRegisterFlow() {
                     try {
                         captchaContext = await resolveCaptchaToken(captcha)
                     } catch (error) {
-                        const errorMessage = error instanceof Error ? error.message : '请先完成验证码验证'
+                        const errorMessage = error instanceof Error ? error.message : t('auth.common.captchaRequired')
                         errors.value.captcha = errorMessage
-                        toast.warning({ title: '需要验证码', description: errorMessage, duration: 2500 })
+                        toast.warning({ title: t('auth.common.captchaNeeded'), description: errorMessage, duration: 2500 })
                         return
                     }
 
@@ -153,7 +155,7 @@ export function useRegisterFlow() {
                     const { error } = await authClient.signUp.email(signUpData, requestOptions)
 
                     if (error) {
-                        throw new Error(error.message || '注册失败')
+                        throw new Error(error.message || t('auth.register.failed'))
                     }
                 } else if (activeTab.value === 'phone') {
                     const isVerified = await authClient.phoneNumber.verify({
@@ -162,7 +164,7 @@ export function useRegisterFlow() {
                     })
 
                     if (!isVerified.data?.status) {
-                        throw new Error('手机号码验证失败')
+                        throw new Error(t('auth.register.phoneVerifyFailed'))
                     }
 
                     const updateData: any = {
@@ -176,18 +178,22 @@ export function useRegisterFlow() {
                     const { error } = await authClient.updateUser(updateData)
 
                     if (error) {
-                        throw new Error(error.message || '更新用户信息失败')
+                        throw new Error(error.message || t('auth.register.profileUpdateFailed'))
                     }
                 }
 
-                toast.success({ title: '注册成功', description: activeTab.value === 'email' ? '验证邮件已发送，请前往邮箱激活账号' : '注册成功，请登录', duration: 2500 })
+                toast.success({
+                    title: t('auth.register.success'),
+                    description: activeTab.value === 'email' ? t('auth.register.successEmail') : t('auth.register.successPhone'),
+                    duration: 2500,
+                })
 
                 setTimeout(() => {
                     navigateTo(`/login?mode=${activeTab.value}`)
                 }, 500)
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : '注册过程中发生未知错误'
-                toast.danger({ title: '注册失败', description: errorMessage, duration: 5000 })
+                const errorMessage = error instanceof Error ? error.message : t('auth.register.unknownError')
+                toast.danger({ title: t('auth.register.failed'), description: errorMessage, duration: 5000 })
                 // Re-throw to let useForm know it failed? useForm doesn't handle errors from onSubmit unless we throw.
                 // But here we handled it with toast.
             }

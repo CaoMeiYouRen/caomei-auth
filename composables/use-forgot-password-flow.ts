@@ -11,18 +11,20 @@ import {
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 import type { CaptchaExpose } from '@/utils/web/captcha'
 
 // Helper function to get first Zod error
 function getFirstZodError(result: { success: boolean, error?: { issues: { message: string }[] } }, translate?: (message?: string | null) => string): string | null {
     if (result.success) { return null }
     const message = result.error?.issues[0]?.message
-    return translate ? translate(message) : resolveValidationMessage(message) || '校验失败'
+    return translate ? translate(message) : resolveValidationMessage(message) || message || ''
 }
 
 export function useForgotPasswordFlow() {
     const config = useRuntimeConfig().public
     const translate = useValidationMessage()
+    const t = useI18nText()
     const phoneEnabled = config.phoneEnabled
 
     const email = ref('')
@@ -70,7 +72,7 @@ export function useForgotPasswordFlow() {
             () => {
                 const res = emailSchema.safeParse(email.value)
                 if (!res.success) {
-                    errors.value.email = translate(res.error.issues[0]?.message) || '请输入有效的邮箱地址'
+                    errors.value.email = translate(res.error.issues[0]?.message) || t('auth.common.invalidEmail')
                     return false
                 }
                 return true
@@ -89,7 +91,7 @@ export function useForgotPasswordFlow() {
             () => {
                 const res = phoneSchema.safeParse(phone.value)
                 if (!res.success) {
-                    errors.value.phone = translate(res.error.issues[0]?.message) || '请输入有效的手机号'
+                    errors.value.phone = translate(res.error.issues[0]?.message) || t('auth.common.invalidPhone')
                     return false
                 }
                 return true
@@ -160,7 +162,7 @@ export function useForgotPasswordFlow() {
                     password: newPassword.value,
                 })
                 if (error) {
-                    throw new Error(error.message || '密码重置失败')
+                    throw new Error(error.message || t('auth.forgot.resetFailed'))
                 }
             } else if (activeTab.value === 'phone') {
                 const isVerified = await authClient.phoneNumber.resetPassword({
@@ -169,16 +171,16 @@ export function useForgotPasswordFlow() {
                     newPassword: newPassword.value,
                 })
                 if (!isVerified.data?.status) {
-                    throw new Error('密码重置失败')
+                    throw new Error(t('auth.forgot.resetFailed'))
                 }
             }
-            toast.success({ title: '密码重置成功', description: '请使用新密码登录', duration: 2500 })
+            toast.success({ title: t('auth.forgot.success'), description: t('auth.common.useNewPassword'), duration: 2500 })
             setTimeout(() => {
                 navigateTo(`/login?mode=${activeTab.value}`)
             }, 1500)
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : '密码重置失败'
-            toast.danger({ title: '重置失败', description: errorMessage, duration: 5000 })
+            const errorMessage = error instanceof Error ? error.message : t('auth.forgot.resetFailed')
+            toast.danger({ title: t('auth.forgot.failed'), description: errorMessage, duration: 5000 })
         }
     }
 

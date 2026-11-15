@@ -1,7 +1,7 @@
 <template>
     <div class="auth-left">
         <h1 class="auth-title">
-            {{ title }}
+            {{ title || t('auth.left.defaultTitle') }}
         </h1>
         <p v-if="subtitle" class="auth-subtitle">
             {{ subtitle }}
@@ -14,10 +14,14 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
+import { useI18nText } from '@/composables/utils/use-i18n-text'
+
+const t = useI18nText()
+
+defineProps({
     title: {
         type: String,
-        default: '草梅Auth统一登录平台',
+        default: '',
     },
     subtitle: {
         type: String,

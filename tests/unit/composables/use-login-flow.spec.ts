@@ -7,6 +7,7 @@ import { useLoginFlow } from '@/composables/use-login-flow'
 import { resolveCaptchaToken } from '@/utils/web/captcha'
 import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 // Mock Nuxt composables
 const { config, useToastMock, useFetchMock, useNuxtAppMock, toastMocks } = vi.hoisted(() => {
     const hoistedToastMocks = { show: vi.fn(), success: vi.fn(), danger: vi.fn(), warning: vi.fn(), info: vi.fn() }

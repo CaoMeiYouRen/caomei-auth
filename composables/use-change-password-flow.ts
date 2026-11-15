@@ -2,10 +2,12 @@ import { ref, computed } from 'vue'
 import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { useForm } from '@/composables/core/use-form'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 import { changePasswordFormSchema } from '@/utils/shared/schemas'
 
 export function useChangePasswordFlow() {
     const toast = useToast()
+    const t = useI18nText()
     const revokeOtherSessions = ref(true)
 
     const { values, errors, submitting, handleSubmit, setField } = useForm({
@@ -30,13 +32,13 @@ export function useChangePasswordFlow() {
                     currentPassword: vals.currentPassword,
                     revokeOtherSessions: revokeOtherSessions.value,
                 })
-                toast.success({ title: '密码修改成功', description: '请使用新密码登录', duration: 2500 })
+                toast.success({ title: t('auth.changePassword.success'), description: t('auth.common.useNewPassword'), duration: 2500 })
                 setTimeout(() => {
                     window.location.href = '/login'
                 }, 1500)
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : '密码修改时发生未知错误'
-                toast.danger({ title: '修改失败', description: errorMessage, duration: 5000 })
+                const errorMessage = error instanceof Error ? error.message : t('auth.changePassword.unknownError')
+                toast.danger({ title: t('auth.changePassword.failed'), description: errorMessage, duration: 5000 })
             }
         })
     }

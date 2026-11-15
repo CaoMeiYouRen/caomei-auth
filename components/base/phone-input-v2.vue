@@ -14,7 +14,7 @@
                         :options="options"
                         option-label="label"
                         option-value="value"
-                        aria-label="国家/地区代码"
+                        :aria-label="t('auth.phone.regionLabel')"
                         @update:model-value="formatPhone"
                     />
                 </div>
@@ -23,7 +23,7 @@
                     v-model="phoneNumber"
                     class="phone-number-input"
                     :name="field.name"
-                    :placeholder="placeholder"
+                    :placeholder="placeholder || t('auth.phone.placeholder')"
                     :invalid="field.invalid"
                     v-bind="$attrs"
                     :aria-labelledby="field['aria-labelledby']"
@@ -39,6 +39,7 @@
 import { ref, watch } from 'vue'
 import pkg, { type RegionCode, type RegionCodeUnknown } from 'google-libphonenumber'
 import { SUPPORTED_REGIONS, formatPhoneNumber, phoneUtil } from '@/utils/shared/phone'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 const { PhoneNumberFormat } = pkg
 
@@ -58,7 +59,7 @@ const props = withDefaults(defineProps<{
 }>(), {
     label: '',
     error: '',
-    placeholder: '请输入手机号',
+    placeholder: '',
     defaultRegion: 'CN',
     required: false,
     name: '',
@@ -67,6 +68,8 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void
 }>()
+
+const t = useI18nText()
 
 const options = SUPPORTED_REGIONS.map((item) => ({
     label: `${item.region} +${item.countryCode}`,

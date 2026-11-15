@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useQuickLoginFlow } from '@/composables/use-quick-login-flow'
 import { authClient } from '@/lib/auth-client'
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 // Mock dependencies
 vi.mock('@/lib/auth-client', () => ({
     authClient: {

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useCaptcha } from '@/composables/use-captcha'
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 // Mock Nuxt composables
 vi.mock('#app/nuxt', async (importOriginal) => {
     const actual = await importOriginal<typeof import('#app/nuxt')>()

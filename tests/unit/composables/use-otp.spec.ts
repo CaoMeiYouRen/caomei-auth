@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ref } from 'vue'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 const { toastMocks, toastStub, emailOtpServiceMock, phoneOtpServiceMock, resolveCaptchaTokenMock } = vi.hoisted(() => {
     const hoistedToastMocks = {
         show: vi.fn(),

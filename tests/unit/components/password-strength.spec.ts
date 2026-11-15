@@ -3,27 +3,19 @@ import { describe, it, expect, vi } from 'vitest'
 import PasswordStrengthComponent from '@/components/password-strength.vue'
 import {
     getPasswordStrength,
-    getPasswordStrengthText,
     getPasswordStrengthColor,
-    getPasswordValidationError,
     getPasswordScore,
     PasswordStrength,
 } from '@/utils/shared/password'
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 // Mock the password utility
-vi.mock('@/utils/shared/password', () => ({
+vi.mock('@/utils/shared/password', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('@/utils/shared/password')>()),
     getPasswordStrength: vi.fn(),
-    getPasswordStrengthText: vi.fn(),
     getPasswordStrengthColor: vi.fn(),
-    getPasswordValidationError: vi.fn(),
     getPasswordScore: vi.fn(),
     getDefaultPasswordStrength: vi.fn().mockReturnValue('strong'),
-    PasswordStrength: {
-        WEAK: 'weak',
-        MEDIUM: 'medium',
-        STRONG: 'strong',
-        VERY_STRONG: 'very_strong',
-    },
 }))
 
 describe('PasswordStrength', () => {
@@ -43,7 +35,6 @@ describe('PasswordStrength', () => {
 
     it('calculates strength and score correctly', () => {
         vi.mocked(getPasswordStrength).mockReturnValue(PasswordStrength.MEDIUM)
-        vi.mocked(getPasswordStrengthText).mockReturnValue('Medium')
         vi.mocked(getPasswordStrengthColor).mockReturnValue('orange')
         vi.mocked(getPasswordScore).mockReturnValue(60)
 
@@ -54,31 +45,28 @@ describe('PasswordStrength', () => {
             },
         })
 
-        expect(wrapper.find('.strength-text').text()).toContain('Medium')
+        expect(wrapper.find('.strength-text').text()).toBe('密码强度：中等')
         expect(wrapper.find('.strength-score').text()).toBe('(60/100)')
         expect(wrapper.find('.strength-progress').attributes('style')).toContain('width: 50%')
         expect(wrapper.find('.strength-progress').attributes('style')).toContain('background-color: orange')
     })
 
-    it('shows requirements error message', () => {
-        vi.mocked(getPasswordValidationError).mockReturnValue('Too short')
-
+    it('shows localized requirements error message', () => {
         const wrapper = mount(PasswordStrengthComponent, {
             props: {
-                password: 'short',
+                password: 'a',
                 showRequirements: true,
             },
         })
 
-        expect(wrapper.find('.error-text').text()).toBe('Too short')
+        expect(wrapper.find('.error-text').text()).toContain('密码长度至少需要')
     })
 
     it('shows success message when valid', () => {
-        vi.mocked(getPasswordValidationError).mockReturnValue('')
-
         const wrapper = mount(PasswordStrengthComponent, {
             props: {
-                password: 'valid',
+                password: 'ValidPass1!',
+                targetStrength: PasswordStrength.STRONG,
                 showRequirements: true,
             },
         })

@@ -1,7 +1,8 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import AuthLeft from '@/components/auth-left.vue'
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 describe('AuthLeft', () => {
     it('renders with default props', () => {
         const wrapper = mount(AuthLeft)

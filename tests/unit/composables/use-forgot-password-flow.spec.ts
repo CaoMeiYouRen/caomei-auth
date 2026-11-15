@@ -3,6 +3,7 @@ import { ref, reactive } from 'vue'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useForgotPasswordFlow } from '@/composables/use-forgot-password-flow'
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 // Mocks
 const { mockUseUrlSearchParams, mockUseToast, mockNavigateTo, mockUseRuntimeConfig, mockAuthClient, mockUseEmailOtp, mockUsePhoneOtp } = vi.hoisted(() => ({
     mockUseUrlSearchParams: vi.fn(),

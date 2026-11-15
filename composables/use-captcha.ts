@@ -1,7 +1,9 @@
 import { ref, computed } from 'vue'
 import { useChallengeV3, type UseChallengeV3Return } from 'vue-recaptcha'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 export function useCaptcha() {
+    const translate = useI18nText()
     const token = ref<string>('')
     const widget = ref<any | null>(null) // 用于存储组件实例
     const error = ref<string | null>(null)
@@ -46,7 +48,7 @@ export function useCaptcha() {
      */
     function onExpired() {
         token.value = ''
-        error.value = '验证码已过期，请重试。'
+        error.value = translate('auth.captcha.expired')
     }
 
     /**
@@ -56,7 +58,7 @@ export function useCaptcha() {
     function onError(err: unknown) {
         const message = err instanceof Error ? err.message : String(err ?? '')
         token.value = ''
-        error.value = `验证码加载失败: ${message}`
+        error.value = translate('auth.captcha.loadFailed', { message })
         console.error('Captcha error:', err)
     }
 
@@ -65,7 +67,7 @@ export function useCaptcha() {
      */
     function onUnsupported() {
         token.value = ''
-        error.value = '您的浏览器不支持验证码，请更换浏览器或禁用广告拦截插件。'
+        error.value = translate('auth.captcha.unsupported')
     }
 
     /**
