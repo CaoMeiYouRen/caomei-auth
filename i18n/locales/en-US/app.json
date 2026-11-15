@@ -1,7 +1,44 @@
 {
     "app": {
         "name": "Caomei Auth",
-        "title": "Caomei Auth Unified Sign-In Platform"
+        "title": "Caomei Auth Unified Sign-In Platform",
+        "error": {
+            "status": {
+                "400": {
+                    "title": "Bad request (400)",
+                    "description": "The request is invalid. Check the parameters and try again."
+                },
+                "401": {
+                    "title": "Unauthorized (401)",
+                    "description": "You are not signed in, or your session has expired."
+                },
+                "403": {
+                    "title": "Forbidden (403)",
+                    "description": "You do not have permission to access this page."
+                },
+                "404": {
+                    "title": "Page not found (404)",
+                    "description": "The page you requested does not exist or has been removed."
+                },
+                "500": {
+                    "title": "Server error (500)",
+                    "description": "Something went wrong on the server. Try again later."
+                },
+                "unknown": {
+                    "code": "Error",
+                    "title": "Something went wrong",
+                    "description": "An unexpected error occurred. Try again later."
+                }
+            },
+            "page": {
+                "ariaLabel": "Error page",
+                "leftSubtitle": "Secure, convenient sign-in for everything"
+            },
+            "actions": {
+                "home": "Back to home",
+                "back": "Go back"
+            }
+        }
     },
     "language": {
         "label": "Language",

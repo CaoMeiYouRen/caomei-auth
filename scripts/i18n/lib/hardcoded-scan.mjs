@@ -8,6 +8,7 @@ import { CJK_PATTERN, parseJson, projectRoot } from './locale-data.mjs'
  */
 export const HARDCODED_SCAN_TARGETS = [
     { path: 'app.vue', extensions: ['.vue'] },
+    { path: 'error.vue', extensions: ['.vue'] },
     { path: 'pages', extensions: ['.vue'] },
     { path: 'components', extensions: ['.vue'] },
     { path: 'layouts', extensions: ['.vue'] },

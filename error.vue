@@ -2,43 +2,43 @@
     <div
         class="auth-container"
         role="main"
-        aria-label="错误页面"
+        :aria-label="t('app.error.page.ariaLabel')"
     >
         <AuthLeft
-            title="草梅Auth统一登录平台"
-            subtitle="安全、便捷的一站式登录体验"
+            :title="t('auth.left.defaultTitle')"
+            :subtitle="t('app.error.page.leftSubtitle')"
         />
         <div class="auth-right">
             <div class="auth-card error-card">
                 <h1 class="error-code">
-                    {{ displayStatusCode }}
+                    {{ view.code }}
                 </h1>
                 <h2 class="auth-title">
-                    {{ title }}
+                    {{ view.title }}
                 </h2>
                 <p class="auth-subtitle">
-                    {{ description }}
+                    {{ view.description }}
                 </p>
                 <div
-                    v-if="error.data?.message"
+                    v-if="view.detail"
                     class="error-message"
                     aria-live="polite"
                 >
-                    {{ error.data.message }}
+                    {{ view.detail }}
                 </div>
                 <div class="error-actions">
                     <CaomeiButton
-                        aria-label="返回首页"
+                        :aria-label="t('app.error.actions.home')"
                         @click="goHome"
                     >
-                        返回首页
+                        {{ t('app.error.actions.home') }}
                     </CaomeiButton>
                     <CaomeiButton
                         variant="secondary"
-                        aria-label="返回上一页"
+                        :aria-label="t('app.error.actions.back')"
                         @click="goBack"
                     >
-                        返回上一页
+                        {{ t('app.error.actions.back') }}
                     </CaomeiButton>
                 </div>
             </div>
@@ -51,6 +51,7 @@ import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import type { NuxtError } from '#app'
 import AuthLeft from '@/components/auth-left.vue'
+import { resolveErrorView } from '@/utils/web/error-status'
 
 const props = defineProps({
     error: {
@@ -60,51 +61,13 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const { t } = useI18n()
 
-const statusCode = computed(() => props.error?.statusCode || 404)
-const displayStatusCode = computed(() => {
-    if ([400, 401, 403, 404, 500].includes(statusCode.value)) {
-        return statusCode.value
-    }
-    return '错误'
-})
-
-const title = computed(() => {
-    switch (statusCode.value) {
-        case 400:
-            return '请求错误 (400)'
-        case 401:
-            return '未授权 (401)'
-        case 403:
-            return '禁止访问 (403)'
-        case 404:
-            return '页面未找到 (404)'
-        case 500:
-            return '服务器错误 (500)'
-        default:
-            return props.error.statusMessage || '出错啦'
-    }
-})
-
-const description = computed(() => {
-    if (props.error.statusMessage) {
-        return props.error.statusMessage
-    }
-    switch (statusCode.value) {
-        case 400:
-            return '请求无效，请检查请求参数。'
-        case 401:
-            return '您尚未登录或登录已过期。'
-        case 403:
-            return '您没有权限访问该页面。'
-        case 404:
-            return '您访问的页面不存在或已被删除。'
-        case 500:
-            return '服务器发生错误，请稍后重试。'
-        default:
-            return '发生未知错误，请稍后再试。'
-    }
-})
+const view = computed(() => resolveErrorView({
+    statusCode: props.error?.statusCode || 404,
+    statusMessage: props.error?.statusMessage,
+    dataMessage: props.error?.data?.message,
+}, t))
 
 function goHome() {
     navigateTo('/')

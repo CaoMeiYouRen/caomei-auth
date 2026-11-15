@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-**阶段 5「i18n 全量落地与体验收口」进行中（2026-11-14 授权）：M1–M4 已完成（2026-11-15），M5–M19 pending。** 范围、口径与验收见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)，已交付条目见 [M1](../design/governance/2026-11-15-m1-caomei-ui-1.3.0.md) / [M2](../design/governance/2026-11-15-m2-locale-modules.md) / [M3](../design/governance/2026-11-15-m3-governance-gates.md) / [M4](../design/governance/2026-11-15-m4-auth-text.md) 记录；阶段 4 已于 2026-11-14 收口，见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)。
+**阶段 5「i18n 全量落地与体验收口」进行中（2026-11-14 授权）：M1–M5 已完成（2026-11-15），M6–M19 pending。** 范围、口径与验收见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)，已交付条目见 [M1](../design/governance/2026-11-15-m1-caomei-ui-1.3.0.md) / [M2](../design/governance/2026-11-15-m2-locale-modules.md) / [M3](../design/governance/2026-11-15-m3-governance-gates.md) / [M4](../design/governance/2026-11-15-m4-auth-text.md) / [M5](../design/governance/2026-11-15-m5-sso-error-reset.md) 记录；阶段 4 已于 2026-11-14 收口，见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)。
 
 ## 阶段 5 原子条目
 
@@ -16,7 +16,7 @@
 | M2 | 消息模块化与按需加载 | `locale-modules` / `locale-runtime-loader`；17 模块拆分；core 首屏 + 路由懒加载；loader 单测 | 已完成（2026-11-15） |
 | M3 | 治理门禁与既有缺陷 | 扫描覆盖 `<script setup>`；`lint:i18n` / `test:i18n` 接入；Admin `validation.*` 直显修复；`usePageMeta` / `app.head` 接入 | 已完成（2026-11-15） |
 | M4 | 认证入口文案 | 5 个认证页 + 共享组件 + 5 个 flow composable + `auth` 模块双语 | 已完成（2026-11-15） |
-| M5 | SSO 登录、错误页与密码重置链接页 | SSO / 错误页双语；`/reset-password` 页面或移除邮件链接；白名单 / 限流同步 | pending |
+| M5 | SSO 登录、错误页与密码重置链接页 | SSO / 错误页双语；邮件链接通道下线（决策：统一验证码，backlog §2.11）；白名单 / 限流 / 语言模块规则同步 | 已完成（2026-11-15） |
 | M6 | 个人中心文案 | `profile` 页 + 9 个组件 + flow 双语；编辑类对话框完整 | pending |
 | M7 | 安全设置文案 | 2FA / 会话 / 密码区双语；动态列按 locale 格式化 | pending |
 | M8 | OAuth 与授权应用文案 | 同意页 + 授权列表 + 2 个 composable 双语 | pending |

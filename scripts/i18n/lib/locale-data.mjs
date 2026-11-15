@@ -132,7 +132,7 @@ export function formatList(items, limit = 50) {
     return `${items.slice(0, limit).map((item) => `  - ${item}`).join('\n')}\n  ... 还有 ${rest} 项`
 }
 
-const SOURCE_ROOTS = ['app.vue', 'pages', 'components', 'layouts', 'composables', 'server', 'utils', 'plugins', 'middleware', 'lib']
+const SOURCE_ROOTS = ['app.vue', 'error.vue', 'pages', 'components', 'layouts', 'composables', 'server', 'utils', 'plugins', 'middleware', 'lib']
 const SOURCE_EXTENSIONS = new Set(['.vue', '.ts'])
 const IGNORED_DIRECTORIES = new Set(['node_modules', '.nuxt', '.output', 'dist', 'coverage', 'test-results', 'playwright-report', '.git'])
 

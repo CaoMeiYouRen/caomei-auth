@@ -232,8 +232,8 @@ const ROUTES: readonly AdminRoute[] = [
         auth: true,
         readySelector: '.error-card',
         readyText: '页面未找到 (404)',
-        /* 错误页是 Nuxt 独立错误实例，未接入主题插件（html 不挂 dark），只采浅色 */
-        themes: ['light'],
+        /* 错误页由应用级主题插件设置 `html.dark`；浅色 / 暗色都由本层覆盖（同页只保留一份基线） */
+        themes: ['light', 'dark'],
     },
 ]
 

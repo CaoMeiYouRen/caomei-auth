@@ -1,6 +1,6 @@
 # 2026-11-08 视觉参考态基座（Visual Reference Harness）
 
-> **状态**：参考态与自基线两层均已建立；2026-11-10 起覆盖 P2–P4 Admin；2026-11-14 自基线补充 about / privacy / terms（自基线 100 张 = 认证 62 + Admin 38；参考态 88 张 = 认证 50 + Admin 38，新页面只维护自基线）。
+> **状态**：参考态与自基线两层均已建立；2026-11-10 起覆盖 P2–P4 Admin；2026-11-14 自基线补充 about / privacy / terms（自基线 102 张 = 认证 62 + Admin 40；参考态 88 张 = 认证 50 + Admin 38，新页面只维护自基线）。
 > **2026-11-14 收口更新**：阶段 4 P5 完成后 PrimeVue 已下线，自基线（`pnpm test:visual`，102 passed）是唯一阻断门禁；参考态快照保留为历史证据，CI 不再执行 parity（`test.yml` 已移除该步骤），`test:visual:reference*` 已不可再采集（无迁移前页面）。
 > **替代关系**：本文替代 [P2 视觉基线方案](./2026-11-05-caomei-ui-p2-visual-baseline-plan.md) §1 的「不建截图工程 / 截图不入库 / 不做像素判定」口径。
 > **关联**：[caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md) §8.1 / §9 / §12｜[P2 视觉基线方案](./2026-11-05-caomei-ui-p2-visual-baseline-plan.md)｜[测试规范](../../standards/testing.md)。
@@ -25,7 +25,7 @@
 - **渲染环境固定为容器**：本地与 CI 共用 `mcr.microsoft.com/playwright:v<版本>-noble`。宿主与容器实测约 1% 的整页漂移（12,509 / 1,296,000 px），因此基线只在容器内采集，宿主直接跑仅用于调试。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
-## 3. 视觉矩阵（自基线 100 张 / 参考态 88 张）
+## 3. 视觉矩阵（自基线 102 张 / 参考态 88 张）
 
 同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）。参考态只覆盖迁移前已存在的页面（认证 50 + Admin 38）；about / privacy / terms 是迁移后新增的自基线页面，矩阵中以 `reference: false` 标记，参考态层跳过。
 
@@ -70,9 +70,9 @@
 | `/admin/logs` | 浅 | 1440×900 | 会话状态筛选 / 日期范围 | `admin-logs-light-desktop-{status-filter,date-range}` |
 | `/oauth/clients` | 浅 / 暗 | 1440×900 / 390×844 | 默认（空态） | `oauth-clients-{theme}-{viewport}-default` |
 | `/` | 浅 / 暗 | 1440×900 / 390×844 | 默认（管理员会话） | `home-{theme}-{viewport}-default` |
-| `/visual-not-found` | 浅 | 1440×900 / 390×844 | 404 错误页 | `error-light-{viewport}-default` |
+| `/visual-not-found` | 浅 / 暗 | 1440×900 / 390×844 | 404 错误页 | `error-{theme}-{viewport}-default` |
 
-> 错误页是 Nuxt 独立错误实例，未接入主题插件（`html` 不挂 `.dark`），因此不采暗色。
+> 错误页是 Nuxt 独立错误实例，不经过布局；2026-11-15 起由应用级 `plugins/app-theme.client.ts` 初始化主题，`html.dark` 正常挂载，浅色 / 暗色同层采集（同页只保留一份基线）。
 > Admin 夹具与固定时钟见 §4.1；参考态采自 P4 开工前提交 `a6c8d3b`。
 
 P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前提交上采集参考态，与本批迁移提交同批入库。
@@ -331,7 +331,7 @@ pnpm test:visual --grep "login 默认态"
 
 ### 6.7 2026-11-09 M4-4 批次（SSO 登录页）
 
-**范围**：`/sso-login` 4 张参考态，采自迁移前提交 `ba07d26`。该页声明 `definePageMeta({ auth: false })`，但全局路由守卫只认 `publicPaths`，未登录会被重定向到 `/login`；同批把 `/sso-login` 加入白名单。
+**范围**：`/sso-login` 4 张参考态，采自迁移前提交 `ba07d26`。该页曾声明 `definePageMeta({ auth: false })`（无消费者，阶段 5 M5 已删除），全局路由守卫只认 `publicPaths`，未登录会被重定向到 `/login`；同批把 `/sso-login` 加入白名单。
 
 **迁移面**：4 个登录表单（`InputText` → `BaseInputV2` + 标签）、5 个按钮、Provider 卡片 `Badge` → `CaomeiTag`、`useSsoLoginFlow` 6 处 Toast 切 caomei；`:deep(.p-button)` 改为 `:deep(.caomei-button)`。
 

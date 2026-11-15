@@ -35,6 +35,7 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [阶段 5 M2：消息模块化与按需加载](./governance/2026-11-15-m2-locale-modules.md): 17 模块注册表、core / 懒加载边界、路由中间件、端到端按需加载验证与包体归因。
 -   [阶段 5 M3：治理门禁与既有缺陷](./governance/2026-11-15-m3-governance-gates.md): `<script setup>` 扫描与基线构成、`lint:i18n` / `test:i18n` 接入、Admin 校验键直显修复、`usePageMeta` / `app.head` 去硬编码。
 -   [阶段 5 M4：认证入口文案](./governance/2026-11-15-m4-auth-text.md): M4-1 组合式函数与共享组件、M4-2 五个认证页面与收尾清理；`useI18nText` / `usePasswordHints`、单测语言包替身、旧密码工具下线与视觉重采归因。
+-   [阶段 5 M5：SSO 登录与错误页](./governance/2026-11-15-m5-sso-error-reset.md): 邮件链接重置通道下线的决策与清理、`sso-login` 页面 / flow 双语、错误页状态码文案与 `error.vue` 纳入扫描根。
 -   [发布链路原生多架构评估](./governance/2026-11-08-native-multiarch-docker-review.md): issue #718 的入口核验、方案比较与方案 C 复用工作流落地（已排期阶段 3 插队，待工作流验证）。
 -   [i18n 评估与实施方案](./governance/2026-11-05-i18n-evaluation.md): 原 i18n 规划的复核修订、Locale Registry、模块化消息、Zod v4 错误本地化、服务端 / 邮件方案与批次。
 -   [阶段 2 范围登记：安全收口与迁移预备](./governance/2026-11-05-phase2-registration.md): 阶段 2 的 5 条主线 / 11 条原子条目、验收与边界（2026-11-06 完成归档）。
