@@ -5,6 +5,8 @@ import { useApplicationManagement } from '@/composables/admin/use-application-ma
 const toast = { success: vi.fn(), danger: vi.fn(), warning: vi.fn() }
 const confirm = { open: vi.fn() }
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
+
 vi.mock('caomei-ui', () => ({
     useToast: () => toast,
     useConfirm: () => confirm,

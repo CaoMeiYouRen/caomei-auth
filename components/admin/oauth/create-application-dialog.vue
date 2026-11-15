@@ -1,7 +1,7 @@
 <template>
     <BaseDialogV2
         :visible="visible"
-        :title="isEditing ? '编辑应用' : '创建新应用'"
+        :title="isEditing ? t('admin.oauth.create.titleEdit') : t('admin.oauth.create.titleCreate')"
         size="lg"
         @update:visible="visible = $event"
     >
@@ -12,22 +12,22 @@
             <BaseInputV2
                 id="client_name"
                 v-model="formData.client_name"
-                label="应用名称"
-                placeholder="例如：我的博客应用"
-                :error="!formData.client_name.trim() ? '应用名称为必填项' : ''"
+                :label="t('admin.oauth.create.name')"
+                :placeholder="t('admin.oauth.create.namePlaceholder')"
+                :error="!formData.client_name.trim() ? t('admin.oauth.create.nameRequired') : ''"
                 required
             />
 
             <CaomeiFormItem
                 id="description"
-                label="应用描述"
+                :label="t('admin.oauth.create.description')"
             >
                 <template #default="field">
                     <CaomeiTextarea
                         :id="field.id"
                         v-model="formData.description"
                         :rows="3"
-                        placeholder="简要描述您的应用功能和用途"
+                        :placeholder="t('admin.oauth.create.descriptionPlaceholder')"
                         :aria-labelledby="field['aria-labelledby']"
                         :aria-describedby="field['aria-describedby']"
                     />
@@ -37,53 +37,53 @@
             <BaseInputV2
                 id="redirectURLs"
                 v-model="redirectUrlsInput"
-                label="重定向 URL"
-                hint="多个URL请用逗号分隔"
+                :label="t('admin.oauth.create.redirect')"
+                :hint="t('admin.oauth.create.redirectHint')"
                 placeholder="https://example.com/callback"
                 required
-                :error="formData.redirect_uris.length === 0 ? '至少需要一个重定向URL' : ''"
+                :error="formData.redirect_uris.length === 0 ? t('admin.oauth.create.redirectRequired') : ''"
                 @blur="updateRedirectUris"
             />
 
             <BaseInputV2
                 id="client_uri"
                 v-model="formData.client_uri"
-                label="应用主页"
-                hint="应用的官方网站地址"
+                :label="t('admin.oauth.create.homepage')"
+                :hint="t('admin.oauth.create.homepageHint')"
                 placeholder="https://example.com"
             />
 
             <BaseInputV2
                 id="logo_uri"
                 v-model="formData.logo_uri"
-                label="应用Logo"
-                hint="应用图标的URL地址"
+                :label="t('admin.oauth.create.logo')"
+                :hint="t('admin.oauth.create.logoHint')"
                 placeholder="https://example.com/logo.png"
             />
 
             <BaseInputV2
                 id="scope"
                 v-model="formData.scope"
-                label="授权范围"
-                hint="多个范围用空格分隔，如：openid profile email"
+                :label="t('admin.oauth.create.scope')"
+                :hint="t('admin.oauth.create.scopeHint')"
                 placeholder="openid profile email"
                 required
-                :error="!formData.scope.trim() ? '授权范围为必填项' : ''"
+                :error="!formData.scope.trim() ? t('admin.oauth.create.scopeRequired') : ''"
             />
 
             <BaseInputV2
                 id="contacts"
                 v-model="contactsInput"
-                label="联系邮箱"
-                hint="应用管理员的联系邮箱，多个邮箱请用逗号分隔"
+                :label="t('admin.oauth.create.contact')"
+                :hint="t('admin.oauth.create.contactHint')"
                 placeholder="admin@example.com"
                 @blur="updateContacts"
             />
 
             <CaomeiFormItem
                 id="token_endpoint_auth_method"
-                label="认证方式"
-                hint="客户端向令牌端点进行身份验证的方法（支持 OIDC 标准方法）"
+                :label="t('admin.oauth.create.authMethod')"
+                :hint="t('admin.oauth.create.authMethodHint')"
                 required
             >
                 <template #default="field">
@@ -101,8 +101,8 @@
 
             <CaomeiFormItem
                 id="grant_types"
-                label="授权类型"
-                hint="应用允许使用的 OAuth 2.0 授权类型"
+                :label="t('admin.oauth.create.grantTypes')"
+                :hint="t('admin.oauth.create.grantTypesHint')"
                 required
             >
                 <template #default="field">
@@ -121,14 +121,14 @@
             <BaseInputV2
                 id="tos_uri"
                 v-model="formData.tos_uri"
-                label="服务条款链接"
+                :label="t('admin.oauth.create.tos')"
                 placeholder="https://example.com/terms"
             />
 
             <BaseInputV2
                 id="policy_uri"
                 v-model="formData.policy_uri"
-                label="隐私政策链接"
+                :label="t('admin.oauth.create.policy')"
                 placeholder="https://example.com/privacy"
             />
 
@@ -137,13 +137,13 @@
                     variant="secondary"
                     @click="visible = false"
                 >
-                    取消
+                    {{ t('admin.oauth.create.cancel') }}
                 </CaomeiButton>
                 <CaomeiButton
                     type="submit"
                     :loading="submitting"
                 >
-                    {{ isEditing ? '保存修改' : '创建应用' }}
+                    {{ isEditing ? t('admin.oauth.create.save') : t('admin.oauth.create.create') }}
                 </CaomeiButton>
             </div>
         </form>
@@ -182,19 +182,19 @@ const submitting = ref(false)
 const redirectUrlsInput = ref('')
 const contactsInput = ref('')
 
-const authMethodOptions = [
-    { label: 'Basic认证 (推荐)', value: 'client_secret_basic' },
-    { label: 'POST认证', value: 'client_secret_post' },
-    { label: '无认证 (仅公开客户端)', value: 'none' },
-]
+const authMethodOptions = computed(() => [
+    { label: t('admin.oauth.create.authMethods.basic'), value: 'client_secret_basic' },
+    { label: t('admin.oauth.create.authMethods.post'), value: 'client_secret_post' },
+    { label: t('admin.oauth.create.authMethods.none'), value: 'none' },
+])
 
-const grantTypeOptions = [
-    { label: '授权码模式 (推荐)', value: 'authorization_code' },
-    { label: '刷新令牌', value: 'refresh_token' },
-    { label: '隐式模式 (不支持)', value: 'implicit', disabled: true },
-    { label: '密码模式 (不支持)', value: 'password', disabled: true },
-    { label: '客户端模式 (不支持)', value: 'client_credentials', disabled: true },
-]
+const grantTypeOptions = computed(() => [
+    { label: t('admin.oauth.create.grantTypesList.code'), value: 'authorization_code' },
+    { label: t('admin.oauth.create.grantTypesList.refresh'), value: 'refresh_token' },
+    { label: t('admin.oauth.create.grantTypesList.implicit'), value: 'implicit', disabled: true },
+    { label: t('admin.oauth.create.grantTypesList.password'), value: 'password', disabled: true },
+    { label: t('admin.oauth.create.grantTypesList.clientCredentials'), value: 'client_credentials', disabled: true },
+])
 
 const formData = ref({
     client_name: '',
@@ -316,7 +316,7 @@ async function submitApplication() {
         const validationErrors = validateForm()
         if (validationErrors.length > 0) {
             toast.danger({
-                title: '表单验证失败',
+                title: t('admin.oauth.create.validationFailed'),
                 description: validationErrors.join(t('common.listSeparator')),
                 duration: 5000,
             })
@@ -358,8 +358,8 @@ async function submitApplication() {
 
         if (response.success) {
             toast.success({
-                title: isEditing.value ? '更新成功' : '创建成功',
-                description: isEditing.value ? '应用信息已更新' : '应用已成功创建',
+                title: isEditing.value ? t('admin.oauth.create.updateSuccessTitle') : t('admin.oauth.create.createSuccessTitle'),
+                description: isEditing.value ? t('admin.oauth.create.updateSuccess') : t('admin.oauth.create.createSuccess'),
                 duration: 3000,
             })
             visible.value = false
@@ -369,12 +369,12 @@ async function submitApplication() {
                 emit('created', response.data)
             }
         } else {
-            throw new Error(response.message || '操作失败')
+            throw new Error(response.message || t('admin.oauth.create.operationFailed'))
         }
     } catch (error: unknown) {
         toast.danger({
-            title: isEditing.value ? '更新失败' : '创建失败',
-            description: errorMessage(error, '操作失败'),
+            title: isEditing.value ? t('admin.oauth.create.updateFailedTitle') : t('admin.oauth.create.createFailedTitle'),
+            description: errorMessage(error, t('admin.oauth.create.operationFailed')),
             duration: 3000,
         })
     } finally {

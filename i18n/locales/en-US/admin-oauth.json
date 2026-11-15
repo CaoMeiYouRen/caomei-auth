@@ -1,1 +1,139 @@
-{}
+{
+    "admin": {
+        "oauth": {
+            "page": {
+                "title": "Application management",
+                "subtitle": "Manage your OAuth 2.0 applications; administrators create and issue them to integrators",
+                "noticeLabel": "Note: ",
+                "noticeText": "The current OIDC implementation is based on Better Auth and supports only the OpenID Connect core features.",
+                "noticeText2": "Implicit, password and client credential flows are not supported.",
+                "apiDocs": "API docs",
+                "create": "Create application",
+                "searchPlaceholder": "Search applications (name, description, client ID)",
+                "searchLabel": "Search applications",
+                "refresh": "Refresh",
+                "listTitle": "Applications ({count})",
+                "empty": "No applications yet",
+                "createFirst": "Create the first application",
+                "columns": {
+                    "name": "Application",
+                    "scope": "Scopes",
+                    "status": "Status",
+                    "createdAt": "Created",
+                    "actions": "Actions"
+                },
+                "actions": {
+                    "edit": "Edit",
+                    "enable": "Enable application",
+                    "disable": "Disable application",
+                    "delete": "Delete"
+                }
+            },
+            "create": {
+                "titleCreate": "Create application",
+                "titleEdit": "Edit application",
+                "name": "Application name",
+                "namePlaceholder": "e.g. My blog application",
+                "nameRequired": "Application name is required",
+                "description": "Description",
+                "descriptionPlaceholder": "Briefly describe what your application does",
+                "redirect": "Redirect URLs",
+                "redirectHint": "Separate multiple URLs with commas",
+                "redirectRequired": "At least one redirect URL is required",
+                "homepage": "Homepage",
+                "homepageHint": "Official website of the application",
+                "logo": "Application logo",
+                "logoHint": "URL of the application icon",
+                "scope": "Scopes",
+                "scopeHint": "Separate scopes with spaces, e.g. openid profile email",
+                "scopeRequired": "Scopes are required",
+                "contact": "Contact email",
+                "contactHint": "Contact email of the application administrator; separate multiple emails with commas",
+                "authMethod": "Client authentication",
+                "authMethodHint": "How the client authenticates to the token endpoint (OIDC standard methods)",
+                "grantTypes": "Grant types",
+                "grantTypesHint": "OAuth 2.0 grant types the application may use",
+                "tos": "Terms of service URL",
+                "policy": "Privacy policy URL",
+                "cancel": "Cancel",
+                "save": "Save changes",
+                "create": "Create application",
+                "validationFailed": "Form validation failed",
+                "updateSuccessTitle": "Updated",
+                "createSuccessTitle": "Created",
+                "updateSuccess": "The application was updated",
+                "createSuccess": "The application was created",
+                "operationFailed": "Operation failed",
+                "updateFailedTitle": "Update failed",
+                "createFailedTitle": "Create failed",
+                "authMethods": {
+                    "basic": "Basic (recommended)",
+                    "post": "POST",
+                    "none": "None (public clients only)"
+                },
+                "grantTypesList": {
+                    "code": "Authorization code (recommended)",
+                    "refresh": "Refresh token",
+                    "implicit": "Implicit (not supported)",
+                    "password": "Password (not supported)",
+                    "clientCredentials": "Client credentials (not supported)"
+                }
+            },
+            "secret": {
+                "title": "Application created",
+                "created": "Application \"{name}\" was created successfully!",
+                "copyClientId": "Copy client ID",
+                "copyClientSecret": "Copy client secret",
+                "warning": "Save these credentials now; the client secret cannot be shown again after this dialog is closed.",
+                "saved": "I have saved them",
+                "copiedTitle": "Copied",
+                "copied": "Copied to clipboard",
+                "copyFailedTitle": "Copy failed",
+                "copyFailed": "Could not copy to clipboard"
+            },
+            "docs": {
+                "title": "OIDC API endpoints",
+                "intro": "The OpenID Connect configuration endpoint, listing all supported endpoints and capabilities.",
+                "discoveryLabel": "Discovery endpoint",
+                "copyDiscovery": "Copy discovery endpoint",
+                "mainTitle": "Main OAuth 2.0 / OIDC endpoints",
+                "mainIntro": "The main OAuth 2.0 and OpenID Connect endpoints provided by this platform.",
+                "copyEndpoint": "Copy {label}",
+                "exampleTitle": "Discovery configuration example",
+                "exampleIntro": "Example configuration returned by the OpenID Connect discovery endpoint.",
+                "copyExample": "Copy configuration example",
+                "notesTitle": "Notes",
+                "note1": "The current OIDC implementation is based on Better Auth and supports only OpenID Connect core features",
+                "note2": "Authorization Code Flow and refresh tokens are supported",
+                "note3": "Implicit, password and client credential flows are not supported",
+                "note4": "Dynamic client registration is disabled; administrators create OAuth applications in the admin console",
+                "note5": "All endpoints require HTTPS",
+                "close": "Close",
+                "endpoints": {
+                    "authorize": "Authorization endpoint",
+                    "token": "Token endpoint",
+                    "userinfo": "UserInfo endpoint",
+                    "jwks": "JWKS endpoint"
+                },
+                "copiedTitle": "Copied",
+                "copied": "Copied to clipboard",
+                "copyFailedTitle": "Copy failed",
+                "copyFailed": "Could not copy to clipboard"
+            },
+            "flow": {
+                "successTitle": "Success",
+                "appEnabled": "Application enabled",
+                "appDisabled": "Application disabled",
+                "errorTitle": "Error",
+                "operationFailed": "Operation failed",
+                "deleteSuccessTitle": "Deleted",
+                "deleteSuccess": "Application deleted",
+                "deleteFailedTitle": "Delete failed",
+                "deleteFailed": "Delete failed",
+                "confirmDeleteTitle": "Delete application",
+                "confirmDelete": "Delete application \"{name}\"? This cannot be undone.",
+                "deleteLabel": "Delete"
+            }
+        }
+    }
+}

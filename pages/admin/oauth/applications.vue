@@ -4,14 +4,14 @@
             <div class="clients-header">
                 <div class="header-content">
                     <h1 class="clients-title">
-                        应用管理
+                        {{ t('admin.oauth.page.title') }}
                     </h1>
                     <p class="clients-subtitle">
-                        管理您的 OAuth 2.0 应用，应用由管理员在此创建并下发给接入方
+                        {{ t('admin.oauth.page.subtitle') }}
                     </p>
                     <span class="text-muted">
-                        <strong>注意：</strong>当前 OIDC 实现基于 Better Auth，仅支持标准 OpenID Connect 核心功能。
-                        不支持隐式流程、密码流程、客户端流程等非标准模式。
+                        <strong>{{ t('admin.oauth.page.noticeLabel') }}</strong>{{ t('admin.oauth.page.noticeText') }}
+                        {{ t('admin.oauth.page.noticeText2') }}
                     </span>
                 </div>
                 <div class="header-actions">
@@ -25,7 +25,7 @@
                                 aria-hidden="true"
                             />
                         </template>
-                        API 文档
+                        {{ t('admin.oauth.page.apiDocs') }}
                     </CaomeiButton>
                     <CaomeiButton @click="openCreateDialog">
                         <template #icon>
@@ -34,7 +34,7 @@
                                 aria-hidden="true"
                             />
                         </template>
-                        创建应用
+                        {{ t('admin.oauth.page.create') }}
                     </CaomeiButton>
                 </div>
             </div>
@@ -45,8 +45,8 @@
                     <div class="search-wrapper">
                         <CaomeiInput
                             :model-value="searchQuery"
-                            placeholder="搜索应用（名称、描述、Client ID）"
-                            label="搜索应用"
+                            :placeholder="t('admin.oauth.page.searchPlaceholder')"
+                            :label="t('admin.oauth.page.searchLabel')"
                             @update:model-value="onSearchInput"
                         >
                             <template #prefix>
@@ -58,11 +58,11 @@
                         </CaomeiInput>
                     </div>
                     <div class="filter-controls">
-                        <BaseTooltip :content="'刷新'">
+                        <BaseTooltip :content="t('admin.oauth.page.refresh')">
                             <CaomeiButton
                                 icon-only
                                 variant="secondary"
-                                label="刷新"
+                                :label="t('admin.oauth.page.refresh')"
                                 @click="handleRefreshApplications"
                             >
                                 <template #icon>
@@ -81,7 +81,7 @@
             <div class="clients-list">
                 <div class="table-header">
                     <div class="table-title">
-                        应用列表 ({{ total }})
+                        {{ t('admin.oauth.page.listTitle', {count: total}) }}
                     </div>
                 </div>
 
@@ -148,11 +148,11 @@
 
                     <template #cell-actions="{row}">
                         <div class="action-buttons">
-                            <BaseTooltip :content="'编辑'">
+                            <BaseTooltip :content="t('admin.oauth.page.actions.edit')">
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
-                                    label="编辑"
+                                    :label="t('admin.oauth.page.actions.edit')"
                                     @click="editApplication(row)"
                                 >
                                     <template #icon>
@@ -163,12 +163,12 @@
                                     </template>
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip :content="row.disabled ? '启用应用' : '禁用应用'">
+                            <BaseTooltip :content="row.disabled ? t('admin.oauth.page.actions.enable') : t('admin.oauth.page.actions.disable')">
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
                                     :tone="row.disabled ? 'success' : 'warning'"
-                                    :label="row.disabled ? '启用应用' : '禁用应用'"
+                                    :label="row.disabled ? t('admin.oauth.page.actions.enable') : t('admin.oauth.page.actions.disable')"
                                     @click="toggleApplicationStatus(row)"
                                 >
                                     <template #icon>
@@ -179,12 +179,12 @@
                                     </template>
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip :content="'删除'">
+                            <BaseTooltip :content="t('admin.oauth.page.actions.delete')">
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
                                     tone="danger"
-                                    label="删除"
+                                    :label="t('admin.oauth.page.actions.delete')"
                                     @click="confirmDelete(row)"
                                 >
                                     <template #icon>
@@ -204,12 +204,12 @@
                                 class="mdi mdi-application-brackets-outline"
                                 aria-hidden="true"
                             />
-                            <p>暂无应用</p>
+                            <p>{{ t('admin.oauth.page.empty') }}</p>
                             <CaomeiButton
                                 variant="ghost"
                                 @click="openCreateDialog"
                             >
-                                创建第一个应用
+                                {{ t('admin.oauth.page.createFirst') }}
                             </CaomeiButton>
                         </div>
                     </template>
@@ -239,6 +239,7 @@
 <script setup lang="ts">
 import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent } from 'caomei-ui'
 import { useApplicationManagement } from '@/composables/admin/use-application-management'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 import CreateApplicationDialog from '@/components/admin/oauth/create-application-dialog.vue'
 import ApplicationSecretDialog from '@/components/admin/oauth/application-secret-dialog.vue'
 import ApiDocsDialog from '@/components/admin/oauth/api-docs-dialog.vue'
@@ -277,20 +278,23 @@ const {
     onSearchInput,
 } = useApplicationManagement()
 
-/** 操作列只通过 `#cell-actions` 插槽渲染；创建时间用 accessor 统一格式化为 `zh-CN` 本地时间（与迁移前中文环境下的 `toLocaleString` 输出一致） */
+const { t } = useI18n()
+usePageMeta('admin.oauth.page.title', 'admin.oauth.page.subtitle')
+
+/* 操作列只通过 `#cell-actions` 插槽渲染；`createdAt` 用 accessor 统一格式化 */
 const columns: DataTableColumn<AdminOAuthApplicationRow>[] = [
-    { key: 'name', header: '应用名称', sortable: true },
+    { key: 'name', header: t('admin.oauth.page.columns.name'), sortable: true },
     { key: 'clientId', header: 'Client ID', width: '220px' },
-    { key: 'scope', header: '授权范围', width: '220px' },
-    { key: 'disabled', header: '状态', sortable: true, width: '100px' },
+    { key: 'scope', header: t('admin.oauth.page.columns.scope'), width: '220px' },
+    { key: 'disabled', header: t('admin.oauth.page.columns.status'), sortable: true, width: '100px' },
     {
         key: 'createdAt',
-        header: '创建时间',
+        header: t('admin.oauth.page.columns.createdAt'),
         sortable: true,
         width: '180px',
         accessor: (row) => formatDateLocale(row.createdAt),
     },
-    { key: 'actions', header: '操作', width: '160px', align: 'right', frozen: 'right' },
+    { key: 'actions', header: t('admin.oauth.page.columns.actions'), width: '160px', align: 'right', frozen: 'right' },
 ]
 
 /** 头像回退文本：取应用名首字符，避免空名时渲染空头像 */

@@ -1,7 +1,7 @@
 <template>
     <BaseDialogV2
         :visible="visible"
-        title="OIDC API 端点文档"
+        :title="t('admin.oauth.docs.title')"
         size="lg"
         @update:visible="visible = $event"
     >
@@ -19,17 +19,17 @@
                         <span>OpenID Connect Discovery</span>
                     </template>
                     <p class="api-docs-content__description">
-                        OpenID Connect 配置端点，包含所有支持的端点和功能信息。
+                        {{ t('admin.oauth.docs.intro') }}
                     </p>
                     <div class="endpoint-group">
                         <div class="endpoint-item">
-                            <span class="endpoint-item__label">Discovery 端点</span>
+                            <span class="endpoint-item__label">{{ t('admin.oauth.docs.discoveryLabel') }}</span>
                             <div class="endpoint-item__url">
                                 <code>{{ authBaseUrl }}/api/auth/.well-known/openid-configuration</code>
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
-                                    label="复制 Discovery 端点"
+                                    :label="t('admin.oauth.docs.copyDiscovery')"
                                     @click="copyToClipboard(`${authBaseUrl}/api/auth/.well-known/openid-configuration`)"
                                 >
                                     <template #icon>
@@ -50,10 +50,10 @@
                             class="mdi mdi-cloud-outline"
                             aria-hidden="true"
                         />
-                        <span>主要 OAuth 2.0 / OIDC 端点</span>
+                        <span>{{ t('admin.oauth.docs.mainTitle') }}</span>
                     </template>
                     <p class="api-docs-content__description">
-                        以下是平台提供的主要 OAuth 2.0 和 OpenID Connect 端点。
+                        {{ t('admin.oauth.docs.mainIntro') }}
                     </p>
                     <div class="endpoint-group">
                         <div
@@ -67,7 +67,7 @@
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
-                                    :label="`复制${endpoint.label}`"
+                                    :label="t('admin.oauth.docs.copyEndpoint', {label: endpoint.label})"
                                     @click="copyToClipboard(`${authBaseUrl}${endpoint.path}`)"
                                 >
                                     <template #icon>
@@ -88,17 +88,17 @@
                             class="mdi mdi-code-json"
                             aria-hidden="true"
                         />
-                        <span>Discovery 配置示例</span>
+                        <span>{{ t('admin.oauth.docs.exampleTitle') }}</span>
                     </template>
                     <p class="api-docs-content__description">
-                        以下是 OpenID Connect Discovery 端点返回的配置示例。
+                        {{ t('admin.oauth.docs.exampleIntro') }}
                     </p>
                     <div class="config-example">
                         <pre><code>{{ oidcConfigJson }}</code></pre>
                         <CaomeiButton
                             icon-only
                             variant="ghost"
-                            label="复制配置示例"
+                            :label="t('admin.oauth.docs.copyExample')"
                             class="config-example__copy"
                             @click="copyToClipboard(oidcConfigJson)"
                         >
@@ -122,21 +122,21 @@
                         class="mdi mdi-information-outline"
                         aria-hidden="true"
                     />
-                    注意事项
+                    {{ t('admin.oauth.docs.notesTitle') }}
                 </h3>
                 <ul>
-                    <li>当前 OIDC 实现基于 Better Auth，仅支持标准 OpenID Connect 核心功能</li>
-                    <li>支持授权码流程（Authorization Code Flow）和刷新令牌</li>
-                    <li>不支持隐式流程、密码流程、客户端流程等非标准模式</li>
-                    <li>不开放动态客户端注册，OAuth 应用需由管理员在管理后台创建</li>
-                    <li>所有端点都要求使用 HTTPS</li>
+                    <li>{{ t('admin.oauth.docs.note1') }}</li>
+                    <li>{{ t('admin.oauth.docs.note2') }}</li>
+                    <li>{{ t('admin.oauth.docs.note3') }}</li>
+                    <li>{{ t('admin.oauth.docs.note4') }}</li>
+                    <li>{{ t('admin.oauth.docs.note5') }}</li>
                 </ul>
             </CaomeiAlert>
         </div>
 
         <template #footer>
             <CaomeiButton @click="visible = false">
-                关闭
+                {{ t('admin.oauth.docs.close') }}
             </CaomeiButton>
         </template>
     </BaseDialogV2>
@@ -173,12 +173,14 @@ const authBaseUrl = computed(() => {
 })
 
 /** 端点清单：模板与原实现的 4 个端点一一对应，避免重复的复制按钮块 */
-const endpoints = [
-    { label: '授权端点', path: '/api/auth/oauth2/authorize' },
-    { label: '令牌端点', path: '/api/auth/oauth2/token' },
-    { label: '用户信息端点', path: '/api/auth/oauth2/userinfo' },
-    { label: 'JWKS 端点', path: '/api/auth/jwks' },
-]
+const { t } = useI18n()
+
+const endpoints = computed(() => [
+    { label: t('admin.oauth.docs.endpoints.authorize'), path: '/api/auth/oauth2/authorize' },
+    { label: t('admin.oauth.docs.endpoints.token'), path: '/api/auth/oauth2/token' },
+    { label: t('admin.oauth.docs.endpoints.userinfo'), path: '/api/auth/oauth2/userinfo' },
+    { label: t('admin.oauth.docs.endpoints.jwks'), path: '/api/auth/jwks' },
+])
 
 const oidcConfig = computed(() => ({
     issuer: authBaseUrl.value,
@@ -201,14 +203,14 @@ async function copyToClipboard(text: string) {
     try {
         await navigator.clipboard.writeText(text)
         toast.success({
-            title: '已复制',
-            description: '内容已复制到剪贴板',
+            title: t('admin.oauth.docs.copiedTitle'),
+            description: t('admin.oauth.docs.copied'),
             duration: 2000,
         })
     } catch {
         toast.danger({
-            title: '复制失败',
-            description: '无法复制到剪贴板',
+            title: t('admin.oauth.docs.copyFailedTitle'),
+            description: t('admin.oauth.docs.copyFailed'),
             duration: 2000,
         })
     }

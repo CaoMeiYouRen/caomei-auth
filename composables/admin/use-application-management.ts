@@ -3,6 +3,7 @@ import { useToast, useConfirm } from 'caomei-ui'
 import { debounce } from 'lodash-es'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import type { AdminOAuthApplicationRow, AdminOAuthClientCredentials } from '@/types/admin'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 interface ApplicationListResponse {
     success: boolean
@@ -11,6 +12,7 @@ interface ApplicationListResponse {
 }
 
 export function useApplicationManagement() {
+    const t = useI18nText()
     const toast = useToast()
     const confirm = useConfirm()
 
@@ -85,16 +87,16 @@ export function useApplicationManagement() {
             })
 
             toast.success({
-                title: '成功',
-                description: `应用已${app.disabled ? '启用' : '禁用'}`,
+                title: t('admin.oauth.flow.successTitle'),
+                description: app.disabled ? t('admin.oauth.flow.appEnabled') : t('admin.oauth.flow.appDisabled'),
                 duration: 3000,
             })
 
             await refreshApplications()
         } catch (error: unknown) {
             toast.danger({
-                title: '错误',
-                description: errorMessage(error, '操作失败'),
+                title: t('admin.oauth.flow.errorTitle'),
+                description: errorMessage(error, t('admin.oauth.flow.operationFailed')),
                 duration: 3000,
             })
         }
@@ -107,8 +109,8 @@ export function useApplicationManagement() {
             })
 
             toast.success({
-                title: '删除成功',
-                description: '应用已删除',
+                title: t('admin.oauth.flow.deleteSuccessTitle'),
+                description: t('admin.oauth.flow.deleteSuccess'),
                 duration: 3000,
             })
 
@@ -116,8 +118,8 @@ export function useApplicationManagement() {
             return true
         } catch (error: unknown) {
             toast.danger({
-                title: '删除失败',
-                description: errorMessage(error, '删除失败'),
+                title: t('admin.oauth.flow.deleteFailedTitle'),
+                description: errorMessage(error, t('admin.oauth.flow.deleteFailed')),
                 duration: 3000,
             })
             return false
@@ -145,9 +147,9 @@ export function useApplicationManagement() {
 
     const confirmDelete = async (app: AdminOAuthApplicationRow) => {
         const confirmed = await confirm.open({
-            title: '确认删除',
-            description: `确定要删除应用 "${app.name}" 吗？此操作无法撤销。`,
-            confirmLabel: '删除',
+            title: t('admin.oauth.flow.confirmDeleteTitle'),
+            description: t('admin.oauth.flow.confirmDelete', { name: app.name }),
+            confirmLabel: t('admin.oauth.flow.deleteLabel'),
             tone: 'danger',
         })
         if (!confirmed) {

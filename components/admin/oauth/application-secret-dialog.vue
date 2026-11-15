@@ -1,7 +1,7 @@
 <template>
     <BaseDialogV2
         :visible="visible"
-        title="应用创建成功"
+        :title="t('admin.oauth.secret.title')"
         size="md"
         @update:visible="visible = $event"
     >
@@ -13,7 +13,7 @@
                 />
             </div>
             <p class="secret-content__message">
-                应用 "{{ application?.client_name }}" 已成功创建！
+                {{ t('admin.oauth.secret.created', {name: application?.client_name}) }}
             </p>
             <div class="secret-content__credentials">
                 <div class="credential-item">
@@ -23,7 +23,7 @@
                         <CaomeiButton
                             icon-only
                             variant="ghost"
-                            label="复制 Client ID"
+                            :label="t('admin.oauth.secret.copyClientId')"
                             @click="copyToClipboard(application?.client_id)"
                         >
                             <template #icon>
@@ -42,7 +42,7 @@
                         <CaomeiButton
                             icon-only
                             variant="ghost"
-                            label="复制 Client Secret"
+                            :label="t('admin.oauth.secret.copyClientSecret')"
                             @click="copyToClipboard(application?.client_secret)"
                         >
                             <template #icon>
@@ -63,12 +63,12 @@
                     class="mdi mdi-alert"
                     aria-hidden="true"
                 />
-                请务必保存这些凭据，关闭此对话框后将无法再次查看 Client Secret。
+                {{ t('admin.oauth.secret.warning') }}
             </CaomeiAlert>
 
             <div class="secret-content__footer">
                 <CaomeiButton @click="visible = false">
-                    我已保存
+                    {{ t('admin.oauth.secret.saved') }}
                 </CaomeiButton>
             </div>
         </div>
@@ -94,6 +94,7 @@ const visible = computed({
     set: (value) => emit('update:visible', value),
 })
 
+const { t } = useI18n()
 const toast = useToast()
 
 async function copyToClipboard(text?: string) {
@@ -103,14 +104,14 @@ async function copyToClipboard(text?: string) {
     try {
         await navigator.clipboard.writeText(text)
         toast.success({
-            title: '已复制',
-            description: '内容已复制到剪贴板',
+            title: t('admin.oauth.secret.copiedTitle'),
+            description: t('admin.oauth.secret.copied'),
             duration: 2000,
         })
     } catch {
         toast.danger({
-            title: '复制失败',
-            description: '无法复制到剪贴板',
+            title: t('admin.oauth.secret.copyFailedTitle'),
+            description: t('admin.oauth.secret.copyFailed'),
             duration: 2000,
         })
     }
