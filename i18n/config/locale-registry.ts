@@ -59,9 +59,10 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         default: false,
         fallbackChain: ['en-US', 'zh-CN'],
         routePrefix: '/en-US',
-        readiness: 'ui-ready',
+        /* 阶段 5 M18：文案与视觉基线已就绪，放开索引 */
+        readiness: 'seo-ready',
         switchable: true,
-        indexable: false,
+        indexable: true,
         files: getLocaleMessageFilePaths('en-US'),
     },
 ]

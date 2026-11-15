@@ -71,6 +71,7 @@
 <script lang="ts" setup>
 import { useProfileFlow } from '@/composables/use-profile-flow'
 import { usePageMeta } from '@/composables/utils/use-page-meta'
+import { useNoIndex } from '@/composables/utils/use-no-index'
 import AuthLeft from '@/components/auth-left.vue'
 
 // Components
@@ -86,6 +87,7 @@ import SetUsernameDialog from '@/components/profile/dialogs/set-username-dialog.
 
 const { t } = useI18n()
 usePageMeta('profile.page.title', 'profile.page.subtitle')
+useNoIndex()
 
 const {
     user,

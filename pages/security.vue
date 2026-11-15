@@ -76,9 +76,11 @@ import TwoFactorPanel from '@/components/security/two-factor-panel.vue'
 import SessionTable from '@/components/security/session-table.vue'
 import { useSecuritySettings } from '@/composables/use-security-settings'
 import { usePageMeta } from '@/composables/utils/use-page-meta'
+import { useNoIndex } from '@/composables/utils/use-no-index'
 
 const { t } = useI18n()
 usePageMeta('security.page.title', 'security.page.subtitle')
+useNoIndex()
 
 const {
     userSession,

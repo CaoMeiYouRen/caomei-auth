@@ -197,6 +197,7 @@
 <script lang="ts" setup>
 import { useOAuthClients } from '@/composables/use-oauth-clients'
 import { usePageMeta } from '@/composables/utils/use-page-meta'
+import { useNoIndex } from '@/composables/utils/use-no-index'
 
 definePageMeta({
     layout: 'default',
@@ -204,6 +205,7 @@ definePageMeta({
 
 const { t } = useI18n()
 usePageMeta('oauth.clients.title', 'oauth.clients.description')
+useNoIndex()
 
 const {
     loading,

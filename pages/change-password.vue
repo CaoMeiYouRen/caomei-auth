@@ -103,12 +103,14 @@
 import { computed } from 'vue'
 import AuthLeft from '@/components/auth-left.vue'
 import { usePageMeta } from '@/composables/utils/use-page-meta'
+import { useNoIndex } from '@/composables/utils/use-no-index'
 import PasswordStrength from '@/components/password-strength.vue'
 import { usePasswordHints } from '@/composables/utils/use-password-hints'
 import { useChangePasswordFlow } from '@/composables/use-change-password-flow'
 
 const { t } = useI18n()
 usePageMeta('auth.changePassword.title', 'auth.changePassword.subtitle')
+useNoIndex()
 const { requirementHint } = usePasswordHints()
 const passwordHint = computed(() => requirementHint())
 

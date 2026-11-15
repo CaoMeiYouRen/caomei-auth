@@ -155,9 +155,11 @@
 import { computed } from 'vue'
 import { useOAuthConsent } from '@/composables/use-oauth-consent'
 import { usePageMeta } from '@/composables/utils/use-page-meta'
+import { useNoIndex } from '@/composables/utils/use-no-index'
 
 const { t } = useI18n()
 usePageMeta('oauth.consent.title')
+useNoIndex()
 
 const {
     loading,

@@ -151,6 +151,9 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
+useNoIndex()
+
+import { useNoIndex } from '@/composables/utils/use-no-index'
 
 // 侧边栏收缩状态管理
 const isCollapsed = ref(false)
