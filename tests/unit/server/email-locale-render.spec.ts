@@ -4,7 +4,22 @@ import { getEmailTranslator } from '@/server/utils/email/i18n'
 
 /** 去掉 HTML 注释后再断言，模板里的中文注释不进入用户可见面 */
 function stripComments(html: string): string {
-    return html.replace(/<!--[\s\S]*?-->/gu, '')
+    let result = ''
+    let cursor = 0
+    while (cursor < html.length) {
+        const start = html.indexOf('<!--', cursor)
+        if (start === -1) {
+            result += html.slice(cursor)
+            break
+        }
+        result += html.slice(cursor, start)
+        const end = html.indexOf('-->', start + 4)
+        if (end === -1) {
+            break
+        }
+        cursor = end + 3
+    }
+    return result
 }
 
 function chineseSegments(html: string): string[] {

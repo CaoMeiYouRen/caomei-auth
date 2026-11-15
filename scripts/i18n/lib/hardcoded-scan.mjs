@@ -79,7 +79,7 @@ export function extractVueScripts(source) {
     /* 先剔除 HTML 注释：模板注释里的 `<script>` 不是 SFC 脚本块 */
     const content = stripHtmlComments(source)
     const scripts = []
-    const openTagPattern = /<script\b[^>]*>/gu
+    const openTagPattern = /<script\b[^>]*>/giu
     let match
     while ((match = openTagPattern.exec(content))) {
         const start = match.index + match[0].length
