@@ -1,1 +1,85 @@
-{}
+{
+    "security": {
+        "page": {
+            "back": "返回个人中心",
+            "title": "账号安全设置",
+            "subtitle": "管理您的账号安全，设置多因子认证、查看登录日志、管理已登录设备、会话管理等。"
+        },
+        "twoFactor": {
+            "title": "双因素认证",
+            "desc": "启用双因素认证后，登录时除了密码外，还需要输入身份验证器生成的验证码，可以有效防止账号被盗。",
+            "recommend": "建议启用双因素认证以提高账号安全性",
+            "enable": "启用双因素认证",
+            "enabledNote": "已启用双因素认证，您的账号受到更好的保护",
+            "disable": "禁用双因素认证",
+            "setupTitle": "设置身份验证器",
+            "step1": "在手机上安装身份验证器应用（如 Google Authenticator、Microsoft Authenticator）",
+            "step2": "使用应用扫描下方二维码",
+            "step3": "输入应用显示的 6 位验证码",
+            "codeLabel": "输入 6 位验证码",
+            "qrAlt": "TOTP 二维码",
+            "verify": "验证并继续",
+            "backupTitle": "备份恢复码",
+            "backupDesc": "请妥善保管以下恢复码，当您无法访问验证器时，可使用这些恢复码登录。每个恢复码只能使用一次。",
+            "copy": "复制恢复码",
+            "download": "下载恢复码",
+            "finish": "完成设置",
+            "enableTitle": "启用双因素认证",
+            "disableTitle": "禁用双因素认证",
+            "enablePrompt": "为了确保是您本人操作，请输入密码以启用双因素认证",
+            "disablePrompt": "为了确保是您本人操作，请输入密码以禁用双因素认证",
+            "passwordPlaceholder": "请输入密码"
+        },
+        "sessions": {
+            "title": "会话管理",
+            "desc": "管理您的活动会话，撤销不再需要的会话。",
+            "columns": {
+                "token": "会话令牌",
+                "browser": "浏览器",
+                "os": "操作系统",
+                "ip": "IP 地址",
+                "createdAt": "创建时间",
+                "expiresAt": "过期时间"
+            },
+            "current": "当前会话",
+            "currentTip": "当前正在使用的会话，令牌为：{id}",
+            "tokenTip": "会话令牌：{id}",
+            "cannotRevokeTip": "无法撤销当前会话",
+            "revokeTip": "点击撤销此会话",
+            "revoke": "撤销会话",
+            "revokeOthersTip": "点击撤销除当前会话外的所有其他会话",
+            "revokeOthers": "撤销其他会话",
+            "revokeAllTip": "注意：点击撤销所有会话，包括当前会话！",
+            "revokeAll": "撤销所有会话",
+            "confirmRevokeTitle": "确认撤销会话",
+            "confirmRevoke": "确定要撤销该会话吗？",
+            "confirmRevokeOthersTitle": "确认撤销其他会话",
+            "confirmRevokeOthers": "确定要撤销除当前会话外的所有其他会话吗？",
+            "confirmRevokeAllTitle": "确认撤销所有会话",
+            "confirmRevokeAll": "确定要撤销所有会话，包括当前会话吗？",
+            "cancel": "取消",
+            "confirm": "确认"
+        },
+        "flow": {
+            "hintTitle": "提示",
+            "errorTitle": "错误",
+            "successTitle": "成功",
+            "warningTitle": "警告",
+            "unknownError": "未知错误",
+            "setupFailed": "设置失败",
+            "setupFailedDetail": "设置失败：{message}",
+            "totpMissing": "未获取到 TOTP 配置信息",
+            "scanQr": "请使用身份验证器应用扫描二维码",
+            "disableFailed": "禁用失败",
+            "disableFailedDetail": "禁用失败：{message}",
+            "disableSuccess": "双因素认证已成功禁用",
+            "passwordRequired": "请输入密码",
+            "codeRequired": "请输入验证码",
+            "verifyFailed": "验证失败",
+            "verifyFailedDetail": "验证失败：{message}",
+            "enabledSuccess": "双因素认证已成功启用！请保存好备份码",
+            "codesCopied": "备份码已复制到剪贴板",
+            "codesDownloaded": "备份码已下载"
+        }
+    }
+}

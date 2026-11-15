@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
+import { useNuxtApp } from '#app'
 import { useSecuritySettings } from '@/composables/use-security-settings'
 
 // --- Mocks ---
@@ -42,6 +43,8 @@ mockNuxtImport('navigateTo', () => mockNavigateTo)
 vi.mock('caomei-ui', () => ({
     useToast: () => mockUseToast,
 }))
+
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 
 vi.mock('@/lib/auth-client', () => ({
     authClient: mockAuthClient,
@@ -448,6 +451,42 @@ describe('useSecuritySettings', () => {
             expect(sessionList.value[0]!.browser).toBe('Chrome')
             expect(sessionList.value[0]!.os).toBe('Windows')
             expect(sessionList.value[0]!.createdAt).toContain('2024')
+            // 日期按 locale 格式化，不再是固定 `YYYY-MM-DD HH:mm:ss`
+            expect(sessionList.value[0]!.createdAt).not.toMatch(/^\d{4}-\d{2}-\d{2} /)
+        })
+    })
+
+    describe('Locale Formatting', () => {
+        it('reformats session dates when the locale changes', async () => {
+            mockAuthClient.listSessions.mockResolvedValue({
+                data: [
+                    {
+                        id: 'session1',
+                        token: 'token1',
+                        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                        ipAddress: '127.0.0.1',
+                        createdAt: new Date('2024-01-01T12:00:00Z'),
+                        updatedAt: new Date('2024-01-01T12:00:00Z'),
+                        expiresAt: new Date('2024-01-01T12:00:00Z'),
+                        userId: 'user1',
+                    },
+                ],
+            })
+            mockGetBrowser.mockReturnValue('Chrome')
+            mockGetOs.mockReturnValue('Windows')
+
+            const { $i18n } = useNuxtApp()
+            $i18n.locale.value = 'zh-CN'
+            const { sessionList } = useSecuritySettings()
+            await new Promise((resolve) => setTimeout(resolve, 0))
+
+            expect(sessionList.value[0]!.createdAt).toMatch(/^\d{4}\//u)
+
+            $i18n.locale.value = 'en-US'
+            await nextTick()
+
+            expect(sessionList.value[0]!.createdAt).toMatch(/^\d{1,2}\/\d{1,2}\/\d{4}/u)
+            expect(sessionList.value[0]!.createdAt).toMatch(/(AM|PM)/u)
         })
     })
 

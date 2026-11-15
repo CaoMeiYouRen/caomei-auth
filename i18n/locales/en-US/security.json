@@ -1,1 +1,85 @@
-{}
+{
+    "security": {
+        "page": {
+            "back": "Back to profile",
+            "title": "Account security",
+            "subtitle": "Manage your account security: multi-factor authentication, sign-in history, signed-in devices and sessions."
+        },
+        "twoFactor": {
+            "title": "Two-factor authentication",
+            "desc": "With two-factor authentication enabled, signing in requires a code from your authenticator app in addition to your password, which helps prevent account theft.",
+            "recommend": "Enable two-factor authentication to make your account safer",
+            "enable": "Enable two-factor authentication",
+            "enabledNote": "Two-factor authentication is enabled. Your account is better protected",
+            "disable": "Disable two-factor authentication",
+            "setupTitle": "Set up authenticator",
+            "step1": "Install an authenticator app on your phone (such as Google Authenticator or Microsoft Authenticator)",
+            "step2": "Scan the QR code below with the app",
+            "step3": "Enter the 6-digit code shown in the app",
+            "codeLabel": "Enter the 6-digit code",
+            "qrAlt": "TOTP QR code",
+            "verify": "Verify and continue",
+            "backupTitle": "Backup recovery codes",
+            "backupDesc": "Keep these recovery codes safe. If you cannot access your authenticator, you can sign in with one of them. Each code works only once.",
+            "copy": "Copy recovery codes",
+            "download": "Download recovery codes",
+            "finish": "Finish setup",
+            "enableTitle": "Enable two-factor authentication",
+            "disableTitle": "Disable two-factor authentication",
+            "enablePrompt": "To confirm it is you, enter your password to enable two-factor authentication",
+            "disablePrompt": "To confirm it is you, enter your password to disable two-factor authentication",
+            "passwordPlaceholder": "Enter your password"
+        },
+        "sessions": {
+            "title": "Session management",
+            "desc": "Manage your active sessions and revoke the ones you no longer need.",
+            "columns": {
+                "token": "Session token",
+                "browser": "Browser",
+                "os": "Operating system",
+                "ip": "IP address",
+                "createdAt": "Created",
+                "expiresAt": "Expires"
+            },
+            "current": "Current session",
+            "currentTip": "This is the session you are using now. Token: {id}",
+            "tokenTip": "Session token: {id}",
+            "cannotRevokeTip": "The current session cannot be revoked",
+            "revokeTip": "Revoke this session",
+            "revoke": "Revoke session",
+            "revokeOthersTip": "Revoke every session except the current one",
+            "revokeOthers": "Revoke other sessions",
+            "revokeAllTip": "Warning: this revokes all sessions, including the current one!",
+            "revokeAll": "Revoke all sessions",
+            "confirmRevokeTitle": "Revoke session",
+            "confirmRevoke": "Revoke this session?",
+            "confirmRevokeOthersTitle": "Revoke other sessions",
+            "confirmRevokeOthers": "Revoke all sessions except the current one?",
+            "confirmRevokeAllTitle": "Revoke all sessions",
+            "confirmRevokeAll": "Revoke all sessions, including the current one?",
+            "cancel": "Cancel",
+            "confirm": "Confirm"
+        },
+        "flow": {
+            "hintTitle": "Notice",
+            "errorTitle": "Error",
+            "successTitle": "Success",
+            "warningTitle": "Warning",
+            "unknownError": "Unknown error",
+            "setupFailed": "Setup failed",
+            "setupFailedDetail": "Setup failed: {message}",
+            "totpMissing": "No TOTP configuration was returned",
+            "scanQr": "Scan the QR code with your authenticator app",
+            "disableFailed": "Disable failed",
+            "disableFailedDetail": "Disable failed: {message}",
+            "disableSuccess": "Two-factor authentication is now disabled",
+            "passwordRequired": "Enter your password",
+            "codeRequired": "Enter the verification code",
+            "verifyFailed": "Verification failed",
+            "verifyFailedDetail": "Verification failed: {message}",
+            "enabledSuccess": "Two-factor authentication is enabled. Keep your backup codes safe",
+            "codesCopied": "Backup codes copied to clipboard",
+            "codesDownloaded": "Backup codes downloaded"
+        }
+    }
+}

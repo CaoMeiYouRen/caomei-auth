@@ -11,14 +11,14 @@
                         <template #icon>
                             <i class="mdi mdi-arrow-left" />
                         </template>
-                        返回个人中心
+                        {{ t('security.page.back') }}
                     </CaomeiButton>
                 </div>
                 <h2 class="auth-title">
-                    账号安全设置
+                    {{ t('security.page.title') }}
                 </h2>
                 <p class="auth-subtitle">
-                    管理您的账号安全，设置多因子认证、查看登录日志、管理已登录设备、会话管理等。
+                    {{ t('security.page.subtitle') }}
                 </p>
 
                 <TwoFactorPanel
@@ -65,6 +65,10 @@
 import TwoFactorPanel from '@/components/security/two-factor-panel.vue'
 import SessionTable from '@/components/security/session-table.vue'
 import { useSecuritySettings } from '@/composables/use-security-settings'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
+
+const { t } = useI18n()
+usePageMeta('security.page.title', 'security.page.subtitle')
 
 const {
     userSession,

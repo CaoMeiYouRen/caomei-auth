@@ -1,16 +1,16 @@
 <template>
     <div class="security-section">
         <h3 class="section-title">
-            双因素认证
+            {{ t('security.twoFactor.title') }}
         </h3>
         <p class="section-desc">
-            启用双因素认证后，登录时除了密码外，还需要输入身份验证器生成的验证码，可以有效防止账号被盗。
+            {{ t('security.twoFactor.desc') }}
         </p>
 
         <!-- 未启用状态 -->
         <div v-if="!userSession?.user.twoFactorEnabled && !showTotpSetup && !showBackupCodes">
             <CaomeiMessage tone="warning">
-                <span>建议启用双因素认证以提高账号安全性</span>
+                <span>{{ t('security.twoFactor.recommend') }}</span>
             </CaomeiMessage>
             <div class="security-actions">
                 <CaomeiButton
@@ -20,7 +20,7 @@
                     <template #icon>
                         <i class="mdi mdi-shield-check-outline" />
                     </template>
-                    启用双因素认证
+                    {{ t('security.twoFactor.enable') }}
                 </CaomeiButton>
             </div>
         </div>
@@ -28,7 +28,7 @@
         <!-- 已启用状态 -->
         <div v-if="userSession?.user.twoFactorEnabled && !showTotpSetup && !showBackupCodes">
             <CaomeiMessage tone="success">
-                <span>已启用双因素认证，您的账号受到更好的保护</span>
+                <span>{{ t('security.twoFactor.enabledNote') }}</span>
             </CaomeiMessage>
             <div class="security-actions">
                 <CaomeiButton
@@ -39,7 +39,7 @@
                     <template #icon>
                         <i class="mdi mdi-shield-off-outline" />
                     </template>
-                    禁用双因素认证
+                    {{ t('security.twoFactor.disable') }}
                 </CaomeiButton>
             </div>
         </div>
@@ -47,23 +47,23 @@
         <!-- 设置双因素验证器 -->
         <div v-if="showTotpSetup" class="totp-setup">
             <h4 class="mb-3 setup-title">
-                设置身份验证器
+                {{ t('security.twoFactor.setupTitle') }}
             </h4>
             <ol class="mb-4 setup-steps">
-                <li>在手机上安装身份验证器应用（如 Google Authenticator、Microsoft Authenticator）</li>
-                <li>使用应用扫描下方二维码</li>
-                <li>输入应用显示的 6 位验证码</li>
+                <li>{{ t('security.twoFactor.step1') }}</li>
+                <li>{{ t('security.twoFactor.step2') }}</li>
+                <li>{{ t('security.twoFactor.step3') }}</li>
             </ol>
 
             <div v-if="qrCodeUrl" class="mb-4 qr-code">
-                <img :src="qrCodeUrl" alt="TOTP QR Code">
+                <img :src="qrCodeUrl" :alt="t('security.twoFactor.qrAlt')">
             </div>
 
             <div class="mb-4 verification-input">
                 <BaseInputV2
                     id="verification-code"
                     :model-value="verificationCode"
-                    label="输入 6 位验证码"
+                    :label="t('security.twoFactor.codeLabel')"
                     maxlength="6"
                     @update:model-value="(val) => $emit('update:verificationCode', val)"
                 />
@@ -74,7 +74,7 @@
                     <template #icon>
                         <i class="mdi mdi-check" />
                     </template>
-                    验证并继续
+                    {{ t('security.twoFactor.verify') }}
                 </CaomeiButton>
             </div>
         </div>
@@ -82,10 +82,10 @@
         <!-- 备份恢复码 -->
         <div v-if="showBackupCodes" class="backup-codes">
             <h4 class="backup-title mb-3">
-                备份恢复码
+                {{ t('security.twoFactor.backupTitle') }}
             </h4>
             <CaomeiMessage tone="primary">
-                <span>请妥善保管以下恢复码，当您无法访问验证器时，可使用这些恢复码登录。每个恢复码只能使用一次。</span>
+                <span>{{ t('security.twoFactor.backupDesc') }}</span>
             </CaomeiMessage>
 
             <div class="backup-codes-list mb-4">
@@ -107,7 +107,7 @@
                     <template #icon>
                         <i class="mdi mdi-content-copy" />
                     </template>
-                    复制恢复码
+                    {{ t('security.twoFactor.copy') }}
                 </CaomeiButton>
                 <CaomeiButton
                     variant="secondary"
@@ -117,13 +117,13 @@
                     <template #icon>
                         <i class="mdi mdi-download" />
                     </template>
-                    下载恢复码
+                    {{ t('security.twoFactor.download') }}
                 </CaomeiButton>
                 <CaomeiButton @click="$emit('finishSetup')">
                     <template #icon>
                         <i class="mdi mdi-check" />
                     </template>
-                    完成设置
+                    {{ t('security.twoFactor.finish') }}
                 </CaomeiButton>
             </div>
         </div>
@@ -131,19 +131,19 @@
         <!-- 双因素认证密码确认对话框 -->
         <BaseDialogV2
             :visible="showPasswordDialog"
-            :title="passwordDialogMode === 'enable' ? '启用双因素认证' : '禁用双因素认证'"
+            :title="passwordDialogMode === 'enable' ? t('security.twoFactor.enableTitle') : t('security.twoFactor.disableTitle')"
             @update:visible="$emit('update:showPasswordDialog', $event)"
             @hide="$emit('passwordDialogHide')"
         >
             <p class="mb-3">
                 {{ passwordDialogMode === 'enable'
-                    ? '为了确保是您本人操作，请输入密码以启用双因素认证'
-                    : '为了确保是您本人操作，请输入密码以禁用双因素认证' }}
+                    ? t('security.twoFactor.enablePrompt')
+                    : t('security.twoFactor.disablePrompt') }}
             </p>
             <BasePasswordV2
                 id="security-password"
                 :model-value="password"
-                placeholder="请输入密码"
+                :placeholder="t('security.twoFactor.passwordPlaceholder')"
                 :feedback="false"
                 @update:model-value="$emit('update:password', $event)"
             />
@@ -152,10 +152,10 @@
                     variant="secondary"
                     @click="$emit('update:showPasswordDialog', false)"
                 >
-                    取消
+                    {{ t('security.sessions.cancel') }}
                 </CaomeiButton>
                 <CaomeiButton @click="$emit('passwordConfirm')">
-                    确认
+                    {{ t('security.sessions.confirm') }}
                 </CaomeiButton>
             </template>
         </BaseDialogV2>
@@ -163,6 +163,8 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
+
 defineProps<{
     userSession: any
     showTotpSetup: boolean

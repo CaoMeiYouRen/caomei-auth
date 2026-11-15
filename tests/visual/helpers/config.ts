@@ -63,8 +63,21 @@ export const visualExpect = {
     },
 }
 
+/** 固定 UA：会话表 / 用户会话对话框会展示 UA 解析出的浏览器版本，跟随容器 Chromium 升级会持续制造基线噪声。 */
+export const VISUAL_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
+
+/** 视觉会话的固定来源 IP：会话表展示 IP，避免 `::1` / `127.0.0.1` 之类差异进入基线。 */
+export const VISUAL_SESSION_IP = '203.0.113.10'
+
+/** 建立视觉会话（sign-up / sign-in）时必须显式带上的请求头：`page.request` 不带 context 的 UA。 */
+export const visualSessionHeaders = {
+    'user-agent': VISUAL_USER_AGENT,
+    'x-forwarded-for': VISUAL_SESSION_IP,
+}
+
 export const visualUse = {
     ...devices['Desktop Chrome'],
+    userAgent: VISUAL_USER_AGENT,
     baseURL: visualBaseURL,
     locale: 'zh-CN',
     timezoneId: 'Asia/Shanghai',

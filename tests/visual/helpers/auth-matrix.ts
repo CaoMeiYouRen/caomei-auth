@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { type Page, expect, test } from '@playwright/test'
-import { visualBaseURL } from './config'
+import { visualBaseURL, visualSessionHeaders } from './config'
 import { applyTheme, expectPageScreenshot, waitForVisualStable, type VisualTheme } from './visual'
 
 /**
@@ -186,18 +186,19 @@ async function ensureSession(page: Page, route: VisualRoute): Promise<void> {
             name: `Visual Security ${suffix.slice(0, 8)}`,
             username: `vs${suffix}`,
         }
-        const created = await page.request.post(`${visualBaseURL}/api/auth/sign-up/email`, { data: account })
+        const created = await page.request.post(`${visualBaseURL}/api/auth/sign-up/email`, { data: account, headers: visualSessionHeaders })
         if (!created.ok()) {
             expect(created.ok(), `视觉隔离账号注册失败（${account.email} / ${created.status()}）：${await created.text()}`).toBeTruthy()
         }
         return
     }
-    const signUp = await page.request.post(`${visualBaseURL}/api/auth/sign-up/email`, { data: VISUAL_ACCOUNT })
+    const signUp = await page.request.post(`${visualBaseURL}/api/auth/sign-up/email`, { data: VISUAL_ACCOUNT, headers: visualSessionHeaders })
     if (signUp.ok()) {
         return
     }
     const signIn = await page.request.post(`${visualBaseURL}/api/auth/sign-in/email`, {
         data: { email: VISUAL_ACCOUNT.email, password: VISUAL_ACCOUNT.password },
+        headers: visualSessionHeaders,
     })
     expect(signIn.ok(), '视觉账号登录失败').toBeTruthy()
 }

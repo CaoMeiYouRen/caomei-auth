@@ -1,19 +1,19 @@
 <template>
     <div class="security-section">
         <h3 class="section-title">
-            会话管理
+            {{ t('security.sessions.title') }}
         </h3>
         <p class="section-desc">
-            管理您的活动会话，撤销不再需要的会话。
+            {{ t('security.sessions.desc') }}
         </p>
         <ul class="security-device-list">
             <li class="device-list-header">
-                <span>会话令牌</span>
-                <span>浏览器</span>
-                <span>操作系统</span>
-                <span>IP 地址</span>
-                <span>创建时间</span>
-                <span>过期时间</span>
+                <span>{{ t('security.sessions.columns.token') }}</span>
+                <span>{{ t('security.sessions.columns.browser') }}</span>
+                <span>{{ t('security.sessions.columns.os') }}</span>
+                <span>{{ t('security.sessions.columns.ip') }}</span>
+                <span>{{ t('security.sessions.columns.createdAt') }}</span>
+                <span>{{ t('security.sessions.columns.expiresAt') }}</span>
                 <span class="device-action-col" />
             </li>
             <li
@@ -23,13 +23,13 @@
             >
                 <BaseTooltip
                     v-if="userSession?.session?.id === session.id"
-                    :content="'当前正在使用的会话，令牌为：' + session.id"
+                    :content="t('security.sessions.currentTip', {id: session.id})"
                 >
-                    <span>当前会话</span>
+                    <span>{{ t('security.sessions.current') }}</span>
                 </BaseTooltip>
                 <BaseTooltip
                     v-else
-                    :content="'会话令牌：' + session.id"
+                    :content="t('security.sessions.tokenTip', {id: session.id})"
                 >
                     <span data-visual-mask>{{ session.id }}</span>
                 </BaseTooltip>
@@ -39,7 +39,7 @@
                 <span data-visual-mask>{{ session.createdAt }}</span>
                 <span data-visual-mask>{{ session.expiresAt }}</span>
                 <span class="device-action-col">
-                    <BaseTooltip :content="userSession?.session?.id === session.id ? '无法撤销当前会话' : '点击撤销此会话'">
+                    <BaseTooltip :content="userSession?.session?.id === session.id ? t('security.sessions.cannotRevokeTip') : t('security.sessions.revokeTip')">
                         <CaomeiButton
                             variant="secondary"
                             class="btn"
@@ -49,14 +49,14 @@
                             <template #icon>
                                 <i class="mdi mdi-close" />
                             </template>
-                            撤销会话
+                            {{ t('security.sessions.revoke') }}
                         </CaomeiButton>
                     </BaseTooltip>
                 </span>
             </li>
         </ul>
         <div class="security-actions">
-            <BaseTooltip content="点击撤销除当前会话外的所有其他会话">
+            <BaseTooltip :content="t('security.sessions.revokeOthersTip')">
                 <CaomeiButton
                     class="btn"
                     @click="$emit('revokeOtherSessions')"
@@ -64,10 +64,10 @@
                     <template #icon>
                         <i class="mdi mdi-logout-variant" />
                     </template>
-                    撤销其他会话
+                    {{ t('security.sessions.revokeOthers') }}
                 </CaomeiButton>
             </BaseTooltip>
-            <BaseTooltip content="注意：点击撤销所有会话，包括当前会话！">
+            <BaseTooltip :content="t('security.sessions.revokeAllTip')">
                 <CaomeiButton
                     class="btn"
                     @click="$emit('revokeAllSessions')"
@@ -75,7 +75,7 @@
                     <template #icon>
                         <i class="mdi mdi-logout-variant" />
                     </template>
-                    撤销所有会话
+                    {{ t('security.sessions.revokeAll') }}
                 </CaomeiButton>
             </BaseTooltip>
         </div>
@@ -83,57 +83,57 @@
         <!-- 撤销单个会话确认对话框 -->
         <BaseDialogV2
             :visible="showRevokeSessionConfirm"
-            title="确认撤销会话"
+            :title="t('security.sessions.confirmRevokeTitle')"
             @update:visible="$emit('update:showRevokeSessionConfirm', $event)"
         >
-            <p>确定要撤销该会话吗？</p>
+            <p>{{ t('security.sessions.confirmRevoke') }}</p>
             <template #footer>
                 <CaomeiButton
                     variant="secondary"
                     @click="$emit('update:showRevokeSessionConfirm', false)"
                 >
-                    取消
+                    {{ t('security.sessions.cancel') }}
                 </CaomeiButton>
                 <CaomeiButton @click="$emit('confirmRevokeSession')">
-                    确认
+                    {{ t('security.sessions.confirm') }}
                 </CaomeiButton>
             </template>
         </BaseDialogV2>
         <!-- 撤销其他会话确认对话框 -->
         <BaseDialogV2
             :visible="showRevokeOtherSessionsConfirm"
-            title="确认撤销其他会话"
+            :title="t('security.sessions.confirmRevokeOthersTitle')"
             @update:visible="$emit('update:showRevokeOtherSessionsConfirm', $event)"
         >
-            <p>确定要撤销除当前会话外的所有其他会话吗？</p>
+            <p>{{ t('security.sessions.confirmRevokeOthers') }}</p>
             <template #footer>
                 <CaomeiButton
                     variant="secondary"
                     @click="$emit('update:showRevokeOtherSessionsConfirm', false)"
                 >
-                    取消
+                    {{ t('security.sessions.cancel') }}
                 </CaomeiButton>
                 <CaomeiButton @click="$emit('confirmRevokeOtherSessions')">
-                    确认
+                    {{ t('security.sessions.confirm') }}
                 </CaomeiButton>
             </template>
         </BaseDialogV2>
         <!-- 撤销所有会话确认对话框 -->
         <BaseDialogV2
             :visible="showRevokeAllSessionsConfirm"
-            title="确认撤销所有会话"
+            :title="t('security.sessions.confirmRevokeAllTitle')"
             @update:visible="$emit('update:showRevokeAllSessionsConfirm', $event)"
         >
-            <p>确定要撤销所有会话，包括当前会话吗？</p>
+            <p>{{ t('security.sessions.confirmRevokeAll') }}</p>
             <template #footer>
                 <CaomeiButton
                     variant="secondary"
                     @click="$emit('update:showRevokeAllSessionsConfirm', false)"
                 >
-                    取消
+                    {{ t('security.sessions.cancel') }}
                 </CaomeiButton>
                 <CaomeiButton @click="$emit('confirmRevokeAllSessions')">
-                    确认
+                    {{ t('security.sessions.confirm') }}
                 </CaomeiButton>
             </template>
         </BaseDialogV2>
@@ -141,6 +141,8 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
+
 defineProps<{
     userSession: any
     sessionList: any[]

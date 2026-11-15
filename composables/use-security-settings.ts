@@ -1,13 +1,25 @@
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, type Ref } from 'vue'
 import { useToast } from 'caomei-ui'
-import dayjs from 'dayjs'
 import type { Prettify } from 'better-auth'
 import { authClient } from '@/lib/auth-client'
 import { generateQRCode } from '@/utils/shared/qrcode'
 import { getBrowser, getOs } from '@/utils/shared/useragent'
+import { formatDateLocale } from '@/utils/shared/date'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
+
+/** 当前 UI 语言（响应式，`Composer.locale` 本身即 ref）；脱离 Nuxt 上下文时回退 zh-CN。 */
+function resolveLocale(): Ref<string> {
+    try {
+        return useNuxtApp().$i18n.locale
+    } catch {
+        return ref('zh-CN')
+    }
+}
 
 export function useSecuritySettings() {
     const toast = useToast()
+    const t = useI18nText()
+    const locale = resolveLocale()
     const session = authClient.useSession()
     const userSession = computed(() => session.value?.data)
 
@@ -40,11 +52,12 @@ export function useSecuritySettings() {
     const showRevokeAllSessionsConfirm = ref(false)
 
     // --- Computed ---
+    // 日期按当前语言格式化（zh-CN / en-US 的日期与时间顺序不同）
     const sessionList = computed(() => sessions.value.map((s) => ({
         ...s,
-        createdAt: dayjs(s.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-        updatedAt: dayjs(s.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
-        expiresAt: dayjs(s.expiresAt).format('YYYY-MM-DD HH:mm:ss'),
+        createdAt: formatDateLocale(s.createdAt, locale.value || 'zh-CN'),
+        updatedAt: formatDateLocale(s.updatedAt, locale.value || 'zh-CN'),
+        expiresAt: formatDateLocale(s.expiresAt, locale.value || 'zh-CN'),
         browser: getBrowser(s.userAgent || ''),
         os: getOs(s.userAgent || ''),
     })))
@@ -75,12 +88,12 @@ export function useSecuritySettings() {
             })
 
             if (error) {
-                throw new Error(error.message || '设置失败')
+                throw new Error(error.message || t('security.flow.setupFailed'))
             }
 
             // 1.7 起 enableTwoFactor 返回按 method 区分的联合类型，仅在 totp 分支包含密钥与备份码
             if (!data || data.method !== 'totp') {
-                throw new Error('未获取到 TOTP 配置信息')
+                throw new Error(t('security.flow.totpMissing'))
             }
 
             totpUri.value = data.totpURI
@@ -89,9 +102,13 @@ export function useSecuritySettings() {
 
             showTotpSetup.value = true
 
-            toast.info({ title: '提示', description: '请使用身份验证器应用扫描二维码', duration: 5000 })
+            toast.info({ title: t('security.flow.hintTitle'), description: t('security.flow.scanQr'), duration: 5000 })
         } catch (error: any) {
-            toast.danger({ title: '错误', description: `设置失败：${error.message || '未知错误'}`, duration: 3000 })
+            toast.danger({
+                title: t('security.flow.errorTitle'),
+                description: t('security.flow.setupFailedDetail', { message: error.message || t('security.flow.unknownError') }),
+                duration: 3000,
+            })
         }
     }
 
@@ -102,19 +119,23 @@ export function useSecuritySettings() {
             })
 
             if (error) {
-                throw new Error(error.message || '禁用失败')
+                throw new Error(error.message || t('security.flow.disableFailed'))
             }
 
             showPasswordDialog.value = false
-            toast.success({ title: '成功', description: '双因素认证已成功禁用', duration: 3000 })
+            toast.success({ title: t('security.flow.successTitle'), description: t('security.flow.disableSuccess'), duration: 3000 })
         } catch (error: any) {
-            toast.danger({ title: '错误', description: `禁用失败：${error.message || '未知错误'}`, duration: 3000 })
+            toast.danger({
+                title: t('security.flow.errorTitle'),
+                description: t('security.flow.disableFailedDetail', { message: error.message || t('security.flow.unknownError') }),
+                duration: 3000,
+            })
         }
     }
 
     const onPasswordConfirm = async () => {
         if (!password.value) {
-            toast.warning({ title: '警告', description: '请输入密码', duration: 3000 })
+            toast.warning({ title: t('security.flow.warningTitle'), description: t('security.flow.passwordRequired'), duration: 3000 })
             return
         }
 
@@ -128,7 +149,7 @@ export function useSecuritySettings() {
     const verifyAndEnable2FA = async () => {
         try {
             if (!verificationCode.value) {
-                toast.warning({ title: '警告', description: '请输入验证码', duration: 3000 })
+                toast.warning({ title: t('security.flow.warningTitle'), description: t('security.flow.codeRequired'), duration: 3000 })
                 return
             }
 
@@ -137,22 +158,26 @@ export function useSecuritySettings() {
             })
 
             if (error) {
-                throw new Error(error.message || '验证失败')
+                throw new Error(error.message || t('security.flow.verifyFailed'))
             }
 
             showTotpSetup.value = false
             showBackupCodes.value = true
 
-            toast.success({ title: '成功', description: '双因素认证已成功启用！请保存好备份码', duration: 5000 })
+            toast.success({ title: t('security.flow.successTitle'), description: t('security.flow.enabledSuccess'), duration: 5000 })
         } catch (error: any) {
-            toast.danger({ title: '错误', description: `验证失败：${error.message || '未知错误'}`, duration: 3000 })
+            toast.danger({
+                title: t('security.flow.errorTitle'),
+                description: t('security.flow.verifyFailedDetail', { message: error.message || t('security.flow.unknownError') }),
+                duration: 3000,
+            })
         }
     }
 
     const copyBackupCodes = () => {
         const codesText = backupCodes.value.join('\n')
         void navigator.clipboard.writeText(codesText)
-        toast.success({ title: '成功', description: '备份码已复制到剪贴板', duration: 3000 })
+        toast.success({ title: t('security.flow.successTitle'), description: t('security.flow.codesCopied'), duration: 3000 })
     }
 
     const downloadBackupCodes = () => {
@@ -166,7 +191,7 @@ export function useSecuritySettings() {
         a.click()
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
-        toast.success({ title: '成功', description: '备份码已下载', duration: 3000 })
+        toast.success({ title: t('security.flow.successTitle'), description: t('security.flow.codesDownloaded'), duration: 3000 })
     }
 
     const finishSetup = () => {
@@ -185,7 +210,7 @@ export function useSecuritySettings() {
             const response = await authClient.listSessions()
             sessions.value = response.data || []
         } catch (error) {
-            console.error('获取会话列表失败:', error)
+            console.error('Failed to list sessions:', error)
         }
     }
 
@@ -194,7 +219,7 @@ export function useSecuritySettings() {
             await authClient.revokeSession({ token })
             await listSessions()
         } catch (error) {
-            console.error('撤销会话失败:', error)
+            console.error('Failed to revoke session:', error)
         }
     }
 
@@ -218,7 +243,7 @@ export function useSecuritySettings() {
             await listSessions()
             showRevokeOtherSessionsConfirm.value = false
         } catch (error) {
-            console.error('撤销其他会话失败:', error)
+            console.error('Failed to revoke other sessions:', error)
         }
     }
 
@@ -233,7 +258,7 @@ export function useSecuritySettings() {
             showRevokeAllSessionsConfirm.value = false
             void navigateTo('/login')
         } catch (error) {
-            console.error('撤销所有会话失败:', error)
+            console.error('Failed to revoke all sessions:', error)
         }
     }
 
