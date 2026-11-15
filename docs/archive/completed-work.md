@@ -160,7 +160,7 @@ _2026-11-14 授权，2026-11-16 M1–M19 全部完成；共 19 条原子条目�
 -   [x] **M11–M14 Admin 域**：用户、OAuth 应用、SSO 提供商、日志统计四个业务域与 12 个对话框双语；`common.status.*` 统一状态标签。
 -   [x] **M15 邮件与偏好**：`User.locale` + `additionalFields`（`z.enum` 校验）、7 个邮件方法与 6 个模板双语、请求 / 偏好 / 默认优先级、旧用户惰性回填、三方言建表与生产 ALTER 说明。
 -   [x] **M16 API 错误面**：全部 `/api/**` 返回 `Content-Language` / `Vary`；`createError` 中文清零；管理端 / 上传 / Demo 守卫 / 社交登录展示名本地化；静态守卫防回退。
--   [x] **M17 治理清理**：未使用键 0（16 个动态拼接键登记来源）、Admin 侧边栏与主题切换双语、核心页 12 张 `en-US` 视觉基线、allowlist 收紧到 132 行 / 24 文件。
+-   [x] **M17 治理清理**：未使用键 0（16 个动态拼接键登记来源）、Admin 侧边栏与主题切换双语、核心页 6 张 `en-US` 视觉基线、allowlist 收紧到 132 行 / 24 文件。
 -   [x] **M18 SEO**：sitemap / robots / hreflang / canonical / `og:locale`、运行时 origin 重写、私有页 `noindex`，`en-US` 升 `seo-ready` 并放开索引。
--   [x] **M19 收口**：1467 键同构、测试 1036 / 138、视觉 116、覆盖率 Statements 76.78% / Lines 76.92%、入口 JS 339,109 B / 总 JS 2,289,780 B；全量门禁通过。
+-   [x] **M19 收口**：1467 键同构、测试 1037 / 138、视觉 110、覆盖率 Statements 76.78% / Lines 76.92%、入口 JS 339,087 B / 总 JS 2,289,799 B；全量门禁通过。
 -   [x] **遗留**：Demo 假数据仍为 zh-CN（已登记边界）；Admin API 错误文案读取链路、OAuth 接口 200 + body status、Zod error map 统一进 backlog。

@@ -47,7 +47,7 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [阶段 5 M14：Admin 日志域文案](./governance/2026-11-15-m14-admin-logs-text.md): `admin-logs` 51 键、统计概览 / 时间段 / 登录方式 / 趋势图 / 日志表双语，图表随语言重绘。
 -   [阶段 5 M15：邮件模板与用户语言偏好](./governance/2026-11-16-m15-email-locale.md): `email` 58 键、`User.locale` 持久化、7 个邮件方法与模板双语、生产库 ALTER 说明。
 -   [阶段 5 M16：API 错误面与内容协商](./governance/2026-11-16-m16-api-errors.md): 全部 `/api/**` 返回 `Content-Language` / `Vary`，管理端 / 上传 / 社交登录文案按请求语言输出，新增静态守卫。
--   [阶段 5 M17：治理清理与双语回归](./governance/2026-11-16-m17-governance-cleanup.md): 未使用键清零、Admin 壳层与主题切换双语、核心页 12 张 `en-US` 视觉基线、allowlist 收紧到 132 行 / 24 文件。
+-   [阶段 5 M17：治理清理与双语回归](./governance/2026-11-16-m17-governance-cleanup.md): 未使用键清零、Admin 壳层与主题切换双语、核心页 6 张 `en-US` 视觉基线、allowlist 收紧到 132 行 / 24 文件。
 -   [阶段 5 M18：SEO 与 `en-US` 升 `seo-ready`](./governance/2026-11-16-m18-seo.md): sitemap / robots / hreflang / `og:locale` / 私有页 `noindex`，`en-US` 放开索引。
 -   [阶段 5 收口记录](./governance/2026-11-16-phase5-closure.md): M1–M19 全部交付、终态指标、与范围登记的偏差、遗留与验证命令。
 -   [发布链路原生多架构评估](./governance/2026-11-08-native-multiarch-docker-review.md): issue #718 的入口核验、方案比较与方案 C 复用工作流落地（已排期阶段 3 插队，待工作流验证）。

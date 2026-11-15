@@ -1,4 +1,5 @@
 import { createError, defineEventHandler, getRequestURL, setResponseHeader } from 'h3'
+import logger from '@/server/utils/logger'
 import { AUTH_BASE_URL } from '@/utils/shared/env'
 import { buildSitemapXml } from '@/utils/shared/seo'
 
@@ -14,7 +15,7 @@ export default defineEventHandler((event) => {
         setResponseHeader(event, 'Cache-Control', 'public, max-age=3600')
         return buildSitemapXml(origin)
     } catch (error) {
-        console.error('[sitemap] generation failed', error)
+        logger.error('sitemap generation failed', { error: error instanceof Error ? error.message : String(error) })
         throw createError({
             statusCode: 500,
             statusMessage: 'Failed to generate sitemap',

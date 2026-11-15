@@ -37,10 +37,23 @@ type HeadMeta = { id?: string, property?: string, content?: string }
 /* `@nuxtjs/i18n` 的 baseUrl 在构建期固化；部署域名可能与构建环境不同，
  * 这里按运行时请求源重写 canonical / hreflang / og:url 的 origin。 */
 const requestURL = useRequestURL()
+
+/** 配置值可能带末尾斜杠或路径，统一归一化为 origin；非法值回退请求源 */
+function normalizeOrigin(value: string | undefined, fallback: string): string {
+    if (!value) {
+        return fallback
+    }
+    try {
+        return new URL(value).origin
+    } catch {
+        return fallback
+    }
+}
+
 /* 与 sitemap / robots 一致：优先使用部署配置的站点地址，未配置时才信任请求源 */
-const siteOrigin = ref(publicConfig.authBaseUrl || requestURL.origin)
+const siteOrigin = ref(normalizeOrigin(publicConfig.authBaseUrl, requestURL.origin))
 onMounted(() => {
-    siteOrigin.value = publicConfig.authBaseUrl || window.location.origin
+    siteOrigin.value = normalizeOrigin(publicConfig.authBaseUrl, window.location.origin)
 })
 
 function withRuntimeOrigin(href?: string): string | undefined {
