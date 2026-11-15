@@ -2,7 +2,7 @@
 
 本文档概述草梅 Auth 的中长期发展方向与大颗粒度阶段规划。候选条目、优先级与验收要点见 [backlog.md](./backlog.md)；进行中阶段的原子条目见 [todo.md](./todo.md)；准入与归档规则见 [规划规范](../standards/planning.md)。
 
-> **当前状态**：**阶段 5「i18n 全量落地与体验收口」已于 2026-11-14 授权启动（M1–M19，实施中）**。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线。阶段 5 范围见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)；阶段 4 记录见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)，P4 摘要见 [P4 交付摘要](../design/governance/2026-11-14-p4-closure.md)；未启动候选见 [backlog.md](./backlog.md)。
+> **当前状态**：**阶段 5「i18n 全量落地与体验收口」已于 2026-11-16 收口（M1–M19 全部交付）**，收口记录见 [阶段 5 收口记录](../design/governance/2026-11-16-phase5-closure.md)。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线。阶段 5 范围见 [阶段 5 范围登记](../design/governance/2026-11-14-phase5-registration.md)；阶段 4 记录见 [阶段 4 收口记录](../design/governance/2026-11-14-phase4-closure.md)，P4 摘要见 [P4 交付摘要](../design/governance/2026-11-14-p4-closure.md)；未启动候选见 [backlog.md](./backlog.md)。
 
 ---
 
@@ -64,7 +64,7 @@ _目标：完成剩余 Admin 数据页与共享封装迁移，建立 Admin 视�
 
 ---
 
-## 阶段 5: i18n 全量落地与体验收口（已授权，2026-11-14 启动）
+## 阶段 5: i18n 全量落地与体验收口（2026-11-16 收口）
 
 _目标：完成 i18n 页面文案、邮件与 `User.locale`、API 错误面与 SEO 放量，建立双语质量门，并收口组件库内建文案与个人中心导航。_
 

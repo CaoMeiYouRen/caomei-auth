@@ -2,7 +2,7 @@
 
 本文档记录了项目已实现的关键技术升级、功能点及测试覆盖情况，作为项目发展的历史记录。
 
-> **勘误（2026-11-05，2026-11-06 补充，2026-11-09 更新，2026-11-14 更新）**：本归档此前把 i18n 误记为已完成；截至 2026-11-06 仅完成 M1 基础设施与语言切换原型（阶段 2 M5）。其中 M2 前置（schema / 校验键 / 治理脚本）与认证类服务端错误试点已在阶段 3 完成（2026-11-09 收口，见 §9）；页面文案、邮件 / `User.locale` 与 SEO 已作为 [阶段 5](../design/governance/2026-11-14-phase5-registration.md) 启动（2026-11-14），未完成项不在本归档登记。
+> **勘误（2026-11-05，2026-11-06 补充，2026-11-09 更新，2026-11-14 更新，2026-11-16 更新）**：本归档此前把 i18n 误记为已完成；截至 2026-11-06 仅完成 M1 基础设施与语言切换原型（阶段 2 M5）。M2 前置与认证类服务端错误试点在阶段 3 完成（2026-11-09 收口，见 §9）；页面文案、邮件 / `User.locale`、API 错误面与 SEO 已由 [阶段 5](../design/governance/2026-11-14-phase5-registration.md) 完成（2026-11-16 收口，见 §11）。
 
 ---
 
@@ -148,3 +148,19 @@ _2026-11-10 授权，2026-11-14 M1–M15 全部完成；共 15 条原子条目�
 -   [x] **护栏终态**：`migration:check-imports`（toast / confirm 显式 import caomei-ui）与 `migration:check-budget` 保留；路由白名单模块删除；自基线 `test:visual` 102 passed 为唯一阻断视觉门禁。
 -   [x] **附带修复**：共享分页 `update:rows` 旧事件导致越界请求（M9 Review Gate）、主题切换暗色分叉与 hover 对比度（M11 Review Gate）、显式浅色 + 系统深色的 token 覆盖（M13）。
 -   [x] **遗留**：i18n 页面 / 邮件 / `User.locale` 交下一阶段（未授权）；`CaomeiDataTable` 能力、视觉固定时钟、i18n 扫描盲区、stylelint 18 升级保留 backlog。
+
+---
+
+## 11. 阶段 5 · i18n 全量落地与体验收口（2026-11-16 收口）
+
+_2026-11-14 授权，2026-11-16 M1–M19 全部完成；共 19 条原子条目。收口记录见 [阶段 5 收口记录](../design/governance/2026-11-16-phase5-closure.md)。_
+
+-   [x] **M1–M3 基座与治理**：caomei-ui 1.3.0 + `CaomeiConfigProvider` locale 桥接；18 个消息模块与路由懒加载；`<script setup>` 扫描、`lint:i18n` / `test:i18n`、`usePageMeta` 落地。
+-   [x] **M4–M10 前台文案**：认证 5 页、SSO / 错误页、个人中心、安全设置、OAuth 同意与授权列表、首页 / 静态页 / 共享壳全部双语；个人中心 ↔ 授权应用 / 安全设置互联。
+-   [x] **M11–M14 Admin 域**：用户、OAuth 应用、SSO 提供商、日志统计四个业务域与 12 个对话框双语；`common.status.*` 统一状态标签。
+-   [x] **M15 邮件与偏好**：`User.locale` + `additionalFields`（`z.enum` 校验）、7 个邮件方法与 6 个模板双语、请求 / 偏好 / 默认优先级、旧用户惰性回填、三方言建表与生产 ALTER 说明。
+-   [x] **M16 API 错误面**：全部 `/api/**` 返回 `Content-Language` / `Vary`；`createError` 中文清零；管理端 / 上传 / Demo 守卫 / 社交登录展示名本地化；静态守卫防回退。
+-   [x] **M17 治理清理**：未使用键 0（16 个动态拼接键登记来源）、Admin 侧边栏与主题切换双语、核心页 12 张 `en-US` 视觉基线、allowlist 收紧到 132 行 / 24 文件。
+-   [x] **M18 SEO**：sitemap / robots / hreflang / canonical / `og:locale`、运行时 origin 重写、私有页 `noindex`，`en-US` 升 `seo-ready` 并放开索引。
+-   [x] **M19 收口**：1467 键同构、测试 1036 / 138、视觉 116、覆盖率 Statements 76.78% / Lines 76.92%、入口 JS 339,109 B / 总 JS 2,289,780 B；全量门禁通过。
+-   [x] **遗留**：Demo 假数据仍为 zh-CN（已登记边界）；Admin API 错误文案读取链路、OAuth 接口 200 + body status、Zod error map 统一进 backlog。
