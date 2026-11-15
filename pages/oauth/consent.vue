@@ -5,7 +5,7 @@
         <div v-if="loading" class="loading-container">
             <div class="loading-content">
                 <i class="loading-icon mdi mdi-loading mdi-spin" />
-                <p>正在验证应用信息...</p>
+                <p>{{ t('oauth.consent.loading') }}</p>
             </div>
         </div>
 
@@ -13,10 +13,10 @@
         <div v-else-if="hasError" class="error-container">
             <div class="error-content">
                 <i class="error-icon mdi mdi-alert-circle" />
-                <h2>授权请求无效</h2>
-                <p>无法处理此授权请求，请检查链接是否正确或联系应用提供方。</p>
+                <h2>{{ t('oauth.consent.invalidTitle') }}</h2>
+                <p>{{ t('oauth.consent.invalidDescription') }}</p>
                 <CaomeiButton @click="handleGoHome">
-                    返回首页
+                    {{ t('oauth.consent.backHome') }}
                 </CaomeiButton>
             </div>
         </div>
@@ -25,10 +25,10 @@
         <div v-else class="consent-container">
             <div class="consent-header">
                 <h1 class="consent-title">
-                    授权申请
+                    {{ t('oauth.consent.title') }}
                 </h1>
                 <p class="consent-subtitle">
-                    {{ applicationName }} 正在请求访问您的账户
+                    {{ t('oauth.consent.subtitle', {name: applicationName}) }}
                 </p>
             </div>
             <div class="consent-body">
@@ -36,15 +36,15 @@
                     <img :src="application.logoUri" :alt="applicationName">
                 </div>
                 <div class="application-info">
-                    <h3>应用信息</h3>
+                    <h3>{{ t('oauth.consent.applicationInfo') }}</h3>
                     <div class="info-item">
-                        <strong>应用名称：</strong>{{ applicationName }}
+                        <strong>{{ t('oauth.consent.applicationName') }}</strong>{{ applicationName }}
                     </div>
                     <div v-if="application?.description" class="info-item">
-                        <strong>描述：</strong>{{ application.description }}
+                        <strong>{{ t('oauth.consent.description') }}</strong>{{ application.description }}
                     </div>
                     <div v-if="application?.clientUri" class="info-item">
-                        <strong>官网：</strong>
+                        <strong>{{ t('oauth.consent.website') }}</strong>
                         <a
                             :href="application.clientUri"
                             target="_blank"
@@ -54,32 +54,32 @@
                         </a>
                     </div>
                     <div v-if="application?.tosUri" class="info-item">
-                        <strong>服务条款：</strong>
+                        <strong>{{ t('oauth.consent.tosField') }}</strong>
                         <a
                             :href="application.tosUri"
                             target="_blank"
                             rel="noopener"
                         >
-                            查看服务条款
+                            {{ t('oauth.consent.tosView') }}
                         </a>
                     </div>
                     <div v-if="application?.policyUri" class="info-item">
-                        <strong>隐私政策：</strong>
+                        <strong>{{ t('oauth.consent.privacyField') }}</strong>
                         <a
                             :href="application.policyUri"
                             target="_blank"
                             rel="noopener"
                         >
-                            查看隐私政策
+                            {{ t('oauth.consent.privacyView') }}
                         </a>
                     </div>
                 </div>
                 <div class="scopes-list">
-                    <h3>将获得以下权限：</h3>
+                    <h3>{{ t('oauth.consent.scopesHeading') }}</h3>
                     <!-- 受信任客户端提示 -->
                     <div v-if="isTrustedClient" class="trusted-client-badge">
                         <i class="mdi mdi-shield-check" />
-                        <span>这是一个受信任的应用</span>
+                        <span>{{ t('oauth.consent.trustedBadge') }}</span>
                     </div>
                     <ul>
                         <li v-for="scopeItem in parsedScopes" :key="scopeItem.scope">
@@ -89,46 +89,45 @@
                     </ul>
                     <!-- 如果没有特定权限，显示基本信息 -->
                     <div v-if="parsedScopes.length === 0" class="no-scopes">
-                        <p>该应用将获得基本的身份验证权限。</p>
+                        <p>{{ t('oauth.consent.noScopes') }}</p>
                     </div>
                 </div>
                 <!-- OAuth 参数信息（仅开发环境显示） -->
                 <div v-if="config.public.NODE_ENV === 'development'" class="debug-info">
                     <details>
-                        <summary>调试信息（仅开发环境显示）</summary>
+                        <summary>{{ t('oauth.consent.debugSummary') }}</summary>
                         <pre>{{ JSON.stringify(oauthParams, null, 2) }}</pre>
                     </details>
                 </div>
             </div>
             <!-- 法律信息区域 -->
             <div v-if="application?.tosUri || application?.policyUri" class="legal-info">
-                <p class="legal-text">
-                    在授权前，建议您仔细阅读该应用的
-                    <template v-if="application?.tosUri">
+                <i18n-t
+                    :keypath="legalKeypath"
+                    tag="p"
+                    class="legal-text"
+                >
+                    <template #terms>
                         <a
                             :href="application.tosUri"
                             target="_blank"
                             rel="noopener"
                             class="legal-link"
                         >
-                            服务条款
+                            {{ t('oauth.common.tosName') }}
                         </a>
                     </template>
-                    <template v-if="application?.tosUri && application?.policyUri">
-                        和
-                    </template>
-                    <template v-if="application?.policyUri">
+                    <template #privacy>
                         <a
                             :href="application.policyUri"
                             target="_blank"
                             rel="noopener"
                             class="legal-link"
                         >
-                            隐私政策
+                            {{ t('oauth.common.privacyName') }}
                         </a>
                     </template>
-                    ，了解您的权利和义务。
-                </p>
+                </i18n-t>
             </div>
             <div class="consent-footer">
                 <CaomeiButton
@@ -137,7 +136,7 @@
                     :disabled="submitting"
                     @click="denyConsent"
                 >
-                    拒绝
+                    {{ t('oauth.consent.deny') }}
                 </CaomeiButton>
                 <CaomeiButton
                     class="btn-allow"
@@ -145,7 +144,7 @@
                     :disabled="submitting"
                     @click="allowConsent"
                 >
-                    {{ submitting ? '处理中...' : '授权' }}
+                    {{ submitting ? t('oauth.consent.processing') : t('oauth.consent.allow') }}
                 </CaomeiButton>
             </div>
         </div>
@@ -153,7 +152,12 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import { useOAuthConsent } from '@/composables/use-oauth-consent'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
+
+const { t } = useI18n()
+usePageMeta('oauth.consent.title')
 
 const {
     loading,
@@ -169,6 +173,15 @@ const {
     allowConsent,
     denyConsent,
 } = await useOAuthConsent()
+
+const legalKeypath = computed(() => {
+    const hasTos = !!application.value?.tosUri
+    const hasPrivacy = !!application.value?.policyUri
+    if (hasTos && hasPrivacy) {
+        return 'oauth.consent.legalBoth'
+    }
+    return hasTos ? 'oauth.consent.legalTerms' : 'oauth.consent.legalPrivacy'
+})
 </script>
 
 <style lang="scss" scoped>

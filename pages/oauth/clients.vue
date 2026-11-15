@@ -6,10 +6,10 @@
                 <div class="header-content">
                     <h1 class="page-title">
                         <i class="mdi mdi-key-variant" />
-                        已授权应用
+                        {{ t('oauth.clients.title') }}
                     </h1>
                     <p class="page-description">
-                        管理您授权访问账户的第三方应用
+                        {{ t('oauth.clients.description') }}
                     </p>
                 </div>
                 <div class="header-actions">
@@ -20,7 +20,7 @@
                         <template #icon>
                             <i class="mdi mdi-arrow-left" aria-hidden="true" />
                         </template>
-                        返回个人中心
+                        {{ t('oauth.clients.backProfile') }}
                     </CaomeiButton>
                 </div>
             </div>
@@ -29,7 +29,7 @@
             <div v-if="loading" class="loading-container">
                 <div class="loading-content">
                     <i class="loading-icon mdi mdi-loading mdi-spin" />
-                    <p>正在加载授权应用...</p>
+                    <p>{{ t('oauth.clients.loading') }}</p>
                 </div>
             </div>
 
@@ -64,18 +64,18 @@
                                 class="app-website"
                             >
                                 <i class="mdi mdi-open-in-new" />
-                                访问官网
+                                {{ t('oauth.clients.visitWebsite') }}
                             </a>
                         </div>
                     </div>
 
                     <div class="app-details">
                         <div class="detail-item">
-                            <strong>授权时间：</strong>
+                            <strong>{{ t('oauth.clients.grantedAt') }}</strong>
                             <span>{{ formatDateTime(app.consentedAt) }}</span>
                         </div>
                         <div class="detail-item">
-                            <strong>应用权限：</strong>
+                            <strong>{{ t('oauth.clients.permissions') }}</strong>
                             <div class="scopes-list">
                                 <span
                                     v-for="scope in app.scopes"
@@ -85,7 +85,7 @@
                                     {{ getScopeDescription(scope) }}
                                 </span>
                                 <span v-if="app.scopes.length === 0" class="no-scopes">
-                                    基本访问权限
+                                    {{ t('oauth.clients.noScopes') }}
                                 </span>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                                 size="sm"
                                 @click="openLink(app.application.tosUri)"
                             >
-                                服务条款
+                                {{ t('oauth.common.tosName') }}
                             </CaomeiButton>
                             <CaomeiButton
                                 v-if="app.application.policyUri"
@@ -107,7 +107,7 @@
                                 size="sm"
                                 @click="openLink(app.application.policyUri)"
                             >
-                                隐私政策
+                                {{ t('oauth.common.privacyName') }}
                             </CaomeiButton>
                         </div>
                         <CaomeiButton
@@ -116,7 +116,7 @@
                             :loading="revokingApps.has(app.clientId)"
                             @click="confirmRevokeAuthorization(app)"
                         >
-                            撤销授权
+                            {{ t('oauth.clients.revoke') }}
                         </CaomeiButton>
                     </div>
                 </div>
@@ -126,13 +126,13 @@
             <div v-else class="empty-state">
                 <div class="empty-content">
                     <i class="empty-icon mdi mdi-key-variant" />
-                    <h3>暂无授权应用</h3>
-                    <p>您还没有授权任何第三方应用访问您的账户</p>
+                    <h3>{{ t('oauth.clients.emptyTitle') }}</h3>
+                    <p>{{ t('oauth.clients.emptyDescription') }}</p>
                     <CaomeiButton
                         variant="secondary"
                         @click="goDocs"
                     >
-                        了解更多
+                        {{ t('oauth.clients.learnMore') }}
                     </CaomeiButton>
                 </div>
             </div>
@@ -141,22 +141,26 @@
         <!-- 撤销授权确认对话框 -->
         <BaseDialogV2
             v-model:visible="showRevokeDialog"
-            title="撤销授权"
+            :title="t('oauth.clients.dialogTitle')"
             size="md"
             :closable="!revoking"
             :close-on-esc="!revoking"
             :close-on-overlay="!revoking"
         >
             <div class="revoke-dialog-content">
-                <p>您确定要撤销对 <strong>{{ selectedApp?.application?.name }}</strong> 的授权吗？</p>
+                <i18n-t keypath="oauth.clients.revokeConfirm" tag="p">
+                    <template #name>
+                        <strong>{{ selectedApp?.application?.name }}</strong>
+                    </template>
+                </i18n-t>
                 <CaomeiAlert
                     tone="warning"
-                    title="撤销后："
+                    :title="t('oauth.clients.revokeWarningTitle')"
                 >
                     <ul>
-                        <li>该应用将无法继续访问您的账户信息</li>
-                        <li>您可能需要重新登录该应用</li>
-                        <li>已获取的数据不会被自动删除</li>
+                        <li>{{ t('oauth.clients.revokeWarningAccess') }}</li>
+                        <li>{{ t('oauth.clients.revokeWarningLogin') }}</li>
+                        <li>{{ t('oauth.clients.revokeWarningData') }}</li>
                     </ul>
                 </CaomeiAlert>
             </div>
@@ -167,14 +171,14 @@
                     :disabled="revoking"
                     @click="showRevokeDialog = false"
                 >
-                    取消
+                    {{ t('oauth.clients.cancel') }}
                 </CaomeiButton>
                 <CaomeiButton
                     tone="danger"
                     :loading="revoking"
                     @click="revokeAuthorization"
                 >
-                    确认撤销
+                    {{ t('oauth.clients.confirmRevoke') }}
                 </CaomeiButton>
             </template>
         </BaseDialogV2>
@@ -183,10 +187,14 @@
 
 <script lang="ts" setup>
 import { useOAuthClients } from '@/composables/use-oauth-clients'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 
 definePageMeta({
     layout: 'default',
 })
+
+const { t } = useI18n()
+usePageMeta('oauth.clients.title', 'oauth.clients.description')
 
 const {
     loading,

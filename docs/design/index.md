@@ -38,6 +38,7 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [阶段 5 M5：SSO 登录与错误页](./governance/2026-11-15-m5-sso-error-reset.md): 邮件链接重置通道下线的决策与清理、`sso-login` 页面 / flow 双语、错误页状态码文案与 `error.vue` 纳入扫描根。
 -   [阶段 5 M6：个人中心文案](./governance/2026-11-15-m6-profile-text.md): `profile` 模块 116 键、页面 / 6 个组件 / 3 个对话框 / flow 全量双语，隐私模式与头像上传文案收口。
 -   [阶段 5 M7：安全设置文案](./governance/2026-11-15-m7-security-text.md): `security` 模块 71 键、2FA 面板与会话表全量双语，会话日期列改按 locale 格式化。
+-   [阶段 5 M8：OAuth 与授权应用文案](./governance/2026-11-15-m8-oauth-text.md): `oauth` 模块 96 键、同意页与授权列表双语，两套 scope 文案与法律提示句用 `<i18n-t>` 收口。
 -   [发布链路原生多架构评估](./governance/2026-11-08-native-multiarch-docker-review.md): issue #718 的入口核验、方案比较与方案 C 复用工作流落地（已排期阶段 3 插队，待工作流验证）。
 -   [i18n 评估与实施方案](./governance/2026-11-05-i18n-evaluation.md): 原 i18n 规划的复核修订、Locale Registry、模块化消息、Zod v4 错误本地化、服务端 / 邮件方案与批次。
 -   [阶段 2 范围登记：安全收口与迁移预备](./governance/2026-11-05-phase2-registration.md): 阶段 2 的 5 条主线 / 11 条原子条目、验收与边界（2026-11-06 完成归档）。

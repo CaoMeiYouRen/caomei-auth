@@ -1,6 +1,28 @@
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'caomei-ui'
 import { formatDateTime } from '@/utils/shared/date'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
+
+/** scope → 简要文案键（字面量集中，便于 i18n 审计扫到完整键名）。 */
+const SCOPE_LABEL_KEYS: Record<string, string> = {
+    openid: 'oauth.scopes.label.openid',
+    profile: 'oauth.scopes.label.profile',
+    email: 'oauth.scopes.label.email',
+    address: 'oauth.scopes.label.address',
+    phone: 'oauth.scopes.label.phone',
+    offline_access: 'oauth.scopes.label.offlineAccess',
+    read: 'oauth.scopes.label.read',
+    write: 'oauth.scopes.label.write',
+    admin: 'oauth.scopes.label.admin',
+    'user:read': 'oauth.scopes.label.userRead',
+    'user:write': 'oauth.scopes.label.userWrite',
+    'user:email': 'oauth.scopes.label.userEmail',
+    'read:user': 'oauth.scopes.label.readUser',
+    'read:profile': 'oauth.scopes.label.readProfile',
+    'write:user': 'oauth.scopes.label.writeUser',
+    'app:read': 'oauth.scopes.label.appRead',
+    'app:write': 'oauth.scopes.label.appWrite',
+}
 
 interface AuthorizedApp {
     id: string
@@ -19,33 +41,7 @@ interface AuthorizedApp {
 
 export async function useOAuthClients() {
     const toast = useToast()
-
-    // 标准 OAuth2.0 和 OpenID Connect scopes 的描述映射
-    const scopeDescriptions: Record<string, string> = {
-        // OpenID Connect 核心 scopes
-        openid: '基本身份信息',
-        profile: '个人资料信息',
-        email: '电子邮件地址',
-        address: '地址信息',
-        phone: '手机号码',
-
-        // 扩展 scopes
-        offline_access: '离线访问权限',
-
-        // 自定义 scopes
-        read: '读取权限',
-        write: '写入权限',
-        admin: '管理权限',
-
-        // 用户相关
-        'user:read': '查看用户信息',
-        'user:write': '修改用户信息',
-        'user:email': '访问用户邮箱',
-
-        // 应用相关
-        'app:read': '查看应用信息',
-        'app:write': '修改应用信息',
-    }
+    const t = useI18nText()
 
     const showRevokeDialog = ref(false)
     const selectedApp = ref<AuthorizedApp>()
@@ -75,8 +71,8 @@ export async function useOAuthClients() {
     watch(error, (newError) => {
         if (newError) {
             toast.danger({
-                title: '错误',
-                description: newError.message || '获取授权应用列表失败',
+                title: t('oauth.flow.errorTitle'),
+                description: newError.message || t('oauth.flow.listFailed'),
                 duration: 3000,
             })
         }
@@ -89,7 +85,8 @@ export async function useOAuthClients() {
 
     // 获取权限描述
     function getScopeDescription(scope: string) {
-        return scopeDescriptions[scope] || scope
+        const key = SCOPE_LABEL_KEYS[scope]
+        return key ? t(key) : scope
     }
 
     // 确认撤销授权
@@ -117,19 +114,19 @@ export async function useOAuthClients() {
 
             if (response.success) {
                 toast.success({
-                    title: '撤销成功',
-                    description: `已成功撤销对 ${selectedApp.value.application.name} 的授权`,
+                    title: t('oauth.flow.revokeSuccessTitle'),
+                    description: t('oauth.flow.revokeSuccess', { name: selectedApp.value.application.name }),
                     duration: 3000,
                 })
 
                 await loadAuthorizedApps()
             } else {
-                throw new Error(response.message || '撤销授权失败')
+                throw new Error(response.message || t('oauth.flow.revokeFailed'))
             }
         } catch (revokeError: unknown) {
             toast.danger({
-                title: '撤销失败',
-                description: revokeError instanceof Error && revokeError.message ? revokeError.message : '撤销授权失败',
+                title: t('oauth.flow.revokeFailedTitle'),
+                description: revokeError instanceof Error && revokeError.message ? revokeError.message : t('oauth.flow.revokeFailed'),
                 duration: 3000,
             })
         } finally {

@@ -29,6 +29,8 @@ const {
     },
 }))
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
+
 vi.mock('caomei-ui', () => ({
     useToast: () => mockUseToast,
 }))
@@ -97,6 +99,17 @@ describe('useOAuthConsent', () => {
             expect(parsedScopes.value).toHaveLength(2)
             expect(parsedScopes.value[0]?.scope).toBe('openid')
             expect(parsedScopes.value[1]?.scope).toBe('profile')
+        })
+
+        it('describes known scopes and falls back for unknown ones', async () => {
+            mockUseRoute.mockReturnValue({ query: { client_id: 'client123', scope: 'openid read:user unknown:scope' } })
+            const { parsedScopes } = await useOAuthConsent()
+
+            expect(parsedScopes.value.map((item) => item.description)).toEqual([
+                '获取您的基本身份信息',
+                '读取用户基本信息（用户名、ID等）',
+                '访问 unknown:scope 权限',
+            ])
         })
 
         it('should fetch application info', async () => {
