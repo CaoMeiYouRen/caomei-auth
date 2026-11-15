@@ -45,37 +45,39 @@ const props = withDefaults(defineProps<{
     falseSeverity: undefined,
 })
 
+const { t } = useI18n()
+
 const presets: Record<string, (val: any) => { label: string, severity: Severity }> = {
     // 启用状态 (true=好, false=坏)
     enabled: (val: boolean) => ({
-        label: val ? '已启用' : '已禁用',
+        label: val ? t('common.status.enabled') : t('common.status.disabled'),
         severity: val ? 'success' : 'danger',
     }),
     // 禁用状态 (true=坏, false=好)
     disabled: (val: boolean) => ({
-        label: val ? '已禁用' : '已启用',
+        label: val ? t('common.status.disabled') : t('common.status.enabled'),
         severity: val ? 'danger' : 'success',
     }),
     // 封禁状态 (true=坏, false=好)
     banned: (val: boolean) => ({
-        label: val ? '已禁用' : '正常',
+        label: val ? t('common.status.banned') : t('common.status.normal'),
         severity: val ? 'danger' : 'success',
     }),
     // 会话状态
     session: (val: boolean) => ({
-        label: val ? '活跃' : '已过期',
+        label: val ? t('common.status.active') : t('common.status.expired'),
         severity: val ? 'success' : 'secondary',
     }),
     // 简单是非
     'yes-no': (val: boolean) => ({
-        label: val ? '是' : '否',
+        label: val ? t('common.status.yes') : t('common.status.no'),
         severity: val ? 'success' : 'secondary',
     }),
     // 角色映射
     role: (val: string) => {
         const map: Record<string, { label: string, severity: Severity }> = {
-            admin: { label: '管理员', severity: 'danger' },
-            user: { label: '用户', severity: 'info' },
+            admin: { label: t('common.status.role.admin'), severity: 'danger' },
+            user: { label: t('common.status.role.user'), severity: 'info' },
         }
         return map[val] || { label: val, severity: 'secondary' }
     },

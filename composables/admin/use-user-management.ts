@@ -7,11 +7,13 @@ import { authClient } from '@/lib/auth-client'
 import { validateEmail } from '@/utils/shared/validate'
 import { syncAdminRole } from '@/utils/web/admin-role-client'
 import type { AdminUserProfile, AdminUserRow } from '@/types/admin'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 export function useUserManagement() {
     const toast = useToast()
+    const t = useI18nText()
     const confirm = useConfirm()
     const { getSortField } = useUserTable()
 
@@ -144,17 +146,17 @@ export function useUserManagement() {
 
             if (response.data) {
                 toast.success({
-                    title: '解禁成功',
-                    description: '用户已解除禁用',
+                    title: t('admin.users.flow.unbanSuccessTitle'),
+                    description: t('admin.users.flow.unbanSuccess'),
                     duration: 3000,
                 })
                 loadUsers()
             }
         } catch (error: unknown) {
-            console.error('解禁用户失败:', error)
+            console.error('Failed to unban user:', error)
             toast.danger({
-                title: '解禁失败',
-                description: errorMessage(error, '解禁用户失败'),
+                title: t('admin.users.flow.unbanFailedTitle'),
+                description: errorMessage(error, t('admin.users.flow.unbanFailed')),
                 duration: 3000,
             })
         }
@@ -164,16 +166,16 @@ export function useUserManagement() {
         // 防止删除自己
         if (isSelf) {
             toast.warning({
-                title: '操作不允许',
-                description: '不能删除自己的账户',
+                title: t('admin.users.flow.cannotDeleteSelfTitle'),
+                description: t('admin.users.flow.cannotDeleteSelf'),
                 duration: 3000,
             })
             return
         }
 
         const confirmed = await confirm.open({
-            title: '确认删除',
-            description: `确定要删除用户 ${user.name || user.email} 吗？此操作不可恢复！`,
+            title: t('admin.users.flow.confirmDeleteTitle'),
+            description: t('admin.users.flow.confirmDelete', { name: user.name || user.email }),
             tone: 'danger',
         })
         if (!confirmed) {
@@ -187,17 +189,17 @@ export function useUserManagement() {
 
             if (response.data) {
                 toast.success({
-                    title: '删除成功',
-                    description: '用户已被删除',
+                    title: t('admin.users.flow.deleteSuccessTitle'),
+                    description: t('admin.users.flow.deleteSuccess'),
                     duration: 3000,
                 })
                 loadUsers()
             }
         } catch (error: unknown) {
-            console.error('删除用户失败:', error)
+            console.error('Failed to delete user:', error)
             toast.danger({
-                title: '删除失败',
-                description: errorMessage(error, '删除用户失败'),
+                title: t('admin.users.flow.deleteFailedTitle'),
+                description: errorMessage(error, t('admin.users.flow.deleteFailed')),
                 duration: 3000,
             })
         }
@@ -210,7 +212,7 @@ export function useUserManagement() {
 
             if (result.success) {
                 toast.success({
-                    title: '同步成功',
+                    title: t('admin.users.flow.syncSuccessTitle'),
                     description: result.message,
                     duration: 3000,
                 })
@@ -220,15 +222,15 @@ export function useUserManagement() {
             }
 
             toast.warning({
-                title: '同步完成',
+                title: t('admin.users.flow.syncDoneTitle'),
                 description: result.message,
                 duration: 3000,
             })
         } catch (error: unknown) {
-            console.error('同步管理员角色失败:', error)
+            console.error('Failed to sync admin role:', error)
             toast.danger({
-                title: '同步失败',
-                description: errorMessage(error, '同步管理员角色失败'),
+                title: t('admin.users.flow.syncFailedTitle'),
+                description: errorMessage(error, t('admin.users.flow.syncFailed')),
                 duration: 3000,
             })
         } finally {
@@ -243,8 +245,8 @@ export function useUserManagement() {
         }
 
         const confirmed = await confirm.open({
-            title: '确认批量禁用',
-            description: `确定要禁用选中的 ${selectedUsers.value.length} 个用户吗？`,
+            title: t('admin.users.flow.batchBanTitle'),
+            description: t('admin.users.flow.batchBan', { count: selectedUsers.value.length }),
             tone: 'danger',
         })
         if (!confirmed) {
@@ -255,23 +257,23 @@ export function useUserManagement() {
             for (const user of selectedUsers.value) {
                 await authClient.admin.banUser({
                     userId: user.id,
-                    banReason: '批量禁用操作',
+                    banReason: t('admin.users.flow.batchBanReason'),
                 })
             }
 
             toast.success({
-                title: '禁用成功',
-                description: `已禁用 ${selectedUsers.value.length} 个用户`,
+                title: t('admin.users.flow.batchBanSuccessTitle'),
+                description: t('admin.users.flow.batchBanSuccess', { count: selectedUsers.value.length }),
                 duration: 3000,
             })
 
             selectedUsers.value = []
             loadUsers()
         } catch (error: unknown) {
-            console.error('批量禁用失败:', error)
+            console.error('Failed to ban selected users:', error)
             toast.danger({
-                title: '批量禁用失败',
-                description: errorMessage(error, '批量禁用用户失败'),
+                title: t('admin.users.flow.batchBanFailedTitle'),
+                description: errorMessage(error, t('admin.users.flow.batchBanFailed')),
                 duration: 3000,
             })
         }
@@ -283,8 +285,8 @@ export function useUserManagement() {
         }
 
         const confirmed = await confirm.open({
-            title: '确认批量解禁',
-            description: `确定要解禁选中的 ${selectedUsers.value.length} 个用户吗？`,
+            title: t('admin.users.flow.batchUnbanTitle'),
+            description: t('admin.users.flow.batchUnban', { count: selectedUsers.value.length }),
             tone: 'neutral',
         })
         if (!confirmed) {
@@ -299,18 +301,18 @@ export function useUserManagement() {
             }
 
             toast.success({
-                title: '解禁成功',
-                description: `已解禁 ${selectedUsers.value.length} 个用户`,
+                title: t('admin.users.flow.batchUnbanSuccessTitle'),
+                description: t('admin.users.flow.batchUnbanSuccess', { count: selectedUsers.value.length }),
                 duration: 3000,
             })
 
             selectedUsers.value = []
             loadUsers()
         } catch (error: unknown) {
-            console.error('批量解禁失败:', error)
+            console.error('Failed to unban selected users:', error)
             toast.danger({
-                title: '批量解禁失败',
-                description: errorMessage(error, '批量解禁用户失败'),
+                title: t('admin.users.flow.batchUnbanFailedTitle'),
+                description: errorMessage(error, t('admin.users.flow.batchUnbanFailed')),
                 duration: 3000,
             })
         }
@@ -322,8 +324,8 @@ export function useUserManagement() {
         }
 
         const confirmed = await confirm.open({
-            title: '确认批量删除',
-            description: `确定要删除选中的 ${selectedUsers.value.length} 个用户吗？此操作不可恢复！`,
+            title: t('admin.users.flow.batchDeleteTitle'),
+            description: t('admin.users.flow.batchDelete', { count: selectedUsers.value.length }),
             tone: 'danger',
         })
         if (!confirmed) {
@@ -338,18 +340,18 @@ export function useUserManagement() {
             }
 
             toast.success({
-                title: '删除成功',
-                description: `已删除 ${selectedUsers.value.length} 个用户`,
+                title: t('admin.users.flow.batchDeleteSuccessTitle'),
+                description: t('admin.users.flow.batchDeleteSuccess', { count: selectedUsers.value.length }),
                 duration: 3000,
             })
 
             selectedUsers.value = []
             loadUsers()
         } catch (error: unknown) {
-            console.error('批量删除失败:', error)
+            console.error('Failed to delete selected users:', error)
             toast.danger({
-                title: '批量删除失败',
-                description: errorMessage(error, '批量删除用户失败'),
+                title: t('admin.users.flow.batchDeleteFailedTitle'),
+                description: errorMessage(error, t('admin.users.flow.batchDeleteFailed')),
                 duration: 3000,
             })
         }
@@ -365,17 +367,17 @@ export function useUserManagement() {
     // 批量操作菜单
     const batchMenuItems = [
         {
-            label: '禁用选中用户',
+            label: t('admin.users.flow.menu.ban'),
             icon: 'mdi mdi-block-helper',
             command: () => batchBanUsers(),
         },
         {
-            label: '解禁选中用户',
+            label: t('admin.users.flow.menu.unban'),
             icon: 'mdi mdi-check-circle',
             command: () => batchUnbanUsers(),
         },
         {
-            label: '删除选中用户',
+            label: t('admin.users.flow.menu.delete'),
             icon: 'mdi mdi-delete',
             command: () => batchDeleteUsers(),
         },

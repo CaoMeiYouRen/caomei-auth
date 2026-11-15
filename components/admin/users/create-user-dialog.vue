@@ -1,7 +1,7 @@
 <template>
     <BaseDialogV2
         :visible="visible"
-        title="创建用户"
+        :title="t('admin.users.create.title')"
         size="md"
         @update:visible="$emit('update:visible', $event)"
     >
@@ -9,8 +9,8 @@
             <BaseInputV2
                 id="createName"
                 v-model="createForm.name"
-                label="昵称"
-                placeholder="请输入用户昵称"
+                :label="t('admin.users.create.nickname')"
+                :placeholder="t('admin.users.create.nicknamePlaceholder')"
                 :error="errors.name || ''"
                 required
             />
@@ -18,9 +18,9 @@
             <BaseInputV2
                 id="createEmail"
                 v-model="createForm.email"
-                label="邮箱"
+                :label="t('admin.users.create.email')"
                 type="email"
-                placeholder="请输入邮箱地址"
+                :placeholder="t('admin.users.create.emailPlaceholder')"
                 :error="errors.email || ''"
                 required
             />
@@ -28,23 +28,23 @@
             <BaseInputV2
                 id="createUsername"
                 v-model="createForm.username"
-                label="用户名"
-                placeholder="请输入用户名（可选）"
+                :label="t('admin.users.create.username')"
+                :placeholder="t('admin.users.create.usernamePlaceholder')"
                 :error="errors.username || ''"
             />
 
             <BasePasswordV2
                 id="createPassword"
                 v-model="createForm.password"
-                label="密码"
-                placeholder="请输入密码"
+                :label="t('admin.users.create.password')"
+                :placeholder="t('admin.users.create.passwordPlaceholder')"
                 :error="errors.password || ''"
                 required
             />
 
             <CaomeiFormItem
                 id="createRole"
-                label="角色"
+                :label="t('admin.users.create.role')"
                 :error="errors.role || ''"
             >
                 <template #default="field">
@@ -54,7 +54,7 @@
                         :options="roleOptions"
                         option-label="label"
                         option-value="value"
-                        placeholder="选择用户角色"
+                        :placeholder="t('admin.users.create.rolePlaceholder')"
                         :invalid="field.invalid"
                         :aria-labelledby="field['aria-labelledby']"
                         :aria-describedby="field['aria-describedby']"
@@ -67,13 +67,13 @@
                     variant="secondary"
                     @click="$emit('update:visible', false)"
                 >
-                    取消
+                    {{ t('admin.users.create.cancel') }}
                 </CaomeiButton>
                 <CaomeiButton
                     type="submit"
                     :loading="createLoading"
                 >
-                    创建
+                    {{ t('admin.users.create.submit') }}
                 </CaomeiButton>
             </div>
         </form>
@@ -97,6 +97,7 @@ const emit = defineEmits<{
     (e: 'created'): void
 }>()
 
+const { t } = useI18n()
 const toast = useToast()
 const translate = useValidationMessage()
 const { roleOptions } = useUserTable()
@@ -140,7 +141,7 @@ const createUser = async () => {
         result.error.issues.forEach((issue) => {
             const path = issue.path[0] as string
             if (path) {
-                errors.value[path] = translate(issue.message) || '校验失败'
+                errors.value[path] = translate(issue.message) || t('admin.users.create.validationFailed')
             }
         })
         return
@@ -158,18 +159,18 @@ const createUser = async () => {
 
         if (response.data) {
             toast.success({
-                title: '创建成功',
-                description: '用户创建成功',
+                title: t('admin.users.create.successTitle'),
+                description: t('admin.users.create.successDescription'),
                 duration: 3000,
             })
             emit('update:visible', false)
             emit('created')
         }
     } catch (error: unknown) {
-        console.error('创建用户失败:', error)
+        console.error('Failed to create user:', error)
         toast.danger({
-            title: '创建失败',
-            description: errorMessage(error, '创建用户失败'),
+            title: t('admin.users.create.failedTitle'),
+            description: errorMessage(error, t('admin.users.create.failedDescription')),
             duration: 3000,
         })
     } finally {

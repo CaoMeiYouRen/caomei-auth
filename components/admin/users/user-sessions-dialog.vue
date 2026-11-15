@@ -1,7 +1,7 @@
 <template>
     <BaseDialogV2
         :visible="visible"
-        title="用户会话"
+        :title="t('admin.users.sessions.title')"
         size="lg"
         :breakpoints="{'1920px': '860px'}"
         @update:visible="$emit('update:visible', $event)"
@@ -9,7 +9,7 @@
         <div v-if="user" class="user-sessions">
             <div class="user-sessions__header">
                 <h4 class="user-sessions__title">
-                    {{ user.name || user.email }} 的活跃会话
+                    {{ t('admin.users.sessions.activeSessions', {name: user.name || user.email}) }}
                 </h4>
                 <CaomeiButton
                     variant="secondary"
@@ -18,7 +18,7 @@
                     :loading="revokeAllLoading"
                     @click="revokeAllUserSessions"
                 >
-                    撤销所有会话
+                    {{ t('admin.users.sessions.revokeAll') }}
                 </CaomeiButton>
             </div>
 
@@ -48,13 +48,13 @@
                         :loading="revokingSession === row.token"
                         @click="revokeUserSession(row.token)"
                     >
-                        撤销
+                        {{ t('admin.users.sessions.revoke') }}
                     </CaomeiButton>
                 </template>
 
                 <template #empty>
                     <div class="user-sessions__empty">
-                        该用户当前没有活跃会话
+                        {{ t('admin.users.sessions.empty') }}
                     </div>
                 </template>
             </CaomeiDataTable>
@@ -80,6 +80,7 @@ const emit = defineEmits<{
     (e: 'update:visible', value: boolean): void
 }>()
 
+const { t } = useI18n()
 const toast = useToast()
 const confirm = useConfirm()
 
@@ -89,21 +90,21 @@ const revokingSession = ref('')
 const userSessions = ref<AdminUserSession[]>([])
 
 const columns: DataTableColumn<AdminUserSession>[] = [
-    { key: 'token', header: '会话ID', width: '170px' },
-    { key: 'userAgent', header: '设备信息', width: '160px' },
+    { key: 'token', header: t('admin.users.sessions.columns.token'), width: '170px' },
+    { key: 'userAgent', header: t('admin.users.sessions.columns.device'), width: '160px' },
     {
         key: 'createdAt',
-        header: '创建时间',
+        header: t('admin.users.sessions.columns.createdAt'),
         width: '180px',
         accessor: (row) => formatDateTime(row.createdAt),
     },
     {
         key: 'expiresAt',
-        header: '到期时间',
+        header: t('admin.users.sessions.columns.expiresAt'),
         width: '180px',
         accessor: (row) => formatDateTime(row.expiresAt),
     },
-    { key: 'actions', header: '操作', width: '100px', align: 'right' },
+    { key: 'actions', header: t('admin.users.sessions.columns.actions'), width: '100px', align: 'right' },
 ]
 
 const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
@@ -118,10 +119,10 @@ const loadUserSessions = async () => {
         })
         userSessions.value = (response.data?.sessions || []) as AdminUserSession[]
     } catch (error: unknown) {
-        console.error('加载用户会话失败:', error)
+        console.error('Failed to load user sessions:', error)
         toast.danger({
-            title: '加载失败',
-            description: errorMessage(error, '加载用户会话失败'),
+            title: t('admin.users.sessions.loadFailedTitle'),
+            description: errorMessage(error, t('admin.users.sessions.loadFailed')),
             duration: 3000,
         })
     } finally {
@@ -145,17 +146,17 @@ const revokeUserSession = async (sessionToken: string) => {
 
         if (response.data) {
             toast.success({
-                title: '撤销成功',
-                description: '会话已撤销',
+                title: t('admin.users.sessions.revokeSuccessTitle'),
+                description: t('admin.users.sessions.revokeSuccess'),
                 duration: 3000,
             })
             loadUserSessions()
         }
     } catch (error: unknown) {
-        console.error('撤销会话失败:', error)
+        console.error('Failed to revoke session:', error)
         toast.danger({
-            title: '撤销失败',
-            description: errorMessage(error, '撤销会话失败'),
+            title: t('admin.users.sessions.revokeFailedTitle'),
+            description: errorMessage(error, t('admin.users.sessions.revokeFailed')),
             duration: 3000,
         })
     } finally {
@@ -168,8 +169,8 @@ const revokeAllUserSessions = async () => {
     if (!targetUser) return
 
     const confirmed = await confirm.open({
-        title: '确认撤销',
-        description: `确定要撤销 ${targetUser.name || targetUser.email} 的所有会话吗？`,
+        title: t('admin.users.sessions.confirmTitle'),
+        description: t('admin.users.sessions.confirmDescription', { name: targetUser.name || targetUser.email }),
         tone: 'danger',
     })
     if (!confirmed) {
@@ -185,17 +186,17 @@ const revokeAllUserSessions = async () => {
 
         if (response.data) {
             toast.success({
-                title: '撤销成功',
-                description: '所有会话已撤销',
+                title: t('admin.users.sessions.revokeAllSuccessTitle'),
+                description: t('admin.users.sessions.revokeAllSuccess'),
                 duration: 3000,
             })
             emit('update:visible', false)
         }
     } catch (error: unknown) {
-        console.error('撤销所有会话失败:', error)
+        console.error('Failed to revoke all sessions:', error)
         toast.danger({
-            title: '撤销失败',
-            description: errorMessage(error, '撤销所有会话失败'),
+            title: t('admin.users.sessions.revokeAllFailedTitle'),
+            description: errorMessage(error, t('admin.users.sessions.revokeAllFailed')),
             duration: 3000,
         })
     } finally {

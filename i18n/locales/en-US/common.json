@@ -1,5 +1,19 @@
 {
     "common": {
-        "listSeparator": "; "
+        "listSeparator": "; ",
+        "status": {
+            "enabled": "Enabled",
+            "disabled": "Disabled",
+            "banned": "Disabled",
+            "normal": "Active",
+            "active": "Active",
+            "expired": "Expired",
+            "yes": "Yes",
+            "no": "No",
+            "role": {
+                "admin": "Admin",
+                "user": "User"
+            }
+        }
     }
 }

@@ -22,6 +22,8 @@ const toast = {
 }
 const confirm = { open: vi.fn() }
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
+
 vi.mock('caomei-ui', () => ({
     useToast: () => toast,
     useConfirm: () => confirm,

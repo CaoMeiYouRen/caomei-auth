@@ -1,5 +1,7 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { useUserTable } from '@/composables/admin/use-user-table'
+
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 
 describe('useUserTable', () => {
     const { getSortField, getSortFieldLabel, formatDate, getRoleLabel, getRoleSeverity } = useUserTable()

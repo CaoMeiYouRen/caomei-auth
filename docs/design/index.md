@@ -41,6 +41,7 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [阶段 5 M8：OAuth 与授权应用文案](./governance/2026-11-15-m8-oauth-text.md): `oauth` 模块 96 键、同意页与授权列表双语，两套 scope 文案与法律提示句用 `<i18n-t>` 收口。
 -   [阶段 5 M9：首页、静态页与共享壳文案](./governance/2026-11-15-m9-static-text.md): 新增 `static` 模块（141 键，路由懒加载）、页脚 / 反馈 / Demo 横幅入 core，隐私与条款的内嵌链接句统一走 `<i18n-t>`。
 -   [阶段 5 M10：个人中心 ↔ 授权应用 / 安全设置互联](./governance/2026-11-15-m10-cross-links.md): 三页头部入口与返回路径打通，移动端按钮组换行，回归基线同步。
+-   [阶段 5 M11：Admin 用户域文案](./governance/2026-11-15-m11-admin-users-text.md): `admin-users` 190 键、用户页与 4 个对话框双语，`common.status.*` 统一状态 / 角色标签。
 -   [发布链路原生多架构评估](./governance/2026-11-08-native-multiarch-docker-review.md): issue #718 的入口核验、方案比较与方案 C 复用工作流落地（已排期阶段 3 插队，待工作流验证）。
 -   [i18n 评估与实施方案](./governance/2026-11-05-i18n-evaluation.md): 原 i18n 规划的复核修订、Locale Registry、模块化消息、Zod v4 错误本地化、服务端 / 邮件方案与批次。
 -   [阶段 2 范围登记：安全收口与迁移预备](./governance/2026-11-05-phase2-registration.md): 阶段 2 的 5 条主线 / 11 条原子条目、验收与边界（2026-11-06 完成归档）。

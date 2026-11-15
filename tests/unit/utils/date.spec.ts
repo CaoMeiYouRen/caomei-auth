@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { formatDateTime, formatDate, formatDateLocale, formatRelativeTime, formatCustomDate } from '@/utils/shared/date'
+import { formatDateTime, formatDate, formatDateLocale, formatDateTimeLocale, formatRelativeTime, formatCustomDate } from '@/utils/shared/date'
 
 afterEach(() => {
     vi.useRealTimers()
@@ -28,6 +28,18 @@ describe('utils/date', () => {
         const value = new Date(2024, 0, 2, 3, 4, 5)
         const result = formatDateLocale(value, 'en-US')
         expect(result).toContain('1/2/2024')
+    })
+
+    it('formats short locale date time without seconds', () => {
+        const value = new Date(2024, 0, 2, 3, 4, 5)
+        const zh = formatDateTimeLocale(value, 'zh-CN')
+        const en = formatDateTimeLocale(value, 'en-US')
+
+        expect(zh).not.toContain(':05')
+        expect(zh).toContain('2024')
+        expect(en).toMatch(/(AM|PM)/u)
+        expect(en).not.toContain(':05')
+        expect(formatDateTimeLocale(null)).toBe('-')
     })
 
     it('formats relative time from current clock', () => {

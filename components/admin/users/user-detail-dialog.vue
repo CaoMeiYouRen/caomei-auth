@@ -1,7 +1,7 @@
 <template>
     <BaseDialogV2
         :visible="visible"
-        :title="isEditing ? '编辑用户' : '用户详情'"
+        :title="isEditing ? t('admin.users.detail.titleEdit') : t('admin.users.detail.titleView')"
         size="lg"
         @update:visible="onClose"
     >
@@ -10,7 +10,7 @@
                 <div class="user-detail__section">
                     <div class="user-detail__section-header">
                         <h3 class="user-detail__section-title">
-                            基本信息
+                            {{ t('admin.users.detail.basicInfo') }}
                         </h3>
                         <CaomeiButton
                             variant="ghost"
@@ -20,7 +20,7 @@
                             <template #icon>
                                 <i class="mdi mdi-pencil" />
                             </template>
-                            编辑
+                            {{ t('admin.users.detail.edit') }}
                         </CaomeiButton>
                     </div>
                     <div class="user-detail__grid">
@@ -29,44 +29,44 @@
                             <span>{{ user.id }}</span>
                         </div>
                         <div class="user-detail__item">
-                            <label>昵称</label>
-                            <span>{{ user.name || '未设置' }}</span>
+                            <label>{{ t('admin.users.detail.nickname') }}</label>
+                            <span>{{ user.name || t('admin.users.detail.notSet') }}</span>
                         </div>
                         <div class="user-detail__item">
-                            <label>邮箱</label>
+                            <label>{{ t('admin.users.detail.email') }}</label>
                             <span>{{ user.email }}</span>
                         </div>
                         <div class="user-detail__item">
-                            <label>手机号</label>
-                            <span>{{ user.phoneNumber ? formatPhoneNumberInternational(user.phoneNumber) : '未设置' }}</span>
+                            <label>{{ t('admin.users.detail.phone') }}</label>
+                            <span>{{ user.phoneNumber ? formatPhoneNumberInternational(user.phoneNumber) : t('admin.users.detail.notSet') }}</span>
                         </div>
                         <div class="user-detail__item">
-                            <label>用户名</label>
-                            <span>{{ user.username || '未设置' }}</span>
+                            <label>{{ t('admin.users.detail.username') }}</label>
+                            <span>{{ user.username || t('admin.users.detail.notSet') }}</span>
                         </div>
                         <div class="user-detail__item">
-                            <label>角色</label>
+                            <label>{{ t('admin.users.detail.role') }}</label>
                             <BaseStatusBadge
                                 variant="role"
                                 :status="user.role"
                             />
                         </div>
                         <div class="user-detail__item">
-                            <label>验证状态</label>
+                            <label>{{ t('admin.users.detail.verifyStatus') }}</label>
                             <div class="user-detail__verification">
                                 <BaseStatusBadge
                                     variant="yes-no"
                                     :status="user.emailVerified"
-                                    true-label="邮箱已验证"
-                                    false-label="邮箱未验证"
+                                    :true-label="t('admin.users.detail.emailVerified')"
+                                    :false-label="t('admin.users.detail.emailUnverified')"
                                     true-severity="success"
                                     false-severity="warning"
                                 />
                                 <BaseStatusBadge
                                     variant="yes-no"
                                     :status="user.phoneNumberVerified"
-                                    true-label="手机已验证"
-                                    false-label="手机未验证"
+                                    :true-label="t('admin.users.detail.phoneVerified')"
+                                    :false-label="t('admin.users.detail.phoneUnverified')"
                                     true-severity="success"
                                     false-severity="warning"
                                 />
@@ -77,22 +77,22 @@
 
                 <div class="user-detail__section">
                     <h3 class="user-detail__section-title">
-                        账户状态
+                        {{ t('admin.users.detail.accountStatus') }}
                     </h3>
                     <div class="user-detail__grid">
                         <div class="user-detail__item">
-                            <label>状态</label>
+                            <label>{{ t('admin.users.detail.status') }}</label>
                             <BaseStatusBadge
                                 variant="banned"
                                 :status="user.banned"
                             />
                         </div>
                         <div v-if="user.banned" class="user-detail__item">
-                            <label>禁用原因</label>
-                            <span>{{ user.banReason || '未提供原因' }}</span>
+                            <label>{{ t('admin.users.detail.banReason') }}</label>
+                            <span>{{ user.banReason || t('admin.users.detail.noReason') }}</span>
                         </div>
                         <div v-if="user.banned && user.banExpires" class="user-detail__item">
-                            <label>禁用到期时间</label>
+                            <label>{{ t('admin.users.detail.banUntil') }}</label>
                             <span>{{ formatDateTime(user.banExpires) }}</span>
                         </div>
                     </div>
@@ -100,15 +100,15 @@
 
                 <div class="user-detail__section">
                     <h3 class="user-detail__section-title">
-                        时间信息
+                        {{ t('admin.users.detail.timeInfo') }}
                     </h3>
                     <div class="user-detail__grid">
                         <div class="user-detail__item">
-                            <label>注册时间</label>
+                            <label>{{ t('admin.users.detail.registeredAt') }}</label>
                             <span>{{ formatDateTime(user.createdAt) }}</span>
                         </div>
                         <div class="user-detail__item">
-                            <label>更新时间</label>
+                            <label>{{ t('admin.users.detail.updatedAt') }}</label>
                             <span>{{ formatDateTime(user.updatedAt) }}</span>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                         <template #icon>
                             <i class="mdi mdi-account-multiple" />
                         </template>
-                        查看会话
+                        {{ t('admin.users.detail.viewSessions') }}
                     </CaomeiButton>
                     <CaomeiButton
                         variant="secondary"
@@ -129,7 +129,7 @@
                         <template #icon>
                             <i class="mdi mdi-sync" />
                         </template>
-                        同步管理员角色
+                        {{ t('admin.users.detail.syncAdminRole') }}
                     </CaomeiButton>
                     <CaomeiButton
                         v-if="!user.role?.includes('admin')"
@@ -141,7 +141,7 @@
                         <template #icon>
                             <i class="mdi mdi-shield-account" />
                         </template>
-                        设为管理员
+                        {{ t('admin.users.detail.makeAdmin') }}
                     </CaomeiButton>
                     <CaomeiButton
                         v-else-if="user.role?.includes('admin') && !isCurrentUser(user.id)"
@@ -153,7 +153,7 @@
                         <template #icon>
                             <i class="mdi mdi-shield-remove" />
                         </template>
-                        移除管理员
+                        {{ t('admin.users.detail.removeAdmin') }}
                     </CaomeiButton>
                     <CaomeiButton
                         v-else-if="user.role?.includes('admin') && isCurrentUser(user.id)"
@@ -164,7 +164,7 @@
                         <template #icon>
                             <i class="mdi mdi-shield-remove" />
                         </template>
-                        不能移除自己的管理员权限
+                        {{ t('admin.users.detail.cannotRemoveSelf') }}
                     </CaomeiButton>
                     <CaomeiButton
                         v-if="!user.banned && user.role !== 'admin' && !isCurrentUser(user.id)"
@@ -175,7 +175,7 @@
                         <template #icon>
                             <i class="mdi mdi-block-helper" />
                         </template>
-                        禁用用户
+                        {{ t('admin.users.detail.banUser') }}
                     </CaomeiButton>
                     <CaomeiButton
                         v-else-if="user.banned && user.role !== 'admin' && !isCurrentUser(user.id)"
@@ -186,7 +186,7 @@
                         <template #icon>
                             <i class="mdi mdi-check-circle" />
                         </template>
-                        解禁用户
+                        {{ t('admin.users.detail.unbanUser') }}
                     </CaomeiButton>
                     <CaomeiButton
                         v-else-if="isCurrentUser(user.id)"
@@ -197,7 +197,7 @@
                         <template #icon>
                             <i class="mdi mdi-account-alert" />
                         </template>
-                        不能操作自己的账户
+                        {{ t('admin.users.detail.cannotOperateSelf') }}
                     </CaomeiButton>
                     <CaomeiButton
                         v-if="user.role === 'admin' && !user.banned"
@@ -208,7 +208,7 @@
                         <template #icon>
                             <i class="mdi mdi-block-helper" />
                         </template>
-                        管理员不可禁用
+                        {{ t('admin.users.detail.adminCannotBan') }}
                     </CaomeiButton>
                 </div>
             </div>
@@ -221,30 +221,30 @@
                 <BaseInputV2
                     id="editNickname"
                     v-model="editNickname"
-                    label="昵称"
-                    placeholder="请输入昵称"
+                    :label="t('admin.users.detail.nickname')"
+                    :placeholder="t('admin.users.detail.nicknamePlaceholder')"
                     :error="errors.nickname"
                     required
                 />
                 <BaseInputV2
                     id="editEmail"
                     v-model="editEmail"
-                    label="邮箱"
+                    :label="t('admin.users.detail.email')"
                     type="email"
-                    placeholder="请输入邮箱"
+                    :placeholder="t('admin.users.detail.emailPlaceholder')"
                     :error="errors.email"
                     required
                 />
                 <BaseInputV2
                     id="editPhone"
                     v-model="editPhone"
-                    label="手机号"
-                    placeholder="请输入手机号"
+                    :label="t('admin.users.detail.phone')"
+                    :placeholder="t('admin.users.detail.phonePlaceholder')"
                     :error="errors.phone"
                 />
                 <CaomeiFormItem
                     id="editRole"
-                    label="角色"
+                    :label="t('admin.users.detail.role')"
                     :error="errors.role"
                 >
                     <template #default="field">
@@ -254,7 +254,7 @@
                             :options="roleOptions"
                             option-label="label"
                             option-value="value"
-                            placeholder="选择角色"
+                            :placeholder="t('admin.users.detail.rolePlaceholder')"
                             :invalid="field.invalid"
                             :aria-labelledby="field['aria-labelledby']"
                             :aria-describedby="field['aria-describedby']"
@@ -264,8 +264,8 @@
                 <BasePasswordV2
                     id="editPassword"
                     v-model="editPassword"
-                    label="新密码"
-                    placeholder="留空则不修改密码"
+                    :label="t('admin.users.detail.newPassword')"
+                    :placeholder="t('admin.users.detail.newPasswordPlaceholder')"
                     :error="errors.password"
                 />
 
@@ -274,13 +274,13 @@
                         variant="secondary"
                         @click="isEditing = false"
                     >
-                        取消
+                        {{ t('admin.users.detail.cancel') }}
                     </CaomeiButton>
                     <CaomeiButton
                         type="submit"
                         :loading="updateLoading"
                     >
-                        保存
+                        {{ t('admin.users.detail.save') }}
                     </CaomeiButton>
                 </div>
             </form>
@@ -313,6 +313,7 @@ const emit = defineEmits<{
     (e: 'ban', user: AdminUserProfile): void
 }>()
 
+const { t } = useI18n()
 const toast = useToast()
 const confirm = useConfirm()
 const { roleOptions } = useUserTable()
@@ -383,11 +384,11 @@ const updateUser = async () => {
                 throw new Error(error.message)
             }
 
-            toast.success({ title: '成功', description: '用户信息更新成功', duration: 3000 })
+            toast.success({ title: t('admin.users.detail.successTitle'), description: t('admin.users.detail.updateSuccess'), duration: 3000 })
             isEditing.value = false
             emit('updated')
         } catch (error: unknown) {
-            toast.danger({ title: '错误', description: errorMessage(error, '更新失败'), duration: 3000 })
+            toast.danger({ title: t('admin.users.detail.errorTitle'), description: errorMessage(error, t('admin.users.detail.updateFailed')), duration: 3000 })
         }
     })
 }
@@ -402,7 +403,7 @@ const handleSyncUserAdminRole = async () => {
 
         if (result.success) {
             toast.success({
-                title: '同步成功',
+                title: t('admin.users.detail.syncSuccessTitle'),
                 description: result.message,
                 duration: 3000,
             })
@@ -411,15 +412,15 @@ const handleSyncUserAdminRole = async () => {
         }
 
         toast.warning({
-            title: '同步完成',
+            title: t('admin.users.detail.syncDoneTitle'),
             description: result.message,
             duration: 3000,
         })
     } catch (error: unknown) {
-        console.error('同步管理员角色失败:', error)
+        console.error('Failed to sync admin role:', error)
         toast.danger({
-            title: '同步失败',
-            description: errorMessage(error, '同步管理员角色失败'),
+            title: t('admin.users.detail.syncFailedTitle'),
+            description: errorMessage(error, t('admin.users.detail.syncFailed')),
             duration: 3000,
         })
     } finally {
@@ -432,8 +433,8 @@ const handleSetUserAsAdmin = async () => {
     if (!targetUser) return
 
     const confirmed = await confirm.open({
-        title: '确认设置管理员',
-        description: `确定要将用户 ${targetUser.name || targetUser.email} 设置为管理员吗？`,
+        title: t('admin.users.detail.confirmMakeAdminTitle'),
+        description: t('admin.users.detail.confirmMakeAdminDescription', { name: targetUser.name || targetUser.email }),
         tone: 'neutral',
     })
     if (!confirmed) {
@@ -446,7 +447,7 @@ const handleSetUserAsAdmin = async () => {
 
         if (result.success) {
             toast.success({
-                title: '设置成功',
+                title: t('admin.users.detail.makeAdminSuccessTitle'),
                 description: result.message,
                 duration: 3000,
             })
@@ -456,15 +457,15 @@ const handleSetUserAsAdmin = async () => {
         }
 
         toast.warning({
-            title: '设置失败',
+            title: t('admin.users.detail.makeAdminFailedTitle'),
             description: result.message,
             duration: 3000,
         })
     } catch (error: unknown) {
-        console.error('设置管理员角色失败:', error)
+        console.error('Failed to grant admin role:', error)
         toast.danger({
-            title: '设置失败',
-            description: errorMessage(error, '设置管理员角色失败'),
+            title: t('admin.users.detail.makeAdminFailedTitle'),
+            description: errorMessage(error, t('admin.users.detail.makeAdminFailed')),
             duration: 3000,
         })
     } finally {
@@ -478,16 +479,16 @@ const handleRemoveUserAdminRole = async () => {
 
     if (isCurrentUser(targetUser.id)) {
         toast.warning({
-            title: '操作不允许',
-            description: '不能移除自己的管理员权限',
+            title: t('admin.users.detail.operationNotAllowedTitle'),
+            description: t('admin.users.detail.cannotRemoveSelfDescription'),
             duration: 3000,
         })
         return
     }
 
     const confirmed = await confirm.open({
-        title: '确认移除管理员角色',
-        description: `确定要移除用户 ${targetUser.name || targetUser.email} 的管理员角色吗？`,
+        title: t('admin.users.detail.confirmRemoveTitle'),
+        description: t('admin.users.detail.confirmRemoveDescription', { name: targetUser.name || targetUser.email }),
         tone: 'danger',
     })
     if (!confirmed) {
@@ -500,7 +501,7 @@ const handleRemoveUserAdminRole = async () => {
 
         if (result.success) {
             toast.success({
-                title: '移除成功',
+                title: t('admin.users.detail.removeSuccessTitle'),
                 description: result.message,
                 duration: 3000,
             })
@@ -510,15 +511,15 @@ const handleRemoveUserAdminRole = async () => {
         }
 
         toast.warning({
-            title: '移除失败',
+            title: t('admin.users.detail.removeFailedTitle'),
             description: result.message,
             duration: 3000,
         })
     } catch (error: unknown) {
-        console.error('移除管理员角色失败:', error)
+        console.error('Failed to remove admin role:', error)
         toast.danger({
-            title: '移除失败',
-            description: errorMessage(error, '移除管理员角色失败'),
+            title: t('admin.users.detail.removeFailedTitle'),
+            description: errorMessage(error, t('admin.users.detail.removeFailed')),
             duration: 3000,
         })
     } finally {
@@ -537,18 +538,18 @@ const handleUnbanUser = async () => {
 
         if (response.data) {
             toast.success({
-                title: '解禁成功',
-                description: '用户已解除禁用',
+                title: t('admin.users.detail.unbanSuccessTitle'),
+                description: t('admin.users.detail.unbanSuccessDescription'),
                 duration: 3000,
             })
             emit('updated')
             emit('update:visible', false)
         }
     } catch (error: unknown) {
-        console.error('解禁用户失败:', error)
+        console.error('Failed to unban user:', error)
         toast.danger({
-            title: '解禁失败',
-            description: errorMessage(error, '解禁用户失败'),
+            title: t('admin.users.detail.unbanFailedTitle'),
+            description: errorMessage(error, t('admin.users.detail.unbanFailed')),
             duration: 3000,
         })
     }

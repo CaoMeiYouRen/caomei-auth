@@ -44,6 +44,18 @@ export function formatDateLocale(date: string | number | Date | null | undefined
 }
 
 /**
+ * 按 locale 输出短日期时间（不含秒）：zh `2026/6/15 12:15`、en `6/15/26, 12:15 PM`。
+ *
+ * 表格列宽有限，`toLocaleString` 默认会带秒且不补零，容易撑破 160px 列。
+ */
+export function formatDateTimeLocale(date: string | number | Date | null | undefined, locale: string = 'zh-CN'): string {
+    if (!date) {
+        return '-'
+    }
+    return new Date(date).toLocaleString(locale, { dateStyle: 'short', timeStyle: 'short' })
+}
+
+/**
  * 格式化相对时间
  * @param date 日期字符串、数字或Date对象
  * @returns 相对时间描述

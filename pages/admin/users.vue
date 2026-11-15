@@ -4,10 +4,10 @@
             <div class="users-header">
                 <div class="header-content">
                     <h1 class="users-title">
-                        用户管理
+                        {{ t('admin.users.page.title') }}
                     </h1>
                     <p class="users-subtitle">
-                        管理系统中的所有用户，包括查看详情、编辑资料、角色设置等
+                        {{ t('admin.users.page.subtitle') }}
                     </p>
                 </div>
                 <div class="header-actions">
@@ -15,7 +15,7 @@
                         <template #icon>
                             <i class="mdi mdi-plus" />
                         </template>
-                        创建用户
+                        {{ t('admin.users.page.create') }}
                     </CaomeiButton>
                 </div>
             </div>
@@ -26,8 +26,8 @@
                     <div class="search-wrapper">
                         <CaomeiInput
                             v-model="searchQuery"
-                            placeholder="搜索用户（有效邮箱或姓名，@开头搜索姓名）"
-                            aria-label="搜索用户"
+                            :placeholder="t('admin.users.page.searchPlaceholder')"
+                            :aria-label="t('admin.users.page.searchAria')"
                             @update:model-value="debouncedSearch"
                         >
                             <template #prefix>
@@ -42,8 +42,8 @@
                                 :options="roleOptions"
                                 option-label="label"
                                 option-value="value"
-                                placeholder="筛选角色"
-                                aria-label="筛选角色"
+                                :placeholder="t('admin.users.page.roleFilter')"
+                                :aria-label="t('admin.users.page.roleFilter')"
                                 show-clear
                             />
                         </div>
@@ -53,15 +53,15 @@
                                 :options="statusOptions"
                                 option-label="label"
                                 option-value="value"
-                                placeholder="筛选状态"
-                                aria-label="筛选状态"
+                                :placeholder="t('admin.users.page.statusFilter')"
+                                :aria-label="t('admin.users.page.statusFilter')"
                                 show-clear
                             />
                         </div>
                         <CaomeiButton
                             icon-only
                             variant="secondary"
-                            label="刷新"
+                            :label="t('admin.users.page.refresh')"
                             @click="refreshUsers"
                         >
                             <template #icon>
@@ -76,9 +76,11 @@
             <div class="users-list">
                 <div class="table-header">
                     <div class="table-title">
-                        用户列表 ({{ totalUsers }})
+                        {{ t('admin.users.page.listTitle', {count: totalUsers}) }}
                         <small v-if="sortField" class="sort-info">
-                            按{{ getSortFieldLabel(sortField) }}{{ sortOrder === 'asc' ? '升序' : '降序' }}排列
+                            {{ sortOrder === 'asc'
+                                ? t('admin.users.page.sortAsc', {field: getSortFieldLabel(sortField)})
+                                : t('admin.users.page.sortDesc', {field: getSortFieldLabel(sortField)}) }}
                         </small>
                     </div>
                     <div v-if="selectedUsers.length > 0" class="table-actions">
@@ -91,7 +93,7 @@
                                     <template #icon>
                                         <i class="mdi mdi-menu-down" />
                                     </template>
-                                    批量操作
+                                    {{ t('admin.users.page.batch') }}
                                 </CaomeiButton>
                             </CaomeiDropdownMenuTrigger>
                             <CaomeiDropdownMenuContent align="end">
@@ -138,7 +140,7 @@
                                 class="user-avatar"
                             />
                             <div class="user-info">
-                                <span class="user-name">{{ row.name || '未设置昵称' }}</span>
+                                <span class="user-name">{{ row.name || t('admin.users.page.noNickname') }}</span>
                                 <span class="user-email">{{ row.email }}</span>
                             </div>
                         </div>
@@ -163,7 +165,7 @@
                             <CaomeiButton
                                 icon-only
                                 variant="ghost"
-                                label="编辑详情"
+                                :label="t('admin.users.page.actions.edit')"
                                 @click="openDetailDialog(row)"
                             >
                                 <template #icon>
@@ -174,7 +176,7 @@
                                 icon-only
                                 variant="ghost"
                                 tone="primary"
-                                label="会话管理"
+                                :label="t('admin.users.page.actions.sessions')"
                                 @click="openSessionsDialog(row)"
                             >
                                 <template #icon>
@@ -186,7 +188,7 @@
                                 icon-only
                                 variant="ghost"
                                 tone="success"
-                                label="解禁用户"
+                                :label="t('admin.users.page.actions.unban')"
                                 @click="unbanUser(row)"
                             >
                                 <template #icon>
@@ -198,7 +200,7 @@
                                 icon-only
                                 variant="ghost"
                                 tone="warning"
-                                label="禁用用户"
+                                :label="t('admin.users.page.actions.ban')"
                                 @click="openBanDialog(row)"
                             >
                                 <template #icon>
@@ -209,7 +211,7 @@
                                 icon-only
                                 variant="ghost"
                                 tone="danger"
-                                label="删除用户"
+                                :label="t('admin.users.page.actions.delete')"
                                 @click="deleteUser(row, isCurrentUser(row.id))"
                             >
                                 <template #icon>
@@ -222,12 +224,12 @@
                     <template #empty>
                         <div class="empty-state">
                             <i class="mdi mdi-account-search-outline" />
-                            <p>未找到匹配的用户</p>
+                            <p>{{ t('admin.users.page.notFound') }}</p>
                             <CaomeiButton
                                 variant="ghost"
                                 @click="refreshUsers"
                             >
-                                清除筛选
+                                {{ t('admin.users.page.clearFilters') }}
                             </CaomeiButton>
                         </div>
                     </template>
@@ -273,6 +275,7 @@ import BanUserDialog from '@/components/admin/users/ban-user-dialog.vue'
 import UserSessionsDialog from '@/components/admin/users/user-sessions-dialog.vue'
 import UserDetailDialog from '@/components/admin/users/user-detail-dialog.vue'
 import type { AdminUserRow as AdminUser } from '@/types/admin'
+import { usePageMeta } from '@/composables/utils/use-page-meta'
 
 definePageMeta({
     layout: 'admin',
@@ -323,18 +326,21 @@ const {
 const userRows = computed<AdminUser[]>(() => users.value as AdminUser[])
 
 /* 操作列只通过 `#cell-actions` 插槽渲染；`createdAt` 用 accessor 统一格式化，避免大小写插槽名 */
+const { t } = useI18n()
+usePageMeta('admin.users.page.title', 'admin.users.page.subtitle')
+
 const columns: DataTableColumn<AdminUser>[] = [
-    { key: 'name', header: '用户', sortable: true },
-    { key: 'role', header: '角色', sortable: true, width: '120px' },
-    { key: 'banned', header: '状态', sortable: true, width: '100px' },
+    { key: 'name', header: t('admin.users.page.columns.user'), sortable: true },
+    { key: 'role', header: t('admin.users.page.columns.role'), sortable: true, width: '120px' },
+    { key: 'banned', header: t('admin.users.page.columns.status'), sortable: true, width: '100px' },
     {
         key: 'createdAt',
-        header: '注册时间',
+        header: t('admin.users.page.columns.registeredAt'),
         sortable: true,
         width: '160px',
         accessor: (row) => formatDate(row.createdAt),
     },
-    { key: 'actions', header: '操作', width: '180px', align: 'right', frozen: 'right' },
+    { key: 'actions', header: t('admin.users.page.columns.actions'), width: '180px', align: 'right', frozen: 'right' },
 ]
 
 /** 当前页可见的选中行：`CaomeiDataTable` 按对象身份匹配勾选态，必须重新绑定到当前页的行对象 */
