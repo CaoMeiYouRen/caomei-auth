@@ -1,24 +1,24 @@
 <template>
     <section class="config-section">
         <h4 class="config-section__title">
-            属性映射
+            {{ t('admin.sso.mapping.title') }}
         </h4>
         <p class="config-section__description">
-            配置如何将 SSO 提供商的属性映射到本地用户字段
+            {{ t('admin.sso.mapping.description') }}
         </p>
 
         <div class="config-section__fields">
             <BaseInputV2
                 id="mappingEmail"
                 v-model="localModel.email"
-                label="邮箱字段"
+                :label="t('admin.sso.mapping.email')"
                 placeholder="email"
             />
 
             <BaseInputV2
                 id="mappingName"
                 v-model="localModel.name"
-                label="姓名字段"
+                :label="t('admin.sso.mapping.name')"
                 :placeholder="type === 'saml' ? 'displayName' : 'name'"
             />
 
@@ -26,7 +26,7 @@
                 v-if="type === 'saml'"
                 id="mappingFirstName"
                 v-model="localModel.firstName"
-                label="名字字段"
+                :label="t('admin.sso.mapping.firstName')"
                 placeholder="givenName"
             />
 
@@ -34,21 +34,21 @@
                 v-if="type === 'saml'"
                 id="mappingLastName"
                 v-model="localModel.lastName"
-                label="姓氏字段"
+                :label="t('admin.sso.mapping.lastName')"
                 placeholder="surname"
             />
 
             <BaseInputV2
                 id="mappingEmailVerified"
                 v-model="localModel.emailVerified"
-                label="邮箱验证字段"
+                :label="t('admin.sso.mapping.emailVerified')"
                 placeholder="email_verified"
             />
 
             <BaseInputV2
                 id="mappingImage"
                 v-model="localModel.image"
-                label="头像字段"
+                :label="t('admin.sso.mapping.image')"
                 placeholder="picture"
             />
         </div>
@@ -73,6 +73,8 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: 'update:modelValue', value: typeof props.modelValue): void
 }>()
+
+const { t } = useI18n()
 
 // Create a local copy to avoid mutating prop
 const localModel = ref({ ...props.modelValue })

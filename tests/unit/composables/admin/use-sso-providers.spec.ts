@@ -8,6 +8,8 @@ vi.mock('caomei-ui', () => ({
     useToast: () => toast,
 }))
 
+vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
+
 // Mock $fetch
 const fetchMock = vi.hoisted(() => vi.fn())
 vi.mock('#build/fetch.mjs', () => ({

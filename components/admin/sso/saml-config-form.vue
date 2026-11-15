@@ -1,22 +1,22 @@
 <template>
     <section class="config-section">
         <h4 class="config-section__title">
-            SAML 配置
+            {{ t('admin.sso.saml.title') }}
         </h4>
 
         <div class="config-section__fields">
             <BaseInputV2
                 id="entryPoint"
                 v-model="localModel.entryPoint"
-                label="入口点 URL"
-                placeholder="SAML IdP 的 SSO 入口点 URL"
+                :label="t('admin.sso.saml.entryPoint')"
+                :placeholder="t('admin.sso.saml.entryPointPlaceholder')"
                 required
             />
 
             <CaomeiFormItem
                 id="certificate"
-                label="X.509 证书"
-                hint="IdP 的 X.509 证书，用于验证 SAML 响应签名"
+                :label="t('admin.sso.saml.cert')"
+                :hint="t('admin.sso.saml.certHint')"
                 required
             >
                 <template #default="field">
@@ -33,8 +33,8 @@
 
             <CaomeiFormItem
                 id="signingKey"
-                label="签名私钥"
-                hint="可选：用于签名 SAML 请求的私钥"
+                :label="t('admin.sso.saml.privateKey')"
+                :hint="t('admin.sso.saml.privateKeyHint')"
             >
                 <template #default="field">
                     <CaomeiTextarea
@@ -50,7 +50,7 @@
 
             <CaomeiFormItem
                 id="attributeConsumingServiceIndex"
-                label="属性消费服务索引"
+                :label="t('admin.sso.saml.spIndex')"
             >
                 <template #default="field">
                     <CaomeiInputNumber
@@ -82,6 +82,8 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: 'update:modelValue', value: typeof props.modelValue): void
 }>()
+
+const { t } = useI18n()
 
 // Create a local copy to avoid mutating prop
 const localModel = ref({ ...props.modelValue })

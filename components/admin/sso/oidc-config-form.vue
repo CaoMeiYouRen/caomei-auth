@@ -1,75 +1,75 @@
 <template>
     <section class="config-section">
         <h4 class="config-section__title">
-            OIDC 配置
+            {{ t('admin.sso.oidc.title') }}
         </h4>
 
         <div class="config-section__fields">
             <BaseInputV2
                 id="clientId"
                 v-model="localModel.clientId"
-                label="Client ID"
-                placeholder="在 OIDC 提供商处注册的客户端 ID"
+                :label="t('admin.sso.oidc.clientId')"
+                :placeholder="t('admin.sso.oidc.clientIdPlaceholder')"
                 required
             />
 
             <BasePasswordV2
                 id="clientSecret"
                 v-model="localModel.clientSecret"
-                label="Client Secret"
-                placeholder="客户端密钥"
+                :label="t('admin.sso.oidc.clientSecret')"
+                :placeholder="t('admin.sso.oidc.clientSecretPlaceholder')"
                 required
             />
 
             <BaseInputV2
                 id="discoveryEndpoint"
                 v-model="localModel.discoveryEndpoint"
-                label="Discovery Endpoint"
-                hint="如果提供此 URL，其他端点将自动发现"
-                placeholder="例如：https://accounts.google.com/.well-known/openid-configuration"
+                :label="t('admin.sso.oidc.discoveryUrl')"
+                :hint="t('admin.sso.oidc.discoveryHint')"
+                :placeholder="t('admin.sso.oidc.discoveryPlaceholder')"
             />
 
             <BaseInputV2
                 id="authorizationEndpoint"
                 v-model="localModel.authorizationEndpoint"
-                label="Authorization Endpoint"
-                placeholder="授权端点 URL"
+                :label="t('admin.sso.oidc.authorizationUrl')"
+                :placeholder="t('admin.sso.oidc.authorizationPlaceholder')"
             />
 
             <BaseInputV2
                 id="tokenEndpoint"
                 v-model="localModel.tokenEndpoint"
-                label="Token Endpoint"
-                placeholder="令牌端点 URL"
+                :label="t('admin.sso.oidc.tokenUrl')"
+                :placeholder="t('admin.sso.oidc.tokenPlaceholder')"
             />
 
             <BaseInputV2
                 id="userInfoEndpoint"
                 v-model="localModel.userInfoEndpoint"
-                label="UserInfo Endpoint"
-                placeholder="用户信息端点 URL"
+                :label="t('admin.sso.oidc.userinfoUrl')"
+                :placeholder="t('admin.sso.oidc.userinfoPlaceholder')"
             />
 
             <BaseInputV2
                 id="jwksEndpoint"
                 v-model="localModel.jwksEndpoint"
-                label="JWKS Endpoint"
-                placeholder="JSON Web Key Set 端点 URL"
+                :label="t('admin.sso.oidc.jwksUrl')"
+                :placeholder="t('admin.sso.oidc.jwksPlaceholder')"
             />
 
             <BaseInputV2
                 id="scopes"
                 :model-value="scopesInput"
-                label="作用域"
-                hint="用空格分隔多个作用域"
-                placeholder="例如：openid profile email"
+                :label="t('admin.sso.oidc.scope')"
+                :hint="t('admin.sso.oidc.scopeHint')"
+                :placeholder="t('admin.sso.oidc.scopePlaceholder')"
                 @update:model-value="updateScopesInput"
             />
 
             <CaomeiCheckbox
                 id="pkce"
                 v-model="localModel.pkce"
-                text="启用 PKCE"
+                :text="t('admin.sso.oidc.pkce')"
             />
         </div>
     </section>
@@ -95,6 +95,8 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: 'update:modelValue', value: typeof props.modelValue): void
 }>()
+
+const { t } = useI18n()
 
 // Create a local copy to avoid mutating prop
 const localModel = ref({ ...props.modelValue })

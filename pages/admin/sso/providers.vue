@@ -5,14 +5,14 @@
             <div class="sso-header">
                 <div class="header-content">
                     <h1 class="sso-title">
-                        SSO 提供商管理
+                        {{ t('admin.sso.providers.title') }}
                     </h1>
                     <p class="sso-subtitle">
-                        管理单点登录（SSO）提供商，支持 OIDC 和 SAML 协议
+                        {{ t('admin.sso.page.subtitle') }}
                     </p>
                     <span class="text-muted">
-                        <strong>注意：</strong>当前 SSO 实现基于 Better Auth SSO 插件，支持标准 OIDC/OAuth2 和 SAML 2.0 协议。
-                        请确保提供商端配置正确的回调 URL 和授权范围。
+                        <strong>{{ t('admin.sso.page.noticeLabel') }}</strong>{{ t('admin.sso.page.noticeText') }}
+                        {{ t('admin.sso.page.noticeText2') }}
                     </span>
                 </div>
                 <div class="header-actions">
@@ -20,7 +20,7 @@
                         <template #icon>
                             <i class="mdi mdi-plus" aria-hidden="true" />
                         </template>
-                        创建提供商
+                        {{ t('admin.sso.page.create') }}
                     </CaomeiButton>
                 </div>
             </div>
@@ -31,8 +31,8 @@
                     <div class="search-wrapper">
                         <CaomeiInput
                             :model-value="searchQuery"
-                            placeholder="搜索提供商名称、域名或 Provider ID..."
-                            label="搜索提供商"
+                            :placeholder="t('admin.sso.page.searchPlaceholder')"
+                            :label="t('admin.sso.page.searchLabel')"
                             @update:model-value="onSearchInput"
                         >
                             <template #prefix>
@@ -47,8 +47,8 @@
                                 :options="typeOptions"
                                 option-label="label"
                                 option-value="value"
-                                placeholder="筛选类型"
-                                aria-label="筛选类型"
+                                :placeholder="t('admin.sso.page.typeFilter')"
+                                :aria-label="t('admin.sso.page.typeFilter')"
                                 show-clear
                             />
                         </div>
@@ -58,16 +58,16 @@
                                 :options="statusOptions"
                                 option-label="label"
                                 option-value="value"
-                                placeholder="筛选状态"
-                                aria-label="筛选状态"
+                                :placeholder="t('admin.sso.page.statusFilter')"
+                                :aria-label="t('admin.sso.page.statusFilter')"
                                 show-clear
                             />
                         </div>
-                        <BaseTooltip :content="'刷新'">
+                        <BaseTooltip :content="t('admin.sso.page.refresh')">
                             <CaomeiButton
                                 icon-only
                                 variant="secondary"
-                                label="刷新"
+                                :label="t('admin.sso.page.refresh')"
                                 :loading="loading"
                                 @click="handleRefreshProviders"
                             >
@@ -84,7 +84,7 @@
             <div class="sso-list">
                 <div class="table-header">
                     <div class="table-title">
-                        SSO 提供商列表 ({{ total }})
+                        {{ t('admin.sso.page.listTitle', {count: total}) }}
                     </div>
                 </div>
 
@@ -101,7 +101,7 @@
                     :page="page + 1"
                     :sort-field="sortField"
                     :sort-order="sortOrder"
-                    empty-text="暂无 SSO 提供商"
+                    :empty-text="t('admin.sso.page.empty')"
                     @page="onTablePage"
                     @update:rows="onRowsChange"
                     @sort="onTableSort"
@@ -152,12 +152,12 @@
 
                     <template #cell-actions="{row}">
                         <div class="action-buttons">
-                            <BaseTooltip :content="'查看详情'">
+                            <BaseTooltip :content="t('admin.sso.page.view')">
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
                                     tone="primary"
-                                    label="查看详情"
+                                    :label="t('admin.sso.page.view')"
                                     @click="openViewDialog(row)"
                                 >
                                     <template #icon>
@@ -165,12 +165,12 @@
                                     </template>
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip :content="'编辑'">
+                            <BaseTooltip :content="t('admin.sso.page.edit')">
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
                                     tone="warning"
-                                    label="编辑"
+                                    :label="t('admin.sso.page.edit')"
                                     @click="openEditDialog(row)"
                                 >
                                     <template #icon>
@@ -178,12 +178,12 @@
                                     </template>
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip :content="row.enabled ? '禁用' : '启用'">
+                            <BaseTooltip :content="row.enabled ? t('admin.sso.page.disable') : t('admin.sso.page.enable')">
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
                                     :tone="row.enabled ? 'warning' : 'success'"
-                                    :label="row.enabled ? '禁用' : '启用'"
+                                    :label="row.enabled ? t('admin.sso.page.disable') : t('admin.sso.page.enable')"
                                     :loading="togglingId === row.id"
                                     @click="handleToggleStatus(row)"
                                 >
@@ -192,12 +192,12 @@
                                     </template>
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip :content="'删除'">
+                            <BaseTooltip :content="t('admin.sso.page.delete')">
                                 <CaomeiButton
                                     icon-only
                                     variant="ghost"
                                     tone="danger"
-                                    label="删除"
+                                    :label="t('admin.sso.page.delete')"
                                     @click="openDeleteDialog(row)"
                                 >
                                     <template #icon>
@@ -228,7 +228,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent } from 'caomei-ui'
 import { useConfirm } from 'caomei-ui'
 import { debounce } from 'lodash-es'
@@ -241,16 +241,18 @@ definePageMeta({
     layout: 'admin',
 })
 
+const { t } = useI18n()
+
 // 页面标题 / 描述走 i18n 键（见 docs/standards/i18n.md §7）；关键词仍为中文 SEO 文案，见 SEO 批次
 usePageMeta('admin.sso.providers.title', 'admin.sso.providers.description')
-useHead({
+useHead(() => ({
     meta: [
         {
             name: 'keywords',
-            content: 'SSO,单点登录,OIDC,SAML,身份验证,提供商管理',
+            content: t('admin.sso.page.seoKeywords'),
         },
     ],
-})
+}))
 
 const confirm = useConfirm()
 const {
@@ -285,18 +287,18 @@ const typeOptions = [
     { label: 'SAML 2.0', value: 'saml' },
 ]
 
-const statusOptions = [
-    { label: '启用', value: 'true' },
-    { label: '禁用', value: 'false' },
-]
+const statusOptions = computed(() => [
+    { label: t('admin.sso.page.statusOptions.enabled'), value: 'true' },
+    { label: t('admin.sso.page.statusOptions.disabled'), value: 'false' },
+])
 
-const columns: DataTableColumn<AdminSsoProviderRow>[] = [
-    { key: 'name', header: '提供商信息' },
-    { key: 'type', header: '协议类型', width: '120px' },
-    { key: 'enabled', header: '状态', sortable: true, width: '100px' },
-    { key: 'createdAt', header: '创建时间', sortable: true, width: '180px' },
-    { key: 'actions', header: '操作', width: '200px', align: 'right', frozen: 'right' },
-]
+const columns = computed<DataTableColumn<AdminSsoProviderRow>[]>(() => [
+    { key: 'name', header: t('admin.sso.page.columns.name') },
+    { key: 'type', header: t('admin.sso.page.columns.type'), width: '120px' },
+    { key: 'enabled', header: t('admin.sso.page.columns.status'), sortable: true, width: '100px' },
+    { key: 'createdAt', header: t('admin.sso.page.columns.createdAt'), sortable: true, width: '180px' },
+    { key: 'actions', header: t('admin.sso.page.columns.actions'), width: '200px', align: 'right', frozen: 'right' },
+])
 
 // 对话框状态
 const showCreateDialog = ref(false)
@@ -325,9 +327,9 @@ function openViewDialog(provider: AdminSsoProviderRow) {
 // 打开删除确认框
 async function openDeleteDialog(provider: AdminSsoProviderRow) {
     const confirmed = await confirm.open({
-        title: '确认删除',
-        description: `确定要删除 SSO 提供商 "${provider.name || provider.providerId}" 吗？此操作不可撤销。`,
-        confirmLabel: '删除',
+        title: t('admin.sso.page.confirmDeleteTitle'),
+        description: t('admin.sso.page.confirmDelete', { name: provider.name || provider.providerId }),
+        confirmLabel: t('admin.sso.page.deleteLabel'),
         tone: 'danger',
     })
     if (!confirmed) {
@@ -370,16 +372,16 @@ function formatRelativeTime(date: string | Date) {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
     if (minutes < 1) {
-        return '刚刚'
+        return t('admin.sso.page.relative.justNow')
     }
     if (minutes < 60) {
-        return `${minutes}分钟前`
+        return t('admin.sso.page.relative.minutesAgo', { count: minutes })
     }
     if (hours < 24) {
-        return `${hours}小时前`
+        return t('admin.sso.page.relative.hoursAgo', { count: hours })
     }
     if (days < 30) {
-        return `${days}天前`
+        return t('admin.sso.page.relative.daysAgo', { count: days })
     }
     return ''
 }

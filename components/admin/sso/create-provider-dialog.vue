@@ -1,7 +1,7 @@
 <template>
     <BaseDialogV2
         :visible="visible"
-        :title="isEditing ? '编辑 SSO 提供商' : '添加 SSO 提供商'"
+        :title="isEditing ? t('admin.sso.create.titleEdit') : t('admin.sso.create.titleCreate')"
         size="lg"
         @update:visible="visible = $event"
     >
@@ -10,19 +10,19 @@
             @submit.prevent="submitProvider"
         >
             <p class="provider-form__intro">
-                {{ isEditing ? '修改 SSO 提供商配置' : '配置新的 SSO 提供商，支持 OIDC 和 SAML 协议' }}
+                {{ isEditing ? t('admin.sso.create.introEdit') : t('admin.sso.create.introCreate') }}
             </p>
 
             <!-- 基本信息 -->
             <section class="config-section">
                 <h4 class="config-section__title">
-                    基本信息
+                    {{ t('admin.sso.create.basicInfo') }}
                 </h4>
 
                 <div class="config-section__fields">
                     <CaomeiFormItem
                         id="providerType"
-                        label="协议类型"
+                        :label="t('admin.sso.create.type')"
                         required
                     >
                         <template #default="field">
@@ -32,7 +32,7 @@
                                 :options="providerTypeOptions"
                                 option-label="label"
                                 option-value="value"
-                                placeholder="选择协议类型"
+                                :placeholder="t('admin.sso.create.typePlaceholder')"
                                 :disabled="isEditing"
                                 :aria-labelledby="field['aria-labelledby']"
                                 :aria-describedby="field['aria-describedby']"
@@ -43,9 +43,9 @@
                     <BaseInputV2
                         id="providerId"
                         v-model="formData.providerId"
-                        label="Provider ID"
-                        hint="唯一标识符，用于生成回调 URL。编辑时不可修改。"
-                        placeholder="例如：company-sso、google-workspace"
+                        :label="t('admin.sso.create.providerId')"
+                        :hint="t('admin.sso.create.providerIdHint')"
+                        :placeholder="t('admin.sso.create.providerIdPlaceholder')"
                         :disabled="isEditing"
                         required
                     />
@@ -53,20 +53,20 @@
                     <BaseInputV2
                         id="name"
                         v-model="formData.name"
-                        label="显示名称"
-                        placeholder="例如：公司 SSO、Google Workspace"
+                        :label="t('admin.sso.create.name')"
+                        :placeholder="t('admin.sso.create.namePlaceholder')"
                     />
 
                     <CaomeiFormItem
                         id="description"
-                        label="描述"
+                        :label="t('admin.sso.create.description')"
                     >
                         <template #default="field">
                             <CaomeiTextarea
                                 :id="field.id"
                                 v-model="formData.description"
                                 :rows="3"
-                                placeholder="SSO 提供商的详细描述"
+                                :placeholder="t('admin.sso.create.descriptionPlaceholder')"
                                 :aria-labelledby="field['aria-labelledby']"
                                 :aria-describedby="field['aria-describedby']"
                             />
@@ -76,31 +76,31 @@
                     <BaseInputV2
                         id="issuer"
                         v-model="formData.issuer"
-                        label="发行者 URL"
-                        placeholder="例如：https://accounts.google.com、https://company.okta.com"
+                        :label="t('admin.sso.create.issuer')"
+                        :placeholder="t('admin.sso.create.issuerPlaceholder')"
                         required
                     />
 
                     <BaseInputV2
                         id="domain"
                         v-model="formData.domain"
-                        label="域名"
-                        hint="用于域名匹配，用户邮箱域名与此匹配时会使用此 SSO 提供商"
-                        placeholder="例如：company.com、example.org"
+                        :label="t('admin.sso.create.domain')"
+                        :hint="t('admin.sso.create.domainHint')"
+                        :placeholder="t('admin.sso.create.domainPlaceholder')"
                         required
                     />
 
                     <BaseInputV2
                         id="organizationId"
                         v-model="formData.organizationId"
-                        label="关联组织 ID"
-                        placeholder="可选：关联到特定组织"
+                        :label="t('admin.sso.create.organizationId')"
+                        :placeholder="t('admin.sso.create.organizationIdPlaceholder')"
                     />
 
                     <CaomeiCheckbox
                         id="enabled"
                         v-model="formData.enabled"
-                        text="启用此 SSO 提供商"
+                        :text="t('admin.sso.create.enabled')"
                     />
                 </div>
             </section>
@@ -128,13 +128,13 @@
                     variant="secondary"
                     @click="visible = false"
                 >
-                    取消
+                    {{ t('admin.sso.create.cancel') }}
                 </CaomeiButton>
                 <CaomeiButton
                     type="submit"
                     :loading="submitting"
                 >
-                    {{ isEditing ? '更新' : '创建' }}
+                    {{ isEditing ? t('admin.sso.create.submitUpdate') : t('admin.sso.create.submitCreate') }}
                 </CaomeiButton>
             </div>
         </form>
@@ -207,15 +207,15 @@ watch(() => props.provider, async (provider) => {
         const response = await $fetch<SsoProviderResponse>(`/api/admin/sso/providers/${provider.id}`)
 
         if (!response?.success || !response.data) {
-            throw new Error('获取提供商数据失败')
+            throw new Error(t('admin.sso.create.loadFailed'))
         }
 
         applyProviderDetail(response.data)
     } catch (error: unknown) {
-        console.error('获取提供商编辑数据失败:', error)
+        console.error('Failed to load provider data for editing:', error)
         toast.danger({
-            title: '获取数据失败',
-            description: errorMessage(error, '无法获取提供商数据进行编辑'),
+            title: t('admin.sso.create.loadFailedTitle'),
+            description: errorMessage(error, t('admin.sso.create.loadFailedDescription')),
             duration: 3000,
         })
     }
@@ -236,7 +236,7 @@ async function submitProvider() {
         const validationErrors = validateForm()
         if (validationErrors.length > 0) {
             toast.danger({
-                title: '表单验证失败',
+                title: t('admin.sso.create.validationFailed'),
                 description: validationErrors.join(t('common.listSeparator')),
                 duration: 5000,
             })
@@ -252,12 +252,14 @@ async function submitProvider() {
         )
 
         if (!response.success) {
-            throw new Error(response.message || '操作失败')
+            throw new Error(response.message || t('admin.sso.create.operationFailed'))
         }
 
         toast.success({
-            title: isEditing.value ? '更新成功' : '创建成功',
-            description: `SSO 提供商 ${formData.value.name || formData.value.providerId} ${isEditing.value ? '更新' : '创建'}成功`,
+            title: isEditing.value ? t('admin.sso.create.updateSuccessTitle') : t('admin.sso.create.createSuccessTitle'),
+            description: isEditing.value
+                ? t('admin.sso.create.updateSuccess', { name: formData.value.name || formData.value.providerId })
+                : t('admin.sso.create.createSuccess', { name: formData.value.name || formData.value.providerId }),
             duration: 3000,
         })
 
@@ -269,8 +271,8 @@ async function submitProvider() {
         }
     } catch (error: unknown) {
         toast.danger({
-            title: isEditing.value ? '更新失败' : '创建失败',
-            description: errorMessage(error, '请检查网络连接或联系管理员'),
+            title: isEditing.value ? t('admin.sso.create.updateFailedTitle') : t('admin.sso.create.createFailedTitle'),
+            description: errorMessage(error, t('admin.sso.create.failureDescription')),
             duration: 5000,
         })
     } finally {

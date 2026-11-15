@@ -1,14 +1,14 @@
 <template>
     <BaseDialogV2
         :visible="visible"
-        title="SSO 提供商详情"
+        :title="t('admin.sso.detail.title')"
         size="lg"
         @update:visible="visible = $event"
     >
         <div v-if="provider" class="provider-detail">
             <section class="provider-detail__section">
                 <h4 class="provider-detail__heading">
-                    基本信息
+                    {{ t('admin.sso.detail.basicInfo') }}
                 </h4>
                 <div class="provider-detail__grid">
                     <div class="provider-detail__item">
@@ -16,7 +16,7 @@
                         <code class="provider-detail__code">{{ provider.providerId }}</code>
                     </div>
                     <div class="provider-detail__item">
-                        <span class="provider-detail__label">协议类型:</span>
+                        <span class="provider-detail__label">{{ t('admin.sso.detail.type') }}</span>
                         <CaomeiTag
                             variant="soft"
                             :tone="provider.type === 'saml' ? 'warning' : 'primary'"
@@ -25,28 +25,28 @@
                         </CaomeiTag>
                     </div>
                     <div class="provider-detail__item">
-                        <span class="provider-detail__label">显示名称:</span>
+                        <span class="provider-detail__label">{{ t('admin.sso.detail.name') }}</span>
                         <span>{{ provider.name || provider.providerId }}</span>
                     </div>
                     <div class="provider-detail__item">
-                        <span class="provider-detail__label">域名:</span>
+                        <span class="provider-detail__label">{{ t('admin.sso.detail.domain') }}</span>
                         <span>{{ provider.domain }}</span>
                     </div>
                     <div class="provider-detail__item">
-                        <span class="provider-detail__label">发行者:</span>
+                        <span class="provider-detail__label">{{ t('admin.sso.detail.issuer') }}</span>
                         <span>{{ provider.issuer }}</span>
                     </div>
                     <div class="provider-detail__item">
-                        <span class="provider-detail__label">状态:</span>
+                        <span class="provider-detail__label">{{ t('admin.sso.detail.status') }}</span>
                         <BaseStatusBadge
                             variant="yes-no"
                             :status="provider.enabled"
-                            true-label="启用"
-                            false-label="禁用"
+                            :true-label="t('admin.sso.detail.enabled')"
+                            :false-label="t('admin.sso.detail.disabled')"
                         />
                     </div>
                     <div v-if="provider.organizationId" class="provider-detail__item">
-                        <span class="provider-detail__label">关联组织:</span>
+                        <span class="provider-detail__label">{{ t('admin.sso.detail.organization') }}</span>
                         <span>{{ provider.organizationId }}</span>
                     </div>
                 </div>
@@ -54,24 +54,24 @@
 
             <section v-if="provider.description" class="provider-detail__section">
                 <h4 class="provider-detail__heading">
-                    描述
+                    {{ t('admin.sso.detail.description') }}
                 </h4>
                 <p>{{ provider.description }}</p>
             </section>
 
             <section class="provider-detail__section">
                 <h4 class="provider-detail__heading">
-                    回调 URL
+                    {{ t('admin.sso.detail.callback') }}
                 </h4>
                 <div class="provider-detail__urls">
                     <div class="provider-detail__url">
-                        <span class="provider-detail__label">{{ provider.type === 'saml' ? 'SAML 回调:' : 'OIDC 回调:' }}</span>
+                        <span class="provider-detail__label">{{ provider.type === 'saml' ? t('admin.sso.detail.samlCallback') : t('admin.sso.detail.oidcCallback') }}</span>
                         <div class="provider-detail__url-row">
                             <code class="provider-detail__code">{{ getCallbackUrl(provider) }}</code>
                             <CaomeiButton
                                 icon-only
                                 variant="secondary"
-                                label="复制"
+                                :label="t('admin.sso.detail.copy')"
                                 @click="copyToClipboard(getCallbackUrl(provider))"
                             >
                                 <template #icon>
@@ -81,13 +81,13 @@
                         </div>
                     </div>
                     <div v-if="provider.type === 'saml'" class="provider-detail__url">
-                        <span class="provider-detail__label">SP 元数据:</span>
+                        <span class="provider-detail__label">{{ t('admin.sso.detail.spMetadata') }}</span>
                         <div class="provider-detail__url-row">
                             <code class="provider-detail__code">{{ getMetadataUrl(provider) }}</code>
                             <CaomeiButton
                                 icon-only
                                 variant="secondary"
-                                label="复制"
+                                :label="t('admin.sso.detail.copy')"
                                 @click="copyToClipboard(getMetadataUrl(provider))"
                             >
                                 <template #icon>
@@ -101,16 +101,16 @@
 
             <section class="provider-detail__section">
                 <h4 class="provider-detail__heading">
-                    时间信息
+                    {{ t('admin.sso.detail.timeInfo') }}
                 </h4>
                 <div class="provider-detail__grid">
                     <div class="provider-detail__item">
-                        <span class="provider-detail__label">创建时间:</span>
-                        <span>{{ formatDateLocale(provider.createdAt) }}</span>
+                        <span class="provider-detail__label">{{ t('admin.sso.detail.createdAt') }}</span>
+                        <span>{{ formatDateLocale(provider.createdAt, locale) }}</span>
                     </div>
                     <div class="provider-detail__item">
-                        <span class="provider-detail__label">更新时间:</span>
-                        <span>{{ formatDateLocale(provider.updatedAt) }}</span>
+                        <span class="provider-detail__label">{{ t('admin.sso.detail.updatedAt') }}</span>
+                        <span>{{ formatDateLocale(provider.updatedAt, locale) }}</span>
                     </div>
                 </div>
             </section>
@@ -138,6 +138,7 @@ const visible = computed({
     set: (value) => emit('update:visible', value),
 })
 
+const { t, locale } = useI18n()
 const toast = useToast()
 const config = useRuntimeConfig().public
 
@@ -176,14 +177,14 @@ async function copyToClipboard(text: string) {
     try {
         await navigator.clipboard.writeText(text)
         toast.success({
-            title: '复制成功',
-            description: '已复制到剪贴板',
+            title: t('admin.sso.detail.copiedTitle'),
+            description: t('admin.sso.detail.copied'),
             duration: 2000,
         })
     } catch {
         toast.danger({
-            title: '复制失败',
-            description: '无法访问剪贴板',
+            title: t('admin.sso.detail.copyFailedTitle'),
+            description: t('admin.sso.detail.copyFailed'),
             duration: 2000,
         })
     }

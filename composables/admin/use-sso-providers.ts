@@ -2,6 +2,7 @@ import { ref, watch } from 'vue'
 import { useToast } from 'caomei-ui'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import type { AdminSsoProviderRow } from '@/types/admin'
+import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 interface SsoProviderListResponse {
     success: boolean
@@ -10,6 +11,7 @@ interface SsoProviderListResponse {
 }
 
 export function useSsoProviders() {
+    const t = useI18nText()
     const toast = useToast()
     /** `CaomeiSelect` 的选项值只接受字符串 / 数字，筛选值用 `'true'` / `'false'`，服务端按同名 query 解析 */
     const typeFilter = ref<string | null>('')
@@ -93,8 +95,8 @@ export function useSsoProviders() {
             await refreshProviders()
         }
         toast.success({
-            title: '刷新成功',
-            description: 'SSO提供商列表已刷新',
+            title: t('admin.sso.flow.refreshSuccessTitle'),
+            description: t('admin.sso.flow.refreshSuccess'),
             duration: 2000,
         })
     }
@@ -113,20 +115,20 @@ export function useSsoProviders() {
             })
 
             if (!response.success) {
-                throw new Error(response.message || '状态更新失败')
+                throw new Error(response.message || t('admin.sso.flow.statusFailed'))
             }
 
             toast.success({
-                title: '状态更新成功',
-                description: `SSO 提供商已${!provider.enabled ? '启用' : '禁用'}`,
+                title: t('admin.sso.flow.statusSuccessTitle'),
+                description: provider.enabled ? t('admin.sso.flow.disabledMessage') : t('admin.sso.flow.enabledMessage'),
                 duration: 3000,
             })
 
             await refreshProviders()
         } catch (error: unknown) {
             toast.danger({
-                title: '状态更新失败',
-                description: errorMessage(error, '请检查网络连接或联系管理员'),
+                title: t('admin.sso.flow.statusFailed'),
+                description: errorMessage(error, t('admin.sso.flow.networkFailed')),
                 duration: 3000,
             })
         }
@@ -139,12 +141,12 @@ export function useSsoProviders() {
             })
 
             if (!response.success) {
-                throw new Error(response.message || '删除失败')
+                throw new Error(response.message || t('admin.sso.flow.deleteFailed'))
             }
 
             toast.success({
-                title: '删除成功',
-                description: 'SSO 提供商已成功删除',
+                title: t('admin.sso.flow.deleteSuccessTitle'),
+                description: t('admin.sso.flow.deleteSuccess'),
                 duration: 3000,
             })
 
@@ -152,8 +154,8 @@ export function useSsoProviders() {
             return true
         } catch (error: unknown) {
             toast.danger({
-                title: '删除失败',
-                description: errorMessage(error, '请检查网络连接或联系管理员'),
+                title: t('admin.sso.flow.deleteFailed'),
+                description: errorMessage(error, t('admin.sso.flow.networkFailed')),
                 duration: 5000,
             })
             return false
