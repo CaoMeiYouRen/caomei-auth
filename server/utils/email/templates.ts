@@ -9,6 +9,7 @@ import sanitizeHtml from 'sanitize-html'
 import logger from '../logger'
 import { getFallbackFragment, getFallbackMjmlTemplate, generateFallbackHtml } from './templates-fallback'
 import { getEmailTranslator, type EmailTranslator } from './i18n'
+import { DEFAULT_TIME_ZONE, formatDateTimeInTimeZone } from '@/utils/shared/timezone'
 import type { LocaleCode } from '@/i18n/config/locale-registry'
 import { APP_NAME, AUTH_BASE_URL, CONTACT_EMAIL } from '@/utils/shared/env'
 
@@ -29,6 +30,8 @@ interface ActionTemplateConfig extends BaseTemplateConfig {
 interface CodeTemplateConfig extends BaseTemplateConfig {
     verificationCode: string
     expiresIn: number
+    /** 收件人时区（IANA）；缺省 UTC，用于把有效期渲染成本地时间 */
+    timeZone?: string
 }
 
 interface SimpleMessageConfig extends BaseTemplateConfig {
@@ -294,7 +297,13 @@ export class EmailTemplateEngine {
             {
                 ...templateData,
                 ...templateConfig,
-                codeExpiresIn: t('email.chrome.codeExpiresIn', { minutes: templateConfig.expiresIn }),
+                codeExpiresIn: [
+                    t('email.chrome.codeExpiresIn', { minutes: templateConfig.expiresIn }),
+                    t('email.chrome.codeExpiresAt', {
+                        time: formatDateTimeInTimeZone(Date.now() + templateConfig.expiresIn * 60_000, templateConfig.timeZone, locale),
+                        timeZone: templateConfig.timeZone ?? DEFAULT_TIME_ZONE,
+                    }),
+                ].join(' '),
             },
             options,
             t,

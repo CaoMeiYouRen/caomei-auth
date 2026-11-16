@@ -14,6 +14,7 @@
             "copyLinkHint": "Copy the following link into your browser:",
             "importantReminder": "⚠️ Important:",
             "securityTipTitle": "🛡️ Security tip",
+            "codeExpiresAt": "Expires at {time} ({timeZone})",
             "codeExpiresIn": "Use this code within {minutes} minutes",
             "fallbackMessage": "Message content",
             "fallbackButton": "Continue",

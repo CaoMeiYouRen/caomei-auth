@@ -14,6 +14,7 @@
             "copyLinkHint": "请复制以下链接到浏览器地址栏：",
             "importantReminder": "⚠️ 重要提醒：",
             "securityTipTitle": "🛡️ 安全提示",
+            "codeExpiresAt": "有效期至 {time}（{timeZone}）",
             "codeExpiresIn": "请在 {minutes} 分钟内使用此验证码",
             "fallbackMessage": "邮件内容",
             "fallbackButton": "点击操作",

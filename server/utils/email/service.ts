@@ -3,6 +3,7 @@ import { emailTemplateEngine } from './templates'
 import { getEmailTranslator } from './i18n'
 import { backfillUserLocale, resolveEmailLocaleWithBackfill } from './user-locale'
 import { sendEmail } from './index'
+import { getUserTimeZoneByEmail } from '@/server/utils/user-timezone'
 import { APP_NAME } from '@/utils/shared/env'
 import type { LocaleCode } from '@/i18n/config/locale-registry'
 
@@ -81,6 +82,7 @@ export const emailService = {
                     message: t('email.loginOtp.message', { appName: APP_NAME }),
                     verificationCode: otp,
                     expiresIn: expiresInMinutes,
+                    timeZone: await getUserTimeZoneByEmail(email),
                     securityTip: t('email.loginOtp.securityTip'),
                 },
                 {
@@ -121,6 +123,7 @@ export const emailService = {
                     message: t('email.emailVerificationOtp.message', { appName: APP_NAME }),
                     verificationCode: otp,
                     expiresIn: expiresInMinutes,
+                    timeZone: await getUserTimeZoneByEmail(email),
                     securityTip: t('email.emailVerificationOtp.securityTip'),
                 },
                 {
@@ -161,6 +164,7 @@ export const emailService = {
                     message: t('email.passwordResetOtp.message', { appName: APP_NAME }),
                     verificationCode: otp,
                     expiresIn: expiresInMinutes,
+                    timeZone: await getUserTimeZoneByEmail(email),
                     securityTip: t('email.passwordResetOtp.securityTip'),
                 },
                 {
