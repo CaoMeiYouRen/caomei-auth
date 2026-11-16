@@ -164,9 +164,11 @@
 import { computed } from 'vue'
 import { debounce } from 'lodash-es'
 import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent, DatePickerRange } from 'caomei-ui'
-import { formatDateTime } from '@/utils/shared/date'
 import { getDeviceIcon, formatDevice } from '@/utils/web/device'
 import type { AdminLogSession } from '@/types/admin'
+import { useLocaleDate } from '@/composables/use-locale-date'
+
+const { formatDateTimeShort } = useLocaleDate()
 
 defineProps<{
     sessions: AdminLogSession[]
@@ -207,7 +209,7 @@ const columns = computed<DataTableColumn<AdminLogSession>[]>(() => [
         key: 'loginTime',
         header: t('admin.logs.table.columns.loginTime'),
         width: '180px',
-        accessor: (row) => formatDateTime(row.loginTime),
+        accessor: (row) => formatDateTimeShort(row.loginTime),
     },
     { key: 'ipAddress', header: t('admin.logs.table.columns.ipAddress'), width: '150px' },
     { key: 'device', header: t('admin.logs.table.columns.device') },

@@ -243,8 +243,10 @@ import { usePageMeta } from '@/composables/utils/use-page-meta'
 import CreateApplicationDialog from '@/components/admin/oauth/create-application-dialog.vue'
 import ApplicationSecretDialog from '@/components/admin/oauth/application-secret-dialog.vue'
 import ApiDocsDialog from '@/components/admin/oauth/api-docs-dialog.vue'
-import { formatDateLocale } from '@/utils/shared/date'
 import type { AdminOAuthApplicationRow } from '@/types/admin'
+import { useLocaleDate } from '@/composables/use-locale-date'
+
+const { formatDateTimeShort } = useLocaleDate()
 
 definePageMeta({
     layout: 'admin',
@@ -292,7 +294,7 @@ const columns: DataTableColumn<AdminOAuthApplicationRow>[] = [
         header: t('admin.oauth.page.columns.createdAt'),
         sortable: true,
         width: '180px',
-        accessor: (row) => formatDateLocale(row.createdAt),
+        accessor: (row) => formatDateTimeShort(row.createdAt),
     },
     { key: 'actions', header: t('admin.oauth.page.columns.actions'), width: '160px', align: 'right', frozen: 'right' },
 ]

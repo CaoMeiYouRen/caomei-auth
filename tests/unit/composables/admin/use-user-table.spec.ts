@@ -18,7 +18,7 @@ describe('useUserTable', () => {
 
     it('formats date correctly', () => {
         const date = new Date('2023-01-01T12:00:00')
-        expect(formatDate(date)).toContain('2023')
+        expect(formatDate(date)).toMatch(/2023|1\/1\/23/u)
         expect(formatDate('')).toBe('-')
     })
 

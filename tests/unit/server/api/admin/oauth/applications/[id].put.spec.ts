@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { H3Event } from 'h3'
 import updateHandler from '@/server/api/admin/oauth/applications/[id].put'
 import { dataSource } from '@/server/database'

@@ -68,9 +68,11 @@ import type { DataTableColumn } from 'caomei-ui'
 import { useConfirm, useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/shared/useragent'
-import { formatDateTime } from '@/utils/shared/date'
 import type { AdminUserProfile, AdminUserSession } from '@/types/admin'
 import { getApiErrorMessage } from '@/utils/shared/api-error'
+import { useLocaleDate } from '@/composables/use-locale-date'
+
+const { formatDateTimeShort } = useLocaleDate()
 
 const props = defineProps<{
     visible: boolean
@@ -97,13 +99,13 @@ const columns: DataTableColumn<AdminUserSession>[] = [
         key: 'createdAt',
         header: t('admin.users.sessions.columns.createdAt'),
         width: '180px',
-        accessor: (row) => formatDateTime(row.createdAt),
+        accessor: (row) => formatDateTimeShort(row.createdAt),
     },
     {
         key: 'expiresAt',
         header: t('admin.users.sessions.columns.expiresAt'),
         width: '180px',
-        accessor: (row) => formatDateTime(row.expiresAt),
+        accessor: (row) => formatDateTimeShort(row.expiresAt),
     },
     { key: 'actions', header: t('admin.users.sessions.columns.actions'), width: '100px', align: 'right' },
 ]

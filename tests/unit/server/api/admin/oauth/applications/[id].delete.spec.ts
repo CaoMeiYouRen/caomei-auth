@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { getValidatedRouterParams } from 'h3'
 import handler from '@/server/api/admin/oauth/applications/[id].delete'
 import { dataSource } from '@/server/database'

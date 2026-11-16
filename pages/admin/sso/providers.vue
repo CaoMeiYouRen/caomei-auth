@@ -145,7 +145,7 @@
 
                     <template #cell-createdAt="{row}">
                         <div class="date-info">
-                            <div>{{ formatDateLocale(row.createdAt) }}</div>
+                            <div>{{ formatDateTimeShort(row.createdAt) }}</div>
                             <small>{{ formatRelativeTime(row.createdAt) }}</small>
                         </div>
                     </template>
@@ -232,10 +232,12 @@ import { computed, ref } from 'vue'
 import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent } from 'caomei-ui'
 import { useConfirm } from 'caomei-ui'
 import { debounce } from 'lodash-es'
-import { formatDateLocale } from '@/utils/shared/date'
 import { usePageMeta } from '@/composables/utils/use-page-meta'
 import { useSsoProviders } from '@/composables/admin/use-sso-providers'
 import type { AdminSsoProviderRow } from '@/types/admin'
+import { useLocaleDate } from '@/composables/use-locale-date'
+
+const { formatDateTimeShort } = useLocaleDate()
 
 definePageMeta({
     layout: 'admin',

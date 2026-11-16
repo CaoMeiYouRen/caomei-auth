@@ -1,20 +1,10 @@
-import { computed, ref, type Ref } from 'vue'
-import { useNuxtApp } from '#app'
-import { formatDateTimeLocale } from '@/utils/shared/date'
+import { computed } from 'vue'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
-
-/** 当前 UI 语言（响应式）；脱离 Nuxt 上下文时回退 zh-CN。 */
-function resolveLocale(): Ref<string> {
-    try {
-        return useNuxtApp().$i18n.locale
-    } catch {
-        return ref('zh-CN')
-    }
-}
+import { useLocaleDate } from '@/composables/use-locale-date'
 
 export function useUserTable() {
     const t = useI18nText()
-    const locale = resolveLocale()
+    const { formatDateTimeShort } = useLocaleDate()
 
     // 排序字段映射（前端 field -> 后端 field）
     const getSortField = (field: string) => {
@@ -54,12 +44,7 @@ export function useUserTable() {
     ])
 
     // 日期按当前语言格式化（zh / en 的时间顺序不同）
-    const formatDate = (date: string | Date) => {
-        if (!date) {
-            return '-'
-        }
-        return formatDateTimeLocale(date, locale.value || 'zh-CN')
-    }
+    const formatDate = (date: string | Date) => formatDateTimeShort(date)
 
     const getRoleLabel = (role: string) => {
         const keys: Record<string, string> = {

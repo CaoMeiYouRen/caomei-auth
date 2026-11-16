@@ -93,7 +93,7 @@
                         </div>
                         <div v-if="user.banned && user.banExpires" class="user-detail__item">
                             <label>{{ t('admin.users.detail.banUntil') }}</label>
-                            <span>{{ formatDateTime(user.banExpires) }}</span>
+                            <span>{{ formatDateTimeFull(user.banExpires) }}</span>
                         </div>
                     </div>
                 </div>
@@ -105,11 +105,11 @@
                     <div class="user-detail__grid">
                         <div class="user-detail__item">
                             <label>{{ t('admin.users.detail.registeredAt') }}</label>
-                            <span>{{ formatDateTime(user.createdAt) }}</span>
+                            <span>{{ formatDateTimeFull(user.createdAt) }}</span>
                         </div>
                         <div class="user-detail__item">
                             <label>{{ t('admin.users.detail.updatedAt') }}</label>
-                            <span>{{ formatDateTime(user.updatedAt) }}</span>
+                            <span>{{ formatDateTimeFull(user.updatedAt) }}</span>
                         </div>
                     </div>
                 </div>
@@ -293,13 +293,15 @@ import { ref, watch, computed } from 'vue'
 import { useConfirm, useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { formatPhoneNumberInternational } from '@/utils/shared/phone'
-import { formatDateTime } from '@/utils/shared/date'
 import { syncAdminRole, addAdminRole, removeAdminRole } from '@/utils/web/admin-role-client'
 import { useUserTable } from '@/composables/admin/use-user-table'
 import { useForm } from '@/composables/core/use-form'
 import { updateUserFormSchema } from '@/utils/shared/schemas'
 import type { AdminUserProfile } from '@/types/admin'
 import { getApiErrorMessage } from '@/utils/shared/api-error'
+import { useLocaleDate } from '@/composables/use-locale-date'
+
+const { formatDateTimeFull } = useLocaleDate()
 
 const props = defineProps<{
     visible: boolean
