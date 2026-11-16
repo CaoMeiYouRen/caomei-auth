@@ -1,6 +1,6 @@
 # 产品 backlog（待办池）
 
-> **状态**：当前无进行中阶段；阶段 6 已于 2026-11-17 收口（见 [阶段 6 收口记录](../design/governance/2026-11-17-phase6-closure.md)）。本表只保留**尚未进入阶段**的候选与未完成项汇总。
+> **状态**：阶段 7「质量与测试基建」已于 2026-11-17 授权启动（见 [阶段 7 范围登记](../design/governance/2026-11-17-phase7-registration.md)）；阶段 6 已于 2026-11-17 收口。本表只保留**尚未进入阶段**的候选与未完成项汇总；已上收条目（stylelint 18、文件规模门禁、视觉平板基线、固定时钟口径、Admin 失败反馈、jscpd 口径）已移出本表。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ---
@@ -67,25 +67,19 @@
 
 ### 3.2 质量与测试
 
-- **stylelint 18 升级与 `stylelint-config-cmyr` 解 pin**：阶段 4 为恢复样式门禁把 `stylelint-config-cmyr` 固定 1.0.0（1.1.0 要求 stylelint 18，当前 16 会报 unknown rule）。升级 stylelint 18 后恢复 `^1.0.0` 与共享配置默认规则。
 
 - **测试覆盖率长期达标**：核心逻辑 Lines 覆盖率长期目标 ≥ 60%，2026-11-05 基线（75.95%）已达到；2026-11-06 阶段 2 复测 Statements 78.26% / Lines 78.49%，后续关注 `pages`（34.92%）与 `plugins`（25.00%）等未覆盖区域，不再以全局数字作为阶段门槛。
     - 阶段 2 按范围设下限并全部达标：`server/api` ≥95%（95.94%）、`composables` ≥80%（84.35%）、`components/base` ≥75%（90.11%），全局不跌破 75.74%。
     - 详见 [测试规范](../standards/testing.md)。
-- **jscpd 重复代码检测**：引入代码重复率检测，目标全项目重复率降至 5% 以下。
 - **Admin composable 泛型化**：`useDataTable<any>` 与 `selectedUsers: any[]` 收紧为 `AdminUser` / 表格行泛型，去掉 `pages/admin/users.vue` 的 `users.value as AdminUser[]` 断言（`use-application-management` 与 OAuth 页面已在 M5 完成泛型化，可作参照）。
 - **caomei-ui DataTable 分页 / 排序能力补齐**：1.2.0 的 `CaomeiDataTable` 未透出 `CaomeiPaginator` 的 `showEdges`（迁移后首 / 末页按钮消失），且 `lazy` 只映射 `manualPagination`、未关闭客户端排序（未透出 `manualSorting`，当前页数据会被二次排序）。影响 `/admin/users`（M2）、`/admin/oauth/applications`（M4）与 `/admin/sso/providers`（M6）；`CaomeiDataTable` 的受控排序也不支持清除（空排序事件被忽略）。处理方向：向上游提能力需求，或明确接受并写入口径；不在页面内做临时绕过。
-- **视觉层固定时钟导致对话框内 Select 的鼠标交互失败（测试环境限制，非产品缺陷）**：视觉用例调用 `page.clock.setFixedTime` 冻结 `Date.now()`，而 Vue 3.5 的事件 invoker 守卫是 `if (!e._vts) e._vts = Date.now(); else if (e._vts <= invoker.attached) return`。固定时钟下 `_vts` 与 `attached` 恒等，凡是传播路径上先有别的 Vue `pointerdown` 监听（`CaomeiDialog` 的 dismiss 层即是），后续 Select 触发器的监听就会被丢弃：对话框内用鼠标点 CaomeiSelect 无反应，键盘 Enter / Space 正常，页面级 Select（无前置监听）正常。真实时钟下已复测通过（/admin/users 禁用时长下拉可开、可选中「7 天」），因此不是产品缺陷，M3 / M5 对话框无需回改。处理方向：视觉交互态需要操作对话框内 Select 时用键盘打开（`focus()` + `press('Enter')`），或把交互用例切到 `clock.install()` / 真实时间（会牺牲日期确定性，`install()` 能否解除该守卫尚待验证）；`tests/visual/helpers` 的注释已写明该约束。
 - **移动端安全页会话表逐字折行**：`session-table` 的 6 列 `flex: 1` + `word-break: break-all` + 100 px 固定操作列，在 390 px 视口下每列只剩约 12 px（掩码盒 12×116 即证据），日期换 locale 只把折行从 19 行降到 18 行。处理方向：移动端改为卡片式会话项，随本条移动端布局改造落地。
-- **视觉矩阵补中间宽度（768 / 1024）**：当前只覆盖 1440 桌面与 390 移动，`flex-wrap` 类改造在平板宽度无回归保护（M10 的 `/profile` 头部即属此类）。
+- **视觉矩阵补 1024 横向宽度**：阶段 7 只新增 768×1024 平板基线；1024 横向（小桌面 / 横屏平板）无回归保护，待评估 CI 时长后补。
 - **视觉基线对「低于阈值的纯色漂移」无感**：`visualExpect` 的 `threshold: 0.2` 允许单像素 YIQ delta ≤ 1,408.6，`#18181b` → `#1e1e1e` 的 delta 只有 16.6，逐像素判等，`maxDiffPixels: 200` 永不触发。P5-1（f91e6e4）换语言切换器 token 后，暗色基线直到 M4-2 因文案位移被迫重采才暴露。处理方向：为关键 token / 组件计算样式补断言（如 `--admin-surface`、`.language-switcher__trigger` 背景色），或在 token / 主题变更时按「全量暗色基线重采」写入门禁清单；`test:visual:update` 改为 `--update-snapshots=all` 并在报告中打印构建产物 SHA / 提交号，避免增量重采留下混合代基线。
 - **视觉预算分级与允许清单**：评估 Admin 数据页（DataTable 密度 / 选择列 / 空态）的 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单；P4-0 暂用统一阈值，避免在迁移期引入双重标准。
 - **Admin 对话框视觉矩阵未覆盖内部滚动区**：视觉层只截整页首屏，SSO 创建对话框（900px 宽、内部滚动）的 OIDC / SAML / 属性映射配置段落在首屏之外，M7 迁移后自基线无像素变化，只能靠定向 Playwright 验收。处理方向：在矩阵中为长表单补充「滚动到指定分段后再截图」的交互态，或明确接受并写入口径。
 - **caomei-ui FormItem 的必填语义与 label 可点击聚焦**：`CaomeiFormItem` 的 `required` 只渲染 `aria-hidden` 的 `*`，不向控件注入 `required` / `aria-required`；label 是 `<span aria-labelledby>`，点击标签不再聚焦输入框。M2 / M5 / M7 均沿用该约定，属于库级能力缺口。处理方向：向上游提能力需求（或由 FormItem 透传 `required` 语义），在上游补齐后统一评估。
 - **2FA / captcha / Toast 视觉覆盖**：为 2FA 弹窗、验证码启用态、提交中 / 提交成功 Toast 补充参考态与自基线；需已启用 2FA 的测试账号与 captcha provider。阶段 3 已登记为环境限制，M6-1 收口时迁入本候选（不再保留阶段编号）。
-- **max-lines 基线清理**：消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。
-    - 2026-11-11（P4-2）：`components/admin/users/user-detail-dialog.vue` 由 556 行增至 624 行，新增 1 条 `max-lines`（全仓 3 → 4 条）；详情视图与编辑表单待拆分。
-- **Admin 对话框的 better-auth 调用失败静默**：`admin/users` 的封禁 / 创建 / 会话撤销等走 `authClient`（better-auth 自带端点），4xx / 5xx 返回 `{ error }` 而不抛出，当前只在 `catch` 里提示，失败时无 Toast 且对话框不关闭。处理方向：显式校验 `response.error` 并给本地化兜底文案（better-auth 自带 message 为英文，不直接展示）。
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本条目只保留 `/api/admin/sso/providers` 系列补录（i18n 相关文档已在阶段 5 M19 同步）。
 - **迁入来源**：原 `todo.md`「低优先级 · 文档同步」与既有 backlog 质量类条目。
 
