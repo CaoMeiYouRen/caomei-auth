@@ -16,6 +16,33 @@ import type {
 import { DEMO_PASSWORD, DEMO_MODE } from '@/utils/shared/env'
 import { formatPhoneNumber } from '@/utils/shared/phone'
 
+/** Demo 数据分布参数（可配置，默认模拟工作时段峰谷与活跃度长尾） */
+export interface DemoSessionDistribution {
+    /** 固定随机种子，提供时同 seed 输出稳定 */
+    seed?: number
+    /** 活跃用户占比（长尾分布中头部用户的权重），0–1 */
+    activeRatio?: number
+    /** 高峰时段（0–23），未命中时随机全天 */
+    peakHours?: number[]
+}
+
+export const DEFAULT_DEMO_SESSION_DISTRIBUTION: Required<Omit<DemoSessionDistribution, 'seed'>> = {
+    activeRatio: 0.6,
+    peakHours: [9, 10, 11, 14, 15, 16, 17, 20, 21, 22],
+}
+
+/** 确定性伪随机数（mulberry32） */
+export function createSeededRandom(seed: number): () => number {
+    let state = seed >>> 0
+    return () => {
+        state = (state + 0x6D2B79F5) >>> 0
+        let t = state
+        t = Math.imul(t ^ (t >>> 15), t | 1)
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+    }
+}
+
 /**
  * 生成随机日期范围
  */
@@ -291,19 +318,54 @@ export function generateDemoStats(): DemoStats {
 /**
  * 生成假的会话数据
  */
-export function generateDemoSessions(count: number = 100): DemoSession[] {
+export function generateDemoSessions(count: number = 100, distribution: DemoSessionDistribution = {}): DemoSession[] {
+    const random = distribution.seed === undefined ? secureRandom : createSeededRandom(distribution.seed)
+    const activeRatio = distribution.activeRatio ?? DEFAULT_DEMO_SESSION_DISTRIBUTION.activeRatio
+    const peakHours = distribution.peakHours ?? DEFAULT_DEMO_SESSION_DISTRIBUTION.peakHours
     const users = generateDemoUsers(20)
+
+    /* 活跃度长尾：头部用户获得更高权重（平方分布），避免会话均匀铺满所有用户 */
+    const pickUser = () => {
+        const skew = 1 + (1 - Math.min(Math.max(activeRatio, 0), 1)) * 4
+        const rank = Math.floor(Math.pow(random(), skew) * users.length)
+        return users[Math.min(rank, users.length - 1)]!
+    }
+
+    /* 会话 token 使用同一随机源，保证固定 seed 可复现 */
+    const randomToken = () => {
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+        let token = ''
+        for (let index = 0; index < 32; index += 1) {
+            token += alphabet[Math.floor(random() * alphabet.length)]
+        }
+        return `demo_session_${token}`
+    }
+
+    /* 登录时间：60% 落在高峰时段，其余全天随机 */
+    const randomLoginTime = () => {
+        const daysAgo = Math.floor(random() * 30)
+        const hour = random() < 0.6
+            ? peakHours[Math.floor(random() * peakHours.length)]!
+            : Math.floor(random() * 24)
+        return dayjs()
+            .subtract(daysAgo, 'day')
+            .hour(hour)
+            .minute(Math.floor(random() * 60))
+            .second(0)
+            .millisecond(0)
+            .toDate()
+    }
 
     // 生成完整的IP地址
     const generateRandomIP = () => {
         const ipRanges = [
-            () => `192.168.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}`,
-            () => `10.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}`,
-            () => `172.${16 + Math.floor(secureRandom() * 16)}.${Math.floor(secureRandom() * 256)}.${Math.floor(secureRandom() * 256)}`,
-            () => `203.208.60.${Math.floor(secureRandom() * 256)}`,
-            () => `114.114.114.${Math.floor(secureRandom() * 256)}`,
+            () => `192.168.${Math.floor(random() * 256)}.${Math.floor(random() * 256)}`,
+            () => `10.${Math.floor(random() * 256)}.${Math.floor(random() * 256)}.${Math.floor(random() * 256)}`,
+            () => `172.${16 + Math.floor(random() * 16)}.${Math.floor(random() * 256)}.${Math.floor(random() * 256)}`,
+            () => `203.208.60.${Math.floor(random() * 256)}`,
+            () => `114.114.114.${Math.floor(random() * 256)}`,
         ]
-        const generator = ipRanges[Math.floor(secureRandom() * ipRanges.length)]
+        const generator = ipRanges[Math.floor(random() * ipRanges.length)]
         return generator ? generator() : '127.0.0.1'
     }
 
@@ -322,10 +384,10 @@ export function generateDemoSessions(count: number = 100): DemoSession[] {
     const sessions: DemoSession[] = []
 
     for (let i = 0; i < count; i++) {
-        const user = users[Math.floor(secureRandom() * users.length)]!
-        const userAgent = userAgents[Math.floor(secureRandom() * userAgents.length)] || 'Unknown'
+        const user = pickUser()
+        const userAgent = userAgents[Math.floor(random() * userAgents.length)] || 'Unknown'
         const parsedUserAgent = parseUserAgent(userAgent)
-        const loginTime = getRandomDate(30)
+        const loginTime = randomLoginTime()
         const expiresAt = dayjs(loginTime).add(30, 'day').toDate()
         const isActive = dayjs(expiresAt).isAfter(dayjs())
         const sessionId = snowflake.generateId()
@@ -350,10 +412,10 @@ export function generateDemoSessions(count: number = 100): DemoSession[] {
             expiresAt,
             isActive,
             ipAddress: maskIP(generateRandomIP()),
-            location: locations[Math.floor(secureRandom() * locations.length)] || 'Unknown',
+            location: locations[Math.floor(random() * locations.length)] || 'Unknown',
             device: deviceInfo,
-            provider: providers[Math.floor(secureRandom() * providers.length)] || 'email',
-            sessionToken: `demo_session_${generateRandomString(32)}`,
+            provider: providers[Math.floor(random() * providers.length)] || 'email',
+            sessionToken: randomToken(),
         })
     }
 

@@ -109,3 +109,36 @@ describe('server/utils/demo-data-generator', () => {
         expect(config.normalUser.phoneNumber).toBeTruthy()
     })
 })
+
+describe('Demo 会话分布', () => {
+    it('同 seed 输出稳定，不同 seed 不同', async () => {
+        const { generateDemoSessions } = await import('@/server/utils/demo-data-generator')
+        const a = generateDemoSessions(12, { seed: 42 })
+        const b = generateDemoSessions(12, { seed: 42 })
+        const c = generateDemoSessions(12, { seed: 43 })
+
+        expect(a.map((item) => item.sessionToken)).toEqual(b.map((item) => item.sessionToken))
+        expect(a.map((item) => item.sessionToken)).not.toEqual(c.map((item) => item.sessionToken))
+    })
+
+    it('登录时间向高峰时段集中', async () => {
+        const { generateDemoSessions } = await import('@/server/utils/demo-data-generator')
+        const peakHours = [9, 10, 11]
+        const sessions = generateDemoSessions(400, { seed: 7, peakHours })
+        const inPeak = sessions.filter((item) => peakHours.includes(item.loginTime.getHours())).length
+
+        expect(inPeak / sessions.length).toBeGreaterThan(0.5)
+    })
+
+    it('活跃度长尾：头部用户占比高于均匀分布', async () => {
+        const { generateDemoSessions } = await import('@/server/utils/demo-data-generator')
+        const sessions = generateDemoSessions(400, { seed: 11, activeRatio: 0.6 })
+        const counts = new Map<string, number>()
+        for (const session of sessions) {
+            counts.set(session.userId, (counts.get(session.userId) ?? 0) + 1)
+        }
+        const maxShare = Math.max(...counts.values()) / sessions.length
+
+        expect(maxShare).toBeGreaterThan(1 / 20)
+    })
+})
