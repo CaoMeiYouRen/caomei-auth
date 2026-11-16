@@ -1,0 +1,11 @@
+{
+  "rows": 50000,
+  "iterations": 200,
+  "note": "绝对毫秒上限，按 2026-11-16 本机基线留约 10 倍余量，避免 CI 抖动；RDS / 网络数据库需单独校准",
+  "p95Ms": {
+    "sessionByToken": 5,
+    "sessionByUserId": 50,
+    "sessionByDateRange": 50,
+    "deleteExpired": 200
+  }
+}

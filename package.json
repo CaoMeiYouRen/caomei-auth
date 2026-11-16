@@ -52,7 +52,8 @@
     "typecheck": "nuxt typecheck",
     "lint:md:check": "lint-md *.md docs/*.md docs/*/*.md docs/*/*/*.md .github/*.md .github/*/*.md .github/*/*/*.md .github/*/*/*/*.md",
     "i18n:audit:source": "node scripts/i18n/audit-locale-keys.mjs --only=source --fail-on-unknown-source",
-    "perf:session": "node scripts/perf/run-session-benchmark.mjs"
+    "perf:session": "node scripts/perf/run-session-benchmark.mjs",
+    "perf:check": "node scripts/perf/check-perf-threshold.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1166.0",

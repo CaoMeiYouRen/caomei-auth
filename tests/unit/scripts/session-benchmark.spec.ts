@@ -44,3 +44,20 @@ describe('scripts/perf/session-benchmark', () => {
         expect(result.plans.sessionByToken[0].detail).toContain('IDX_session_token')
     })
 })
+
+describe('scripts/perf/check-perf-threshold', () => {
+    it('按 p95 上限判定通过 / 失败 / 缺项', async () => {
+        const { evaluateThresholds } = await import('../../../scripts/perf/check-perf-threshold.mjs')
+        const thresholds = { p95Ms: { a: 10, b: 1 } }
+
+        expect(evaluateThresholds({ timings: { a: { p95: 5 }, b: { p95: 0.5 } } }, thresholds).passed).toBe(true)
+
+        const failed = evaluateThresholds({ timings: { a: { p95: 11 }, b: { p95: 0.5 } } }, thresholds)
+        expect(failed.passed).toBe(false)
+        expect(failed.failures[0]).toContain('a')
+
+        const missing = evaluateThresholds({ timings: {} }, thresholds)
+        expect(missing.failures).toHaveLength(2)
+        expect(missing.failures[0]).toContain('缺少基准结果')
+    })
+})
