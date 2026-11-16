@@ -11,6 +11,8 @@
 -   [阶段 3 收口记录：caomei-ui P2–P3 与 i18n 非组件面](./2026-11-09-phase3-closure.md): 九条路由白名单、包体 / 用量复测、视觉 50/50、i18n 交付、回退证据与遗留项（2026-11-09 收口，M0-3 待定时验证）。
 -   [阶段 4 范围登记：caomei-ui P4 Admin 与 P5 单库收尾](./2026-11-10-phase4-registration.md): P4 Admin 数据页、P5 卸载 PrimeVue 的 15 条原子条目、验收、依赖与回退策略（2026-11-14 收口）。
 -   [阶段 4 收口记录：P5 单库收尾与阶段归档](./2026-11-14-phase4-closure.md): 最终包体、视觉、护栏终态、验证、回退与遗留（2026-11-14）。
+-   [阶段 5 范围登记：i18n 全量落地与体验收口](./2026-11-14-phase5-registration.md): 阶段目标、M1–M19 原子条目、验收、依赖与不做范围（2026-11-16 收口）。
+-   [阶段 5 收口记录：i18n 全量落地与体验收口](./2026-11-16-phase5-closure.md): 终态指标、阶段级变更、与范围登记的偏差、遗留与验证命令（2026-11-16）。
 -   [P4-0 技术方案：Admin 数据页迁移基座](./2026-11-10-p4-admin-migration-plan.md): DataTable / Dialog / DatePicker / 暗色主题 / 视觉夹具 / 白名单的验证项与退出条件。
 -   [P4-0 决策记录：Admin 迁移基座](./2026-11-10-p4-0-decisions.md): DataTable / Dialog / DatePicker / Toast 映射、Admin token 契约、视觉矩阵与白名单判定点。
 -   [视觉参考态基座](./2026-11-08-visual-baseline-harness.md): 自基线与参考态两层的边界、矩阵、命令、差异处置与已知限制。
