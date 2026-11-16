@@ -164,3 +164,16 @@ _2026-11-14 授权，2026-11-16 M1–M19 全部完成；共 19 条原子条目�
 -   [x] **M18 SEO**：sitemap / robots / hreflang / canonical / `og:locale`、运行时 origin 重写、私有页 `noindex`，`en-US` 升 `seo-ready` 并放开索引。
 -   [x] **M19 收口**：1467 键同构、测试 1037 / 138、视觉 110、覆盖率 Statements 76.78% / Lines 76.92%、入口 JS 339,087 B / 总 JS 2,289,799 B；全量门禁通过。
 -   [x] **遗留**：Demo 假数据仍为 zh-CN（已登记边界）；Admin API 错误文案读取链路、OAuth 接口 200 + body status、Zod error map 统一进 backlog。
+
+---
+
+## 12. 阶段 6 · 质量门禁补齐、Admin 错误面与体验性能（2026-11-17 收口）
+
+_2026-11-16 授权，M1–M18 全部完成；A 批（M1–M9）2026-11-16 收口检查点，B 批（M10–M18）2026-11-17 完成。收口记录见 [阶段 6 收口记录](../design/governance/2026-11-17-phase6-closure.md)。_
+
+-   [x] **A 批质量与错误面**：`lint:md` 多层目录 + CI 无 fix 校验；i18n 反向键校验；Admin 错误读取统一与 10 处去重；OAuth 应用错误面；Zod error map；日期本地化；`auth.quick` 命名空间收敛；对话框单测。
+-   [x] **时区**：`User.timezone` + 个人中心选择 + 页面展示 `useUserTimezone`；OTP 邮件按收件人时区显示到期时间。
+-   [x] **注册控制**：邮箱域名 / 手机号国家码白黑名单，create/update 钩子校验，管理端 CRUD、审计日志与 Demo 守卫。
+-   [x] **性能与 Demo**：会话基准与索引、缓存选型与阈值脚本；Admin 日志 IP 精确筛选与统计联动；Demo 数据 seed / 峰谷 / 长尾。
+-   [x] **终态**：测试 1090 / 148；覆盖率 Statements 76.07% / Lines 76.36%；视觉 110；包体预算通过；重复率 3.71%。
+-   [x] **遗留**：注册规则多实例缓存、规则值格式校验、审计入库、日志事件源 / 热力图等保留 backlog。
