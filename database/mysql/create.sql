@@ -326,3 +326,18 @@ CREATE TABLE `caomei_auth_jwks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+DROP TABLE IF EXISTS `caomei_auth_registration_rule`;
+
+CREATE TABLE `caomei_auth_registration_rule` (
+    `id` VARCHAR(36) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `type` VARCHAR(32) NOT NULL,
+    `mode` VARCHAR(8) NOT NULL,
+    `value` VARCHAR(128) NOT NULL,
+    `enabled` BOOLEAN NOT NULL DEFAULT TRUE,
+    `note` VARCHAR(255) NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `IDX_registration_rule_unique` (`type`, `mode`, `value`)
+);

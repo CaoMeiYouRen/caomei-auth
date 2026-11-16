@@ -25,7 +25,16 @@
         "server": {
             "internal": "服务器内部错误"
         },
+        "registration": {
+            "emailDomainNotAllowed": "该邮箱域名暂不允许注册",
+            "phoneCountryNotAllowed": "该手机号所属地区暂不允许注册",
+            "notAllowed": "当前不允许注册，请联系管理员"
+        },
         "admin": {
+            "registrationRuleExists": "同名规则已存在",
+            "registrationRuleNotFound": "规则不存在",
+            "registrationRuleUpdateFailed": "更新注册规则失败",
+            "registrationRuleDeleteFailed": "删除注册规则失败",
             "userNotFound": "当前用户不存在",
             "adminOnly": "仅管理员可以执行此操作",
             "cannotRemoveSelf": "不能移除自己的管理员权限",

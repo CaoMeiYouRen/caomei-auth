@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth'
+import { APIError } from 'better-auth/api'
 import {
     username,
     anonymous,
@@ -69,9 +70,30 @@ import { getTempEmail, getTempName } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email/service'
 import { getUserLocale } from '@/server/utils/locale'
 import { isValidTimeZone } from '@/utils/shared/timezone'
+import { evaluateRegistration } from '@/server/utils/registration-policy'
+import zhErrors from '@/i18n/locales/zh-CN/errors.json'
+import enErrors from '@/i18n/locales/en-US/errors.json'
 import { getCaptchaConfig } from '@/server/utils/captcha-config'
 import { isCaptchaEnabled } from '@/utils/web/captcha'
 import { AUTH_DISABLED_PATHS } from '@/utils/shared/auth-disabled-paths'
+
+/** 注册准入校验：拒绝时抛出统一错误码，避免暴露命中的名单类型 */
+async function assertRegistrationAllowed(
+    input: { email?: string | null, phone?: string | null },
+    context: unknown,
+): Promise<void> {
+    const decision = await evaluateRegistration(input)
+    if (decision.allowed) {
+        return
+    }
+    const acceptLanguage = (context as { headers?: Headers } | undefined)?.headers?.get?.('accept-language') ?? ''
+    const locale = acceptLanguage.toLowerCase().startsWith('en') ? 'en' : 'zh'
+    const messages = locale === 'en' ? enErrors.errors.registration : zhErrors.errors.registration
+    throw new APIError('BAD_REQUEST', {
+        message: messages.notAllowed,
+        code: 'REGISTRATION_NOT_ALLOWED',
+    })
+}
 
 export const auth = betterAuth({
     appName: APP_NAME, // 应用名称。它将被用作发行者。
@@ -85,6 +107,34 @@ export const auth = betterAuth({
     // 数据库适配器
     // 使用 TypeORM 适配器
     database: typeormAdapter(dataSource),
+    // 注册控制：邮箱域名 / 手机号国家码规则（阶段 6 M12）
+    databaseHooks: {
+        user: {
+            create: {
+                before: async (user, context) => {
+                    await assertRegistrationAllowed({
+                        email: user.email,
+                        phone: (user as { phoneNumber?: string | null }).phoneNumber,
+                    }, context)
+                    return { data: user }
+                },
+            },
+            update: {
+                before: async (data, context) => {
+                    const changes = data as { email?: string | null, phoneNumber?: string | null }
+                    /* 只在邮箱 / 手机号变更时校验，避免时区、语言等更新被误拦 */
+                    if (changes.email === undefined && changes.phoneNumber === undefined) {
+                        return { data }
+                    }
+                    await assertRegistrationAllowed({
+                        email: changes.email,
+                        phone: changes.phoneNumber,
+                    }, context)
+                    return { data }
+                },
+            },
+        },
+    },
     // 可信来源列表。
     trustedOrigins: [AUTH_BASE_URL],
     // 用于加密、签名和哈希的秘密。

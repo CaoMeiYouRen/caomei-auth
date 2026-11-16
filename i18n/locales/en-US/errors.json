@@ -25,7 +25,16 @@
         "server": {
             "internal": "Internal server error"
         },
+        "registration": {
+            "emailDomainNotAllowed": "Registration is not available for this email domain",
+            "phoneCountryNotAllowed": "Registration is not available for this phone region",
+            "notAllowed": "Registration is currently unavailable. Please contact the administrator."
+        },
         "admin": {
+            "registrationRuleExists": "A rule with the same type, mode and value already exists",
+            "registrationRuleNotFound": "Rule not found",
+            "registrationRuleUpdateFailed": "Failed to update registration rule",
+            "registrationRuleDeleteFailed": "Failed to delete registration rule",
             "userNotFound": "Current user not found",
             "adminOnly": "Only administrators can perform this action",
             "cannotRemoveSelf": "You cannot remove your own admin role",

@@ -591,3 +591,16 @@ CREATE UNIQUE INDEX IF NOT EXISTS IDX_16f4c39e99d3b2619a4e92992c ON caomei_auth_
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
+
+CREATE TABLE IF NOT EXISTS caomei_auth_registration_rule (
+    id         VARCHAR (36) PRIMARY KEY NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT (datetime('now')),
+    updated_at DATETIME NOT NULL DEFAULT (datetime('now')),
+    type       VARCHAR (32) NOT NULL,
+    mode       VARCHAR (8)  NOT NULL,
+    value      VARCHAR (128) NOT NULL,
+    enabled    BOOLEAN NOT NULL DEFAULT 1,
+    note       VARCHAR (255)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS IDX_registration_rule_unique ON caomei_auth_registration_rule (type, mode, value);

@@ -369,3 +369,19 @@ CREATE TABLE public.caomei_auth_jwks (
 	private_key text NOT NULL,
 	CONSTRAINT "PK_caomei_auth_jwks" PRIMARY KEY (id)
 );
+
+DROP TABLE IF EXISTS public.caomei_auth_registration_rule;
+
+CREATE TABLE public.caomei_auth_registration_rule (
+	id varchar(36) NOT NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+	type varchar(32) NOT NULL,
+	mode varchar(8) NOT NULL,
+	value varchar(128) NOT NULL,
+	enabled boolean DEFAULT true NOT NULL,
+	note varchar(255) NULL,
+	CONSTRAINT "PK_registration_rule" PRIMARY KEY (id)
+);
+
+CREATE UNIQUE INDEX "IDX_registration_rule_unique" ON public.caomei_auth_registration_rule USING btree (type, mode, value);

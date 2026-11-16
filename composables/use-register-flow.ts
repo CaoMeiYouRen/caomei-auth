@@ -155,6 +155,9 @@ export function useRegisterFlow() {
                     const { error } = await authClient.signUp.email(signUpData, requestOptions)
 
                     if (error) {
+                        if ((error as { code?: string }).code === 'REGISTRATION_NOT_ALLOWED') {
+                            throw new Error(t('auth.register.registrationRestricted'))
+                        }
                         throw new Error(error.message || t('auth.register.failed'))
                     }
                 } else if (activeTab.value === 'phone') {
