@@ -1,19 +1,19 @@
 <template>
     <div class="auth-container">
-        <AuthLeft :title="t('auth.quick.heroTitle')" :subtitle="t('auth.quick.heroSubtitle')" />
+        <AuthLeft :title="t('auth.quickLogin.heroTitle')" :subtitle="t('auth.quickLogin.heroSubtitle')" />
         <div class="auth-right">
             <div class="auth-card">
                 <h2 class="auth-title">
-                    {{ t('auth.quick.title') }}
+                    {{ t('auth.quickLogin.title') }}
                 </h2>
                 <p class="auth-subtitle">
-                    {{ t('auth.quick.subtitle') }}
+                    {{ t('auth.quickLogin.subtitle') }}
                 </p>
                 <!-- Tab切换 -->
                 <div class="login-btn mb-4">
                     <div class="card flex justify-center">
-                        <CaomeiButtonGroup :group-label="t('auth.quick.methodLabel')">
-                            <BaseTooltip :content="t('auth.quick.emailTip')">
+                        <CaomeiButtonGroup :group-label="t('auth.quickLogin.methodLabel')">
+                            <BaseTooltip :content="t('auth.quickLogin.emailTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'email' ? 'primary' : 'secondary'"
                                     :aria-pressed="activeTab === 'email'"
@@ -22,10 +22,10 @@
                                     <template #icon>
                                         <i class="mdi mdi-email" />
                                     </template>
-                                    {{ t('auth.quick.methodEmail') }}
+                                    {{ t('auth.quickLogin.methodEmail') }}
                                 </CaomeiButton>
                             </BaseTooltip>
-                            <BaseTooltip v-if="phoneEnabled" :content="t('auth.quick.phoneTip')">
+                            <BaseTooltip v-if="phoneEnabled" :content="t('auth.quickLogin.phoneTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'phone' ? 'primary' : 'secondary'"
                                     :aria-pressed="activeTab === 'phone'"
@@ -34,7 +34,7 @@
                                     <template #icon>
                                         <i class="mdi mdi-phone" />
                                     </template>
-                                    {{ t('auth.quick.methodPhone') }}
+                                    {{ t('auth.quickLogin.methodPhone') }}
                                 </CaomeiButton>
                             </BaseTooltip>
                         </CaomeiButtonGroup>
@@ -46,16 +46,16 @@
                     <BaseInputV2
                         id="email"
                         v-model="email"
-                        :label="t('auth.quick.fieldEmail')"
-                        :placeholder="t('auth.quick.placeholderEmail')"
+                        :label="t('auth.quickLogin.fieldEmail')"
+                        :placeholder="t('auth.quickLogin.placeholderEmail')"
                         :error="errors.email"
                     />
 
                     <BaseInputV2
                         id="emailCode"
                         v-model="emailCode"
-                        :label="t('auth.quick.fieldCode')"
-                        :placeholder="t('auth.quick.placeholderEmailCode')"
+                        :label="t('auth.quickLogin.fieldCode')"
+                        :placeholder="t('auth.quickLogin.placeholderEmailCode')"
                         :error="errors.emailCode"
                         maxlength="6"
                         @input="handleEmailCodeInput"
@@ -77,7 +77,7 @@
                         :loading="isEmailLoggingIn"
                         @click="loginWithEmail"
                     >
-                        {{ t('auth.quick.loginEmail') }}
+                        {{ t('auth.quickLogin.loginEmail') }}
                     </CaomeiButton>
                 </div>
 
@@ -86,15 +86,15 @@
                     <BasePhoneInputV2
                         id="phone"
                         v-model="phone"
-                        :label="t('auth.quick.fieldPhone')"
+                        :label="t('auth.quickLogin.fieldPhone')"
                         :error="errors.phone"
                     />
 
                     <BaseInputV2
                         id="phoneCode"
                         v-model="phoneCode"
-                        :label="t('auth.quick.fieldCode')"
-                        :placeholder="t('auth.quick.placeholderSmsCode')"
+                        :label="t('auth.quickLogin.fieldCode')"
+                        :placeholder="t('auth.quickLogin.placeholderSmsCode')"
                         :error="errors.phoneCode"
                         maxlength="6"
                         @input="handlePhoneCodeInput"
@@ -116,7 +116,7 @@
                         :loading="isPhoneLoggingIn"
                         @click="loginWithPhone"
                     >
-                        {{ t('auth.quick.loginPhone') }}
+                        {{ t('auth.quickLogin.loginPhone') }}
                     </CaomeiButton>
                 </div>
 
@@ -128,31 +128,31 @@
                 <!-- 其他登录方式 -->
                 <div class="toggle-login">
                     <NuxtLink to="/login" class="toggle-link">
-                        {{ t('auth.quick.passwordLogin') }}
+                        {{ t('auth.quickLogin.passwordLogin') }}
                     </NuxtLink>
                     <span class="divider">|</span>
                     <NuxtLink to="/register" class="toggle-link">
-                        {{ t('auth.quick.register') }}
+                        {{ t('auth.quickLogin.register') }}
                     </NuxtLink>
                 </div>
 
                 <!-- 用户协议 -->
                 <div class="agreement-notice">
-                    {{ t('auth.quick.agreementPrefix') }}
+                    {{ t('auth.quickLogin.agreementPrefix') }}
                     <NuxtLink
                         to="/terms"
                         target="_blank"
                         class="agreement-link"
                     >
-                        {{ t('auth.quick.terms') }}
+                        {{ t('auth.quickLogin.terms') }}
                     </NuxtLink>
-                    {{ t('auth.quick.agreementAnd') }}
+                    {{ t('auth.quickLogin.agreementAnd') }}
                     <NuxtLink
                         to="/privacy"
                         target="_blank"
                         class="agreement-link"
                     >
-                        {{ t('auth.quick.privacy') }}
+                        {{ t('auth.quickLogin.privacy') }}
                     </NuxtLink>
                 </div>
             </div>
@@ -168,7 +168,7 @@ import Captcha from '@/components/captcha.vue'
 import { useQuickLoginFlow } from '@/composables/use-quick-login-flow'
 
 const { t } = useI18n()
-usePageMeta('auth.quick.title', 'auth.quick.subtitle')
+usePageMeta('auth.quickLogin.title', 'auth.quickLogin.subtitle')
 
 const {
     activeTab,
