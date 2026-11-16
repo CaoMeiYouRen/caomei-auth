@@ -524,13 +524,6 @@ ALTER TABLE caomei_auth_user ADD COLUMN locale VARCHAR(16);
 4. **版本控制**: 跟踪数据库 schema 变更
 5. **测试环境**: 在测试环境验证变更后再应用到生产环境
 
-## 相关链接
-
--   [PostgreSQL 官方文档](https://www.postgresql.org/docs/)
--   [MySQL 官方文档](https://dev.mysql.com/doc/)
--   [SQLite 官方文档](https://www.sqlite.org/docs.html)
--   [TypeORM 文档](https://typeorm.io/)
-
 ### 用户时区偏好列 `user.timezone`（2026-11-16）
 
 阶段 6 新增 `timezone VARCHAR(64) NULL`（IANA 名称，如 `Asia/Shanghai`；默认 `NULL` 表示跟随浏览器时区）。开发 / 测试环境的 `synchronize` 会自动加列；生产环境 `synchronize: false`，升级前需手工执行：
@@ -549,3 +542,10 @@ ALTER TABLE caomei_auth_user ADD COLUMN timezone VARCHAR(64) NULL;
 -- SQLite
 ALTER TABLE caomei_auth_user ADD COLUMN timezone VARCHAR(64);
 ```
+
+## 相关链接
+
+-   [PostgreSQL 官方文档](https://www.postgresql.org/docs/)
+-   [MySQL 官方文档](https://dev.mysql.com/doc/)
+-   [SQLite 官方文档](https://www.sqlite.org/docs.html)
+-   [TypeORM 文档](https://typeorm.io/)

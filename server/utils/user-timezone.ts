@@ -1,17 +1,16 @@
 import { dataSource } from '@/server/database'
 import { User } from '@/server/entities/user'
-import { DEFAULT_TIME_ZONE, isValidTimeZone } from '@/utils/shared/timezone'
+import { isValidTimeZone } from '@/utils/shared/timezone'
 
 /**
  * 读取用户时区偏好（按邮箱）。
- * 未注册 / 未设置 / 非法值统一回退 UTC，邮件等异步场景不依赖请求上下文。
+ * 未注册 / 未设置 / 非法值返回 null：异步邮件没有浏览器上下文，不猜测用户时区。
  */
-export async function getUserTimeZoneByEmail(email: string): Promise<string> {
+export async function getUserTimeZoneByEmail(email: string): Promise<string | null> {
     try {
         const user = await dataSource.getRepository(User).findOne({ where: { email }, select: ['id', 'timezone'] })
-        const timezone = user?.timezone
-        return isValidTimeZone(timezone) ? timezone : DEFAULT_TIME_ZONE
+        return isValidTimeZone(user?.timezone) ? user.timezone : null
     } catch {
-        return DEFAULT_TIME_ZONE
+        return null
     }
 }

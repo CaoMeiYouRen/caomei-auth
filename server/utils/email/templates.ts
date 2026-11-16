@@ -9,7 +9,7 @@ import sanitizeHtml from 'sanitize-html'
 import logger from '../logger'
 import { getFallbackFragment, getFallbackMjmlTemplate, generateFallbackHtml } from './templates-fallback'
 import { getEmailTranslator, type EmailTranslator } from './i18n'
-import { DEFAULT_TIME_ZONE, formatDateTimeInTimeZone } from '@/utils/shared/timezone'
+import { formatDateTimeInTimeZone } from '@/utils/shared/timezone'
 import type { LocaleCode } from '@/i18n/config/locale-registry'
 import { APP_NAME, AUTH_BASE_URL, CONTACT_EMAIL } from '@/utils/shared/env'
 
@@ -297,13 +297,13 @@ export class EmailTemplateEngine {
             {
                 ...templateData,
                 ...templateConfig,
-                codeExpiresIn: [
-                    t('email.chrome.codeExpiresIn', { minutes: templateConfig.expiresIn }),
-                    t('email.chrome.codeExpiresAt', {
+                codeExpiresIn: templateConfig.timeZone
+                    ? t('email.chrome.codeExpiresInWithAt', {
+                        minutes: templateConfig.expiresIn,
                         time: formatDateTimeInTimeZone(Date.now() + templateConfig.expiresIn * 60_000, templateConfig.timeZone, locale),
-                        timeZone: templateConfig.timeZone ?? DEFAULT_TIME_ZONE,
-                    }),
-                ].join(' '),
+                        timeZone: templateConfig.timeZone,
+                    })
+                    : t('email.chrome.codeExpiresIn', { minutes: templateConfig.expiresIn }),
             },
             options,
             t,

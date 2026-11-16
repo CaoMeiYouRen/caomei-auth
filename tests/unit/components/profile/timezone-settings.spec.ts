@@ -40,7 +40,8 @@ describe('components/profile/timezone-settings', () => {
 
         await select.trigger('click')
         expect(updateUser).toHaveBeenCalledWith({ timezone: expect.any(String) })
-        expect(updateUser.mock.calls[0]![0].timezone).not.toBe('__browser__')
+        const payload = (updateUser.mock.calls[0] as unknown as [{ timezone: string }])[0]
+        expect(payload.timezone).not.toBe('__browser__')
         expect(wrapper.emitted('saved')).toBeTruthy()
     })
 

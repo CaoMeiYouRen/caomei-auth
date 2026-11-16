@@ -21,14 +21,14 @@ describe('server/utils/user-timezone', () => {
 
     it('未设置或非法时区回退 UTC', async () => {
         findOne.mockResolvedValue({ id: 'u1', timezone: null })
-        await expect(getUserTimeZoneByEmail('a@example.com')).resolves.toBe('UTC')
+        await expect(getUserTimeZoneByEmail('a@example.com')).resolves.toBeNull()
 
         findOne.mockResolvedValue({ id: 'u1', timezone: 'Mars/Olympus' })
-        await expect(getUserTimeZoneByEmail('a@example.com')).resolves.toBe('UTC')
+        await expect(getUserTimeZoneByEmail('a@example.com')).resolves.toBeNull()
     })
 
     it('查询失败时回退 UTC', async () => {
         findOne.mockRejectedValue(new Error('db down'))
-        await expect(getUserTimeZoneByEmail('a@example.com')).resolves.toBe('UTC')
+        await expect(getUserTimeZoneByEmail('a@example.com')).resolves.toBeNull()
     })
 })

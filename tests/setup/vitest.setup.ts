@@ -2,7 +2,7 @@ import { afterEach, beforeAll, vi } from 'vitest'
 
 /* 单测使用内存 SQLite：避免 synchronize 改动开发库，也避免并行用例共享文件库时的重建冲突 */
 process.env.DATABASE_TYPE = process.env.DATABASE_TYPE || 'sqlite'
-process.env.DATABASE_PATH = process.env.DATABASE_PATH || ':memory:'
+process.env.DATABASE_PATH = ':memory:'
 import loggerMock, { resetLoggerMock } from '../mocks/logger'
 
 // Provide the same mock instance for every import of the logger utility.

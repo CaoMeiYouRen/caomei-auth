@@ -82,7 +82,7 @@ export const emailService = {
                     message: t('email.loginOtp.message', { appName: APP_NAME }),
                     verificationCode: otp,
                     expiresIn: expiresInMinutes,
-                    timeZone: await getUserTimeZoneByEmail(email),
+                    timeZone: (await getUserTimeZoneByEmail(email)) ?? undefined,
                     securityTip: t('email.loginOtp.securityTip'),
                 },
                 {
@@ -123,7 +123,7 @@ export const emailService = {
                     message: t('email.emailVerificationOtp.message', { appName: APP_NAME }),
                     verificationCode: otp,
                     expiresIn: expiresInMinutes,
-                    timeZone: await getUserTimeZoneByEmail(email),
+                    timeZone: (await getUserTimeZoneByEmail(email)) ?? undefined,
                     securityTip: t('email.emailVerificationOtp.securityTip'),
                 },
                 {
@@ -164,7 +164,7 @@ export const emailService = {
                     message: t('email.passwordResetOtp.message', { appName: APP_NAME }),
                     verificationCode: otp,
                     expiresIn: expiresInMinutes,
-                    timeZone: await getUserTimeZoneByEmail(email),
+                    timeZone: (await getUserTimeZoneByEmail(email)) ?? undefined,
                     securityTip: t('email.passwordResetOtp.securityTip'),
                 },
                 {
