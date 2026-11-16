@@ -360,6 +360,18 @@ CREATE INDEX IF NOT EXISTS IDX_6415e014be607f933d913962c9 ON caomei_auth_account
 
 
 -- 索引：IDX_74025fdcaa5eb6e1da65ecd0bc
+DROP INDEX IF EXISTS IDX_session_expires_at;
+
+CREATE INDEX IF NOT EXISTS IDX_session_expires_at ON caomei_auth_session (
+    expires_at
+);
+
+DROP INDEX IF EXISTS IDX_session_created_at;
+
+CREATE INDEX IF NOT EXISTS IDX_session_created_at ON caomei_auth_session (
+    created_at
+);
+
 DROP INDEX IF EXISTS IDX_74025fdcaa5eb6e1da65ecd0bc;
 
 CREATE INDEX IF NOT EXISTS IDX_74025fdcaa5eb6e1da65ecd0bc ON caomei_auth_session (

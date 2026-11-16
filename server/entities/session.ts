@@ -1,9 +1,11 @@
-import { Entity, ManyToOne } from 'typeorm'
+import { Entity, Index, ManyToOne } from 'typeorm'
 import { CustomColumn } from '../decorators/custom-column'
 import { BaseEntity } from './base-entity'
 import { User } from './user'
 
 @Entity('session')
+@Index('IDX_session_created_at', ['createdAt'])
+@Index('IDX_session_expires_at', ['expiresAt'])
 export class Session extends BaseEntity {
 
     @CustomColumn({ type: 'datetime', nullable: false })

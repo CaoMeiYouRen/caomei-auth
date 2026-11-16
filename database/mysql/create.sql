@@ -238,6 +238,8 @@ CREATE TABLE `caomei_auth_session` (
     PRIMARY KEY (`id`),
     KEY `IDX_74025fdcaa5eb6e1da65ecd0bc` (`user_id`),
     KEY `IDX_d18c48fcaf48365c685ebba665` (`token`(255)),
+    KEY `IDX_session_expires_at` (`expires_at`),
+    KEY `IDX_session_created_at` (`created_at`),
     CONSTRAINT `FK_74025fdcaa5eb6e1da65ecd0bcb` FOREIGN KEY (`user_id`) REFERENCES `caomei_auth_user` (`id`) ON DELETE CASCADE,
     CONSTRAINT `FK_e01a03fbaf990eb8d81192ca5b2` FOREIGN KEY (`impersonated_by`) REFERENCES `caomei_auth_user` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

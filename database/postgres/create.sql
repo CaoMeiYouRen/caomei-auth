@@ -313,6 +313,8 @@ CREATE TABLE public.caomei_auth_session (
 );
 CREATE INDEX "IDX_74025fdcaa5eb6e1da65ecd0bc" ON public.caomei_auth_session USING btree (user_id);
 CREATE INDEX "IDX_d18c48fcaf48365c685ebba665" ON public.caomei_auth_session USING btree (token);
+CREATE INDEX "IDX_session_expires_at" ON public.caomei_auth_session USING btree (expires_at);
+CREATE INDEX "IDX_session_created_at" ON public.caomei_auth_session USING btree (created_at);
 
 
 -- public.caomei_auth_sso_provider definition
