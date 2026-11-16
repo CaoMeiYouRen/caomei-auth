@@ -88,8 +88,9 @@ function printSection(title, items, level) {
 const SOURCE_ALLOWLIST_PATH = path.join(projectRoot, 'scripts', 'i18n', 'locale-key-source-allowlist.json')
 
 /**
- * 读取反向键校验白名单。每项必须写明 key 与 reason；格式错误直接失败，避免白名单静默失效。
- * @returns {Promise<{ keys: Set<string>, entries: { key: string, reason: string }[] }>}
+ * 解析反向键校验白名单。每项必须写明 key 与 reason；格式错误直接失败，避免白名单静默失效。
+ * @param {string} content
+ * @returns {{ keys: Set<string>, entries: { key: string, reason: string }[] }}
  */
 export function parseSourceKeyAllowlist(content) {
     const parsed = JSON.parse(content)

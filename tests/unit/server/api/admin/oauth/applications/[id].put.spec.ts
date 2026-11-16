@@ -111,7 +111,10 @@ describe('server/api/admin/oauth/applications/[id].put', () => {
 
         mockFindOne.mockResolvedValue({ id: 'app-123' })
 
-        await expect(updateHandler(event)).rejects.toMatchObject({ statusCode: 400 })
+        await expect(updateHandler(event)).rejects.toMatchObject({
+            statusCode: 400,
+            message: '输入类型不正确',
+        })
         expect(mockSave).not.toHaveBeenCalled()
     })
 
