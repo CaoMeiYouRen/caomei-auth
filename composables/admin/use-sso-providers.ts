@@ -3,6 +3,7 @@ import { useToast } from 'caomei-ui'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import type { AdminSsoProviderRow } from '@/types/admin'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 interface SsoProviderListResponse {
     success: boolean
@@ -101,8 +102,6 @@ export function useSsoProviders() {
         })
     }
 
-    const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
-
     const toggleProviderStatus = async (provider: AdminSsoProviderRow) => {
         if (!provider) {
             return
@@ -128,7 +127,7 @@ export function useSsoProviders() {
         } catch (error: unknown) {
             toast.danger({
                 title: t('admin.sso.flow.statusFailed'),
-                description: errorMessage(error, t('admin.sso.flow.networkFailed')),
+                description: getApiErrorMessage(error, t('admin.sso.flow.networkFailed')),
                 duration: 3000,
             })
         }
@@ -155,7 +154,7 @@ export function useSsoProviders() {
         } catch (error: unknown) {
             toast.danger({
                 title: t('admin.sso.flow.deleteFailed'),
-                description: errorMessage(error, t('admin.sso.flow.networkFailed')),
+                description: getApiErrorMessage(error, t('admin.sso.flow.networkFailed')),
                 duration: 5000,
             })
             return false

@@ -85,6 +85,7 @@
 - **2FA / captcha / Toast 视觉覆盖**：为 2FA 弹窗、验证码启用态、提交中 / 提交成功 Toast 补充参考态与自基线；需已启用 2FA 的测试账号与 captcha provider。阶段 3 已登记为环境限制，M6-1 收口时迁入本候选（不再保留阶段编号）。
 - **max-lines 基线清理**：消除历史遗留的 lint warning，逐步收紧 `eslint-plugin-max-lines` 基线。
     - 2026-11-11（P4-2）：`components/admin/users/user-detail-dialog.vue` 由 556 行增至 624 行，新增 1 条 `max-lines`（全仓 3 → 4 条）；详情视图与编辑表单待拆分。
+- **Admin 对话框的 better-auth 调用失败静默**：`admin/users` 的封禁 / 创建 / 会话撤销等走 `authClient`（better-auth 自带端点），4xx / 5xx 返回 `{ error }` 而不抛出，当前只在 `catch` 里提示，失败时无 Toast 且对话框不关闭。处理方向：显式校验 `response.error` 并给本地化兜底文案（better-auth 自带 message 为英文，不直接展示）。
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本条目只保留 `/api/admin/sso/providers` 系列补录（i18n 相关文档已在阶段 5 M19 同步）。
 - **迁入来源**：原 `todo.md`「低优先级 · 文档同步」与既有 backlog 质量类条目。
 

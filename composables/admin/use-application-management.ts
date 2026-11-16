@@ -4,6 +4,7 @@ import { debounce } from 'lodash-es'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import type { AdminOAuthApplicationRow, AdminOAuthClientCredentials } from '@/types/admin'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 interface ApplicationListResponse {
     success: boolean
@@ -75,8 +76,6 @@ export function useApplicationManagement() {
         refreshApplications()
     }
 
-    const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
-
     const toggleApplicationStatus = async (app: AdminOAuthApplicationRow) => {
         try {
             await $fetch(`/api/admin/oauth/applications/${app.id}`, {
@@ -96,7 +95,7 @@ export function useApplicationManagement() {
         } catch (error: unknown) {
             toast.danger({
                 title: t('admin.oauth.flow.errorTitle'),
-                description: errorMessage(error, t('admin.oauth.flow.operationFailed')),
+                description: getApiErrorMessage(error, t('admin.oauth.flow.operationFailed')),
                 duration: 3000,
             })
         }
@@ -119,7 +118,7 @@ export function useApplicationManagement() {
         } catch (error: unknown) {
             toast.danger({
                 title: t('admin.oauth.flow.deleteFailedTitle'),
-                description: errorMessage(error, t('admin.oauth.flow.deleteFailed')),
+                description: getApiErrorMessage(error, t('admin.oauth.flow.deleteFailed')),
                 duration: 3000,
             })
             return false

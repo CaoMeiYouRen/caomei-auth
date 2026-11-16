@@ -149,6 +149,7 @@ import { useSsoProviderForm } from '@/composables/admin/use-sso-provider-form'
 import OidcConfigForm from './oidc-config-form.vue'
 import SamlConfigForm from './saml-config-form.vue'
 import AttributeMappingForm from './attribute-mapping-form.vue'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 interface SsoProviderResponse {
     success: boolean
@@ -193,7 +194,6 @@ const {
 } = useSsoProviderForm()
 
 const { t } = useI18n()
-const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 // 监听 provider 变化，初始化表单
 watch(() => props.provider, async (provider) => {
@@ -215,7 +215,7 @@ watch(() => props.provider, async (provider) => {
         console.error('Failed to load provider data for editing:', error)
         toast.danger({
             title: t('admin.sso.create.loadFailedTitle'),
-            description: errorMessage(error, t('admin.sso.create.loadFailedDescription')),
+            description: getApiErrorMessage(error, t('admin.sso.create.loadFailedDescription')),
             duration: 3000,
         })
     }
@@ -272,7 +272,7 @@ async function submitProvider() {
     } catch (error: unknown) {
         toast.danger({
             title: isEditing.value ? t('admin.sso.create.updateFailedTitle') : t('admin.sso.create.createFailedTitle'),
-            description: errorMessage(error, t('admin.sso.create.failureDescription')),
+            description: getApiErrorMessage(error, t('admin.sso.create.failureDescription')),
             duration: 5000,
         })
     } finally {

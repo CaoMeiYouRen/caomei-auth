@@ -299,6 +299,7 @@ import { useUserTable } from '@/composables/admin/use-user-table'
 import { useForm } from '@/composables/core/use-form'
 import { updateUserFormSchema } from '@/utils/shared/schemas'
 import type { AdminUserProfile } from '@/types/admin'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 const props = defineProps<{
     visible: boolean
@@ -339,8 +340,6 @@ const editRole = computed({ get: () => editForm.value.role, set: (v) => setField
 const editPassword = computed({ get: () => editForm.value.password || '', set: (v) => setField('password', v) })
 
 const isCurrentUser = (userId: string) => props.currentUserId === userId
-
-const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 const onClose = (val: boolean) => {
     emit('update:visible', val)
@@ -388,7 +387,7 @@ const updateUser = async () => {
             isEditing.value = false
             emit('updated')
         } catch (error: unknown) {
-            toast.danger({ title: t('admin.users.detail.errorTitle'), description: errorMessage(error, t('admin.users.detail.updateFailed')), duration: 3000 })
+            toast.danger({ title: t('admin.users.detail.errorTitle'), description: getApiErrorMessage(error, t('admin.users.detail.updateFailed')), duration: 3000 })
         }
     })
 }
@@ -420,7 +419,7 @@ const handleSyncUserAdminRole = async () => {
         console.error('Failed to sync admin role:', error)
         toast.danger({
             title: t('admin.users.detail.syncFailedTitle'),
-            description: errorMessage(error, t('admin.users.detail.syncFailed')),
+            description: getApiErrorMessage(error, t('admin.users.detail.syncFailed')),
             duration: 3000,
         })
     } finally {
@@ -465,7 +464,7 @@ const handleSetUserAsAdmin = async () => {
         console.error('Failed to grant admin role:', error)
         toast.danger({
             title: t('admin.users.detail.makeAdminFailedTitle'),
-            description: errorMessage(error, t('admin.users.detail.makeAdminFailed')),
+            description: getApiErrorMessage(error, t('admin.users.detail.makeAdminFailed')),
             duration: 3000,
         })
     } finally {
@@ -519,7 +518,7 @@ const handleRemoveUserAdminRole = async () => {
         console.error('Failed to remove admin role:', error)
         toast.danger({
             title: t('admin.users.detail.removeFailedTitle'),
-            description: errorMessage(error, t('admin.users.detail.removeFailed')),
+            description: getApiErrorMessage(error, t('admin.users.detail.removeFailed')),
             duration: 3000,
         })
     } finally {
@@ -549,7 +548,7 @@ const handleUnbanUser = async () => {
         console.error('Failed to unban user:', error)
         toast.danger({
             title: t('admin.users.detail.unbanFailedTitle'),
-            description: errorMessage(error, t('admin.users.detail.unbanFailed')),
+            description: getApiErrorMessage(error, t('admin.users.detail.unbanFailed')),
             duration: 3000,
         })
     }

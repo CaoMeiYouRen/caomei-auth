@@ -156,6 +156,7 @@ import { useToast } from 'caomei-ui'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import { oauthApplicationFormSchema } from '@/utils/shared/schemas'
 import type { AdminOAuthApplicationRow, AdminOAuthClientCredentials } from '@/types/admin'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 const props = defineProps<{
     visible: boolean
@@ -304,8 +305,6 @@ function validateForm(): string[] {
     return errors
 }
 
-const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
-
 async function submitApplication() {
     try {
         submitting.value = true
@@ -374,7 +373,7 @@ async function submitApplication() {
     } catch (error: unknown) {
         toast.danger({
             title: isEditing.value ? t('admin.oauth.create.updateFailedTitle') : t('admin.oauth.create.createFailedTitle'),
-            description: errorMessage(error, t('admin.oauth.create.operationFailed')),
+            description: getApiErrorMessage(error, t('admin.oauth.create.operationFailed')),
             duration: 3000,
         })
     } finally {

@@ -4,6 +4,7 @@ import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import { authClient } from '@/lib/auth-client'
 import type { AdminLogSession, AdminLogStats } from '@/types/admin'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 interface LogSessionsResponse {
     success: boolean
@@ -22,8 +23,6 @@ interface LogStatsResponse {
     success: boolean
     data: AdminLogStats
 }
-
-const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
 
 export function useLogsManagement() {
     const t = useI18nText()
@@ -108,7 +107,7 @@ export function useLogsManagement() {
         } catch (error: unknown) {
             toast.danger({
                 title: t('admin.logs.flow.revokeFailed'),
-                description: errorMessage(error, t('admin.logs.flow.revokeFailedDescription')),
+                description: getApiErrorMessage(error, t('admin.logs.flow.revokeFailedDescription')),
                 duration: 3000,
             })
         } finally {
@@ -133,7 +132,7 @@ export function useLogsManagement() {
         } catch (error: unknown) {
             toast.danger({
                 title: t('admin.logs.flow.statsFailed'),
-                description: errorMessage(error, t('admin.logs.flow.statsFailedDescription')),
+                description: getApiErrorMessage(error, t('admin.logs.flow.statsFailedDescription')),
                 duration: 3000,
             })
         } finally {

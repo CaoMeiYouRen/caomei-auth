@@ -87,6 +87,7 @@ import { authClient } from '@/lib/auth-client'
 import { createUserFormSchema } from '@/utils/shared/schemas'
 import { useUserTable } from '@/composables/admin/use-user-table'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 const props = defineProps<{
     visible: boolean
@@ -130,8 +131,6 @@ watch(() => props.visible, (newValue) => {
     }
 })
 
-const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
-
 const createUser = async () => {
     errors.value = {}
 
@@ -170,7 +169,7 @@ const createUser = async () => {
         console.error('Failed to create user:', error)
         toast.danger({
             title: t('admin.users.create.failedTitle'),
-            description: errorMessage(error, t('admin.users.create.failedDescription')),
+            description: getApiErrorMessage(error, t('admin.users.create.failedDescription')),
             duration: 3000,
         })
     } finally {

@@ -70,6 +70,7 @@ import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/shared/useragent'
 import { formatDateTime } from '@/utils/shared/date'
 import type { AdminUserProfile, AdminUserSession } from '@/types/admin'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 const props = defineProps<{
     visible: boolean
@@ -107,8 +108,6 @@ const columns: DataTableColumn<AdminUserSession>[] = [
     { key: 'actions', header: t('admin.users.sessions.columns.actions'), width: '100px', align: 'right' },
 ]
 
-const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
-
 const loadUserSessions = async () => {
     if (!props.user) return
 
@@ -122,7 +121,7 @@ const loadUserSessions = async () => {
         console.error('Failed to load user sessions:', error)
         toast.danger({
             title: t('admin.users.sessions.loadFailedTitle'),
-            description: errorMessage(error, t('admin.users.sessions.loadFailed')),
+            description: getApiErrorMessage(error, t('admin.users.sessions.loadFailed')),
             duration: 3000,
         })
     } finally {
@@ -156,7 +155,7 @@ const revokeUserSession = async (sessionToken: string) => {
         console.error('Failed to revoke session:', error)
         toast.danger({
             title: t('admin.users.sessions.revokeFailedTitle'),
-            description: errorMessage(error, t('admin.users.sessions.revokeFailed')),
+            description: getApiErrorMessage(error, t('admin.users.sessions.revokeFailed')),
             duration: 3000,
         })
     } finally {
@@ -196,7 +195,7 @@ const revokeAllUserSessions = async () => {
         console.error('Failed to revoke all sessions:', error)
         toast.danger({
             title: t('admin.users.sessions.revokeAllFailedTitle'),
-            description: errorMessage(error, t('admin.users.sessions.revokeAllFailed')),
+            description: getApiErrorMessage(error, t('admin.users.sessions.revokeAllFailed')),
             duration: 3000,
         })
     } finally {

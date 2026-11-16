@@ -8,8 +8,7 @@ import { validateEmail } from '@/utils/shared/validate'
 import { syncAdminRole } from '@/utils/web/admin-role-client'
 import type { AdminUserProfile, AdminUserRow } from '@/types/admin'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
-
-const errorMessage = (error: unknown, fallback: string) => (error instanceof Error && error.message ? error.message : fallback)
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 export function useUserManagement() {
     const toast = useToast()
@@ -156,7 +155,7 @@ export function useUserManagement() {
             console.error('Failed to unban user:', error)
             toast.danger({
                 title: t('admin.users.flow.unbanFailedTitle'),
-                description: errorMessage(error, t('admin.users.flow.unbanFailed')),
+                description: getApiErrorMessage(error, t('admin.users.flow.unbanFailed')),
                 duration: 3000,
             })
         }
@@ -199,7 +198,7 @@ export function useUserManagement() {
             console.error('Failed to delete user:', error)
             toast.danger({
                 title: t('admin.users.flow.deleteFailedTitle'),
-                description: errorMessage(error, t('admin.users.flow.deleteFailed')),
+                description: getApiErrorMessage(error, t('admin.users.flow.deleteFailed')),
                 duration: 3000,
             })
         }
@@ -230,7 +229,7 @@ export function useUserManagement() {
             console.error('Failed to sync admin role:', error)
             toast.danger({
                 title: t('admin.users.flow.syncFailedTitle'),
-                description: errorMessage(error, t('admin.users.flow.syncFailed')),
+                description: getApiErrorMessage(error, t('admin.users.flow.syncFailed')),
                 duration: 3000,
             })
         } finally {
@@ -273,7 +272,7 @@ export function useUserManagement() {
             console.error('Failed to ban selected users:', error)
             toast.danger({
                 title: t('admin.users.flow.batchBanFailedTitle'),
-                description: errorMessage(error, t('admin.users.flow.batchBanFailed')),
+                description: getApiErrorMessage(error, t('admin.users.flow.batchBanFailed')),
                 duration: 3000,
             })
         }
@@ -312,7 +311,7 @@ export function useUserManagement() {
             console.error('Failed to unban selected users:', error)
             toast.danger({
                 title: t('admin.users.flow.batchUnbanFailedTitle'),
-                description: errorMessage(error, t('admin.users.flow.batchUnbanFailed')),
+                description: getApiErrorMessage(error, t('admin.users.flow.batchUnbanFailed')),
                 duration: 3000,
             })
         }
@@ -351,7 +350,7 @@ export function useUserManagement() {
             console.error('Failed to delete selected users:', error)
             toast.danger({
                 title: t('admin.users.flow.batchDeleteFailedTitle'),
-                description: errorMessage(error, t('admin.users.flow.batchDeleteFailed')),
+                description: getApiErrorMessage(error, t('admin.users.flow.batchDeleteFailed')),
                 duration: 3000,
             })
         }
