@@ -14,7 +14,7 @@
     "i18n:audit:hardcoded:update": "node scripts/i18n/audit-hardcoded-text.mjs --update",
     "i18n:check-sync": "node scripts/i18n/check-locale-parity.mjs",
     "i18n:check-fallback": "node scripts/i18n/check-locale-fallback.mjs",
-    "i18n:check": "pnpm i18n:audit:missing && pnpm i18n:check-sync && pnpm i18n:check-fallback && pnpm i18n:audit:hardcoded && pnpm lint:i18n && pnpm test:i18n",
+    "i18n:check": "pnpm i18n:audit:missing && pnpm i18n:check-sync && pnpm i18n:check-fallback && pnpm i18n:audit:source && pnpm i18n:audit:hardcoded && pnpm lint:i18n && pnpm test:i18n",
     "i18n:verify": "pnpm lint:i18n && pnpm test:i18n",
     "security:alerts": "node scripts/security/check-alerts.mjs",
     "setup:ai": "node scripts/setup-ai.mjs",
@@ -50,7 +50,8 @@
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview",
     "typecheck": "nuxt typecheck",
-    "lint:md:check": "lint-md *.md docs/*.md docs/*/*.md docs/*/*/*.md .github/*.md .github/*/*.md .github/*/*/*.md .github/*/*/*/*.md"
+    "lint:md:check": "lint-md *.md docs/*.md docs/*/*.md docs/*/*/*.md .github/*.md .github/*/*.md .github/*/*/*.md .github/*/*/*/*.md",
+    "i18n:audit:source": "node scripts/i18n/audit-locale-keys.mjs --only=source --fail-on-unknown-source"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1166.0",

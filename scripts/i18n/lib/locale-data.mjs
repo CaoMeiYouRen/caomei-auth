@@ -124,6 +124,88 @@ export function hasKeyReference(haystack, key) {
     return pattern.test(haystack)
 }
 
+/**
+ * 抽取源码中 `t('...')` / `$t('...')` / `te('...')` 的字面量键。
+ * 排除 `format(` / `set(` 等以 t 结尾的普通函数名；模板字符串与拼接表达式视为动态键，不在此列出。
+ * @param {string} text
+ * @returns {string[]}
+ */
+export function extractKeyLiterals(text) {
+    const keys = new Set()
+    const patterns = [
+        // t('a.b') / $t('a.b') / te('a.b') / $te('a.b')：要求引号后紧跟逗号或右括号，排除拼接表达式
+        /(?<![\w$])(?:\$te|\$t|te|t)\(\s*(['"])((?:\\[\s\S]|(?!\1)[^\\\n])*)\1\s*[,)]/gu,
+        // t(`a.b`)：无插值的模板字符串
+        /(?<![\w$])(?:\$te|\$t|te|t)\(\s*`([^`$]*)`\s*[,)]/gu,
+        // <i18n-t keypath="a.b">
+        /\bkeypath\s*=\s*(['"])([^'"]+)\1/gu,
+    ]
+    for (const pattern of patterns) {
+        let match
+        while ((match = pattern.exec(text)) !== null) {
+            const key = match[2] ?? match[1]
+            if (!/^[A-Za-z][\w-]*(?:\.[\w-]+)+$/u.test(key)) {
+                continue
+            }
+            keys.add(key)
+        }
+    }
+    // usePageMeta('title.key', 'subtitle.key')：逐个提取参数中的字符串字面量
+    const pageMetaPattern = /\busePageMeta\(([^)]*)\)/gu
+    let metaMatch
+    while ((metaMatch = pageMetaPattern.exec(text)) !== null) {
+        const literalPattern = /(['"])([^'"]+)\1/gu
+        let literalMatch
+        while ((literalMatch = literalPattern.exec(metaMatch[1])) !== null) {
+            const key = literalMatch[2]
+            if (/^[A-Za-z][\w-]*(?:\.[\w-]+)+$/u.test(key)) {
+                keys.add(key)
+            }
+        }
+    }
+    return [...keys].sort()
+}
+
+/**
+ * 找出源码引用了但默认语言包不存在的键（反向校验）。
+ * @param {Iterable<string>} sourceKeys
+ * @param {Set<string> | Map<string, unknown>} knownKeys
+ * @param {Iterable<string>} [allowedKeys]
+ * @returns {string[]}
+ */
+export function findUnknownSourceKeys(sourceKeys, knownKeys, allowedKeys = []) {
+    const allowed = allowedKeys instanceof Set ? allowedKeys : new Set(allowedKeys)
+    return [...sourceKeys]
+        .filter((key) => !knownKeys.has(key) && !allowed.has(key))
+        .sort()
+}
+
+/**
+ * 汇总源码中引用的字面量键及其来源文件。
+ * @returns {Promise<Map<string, string[]>>}
+ */
+export async function collectSourceKeyLiterals() {
+    const files = []
+    for (const root of SOURCE_ROOTS) {
+        await collectTextFiles(path.join(projectRoot, root), files)
+    }
+
+    const result = new Map()
+    for (const file of files) {
+        const text = await readFile(file, 'utf8')
+        for (const key of extractKeyLiterals(text)) {
+            const relative = path.relative(projectRoot, file)
+            const owners = result.get(key)
+            if (owners) {
+                owners.push(relative)
+            } else {
+                result.set(key, [relative])
+            }
+        }
+    }
+    return result
+}
+
 export function formatList(items, limit = 50) {
     if (items.length <= limit) {
         return items.map((item) => `  - ${item}`).join('\n')
