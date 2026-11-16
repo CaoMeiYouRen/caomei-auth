@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'caomei-ui'
-import { formatDateTime } from '@/utils/shared/date'
+import { useLocaleDate } from '@/composables/use-locale-date'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 /** scope → 简要文案键（字面量集中，便于 i18n 审计扫到完整键名）。 */
@@ -42,6 +42,7 @@ interface AuthorizedApp {
 export async function useOAuthClients() {
     const toast = useToast()
     const t = useI18nText()
+    const { formatDateTimeShort: formatDateTime } = useLocaleDate()
 
     const showRevokeDialog = ref(false)
     const selectedApp = ref<AuthorizedApp>()

@@ -25,6 +25,7 @@ CREATE TABLE `caomei_auth_user` (
     `ban_reason` TEXT NULL,
     `ban_expires` INT NULL,
     `locale` VARCHAR(16) NULL,
+    `timezone` VARCHAR(64) NULL,
     `two_factor_enabled` BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
     UNIQUE KEY `IDX_eaed40cc28f3c6cdcfdfbfea9c` (`email`),

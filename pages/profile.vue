@@ -23,6 +23,8 @@
                             @open-set-username-dialog="showSetUsernameDialog = true"
                         />
 
+                        <TimezoneSettings :timezone="userTimezone" />
+
                         <UserContactInfo
                             v-model:user="user"
                             :privacy-mode="privacyMode"
@@ -79,6 +81,7 @@ import ProfileHeader from '@/components/profile/profile-header.vue'
 import UserAvatar from '@/components/profile/user-avatar.vue'
 import UserBasicInfo from '@/components/profile/user-basic-info.vue'
 import UserContactInfo from '@/components/profile/user-contact-info.vue'
+import TimezoneSettings from '@/components/profile/timezone-settings.vue'
 import SocialAccounts from '@/components/profile/social-accounts.vue'
 import ProfileFooterActions from '@/components/profile/profile-footer-actions.vue'
 import EditEmailDialog from '@/components/profile/dialogs/edit-email-dialog.vue'
@@ -109,6 +112,8 @@ const {
     goSecurity,
     handleLogout,
 } = await useProfileFlow()
+
+const userTimezone = computed(() => user.value.timezone || null)
 </script>
 
 <style scoped lang="scss">

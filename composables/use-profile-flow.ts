@@ -30,6 +30,7 @@ export async function useProfileFlow() {
         emailVerified: false,
         phone: '',
         phoneVerified: false,
+        timezone: '',
     })
 
     const saving = ref(false)
@@ -60,7 +61,7 @@ export async function useProfileFlow() {
     }))
 
     watch(
-        () => session.value?.session,
+        () => session.value?.user,
         async () => {
             const newUser = session.value?.user
             if (newUser) {
@@ -73,6 +74,7 @@ export async function useProfileFlow() {
                     emailVerified: newUser.emailVerified || false,
                     phone: newUser.phoneNumber || '',
                     phoneVerified: newUser.phoneNumberVerified || false,
+                    timezone: (newUser as { timezone?: string | null }).timezone ?? '',
                 })
 
                 clarity.identify(newUser.id, undefined, '/profile', newUser.name)

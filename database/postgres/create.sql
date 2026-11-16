@@ -43,6 +43,7 @@ CREATE TABLE public.caomei_auth_user (
 	ban_reason text NULL,
 	ban_expires int4 NULL,
 	locale varchar(16) NULL,
+	timezone varchar(64) NULL,
 	two_factor_enabled bool DEFAULT false NOT NULL,
 	CONSTRAINT "PK_8e449c5c3ca6bfe96e55e1891d0" PRIMARY KEY (id)
 );

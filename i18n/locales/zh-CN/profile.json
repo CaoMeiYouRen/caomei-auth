@@ -114,6 +114,17 @@
             "failed": "设置用户名失败",
             "failedUnknown": "设置用户名时发生未知错误"
         },
+        "timezone": {
+            "title": "时区设置",
+            "followBrowser": "跟随浏览器时区",
+            "description": "用于按你的时区显示页面时间；未设置时使用浏览器时区。",
+            "label": "时区",
+            "placeholder": "选择时区",
+            "savedTitle": "已更新",
+            "saved": "时区偏好已保存",
+            "failedTitle": "更新失败",
+            "failed": "时区更新失败，请稍后重试"
+        },
         "flow": {
             "accountsLoadFailedTitle": "获取第三方账号失败",
             "accountsLoadFailed": "获取第三方账号信息失败",

@@ -5,6 +5,7 @@ import { authClient } from '@/lib/auth-client'
 import { generateQRCode } from '@/utils/shared/qrcode'
 import { getBrowser, getOs } from '@/utils/shared/useragent'
 import { formatDateLocale } from '@/utils/shared/date'
+import { useUserTimezone } from '@/composables/use-user-timezone'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
 
 /** 当前 UI 语言（响应式，`Composer.locale` 本身即 ref）；脱离 Nuxt 上下文时回退 zh-CN。 */
@@ -52,12 +53,13 @@ export function useSecuritySettings() {
     const showRevokeAllSessionsConfirm = ref(false)
 
     // --- Computed ---
-    // 日期按当前语言格式化（zh-CN / en-US 的日期与时间顺序不同）
+    const { timeZone } = useUserTimezone()
+    // 日期按当前语言与时区格式化（zh-CN / en-US 的日期与时间顺序不同）
     const sessionList = computed(() => sessions.value.map((s) => ({
         ...s,
-        createdAt: formatDateLocale(s.createdAt, locale.value || 'zh-CN'),
-        updatedAt: formatDateLocale(s.updatedAt, locale.value || 'zh-CN'),
-        expiresAt: formatDateLocale(s.expiresAt, locale.value || 'zh-CN'),
+        createdAt: formatDateLocale(s.createdAt, locale.value || 'zh-CN', timeZone.value),
+        updatedAt: formatDateLocale(s.updatedAt, locale.value || 'zh-CN', timeZone.value),
+        expiresAt: formatDateLocale(s.expiresAt, locale.value || 'zh-CN', timeZone.value),
         browser: getBrowser(s.userAgent || ''),
         os: getOs(s.userAgent || ''),
     })))

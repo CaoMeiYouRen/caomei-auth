@@ -60,7 +60,7 @@
 | M7 | `auth.quick` 命名空间收敛 | A | 合并 `auth.quick.*`（23）与 `auth.quickLogin.*`（7）为单一页面命名空间；同步 `pages/quick-login.vue`、`use-quick-login-flow.ts` 与测试 | 两套命名空间归一；`i18n:check` / 未用键审计通过；快速登录页与 flow 双语正常；视觉无未归因变化 | 无 |
 | M8 | Admin 用户对话框定向单测 | A | `tests/unit/components/admin/users/**`：封禁时长 `0 → 永久`、详情动作可见性（自操作保护）、会话撤销调用 | 3 类用例通过；对应组件行覆盖率不低于当前；无新增 `any` | 无 |
 | M9 | A 批收口检查点 | A | A 批门禁复核、文档同步、批次记录 | A 批 8 条全绿（`lint` / `typecheck` / `test` / `i18n:check` / `build`）；文档口径一致；无未登记遗留 | M1–M8 |
-| M10 | 时区偏好与前端展示 | B | `User.timezone`（nullable）+ 个人中心时区选择 + `useUserTimezone()`；日期展示按用户时区与 locale | 设置后页面时间按所选时区显示；未设置回退浏览器时区；三方言 `create.sql` 更新并各实跑一次（记录入 `artifacts/`）；部署文档补 `ALTER TABLE`；`/profile` 时区选择在 zh / en × light / dark 四张定向视觉截图 | M6 |
+| M10 | 时区偏好与前端展示 | B | `User.timezone`（nullable）+ 个人中心时区选择 + `useUserTimezone()`；日期展示按用户时区与 locale | 设置后页面时间按所选时区显示；未设置回退浏览器时区；三方言 `create.sql` 更新，SQLite 实跑、MySQL / PostgreSQL 脚本语法核对（本地无实例）；部署文档补 `ALTER TABLE`；`/profile` 时区选择在 zh / en × light / dark 四张定向视觉截图 | M6 |
 | M11 | 服务端与邮件时区 | B | 审计日志、会话时间、邮件时间的服务端格式化入口统一；请求上下文时区来源 | 服务端与邮件时间与用户时区一致；非法时区回退默认；测试覆盖 UTC / Asia/Shanghai / America/New_York | M10 |
 | M12 | 注册控制规则与注册入口 | B | 邮箱域名黑白名单 + 手机号国家 / 地区黑名单（配置模型 + Zod）；注册、邀请、第三方首次绑定统一校验；本地化错误码 | 名单命中被拒且提示本地化；未命中放行；既有用户登录不受影响；各入口单测 | 无 |
 | M13 | 注册控制管理端配置与审计 | B | Admin 配置页（或设置区）+ 读写 API + 变更审计记录（操作者 / 时间 / 变更内容）；权限校验 | 管理员可增删改名单；非管理员 403；变更写入审计日志；双语与表单校验通过 | M12 |
@@ -136,3 +136,9 @@
 
 - 每批收口时同步 `todo.md`、`roadmap.md`、`backlog.md`（上收条目移出候选）、`.session/` 与 [治理索引](./index.md)。
 - M18 产出阶段 6 收口记录，并按 [规划规范](../../standards/planning.md) §5 归档到 [已完成工作归档](../../archive/completed-work.md)。
+
+## 9. 偏差登记
+
+| 条目 | 登记 | 实际 | 原因 |
+| :--- | :--- | :--- | :--- |
+| M10 三方言实跑 | `create.sql` 各实跑一次 | SQLite 内存实跑；MySQL / PostgreSQL 仅脚本语法核对 | 本地与 CI 无 MySQL / PostgreSQL 实例，避免引入临时容器依赖；部署前由数据库文档的 ALTER 语句兜底 |

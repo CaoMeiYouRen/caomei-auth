@@ -18,6 +18,14 @@ describe('useLocaleDate', () => {
         expect(formatDateTimeFull(date)).toContain('12:15:30')
     })
 
+    it('按指定时区输出', () => {
+        const { formatDateTimeShort } = useLocaleDate(ref('en-US'), ref('America/New_York'))
+        const date = new Date('2026-06-15T16:15:00Z')
+
+        /* UTC 16:15 → 纽约 12:15 */
+        expect(formatDateTimeShort(date)).toMatch(/12:15/u)
+    })
+
     it('空值返回占位符', () => {
         const { formatDateTimeFull, formatDateTimeShort } = useLocaleDate(ref('zh-CN'))
 

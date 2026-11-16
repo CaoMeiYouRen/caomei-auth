@@ -36,11 +36,11 @@ export function formatDate(date: string | number | Date | null | undefined): str
  * @param locale 本地化设置，默认为 'zh-CN'
  * @returns 格式化后的日期时间字符串
  */
-export function formatDateLocale(date: string | number | Date | null | undefined, locale: string = 'zh-CN'): string {
+export function formatDateLocale(date: string | number | Date | null | undefined, locale: string = 'zh-CN', timeZone?: string): string {
     if (!date) {
         return '-'
     }
-    return new Date(date).toLocaleString(locale)
+    return new Date(date).toLocaleString(locale, timeZone ? { timeZone } : undefined)
 }
 
 /**
@@ -48,11 +48,11 @@ export function formatDateLocale(date: string | number | Date | null | undefined
  *
  * 表格列宽有限，`toLocaleString` 默认会带秒且不补零，容易撑破 160px 列。
  */
-export function formatDateTimeLocale(date: string | number | Date | null | undefined, locale: string = 'zh-CN'): string {
+export function formatDateTimeLocale(date: string | number | Date | null | undefined, locale: string = 'zh-CN', timeZone?: string): string {
     if (!date) {
         return '-'
     }
-    return new Date(date).toLocaleString(locale, { dateStyle: 'short', timeStyle: 'short' })
+    return new Date(date).toLocaleString(locale, timeZone ? { dateStyle: 'short', timeStyle: 'short', timeZone } : { dateStyle: 'short', timeStyle: 'short' })
 }
 
 /**

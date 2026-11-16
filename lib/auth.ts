@@ -68,6 +68,7 @@ import { generateRandomString } from '@/utils/shared/random'
 import { getTempEmail, getTempName } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email/service'
 import { getUserLocale } from '@/server/utils/locale'
+import { isValidTimeZone } from '@/utils/shared/timezone'
 import { getCaptchaConfig } from '@/server/utils/captcha-config'
 import { isCaptchaEnabled } from '@/utils/web/captcha'
 import { AUTH_DISABLED_PATHS } from '@/utils/shared/auth-disabled-paths'
@@ -149,6 +150,16 @@ export const auth = betterAuth({
                 /* 只接受 Registry 内的语言码，避免任意字符串写入库 */
                 validator: {
                     input: z.enum(['zh-CN', 'en-US']),
+                },
+            },
+            /* 用户时区偏好：IANA 名称或空串（跟随浏览器），仅用于展示时间，不参与鉴权 */
+            timezone: {
+                type: 'string',
+                required: false,
+                defaultValue: null,
+                input: true,
+                validator: {
+                    input: z.string().max(64).refine((value) => value === '' || isValidTimeZone(value), 'invalid time zone'),
                 },
             },
         },

@@ -530,3 +530,22 @@ ALTER TABLE caomei_auth_user ADD COLUMN locale VARCHAR(16);
 -   [MySQL 官方文档](https://dev.mysql.com/doc/)
 -   [SQLite 官方文档](https://www.sqlite.org/docs.html)
 -   [TypeORM 文档](https://typeorm.io/)
+
+### 用户时区偏好列 `user.timezone`（2026-11-16）
+
+阶段 6 新增 `timezone VARCHAR(64) NULL`（IANA 名称，如 `Asia/Shanghai`；默认 `NULL` 表示跟随浏览器时区）。开发 / 测试环境的 `synchronize` 会自动加列；生产环境 `synchronize: false`，升级前需手工执行：
+
+```sql
+-- PostgreSQL
+ALTER TABLE caomei_auth_user ADD COLUMN IF NOT EXISTS timezone varchar(64) NULL;
+```
+
+```sql
+-- MySQL
+ALTER TABLE caomei_auth_user ADD COLUMN timezone VARCHAR(64) NULL;
+```
+
+```sql
+-- SQLite
+ALTER TABLE caomei_auth_user ADD COLUMN timezone VARCHAR(64);
+```

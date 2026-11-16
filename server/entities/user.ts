@@ -93,6 +93,12 @@ export class User extends BaseEntity {
     locale: string | null
 
     /**
+     * 用户时区偏好（IANA 名称，如 Asia/Shanghai），null 表示未设置
+     */
+    @CustomColumn({ type: 'varchar', length: 64, nullable: true })
+    timezone: string | null
+
+    /**
      * 是否启用两因素认证
      */
     @CustomColumn({ type: 'boolean', default: false })

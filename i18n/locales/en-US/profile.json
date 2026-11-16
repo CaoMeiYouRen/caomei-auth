@@ -114,6 +114,17 @@
             "failed": "Failed to set username",
             "failedUnknown": "Unknown error while setting the username"
         },
+        "timezone": {
+            "title": "Time zone",
+            "followBrowser": "Follow browser time zone",
+            "description": "Used to display page times in your zone. Browser time zone is used when unset.",
+            "label": "Time zone",
+            "placeholder": "Select a time zone",
+            "savedTitle": "Updated",
+            "saved": "Time zone preference saved",
+            "failedTitle": "Update failed",
+            "failed": "Could not update time zone. Please try again."
+        },
         "flow": {
             "accountsLoadFailedTitle": "Failed to load linked accounts",
             "accountsLoadFailed": "Failed to load linked account information",

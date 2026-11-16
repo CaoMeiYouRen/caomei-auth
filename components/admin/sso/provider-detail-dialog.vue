@@ -106,11 +106,11 @@
                 <div class="provider-detail__grid">
                     <div class="provider-detail__item">
                         <span class="provider-detail__label">{{ t('admin.sso.detail.createdAt') }}</span>
-                        <span>{{ formatDateLocale(provider.createdAt, locale) }}</span>
+                        <span>{{ formatDateLocale(provider.createdAt, locale, timeZone) }}</span>
                     </div>
                     <div class="provider-detail__item">
                         <span class="provider-detail__label">{{ t('admin.sso.detail.updatedAt') }}</span>
-                        <span>{{ formatDateLocale(provider.updatedAt, locale) }}</span>
+                        <span>{{ formatDateLocale(provider.updatedAt, locale, timeZone) }}</span>
                     </div>
                 </div>
             </section>
@@ -122,6 +122,7 @@
 import { computed } from 'vue'
 import { useToast } from 'caomei-ui'
 import { formatDateLocale } from '@/utils/shared/date'
+import { useUserTimezone } from '@/composables/use-user-timezone'
 import type { AdminSsoProviderDetail } from '@/types/admin'
 
 const props = defineProps<{
@@ -139,6 +140,7 @@ const visible = computed({
 })
 
 const { t, locale } = useI18n()
+const { timeZone } = useUserTimezone()
 const toast = useToast()
 const config = useRuntimeConfig().public
 
