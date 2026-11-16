@@ -125,3 +125,17 @@ describe('utils/shared/api-schemas', () => {
         })
     })
 })
+
+describe('registrationRule schemas', () => {
+    it('更新 schema 不为缺省字段注入默认值', async () => {
+        const { registrationRuleUpdateSchema } = await import('@/utils/shared/api-schemas')
+        expect(registrationRuleUpdateSchema.parse({ note: 'x' })).toEqual({ note: 'x' })
+        expect(registrationRuleUpdateSchema.safeParse({}).success).toBe(false)
+    })
+
+    it('拒绝非法类型与超长值', async () => {
+        const { registrationRuleSchema } = await import('@/utils/shared/api-schemas')
+        expect(registrationRuleSchema.safeParse({ type: 'ip', mode: 'deny', value: 'x' }).success).toBe(false)
+        expect(registrationRuleSchema.safeParse({ type: 'email-domain', mode: 'deny', value: 'x'.repeat(129) }).success).toBe(false)
+    })
+})

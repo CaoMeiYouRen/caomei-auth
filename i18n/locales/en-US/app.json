@@ -47,6 +47,7 @@
                 "users": "Users",
                 "applications": "Applications",
                 "sso": "SSO",
+                "registration": "Registration",
                 "logs": "Login stats",
                 "quickAccess": "Quick access",
                 "profile": "Profile",

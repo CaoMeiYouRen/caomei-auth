@@ -53,6 +53,9 @@ function isDangerousAdminOperation(url: string, method: string): boolean {
         // 以下使用 PUT/DELETE 的接口
         // '/api/admin/oauth/applications/[id]' 会在下面的方法检查中处理
 
+        // 注册控制 - 写操作
+        '/api/admin/registration/rules', // POST
+
         // SSO提供商管理 - 写操作
         '/api/admin/sso/providers', // POST
         // 以下使用 PUT/DELETE 的接口

@@ -673,3 +673,37 @@ curl -X POST https://auth.example.com/api/admin/oauth/applications \
 ```
 
 通过这些管理员 API，您可以完全控制草梅 Auth 系统的用户、应用和设置。如需更多帮助，请查看 [最佳实践](./best-practices.md) 或 [故障排除指南](./troubleshooting.md)。
+
+## 注册控制
+
+控制邮箱域名与手机号国家码的注册准入（阶段 6 M12/M13）。白名单非空时仅放行列内，黑名单命中即拒绝；规则变更 30 秒内生效。
+
+### GET /api/admin/registration/rules
+
+列出全部规则（按类型 / 模式 / 值排序）。
+
+### POST /api/admin/registration/rules
+
+新增规则。请求体：
+
+```json
+{
+    "type": "email-domain",
+    "mode": "deny",
+    "value": "example.com",
+    "enabled": true,
+    "note": "内部域名禁止注册"
+}
+```
+
+-   `type`：`email-domain`（域名，前导点表示后缀匹配，如 `.edu.cn`）或 `phone-country`（E.164 国家码前缀，如 `+86`）
+-   `mode`：`allow` / `deny`
+-   重复的 `type + mode + value` 返回 409。
+
+### PUT /api/admin/registration/rules/:id
+
+更新 `type` / `mode` / `value` / `enabled` / `note` 的任意子集。
+
+### DELETE /api/admin/registration/rules/:id
+
+删除规则。

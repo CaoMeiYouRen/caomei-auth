@@ -89,6 +89,7 @@ describe('i18n/config/locale-modules', () => {
             ['/en-US/admin/oauth/applications', ['admin', 'admin-oauth']],
             ['/admin/sso/providers', ['admin', 'admin-sso']],
             ['/admin/logs', ['admin', 'admin-logs']],
+            ['/admin/registration', ['admin']],
         ]
 
         for (const [routePath, modules] of cases) {
@@ -134,6 +135,7 @@ const PAGE_MODULE_EXPECTATIONS: Record<string, string[]> = {
     '/admin/oauth/applications': ['admin', 'admin-oauth'],
     '/admin/sso/providers': ['admin', 'admin-sso'],
     '/admin/logs': ['admin', 'admin-logs'],
+    '/admin/registration': ['admin'],
 }
 
 function listPageRoutes(dir = path.resolve(process.cwd(), 'pages')): string[] {

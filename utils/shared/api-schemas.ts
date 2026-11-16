@@ -85,6 +85,31 @@ export const logStatsQuerySchema = z.object({
 })
 
 /**
+ * Registration rule schema（阶段 6 M13）
+ */
+export const registrationRuleTypeSchema = z.enum(['email-domain', 'phone-country'])
+export const registrationRuleModeSchema = z.enum(['allow', 'deny'])
+
+export const registrationRuleSchema = z.object({
+    type: registrationRuleTypeSchema,
+    mode: registrationRuleModeSchema,
+    value: z.string().trim().min(1).max(128),
+    enabled: z.boolean().optional().default(true),
+    note: z.string().trim().max(255).nullable().optional(),
+})
+
+export const registrationRuleUpdateSchema = z.object({
+    type: registrationRuleTypeSchema.optional(),
+    mode: registrationRuleModeSchema.optional(),
+    value: z.string().trim().min(1).max(128).optional(),
+    enabled: z.boolean().optional(),
+    note: z.string().trim().max(255).nullable().optional(),
+}).refine(
+    (value) => Object.keys(value).length > 0,
+    { message: 'validation.invalid' },
+)
+
+/**
  * Social providers query schema
  */
 export const socialProvidersQuerySchema = z.object({
@@ -103,4 +128,6 @@ export type PaginationQuery = z.infer<typeof paginationQuerySchema>
 export type SSOProvidersQuery = z.infer<typeof ssoProvidersQuerySchema>
 export type SessionLogsQuery = z.infer<typeof sessionLogsQuerySchema>
 export type LogStatsQuery = z.infer<typeof logStatsQuerySchema>
+export type RegistrationRuleInput = z.infer<typeof registrationRuleSchema>
+export type RegistrationRuleUpdate = z.infer<typeof registrationRuleUpdateSchema>
 export type SocialProvidersQuery = z.infer<typeof socialProvidersQuerySchema>

@@ -1,1 +1,32 @@
-{}
+{
+    "admin": {
+        "registration": {
+            "title": "Registration control",
+            "subtitle": "Configure email domain and phone country allow/deny lists",
+            "type": "Rule type",
+            "mode": "Rule mode",
+            "value": "Match value",
+            "note": "Note",
+            "enabled": "Enabled",
+            "actions": "Actions",
+            "typeOptions": {
+                "email": "Email domain",
+                "phone": "Phone country code"
+            },
+            "modeOptions": {
+                "allow": "Allow list",
+                "deny": "Deny list"
+            },
+            "valuePlaceholder": "example.com or .edu.cn / +86",
+            "notePlaceholder": "Optional",
+            "add": "Add rule",
+            "delete": "Delete",
+            "empty": "No rules yet",
+            "hint": "When the allow list is not empty only matching values pass; deny matches are always rejected. Changes apply within 30 seconds.",
+            "saved": "Rule saved",
+            "deleted": "Rule deleted",
+            "failed": "Operation failed",
+            "refresh": "Refresh"
+        }
+    }
+}

@@ -1,1 +1,32 @@
-{}
+{
+    "admin": {
+        "registration": {
+            "title": "注册控制",
+            "subtitle": "配置邮箱域名与手机号国家码黑白名单",
+            "type": "规则类型",
+            "mode": "规则模式",
+            "value": "匹配值",
+            "note": "备注",
+            "enabled": "启用",
+            "actions": "操作",
+            "typeOptions": {
+                "email": "邮箱域名",
+                "phone": "手机号国家码"
+            },
+            "modeOptions": {
+                "allow": "白名单",
+                "deny": "黑名单"
+            },
+            "valuePlaceholder": "example.com 或 .edu.cn / +86",
+            "notePlaceholder": "可选",
+            "add": "新增规则",
+            "delete": "删除",
+            "empty": "暂无规则",
+            "hint": "白名单非空时仅放行列内；黑名单命中即拒绝。修改后 30 秒内生效。",
+            "saved": "规则已保存",
+            "deleted": "规则已删除",
+            "failed": "操作失败",
+            "refresh": "刷新"
+        }
+    }
+}

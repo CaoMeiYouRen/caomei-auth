@@ -68,6 +68,16 @@
                             <span v-show="!isCollapsed">{{ t('app.admin.nav.sso') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
+                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.registration') : ''">
+                        <NuxtLink
+                            to="/admin/registration"
+                            class="nav-item"
+                            active-class="active"
+                        >
+                            <i class="mdi mdi-shield-lock" />
+                            <span v-show="!isCollapsed">{{ t('app.admin.nav.registration') }}</span>
+                        </NuxtLink>
+                    </BaseTooltip>
                     <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.logs') : ''">
                         <NuxtLink
                             to="/admin/logs"
