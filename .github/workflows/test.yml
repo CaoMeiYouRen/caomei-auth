@@ -25,6 +25,7 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run lint:css
       - run: pnpm run ai:check
+      - run: pnpm run lint:md:check
       - run: pnpm run migration:check-imports
       - run: pnpm run i18n:check
       - run: pnpm run typecheck

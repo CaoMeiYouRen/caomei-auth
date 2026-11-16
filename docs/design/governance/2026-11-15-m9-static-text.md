@@ -27,7 +27,7 @@
 - **内嵌链接句**：隐私政策的 5 处链接句与开源协议句统一改 `<i18n-t>` + 命名插槽（`#sentry` / `#clarity` / `#baidu` / `#google` / `#email` / `#license`），避免英文缺空格；条款里 `<strong>标签：</strong>正文` 拆成 label / text 两键，冒号由 `static.colon`（zh「：」/ en「: 」）统一输出；`rights.*Label` 因原样式把冒号包在 `<strong>` 内，保留冒号并单独渲染，其余 label 一律不带冒号。
 - **第三方登录链接**：链接 URL 留在页面常量里，文案键以字面量放进 `thirdPartyPlatforms`，既避免动态拼接逃过审计，也让 11 个平台名各自可翻译。
 - 反馈按钮 / GitHub 角标的 props 默认值改为 `undefined` + `computed` 回退到 `t()`，保留调用方可覆盖的行为。
-- Demo 横幅的「Demo账号密码详见 + 文档链接」改 `<i18n-t keypath="demo.docHint">` + `#link` 插槽。
+- Demo 横幅的「Demo 账号密码详见 + 文档链接」改 `<i18n-t keypath="demo.docHint">` + `#link` 插槽。
 - 页脚标语沿用 M2 已有的 `footer.tagline`，值统一为 `统一登录平台 · 安全、便捷、可扩展`（`|` 会被 vue-i18n 当作复数分隔符，导致只渲染前半句；`test:i18n` 已守住该约束）。
 
 ## 3. 验证
@@ -38,8 +38,8 @@
 | `pnpm test` | **998 passed / 131 files**（新增 `app-footer` 的 `useI18n` 替身、`demo-mode-banner` 3 例；`locale-modules` 断言 18 模块与 static 路由） |
 | `pnpm typecheck` / `pnpm lint` | 通过 / 0 error（25 条既有 warning） |
 | `pnpm build` / 预算 | 通过；入口 CSS 415,165 B（累计 +3.86%，本轮无变化）、入口 JS 388,584 B、总 JS 2,241,326 B |
-| `pnpm test:visual` | 静态页与首页基线重采（页脚标语由硬编码 `|` 改为 `t('footer.tagline')` 的 `·` 版本，整套 102 张以 `--update-snapshots=all` 重采、共 52 张变化：4 张 Admin 桌面基线的差异精确落在页脚标语行（内容变化），`about` / `privacy` / `terms` / `home` 为切换器与文本节点抗锯齿，其余为 ±1–7 的渲染噪声；无尺寸或布局位移）；verify **104 passed** |
-| 浏览器（生产构建） | `/about` 与 `/en-US/about`：标题、简介、功能 / 技术栈条目中英一一对应；`/privacy` 与 `/en-US/privacy`：「数据收集：…」「Data collection: …」，内嵌链接句渲染为 `… 请通过 {邮箱} 联系…` / `… contact our support team at {email}`，无双冒号；`/terms` 与 `/en-US/terms` 同构；页脚在 `/`、`/about`、`/privacy`、`/terms` 上均为当前语言（`首页 / Home`、`隐私政策 / Privacy Policy`、`项目文档 / Documentation`） |
+| `pnpm test:visual` | 静态页与首页基线重采（页脚标语由硬编码 `|` 改为 `t('footer.tagline')` 的 `·` 版本，整套 102 张以 `--update-snapshots=all`重采、共 52 张变化：4 张 Admin 桌面基线的差异精确落在页脚标语行（内容变化），`about` / `privacy` / `terms` / `home` 为切换器与文本节点抗锯齿，其余为 ±1–7 的渲染噪声；无尺寸或布局位移）；verify **104 passed** |
+| 浏览器（生产构建） | `/about` 与 `/en-US/about`：标题、简介、功能 / 技术栈条目中英一一对应；`/privacy` 与 `/en-US/privacy`：`数据收集：…` / `Data collection: …`，内嵌链接句渲染为 `… 请通过 {邮箱} 联系…` / `… contact our support team at {email}`，无双冒号；`/terms` 与 `/en-US/terms` 同构；页脚在 `/`、`/about`、`/privacy`、`/terms` 上均为当前语言（`首页 / Home`、`隐私政策 / Privacy Policy`、`项目文档 / Documentation`） |
 
 ## 4. 已知边界
 

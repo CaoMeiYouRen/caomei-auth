@@ -147,7 +147,7 @@ jobs:
         run: pnpm run lint:css
 
       - name: Lint markdown
-        run: pnpm run lint:md
+        run: pnpm run lint:md:check
 
       - name: Check AI governance
         run: pnpm run ai:check

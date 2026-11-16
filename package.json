@@ -23,7 +23,7 @@
     "lint:css": "stylelint ./**/*.{css,scss,sass,vue} --fix",
     "lint:duplicate": "jscpd .",
     "lint:i18n": "cross-env NODE_ENV=production eslint --config eslint.i18n.config.mjs \"i18n/locales/**/*.json\" --quiet",
-    "lint:md": "lint-md *.md docs/**/*.md .github/**/*.md --fix",
+    "lint:md": "lint-md *.md docs/*.md docs/*/*.md docs/*/*/*.md .github/*.md .github/*/*.md .github/*/*/*.md .github/*/*/*/*.md --fix",
     "lint": "cross-env NODE_ENV=production eslint . --fix",
     "release": "semantic-release",
     "build": "nuxt build",
@@ -49,7 +49,8 @@
     "docs:dev": "vitepress dev --open",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "lint:md:check": "lint-md *.md docs/*.md docs/*/*.md docs/*/*/*.md .github/*.md .github/*/*.md .github/*/*/*.md .github/*/*/*/*.md"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1166.0",

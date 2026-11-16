@@ -21,7 +21,7 @@
 
 ## 2. 实现要点
 
-- 图表文案全部走 `t()`：图例 `登录次数`、tooltip `日期: {date}` / `登录次数: {count}`、坐标轴标题；Demo 日期改用 `Intl.DateTimeFormat(locale)`，避免 dayjs 全局 locale 固定为 zh-cn 时 `MMM D` 渲染成「11月 15」。
+- 图表文案全部走 `t()`：图例 `登录次数`、tooltip `日期: {date}` / `登录次数: {count}`、坐标轴标题；Demo 日期改用 `Intl.DateTimeFormat(locale)`，避免 dayjs 全局 locale 固定为 zh-cn 时 `MMM D` 渲染成 `11月 15`。
 - `watch(locale)` 触发 `nextTick(renderChart)`，与既有 `watch(isDark)` 同构，切语言后图例与坐标轴即时更新；同时清空 `demoSeries` 缓存，Demo 标签按新语言重算。
 - `formatDevice` 的兜底从中文改为空串，由表格用 `admin.logs.table.unknownDevice` 本地化（工具层不再输出中文）。
 - 页面 `definePageMeta` 只保留 `layout`，标题 / 描述由 `usePageMeta` 生成，`document.title` 为 `登录统计 - 草梅 Auth` / `Login statistics - Caomei Auth`。
