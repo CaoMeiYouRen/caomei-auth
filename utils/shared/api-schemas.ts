@@ -69,6 +69,19 @@ export const sessionLogsQuerySchema = z.object({
     endDate: z.string().optional(),
     status: z.enum(['active', 'expired', 'all']).optional().default('all'),
     search: z.string().optional(),
+    /** 精确匹配 IP（搜索框为模糊匹配） */
+    ip: z.string().trim().max(64).optional(),
+})
+
+/**
+ * Session log statistics query schema（与会话列表同一组筛选）
+ */
+export const logStatsQuerySchema = z.object({
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    status: z.enum(['active', 'expired', 'all']).optional().default('all'),
+    search: z.string().optional(),
+    ip: z.string().trim().max(64).optional(),
 })
 
 /**
@@ -89,4 +102,5 @@ export type IdParam = z.infer<typeof idParamSchema>
 export type PaginationQuery = z.infer<typeof paginationQuerySchema>
 export type SSOProvidersQuery = z.infer<typeof ssoProvidersQuerySchema>
 export type SessionLogsQuery = z.infer<typeof sessionLogsQuerySchema>
+export type LogStatsQuery = z.infer<typeof logStatsQuerySchema>
 export type SocialProvidersQuery = z.infer<typeof socialProvidersQuerySchema>

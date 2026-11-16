@@ -22,6 +22,19 @@
                         </CaomeiInput>
                     </div>
                     <div class="filter-controls">
+                        <div class="filter-item filter-item--ip">
+                            <CaomeiInput
+                                v-model="ipFilter"
+                                :placeholder="t('admin.logs.table.ipPlaceholder')"
+                                :label="t('admin.logs.table.ipLabel')"
+                                clearable
+                                @update:model-value="onIpChange"
+                            >
+                                <template #prefix>
+                                    <i class="mdi mdi-ip-network-outline" aria-hidden="true" />
+                                </template>
+                            </CaomeiInput>
+                        </div>
                         <div class="filter-item filter-item--status">
                             <CaomeiSelect
                                 :model-value="selectedStatus ?? null"
@@ -193,6 +206,7 @@ const emit = defineEmits<{
 const searchQuery = defineModel<string>('searchQuery', { required: true })
 const selectedStatus = defineModel<string | undefined>('selectedStatus', { required: true })
 const dateRange = defineModel<DatePickerRange | null>('dateRange', { required: true })
+const ipFilter = defineModel<string>('ipFilter', { required: true })
 
 const { t } = useI18n()
 
@@ -218,6 +232,10 @@ const columns = computed<DataTableColumn<AdminLogSession>[]>(() => [
 ])
 
 const onSearch = debounce(() => {
+    emit('filter-change')
+}, 500)
+
+const onIpChange = debounce(() => {
     emit('filter-change')
 }, 500)
 

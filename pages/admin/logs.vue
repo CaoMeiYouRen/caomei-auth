@@ -24,6 +24,7 @@
                 v-model:search-query="searchQuery"
                 v-model:selected-status="selectedStatus"
                 v-model:date-range="dateRange"
+                v-model:ip-filter="ipFilter"
                 :sessions="sessions"
                 :loading="sessionsLoading"
                 :total-records="totalRecords"
@@ -37,7 +38,7 @@
                 @page="onPage"
                 @rows-change="onRowsChange"
                 @sort="onSort"
-                @filter-change="onSearch"
+                @filter-change="onFilterChange"
             />
         </div>
     </div>
@@ -72,6 +73,7 @@ const {
     searchQuery,
     selectedStatus,
     dateRange,
+    ipFilter,
     revokingSessionId: revokingSession,
     refreshSessions,
     revokeSession,
@@ -79,6 +81,7 @@ const {
     onRowsChange,
     onSort,
     onSearch,
+    onFilterChange,
     // Stats
     statsData,
     statsLoading,

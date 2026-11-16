@@ -6,6 +6,18 @@ import { User } from '@/server/entities/user'
 import { Session } from '@/server/entities/session'
 import { Account } from '@/server/entities/account'
 
+const { queryState } = vi.hoisted(() => ({
+    queryState: { value: {} as Record<string, unknown> },
+}))
+
+vi.mock('h3', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('h3')>()
+    return {
+        ...actual,
+        getValidatedQuery: async (_event: unknown, validate: (value: unknown) => unknown) => validate(queryState.value),
+    }
+})
+
 // Mock dependencies
 vi.mock('@/server/database', () => ({
     dataSource: {
@@ -34,10 +46,13 @@ describe('server/api/admin/logs/stats.get', () => {
 
     beforeEach(() => {
         vi.clearAllMocks()
+        queryState.value = {}
 
         // Setup Mock QueryBuilder
         mockQueryBuilder = {
             where: vi.fn().mockReturnThis(),
+            andWhere: vi.fn().mockReturnThis(),
+            leftJoin: vi.fn().mockReturnThis(),
             select: vi.fn().mockReturnThis(),
             addSelect: vi.fn().mockReturnThis(),
             groupBy: vi.fn().mockReturnThis(),
@@ -80,17 +95,11 @@ describe('server/api/admin/logs/stats.get', () => {
 
         // Mock Data Returns
         mockUserRepo.count.mockResolvedValue(100) // totalUsers
-        mockSessionRepo.count.mockResolvedValue(500) // totalSessions
 
         // Sequence for Session Repo QueryBuilder calls:
-        // 1. activeSessions (getCount)
-        // 2. todaySessions (getCount)
-        // 3. yesterdaySessions (getCount)
-        // 4. weekSessions (getCount)
-        // 5. monthSessions (getCount)
-        // 6. activeUsers (getRawOne)
-        // 7. dailyTrend (getRawMany)
+        // 1. totalSessions / 2. activeSessions / 3-6. today / yesterday / week / month
         mockQueryBuilder.getCount
+            .mockResolvedValueOnce(500) // totalSessions
             .mockResolvedValueOnce(50) // activeSessions
             .mockResolvedValueOnce(10) // todaySessions
             .mockResolvedValueOnce(8) // yesterdaySessions
@@ -155,8 +164,29 @@ describe('server/api/admin/logs/stats.get', () => {
 
         expect(checkAdmin).toHaveBeenCalledWith(event)
         expect(mockUserRepo.count).toHaveBeenCalled()
-        expect(mockSessionRepo.count).toHaveBeenCalled()
-        expect(mockQueryBuilder.where).toHaveBeenCalledTimes(7) // 5 sessions + 1 activeUsers + 1 dailyTrend
+        expect(mockQueryBuilder.andWhere).toHaveBeenCalled()
+    })
+
+    it('applies ip / status / date filters to session statistics', async () => {
+        vi.mocked(checkAdmin).mockResolvedValue({ data: { userId: 'admin-1' } } as any)
+        mockUserRepo.count.mockResolvedValue(100)
+        mockQueryBuilder.getCount.mockResolvedValue(1)
+        mockQueryBuilder.getRawOne.mockResolvedValue({ count: '1' })
+        mockQueryBuilder.getRawMany.mockResolvedValue([])
+        queryState.value = {
+            ip: '203.0.113.7',
+            status: 'active',
+            startDate: '2026-01-01',
+            endDate: '2026-01-31',
+        }
+
+        await statsHandler({} as any)
+
+        const calls = mockQueryBuilder.andWhere.mock.calls.map((call: unknown[]) => String(call[0]))
+        expect(calls.some((sql) => sql.includes('session.ipAddress = :ip'))).toBe(true)
+        expect(calls.some((sql) => sql.includes('session.createdAt >= :filterStart'))).toBe(true)
+        expect(calls.some((sql) => sql.includes('session.createdAt <= :filterEnd'))).toBe(true)
+        expect(calls.filter((sql) => sql.includes('session.expiresAt > :now')).length).toBeGreaterThan(0)
     })
 
     it('should handle errors gracefully', async () => {

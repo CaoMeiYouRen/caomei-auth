@@ -41,6 +41,8 @@
                 "title": "登录日志 ({count})",
                 "searchPlaceholder": "搜索用户或IP地址",
                 "searchLabel": "搜索用户或IP地址",
+                "ipLabel": "IP 精确筛选",
+                "ipPlaceholder": "输入完整 IP，如 203.0.113.10",
                 "statusPlaceholder": "会话状态",
                 "statusLabel": "会话状态",
                 "dateRangePlaceholder": "选择日期范围",

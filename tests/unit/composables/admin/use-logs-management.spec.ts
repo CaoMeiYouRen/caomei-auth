@@ -88,6 +88,8 @@ describe('useLogsManagement', () => {
         const { dateRange } = useLogsManagement()
         const start = new Date('2026-06-01T00:00:00.000Z')
         const end = new Date('2026-06-15T00:00:00.000Z')
+        const expectedEnd = new Date(end)
+        expectedEnd.setHours(23, 59, 59, 999)
 
         dateRange.value = [start, end]
         await nextTick()
@@ -96,7 +98,7 @@ describe('useLogsManagement', () => {
         expect(fetchMock).toHaveBeenCalledWith('/api/admin/logs/sessions', expect.objectContaining({
             query: expect.objectContaining({
                 startDate: start.toISOString(),
-                endDate: end.toISOString(),
+                endDate: expectedEnd.toISOString(),
             }),
         }))
 

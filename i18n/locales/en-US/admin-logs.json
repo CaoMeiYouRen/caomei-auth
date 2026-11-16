@@ -41,6 +41,8 @@
                 "title": "Login logs ({count})",
                 "searchPlaceholder": "Search by user or IP address",
                 "searchLabel": "Search by user or IP address",
+                "ipLabel": "Exact IP filter",
+                "ipPlaceholder": "Full IP, e.g. 203.0.113.10",
                 "statusPlaceholder": "Session status",
                 "statusLabel": "Session status",
                 "dateRangePlaceholder": "Select a date range",

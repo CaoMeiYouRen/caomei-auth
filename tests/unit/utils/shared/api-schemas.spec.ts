@@ -96,6 +96,7 @@ describe('utils/shared/api-schemas', () => {
                 endDate: '2026-01-31',
                 status: 'active',
                 search: 'chrome',
+                ip: '203.0.113.7',
             })
 
             expect(parsed).toEqual({
@@ -106,6 +107,7 @@ describe('utils/shared/api-schemas', () => {
                 endDate: '2026-01-31',
                 status: 'active',
                 search: 'chrome',
+                ip: '203.0.113.7',
             })
         })
 

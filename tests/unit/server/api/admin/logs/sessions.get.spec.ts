@@ -188,6 +188,7 @@ describe('server/api/admin/logs/sessions.get', () => {
                     status: 'active',
                     startDate: '2023-01-01',
                     endDate: '2023-01-31',
+                    ip: '203.0.113.7',
                 },
             } as any)
 
@@ -205,6 +206,7 @@ describe('server/api/admin/logs/sessions.get', () => {
             expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith('session.expiresAt > :now', expect.any(Object))
             expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith('session.createdAt >= :startDate', expect.any(Object))
             expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith('session.createdAt <= :endDate', expect.any(Object))
+            expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith('session.ipAddress = :ip', { ip: '203.0.113.7' })
         })
 
         it('should handle database errors', async () => {

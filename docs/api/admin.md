@@ -287,14 +287,19 @@ Authorization: Bearer <access_token>
 
 **查询参数:**
 
--   `period`: 统计周期，可选值：`day`、`week`、`month`、`year`
 -   `startDate`: 开始日期 (ISO 8601 格式)
 -   `endDate`: 结束日期 (ISO 8601 格式)
+-   `status`: 会话状态，可选值：`active`、`expired`、`all`
+-   `search`: 搜索关键词（用户名、邮箱、IP 地址，模糊匹配）
+-   `ip`: 精确匹配 IP 地址
+
+> 筛选作用于会话类统计（总会话数、活跃会话、今日 / 昨日 / 本周 / 本月、趋势），
+> 总用户数、近 7 日活跃用户与登录方式分布保持全局口径。
 
 **示例请求:**
 
 ```http
-GET /api/admin/logs/stats?period=week&startDate=2024-01-01T00:00:00Z&endDate=2024-01-07T23:59:59Z
+GET /api/admin/logs/stats?status=active&startDate=2026-01-01T00:00:00Z&endDate=2026-01-31T23:59:59Z&ip=203.0.113.10
 ```
 
 **响应示例:**
@@ -340,12 +345,13 @@ GET /api/admin/logs/stats?period=week&startDate=2024-01-01T00:00:00Z&endDate=202
 -   `startDate`: 开始日期
 -   `endDate`: 结束日期
 -   `status`: 会话状态，可选值：`active`、`expired`、`all`
--   `search`: 搜索关键词（用户名、邮箱、IP 地址）
+-   `search`: 搜索关键词（用户名、邮箱、IP 地址，模糊匹配）
+-   `ip`: 精确匹配 IP 地址（与 `search` 可组合）
 
 **示例请求:**
 
 ```http
-GET /api/admin/logs/sessions?page=1&limit=20&status=active&search=192.168
+GET /api/admin/logs/sessions?page=1&limit=20&status=active&ip=203.0.113.10
 ```
 
 **响应示例:**

@@ -26,6 +26,7 @@ export default defineEventHandler(async (event) => {
         endDate,
         status,
         search,
+        ip,
     } = query
 
     // Demo 模式处理
@@ -46,6 +47,10 @@ export default defineEventHandler(async (event) => {
                     || session.user.email.toLowerCase().includes(searchLower)
                     || session.ipAddress.toLowerCase().includes(searchLower),
                 )
+            }
+
+            if (ip) {
+                allDemoSessions = allDemoSessions.filter((session) => session.ipAddress === ip)
             }
 
             if (startDate) {
@@ -89,7 +94,7 @@ export default defineEventHandler(async (event) => {
             logger.business.sessionLogQueryFailed({
                 adminId: auth.data.userId,
                 error: error instanceof Error ? error.message : String(error),
-                queryParams: { page, limit, userId, startDate, endDate, status, search },
+                queryParams: { page, limit, userId, startDate, endDate, status, search, ip },
             })
             throw await createLocalizedError(event, {
                 statusCode: 500,
@@ -117,6 +122,10 @@ export default defineEventHandler(async (event) => {
                 '(user.name LIKE :search OR user.email LIKE :search OR session.ipAddress LIKE :search)',
                 { search: `%${search}%` },
             )
+        }
+
+        if (ip) {
+            queryBuilder = queryBuilder.andWhere('session.ipAddress = :ip', { ip })
         }
 
         if (startDate) {
@@ -191,7 +200,7 @@ export default defineEventHandler(async (event) => {
         logger.business.sessionLogQueryFailed({
             adminId: auth.data.userId,
             error: error instanceof Error ? error.message : String(error),
-            queryParams: { page, limit, userId, startDate, endDate, status, search },
+            queryParams: { page, limit, userId, startDate, endDate, status, search, ip },
         })
         throw await createLocalizedError(event, {
             statusCode: 500,

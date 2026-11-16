@@ -30,6 +30,8 @@ export function useLogsManagement() {
     const selectedStatus = ref<string | undefined>(undefined)
     /** 日期区间只在两端齐全时由 `CaomeiDatePicker` 抛值；`null` 表示未筛选 */
     const dateRange = ref<DatePickerRange | null>(null)
+    /** 精确 IP 筛选（搜索框仍为模糊匹配） */
+    const ipFilter = ref('')
     const revokingSessionId = ref<string>('')
 
     const fetcher = async (params: DataTableFetchParams) => {
@@ -48,7 +50,14 @@ export function useLogsManagement() {
 
         if (dateRange.value) {
             query.startDate = dateRange.value[0].toISOString()
-            query.endDate = dateRange.value[1].toISOString()
+            /* DatePicker 返回当日零点；结束日取当天 23:59:59，避免选中当天被排除 */
+            const end = new Date(dateRange.value[1])
+            end.setHours(23, 59, 59, 999)
+            query.endDate = end.toISOString()
+        }
+
+        if (ipFilter.value.trim()) {
+            query.ip = ipFilter.value.trim()
         }
 
         const response = await $fetch<LogSessionsResponse>('/api/admin/logs/sessions', {
@@ -80,10 +89,17 @@ export function useLogsManagement() {
         defaultPageSize: 20,
     })
 
+    /* 状态下拉 / 日期区间为离散操作，立即刷新；IP 输入由表格防抖后统一触发 onFilterChange */
     watch([selectedStatus, dateRange], () => {
         page.value = 0
         loadSessions()
+        loadStats()
     })
+
+    const onFilterChange = () => {
+        onSearch()
+        loadStats()
+    }
 
     const refreshSessions = async () => {
         await loadSessions()
@@ -123,11 +139,34 @@ export function useLogsManagement() {
     const providerStatsData = computed(() => [...(statsData.value?.providers || [])].sort((a, b) => b.count - a.count))
     const trendData = computed(() => statsData.value?.trend || [])
 
+    /* 统计请求带序号，避免前缀 IP 的慢响应覆盖精确 IP 的结果 */
+    let statsRequestId = 0
+
     // 加载统计数据
     const loadStats = async () => {
+        const requestId = ++statsRequestId
         try {
             statsLoading.value = true
-            const { data } = await $fetch<LogStatsResponse>('/api/admin/logs/stats')
+            const query: Record<string, string> = {}
+            if (selectedStatus.value && selectedStatus.value !== 'all') {
+                query.status = selectedStatus.value
+            }
+            if (dateRange.value) {
+                query.startDate = dateRange.value[0].toISOString()
+                const end = new Date(dateRange.value[1])
+                end.setHours(23, 59, 59, 999)
+                query.endDate = end.toISOString()
+            }
+            if (ipFilter.value.trim()) {
+                query.ip = ipFilter.value.trim()
+            }
+            if (searchQuery.value) {
+                query.search = searchQuery.value
+            }
+            const { data } = await $fetch<LogStatsResponse>('/api/admin/logs/stats', { query })
+            if (requestId !== statsRequestId) {
+                return
+            }
             statsData.value = data
         } catch (error: unknown) {
             toast.danger({
@@ -136,7 +175,9 @@ export function useLogsManagement() {
                 duration: 3000,
             })
         } finally {
-            statsLoading.value = false
+            if (requestId === statsRequestId) {
+                statsLoading.value = false
+            }
         }
     }
 
@@ -162,6 +203,7 @@ export function useLogsManagement() {
         searchQuery,
         selectedStatus,
         dateRange,
+        ipFilter,
         revokingSessionId,
         refreshSessions,
         revokeSession,
@@ -169,6 +211,7 @@ export function useLogsManagement() {
         onRowsChange,
         onSort,
         onSearch,
+        onFilterChange,
         // Stats
         statsData,
         statsLoading,
