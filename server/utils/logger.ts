@@ -251,8 +251,8 @@ interface ExtendedLogger {
         userDeleted: (data: { userId: string, email: string, adminId?: string }) => void
         oauthAppCreated: (data: { appId: string, name: string, createdBy: string }) => void
         oauthAppCreateFailed: (data: { name?: string, createdBy: string, error: string }) => void
-        oauthAppUpdated: (data: { appId: string, name?: string, updatedBy: string }) => void
-        oauthAppDeleted: (data: { appId: string, name?: string, deletedBy: string }) => void
+        oauthAppUpdateFailed: (data: { appId: string, name?: string, updatedBy: string, error: string }) => void
+        oauthAppDeleteFailed: (data: { appId: string, deletedBy: string, error: string }) => void
         oauthAppListFailed: (data: { error: string, adminId: string }) => void
         fileUploaded: (data: { fileName: string, size: number, userId: string, type?: string }) => void
         ssoProviderCreated: (data: { providerId: string, name: string, createdBy: string }) => void
@@ -458,15 +458,15 @@ const extendedLogger: ExtendedLogger = {
             const message = `Failed to create OAuth app${data.name ? `: ${data.name}` : ''} - ${data.error}`
             businessLogger.error(message, { createdBy: safeData.createdBy })
         },
-        oauthAppUpdated: (data) => {
+        oauthAppUpdateFailed: (data) => {
             const safeData = createSafeLogData(data)
-            const message = `OAuth app updated${data.name ? `: ${data.name}` : ''}`
-            businessLogger.info(message, { appId: data.appId, updatedBy: safeData.updatedBy })
+            const message = `Failed to update OAuth app${data.name ? `: ${data.name}` : ''} - ${data.error}`
+            businessLogger.error(message, { appId: data.appId, updatedBy: safeData.updatedBy })
         },
-        oauthAppDeleted: (data) => {
+        oauthAppDeleteFailed: (data) => {
             const safeData = createSafeLogData(data)
-            const message = `OAuth app deleted${data.name ? `: ${data.name}` : ''}`
-            businessLogger.warn(message, { appId: data.appId, deletedBy: safeData.deletedBy })
+            const message = `Failed to delete OAuth app - ${data.error}`
+            businessLogger.error(message, { appId: data.appId, deletedBy: safeData.deletedBy })
         },
         oauthAppListFailed: (data) => {
             const safeData = createSafeLogData(data)

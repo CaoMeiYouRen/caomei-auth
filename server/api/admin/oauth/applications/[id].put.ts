@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody } from 'h3'
+import { createError, defineEventHandler, isError, readBody } from 'h3'
 import { OAuthClient } from '@/server/entities/oauth-client'
 import { dataSource } from '@/server/database'
 import { checkAdmin } from '@/server/utils/check-admin'
@@ -6,7 +6,7 @@ import { applyOAuthClientInput, toAdminOAuthClientView } from '@/server/utils/oa
 import logger from '@/server/utils/logger'
 import { oauthApplicationUpdateSchema } from '@/utils/shared/schemas'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
-import { getServerI18n } from '@/server/utils/i18n'
+import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -16,12 +16,10 @@ export default defineEventHandler(async (event) => {
         const body = await readBody(event)
 
         if (!id) {
-            return {
-                status: 400,
-                success: false,
-                message: t('errors.admin.oauthAppIncomplete'),
-                data: null,
-            }
+            throw await createLocalizedError(event, {
+                statusCode: 400,
+                key: 'errors.admin.oauthAppIncomplete',
+            })
         }
 
         const repo = dataSource.getRepository(OAuthClient)
@@ -31,12 +29,10 @@ export default defineEventHandler(async (event) => {
         })
 
         if (!application) {
-            return {
-                status: 404,
-                success: false,
-                message: t('errors.admin.oauthAppNotFound'),
-                data: null,
-            }
+            throw await createLocalizedError(event, {
+                statusCode: 404,
+                key: 'errors.admin.oauthAppNotFound',
+            })
         }
 
         // 如果只是切换禁用状态
@@ -55,12 +51,10 @@ export default defineEventHandler(async (event) => {
         // 完整更新应用信息
         const validationResult = oauthApplicationUpdateSchema.safeParse(body)
         if (!validationResult.success) {
-            return {
-                status: 400,
-                success: false,
+            throw createError({
+                statusCode: 400,
                 message: resolveValidationMessage(validationResult.error?.issues[0]?.message, t) || t('errors.admin.paramsInvalid'),
-                data: null,
-            }
+            })
         }
 
         const validatedData = validationResult.data
@@ -92,15 +86,17 @@ export default defineEventHandler(async (event) => {
             data: toAdminOAuthClientView(application),
         }
     } catch (error) {
-        logger.business.oauthAppUpdated({
+        if (isError(error)) {
+            throw error
+        }
+        logger.business.oauthAppUpdateFailed({
             appId: event.context.params?.id || 'unknown',
             updatedBy: auth.data.userId,
+            error: error instanceof Error ? error.message : String(error),
         })
-        return {
-            status: 500,
-            success: false,
-            message: t('errors.admin.oauthAppUpdateFailed'),
-            data: null,
-        }
+        throw await createLocalizedError(event, {
+            statusCode: 500,
+            key: 'errors.admin.oauthAppUpdateFailed',
+        })
     }
 })

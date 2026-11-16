@@ -28,12 +28,16 @@ vi.mock('@/server/utils/check-admin', () => ({
 vi.mock('@/server/utils/logger', () => ({
     default: {
         business: {
-            oauthAppUpdated: vi.fn(),
+            oauthAppUpdateFailed: vi.fn(),
         },
     },
 }))
 
 describe('server/api/admin/oauth/applications/[id].put', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals()
+    })
+
     let event: H3Event
     const mockSave = vi.fn()
     const mockFindOne = vi.fn()
@@ -63,11 +67,10 @@ describe('server/api/admin/oauth/applications/[id].put', () => {
         const { readBody } = await import('h3')
         vi.mocked(readBody).mockResolvedValue({})
 
-        const result = await updateHandler(event) as any
-
-        expect(result.status).toBe(400)
-        expect(result.success).toBe(false)
-        expect(result.message).toBe('参数不完整')
+        await expect(updateHandler(event)).rejects.toMatchObject({
+            statusCode: 400,
+            message: '参数不完整',
+        })
     })
 
     it('should return 404 if application not found', async () => {
@@ -75,11 +78,10 @@ describe('server/api/admin/oauth/applications/[id].put', () => {
         vi.mocked(readBody).mockResolvedValue({})
         mockFindOne.mockResolvedValue(null)
 
-        const result = await updateHandler(event) as any
-
-        expect(result.status).toBe(404)
-        expect(result.success).toBe(false)
-        expect(result.message).toBe('应用不存在')
+        await expect(updateHandler(event)).rejects.toMatchObject({
+            statusCode: 404,
+            message: '应用不存在',
+        })
     })
 
     it('should toggle disabled status successfully', async () => {
@@ -109,11 +111,7 @@ describe('server/api/admin/oauth/applications/[id].put', () => {
 
         mockFindOne.mockResolvedValue({ id: 'app-123' })
 
-        const result = await updateHandler(event) as any
-
-        expect(result.status).toBe(400)
-        expect(result.success).toBe(false)
-        expect(result.message).toBeTruthy()
+        await expect(updateHandler(event)).rejects.toMatchObject({ statusCode: 400 })
         expect(mockSave).not.toHaveBeenCalled()
     })
 
@@ -157,11 +155,54 @@ describe('server/api/admin/oauth/applications/[id].put', () => {
         mockFindOne.mockResolvedValue({ id: 'app-123' })
         mockSave.mockRejectedValue(new Error('Database error'))
 
-        const result = await updateHandler(event) as any
+        await expect(updateHandler(event)).rejects.toMatchObject({
+            statusCode: 500,
+            message: '更新应用失败',
+        })
+        expect(logger.business.oauthAppUpdateFailed).toHaveBeenCalled()
+    })
 
-        expect(result.status).toBe(500)
-        expect(result.success).toBe(false)
-        expect(result.message).toBe('更新应用失败')
-        expect(logger.business.oauthAppUpdated).toHaveBeenCalled()
+    it('returns localized English message for 404 when request language is en-US', async () => {
+        const { readBody } = await import('h3')
+        vi.mocked(readBody).mockResolvedValue({})
+        mockFindOne.mockResolvedValue(null)
+        Object.defineProperty(event, 'path', { value: '/api/admin/oauth/applications/app-123', configurable: true })
+        const headers = new Map<string, string>()
+        Object.defineProperty(event, 'node', {
+            value: {
+                res: {
+                    setHeader: (key: string, value: string) => headers.set(key, value),
+                    getHeader: (key: string) => headers.get(key),
+                },
+            },
+            configurable: true,
+        })
+        vi.stubGlobal('tryHeaderLocale', vi.fn(() => 'en-US'))
+        vi.stubGlobal('useTranslation', vi.fn(async () => (key: string) => (
+            key === 'errors.admin.oauthAppNotFound' ? 'Application not found' : key
+        )))
+
+        await expect(updateHandler(event)).rejects.toMatchObject({
+            statusCode: 404,
+            message: 'Application not found',
+        })
+        expect(headers.get('Content-Language')).toBe('en-US')
+    })
+
+    it('returns localized English message for 500 when request language is en-US', async () => {
+        const { readBody } = await import('h3')
+        vi.mocked(readBody).mockResolvedValue({ disabled: true })
+        mockFindOne.mockResolvedValue({ id: 'app-123' })
+        mockSave.mockRejectedValue(new Error('Database error'))
+        Object.defineProperty(event, 'path', { value: '/api/admin/oauth/applications/app-123', configurable: true })
+        vi.stubGlobal('tryHeaderLocale', vi.fn(() => 'en-US'))
+        vi.stubGlobal('useTranslation', vi.fn(async () => (key: string) => (
+            key === 'errors.admin.oauthAppUpdateFailed' ? 'Could not update the application' : key
+        )))
+
+        await expect(updateHandler(event)).rejects.toMatchObject({
+            statusCode: 500,
+            message: 'Could not update the application',
+        })
     })
 })

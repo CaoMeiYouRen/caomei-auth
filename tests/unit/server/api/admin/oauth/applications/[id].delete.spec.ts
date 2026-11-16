@@ -27,13 +27,17 @@ vi.mock('@/server/utils/check-admin', () => ({
 vi.mock('@/server/utils/logger', () => ({
     default: {
         business: {
-            oauthAppDeleted: vi.fn(),
+            oauthAppDeleteFailed: vi.fn(),
         },
         error: vi.fn(),
     },
 }))
 
 describe('server/api/admin/oauth/applications/[id].delete', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals()
+    })
+
     const mockRepo = {
         findOne: vi.fn(),
         remove: vi.fn(),
@@ -63,13 +67,9 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
             },
         }
 
-        const result = await handler(event as any)
-
-        expect(result).toEqual({
-            status: 400,
-            success: false,
+        await expect(handler(event as any)).rejects.toMatchObject({
+            statusCode: 400,
             message: 'ID 不能为空',
-            data: null,
         })
     })
 
@@ -84,16 +84,12 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
 
         mockRepo.findOne.mockResolvedValue(null)
 
-        const result = await handler(event as any)
-
+        await expect(handler(event as any)).rejects.toMatchObject({
+            statusCode: 404,
+            message: '应用不存在',
+        })
         expect(mockRepo.findOne).toHaveBeenCalledWith({
             where: { id: 'app-123' },
-        })
-        expect(result).toEqual({
-            status: 404,
-            success: false,
-            message: '应用不存在',
-            data: null,
         })
     })
 
@@ -136,17 +132,37 @@ describe('server/api/admin/oauth/applications/[id].delete', () => {
         const error = new Error('Database error')
         mockRepo.findOne.mockRejectedValue(error)
 
-        const result = await handler(event as any)
-
-        expect(logger.business.oauthAppDeleted).toHaveBeenCalledWith({
+        await expect(handler(event as any)).rejects.toMatchObject({
+            statusCode: 500,
+            message: '删除应用失败',
+        })
+        expect(logger.business.oauthAppDeleteFailed).toHaveBeenCalledWith({
             appId: 'app-123',
             deletedBy: 'admin-123',
+            error: 'Database error',
         })
-        expect(result).toEqual({
-            status: 500,
-            success: false,
-            message: '删除应用失败',
-            data: null,
+    })
+
+    it('returns localized English message for 404 when request language is en-US', async () => {
+        vi.mocked(getValidatedRouterParams).mockResolvedValue({ success: true, data: { id: 'app-123' } } as any)
+        mockRepo.findOne.mockResolvedValue(null)
+        const event = { context: { params: { id: 'app-123' } }, path: '/api/admin/oauth/applications/app-123' } as any
+        const headers = new Map<string, string>()
+        event.node = {
+            res: {
+                setHeader: (key: string, value: string) => headers.set(key, value),
+                getHeader: (key: string) => headers.get(key),
+            },
+        }
+        vi.stubGlobal('tryHeaderLocale', vi.fn(() => 'en-US'))
+        vi.stubGlobal('useTranslation', vi.fn(async () => (key: string) => (
+            key === 'errors.admin.oauthAppNotFound' ? 'Application not found' : key
+        )))
+
+        await expect(handler(event)).rejects.toMatchObject({
+            statusCode: 404,
+            message: 'Application not found',
         })
+        expect(headers.get('Content-Language')).toBe('en-US')
     })
 })

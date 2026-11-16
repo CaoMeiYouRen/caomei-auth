@@ -1,4 +1,4 @@
-import { defineEventHandler } from 'h3'
+import { createError, defineEventHandler, isError } from 'h3'
 import { OAuthClient } from '@/server/entities/oauth-client'
 import { OAuthAccessToken } from '@/server/entities/oauth-access-token'
 import { OAuthRefreshToken } from '@/server/entities/oauth-refresh-token'
@@ -9,17 +9,17 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { validateParamsSafe } from '@/server/utils/validation'
 import { idParamSchema } from '@/utils/shared/api-schemas'
-import { getServerI18n } from '@/server/utils/i18n'
+import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
     const { t } = await getServerI18n(event)
     let appId = 'unknown'
     try {
-        const paramsResult = await validateParamsSafe(event, idParamSchema)
+        const paramsResult = await validateParamsSafe(event, idParamSchema, { translate: t })
 
         if (!paramsResult.success) {
-            return paramsResult.error
+            throw createError({ statusCode: 400, message: paramsResult.error.message })
         }
 
         const { id } = paramsResult.data
@@ -32,12 +32,10 @@ export default defineEventHandler(async (event) => {
         })
 
         if (!application) {
-            return {
-                status: 404,
-                success: false,
-                message: t('errors.admin.oauthAppNotFound'),
-                data: null,
-            }
+            throw await createLocalizedError(event, {
+                statusCode: 404,
+                key: 'errors.admin.oauthAppNotFound',
+            })
         }
 
         // 清理客户端关联的令牌、授权同意与资源绑定，避免残留孤儿数据
@@ -55,15 +53,17 @@ export default defineEventHandler(async (event) => {
             data: null,
         }
     } catch (error) {
-        logger.business.oauthAppDeleted({
+        if (isError(error)) {
+            throw error
+        }
+        logger.business.oauthAppDeleteFailed({
             appId,
             deletedBy: auth.data.userId,
+            error: error instanceof Error ? error.message : String(error),
         })
-        return {
-            status: 500,
-            success: false,
-            message: t('errors.admin.oauthAppDeleteFailed'),
-            data: null,
-        }
+        throw await createLocalizedError(event, {
+            statusCode: 500,
+            key: 'errors.admin.oauthAppDeleteFailed',
+        })
     }
 })
