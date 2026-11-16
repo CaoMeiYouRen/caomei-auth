@@ -7,6 +7,7 @@ import logger from '@/server/utils/logger'
 import { oauthApplicationUpdateSchema } from '@/utils/shared/schemas'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -49,7 +50,7 @@ export default defineEventHandler(async (event) => {
         }
 
         // 完整更新应用信息
-        const validationResult = oauthApplicationUpdateSchema.safeParse(body)
+        const validationResult = oauthApplicationUpdateSchema.safeParse(body, { error: createZodErrorMap(t) })
         if (!validationResult.success) {
             throw createError({
                 statusCode: 400,

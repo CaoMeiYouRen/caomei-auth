@@ -8,14 +8,16 @@ import { isDemoMode, generateDemoSessions } from '@/server/utils/demo-data-gener
 import logger from '@/server/utils/logger'
 import { validateQuery } from '@/server/utils/validation'
 import { sessionLogsQuerySchema, type SessionLogsQuery } from '@/utils/shared/api-schemas'
-import { createLocalizedError } from '@/server/utils/i18n'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
+import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     // 检查管理员权限
     const auth = await checkAdmin(event)
+    const { t } = await getServerI18n(event)
 
     // 使用 Zod 校验查询参数
-    const query: SessionLogsQuery = await validateQuery(event, sessionLogsQuerySchema)
+    const query: SessionLogsQuery = await validateQuery(event, sessionLogsQuerySchema, { errorMap: createZodErrorMap(t) })
     const {
         page,
         limit,

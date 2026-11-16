@@ -6,13 +6,15 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { validateQuery } from '@/server/utils/validation'
 import { ssoProvidersQuerySchema, type SSOProvidersQuery } from '@/utils/shared/api-schemas'
-import { createLocalizedError } from '@/server/utils/i18n'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
+import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
+    const { t } = await getServerI18n(event)
 
     // 使用 Zod 校验查询参数
-    const query: SSOProvidersQuery = await validateQuery(event, ssoProvidersQuerySchema)
+    const query: SSOProvidersQuery = await validateQuery(event, ssoProvidersQuerySchema, { errorMap: createZodErrorMap(t) })
     const { page, limit, search, sortField, sortOrder, type, enabled } = query
 
     try {

@@ -5,6 +5,7 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { validateParams } from '@/server/utils/validation'
 import { idParamSchema } from '@/utils/shared/api-schemas'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
@@ -12,7 +13,7 @@ export default defineEventHandler(async (event) => {
     const { t } = await getServerI18n(event)
 
     try {
-        const { id: providerId } = await validateParams(event, idParamSchema)
+        const { id: providerId } = await validateParams(event, idParamSchema, { errorMap: createZodErrorMap(t), translate: t })
 
         const ssoProviderRepository = dataSource.getRepository(SSOProvider)
         const provider = await ssoProviderRepository.findOne({

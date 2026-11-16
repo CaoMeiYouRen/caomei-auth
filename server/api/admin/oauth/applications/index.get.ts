@@ -8,13 +8,14 @@ import logger from '@/server/utils/logger'
 import { validateQuery } from '@/server/utils/validation'
 import { paginationQuerySchema, type PaginationQuery } from '@/utils/shared/api-schemas'
 import { getServerI18n } from '@/server/utils/i18n'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
     const { t } = await getServerI18n(event)
 
     // 使用 Zod 校验查询参数
-    const query: PaginationQuery = await validateQuery(event, paginationQuerySchema)
+    const query: PaginationQuery = await validateQuery(event, paginationQuerySchema, { errorMap: createZodErrorMap(t) })
     const { page, limit, search, sortField, sortOrder } = query
 
     try {

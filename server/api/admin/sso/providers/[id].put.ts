@@ -6,6 +6,7 @@ import logger from '@/server/utils/logger'
 import { ssoProviderUpdateSchema } from '@/utils/shared/schemas'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 
 export default defineEventHandler(async (event) => {
     await checkAdmin(event)
@@ -35,7 +36,7 @@ export default defineEventHandler(async (event) => {
         // 更新 SSO 提供商
         const body = await readBody(event)
 
-        const validationResult = ssoProviderUpdateSchema.safeParse(body)
+        const validationResult = ssoProviderUpdateSchema.safeParse(body, { error: createZodErrorMap(t) })
         if (!validationResult.success) {
             throw createError({
                 statusCode: 400,

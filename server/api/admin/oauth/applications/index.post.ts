@@ -9,6 +9,7 @@ import { snowflake } from '@/server/utils/snowflake'
 import logger from '@/server/utils/logger'
 import { oauthApplicationSchema } from '@/utils/shared/schemas'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 import { getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
@@ -18,7 +19,7 @@ export default defineEventHandler(async (event) => {
     try {
         body = await readBody(event)
 
-        const validationResult = oauthApplicationSchema.safeParse(body)
+        const validationResult = oauthApplicationSchema.safeParse(body, { error: createZodErrorMap(t) })
         if (!validationResult.success) {
             return {
                 status: 400,

@@ -7,6 +7,7 @@ import { ssoProviderSchema } from '@/utils/shared/schemas'
 import { snowflake } from '@/server/utils/snowflake'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 
 export default defineEventHandler(async (event) => {
     const auth = await checkAdmin(event)
@@ -17,7 +18,7 @@ export default defineEventHandler(async (event) => {
         // 创建 SSO 提供商
         body = await readBody(event)
 
-        const validationResult = ssoProviderSchema.safeParse(body)
+        const validationResult = ssoProviderSchema.safeParse(body, { error: createZodErrorMap(t) })
         if (!validationResult.success) {
             throw createError({
                 statusCode: 400,

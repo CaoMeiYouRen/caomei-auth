@@ -6,6 +6,7 @@ import logger from '@/server/utils/logger'
 import { adminRoleSyncSchema } from '@/utils/shared/schemas'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 
 export default defineEventHandler(async (event) => {
     const { t } = await getServerI18n(event)
@@ -43,7 +44,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event)
-    const validationResult = adminRoleSyncSchema.safeParse(body)
+    const validationResult = adminRoleSyncSchema.safeParse(body, { error: createZodErrorMap(t) })
 
     if (!validationResult.success) {
         throw createError({

@@ -9,6 +9,7 @@ import { checkAdmin } from '@/server/utils/check-admin'
 import logger from '@/server/utils/logger'
 import { validateParamsSafe } from '@/server/utils/validation'
 import { idParamSchema } from '@/utils/shared/api-schemas'
+import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 
 export default defineEventHandler(async (event) => {
@@ -16,7 +17,7 @@ export default defineEventHandler(async (event) => {
     const { t } = await getServerI18n(event)
     let appId = 'unknown'
     try {
-        const paramsResult = await validateParamsSafe(event, idParamSchema, { translate: t })
+        const paramsResult = await validateParamsSafe(event, idParamSchema, { errorMap: createZodErrorMap(t), translate: t })
 
         if (!paramsResult.success) {
             throw createError({ statusCode: 400, message: paramsResult.error.message })
