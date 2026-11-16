@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
             throw await createLocalizedError(event, { statusCode: 404, key: 'errors.admin.registrationRuleNotFound' })
         }
 
+        const before = { type: rule.type, mode: rule.mode, value: rule.value, enabled: rule.enabled, note: rule.note }
         if (result.data.type !== undefined) {
             rule.type = result.data.type
         }
@@ -56,6 +57,7 @@ export default defineEventHandler(async (event) => {
         logger.info('Registration rule updated', {
             adminId: auth.data.userId,
             ruleId: rule.id,
+            before,
             type: rule.type,
             mode: rule.mode,
             value: rule.value,
