@@ -2,7 +2,7 @@
 
 本文档概述草梅 Auth 的中长期发展方向与大颗粒度阶段规划。候选条目、优先级与验收要点见 [backlog.md](./backlog.md)；进行中阶段的原子条目见 [todo.md](./todo.md)；准入与归档规则见 [规划规范](../standards/planning.md)。
 
-> **当前状态**：**当前无进行中阶段**。阶段 7「质量与测试基建」已于 2026-11-17 收口（M1–M7 全部交付），记录见 [阶段 7 收口记录](../design/governance/2026-11-17-phase7-closure.md)；阶段 6 已于 2026-11-17 收口（M1–M18 全部交付），记录见 [阶段 6 收口记录](../design/governance/2026-11-17-phase6-closure.md)。阶段 5「i18n 全量落地与体验收口」已于 2026-11-16 收口（M1–M19 全部交付），收口记录见 [阶段 5 收口记录](../design/governance/2026-11-16-phase5-closure.md)。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线；未启动候选见 [backlog.md](./backlog.md)。
+> **当前状态**：**阶段 8「国际化 5 语推广（10 语架构）」已于 2026-11-17 授权启动**，范围与验收见 [阶段 8 范围登记](../design/governance/2026-11-17-phase8-registration.md)。阶段 7「质量与测试基建」已于 2026-11-17 收口（M1–M7 全部交付），记录见 [阶段 7 收口记录](../design/governance/2026-11-17-phase7-closure.md)；阶段 6 已于 2026-11-17 收口（M1–M18 全部交付），记录见 [阶段 6 收口记录](../design/governance/2026-11-17-phase6-closure.md)。阶段 5「i18n 全量落地与体验收口」已于 2026-11-16 收口（M1–M19 全部交付），收口记录见 [阶段 5 收口记录](../design/governance/2026-11-16-phase5-closure.md)。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线；未启动候选见 [backlog.md](./backlog.md)。
 
 ---
 
@@ -107,6 +107,18 @@ _目标：收口工具链与测试基建——stylelint 18、文件规模门禁�
 
 ---
 
+## 阶段 8: 国际化 5 语推广（10 语架构，2026-11-17 启动）
+
+_目标：语言架构扩到 10 码并启用 zh-CN / en-US / zh-TW / ja-JP / ko-KR；新语言 ui-ready（可切换、不索引），保留母语审校与后续 5 语扩展。_
+
+- **M1–M2 基建**：Registry 10 码 + 启用开关；caomei-ui `registerLocale` 桥接、切换器与协商。
+- **M3–M5 zh-TW**：微信 / 核心 / Admin 三批语言包，转换 + 台湾术语校订。
+- **M6–M8 ja-JP**：核心 / 业务 / Admin 三批语言包，机器翻译 draft。
+- **M9–M11 ko-KR**：核心 / 业务 / Admin 三批语言包，机器翻译 draft。
+- **M12 收口**：新语言视觉基线、SEO noindex 断言、文档、台账与归档。
+
+> **不做**：es-ES / fr-FR / de-DE / ru-RU / pt-BR 内容启用、母语者终审与 `seo-ready` 升级、RTL、用户生成内容与 Demo 种子数据翻译。范围与验收见 [阶段 8 范围登记](../design/governance/2026-11-17-phase8-registration.md)。
+
 ## 后续方向（未授权）
 
 以下方向不属于当前阶段，作为中长期方向保留；候选详情与触发条件见 [backlog.md](./backlog.md)。未授权方向不构成启动授权。
@@ -167,6 +179,9 @@ _目标：收口工具链与测试基建——stylelint 18、文件规模门禁�
         ▼
 阶段 7（2026-11-17 收口）：质量与测试基建
         │  stylelint 18 / 文件规模门禁 → 平板基线 / 固定时钟口径 → Admin 失败反馈 → 覆盖率 → 收口
+        ▼
+阶段 8（已授权 2026-11-17）：国际化 5 语推广（10 语架构）
+        │  Registry 10 码 → caomei 桥接 → zh-TW / ja-JP / ko-KR 语言包 → 视觉与收口
         ▼
 后续方向（未授权）：登录事件与日志可视化 / 安全增强 / 开发者生态 / 企业级
         │
