@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import { onClickOutside } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
-import type { LocaleCode } from '@/i18n/config/locale-registry'
+import { getLocaleDefinition } from '@/i18n/config/locale-registry'
 
 interface Props {
     /** 只显示图标（侧边栏折叠时使用） */
@@ -70,15 +70,17 @@ withDefaults(defineProps<Props>(), {
 })
 
 const { t, locale, locales, setLocale } = useI18n()
-const cookie = useCookie<string | null>('i18n_locale')
 const root = ref<HTMLElement | null>(null)
 const trigger = ref<HTMLButtonElement | null>(null)
 const open = ref(false)
 
-const options = computed(() => locales.value.map((item) => ({
-    label: typeof item.name === 'string' && item.name ? item.name : item.code,
-    value: item.code as LocaleCode,
-})))
+const options = computed(() => locales.value
+    /* 停用 / 不可切换的语言不进入切换器（Registry 可能包含未启用语言） */
+    .filter((item) => getLocaleDefinition(item.code)?.switchable !== false)
+    .map((item) => ({
+        label: typeof item.name === 'string' && item.name ? item.name : item.code,
+        value: item.code,
+    })))
 
 const toggle = () => {
     open.value = !open.value
@@ -88,12 +90,13 @@ const close = () => {
     open.value = false
 }
 
-const selectLocale = async (code: LocaleCode) => {
+type ConfiguredLocaleCode = Parameters<ReturnType<typeof useI18n>['setLocale']>[0]
+
+const selectLocale = async (code: ConfiguredLocaleCode) => {
     close()
     if (code === locale.value) {
         return
     }
-    cookie.value = code
     await setLocale(code)
     /* 登录用户把偏好写回账户，供异步邮件选择语言；未登录时请求失败可忽略 */
     authClient.updateUser({ locale: code }).catch(() => undefined)
