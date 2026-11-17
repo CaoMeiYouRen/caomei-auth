@@ -64,6 +64,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | `/admin/users` | 浅 / 暗 | 1440×900 / 390×844 | 默认（管理员会话） | `admin-users-{theme}-{viewport}-default` |
 | `/admin/users` | 浅 | 1440×900 | 选择行 / 创建用户 / 用户详情 / 禁用用户 / 用户会话 | `admin-users-light-desktop-{selection,create-dialog,detail-dialog,ban-dialog,sessions-dialog}` |
+| `/admin/users` | 浅 | 1440×900 | 键盘选择角色 / 键盘选择禁用时长 / 会话撤销确认（键盘） | `admin-users-light-desktop-{create-dialog-role,ban-dialog-duration,sessions-revoke-confirm}` |
 | `/admin/oauth/applications` | 浅 / 暗 | 1440×900 / 390×844 | 默认 | `admin-applications-{theme}-{viewport}-default` |
 | `/admin/oauth/applications` | 浅 | 1440×900 | 创建应用 / API 文档 | `admin-applications-light-desktop-{create-dialog,api-docs-dialog}` |
 | `/admin/sso/providers` | 浅 / 暗 | 1440×900 / 390×844 | 默认 | `admin-sso-{theme}-{viewport}-default` |
@@ -102,6 +103,7 @@ P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前�
 - **确定性数据**：`scripts/testing/visual-fixtures.mjs` 写入 12 个用户（1 管理员 / 1 禁用）、3 个 OAuth 应用、2 个 SSO 提供商（OIDC + SAML）、25 条会话日志；ID / 名称 / 邮箱 / 时间 / IP / UA 全部固定。
 - **管理员会话**：预置固定 token 的 `session` 行，测试侧用 `AUTH_SECRET` 做 HMAC-SHA256 签名写 cookie（`tests/visual/helpers/admin-session.ts`），不调用 `/sign-in`、不新增会话行。
 - **固定时钟**：`server/plugins/visual-clock.ts` 在 `VISUAL_HARNESS=1` + `VISUAL_FIXED_NOW` 存在 + 视觉库路径同时成立时，把服务端时钟平移到锚点，并按真实速度前进（不冻结，限流 / 过期语义不变）；浏览器侧用 `page.clock.setFixedTime` 固定同一锚点。
+- **固定时钟下的对话框交互**：`setFixedTime` 冻结 `Date.now()` 后，Vue 3.5 invoker 的 `_vts <= attached` 守卫会丢弃对话框内 Select 的 `pointerdown`，鼠标点不开下拉（真实时钟下正常，属测试环境假阳性）。交互态统一走 [`tests/visual/helpers/dialog.ts`](../../../tests/visual/helpers/dialog.ts) 的键盘路径：`selectDialogOption`（focus + Enter 打开再点选项）、`pressDialogButton`（focus + Enter 激活按钮）。`page.clock.install()` 不采用：实测接管定时器后 Admin 表格数据不再加载，60s 内无法达到可交互状态；它是否解除该守卫未验证。会话撤销用例只覆盖「键盘打开确认层」，不执行确认动作，避免改动共享夹具的会话数据。
 - **暗色基座**：PrimeVue `darkModeSelector` 必须为 `.dark`（`html.dark` 会生成后代选择器，暗色变量不生效）；详见 [P4-0 决策记录](./2026-11-10-p4-0-decisions.md) §5。
 
 ## 5. 命令与产物

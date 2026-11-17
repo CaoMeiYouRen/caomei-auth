@@ -1,5 +1,6 @@
 import { type Page, expect, test } from '@playwright/test'
 import { useAdminSession } from './admin-session'
+import { pressDialogButton, selectDialogOption } from './dialog'
 import { visualFixedNow, visualTabletViewport } from './config'
 import { applyTheme, expectNoHorizontalOverflow, expectPageScreenshot, waitForVisualStable, type VisualTheme } from './visual'
 
@@ -25,6 +26,8 @@ interface VisualState {
     label: string
     slug: string
     action: (page: Page) => Promise<void>
+    /** 是否参与参考态层；新增交互态没有迁移前参考态时设为 false */
+    reference?: boolean
 }
 
 interface AdminRoute {
@@ -94,6 +97,16 @@ const ROUTES: readonly AdminRoute[] = [
                 },
             },
             {
+                label: '创建用户对话框（键盘选择角色）',
+                slug: 'create-dialog-role',
+                reference: false,
+                action: async (page) => {
+                    await page.getByRole('button', { name: '创建用户' }).click()
+                    await expectDialog(page, '创建用户')
+                    await selectDialogOption(page, '角色', '管理员')
+                },
+            },
+            {
                 label: '用户详情对话框',
                 slug: 'detail-dialog',
                 action: async (page) => {
@@ -110,11 +123,33 @@ const ROUTES: readonly AdminRoute[] = [
                 },
             },
             {
+                label: '禁用用户对话框（键盘选择时长）',
+                slug: 'ban-dialog-duration',
+                reference: false,
+                action: async (page) => {
+                    await tableRow(page, 'wang.qiang@example.com').getByRole('button', { name: '禁用用户' }).click()
+                    await expectDialog(page, '禁用用户')
+                    await selectDialogOption(page, '禁用时长', '7天')
+                },
+            },
+            {
                 label: '用户会话对话框',
                 slug: 'sessions-dialog',
                 action: async (page) => {
                     await tableRow(page, 'wang.qiang@example.com').getByRole('button', { name: '会话管理' }).click()
                     await expectDialog(page, '用户会话')
+                },
+            },
+            {
+                label: '会话撤销确认（键盘）',
+                slug: 'sessions-revoke-confirm',
+                reference: false,
+                action: async (page) => {
+                    await tableRow(page, 'wang.qiang@example.com').getByRole('button', { name: '会话管理' }).click()
+                    await expectDialog(page, '用户会话')
+                    await pressDialogButton(page, '撤销所有会话')
+                    /* 只验证确认层出现，不执行确认动作，避免改动共享夹具的会话数据 */
+                    await expect(page.getByText('确认撤销', { exact: true }).first()).toBeVisible()
                 },
             },
         ],
@@ -165,14 +200,8 @@ const ROUTES: readonly AdminRoute[] = [
                 action: async (page) => {
                     await page.getByRole('button', { name: '创建提供商' }).click()
                     await expectDialog(page, '添加 SSO 提供商')
-                    /* 视觉层用 page.clock.setFixedTime 冻结 Date.now()，Vue 的 `_vts` 守卫会丢弃
-                     * 对话框内 Select 的 pointerdown（真实时钟下正常，见 docs/plan/backlog.md）。
-                     * Enter 路径没有前置 keydown 监听，不会命中同一守卫，因此交互态统一用键盘打开下拉再点选项。 */
-                    const typeSelect = page.getByRole('dialog').getByRole('combobox', { name: '协议类型' })
-                    await typeSelect.focus()
-                    await typeSelect.press('Enter')
-                    await expect(page.getByRole('listbox')).toBeVisible()
-                    await page.getByRole('option', { name: 'SAML 2.0' }).click()
+                    /* 固定时钟下鼠标点不开对话框内 Select，统一走键盘 helper（见 ./dialog.ts） */
+                    await selectDialogOption(page, '协议类型', 'SAML 2.0')
                     await expect(page.getByText('SAML 配置', { exact: true })).toBeVisible()
                 },
             },
@@ -308,6 +337,10 @@ function defineInteractionStates(): void {
 
         for (const route of ROUTES) {
             for (const state of route.states ?? []) {
+                /* 新增交互态没有迁移前参考态，参考态层跳过（否则会把当前态写进参考态目录） */
+                if (state.reference === false && isReferenceLayer()) {
+                    continue
+                }
                 test(`${route.slug} ${state.label}`, async ({ page }) => {
                     await open(page, route, 'light')
                     await state.action(page)
