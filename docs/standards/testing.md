@@ -36,6 +36,7 @@
 
 -   **Pre-commit**: 在提交代码或合并 PR 之前，应在本地运行 `pnpm test` 确保无回归错误。
 -   **覆盖率**: 重要核心逻辑（如 Auth、Database Utils）应维持高覆盖率。
+-   **重复代码**: `pnpm lint:duplicate`（jscpd，minLines 5 / minTokens 50，阈值 5%）为 CI 门禁，报告写入 `jscpd-report/`；当前已低于阈值，按非回归口径保持。
 -   **模块下限（自 2026-11-17 起）**: `pages` ≥ 40%、`plugins` ≥ 40%；全局作为非回归下限，不低于阶段 6 基线（Statements 76.07% / Lines 76.36%）。Vitest 4 已移除 `coverage.all`，当前未配置 `coverage.include`，百分比只统计测试导入过的文件，不代表 `pages/` 目录全量；新增页面测试若覆盖低于全局均值会拉低全局，需先补足交互再纳入。下限目前由报告与评审核对，自动化校验登记在 backlog。
 
 ---

@@ -1,6 +1,6 @@
 # 产品 backlog（待办池）
 
-> **状态**：阶段 7「质量与测试基建」已于 2026-11-17 授权启动（见 [阶段 7 范围登记](../design/governance/2026-11-17-phase7-registration.md)）；阶段 6 已于 2026-11-17 收口。本表只保留**尚未进入阶段**的候选与未完成项汇总；已上收条目（stylelint 18、文件规模门禁、视觉平板基线、固定时钟口径、Admin 失败反馈、jscpd 口径）已移出本表。
+> **状态**：阶段 7「质量与测试基建」已于 2026-11-17 收口（[收口记录](../design/governance/2026-11-17-phase7-closure.md)）；阶段 6 已于 2026-11-17 收口。本表只保留**尚未进入阶段**的候选与未完成项汇总。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ---
@@ -74,6 +74,7 @@
 - **非 Admin 流程 better-auth 失败静默**：`use-change-password-flow`（修改密码成功提示）、`edit-email-dialog`（修改邮箱）、`use-security-settings`（撤销 / 退出其他会话）、`use-profile-flow`（登出）仍只 `catch` 抛错路径，4xx/5xx 的 `{ error }` 不校验，会提示成功或静默。处理方向：复用 `utils/shared/api-error.ts` 的 `throwIfAuthError`，逐流程补失败 Toast 与单测；M5 只覆盖 Admin 面。
 - **Admin composable 泛型化**：`useDataTable<any>` 与 `selectedUsers: any[]` 收紧为 `AdminUser` / 表格行泛型，去掉 `pages/admin/users.vue` 的 `users.value as AdminUser[]` 断言（`use-application-management` 与 OAuth 页面已在 M5 完成泛型化，可作参照）。
 - **caomei-ui DataTable 分页 / 排序能力补齐**：1.2.0 的 `CaomeiDataTable` 未透出 `CaomeiPaginator` 的 `showEdges`（迁移后首 / 末页按钮消失），且 `lazy` 只映射 `manualPagination`、未关闭客户端排序（未透出 `manualSorting`，当前页数据会被二次排序）。影响 `/admin/users`（M2）、`/admin/oauth/applications`（M4）与 `/admin/sso/providers`（M6）；`CaomeiDataTable` 的受控排序也不支持清除（空排序事件被忽略）。处理方向：向上游提能力需求，或明确接受并写入口径；不在页面内做临时绕过。
+- **Admin 页面深度覆盖与 pages 分母口径**：当前页面测试只覆盖首页 / 登录页 / 静态页（pages 77.46% 仅统计测试导入的 5 个文件）；补 Admin 页 smoke 测试会加载大量低覆盖模板，把全局从 78.3% 拉到 73%（低于阶段 6 基线），故未纳入阶段 7。处理方向：为 Admin 页按交互深度补测（表格选择 / 筛选 / 对话框流程），达标后再纳入覆盖率分母，并同步评估 `coverage.include`。
 - **覆盖率模块下限自动化校验**：`pages` ≥ 40% / `plugins` ≥ 40% 与全局非回归基线目前只写规范，CI 不阻断；Vitest 4 移除 `coverage.all` 后报告只统计被测试导入的文件，数字回落无人发现。评估用 `coverage.thresholds`（glob）或脚本读取 `coverage-final.json` 做门禁。
 - **移动端安全页会话表逐字折行**：`session-table` 的 6 列 `flex: 1` + `word-break: break-all` + 100 px 固定操作列，在 390 px 视口下每列只剩约 12 px（掩码盒 12×116 即证据），日期换 locale 只把折行从 19 行降到 18 行。处理方向：移动端改为卡片式会话项，随本条移动端布局改造落地。
 - **stylelint 18 规则补位**：`stylelint-config-cmyr@1.1.0` 为兼容 SCSS 变量关闭了 `value-no-invalid`（实测现有样式 21 条误报），取值拼写错误暂时不再被拦截；待上游支持 SCSS 变量值后恢复。同配置的 `stylelint-config-recommended-scss@17.0.1` peer 仍为 `stylelint ^17`，需上游升 `^18` 才与 stylelint 18 正式对齐。
