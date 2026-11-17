@@ -37,6 +37,12 @@ export function dynamicMask(page: Page): Locator[] {
     return [page.locator('[data-visual-mask]')]
 }
 
+/** 断言页面没有横向溢出：平板宽度新增基线的验收项之一。 */
+export async function expectNoHorizontalOverflow(page: Page): Promise<void> {
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+    expect(overflow, '平板宽度下页面出现横向溢出').toBeLessThanOrEqual(1)
+}
+
 /** 对整页（viewport）截图并比对，自动应用动态区域掩码。 */
 export async function expectPageScreenshot(page: Page, name: string, extraMasks: Locator[] = []): Promise<void> {
     const snapshot = name.endsWith('.png') || name.endsWith('.webp') ? name : `${name}.png`

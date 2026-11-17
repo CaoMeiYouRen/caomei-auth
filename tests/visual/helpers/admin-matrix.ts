@@ -1,7 +1,7 @@
 import { type Page, expect, test } from '@playwright/test'
 import { useAdminSession } from './admin-session'
-import { visualFixedNow } from './config'
-import { applyTheme, expectPageScreenshot, waitForVisualStable, type VisualTheme } from './visual'
+import { visualFixedNow, visualTabletViewport } from './config'
+import { applyTheme, expectNoHorizontalOverflow, expectPageScreenshot, waitForVisualStable, type VisualTheme } from './visual'
 
 /**
  * Admin 数据页视觉矩阵（P4）。
@@ -42,6 +42,8 @@ interface AdminRoute {
     themes?: readonly VisualTheme[]
     /** 额外交互态（仅浅色桌面） */
     states?: readonly VisualState[]
+    /** 是否参与平板宽度（768×1024）自基线；只给核心页开启，控制视觉 CI 时长 */
+    tablet?: boolean
 }
 
 const VIEWPORTS: readonly VisualViewport[] = [
@@ -50,6 +52,8 @@ const VIEWPORTS: readonly VisualViewport[] = [
 ]
 
 const THEMES: readonly VisualTheme[] = ['light', 'dark']
+
+const isReferenceLayer = () => process.env.VISUAL_LAYER === 'parity'
 
 /** 等待指定标题的对话框可见。 */
 async function expectDialog(page: Page, title: string): Promise<void> {
@@ -67,6 +71,7 @@ const ROUTES: readonly AdminRoute[] = [
         path: '/admin/users',
         slug: 'admin-users',
         auth: true,
+        tablet: true,
         readySelector: '.admin-users',
         readyText: '用户管理',
         states: [
@@ -185,6 +190,7 @@ const ROUTES: readonly AdminRoute[] = [
         path: '/admin/logs',
         slug: 'admin-logs',
         auth: true,
+        tablet: true,
         readySelector: '.admin-logs',
         readyText: '登录统计',
         states: [
@@ -312,7 +318,32 @@ function defineInteractionStates(): void {
     })
 }
 
+/** 平板宽度：只覆盖用户管理与登录统计，避免扩大 Admin 全矩阵、拉长 CI。 */
+function defineTabletStates(): void {
+    /* 平板基线与参考态层无关：参考态采自迁移前提交，没有 tablet 快照 */
+    if (isReferenceLayer()) {
+        return
+    }
+    for (const theme of THEMES) {
+        test.describe(`${theme} / tablet`, () => {
+            test.use({ colorScheme: theme, viewport: visualTabletViewport })
+
+            for (const route of ROUTES.filter((item) => item.tablet)) {
+                if (!(route.themes ?? THEMES).includes(theme)) {
+                    continue
+                }
+                test(`${route.slug} 默认态（${theme} / tablet）`, async ({ page }) => {
+                    await open(page, route, theme)
+                    await expectNoHorizontalOverflow(page)
+                    await shot(page, `${route.slug}-${theme}-tablet-default`)
+                })
+            }
+        })
+    }
+}
+
 export function defineAdminVisualMatrix(): void {
     defineDefaultStates()
     defineInteractionStates()
+    defineTabletStates()
 }

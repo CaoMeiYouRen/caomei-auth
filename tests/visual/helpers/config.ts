@@ -11,6 +11,9 @@ export const visualHost = '127.0.0.1'
 export const visualPort = 3100
 export const visualBaseURL = `http://${visualHost}:${visualPort}`
 
+/** 平板宽度：只用于核心页的 tablet 自基线（阶段 7 M3） */
+export const visualTabletViewport = { width: 768, height: 1024 }
+
 /** 视觉层固定时钟锚点：与 `scripts/testing/visual-fixtures.mjs` 的默认值一致。 */
 export const visualFixedNow = '2026-06-15T12:00:00+08:00'
 

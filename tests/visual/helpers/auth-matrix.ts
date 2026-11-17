@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { type Page, expect, test } from '@playwright/test'
-import { visualBaseURL, visualSessionHeaders } from './config'
-import { applyTheme, expectPageScreenshot, waitForVisualStable, type VisualTheme } from './visual'
+import { visualBaseURL, visualSessionHeaders, visualTabletViewport } from './config'
+import { applyTheme, expectNoHorizontalOverflow, expectPageScreenshot, waitForVisualStable, type VisualTheme } from './visual'
 
 /**
  * 认证页视觉矩阵（P2/P3）。
@@ -46,6 +46,8 @@ interface VisualRoute {
     states?: readonly VisualState[]
     /** 是否参与参考态层（迁移前页面才需要）；新增页面设为 false，只维护自基线 */
     reference?: boolean
+    /** 是否参与平板宽度（768×1024）自基线；只给核心页开启，控制视觉 CI 时长 */
+    tablet?: boolean
 }
 
 const VIEWPORTS: readonly VisualViewport[] = [
@@ -59,6 +61,7 @@ const ROUTES: readonly VisualRoute[] = [
     {
         path: '/login',
         slug: 'login',
+        tablet: true,
         submitLabel: '登录',
         errorAnchor: '请输入用户名',
         tabs: [['用户名', 'username'], ['邮箱', 'email'], ['手机号', 'phone']],
@@ -66,6 +69,7 @@ const ROUTES: readonly VisualRoute[] = [
     {
         path: '/register',
         slug: 'register',
+        tablet: true,
         submitLabel: '注册',
         errorAnchor: '请输入有效的邮箱地址',
         tabs: [['手机号', 'phone']],
@@ -153,6 +157,7 @@ const ROUTES: readonly VisualRoute[] = [
         path: '/profile',
         slug: 'profile',
         auth: true,
+        tablet: true,
         readyText: 'visual-baseline@example.com',
         states: [
             {
@@ -302,7 +307,32 @@ function defineInteractionStates(): void {
     })
 }
 
+/** 平板宽度：只覆盖核心页（登录 / 注册 / 个人资料），保持与桌面 / 移动基线同批验证。 */
+function defineTabletStates(): void {
+    /* 平板基线与参考态层无关：参考态采自迁移前提交，没有 tablet 快照 */
+    if (isReferenceLayer()) {
+        return
+    }
+    for (const theme of THEMES) {
+        test.describe(`${theme} / tablet`, () => {
+            test.use({ colorScheme: theme, viewport: visualTabletViewport })
+
+            for (const route of ROUTES.filter((item) => item.tablet)) {
+                if (route.reference === false && isReferenceLayer()) {
+                    continue
+                }
+                test(`${route.slug} 默认态（${theme} / tablet）`, async ({ page }) => {
+                    await open(page, route, theme)
+                    await expectNoHorizontalOverflow(page)
+                    await shot(page, `${route.slug}-${theme}-tablet-default`)
+                })
+            }
+        })
+    }
+}
+
 export function defineAuthVisualMatrix(): void {
     defineDefaultStates()
     defineInteractionStates()
+    defineTabletStates()
 }

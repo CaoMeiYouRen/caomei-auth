@@ -25,7 +25,7 @@
 - **渲染环境固定为容器**：本地与 CI 共用 `mcr.microsoft.com/playwright:v<版本>-noble`。宿主与容器实测约 1% 的整页漂移（12,509 / 1,296,000 px），因此基线只在容器内采集，宿主直接跑仅用于调试。
 - **不追求像素级一致**：`threshold 0.2` + `maxDiffPixels 200` 只吸收抗锯齿噪声；超限即报告差异，由人工归因。
 
-## 3. 视觉矩阵（自基线 102 张 / 参考态 88 张）
+## 3. 视觉矩阵
 
 同一矩阵同时驱动两层：参考态层（迁移前原貌）与自基线层（当前接受状态）。参考态只覆盖迁移前已存在的页面（认证 50 + Admin 38）；about / privacy / terms 是迁移后新增的自基线页面，矩阵中以 `reference: false` 标记，参考态层跳过。
 
@@ -56,6 +56,8 @@
 | `/privacy` | 浅 / 暗 | 1440×900 / 390×844 | 默认（仅自基线） | `privacy-{theme}-{viewport}-default` |
 | `/terms` | 浅 / 暗 | 1440×900 / 390×844 | 默认（仅自基线） | `terms-{theme}-{viewport}-default` |
 
+**平板宽度（2026-11-17 起）**：只给核心页 `login` / `register` / `profile` / `admin-users` / `admin-logs` 增加 768×1024（`tablet`）默认态，浅色 + 暗色共 10 张，快照名 `{slug}-{theme}-tablet-default`；用例同时断言 `document.documentElement.scrollWidth` 不超出视口（无横向溢出）。不扩到全部矩阵以控制 CI 时长。
+
 ### 3.1 Admin 矩阵（P4-0）
 
 | 路由 | 主题 | 视口 | 状态 | 快照 |
@@ -82,7 +84,7 @@ P3 / P4 路由按同一矩阵逐批扩展：每批迁移**之前**在迁移前�
 | 维度 | 取值 | 说明 |
 | :--- | :--- | :--- |
 | 浏览器 | Playwright 1.65.0 绑定的 chromium | 由 `package.json` 的 `@playwright/test` 版本决定，不跟随系统 Chrome；升级时必须同步 CI 容器版本并重采基线 |
-| 视口 / DSF | 1440×900 / 390×844，DSF 1 | 每个 describe 显式 `test.use` |
+| 视口 / DSF | 1440×900 / 390×844，核心页追加 768×1024，DSF 1 | 每个 describe 显式 `test.use` |
 | locale / 时区 | `zh-CN` / `Asia/Shanghai` | 避免文案与日期格式漂移 |
 | 主题 | `localStorage['vueuse-color-scheme']=light\|dark` | 不依赖系统 `prefers-color-scheme`；暗色额外断言 `html.dark` 生效 |
 | 动画 / 光标 | `animations: 'disabled'` / `caret: 'hide'` | 配置层统一 |
