@@ -21,6 +21,7 @@ const validRegistry = {
             nativeName: '简体中文',
             dir: 'ltr',
             default: true,
+            enabled: true,
             fallbackChain: ['zh-CN'],
             routePrefix: '',
             readiness: 'seo-ready',
@@ -34,6 +35,7 @@ const validRegistry = {
             nativeName: 'English',
             dir: 'ltr',
             default: false,
+            enabled: true,
             fallbackChain: ['en-US', 'zh-CN'],
             routePrefix: '/en-US',
             readiness: 'ui-ready',
@@ -204,6 +206,34 @@ describe('i18n 治理脚本：Locale Registry 校验', () => {
         const english = registry.LOCALE_REGISTRY[1]!
         english.indexable = true
         expect(validateLocaleRegistry(registry, validDiskState)).toContain('locale en-US 尚未 seo-ready，indexable 必须为 false')
+    })
+
+    it('拒绝未启用语言开放切换或索引', () => {
+        const registry = structuredClone(validRegistry)
+        const disabled = structuredClone(registry.LOCALE_REGISTRY[1]!)
+        disabled.code = 'ja-JP'
+        disabled.enabled = false
+        disabled.switchable = true
+        disabled.indexable = true
+        registry.LOCALE_REGISTRY.push(disabled)
+        const errors = validateLocaleRegistry(registry, validDiskState)
+        expect(errors).toContain('locale ja-JP 未启用，switchable 必须为 false')
+        expect(errors).toContain('locale ja-JP 未启用，indexable 必须为 false')
+    })
+
+    it('未启用语言不要求目录与语言文件', () => {
+        const registry = structuredClone(validRegistry)
+        const disabled = structuredClone(registry.LOCALE_REGISTRY[1]!)
+        disabled.code = 'ja-JP'
+        disabled.enabled = false
+        disabled.switchable = false
+        disabled.indexable = false
+        disabled.readiness = 'draft'
+        disabled.routePrefix = '/ja-JP'
+        disabled.fallbackChain = ['ja-JP', 'en-US', 'zh-CN']
+        disabled.files = ['ja-JP/common.json']
+        registry.LOCALE_REGISTRY.push(disabled)
+        expect(validateLocaleRegistry(registry, validDiskState)).toEqual([])
     })
 
     it('要求回退链最终回到默认语言', () => {

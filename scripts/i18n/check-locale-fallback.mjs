@@ -23,7 +23,8 @@ async function main() {
 
     const errors = validateLocaleRegistry(registry, { directories, filesByLocale })
     if (errors.length === 0) {
-        console.log(`[i18n] Locale Registry 校验通过（${registry.LOCALE_REGISTRY.length} 个语言，${directories.length} 个目录）`)
+        const enabled = registry.LOCALE_REGISTRY.filter((locale) => locale.enabled === true).length
+        console.log(`[i18n] Locale Registry 校验通过（${registry.LOCALE_REGISTRY.length} 个语言 / ${enabled} 个启用，${directories.length} 个目录）`)
         return
     }
 

@@ -4,12 +4,15 @@ import { diffFlatKeys, formatList, listLocaleDirectories, loadLocaleMessages, lo
 async function main() {
     const registry = await loadLocaleRegistry()
     const defaultLocale = registry.DEFAULT_LOCALE
-    const localeCodes = registry.LOCALE_REGISTRY.map((locale) => String(locale.code))
+    const allLocaleCodes = registry.LOCALE_REGISTRY.map((locale) => String(locale.code))
+    const localeCodes = registry.LOCALE_REGISTRY
+        .filter((locale) => locale.enabled === true)
+        .map((locale) => String(locale.code))
     const directories = await listLocaleDirectories()
     const errors = []
 
     for (const directory of directories) {
-        if (!localeCodes.includes(directory)) {
+        if (!allLocaleCodes.includes(directory)) {
             errors.push(`i18n/locales/${directory} 未在 Locale Registry 中登记`)
         }
     }

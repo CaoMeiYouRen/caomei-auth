@@ -131,7 +131,9 @@ async function main() {
 
     const registry = await loadLocaleRegistry()
     const defaultLocale = registry.DEFAULT_LOCALE
-    const localeCodes = registry.LOCALE_REGISTRY.map((locale) => String(locale.code))
+    const localeCodes = registry.LOCALE_REGISTRY
+        .filter((locale) => locale.enabled === true)
+        .map((locale) => String(locale.code))
     if (!localeCodes.includes(defaultLocale)) {
         throw new Error(`DEFAULT_LOCALE（${defaultLocale}）不在 LOCALE_REGISTRY 中`)
     }

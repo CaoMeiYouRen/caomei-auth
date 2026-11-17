@@ -52,6 +52,9 @@ export function validateLocaleRegistry(registry, diskState) {
         if (typeof locale.nativeName !== 'string' || !locale.nativeName.trim()) {
             errors.push(`${label} 缺少 nativeName`)
         }
+        if (typeof locale.enabled !== 'boolean') {
+            errors.push(`${label} 的 enabled 必须是布尔值`)
+        }
         if (locale.dir !== 'ltr' && locale.dir !== 'rtl') {
             errors.push(`${label} 的 dir 必须是 ltr 或 rtl`)
         }
@@ -59,6 +62,7 @@ export function validateLocaleRegistry(registry, diskState) {
             errors.push(`${label} 的 readiness 非法：${String(locale.readiness)}`)
         }
 
+        const enabled = locale.enabled === true
         const indexable = locale.indexable === true
         if (indexable && locale.readiness !== 'seo-ready') {
             errors.push(`${label} 尚未 seo-ready，indexable 必须为 false`)
@@ -66,8 +70,15 @@ export function validateLocaleRegistry(registry, diskState) {
         if (locale.switchable === true && locale.readiness === 'draft') {
             errors.push(`${label} 仍是 draft，不能开放切换`)
         }
-
-        if (!directories.has(code)) {
+        /* 未启用语言不生成路由 / 切换入口 / 索引，也不要求磁盘语言包已存在 */
+        if (!enabled) {
+            if (locale.switchable === true) {
+                errors.push(`${label} 未启用，switchable 必须为 false`)
+            }
+            if (indexable) {
+                errors.push(`${label} 未启用，indexable 必须为 false`)
+            }
+        } else if (!directories.has(code)) {
             errors.push(`${label} 在 i18n/locales 下缺少目录`)
         }
 
@@ -132,16 +143,21 @@ export function validateLocaleRegistry(registry, diskState) {
             }
             seenFiles.add(fileName)
 
+            if (!enabled) {
+                continue
+            }
             const diskFiles = diskState.filesByLocale[code] ?? []
             if (!diskFiles.includes(fileName)) {
                 errors.push(`${label} 声明的语言文件不存在：${file}`)
             }
         }
 
-        const diskFiles = diskState.filesByLocale[code] ?? []
-        for (const fileName of diskFiles) {
-            if (!seenFiles.has(fileName)) {
-                errors.push(`${label} 存在未注册的语言文件：${code}/${fileName}`)
+        if (enabled) {
+            const diskFiles = diskState.filesByLocale[code] ?? []
+            for (const fileName of diskFiles) {
+                if (!seenFiles.has(fileName)) {
+                    errors.push(`${label} 存在未注册的语言文件：${code}/${fileName}`)
+                }
             }
         }
     }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createI18n } from 'vue-i18n'
 import { LOCALE_MESSAGE_MODULES, getLocaleMessageFilePaths } from '@/i18n/config/locale-modules'
-import { DEFAULT_LOCALE, LOCALE_REGISTRY } from '@/i18n/config/locale-registry'
+import { DEFAULT_LOCALE, ENABLED_LOCALES } from '@/i18n/config/locale-registry'
 
 /**
  * 语言包运行时门禁：结构、可编译性与文案卫生。
@@ -39,8 +39,8 @@ function mergeModules(locale: string): LocaleMessages {
 }
 
 describe('i18n 语言包运行时门禁', () => {
-    it('每个注册语言都有全部模块文件', () => {
-        for (const locale of LOCALE_REGISTRY) {
+    it('每个启用语言都有全部模块文件', () => {
+        for (const locale of ENABLED_LOCALES) {
             for (const file of getLocaleMessageFilePaths(locale.code)) {
                 expect(catalogs[`../../i18n/locales/${file}`], file).toBeDefined()
             }
@@ -50,7 +50,7 @@ describe('i18n 语言包运行时门禁', () => {
     it('各语言与默认语言的键集合一致', () => {
         const baseKeys = flattenMessages(mergeModules(DEFAULT_LOCALE)).map(([key]) => key).sort()
 
-        for (const locale of LOCALE_REGISTRY) {
+        for (const locale of ENABLED_LOCALES) {
             if (locale.code === DEFAULT_LOCALE) {
                 continue
             }
@@ -59,9 +59,9 @@ describe('i18n 语言包运行时门禁', () => {
         }
     })
 
-    it('英文语言包不含中文', () => {
-        for (const locale of LOCALE_REGISTRY) {
-            if (locale.code === DEFAULT_LOCALE) {
+    it('非中文语言包不含中文', () => {
+        for (const locale of ENABLED_LOCALES) {
+            if (locale.code.startsWith('zh-')) {
                 continue
             }
             for (const [key, value] of flattenMessages(mergeModules(locale.code))) {
@@ -75,7 +75,7 @@ describe('i18n 语言包运行时门禁', () => {
     })
 
     it('文案不使用 `|` 复数分隔符', () => {
-        for (const locale of LOCALE_REGISTRY) {
+        for (const locale of ENABLED_LOCALES) {
             for (const [key, value] of flattenMessages(mergeModules(locale.code))) {
                 expect(value.includes('|'), `${locale.code} 的 ${key} 含复数分隔符`).toBe(false)
             }
@@ -83,9 +83,10 @@ describe('i18n 语言包运行时门禁', () => {
     })
 
     it('每条文案都能被 vue-i18n 编译并取到值', () => {
-        for (const locale of LOCALE_REGISTRY) {
+        for (const locale of ENABLED_LOCALES) {
             const messages = mergeModules(locale.code)
-            const i18n = createI18n({ legacy: false, locale: locale.code, fallbackLocale: false })
+            /* Registry 含未启用语言，类型上只允许当前启用语言；运行时仍逐语言校验 */
+            const i18n = createI18n({ legacy: false, locale: locale.code as never, fallbackLocale: false })
             i18n.global.setLocaleMessage(locale.code, messages)
 
             for (const [key] of flattenMessages(messages)) {
