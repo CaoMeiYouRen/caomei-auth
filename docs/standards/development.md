@@ -61,6 +61,14 @@
 -   **数据预取**: 在 SSR 场景下优先使用 `useFetch` 或 `useAsyncData`。
 -   **请求方法**: 优先使用项目封装的 `fetch` 逻辑，确保统一的错误处理和日志记录。
 
+### 4.3 文件规模门禁
+
+-   **阈值**: 单个源文件（`.ts` / `.tsx` / `.vue` / `.mjs` / `.js` / `.cjs`）不得超过 600 行，与 ESLint `max-lines` 同口径（按 `wc -l` 计行）。
+-   **新增超限**: 新文件超限直接失败，不得通过加入基线绕过；必须拆分。
+-   **基线文件**: `scripts/quality/file-size-baseline.json` 只登记存量超限文件，条目必须写明 `owner` 与拆分计划；行数只允许缩减，增长即失败。
+-   **命令**: `pnpm quality:file-size` 校验；拆分完成后执行 `pnpm quality:file-size:update` 收紧基线（只更新行数与移除条目，不新增）。
+-   **新增条目防线**: PR 场景由 CI 传入 `--compare-ref=<base sha>`，出现基线新增条目即失败；确需登记存量超限文件时必须人工评审并显式加 `--allow-new-baseline`。
+
 ## 5. 版本控制与提交
 
 -   **分支管理**:

@@ -56,6 +56,7 @@ jobs:
       - run: pnpm run typecheck
       - run: pnpm run build
       - run: pnpm run migration:check-budget
+      - run: pnpm run quality:file-size
       - run: pnpm run test
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

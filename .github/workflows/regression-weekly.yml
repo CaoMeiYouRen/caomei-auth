@@ -152,6 +152,9 @@ jobs:
       - name: Check AI governance
         run: pnpm run ai:check
 
+      - name: Check file size budget
+        run: pnpm run quality:file-size
+
       - name: Check caomei-ui imports
         run: pnpm run migration:check-imports
 

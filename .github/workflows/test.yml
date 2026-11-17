@@ -14,6 +14,9 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        with:
+          # 文件规模门禁的 --compare-ref 需要读取 PR base 的基线文件，浅克隆拿不到该对象
+          fetch-depth: 0
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
       - name: Setup Node.js@lts environment
@@ -25,6 +28,10 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run lint:css
       - run: pnpm run ai:check
+      - name: Check file size budget
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: pnpm run quality:file-size${BASE_SHA:+ --compare-ref=$BASE_SHA}
       - run: pnpm run lint:md:check
       - run: pnpm run migration:check-imports
       - run: pnpm run i18n:check

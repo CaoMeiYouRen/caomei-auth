@@ -32,7 +32,7 @@
 | 项 | 现状 | 影响 |
 | :--- | :--- | :--- |
 | stylelint | `stylelint ^16.26.1` + `stylelint-config-cmyr 1.0.0`（阶段 4 为恢复门禁固定） | 1.1.0 要求 stylelint 18；当前无法解 pin |
-| 文件规模 | `max-lines` 600：4 个文件超限（`user-detail-dialog` 630、`lib/auth` 788、`pages/security` 616、`check-governance.mjs` 781） | warning 常态化，新增大文件无阻断 |
+| 文件规模 | `max-lines` 600：5 个文件超限（`lib/auth` 788、`check-governance.mjs` 781、`user-detail-dialog` 630、`pages/security` 616、`typeorm-adapter` 613；M2 取证时补登此前遗漏的 `typeorm-adapter`） | warning 常态化，新增大文件无阻断 |
 | 视觉矩阵 | 只覆盖 1440×900 与 390×844 | 平板宽度无回归保护 |
 | 固定时钟 | `page.clock.setFixedTime` 下对话框内 Select 鼠标交互失效（Vue invoker 守卫） | 交互用例只能走键盘，口径散落在注释 |
 | Admin 失败反馈 | `authClient` 4xx/5xx 返回 `{ error }` 不抛出，封禁 / 创建 / 会话撤销失败静默 | 用户无提示、对话框不关闭 |
@@ -44,7 +44,7 @@
 | 编号 | 条目 | 交付面 | 验收 | 依赖 |
 | :--- | :--- | :--- | :--- | :--- |
 | M1 | stylelint 18 升级与共享配置解 pin | `stylelint` ^18.0.0、`stylelint-config-cmyr` ^1.1.0；按新规则修复样式 | `pnpm lint:css` 0 error；配置无临时规则副本；`pnpm build` 通过；`pnpm test:visual` 110 基线全绿且 login / profile / admin-users 三页抽检无 diff | 无 |
-| M2 | 文件规模门禁与基线 | `scripts/quality/check-file-size.mjs`、`file-size-baseline.json`（4 个超限文件登记当前行数）、`quality:file-size` 脚本、CI 接入 | 新增/增长超 600 行被拦截；基线内文件不得继续增长；缩减后可更新基线；单测覆盖阈值与基线解析 | 无 |
+| M2 | 文件规模门禁与基线 | `scripts/quality/check-file-size.mjs`、`file-size-baseline.json`（5 个超限文件登记当前行数与拆分计划）、`quality:file-size` 脚本、CI 接入 | 新增/增长超 600 行被拦截；基线内文件不得继续增长；缩减后可更新基线；单测覆盖阈值与基线解析 | 无 |
 | M3 | 视觉矩阵补平板宽度 | 视觉矩阵新增 `tablet`（768×1024），覆盖 login / register / profile / admin-users / admin-logs 等核心页，新增基线 | 新增基线 `test:visual` 通过；既有 1440 / 390 基线零变化；无横向溢出 | 无 |
 | M4 | 固定时钟交互口径收口 | 交互 helper：对话框内 Select 用键盘打开/选择；记录 `clock.install()` 可行性结论；更新相关用例与注释 | admin-users 封禁 / 创建对话框、会话撤销用例以键盘路径连续 3 次运行通过；文档写明约束与推荐写法 | M3 |
 | M5 | Admin 对话框 better-auth 失败反馈 | 封禁 / 创建用户 / 会话撤销 / 角色操作显式校验 `response.error`，给本地化兜底文案 | 失败弹错误 Toast 且不误报成功；单测覆盖 error 与成功分支 | 无 |
