@@ -111,7 +111,7 @@ _目标：收口工具链与测试基建——stylelint 18、文件规模门禁�
 
 _目标：语言架构扩到 10 码并启用 zh-CN / en-US / zh-TW / ja-JP / ko-KR；新语言 ui-ready（可切换、不索引），保留母语审校与后续 5 语扩展。_
 
-- **M1–M2 基建**：Registry 10 码 + 启用开关；caomei-ui `registerLocale` 桥接、切换器与协商。
+- **M1A–M2 基建**：Registry 10 码 + 启用开关；治理脚本适配启用集；caomei-ui `registerLocale` 桥接、切换器与协商。
 - **M3–M5 zh-TW**：微信 / 核心 / Admin 三批语言包，转换 + 台湾术语校订。
 - **M6–M8 ja-JP**：核心 / 业务 / Admin 三批语言包，机器翻译 draft。
 - **M9–M11 ko-KR**：核心 / 业务 / Admin 三批语言包，机器翻译 draft。
