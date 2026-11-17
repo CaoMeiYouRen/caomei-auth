@@ -21,13 +21,21 @@ import { DEFAULT_LOCALE, type LocaleCode, matchDetectedLocale } from '@/i18n/con
 const CAOMEI_LOCALE_MAP: Record<LocaleCode, CaomeiLocale> = {
     'zh-CN': 'zh-CN',
     'en-US': 'en-US',
+    'zh-TW': 'zh-TW',
+    'ja-JP': 'ja-JP',
+    'ko-KR': 'ko-KR',
+    'es-ES': 'es-ES',
+    'fr-FR': 'fr-FR',
+    'de-DE': 'de-DE',
+    'ru-RU': 'ru-RU',
+    'pt-BR': 'pt-BR',
 }
 
 /**
  * 把任意来源的 locale 归一化为 caomei-ui 可识别的 locale；无法识别时回退默认语言。
  *
- * 归一化沿用 Registry 的 better-auth 边界口径：`en` / `en-US` → `en-US`，
- * `zh-Hans` / `zh-Hant` / `zh-CN` → `zh-CN`（繁体暂不区分），`default` → 默认语言。
+ * 归一化沿用 Registry 的 better-auth 边界口径：`en` → `en-US`、`zh-Hans` → `zh-CN`、
+ * `zh-Hant` → `zh-TW`、`ja` → `ja-JP` 等；停用语言与未识别输入回退默认语言。
  */
 export function toCaomeiLocale(code?: string | null): CaomeiLocale {
     return CAOMEI_LOCALE_MAP[matchDetectedLocale(code) ?? DEFAULT_LOCALE]

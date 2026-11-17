@@ -46,6 +46,10 @@ describe('server/utils/email/i18n', () => {
         expect(getRequestLocaleFromRequest(new Request('https://example.com/api', {
             headers: { 'accept-language': 'fr-FR,en-US;q=0.9,zh-CN;q=0.8' },
         }))).toBe('en-US')
+        /* zh-TW 未启用时繁体按简体协商，不应被跳过而落到英文 */
+        expect(getRequestLocaleFromRequest(new Request('https://example.com/api', {
+            headers: { 'accept-language': 'zh-Hant,en-US;q=0.9' },
+        }))).toBe('zh-CN')
         expect(getRequestLocaleFromRequest(new Request('https://example.com/api', {
             headers: { 'accept-language': 'fr-FR,de-DE' },
         }))).toBeUndefined()

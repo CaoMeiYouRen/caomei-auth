@@ -11,7 +11,11 @@ import {
 /** 邮件模块消息（服务端专用模块，与 `email.json` 同构） */
 type EmailMessages = Record<string, unknown>
 
-const EMAIL_MESSAGES: Record<LocaleCode, EmailMessages> = {
+/**
+ * 邮件消息表：只登记已有语言包的语言；未登记的新语言回退 zh-CN。
+ * 新增语言时随语言包批次补静态 import。
+ */
+const EMAIL_MESSAGES: Partial<Record<LocaleCode, EmailMessages>> = {
     'zh-CN': zhEmail as EmailMessages,
     'en-US': enEmail as EmailMessages,
 }
@@ -49,8 +53,8 @@ export interface RequestLike {
  */
 export function getEmailTranslator(locale?: LocaleCode | string | null): EmailTranslator {
     const normalized = normalizeDetectedLocale(locale)
-    const primary = EMAIL_MESSAGES[normalized]
-    const fallback = EMAIL_MESSAGES[DEFAULT_LOCALE]
+    const fallback: EmailMessages = EMAIL_MESSAGES[DEFAULT_LOCALE] ?? {}
+    const primary: EmailMessages = EMAIL_MESSAGES[normalized] ?? fallback
 
     return (key, named) => {
         const template = lookupMessage(primary, key) || lookupMessage(fallback, key)

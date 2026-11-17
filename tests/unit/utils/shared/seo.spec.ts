@@ -11,6 +11,7 @@ describe('utils/shared/seo', () => {
         expect(isIndexableHreflang('zh-CN')).toBe(true)
         expect(isIndexableHreflang('en')).toBe(true)
         expect(isIndexableHreflang('ja-JP')).toBe(false)
+        expect(isIndexableHreflang('zh-TW')).toBe(false)
         expect(isIndexableOgLocale('en_US')).toBe(true)
         expect(isIndexableOgLocale('ja_JP')).toBe(false)
         expect(isIndexableHreflang(undefined)).toBe(false)

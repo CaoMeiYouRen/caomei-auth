@@ -87,7 +87,7 @@ export default defineNuxtConfig({
         baseUrl: process.env.NUXT_PUBLIC_AUTH_BASE_URL || 'http://localhost:3000',
         // locales 由 Locale Registry 生成，禁止手写第二份；
         // files 只装 core 模块（阶段 5 M2），其余模块由 i18n-modules 中间件按路由懒加载
-        locales: LOCALE_REGISTRY.map((locale) => ({
+        locales: LOCALE_REGISTRY.filter((locale) => locale.enabled === true).map((locale) => ({
             code: locale.code,
             name: locale.nativeName,
             language: locale.code,

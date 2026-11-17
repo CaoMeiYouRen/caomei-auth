@@ -4,6 +4,7 @@
  * - `nuxt.config.ts` 的 `i18n.locales` 由本文件生成，禁止手写第二份。
  * - `server` 侧 detector 与服务端翻译共享同一份定义。
  * - better-auth 的 `zh-Hans` / `zh-Hant` / `default` 只在认证边界映射，不进入本表。
+ * - 目标语言面与 caomei-ui 1.3.0 的 10 语对齐；`enabled` 控制当前实际启用的语言。
  */
 
 /* 治理脚本用 Node 类型擦除直接 import 本文件，相对 import 必须带 `.ts` 扩展名 */
@@ -13,7 +14,21 @@ export const DEFAULT_LOCALE = 'zh-CN'
 
 export const LOCALE_COOKIE_KEY = 'i18n_locale'
 
-export type LocaleCode = 'zh-CN' | 'en-US'
+/** 目标语言全集（与 caomei-ui 内建语言一致）；顺序即语言切换器的展示顺序 */
+export const LOCALE_CODES = [
+    'zh-CN',
+    'en-US',
+    'zh-TW',
+    'ja-JP',
+    'ko-KR',
+    'es-ES',
+    'fr-FR',
+    'de-DE',
+    'ru-RU',
+    'pt-BR',
+] as const
+
+export type LocaleCode = typeof LOCALE_CODES[number]
 
 export type LocaleReadiness = 'draft' | 'ui-ready' | 'seo-ready'
 
@@ -26,6 +41,8 @@ export interface LocaleDefinition {
     nativeName: string
     dir: 'ltr' | 'rtl'
     default: boolean
+    /** 是否在当前版本启用（未启用语言不生成路由、不进切换器、不可被探测器命中） */
+    enabled: boolean
     /** 回退链，首项为自身 */
     fallbackChain: LocaleCode[]
     /** 路由前缀（`prefix_except_default` 下默认语言为空） */
@@ -44,6 +61,7 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         nativeName: '简体中文',
         dir: 'ltr',
         default: true,
+        enabled: true,
         fallbackChain: ['zh-CN'],
         routePrefix: '',
         readiness: 'seo-ready',
@@ -57,6 +75,7 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         nativeName: 'English',
         dir: 'ltr',
         default: false,
+        enabled: true,
         fallbackChain: ['en-US', 'zh-CN'],
         routePrefix: '/en-US',
         /* 文案与视觉基线已就绪，放开索引 */
@@ -65,16 +84,154 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         indexable: true,
         files: getLocaleMessageFilePaths('en-US'),
     },
+    {
+        code: 'zh-TW',
+        name: '繁體中文',
+        nativeName: '繁體中文',
+        dir: 'ltr',
+        default: false,
+        enabled: false,
+        fallbackChain: ['zh-TW', 'zh-CN', 'en-US'],
+        routePrefix: '/zh-TW',
+        readiness: 'draft',
+        switchable: false,
+        indexable: false,
+        files: getLocaleMessageFilePaths('zh-TW'),
+    },
+    {
+        code: 'ja-JP',
+        name: '日本語',
+        nativeName: '日本語',
+        dir: 'ltr',
+        default: false,
+        enabled: false,
+        fallbackChain: ['ja-JP', 'en-US', 'zh-CN'],
+        routePrefix: '/ja-JP',
+        readiness: 'draft',
+        switchable: false,
+        indexable: false,
+        files: getLocaleMessageFilePaths('ja-JP'),
+    },
+    {
+        code: 'ko-KR',
+        name: '한국어',
+        nativeName: '한국어',
+        dir: 'ltr',
+        default: false,
+        enabled: false,
+        fallbackChain: ['ko-KR', 'en-US', 'zh-CN'],
+        routePrefix: '/ko-KR',
+        readiness: 'draft',
+        switchable: false,
+        indexable: false,
+        files: getLocaleMessageFilePaths('ko-KR'),
+    },
+    {
+        code: 'es-ES',
+        name: 'Español',
+        nativeName: 'Español',
+        dir: 'ltr',
+        default: false,
+        enabled: false,
+        fallbackChain: ['es-ES', 'en-US', 'zh-CN'],
+        routePrefix: '/es-ES',
+        readiness: 'draft',
+        switchable: false,
+        indexable: false,
+        files: getLocaleMessageFilePaths('es-ES'),
+    },
+    {
+        code: 'fr-FR',
+        name: 'Français',
+        nativeName: 'Français',
+        dir: 'ltr',
+        default: false,
+        enabled: false,
+        fallbackChain: ['fr-FR', 'en-US', 'zh-CN'],
+        routePrefix: '/fr-FR',
+        readiness: 'draft',
+        switchable: false,
+        indexable: false,
+        files: getLocaleMessageFilePaths('fr-FR'),
+    },
+    {
+        code: 'de-DE',
+        name: 'Deutsch',
+        nativeName: 'Deutsch',
+        dir: 'ltr',
+        default: false,
+        enabled: false,
+        fallbackChain: ['de-DE', 'en-US', 'zh-CN'],
+        routePrefix: '/de-DE',
+        readiness: 'draft',
+        switchable: false,
+        indexable: false,
+        files: getLocaleMessageFilePaths('de-DE'),
+    },
+    {
+        code: 'ru-RU',
+        name: 'Русский',
+        nativeName: 'Русский',
+        dir: 'ltr',
+        default: false,
+        enabled: false,
+        fallbackChain: ['ru-RU', 'en-US', 'zh-CN'],
+        routePrefix: '/ru-RU',
+        readiness: 'draft',
+        switchable: false,
+        indexable: false,
+        files: getLocaleMessageFilePaths('ru-RU'),
+    },
+    {
+        code: 'pt-BR',
+        name: 'Português (Brasil)',
+        nativeName: 'Português (Brasil)',
+        dir: 'ltr',
+        default: false,
+        enabled: false,
+        fallbackChain: ['pt-BR', 'en-US', 'zh-CN'],
+        routePrefix: '/pt-BR',
+        readiness: 'draft',
+        switchable: false,
+        indexable: false,
+        files: getLocaleMessageFilePaths('pt-BR'),
+    },
 ]
+
+/** 当前启用的语言：只有这些语言会生成路由、进入切换器并参与语言协商 */
+export const ENABLED_LOCALES = LOCALE_REGISTRY.filter((locale) => locale.enabled === true)
+
+export const ENABLED_LOCALE_CODES = ENABLED_LOCALES.map((locale) => locale.code)
+
+const ENABLED_LOCALE_CODE_SET = new Set<string>(ENABLED_LOCALE_CODES)
+
+function isEnabledLocale(code: string): code is LocaleCode {
+    return ENABLED_LOCALE_CODE_SET.has(code)
+}
 
 /** 认证层（better-auth）locale → 项目 locale 的边界映射 */
 const AUTH_LOCALE_ALIASES: Record<string, LocaleCode> = {
     'zh-Hans': 'zh-CN',
     zh: 'zh-CN',
     'zh-CN': 'zh-CN',
-    'zh-Hant': 'zh-CN',
+    'zh-Hant': 'zh-TW',
+    'zh-TW': 'zh-TW',
     en: 'en-US',
     'en-US': 'en-US',
+    ja: 'ja-JP',
+    'ja-JP': 'ja-JP',
+    ko: 'ko-KR',
+    'ko-KR': 'ko-KR',
+    es: 'es-ES',
+    'es-ES': 'es-ES',
+    fr: 'fr-FR',
+    'fr-FR': 'fr-FR',
+    de: 'de-DE',
+    'de-DE': 'de-DE',
+    ru: 'ru-RU',
+    'ru-RU': 'ru-RU',
+    pt: 'pt-BR',
+    'pt-BR': 'pt-BR',
     default: DEFAULT_LOCALE,
 }
 
@@ -84,10 +241,11 @@ function matchAuthLocaleAlias(input: string): LocaleCode | undefined {
 }
 
 /**
- * 把任意来源的 locale 归一化为 Registry 内的 code；无法识别时返回 undefined。
+ * 把任意来源的 locale 归一化为**已启用**的 Registry code；无法识别或未启用时返回 undefined。
  *
  * 与 `normalizeDetectedLocale` 的区别：调用方需要区分“未识别”与“默认语言”时使用，
- * 例如在语言协商中跳过不支持的语言。
+ * 例如在语言协商中跳过不支持的语言。未启用的语言按“不支持”处理；
+ * 例外：`zh-Hant` 在 zh-TW 未启用时回退 zh-CN，避免协商落到英文。
  */
 export function matchDetectedLocale(input?: string | null): LocaleCode | undefined {
     if (!input) {
@@ -99,16 +257,24 @@ export function matchDetectedLocale(input?: string | null): LocaleCode | undefin
         return undefined
     }
 
-    const exact = LOCALE_REGISTRY.find((locale) => locale.code.toLowerCase() === raw.toLowerCase())
+    const exact = ENABLED_LOCALES.find((locale) => locale.code.toLowerCase() === raw.toLowerCase())
     if (exact) {
         return exact.code
     }
 
-    return matchAuthLocaleAlias(raw) ?? matchAuthLocaleAlias(raw.split('-')[0] ?? '')
+    const aliased = matchAuthLocaleAlias(raw) ?? matchAuthLocaleAlias(raw.split('-')[0] ?? '')
+    if (aliased && isEnabledLocale(aliased)) {
+        return aliased
+    }
+    /* 繁体用户在 zh-TW 启用前回退简体，避免按 tag 协商时被跳过而落到英文 */
+    if (aliased === 'zh-TW' && isEnabledLocale('zh-CN')) {
+        return 'zh-CN'
+    }
+    return undefined
 }
 
 /**
- * 把任意来源的 locale 归一化为 Registry 内的 code，无法识别时回退默认语言。
+ * 把任意来源的 locale 归一化为**已启用**的 Registry code，无法识别时回退默认语言。
  */
 export function normalizeDetectedLocale(input?: string | null): LocaleCode {
     return matchDetectedLocale(input) ?? DEFAULT_LOCALE
@@ -120,10 +286,10 @@ export function getLocaleDefinition(code: string): LocaleDefinition | undefined 
 
 /**
  * 去掉路径上的 locale 前缀（`/en-US/login` → `/login`）。
- * 用于路由守卫等按业务路径判断的场景；默认语言无前缀，原样返回。
+ * 只处理已启用语言；停用语言不生成路由，按普通路径原样返回。
  */
 export function stripLocalePrefix(path: string): string {
-    for (const locale of LOCALE_REGISTRY) {
+    for (const locale of ENABLED_LOCALES) {
         if (!locale.routePrefix) {
             continue
         }

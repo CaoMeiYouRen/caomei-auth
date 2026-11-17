@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { PRE_REGISTERED_LOCALES } from 'caomei-ui'
-import { DEFAULT_LOCALE, LOCALE_REGISTRY } from '@/i18n/config/locale-registry'
+import { DEFAULT_LOCALE, ENABLED_LOCALES } from '@/i18n/config/locale-registry'
 import { toCaomeiLocale } from '@/composables/utils/use-caomei-locale'
 
 describe('use-caomei-locale', () => {
-    it('maps every registry locale to a pre-registered caomei locale', () => {
-        for (const locale of LOCALE_REGISTRY) {
+    it('maps every enabled locale to a pre-registered caomei locale', () => {
+        for (const locale of ENABLED_LOCALES) {
             const mapped = toCaomeiLocale(locale.code)
             /* 未预注册的语种会在运行期静默回退到 zh-CN，必须在单测阶段拦住 */
             expect(PRE_REGISTERED_LOCALES).toContain(mapped)

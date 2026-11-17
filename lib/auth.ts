@@ -18,6 +18,7 @@ import { sso } from '@better-auth/sso'
 import { ms } from 'ms'
 import { z } from 'zod'
 import { localization } from 'better-auth-localization'
+import { ENABLED_LOCALE_CODES, type LocaleCode } from '@/i18n/config/locale-registry'
 import { typeormAdapter } from '@/server/database/typeorm-adapter'
 import { sendEmail } from '@/server/utils/email/index'
 import { snowflake } from '@/server/utils/snowflake'
@@ -197,9 +198,8 @@ export const auth = betterAuth({
                 required: false,
                 defaultValue: null,
                 input: true,
-                /* 只接受 Registry 内的语言码，避免任意字符串写入库 */
                 validator: {
-                    input: z.enum(['zh-CN', 'en-US']),
+                    input: z.enum(ENABLED_LOCALE_CODES as [LocaleCode, ...LocaleCode[]]),
                 },
             },
             /* 用户时区偏好：IANA 名称或空串（跟随浏览器），仅用于展示时间，不参与鉴权 */

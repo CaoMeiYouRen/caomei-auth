@@ -8,8 +8,16 @@ const INDEXABLE_LOCALES = LOCALE_REGISTRY.filter((locale) => locale.readiness ==
 export const INDEXABLE_LOCALE_CODES = INDEXABLE_LOCALES.map((locale) => locale.code)
 
 const BCP47_BY_CODE: Record<LocaleCode, string[]> = {
-    'zh-CN': ['zh-CN', 'zh'],
+    'zh-CN': ['zh-CN', 'zh', 'zh-Hans'],
     'en-US': ['en-US', 'en'],
+    'zh-TW': ['zh-TW', 'zh-Hant'],
+    'ja-JP': ['ja-JP', 'ja'],
+    'ko-KR': ['ko-KR', 'ko'],
+    'es-ES': ['es-ES', 'es'],
+    'fr-FR': ['fr-FR', 'fr'],
+    'de-DE': ['de-DE', 'de'],
+    'ru-RU': ['ru-RU', 'ru'],
+    'pt-BR': ['pt-BR', 'pt'],
 }
 
 /** hreflang 值是否属于可索引语言（`en` / `en-US` 都算） */
@@ -47,7 +55,7 @@ function trimBase(baseUrl: string): string {
 /**
  * 生成 sitemap.xml：每个公开页面 × 每个可索引语言，附带 `xhtml:link` alternates。
  *
- * 只输出可索引语言（当前为 zh-CN / en-US），`ui-ready` 语言不会进入索引。
+ * 只输出可索引语言（阶段 8 仍为 zh-CN / en-US），`ui-ready` 语言不会进入索引。
  */
 export function buildSitemapXml(baseUrl: string, paths: readonly string[] = PUBLIC_SITEMAP_PATHS): string {
     const base = trimBase(baseUrl)
