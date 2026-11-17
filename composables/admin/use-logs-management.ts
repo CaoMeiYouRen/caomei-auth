@@ -4,7 +4,7 @@ import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import { authClient } from '@/lib/auth-client'
 import type { AdminLogSession, AdminLogStats } from '@/types/admin'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
-import { getApiErrorMessage } from '@/utils/shared/api-error'
+import { getApiErrorMessage, throwIfAuthError } from '@/utils/shared/api-error'
 
 interface LogSessionsResponse {
     success: boolean
@@ -109,9 +109,11 @@ export function useLogsManagement() {
         try {
             revokingSessionId.value = session.sessionToken
 
-            await authClient.admin.revokeUserSession({
+            const response = await authClient.admin.revokeUserSession({
                 sessionToken: session.sessionToken,
             })
+
+            throwIfAuthError(response, t('admin.logs.flow.revokeFailedDescription'))
 
             toast.success({
                 title: t('admin.logs.flow.revokeSuccessTitle'),

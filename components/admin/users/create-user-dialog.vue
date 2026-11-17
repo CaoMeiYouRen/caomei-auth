@@ -87,7 +87,7 @@ import { authClient } from '@/lib/auth-client'
 import { createUserFormSchema } from '@/utils/shared/schemas'
 import { useUserTable } from '@/composables/admin/use-user-table'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
-import { getApiErrorMessage } from '@/utils/shared/api-error'
+import { getApiErrorMessage, throwIfAuthError } from '@/utils/shared/api-error'
 
 const props = defineProps<{
     visible: boolean
@@ -155,6 +155,8 @@ const createUser = async () => {
             password: createForm.value.password,
             role: createForm.value.role as 'admin' | 'user',
         })
+
+        throwIfAuthError(response, t('admin.users.create.failedDescription'))
 
         if (response.data) {
             toast.success({

@@ -8,7 +8,7 @@ import { validateEmail } from '@/utils/shared/validate'
 import { syncAdminRole } from '@/utils/web/admin-role-client'
 import type { AdminUserProfile, AdminUserRow } from '@/types/admin'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
-import { getApiErrorMessage } from '@/utils/shared/api-error'
+import { getApiErrorMessage, throwIfAuthError } from '@/utils/shared/api-error'
 
 export function useUserManagement() {
     const toast = useToast()
@@ -143,6 +143,8 @@ export function useUserManagement() {
                 userId: user.id,
             })
 
+            throwIfAuthError(response, t('admin.users.flow.unbanFailed'))
+
             if (response.data) {
                 toast.success({
                     title: t('admin.users.flow.unbanSuccessTitle'),
@@ -185,6 +187,8 @@ export function useUserManagement() {
             const response = await authClient.admin.removeUser({
                 userId: user.id,
             })
+
+            throwIfAuthError(response, t('admin.users.flow.deleteFailed'))
 
             if (response.data) {
                 toast.success({
@@ -254,10 +258,11 @@ export function useUserManagement() {
 
         try {
             for (const user of selectedUsers.value) {
-                await authClient.admin.banUser({
+                const response = await authClient.admin.banUser({
                     userId: user.id,
                     banReason: t('admin.users.flow.batchBanReason'),
                 })
+                throwIfAuthError(response, t('admin.users.flow.batchBanFailed'))
             }
 
             toast.success({
@@ -275,6 +280,9 @@ export function useUserManagement() {
                 description: getApiErrorMessage(error, t('admin.users.flow.batchBanFailed')),
                 duration: 3000,
             })
+            /* 批量可能部分成功：刷新列表并清空选择，避免重复操作 */
+            selectedUsers.value = []
+            loadUsers()
         }
     }
 
@@ -294,9 +302,10 @@ export function useUserManagement() {
 
         try {
             for (const user of selectedUsers.value) {
-                await authClient.admin.unbanUser({
+                const response = await authClient.admin.unbanUser({
                     userId: user.id,
                 })
+                throwIfAuthError(response, t('admin.users.flow.batchUnbanFailed'))
             }
 
             toast.success({
@@ -314,6 +323,8 @@ export function useUserManagement() {
                 description: getApiErrorMessage(error, t('admin.users.flow.batchUnbanFailed')),
                 duration: 3000,
             })
+            selectedUsers.value = []
+            loadUsers()
         }
     }
 
@@ -333,9 +344,10 @@ export function useUserManagement() {
 
         try {
             for (const user of selectedUsers.value) {
-                await authClient.admin.removeUser({
+                const response = await authClient.admin.removeUser({
                     userId: user.id,
                 })
+                throwIfAuthError(response, t('admin.users.flow.batchDeleteFailed'))
             }
 
             toast.success({
@@ -353,6 +365,8 @@ export function useUserManagement() {
                 description: getApiErrorMessage(error, t('admin.users.flow.batchDeleteFailed')),
                 duration: 3000,
             })
+            selectedUsers.value = []
+            loadUsers()
         }
     }
 

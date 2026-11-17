@@ -128,6 +128,20 @@ describe('useLogsManagement', () => {
         }))
     })
 
+    it('better-auth 返回 error 时不得误报撤销成功', async () => {
+        const { revokeSession } = useLogsManagement()
+
+        ;(authClient.admin.revokeUserSession as any).mockResolvedValue({ error: { message: '无权限撤销' } })
+
+        await revokeSession({ sessionToken: 'token123' } as any)
+
+        expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+            title: '撤销失败',
+            description: '无权限撤销',
+        }))
+        expect(toast.success).not.toHaveBeenCalled()
+    })
+
     it('撤销失败时使用 danger 语气', async () => {
         const { revokeSession, revokingSessionId } = useLogsManagement()
 

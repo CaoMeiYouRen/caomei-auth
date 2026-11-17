@@ -298,7 +298,7 @@ import { useUserTable } from '@/composables/admin/use-user-table'
 import { useForm } from '@/composables/core/use-form'
 import { updateUserFormSchema } from '@/utils/shared/schemas'
 import type { AdminUserProfile } from '@/types/admin'
-import { getApiErrorMessage } from '@/utils/shared/api-error'
+import { getApiErrorMessage, throwIfAuthError } from '@/utils/shared/api-error'
 import { useLocaleDate } from '@/composables/use-locale-date'
 
 const { formatDateTimeFull } = useLocaleDate()
@@ -369,7 +369,7 @@ const updateUser = async () => {
 
     await handleSubmit(async (vals) => {
         try {
-            const { error } = await authClient.admin.updateUser({
+            const response = await authClient.admin.updateUser({
                 userId: targetUser.id,
                 data: {
                     name: vals.nickname,
@@ -381,9 +381,7 @@ const updateUser = async () => {
                 },
             })
 
-            if (error) {
-                throw new Error(error.message)
-            }
+            throwIfAuthError(response, t('admin.users.detail.updateFailed'))
 
             toast.success({ title: t('admin.users.detail.successTitle'), description: t('admin.users.detail.updateSuccess'), duration: 3000 })
             isEditing.value = false
@@ -536,6 +534,8 @@ const handleUnbanUser = async () => {
         const response = await authClient.admin.unbanUser({
             userId: targetUser.id,
         })
+
+        throwIfAuthError(response, t('admin.users.detail.unbanFailed'))
 
         if (response.data) {
             toast.success({

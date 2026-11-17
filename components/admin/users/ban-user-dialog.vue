@@ -72,7 +72,7 @@ import { computed, ref, watch } from 'vue'
 import { useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import type { AdminUserProfile } from '@/types/admin'
-import { getApiErrorMessage } from '@/utils/shared/api-error'
+import { getApiErrorMessage, throwIfAuthError } from '@/utils/shared/api-error'
 
 const props = defineProps<{
     visible: boolean
@@ -124,6 +124,8 @@ const confirmBanUser = async () => {
             banReason: banForm.value.reason || undefined,
             banExpiresIn: banForm.value.duration || undefined,
         })
+
+        throwIfAuthError(response, t('admin.users.ban.failedDescription'))
 
         if (response.data) {
             toast.success({

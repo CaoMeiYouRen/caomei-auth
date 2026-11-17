@@ -42,3 +42,35 @@ export function getApiErrorMessage(error: unknown, fallback: string): string {
 
     return fallback
 }
+
+/** better-auth 客户端在 4xx / 5xx 时返回 `{ error }` 而不是抛错，成功时才有 `data` */
+export interface AuthResponseLike {
+    data?: unknown
+    error?: { message?: unknown } | null
+}
+
+/**
+ * 读取 better-auth 客户端的失败文案。
+ *
+ * 返回 `null` 表示没有失败；返回空字符串表示失败但没有可展示文案，调用方应使用本地化兜底文案。
+ * @param response better-auth 客户端返回的响应
+ */
+export function getAuthResponseError(response: AuthResponseLike | null | undefined): string | null {
+    if (!response?.error) {
+        return null
+    }
+    return readMessage(response.error) ?? ''
+}
+
+/**
+ * better-auth 的 4xx / 5xx 返回 `{ error }` 而不抛错；显式校验并抛出可读错误，
+ * 交给调用方既有的 `catch` 展示本地化 Toast，避免误报成功。
+ * @param response better-auth 客户端返回的响应
+ * @param fallback 错误本身没有可展示文案时使用的本地化兜底文案
+ */
+export function throwIfAuthError(response: AuthResponseLike | null | undefined, fallback: string): void {
+    const message = getAuthResponseError(response)
+    if (message !== null) {
+        throw new Error(message || fallback)
+    }
+}

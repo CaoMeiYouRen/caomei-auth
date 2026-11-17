@@ -69,7 +69,7 @@ import { useConfirm, useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/shared/useragent'
 import type { AdminUserProfile, AdminUserSession } from '@/types/admin'
-import { getApiErrorMessage } from '@/utils/shared/api-error'
+import { getApiErrorMessage, throwIfAuthError } from '@/utils/shared/api-error'
 import { useLocaleDate } from '@/composables/use-locale-date'
 
 const { formatDateTimeShort } = useLocaleDate()
@@ -115,9 +115,12 @@ const loadUserSessions = async () => {
 
     try {
         sessionsLoading.value = true
+        /* 失败时不能保留上一个用户的会话列表 */
+        userSessions.value = []
         const response = await authClient.admin.listUserSessions({
             userId: props.user.id,
         })
+        throwIfAuthError(response, t('admin.users.sessions.loadFailed'))
         userSessions.value = (response.data?.sessions || []) as AdminUserSession[]
     } catch (error: unknown) {
         console.error('Failed to load user sessions:', error)
@@ -144,6 +147,8 @@ const revokeUserSession = async (sessionToken: string) => {
         const response = await authClient.admin.revokeUserSession({
             sessionToken,
         })
+
+        throwIfAuthError(response, t('admin.users.sessions.revokeFailed'))
 
         if (response.data) {
             toast.success({
@@ -184,6 +189,8 @@ const revokeAllUserSessions = async () => {
         const response = await authClient.admin.revokeUserSessions({
             userId: targetUser.id,
         })
+
+        throwIfAuthError(response, t('admin.users.sessions.revokeAllFailed'))
 
         if (response.data) {
             toast.success({

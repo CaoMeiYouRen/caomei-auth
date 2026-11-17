@@ -3,17 +3,24 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useI18nText } from '@/tests/mocks/i18n-text'
 import BanUserDialog from '@/components/admin/users/ban-user-dialog.vue'
+import CreateUserDialog from '@/components/admin/users/create-user-dialog.vue'
 import UserDetailDialog from '@/components/admin/users/user-detail-dialog.vue'
 import UserSessionsDialog from '@/components/admin/users/user-sessions-dialog.vue'
 import type { AdminUserProfile } from '@/types/admin'
 
-const { toast, confirmOpen, banUser, listUserSessions, revokeUserSessions, revokeUserSession } = vi.hoisted(() => ({
+interface AuthResponse {
+    data?: unknown
+    error?: { message?: string } | null
+}
+
+const { toast, confirmOpen, banUser, createUser, listUserSessions, revokeUserSessions, revokeUserSession } = vi.hoisted(() => ({
     toast: { success: vi.fn(), danger: vi.fn() },
     confirmOpen: vi.fn(async () => true),
-    banUser: vi.fn(async () => ({ data: {} })),
-    listUserSessions: vi.fn(async () => ({ data: { sessions: [] } })),
-    revokeUserSessions: vi.fn(async () => ({ data: {} })),
-    revokeUserSession: vi.fn(async () => ({ data: {} })),
+    banUser: vi.fn(async (): Promise<AuthResponse> => ({ data: {} })),
+    createUser: vi.fn(async (): Promise<AuthResponse> => ({ data: {} })),
+    listUserSessions: vi.fn(async (): Promise<AuthResponse> => ({ data: { sessions: [] } })),
+    revokeUserSessions: vi.fn(async (): Promise<AuthResponse> => ({ data: {} })),
+    revokeUserSession: vi.fn(async (): Promise<AuthResponse> => ({ data: {} })),
 }))
 
 vi.mock('caomei-ui', async (importOriginal) => {
@@ -29,12 +36,17 @@ vi.mock('@/lib/auth-client', () => ({
     authClient: {
         admin: {
             banUser,
+            createUser,
             listUserSessions,
             revokeUserSessions,
             revokeUserSession,
         },
         useSession: () => ({ value: { data: null } }),
     },
+}))
+
+vi.mock('@/composables/admin/use-user-table', () => ({
+    useUserTable: () => ({ roleOptions: [{ label: '用户', value: 'user' }, { label: '管理员', value: 'admin' }] }),
 }))
 
 mockNuxtImport('useI18n', () => () => ({ t: useI18nText(), locale: { value: 'zh-CN' } }))
@@ -49,12 +61,18 @@ const DialogStub = {
     template: '<div><slot /></div>',
 }
 
+const DataTableStub = {
+    props: ['data'],
+    template: '<div><div v-for="row in data" :key="row.token"><slot name="cell-actions" :row="row" /></div></div>',
+}
+
 const mountOptions = {
     global: {
         renderStubDefaultSlot: true,
         stubs: {
             BaseDialogV2: DialogStub,
             CaomeiButton: ButtonStub,
+            CaomeiDataTable: DataTableStub,
         },
     },
 }
@@ -126,5 +144,92 @@ describe('admin 用户对话框', () => {
         expect(confirmOpen).toHaveBeenCalled()
         expect(revokeUserSessions).toHaveBeenCalledWith({ userId: 'user-1' })
         expect(wrapper.emitted('update:visible')?.at(-1)).toEqual([false])
+    })
+
+    it('封禁失败时弹出错误提示且不误报成功', async () => {
+        banUser.mockResolvedValueOnce({ error: { message: '目标用户不存在' } })
+        const wrapper = mount(BanUserDialog, {
+            props: { visible: true, user },
+            ...mountOptions,
+        })
+
+        await findButtonByText(wrapper, '确认禁用')!.trigger('click')
+        await vi.waitFor(() => expect(banUser).toHaveBeenCalled())
+
+        expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '目标用户不存在' }))
+        expect(toast.success).not.toHaveBeenCalled()
+        expect(wrapper.emitted('banned')).toBeUndefined()
+        expect(wrapper.emitted('update:visible')).toBeUndefined()
+    })
+
+    it('创建用户成功时提示并通知父组件', async () => {
+        const wrapper = mount(CreateUserDialog, {
+            props: { visible: true },
+            ...mountOptions,
+        })
+
+        await wrapper.find('#createName').setValue('新用户')
+        await wrapper.find('#createEmail').setValue('new-user@example.com')
+        await wrapper.find('#createPassword').setValue('secret123')
+        await wrapper.find('form').trigger('submit')
+        await vi.waitFor(() => expect(createUser).toHaveBeenCalled())
+
+        expect(createUser).toHaveBeenCalledWith(expect.objectContaining({ email: 'new-user@example.com', role: 'user' }))
+        expect(toast.success).toHaveBeenCalled()
+        expect(wrapper.emitted('created')).toEqual([[]])
+    })
+
+    it('创建用户失败时弹出错误提示且不误报成功', async () => {
+        createUser.mockResolvedValueOnce({ error: { message: '邮箱已被占用' } })
+        const wrapper = mount(CreateUserDialog, {
+            props: { visible: true },
+            ...mountOptions,
+        })
+
+        await wrapper.find('#createName').setValue('新用户')
+        await wrapper.find('#createEmail').setValue('new-user@example.com')
+        await wrapper.find('#createPassword').setValue('secret123')
+        await wrapper.find('form').trigger('submit')
+        await vi.waitFor(() => expect(createUser).toHaveBeenCalled())
+
+        expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '邮箱已被占用' }))
+        expect(toast.success).not.toHaveBeenCalled()
+        expect(wrapper.emitted('created')).toBeUndefined()
+    })
+
+    it('撤销单个会话失败时弹出错误提示且不误报成功', async () => {
+        listUserSessions.mockResolvedValueOnce({ data: { sessions: [{ token: 'token-1' }] } })
+        revokeUserSession.mockResolvedValueOnce({ error: { message: '会话不存在' } })
+        const wrapper = mount(UserSessionsDialog, {
+            props: { visible: false, user },
+            ...mountOptions,
+        })
+
+        await wrapper.setProps({ visible: true })
+        await vi.waitFor(() => expect(listUserSessions).toHaveBeenCalled())
+        const revokeButton = wrapper.findAll('button').find((button) => button.text().trim() === '撤销')
+        expect(revokeButton).toBeTruthy()
+        await revokeButton!.trigger('click')
+        await vi.waitFor(() => expect(revokeUserSession).toHaveBeenCalledWith({ sessionToken: 'token-1' }))
+
+        expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '会话不存在' }))
+        expect(toast.success).not.toHaveBeenCalled()
+    })
+
+    it('撤销全部会话失败时弹出错误提示且不关闭对话框', async () => {
+        revokeUserSessions.mockResolvedValueOnce({ error: { message: '无权限撤销' } })
+        const wrapper = mount(UserSessionsDialog, {
+            props: { visible: false, user },
+            ...mountOptions,
+        })
+
+        await wrapper.setProps({ visible: true })
+        await vi.waitFor(() => expect(listUserSessions).toHaveBeenCalled())
+        await findButtonByText(wrapper, '撤销所有会话')!.trigger('click')
+        await vi.waitFor(() => expect(revokeUserSessions).toHaveBeenCalled())
+
+        expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '无权限撤销' }))
+        expect(toast.success).not.toHaveBeenCalled()
+        expect(wrapper.emitted('update:visible')).toBeUndefined()
     })
 })

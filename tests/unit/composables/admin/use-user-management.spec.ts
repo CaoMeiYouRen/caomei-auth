@@ -176,6 +176,19 @@ describe('useUserManagement', () => {
             }))
         })
 
+        it('should surface better-auth unban errors instead of reporting success', async () => {
+            ;(authClient.admin.unbanUser as any).mockResolvedValue({ error: { message: '目标用户不存在' } })
+
+            const { unbanUser } = useUserManagement()
+            await unbanUser(buildUser({ id: 'user-1' }))
+
+            expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                title: '解禁失败',
+                description: '目标用户不存在',
+            }))
+            expect(toast.success).not.toHaveBeenCalled()
+        })
+
         it('should prevent deleting current user', async () => {
             const { deleteUser } = useUserManagement()
             const mockUser = buildUser({ id: 'admin-id', name: 'Admin', email: 'admin@example.com' })
@@ -223,6 +236,19 @@ describe('useUserManagement', () => {
             await deleteUser(mockUser, false)
 
             expect(authClient.admin.removeUser).not.toHaveBeenCalled()
+            expect(toast.success).not.toHaveBeenCalled()
+        })
+
+        it('should not report delete success when better-auth returns an error', async () => {
+            ;(authClient.admin.removeUser as any).mockResolvedValue({ error: { message: '用户已被删除' } })
+
+            const { deleteUser } = useUserManagement()
+            await deleteUser(buildUser({ id: 'user-1' }), false)
+
+            expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                title: '删除失败',
+                description: '用户已被删除',
+            }))
             expect(toast.success).not.toHaveBeenCalled()
         })
 
@@ -318,12 +344,45 @@ describe('useUserManagement', () => {
             }))
         })
 
+        it('should not report batch ban success when better-auth returns an error', async () => {
+            ;(authClient.admin.banUser as any)
+                .mockResolvedValueOnce({ data: { success: true } })
+                .mockResolvedValueOnce({ error: { message: '无权限禁用该用户' } })
+
+            const { batchBanUsers, selectedUsers } = useUserManagement()
+            selectedUsers.value = [buildUser({ id: 'user-1' }), buildUser({ id: 'user-2' })]
+
+            await batchBanUsers()
+
+            expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                title: '批量禁用失败',
+                description: '无权限禁用该用户',
+            }))
+            expect(toast.success).not.toHaveBeenCalled()
+        })
+
         it('should not batch unban users when none selected', async () => {
             const { batchUnbanUsers } = useUserManagement()
 
             await batchUnbanUsers()
 
             expect(confirm.open).not.toHaveBeenCalled()
+        })
+
+        it('should not report batch unban success when better-auth returns an error', async () => {
+            ;(authClient.admin.unbanUser as any).mockResolvedValue({ error: { message: '无权限解禁' } })
+
+            const { batchUnbanUsers, selectedUsers } = useUserManagement()
+            selectedUsers.value = [buildUser({ id: 'user-1' })]
+
+            await batchUnbanUsers()
+
+            expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                title: '批量解禁失败',
+                description: '无权限解禁',
+            }))
+            expect(toast.success).not.toHaveBeenCalled()
+            expect(selectedUsers.value).toEqual([])
         })
 
         it('should not batch delete users when none selected', async () => {
