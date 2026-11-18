@@ -5,21 +5,21 @@
             "reviewLevel": "machine+glossary",
             "nativeReview": false,
             "readiness": "draft",
-            "reviewedModules": ["app", "common", "errors", "validation", "auth", "static"],
-            "pendingModules": [
+            "reviewedModules": [
+                "app",
+                "common",
+                "errors",
+                "validation",
+                "auth",
                 "profile",
                 "security",
                 "oauth",
                 "sso",
-                "admin",
-                "admin-users",
-                "admin-oauth",
-                "admin-sso",
-                "admin-logs",
+                "static",
                 "demo",
-                "email",
-                "server-only"
+                "email"
             ],
+            "pendingModules": ["admin", "admin-users", "admin-oauth", "admin-sso", "admin-logs", "server-only"],
             "note": "转换后按台湾术语（帳號 / 登入 / 設定 / 使用者 / 透過 / 權限）人工校订；未做母语者终审，不得据此升级 seo-ready",
             "updatedAt": "2026-11-18"
         }

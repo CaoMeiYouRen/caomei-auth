@@ -1,0 +1,79 @@
+{
+    "email": {
+        "chrome": {
+            "headerSubtitle": "安全 • 便捷 • 統一的身分認證平臺",
+            "greeting": "您好！",
+            "helpText": "需要幫助？聯絡我們的客服團隊",
+            "contact": "聯絡方式",
+            "privacy": "隱私權政策",
+            "terms": "服務條款",
+            "allRightsReserved": "保留所有權利。",
+            "footerNote": "這是一封系統自動傳送的電子郵件，請勿直接回覆。",
+            "footerNoteCode": "這是一封系統自動傳送的驗證碼電子郵件，請勿直接回覆。",
+            "cannotClick": "無法點選按鈕？",
+            "copyLinkHint": "請複製以下連結到瀏覽器位址列：",
+            "importantReminder": "⚠️ 重要提醒：",
+            "securityTipTitle": "🛡️ 安全提示",
+            "codeExpiresInWithAt": "請在 {minutes} 分鐘內使用此驗證碼（有效期至 {time}，{timeZone}）",
+            "codeExpiresIn": "請在 {minutes} 分鐘內使用此驗證碼",
+            "fallbackMessage": "電子郵件內容",
+            "fallbackButton": "點選操作",
+            "defaultSecurityTip": "• 驗證碼僅供本次操作使用，請勿洩漏給他人\n• 如果您沒有進行此操作，請忽略此電子郵件\n• 請在規定時間內完成驗證，過期需重新取得",
+            "codeTitle": "您的驗證碼"
+        },
+        "verification": {
+            "subject": "驗證您的 {appName} 電子郵件地址",
+            "title": "驗證您的 {appName} 電子郵件地址",
+            "preheader": "歡迎註冊 {appName}！請驗證您的電子郵件地址以完成註冊。",
+            "message": "感謝您註冊 <strong>{appName}</strong>！為了確保您的帳號安全，請點選下方按鈕驗證您的電子郵件地址。",
+            "buttonText": "驗證電子郵件地址",
+            "reminder": "• 此驗證連結將在 <strong>24 小時</strong>後過期<br/>• 如果您沒有註冊 {appName} 帳號，請忽略此電子郵件<br/>• 請勿將此連結分享給他人，以保護您的帳號安全",
+            "securityTip": "{appName} 永遠不會透過電子郵件要求您提供密碼、驗證碼或其他敏感資訊。"
+        },
+        "loginOtp": {
+            "subject": "您的 {appName} 登入驗證碼",
+            "title": "您的 {appName} 登入驗證碼",
+            "preheader": "您的登入驗證碼是 {code}",
+            "message": "您正在嘗試登入 <strong>{appName}</strong>。請使用以下驗證碼完成登入：",
+            "securityTip": "如果不是您本人操作，請忽略此電子郵件並檢查您的帳號安全。"
+        },
+        "emailVerificationOtp": {
+            "subject": "驗證您的 {appName} 電子郵件地址",
+            "title": "驗證您的 {appName} 電子郵件地址",
+            "preheader": "您的電子郵件驗證碼是 {code}",
+            "message": "感謝您註冊 <strong>{appName}</strong>！請使用以下驗證碼完成電子郵件驗證：",
+            "securityTip": "如果您沒有註冊此帳號，請忽略此電子郵件。"
+        },
+        "passwordResetOtp": {
+            "subject": "重設您的 {appName} 密碼",
+            "title": "重設您的 {appName} 密碼",
+            "preheader": "您的密碼重設驗證碼是 {code}",
+            "message": "有人請求重設您的 <strong>{appName}</strong> 帳號密碼。請使用以下驗證碼完成密碼重設：",
+            "securityTip": "如果不是您本人操作，請忽略此電子郵件並立即檢查您的帳號安全。"
+        },
+        "magicLink": {
+            "subject": "您的 {appName} 登入連結",
+            "title": "您的 {appName} 登入連結",
+            "preheader": "點選即可安全登入，無需輸入密碼。",
+            "message": "點選下方按鈕，無需密碼即可安全登入您的 <strong>{appName}</strong> 帳號：",
+            "buttonText": "一鍵登入",
+            "reminder": "• 此登入連結將在 <strong>15 分鐘</strong>後過期<br/>• 連結只能使用一次<br/>• 如果不是您本人操作，請忽略此電子郵件",
+            "securityTip": "為了您的帳號安全，請勿將此連結分享給任何人。"
+        },
+        "emailChange": {
+            "subject": "確認電子郵件地址變更 - {appName}",
+            "title": "確認電子郵件地址變更 - {appName}",
+            "preheader": "確認將電子郵件地址變更為 {newEmail}",
+            "message": "您即將修改電子郵件地址為：<strong>{newEmail}</strong><br/><br/>如果確認變更，請點選下方按鈕：",
+            "buttonText": "確認電子郵件變更",
+            "reminder": "• 此確認連結將在 <strong>24 小時</strong>後過期<br/>• 變更電子郵件後，您需要使用新電子郵件地址登入<br/>• 如果這不是您的操作，請忽略此電子郵件",
+            "securityTip": "為了您的帳號安全，電子郵件變更確認連結已傳送到您目前的電子郵件地址。"
+        },
+        "securityNotification": {
+            "subject": "{appName} 帳號安全通知",
+            "title": "{appName} 帳號安全通知",
+            "preheader": "您的帳號有安全活動，請檢視詳情。",
+            "message": "我們偵測到您的 <strong>{appName}</strong> 帳號有以下安全活動：<br/><br/><strong>{action}</strong>"
+        }
+    }
+}
