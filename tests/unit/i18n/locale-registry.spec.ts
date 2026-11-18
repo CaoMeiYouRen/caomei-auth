@@ -17,7 +17,7 @@ describe('i18n/config/locale-registry', () => {
     it('defines the ten target locales and only enables the current batch', () => {
         expect(LOCALE_CODES).toHaveLength(10)
         expect(LOCALE_REGISTRY.map((locale) => locale.code)).toEqual([...LOCALE_CODES])
-        expect(ENABLED_LOCALE_CODES).toEqual(['zh-CN', 'en-US'])
+        expect(ENABLED_LOCALE_CODES).toEqual(['zh-CN', 'en-US', 'zh-TW'])
         expect(ENABLED_LOCALES.every((locale) => locale.enabled)).toBe(true)
         expect(LOCALE_REGISTRY.filter((locale) => locale.default)).toHaveLength(1)
         expect(DEFAULT_LOCALE).toBe('zh-CN')
@@ -59,20 +59,22 @@ describe('i18n/config/locale-registry', () => {
         expect(matchDetectedLocale('fr-FR')).toBeUndefined()
         /* 已登记但未启用的语言按“不支持”处理 */
         expect(matchDetectedLocale('ja-JP')).toBeUndefined()
-        /* zh-TW 未启用时繁体按简体协商，避免 Accept-Language 落到英文 */
-        expect(matchDetectedLocale('zh-Hant')).toBe('zh-CN')
+        /* zh-TW 启用后，繁体（含 zh-Hant 别名）协商到 zh-TW */
+        expect(matchDetectedLocale('zh-TW')).toBe('zh-TW')
+        expect(matchDetectedLocale('zh-Hant')).toBe('zh-TW')
         expect(matchDetectedLocale('')).toBeUndefined()
     })
 
     it('only matches enabled locales and falls back for disabled ones', () => {
         expect(normalizeDetectedLocale('ja-JP')).toBe(DEFAULT_LOCALE)
-        expect(normalizeDetectedLocale('zh-Hant')).toBe(DEFAULT_LOCALE)
+        expect(normalizeDetectedLocale('zh-Hant')).toBe('zh-TW')
+        expect(normalizeDetectedLocale('ko-KR')).toBe(DEFAULT_LOCALE)
     })
 
     it('maps better-auth locales at the boundary', () => {
         expect(normalizeDetectedLocale('zh-Hans')).toBe('zh-CN')
-        /* zh-TW 未启用时 zh-Hant 回退默认语言；启用后由 M5 切换为 zh-TW */
-        expect(normalizeDetectedLocale('zh-Hant')).toBe('zh-CN')
+        /* better-auth 的 zh-Hant 在认证边界落到已启用的 zh-TW */
+        expect(normalizeDetectedLocale('zh-Hant')).toBe('zh-TW')
         expect(normalizeDetectedLocale('default')).toBe('zh-CN')
         expect(normalizeDetectedLocale('en')).toBe('en-US')
         expect(normalizeDetectedLocale('en-US')).toBe('en-US')
@@ -88,6 +90,8 @@ describe('i18n/config/locale-registry', () => {
     it('strips locale prefixes for route guards', () => {
         expect(stripLocalePrefix('/en-US/login')).toBe('/login')
         expect(stripLocalePrefix('/en-US')).toBe('/')
+        expect(stripLocalePrefix('/zh-TW/login')).toBe('/login')
+        expect(stripLocalePrefix('/zh-TW')).toBe('/')
         expect(stripLocalePrefix('/login')).toBe('/login')
         expect(stripLocalePrefix('/en-USfoo')).toBe('/en-USfoo')
         /* 停用语言没有路由，不剥离前缀 */

@@ -90,4 +90,25 @@ describe('server/utils/email 双语渲染', () => {
         expect(code.html).toContain('隐私政策')
         expect(chineseSegments(code.html)).not.toContain('{{codeExpiresIn}}')
     })
+
+    it('繁体邮件渲染 zh-TW 文案且不残留占位符', async () => {
+        const t = getEmailTranslator('zh-TW')
+        const code = await emailTemplateEngine.generateCodeEmailTemplate({
+            headerIcon: 'key',
+            message: t('email.emailVerificationOtp.message', { appName: '草梅 Auth' }),
+            verificationCode: '246810',
+            expiresIn: 10,
+            securityTip: t('email.emailVerificationOtp.securityTip'),
+        }, {
+            title: t('email.emailVerificationOtp.title', { appName: '草梅 Auth' }),
+            preheader: t('email.emailVerificationOtp.preheader', { code: '246810' }),
+        }, 'zh-TW')
+
+        expect(code.html).toContain('246810')
+        expect(code.html).toContain('請在 10 分鐘內使用此驗證碼')
+        expect(code.html).toContain('隱私權政策')
+        expect(code.html).toContain('請勿直接回覆')
+        expect(stripComments(code.html)).not.toMatch(/\{\{\w+\}\}/u)
+        expect(stripComments(code.html)).not.toMatch(/\{(?:appName|code|minutes|time|timeZone)\}/u)
+    })
 })

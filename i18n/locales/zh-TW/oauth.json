@@ -67,7 +67,7 @@
                 "userRead": "檢視使用者資訊",
                 "userWrite": "修改使用者資訊",
                 "userEmail": "存取使用者電子郵件",
-                "readUser": "讀取使用者基本資訊（使用者名稱、ID等）",
+                "readUser": "讀取使用者基本資訊（使用者名稱、ID 等）",
                 "readProfile": "讀取使用者詳細資料",
                 "writeUser": "修改使用者資訊",
                 "appRead": "檢視應用資訊",

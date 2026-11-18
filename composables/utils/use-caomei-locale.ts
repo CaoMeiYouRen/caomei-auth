@@ -6,17 +6,20 @@ import { DEFAULT_LOCALE, type LocaleCode, matchDetectedLocale } from '@/i18n/con
  * 项目 locale → caomei-ui 内建文案 locale 的映射。
  *
  * `CaomeiConfigProvider` 依据该值切换组件内建文案（Select 空态、Paginator、
- * DataTable 空态、Toast / Confirm 默认按钮等）。caomei-ui 1.2.0 起根包预注册
- * `zh-CN` / `en-US`（见 `PRE_REGISTERED_LOCALES`），与 Locale Registry 一一对应。
+ * DataTable 空态、Toast / Confirm 默认按钮等）。caomei-ui 1.3.0 根包只预注册
+ * `zh-CN` / `en-US`（见 `PRE_REGISTERED_LOCALES`），其余语言由 `plugins/caomei-locale`
+ * 在 provider 挂载前注册。
  *
  * 入参先经 `matchDetectedLocale` 归一到 Registry code（复用 `en` / `zh-Hans` 等
  * better-auth 边界别名），未识别时回退默认语言。
  *
  * 新增语言时必须同步两件事，否则英文 / 新语言界面会静默回退到中文文案：
  * 1. 在此登记映射（`Record<LocaleCode, CaomeiLocale>` 会在类型检查期强制补齐），
- *    并由 `tests/unit/composables/use-caomei-locale.spec.ts` 校验映射值已预注册；
+ *    由 `tests/unit/composables/use-caomei-locale.spec.ts` 校验映射恒等；可加载性与注册由
+ *    插件加载器的类型约束与 `tests/unit/plugins/caomei-locale.spec.ts` 保证；
  * 2. 若该语言不在 `PRE_REGISTERED_LOCALES` 内，需在 provider 挂载前
- *    `import('caomei-ui/locale/<code>')` + `registerLocale()`。
+ *    `import('caomei-ui/locale/<code>')` + `registerLocale()`；`plugins/caomei-locale.ts`
+ *    的加载器在类型层强制补齐，并由 `tests/unit/plugins/caomei-locale.spec.ts` 校验按启用语言注册。
  */
 const CAOMEI_LOCALE_MAP: Record<LocaleCode, CaomeiLocale> = {
     'zh-CN': 'zh-CN',

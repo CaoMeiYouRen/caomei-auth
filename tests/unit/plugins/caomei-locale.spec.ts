@@ -20,6 +20,12 @@ describe('plugins/caomei-locale', () => {
         registerLocale.mockClear()
     })
 
+    it('按 Registry 的启用语言注册非预注册文案', async () => {
+        await registerCaomeiLocales()
+        const codes = registerLocale.mock.calls.map(([code]) => code).sort()
+        expect(codes).toEqual(['zh-TW'])
+    })
+
     it('只注册非预注册的启用语言', async () => {
         await registerCaomeiLocales([{ code: 'zh-CN' }, { code: 'en-US' }])
         expect(registerLocale).not.toHaveBeenCalled()

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import zhEmail from '@/i18n/locales/zh-CN/email.json'
 import enEmail from '@/i18n/locales/en-US/email.json'
+import zhTwEmail from '@/i18n/locales/zh-TW/email.json'
 
 function flatten(value: unknown, prefix = ''): Record<string, string> {
     if (typeof value !== 'object' || value === null) {
@@ -14,10 +15,15 @@ function flatten(value: unknown, prefix = ''): Record<string, string> {
 
 const zh = flatten(zhEmail)
 const en = flatten(enEmail)
+const zhTw = flatten(zhTwEmail)
 
 describe('i18n/locales/email.json', () => {
     it('keeps zh and en keys aligned', () => {
         expect(Object.keys(en).sort()).toEqual(Object.keys(zh).sort())
+    })
+
+    it('keeps zh-CN and zh-TW keys aligned', () => {
+        expect(Object.keys(zhTw).sort()).toEqual(Object.keys(zh).sort())
     })
 
     it('keeps placeholders identical across locales', () => {
@@ -26,6 +32,16 @@ describe('i18n/locales/email.json', () => {
         for (const key of Object.keys(zh)) {
             expect({ key, placeholders: placeholders(en[key] ?? '') })
                 .toEqual({ key, placeholders: placeholders(zh[key] ?? '') })
+            expect({ key, placeholders: placeholders(zhTw[key] ?? '') })
+                .toEqual({ key, placeholders: placeholders(zh[key] ?? '') })
+        }
+    })
+
+    it('keeps the HTML structure of zh-TW identical to zh-CN', () => {
+        const tags = (value: string) => [...value.matchAll(/<\/?([a-z]+)[^>]*>/gu)].map((match) => match[1])
+
+        for (const key of Object.keys(zh)) {
+            expect({ key, tags: tags(zhTw[key] ?? '') }).toEqual({ key, tags: tags(zh[key] ?? '') })
         }
     })
 
@@ -38,7 +54,7 @@ describe('i18n/locales/email.json', () => {
     })
 
     it('has no empty values', () => {
-        for (const pack of [zh, en]) {
+        for (const pack of [zh, en, zhTw]) {
             expect(Object.entries(pack).filter(([, value]) => !value.trim()).map(([key]) => key)).toEqual([])
         }
     })

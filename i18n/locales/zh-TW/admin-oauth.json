@@ -1,0 +1,139 @@
+{
+    "admin": {
+        "oauth": {
+            "page": {
+                "title": "應用管理",
+                "subtitle": "管理您的 OAuth 2.0 應用，應用由管理員在此建立並下發給接入方",
+                "noticeLabel": "注意：",
+                "noticeText": "目前 OIDC 實現基於 Better Auth，僅支援標準 OpenID Connect 核心功能。",
+                "noticeText2": "不支援隱式流程、密碼流程、用戶端流程等非標準模式。",
+                "apiDocs": "API 文件",
+                "create": "建立應用",
+                "searchPlaceholder": "搜尋應用（名稱、描述、Client ID）",
+                "searchLabel": "搜尋應用",
+                "refresh": "重新整理",
+                "listTitle": "應用清單 ({count})",
+                "empty": "尚無應用",
+                "createFirst": "建立第一個應用",
+                "columns": {
+                    "name": "應用名稱",
+                    "scope": "授權範圍",
+                    "status": "狀態",
+                    "createdAt": "建立時間",
+                    "actions": "操作"
+                },
+                "actions": {
+                    "edit": "編輯",
+                    "enable": "啟用應用",
+                    "disable": "停用應用",
+                    "delete": "刪除"
+                }
+            },
+            "create": {
+                "titleCreate": "建立新應用",
+                "titleEdit": "編輯應用",
+                "name": "應用名稱",
+                "namePlaceholder": "例如：我的部落格應用",
+                "nameRequired": "應用名稱為必填項",
+                "description": "應用描述",
+                "descriptionPlaceholder": "簡要描述您的應用功能和用途",
+                "redirect": "重新導向 URL",
+                "redirectHint": "多個 URL 請用逗號分隔",
+                "redirectRequired": "至少需要一個重新導向 URL",
+                "homepage": "應用主頁",
+                "homepageHint": "應用的官方網站地址",
+                "logo": "應用 Logo",
+                "logoHint": "應用圖示的 URL 網址",
+                "scope": "授權範圍",
+                "scopeHint": "多個範圍用空格分隔，如：openid profile email",
+                "scopeRequired": "授權範圍為必填項",
+                "contact": "聯絡電子郵件",
+                "contactHint": "應用管理員的聯絡電子郵件，多個電子郵件請用逗號分隔",
+                "authMethod": "認證方式",
+                "authMethodHint": "用戶端向權杖端點進行身分驗證的方法（支援 OIDC 標準方法）",
+                "grantTypes": "授權類型",
+                "grantTypesHint": "應用允許使用的 OAuth 2.0 授權類型",
+                "tos": "服務條款連結",
+                "policy": "隱私權政策連結",
+                "cancel": "取消",
+                "save": "儲存修改",
+                "create": "建立應用",
+                "validationFailed": "表單驗證失敗",
+                "updateSuccessTitle": "更新成功",
+                "createSuccessTitle": "建立成功",
+                "updateSuccess": "應用資訊已更新",
+                "createSuccess": "應用已成功建立",
+                "operationFailed": "操作失敗",
+                "updateFailedTitle": "更新失敗",
+                "createFailedTitle": "建立失敗",
+                "authMethods": {
+                    "basic": "Basic 認證 (推薦)",
+                    "post": "POST 認證",
+                    "none": "無認證 (僅公開用戶端)"
+                },
+                "grantTypesList": {
+                    "code": "授權碼模式 (推薦)",
+                    "refresh": "重新整理權杖",
+                    "implicit": "隱式模式 (不支援)",
+                    "password": "密碼模式 (不支援)",
+                    "clientCredentials": "用戶端模式 (不支援)"
+                }
+            },
+            "secret": {
+                "title": "應用建立成功",
+                "created": "應用 \"{name}\" 已成功建立！",
+                "copyClientId": "複製 Client ID",
+                "copyClientSecret": "複製 Client Secret",
+                "warning": "請務必儲存這些憑證，關閉此對話方塊後將無法再次檢視 Client Secret。",
+                "saved": "我已儲存",
+                "copiedTitle": "已複製",
+                "copied": "內容已複製到剪貼簿",
+                "copyFailedTitle": "複製失敗",
+                "copyFailed": "無法複製到剪貼簿"
+            },
+            "docs": {
+                "title": "OIDC API 端點文件",
+                "intro": "OpenID Connect 設定端點，包含所有支援的端點和功能資訊。",
+                "discoveryLabel": "Discovery 端點",
+                "copyDiscovery": "複製 Discovery 端點",
+                "mainTitle": "主要 OAuth 2.0 / OIDC 端點",
+                "mainIntro": "以下是平臺提供的主要 OAuth 2.0 和 OpenID Connect 端點。",
+                "copyEndpoint": "複製{label}",
+                "exampleTitle": "Discovery 設定示例",
+                "exampleIntro": "以下是 OpenID Connect Discovery 端點返回的設定示例。",
+                "copyExample": "複製設定示例",
+                "notesTitle": "注意事項",
+                "note1": "目前 OIDC 實現基於 Better Auth，僅支援標準 OpenID Connect 核心功能",
+                "note2": "支援授權碼流程（Authorization Code Flow）和重新整理權杖",
+                "note3": "不支援隱式流程、密碼流程、用戶端流程等非標準模式",
+                "note4": "不開放動態用戶端註冊，OAuth 應用需由管理員在管理後台建立",
+                "note5": "所有端點都要求使用 HTTPS",
+                "close": "關閉",
+                "endpoints": {
+                    "authorize": "授權端點",
+                    "token": "權杖端點",
+                    "userinfo": "使用者資訊端點",
+                    "jwks": "JWKS 端點"
+                },
+                "copiedTitle": "已複製",
+                "copied": "內容已複製到剪貼簿",
+                "copyFailedTitle": "複製失敗",
+                "copyFailed": "無法複製到剪貼簿"
+            },
+            "flow": {
+                "successTitle": "成功",
+                "appEnabled": "應用已啟用",
+                "appDisabled": "應用已停用",
+                "errorTitle": "錯誤",
+                "operationFailed": "操作失敗",
+                "deleteSuccessTitle": "刪除成功",
+                "deleteSuccess": "應用已刪除",
+                "deleteFailedTitle": "刪除失敗",
+                "deleteFailed": "刪除失敗",
+                "confirmDeleteTitle": "確認刪除",
+                "confirmDelete": "確定要刪除應用 \"{name}\" 嗎？此操作無法撤銷。",
+                "deleteLabel": "刪除"
+            }
+        }
+    }
+}

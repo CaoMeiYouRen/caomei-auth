@@ -1,0 +1,32 @@
+{
+    "admin": {
+        "registration": {
+            "title": "註冊控制",
+            "subtitle": "設定電子郵件網域與手機號碼國家碼黑白名單",
+            "type": "規則類型",
+            "mode": "規則模式",
+            "value": "匹配值",
+            "note": "備註",
+            "enabled": "啟用",
+            "actions": "操作",
+            "typeOptions": {
+                "email": "電子郵件網域",
+                "phone": "手機號碼國家碼"
+            },
+            "modeOptions": {
+                "allow": "白名單",
+                "deny": "黑名單"
+            },
+            "valuePlaceholder": "example.com 或 .edu.cn / +86",
+            "notePlaceholder": "可選",
+            "add": "新增規則",
+            "delete": "刪除",
+            "empty": "尚無規則",
+            "hint": "白名單非空時僅放行列內；黑名單命中即拒絕。修改後 30 秒內生效。",
+            "saved": "規則已儲存",
+            "deleted": "規則已刪除",
+            "failed": "操作失敗",
+            "refresh": "重新整理"
+        }
+    }
+}

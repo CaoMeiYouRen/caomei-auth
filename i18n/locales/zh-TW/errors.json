@@ -63,7 +63,7 @@
             "oauthAppEnabled": "應用已啟用",
             "oauthAppDisabled": "應用已停用",
             "oauthAppListFailed": "取得應用清單失敗",
-            "invalidRedirectUri": "無效的重新導向URI：{uri}",
+            "invalidRedirectUri": "無效的重新導向 URI：{uri}",
             "ssoCreated": "SSO 提供者建立成功",
             "ssoUpdated": "SSO 提供者更新成功",
             "ssoDeleted": "SSO 提供者刪除成功"

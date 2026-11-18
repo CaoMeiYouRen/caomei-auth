@@ -1,5 +1,6 @@
 import zhEmail from '@/i18n/locales/zh-CN/email.json'
 import enEmail from '@/i18n/locales/en-US/email.json'
+import zhTwEmail from '@/i18n/locales/zh-TW/email.json'
 import {
     DEFAULT_LOCALE,
     LOCALE_COOKIE_KEY,
@@ -12,13 +13,18 @@ import {
 type EmailMessages = Record<string, unknown>
 
 /**
- * 邮件消息表：只登记已有语言包的语言；未登记的新语言回退 zh-CN。
- * 新增语言时随语言包批次补静态 import。
+ * 邮件消息表：只登记**已启用**的语言；未登记的语言回退 zh-CN。
+ * 新增语言时随该语言启用批次（`enabled: true`）补静态 import；
+ * 未启用语言不登记——`normalizeDetectedLocale` 对停用语言返回 zh-CN，提前登记是不可达映射。
  */
 const EMAIL_MESSAGES: Partial<Record<LocaleCode, EmailMessages>> = {
     'zh-CN': zhEmail as EmailMessages,
     'en-US': enEmail as EmailMessages,
+    'zh-TW': zhTwEmail as EmailMessages,
 }
+
+/** 已登记邮件消息的语言；单测据此校验「启用语言全覆盖」，防止新语言漏补 import 静默回落 zh-CN */
+export const EMAIL_MESSAGE_LOCALES = Object.keys(EMAIL_MESSAGES) as LocaleCode[]
 
 function lookupMessage(messages: EmailMessages, key: string): string | undefined {
     let current: unknown = messages

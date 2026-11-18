@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { useCaomeiLocale } from '@/composables/utils/use-caomei-locale'
-import { isIndexableHreflang, isIndexableOgLocale } from '@/utils/shared/seo'
+import { isIndexableHreflang, isIndexableLocale, isIndexableOgLocale } from '@/utils/shared/seo'
 
 const runtimeConfig = useRuntimeConfig()
 const publicConfig = runtimeConfig.public
@@ -25,7 +25,7 @@ const publicConfig = runtimeConfig.public
 const caomeiLocale = useCaomeiLocale()
 
 // 默认站点标题跟随语言；页面可用 usePageMeta 覆盖
-const { t } = useI18n()
+const { locale, t } = useI18n()
 
 // SEO / html lang：由 Locale Registry 驱动的 useLocaleHead 输出；
 // alternates 只保留 `seo-ready` 且可索引的语言，ui-ready 语言不进入索引。
@@ -96,6 +96,11 @@ const seoMeta = computed(() => (i18nHead.value.meta ?? []).filter((meta) => {
     return (item.property === 'og:url' ? { ...meta, content: withRuntimeOrigin(item.content) } : meta) as (typeof i18nHead.value.meta)[number]
 }))
 
+/* `ui-ready` 语言可访问但不进索引：与 sitemap / hreflang 的过滤口径一致，补页面级 robots */
+const robotsMeta = computed(() => (isIndexableLocale(locale.value)
+    ? []
+    : [{ name: 'robots', content: 'noindex, nofollow' }]))
+
 useHead(() => ({
     title: t('app.title'),
     htmlAttrs: {
@@ -103,7 +108,7 @@ useHead(() => ({
         dir: i18nHead.value.htmlAttrs?.dir,
     },
     link: seoLinks.value,
-    meta: seoMeta.value,
+    meta: [...seoMeta.value, ...robotsMeta.value],
 }))
 
 if (import.meta.client && publicConfig.captchaProvider === 'google-recaptcha' && publicConfig.recaptchaSiteKey) {

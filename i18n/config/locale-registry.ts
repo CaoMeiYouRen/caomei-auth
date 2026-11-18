@@ -90,11 +90,12 @@ export const LOCALE_REGISTRY: LocaleDefinition[] = [
         nativeName: '繁體中文',
         dir: 'ltr',
         default: false,
-        enabled: false,
+        enabled: true,
         fallbackChain: ['zh-TW', 'zh-CN', 'en-US'],
         routePrefix: '/zh-TW',
-        readiness: 'draft',
-        switchable: false,
+        /* 机翻 + 术语表校订完成（未做母语终审），先以 ui-ready 上线：可切换 / 可访问，但不进入索引 */
+        readiness: 'ui-ready',
+        switchable: true,
         indexable: false,
         files: getLocaleMessageFilePaths('zh-TW'),
     },
@@ -266,7 +267,8 @@ export function matchDetectedLocale(input?: string | null): LocaleCode | undefin
     if (aliased && isEnabledLocale(aliased)) {
         return aliased
     }
-    /* 繁体用户在 zh-TW 启用前回退简体，避免按 tag 协商时被跳过而落到英文 */
+    /* 仅在 zh-TW 停用时生效（当前 Registry 已启用 zh-TW，本分支不可达）：
+     * 繁体用户回退简体，避免按 tag 协商时被跳过而落到英文 */
     if (aliased === 'zh-TW' && isEnabledLocale('zh-CN')) {
         return 'zh-CN'
     }

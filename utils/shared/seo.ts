@@ -7,6 +7,18 @@ const INDEXABLE_LOCALES = LOCALE_REGISTRY.filter((locale) => locale.readiness ==
 
 export const INDEXABLE_LOCALE_CODES = INDEXABLE_LOCALES.map((locale) => locale.code)
 
+const INDEXABLE_LOCALE_CODE_SET = new Set<string>(INDEXABLE_LOCALE_CODES)
+
+/**
+ * 语言是否可进入索引。
+ *
+ * `ui-ready` 语言（当前为 zh-TW，ja-JP / ko-KR 启用后同理）可访问、可切换，但页面级 robots 需保持 `noindex`，
+ * 与 sitemap / hreflang / `og:locale` 的过滤口径一致。
+ */
+export function isIndexableLocale(code?: string | null): boolean {
+    return Boolean(code) && INDEXABLE_LOCALE_CODE_SET.has(String(code))
+}
+
 const BCP47_BY_CODE: Record<LocaleCode, string[]> = {
     'zh-CN': ['zh-CN', 'zh', 'zh-Hans'],
     'en-US': ['en-US', 'en'],

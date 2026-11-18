@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { getEmailTranslator, getRequestLocaleFromRequest, resolveEmailLocale } from '@/server/utils/email/i18n'
+import { EMAIL_MESSAGE_LOCALES, getEmailTranslator, getRequestLocaleFromRequest, resolveEmailLocale } from '@/server/utils/email/i18n'
+import { ENABLED_LOCALE_CODES } from '@/i18n/config/locale-registry'
 
 describe('server/utils/email/i18n', () => {
+    it('registers email messages for every enabled locale', () => {
+        /* 启用语言漏补 import 时邮件会静默回落 zh-CN，必须由门禁拦住 */
+        expect([...EMAIL_MESSAGE_LOCALES].sort()).toEqual([...ENABLED_LOCALE_CODES].sort())
+    })
+
     it('translates chrome and message copy in both locales', () => {
         const zh = getEmailTranslator('zh-CN')
         const en = getEmailTranslator('en-US')
@@ -10,6 +16,10 @@ describe('server/utils/email/i18n', () => {
         expect(en('email.chrome.greeting')).toBe('Hello!')
         expect(zh('email.verification.buttonText')).toBe('验证邮箱地址')
         expect(en('email.verification.buttonText')).toBe('Verify email address')
+
+        const zhTw = getEmailTranslator('zh-TW')
+        expect(zhTw('email.chrome.greeting')).toBe('您好！')
+        expect(zhTw('email.verification.buttonText')).toBe('驗證電子郵件地址')
     })
 
     it('interpolates named parameters and leaves unknown ones intact', () => {
@@ -46,10 +56,10 @@ describe('server/utils/email/i18n', () => {
         expect(getRequestLocaleFromRequest(new Request('https://example.com/api', {
             headers: { 'accept-language': 'fr-FR,en-US;q=0.9,zh-CN;q=0.8' },
         }))).toBe('en-US')
-        /* zh-TW 未启用时繁体按简体协商，不应被跳过而落到英文 */
+        /* zh-TW 启用后繁体（含 zh-Hant 别名）协商到 zh-TW，不再落到英文 */
         expect(getRequestLocaleFromRequest(new Request('https://example.com/api', {
             headers: { 'accept-language': 'zh-Hant,en-US;q=0.9' },
-        }))).toBe('zh-CN')
+        }))).toBe('zh-TW')
         expect(getRequestLocaleFromRequest(new Request('https://example.com/api', {
             headers: { 'accept-language': 'fr-FR,de-DE' },
         }))).toBeUndefined()

@@ -4,7 +4,7 @@
             "source": "opencc（cn→twp）简繁转换 + 台湾用语人工校订",
             "reviewLevel": "machine+glossary",
             "nativeReview": false,
-            "readiness": "draft",
+            "readiness": "ui-ready",
             "reviewedModules": [
                 "app",
                 "common",
@@ -16,11 +16,17 @@
                 "oauth",
                 "sso",
                 "static",
+                "admin",
+                "admin-users",
+                "admin-oauth",
+                "admin-sso",
+                "admin-logs",
                 "demo",
-                "email"
+                "email",
+                "server-only"
             ],
-            "pendingModules": ["admin", "admin-users", "admin-oauth", "admin-sso", "admin-logs", "server-only"],
-            "note": "转换后按台湾术语（帳號 / 登入 / 設定 / 使用者 / 透過 / 權限）人工校订；未做母语者终审，不得据此升级 seo-ready",
+            "pendingModules": [],
+            "note": "18 个模块均已转换并按台湾术语（帳號 / 登入 / 設定 / 使用者 / 透過 / 權限）人工校订；未做母语者终审，不得据此升级 seo-ready",
             "updatedAt": "2026-11-18"
         }
     }

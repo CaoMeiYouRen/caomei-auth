@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { INDEXABLE_LOCALE_CODES, PUBLIC_SITEMAP_PATHS, buildRobotsTxt, buildSitemapXml, isIndexableHreflang, isIndexableOgLocale } from '@/utils/shared/seo'
+import { INDEXABLE_LOCALE_CODES, PUBLIC_SITEMAP_PATHS, buildRobotsTxt, buildSitemapXml, isIndexableHreflang, isIndexableLocale, isIndexableOgLocale } from '@/utils/shared/seo'
 import { publicPaths } from '@/utils/shared/public-paths'
 
 describe('utils/shared/seo', () => {
@@ -29,6 +29,25 @@ describe('utils/shared/seo', () => {
         expect(xml).toContain('hreflang="en-US"')
         expect(xml).toContain('hreflang="x-default"')
         expect(xml).not.toContain('//en-US')
+    })
+
+    it('keeps ui-ready locales out of the sitemap and hreflang', () => {
+        const xml = buildSitemapXml('https://auth.example.com/')
+
+        /* zh-TW 已启用但 readiness=ui-ready：可访问、可切换，但不进 sitemap / hreflang / og:locale */
+        expect(xml).not.toContain('/zh-TW')
+        expect(xml).not.toContain('hreflang="zh-TW"')
+        expect(isIndexableHreflang('zh-TW')).toBe(false)
+        expect(isIndexableOgLocale('zh_TW')).toBe(false)
+    })
+
+    it('marks only seo-ready locales as indexable', () => {
+        expect(isIndexableLocale('zh-CN')).toBe(true)
+        expect(isIndexableLocale('en-US')).toBe(true)
+        expect(isIndexableLocale('zh-TW')).toBe(false)
+        expect(isIndexableLocale('ja-JP')).toBe(false)
+        expect(isIndexableLocale('')).toBe(false)
+        expect(isIndexableLocale(null)).toBe(false)
     })
 
     it('keeps private routes and login-gated home out of the sitemap', () => {

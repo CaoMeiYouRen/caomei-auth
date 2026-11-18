@@ -1,0 +1,79 @@
+{
+    "admin": {
+        "logs": {
+            "page": {
+                "title": "登入統計",
+                "subtitle": "檢視登入日誌、活躍使用者、異常登入等統計報表",
+                "refresh": "重新整理資料"
+            },
+            "overview": {
+                "totalUsers": "總使用者數",
+                "totalSessions": "總登入次數",
+                "activeSessions": "活躍工作階段",
+                "activeUsers": "活躍使用者（7 天）"
+            },
+            "period": {
+                "title": "時間段統計",
+                "today": "今日登入",
+                "yesterday": "昨日登入",
+                "week": "本週登入",
+                "month": "本月登入"
+            },
+            "providers": {
+                "title": "登入方式統計",
+                "empty": "尚無登入方式資料",
+                "columns": {
+                    "provider": "登入方式",
+                    "count": "登入次數",
+                    "share": "佔比"
+                }
+            },
+            "trend": {
+                "title": "登入趨勢（最近 30 天）",
+                "series": "登入次數",
+                "tooltipDate": "日期: {date}",
+                "tooltipValue": "登入次數: {count}",
+                "axisDate": "日期",
+                "axisCount": "登入次數"
+            },
+            "table": {
+                "sectionTitle": "登入日誌",
+                "title": "登入日誌 ({count})",
+                "searchPlaceholder": "搜尋使用者或 IP 位址",
+                "searchLabel": "搜尋使用者或 IP 位址",
+                "ipLabel": "IP 精確篩選",
+                "ipPlaceholder": "輸入完整 IP，如 203.0.113.10",
+                "statusPlaceholder": "工作階段狀態",
+                "statusLabel": "工作階段狀態",
+                "dateRangePlaceholder": "選擇日期範圍",
+                "dateRangeLabel": "選擇日期範圍",
+                "clearDateRange": "清除日期範圍",
+                "refresh": "重新整理",
+                "empty": "尚無登入日誌",
+                "revoke": "撤銷工作階段",
+                "columns": {
+                    "user": "使用者",
+                    "loginTime": "登入時間",
+                    "ipAddress": "IP 位址",
+                    "device": "裝置資訊",
+                    "status": "狀態",
+                    "actions": "操作"
+                },
+                "statusOptions": {
+                    "all": "全部狀態",
+                    "active": "活躍工作階段",
+                    "expired": "已過期"
+                },
+                "unknownDevice": "未知裝置"
+            },
+            "flow": {
+                "revokeSuccessTitle": "撤銷成功",
+                "revokeSuccess": "工作階段已撤銷",
+                "revokeFailed": "撤銷失敗",
+                "revokeFailedDescription": "撤銷工作階段失敗",
+                "statsFailed": "載入失敗",
+                "statsFailedDescription": "載入統計資料失敗"
+            }
+        }
+    }
+}
