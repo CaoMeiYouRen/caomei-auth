@@ -1,0 +1,91 @@
+{
+    "app": {
+        "name": "草梅 Auth",
+        "title": "草梅 Auth 統一登入平臺",
+        "error": {
+            "status": {
+                "400": {
+                    "title": "請求錯誤 (400)",
+                    "description": "請求無效，請檢查請求參數。"
+                },
+                "401": {
+                    "title": "未授權 (401)",
+                    "description": "您尚未登入或登入已過期。"
+                },
+                "403": {
+                    "title": "禁止存取 (403)",
+                    "description": "您沒有權限存取該頁面。"
+                },
+                "404": {
+                    "title": "找不到頁面 (404)",
+                    "description": "您存取的頁面不存在或已被刪除。"
+                },
+                "500": {
+                    "title": "伺服器錯誤 (500)",
+                    "description": "伺服器發生錯誤，請稍後重試。"
+                },
+                "unknown": {
+                    "code": "錯誤",
+                    "title": "出錯了",
+                    "description": "發生未知錯誤，請稍後再試。"
+                }
+            },
+            "page": {
+                "ariaLabel": "錯誤頁面",
+                "leftSubtitle": "安全、便捷的一站式登入體驗"
+            },
+            "actions": {
+                "home": "返回首頁",
+                "back": "返回上一頁"
+            }
+        },
+        "admin": {
+            "nav": {
+                "expand": "展開側邊欄",
+                "collapse": "收合側邊欄",
+                "title": "管理後台",
+                "users": "使用者管理",
+                "applications": "應用管理",
+                "sso": "SSO 管理",
+                "registration": "註冊控制",
+                "logs": "登入統計",
+                "quickAccess": "快速存取",
+                "profile": "個人中心",
+                "myApps": "我的應用",
+                "docs": "專案文件",
+                "home": "返回首頁"
+            }
+        },
+        "theme": {
+            "toLight": "切換為亮色模式",
+            "toDark": "切換為暗色模式"
+        }
+    },
+    "language": {
+        "label": "語言",
+        "short": "中文"
+    },
+    "footer": {
+        "tagline": "統一登入平臺 · 安全、便捷、可擴充",
+        "copyright": "草梅 Auth © 2025",
+        "ariaGithub": "GitHub",
+        "ariaHome": "主頁",
+        "home": "首頁",
+        "profile": "個人中心",
+        "admin": "管理後台",
+        "forgotPassword": "忘記密碼",
+        "privacy": "隱私權政策",
+        "terms": "服務條款",
+        "about": "關於我們",
+        "contact": "聯絡我們",
+        "docs": "專案文件"
+    },
+    "feedback": {
+        "title": "回饋建議",
+        "text": "問題回饋"
+    },
+    "github": {
+        "title": "在 GitHub 上關注我",
+        "ariaLabel": "在 GitHub 上關注我"
+    }
+}

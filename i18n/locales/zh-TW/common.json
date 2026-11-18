@@ -1,0 +1,19 @@
+{
+    "common": {
+        "listSeparator": "；",
+        "status": {
+            "enabled": "已啟用",
+            "disabled": "已停用",
+            "banned": "已停用",
+            "normal": "正常",
+            "active": "活躍",
+            "expired": "已過期",
+            "yes": "是",
+            "no": "否",
+            "role": {
+                "admin": "管理員",
+                "user": "使用者"
+            }
+        }
+    }
+}

@@ -1,0 +1,86 @@
+{
+    "errors": {
+        "auth": {
+            "loginRequired": "請先登入",
+            "unauthorized": "未登入使用者",
+            "forbidden": "無權限存取",
+            "demoAdminRequired": "Demo 模式：無管理員權限",
+            "rateLimited": "請求過於頻繁，請稍後再試",
+            "oauthRegisterAdminOnly": "僅管理員可以存取註冊應用介面",
+            "oauthManageAdminOnly": "僅管理員可以管理 OAuth 應用",
+            "ssoManageAdminOnly": "僅管理員可以存取 SSO 提供者管理介面"
+        },
+        "oauth": {
+            "consentsFetchFailed": "取得授權應用清單失敗",
+            "revokeSucceeded": "成功撤銷授權",
+            "consentNotFound": "找不到對該應用的授權記錄",
+            "revokeFailed": "撤銷授權失敗",
+            "validationFailed": "參數驗證失敗",
+            "clientNotFound": "應用不存在或已被停用",
+            "clientFetchFailed": "取得應用資訊失敗"
+        },
+        "sso": {
+            "methodNotAllowed": "方法不允許"
+        },
+        "server": {
+            "internal": "伺服器內部錯誤"
+        },
+        "registration": {
+            "emailDomainNotAllowed": "該電子郵件網域暫不允許註冊",
+            "phoneCountryNotAllowed": "該手機號碼所屬地區暫不允許註冊",
+            "notAllowed": "目前不允許註冊，請聯絡管理員"
+        },
+        "admin": {
+            "registrationRuleExists": "同名規則已存在",
+            "registrationRuleNotFound": "規則不存在",
+            "registrationRuleUpdateFailed": "更新註冊規則失敗",
+            "registrationRuleDeleteFailed": "刪除註冊規則失敗",
+            "userNotFound": "目前使用者不存在",
+            "adminOnly": "僅管理員可以執行此操作",
+            "cannotRemoveSelf": "不能移除自己的管理員權限",
+            "roleSyncFailed": "管理員角色操作失敗",
+            "ssoProviderNotFound": "SSO 提供者不存在",
+            "ssoProviderExists": "Provider ID 已存在",
+            "ssoProviderIdRequired": "缺少提供者 ID",
+            "paramsInvalid": "參數驗證失敗",
+            "logsStatsFailed": "取得登入統計失敗",
+            "logsSessionsFailed": "取得登入日誌失敗",
+            "roleSyncSucceeded": "管理員角色同步成功",
+            "roleSyncFailedDescription": "同步失敗，使用者不存在或非管理員",
+            "roleAddSucceeded": "管理員角色新增成功",
+            "roleAddFailed": "新增失敗，使用者不存在",
+            "roleRemoveSucceeded": "管理員角色移除成功",
+            "roleRemoveFailed": "移除失敗，使用者不存在或操作被拒絕",
+            "unsupportedAction": "不支援的操作",
+            "oauthAppCreated": "應用建立成功",
+            "oauthAppCreateFailed": "建立應用失敗",
+            "oauthAppUpdated": "應用更新成功",
+            "oauthAppUpdateFailed": "更新應用失敗",
+            "oauthAppDeleted": "刪除成功",
+            "oauthAppDeleteFailed": "刪除應用失敗",
+            "oauthAppNotFound": "應用不存在",
+            "oauthAppIncomplete": "參數不完整",
+            "oauthAppEnabled": "應用已啟用",
+            "oauthAppDisabled": "應用已停用",
+            "oauthAppListFailed": "取得應用清單失敗",
+            "invalidRedirectUri": "無效的重新導向URI：{uri}",
+            "ssoCreated": "SSO 提供者建立成功",
+            "ssoUpdated": "SSO 提供者更新成功",
+            "ssoDeleted": "SSO 提供者刪除成功"
+        },
+        "upload": {
+            "notLoggedIn": "未登入",
+            "notFound": "找不到上傳檔案",
+            "invalid": "無效的檔案上傳",
+            "tooLarge": "檔案大小超出 {limit} 限制",
+            "dailyLimit": "今日上傳次數超出限制",
+            "failed": "檔案上傳失敗",
+            "userDailyLimit": "您今日上傳次數超出限制"
+        },
+        "demo": {
+            "adminRestricted": "Demo 模式下不允許執行管理後台的修改操作",
+            "writeRestricted": "Demo 模式下不允許執行此操作",
+            "dangerousRestricted": "Demo 模式下不允許執行此危險操作"
+        }
+    }
+}
