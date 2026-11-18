@@ -4,6 +4,8 @@
 
 ## 文档列表
 
+-   [账号找回与 2FA 边界设计草案](./2026-11-18-account-recovery-design.md): 现状取证、威胁模型、恢复等级、分阶段路线与待定决策（2026-11-18 草案，未进入阶段）。
+-   [主流平台账号找回与改邮箱机制调研](./2026-11-18-account-recovery-research.md): Google / Microsoft / Apple / GitHub / Supabase / Auth0 / Okta / Cognito / Keycloak / Firebase 与 NIST / OWASP 的公开口径（2026-11-18 快照）。
 -   [AI 基建优化规划](./ai-infrastructure-optimization.md): Skills / Agents / 项目规范 / i18n 规划的评估与分批复核清单。
 -   [PrimeVue → caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md): 组件库迁移的现状盘点、逐组件映射、主题 / 测试耦合、分阶段计划与风险。
 -   [i18n 评估与实施方案](./2026-11-05-i18n-evaluation.md): 基于原 i18n 规划的复核修订、Locale Registry、模块化消息、Zod v4 错误本地化、服务端 / 邮件方案与批次。

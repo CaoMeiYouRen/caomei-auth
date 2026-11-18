@@ -28,6 +28,8 @@
 
 AI 基建、依赖治理、架构演进等决策与规划文档。
 
+-   [账号找回与 2FA 边界设计草案](./governance/2026-11-18-account-recovery-design.md): 现状取证、威胁模型、恢复等级、分阶段路线与待定决策（2026-11-18 草案，未进入阶段）。
+-   [主流平台账号找回与改邮箱机制调研](./governance/2026-11-18-account-recovery-research.md): Google / Microsoft / Apple / GitHub / Supabase / Auth0 / Okta / Cognito / Keycloak / Firebase 与 NIST / OWASP 的公开口径（2026-11-18 快照）。
 -   [AI 基建优化规划](./governance/ai-infrastructure-optimization.md): Skills / Agents / 项目规范 / i18n 规划的评估与分批复核清单。
 -   [PrimeVue → caomei-ui 迁移评估](./governance/2026-11-05-caomei-ui-migration-evaluation.md): 组件库迁移的现状盘点、逐组件映射、主题 / 测试耦合、分阶段计划与风险。
 -   [caomei-ui 1.2.0 复核记录](./governance/2026-11-08-caomei-ui-1.2.0-revaluation.md): 1.1.0 / 1.2.0 能力变化、导出面差分、对 DatePicker / Toast / Form / DataTable 口径的修订与升级验证。
