@@ -91,6 +91,19 @@ async function runPlugin(modulePath: string, nuxtApp: Record<string, unknown> = 
     return await setup({ vueApp: { use: vi.fn() }, ...nuxtApp }) as { provide?: Record<string, Record<string, (...args: unknown[]) => unknown>> } | undefined
 }
 
+/** 判断被注入节点是否为百度统计脚本：按主机名精确比对，避免子串匹配被其他域名绕过 */
+function isBaiduAnalyticsScript(node: { src?: string } | undefined) {
+    if (!node?.src) {
+        return false
+    }
+    try {
+        return new URL(node.src).hostname === 'hm.baidu.com'
+    } catch {
+        // src 不是合法绝对 URL 时按非目标节点处理
+        return false
+    }
+}
+
 describe('plugins/baidu-analytics', () => {
     beforeEach(() => {
         vi.clearAllMocks()
@@ -103,7 +116,9 @@ describe('plugins/baidu-analytics', () => {
         const api = provideApi<BaiduApi>(result, 'baiduAnalytics')
         expect(api).toBeTruthy()
         expect(window._hmt).toEqual([])
-        const script = appendSpy.mock.calls.map(([node]) => node as HTMLScriptElement).find((node) => node?.src?.includes('hm.baidu.com'))
+        const script = appendSpy.mock.calls
+            .map(([node]) => node as HTMLScriptElement)
+            .find((node) => isBaiduAnalyticsScript(node))
         expect(script?.src).toContain('baidu-test')
         expect(script?.async).toBe(true)
 
@@ -120,6 +135,15 @@ describe('plugins/baidu-analytics', () => {
 
         expect(window._hmt).toEqual(expect.arrayContaining([['_trackEvent', 'auth', 'login', 'email', 1]]))
         appendSpy.mockRestore()
+    })
+
+    it('仅精确匹配百度统计域名', () => {
+        expect(isBaiduAnalyticsScript({ src: 'https://hm.baidu.com/hm.js?id=baidu-test' })).toBe(true)
+        expect(isBaiduAnalyticsScript({ src: 'https://hm.baidu.com.evil.test/hm.js' })).toBe(false)
+        expect(isBaiduAnalyticsScript({ src: 'https://evil.test/hm.baidu.com/hm.js' })).toBe(false)
+        expect(isBaiduAnalyticsScript({ src: 'not-a-url' })).toBe(false)
+        expect(isBaiduAnalyticsScript({})).toBe(false)
+        expect(isBaiduAnalyticsScript(undefined)).toBe(false)
     })
 
     it('未配置 ID 时不注入脚本', async () => {
