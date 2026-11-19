@@ -57,7 +57,7 @@
 | 能力 | 现状 | 证据 |
 | :--- | :--- | :--- |
 | 改邮箱 | 可用（`admin.updateUser` 的 `set-email` 权限） | `components/admin/users/user-detail-dialog.vue:368-385`；上游 `admin/routes.mjs:289-302` |
-| 改密码 | **UI 必失败**：密码被塞进 `updateUser.data`，上游以 `PASSWORD_CANNOT_BE_UPDATED_VIA_UPDATE_USER` 拒绝 | 同上；`admin/routes.mjs:261` |
+| 改密码 | **UI 必失败**：密码被塞进 `updateUser.data`，上游以 `PASSWORD_CANNOT_BE_UPDATED_VIA_UPDATE_USER` 拒绝；按 D8（2026-11-20）该入口应移除，管理员只能触发重置邮件 | 同上；`admin/routes.mjs:261` |
 | 正确的改密码入口 | `/admin/set-user-password` 存在，但前端未接入 | `admin/routes.mjs:796-852` |
 | 重置 2FA | **无此能力**，admin 插件无 twoFactor 操作 | admin 插件端点清单；`server/api/admin` 无对应路由 |
 | 审计 | 只有通用 API 请求日志，无 before/after、工单号、操作原因 | `server/middleware/1-log.ts` |
@@ -250,6 +250,7 @@
 | D5 | 冷静期长度 | 24h / 72h / 可配置 | 默认 24h，可配置到 72h |
 | D6 | 社交账号作为恢复因子 | 是 / 否 | 否：社交账号本身可能丢失；只作为“登录通道”，不作为恢复证明 |
 | D7 | 生效后旧邮箱是否还能登录 | 立即失效 / 保留一段时间 | 立即失效；冷静期内可撤销，生效后不再作为登录标识 |
+| D8 | 管理员能否为用户设置密码 | 允许 / 仅触发重置邮件 / 不允许 | **已决策（2026-11-20）**：不允许手动设置；管理员上限为向用户邮箱触发重置邮件，由用户自助完成 |
 
 ## 8. 兼容性与影响面
 
@@ -272,7 +273,7 @@
 - `profile` 改邮箱对话框：区分“旧邮箱可用 / 不可用”两条路径；展示冷静期与撤销入口。
 - `security`：备份码 / 恢复码再生成、2FA 重置说明、可信设备列表。
 - `admin/users`：2FA 状态、恢复事件、重置入口、工单字段。
-- 新增 i18n 键、邮件模板（改邮箱通知、恢复通知、冷静期生效通知）。
+- 新增 i18n 键、邮件模板（改邮箱通知、恢复通知、冷静期生效通知）；`admin/users` 移除「新密码」输入，改为「发送重置邮件」动作（D8）。
 - 视觉基线覆盖 profile / security / admin 的相关弹窗与状态。
 
 ### 8.4 API 与集成方
