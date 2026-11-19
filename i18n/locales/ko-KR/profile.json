@@ -1,0 +1,153 @@
+{
+    "profile": {
+        "page": {
+            "title": "마이페이지",
+            "subtitle": "계정 정보를 관리합니다."
+        },
+        "header": {
+            "title": "프로필",
+            "subtitle": "계정 정보 관리",
+            "privacyEnableTip": "개인정보 보호 모드를 켜서 민감한 정보 숨기기",
+            "privacyDisableTip": "개인정보 보호 모드를 끄고 전체 정보 표시",
+            "privacyOn": "개인정보 보호 모드",
+            "privacyOff": "상세 보기",
+            "oauthTip": "권한을 부여한 앱 관리",
+            "oauth": "권한을 부여한 앱",
+            "securityTip": "계정 보안 설정",
+            "security": "보안 설정",
+            "logoutTip": "로그아웃",
+            "logout": "로그아웃"
+        },
+        "basic": {
+            "idLabel": "ID",
+            "idTipHidden": "사용자 ID가 숨겨져 있습니다. 상단의 개인정보 보호 모드 스위치로 표시할 수 있습니다",
+            "idTip": "현재 사용자의 고유 식별자이며 편집할 수 없습니다",
+            "usernameLabel": "사용자 이름",
+            "usernameTipHidden": "사용자 이름이 숨겨져 있습니다. 상단의 개인정보 보호 모드 스위치로 표시할 수 있습니다",
+            "usernameTip": "현재 사용 중인 사용자 이름이며 편집할 수 없습니다",
+            "setUsernameTip": "클릭하여 사용자 이름을 설정하세요. 설정 후 사용자 이름과 비밀번호로 로그인할 수 있습니다",
+            "setUsername": "사용자 이름 설정",
+            "unsetWarning": "사용자 이름이 설정되지 않아 사용자 이름과 비밀번호로 로그인할 수 없습니다",
+            "nicknameLabel": "닉네임",
+            "nicknameTip": "닉네임은 언제든지 변경할 수 있습니다. 2~36자."
+        },
+        "contact": {
+            "emailLabel": "이메일",
+            "phoneLabel": "전화번호",
+            "fullEmailTip": "전체 이메일 주소: {email}",
+            "notBound": "미등록",
+            "emailHiddenTip": "이메일 정보가 숨겨져 있습니다. 상단의 개인정보 보호 모드 스위치로 표시할 수 있습니다",
+            "changeVerifiedEmailTip": "클릭하여 확인된 이메일 주소 변경",
+            "edit": "변경",
+            "emailVerifiedTip": "이메일이 확인되었습니다. 로그인과 비밀번호 찾기에 사용할 수 있습니다",
+            "verified": "확인됨",
+            "verifyEmailTip": "클릭하여 이메일을 확인하세요. 확인 후 로그인과 비밀번호 찾기에 사용할 수 있습니다",
+            "verify": "확인",
+            "emailUnverifiedTip": "이메일이 확인되지 않아 로그인과 비밀번호 찾기에 사용할 수 없습니다",
+            "unverified": "미확인",
+            "emailWarning": "이메일이 확인되지 않아 이메일 로그인과 비밀번호 찾기를 사용할 수 없습니다.",
+            "emailWarningStrong": "계정 보안을 위해 가능한 한 빨리 이메일을 확인해 주세요.",
+            "phoneHiddenTip": "전화번호 정보가 숨겨져 있습니다. 상단의 개인정보 보호 모드 스위치로 표시할 수 있습니다",
+            "changePhoneTip": "클릭하여 등록된 전화번호 변경",
+            "bindPhoneTip": "클릭하여 전화번호를 등록하세요. 등록 후 로그인과 인증에 사용할 수 있습니다",
+            "smsDisabledTip": "SMS 기능이 활성화되지 않아 전화번호를 등록할 수 없습니다",
+            "bind": "등록",
+            "phoneVerifiedTip": "전화번호가 확인되었습니다. 로그인과 인증에 사용할 수 있습니다"
+        },
+        "social": {
+            "label": "외부 계정",
+            "unlinkTipPrivate": "클릭하여 {name} 계정 연결 해제, ID: {id}",
+            "unlinkTipFull": "클릭하여 {name} 계정 연결 해제, 전체 ID: {id}",
+            "bind": "{name} 계정 연결"
+        },
+        "avatar": {
+            "uploadTip": "클릭하여 새 아바타 업로드",
+            "upload": "아바타 업로드",
+            "invalidType": "이미지 파일을 선택해 주세요",
+            "tooLarge": "파일 크기는 {size}를 초과할 수 없습니다",
+            "uploadFailed": "아바타 업로드에 실패했습니다",
+            "uploadSuccess": "아바타를 업로드했습니다"
+        },
+        "actions": {
+            "saveTip": "클릭하여 변경한 개인 정보 저장",
+            "save": "변경 저장",
+            "changePasswordTip": "클릭하여 비밀번호 변경 페이지로 이동",
+            "changePassword": "비밀번호 변경"
+        },
+        "emailDialog": {
+            "titleEdit": "이메일 변경",
+            "titleBind": "이메일 등록",
+            "inputTip": "새 이메일 주소 입력",
+            "placeholder": "새 이메일 주소를 입력해 주세요",
+            "submitTip": "클릭하여 새 이메일로 확인 링크 전송",
+            "submit": "확인 링크 전송",
+            "captchaRequired": "먼저 CAPTCHA 인증을 완료해 주세요",
+            "captchaNeeded": "CAPTCHA가 필요합니다",
+            "sentToCurrent": "확인 링크를 현재 이메일로 전송했습니다. 확인해 주세요",
+            "sent": "확인 이메일을 전송했습니다",
+            "sentDescription": "새 이메일에서 확인 이메일을 확인해 주세요",
+            "bindFailed": "등록에 실패했습니다",
+            "bindFailedUnknown": "이메일 등록 중 알 수 없는 오류가 발생했습니다"
+        },
+        "phoneDialog": {
+            "titleEdit": "전화번호 변경",
+            "titleBind": "전화번호 등록",
+            "inputTip": "새 전화번호 입력",
+            "placeholder": "새 전화번호를 입력해 주세요",
+            "codeTip": "수신한 SMS 인증 코드 입력",
+            "codePlaceholder": "인증 코드",
+            "submitTip": "클릭하여 전화번호 변경 확정",
+            "submit": "변경 확정",
+            "invalidPhone": "올바른 전화번호를 입력해 주세요",
+            "verifyFailed": "전화번호 확인에 실패했습니다",
+            "success": "전화번호를 변경했습니다",
+            "failed": "전화번호 변경에 실패했습니다",
+            "failedUnknown": "전화번호 변경 중 알 수 없는 오류가 발생했습니다"
+        },
+        "usernameDialog": {
+            "title": "사용자 이름 설정",
+            "inputTip": "사용자 이름과 비밀번호 로그인에 사용할 새 사용자 이름 입력",
+            "placeholder": "새 사용자 이름을 입력해 주세요",
+            "submitTip": "클릭하여 새 사용자 이름 설정 확정",
+            "submit": "설정 확정",
+            "success": "사용자 이름을 설정했습니다",
+            "failed": "사용자 이름 설정에 실패했습니다",
+            "failedUnknown": "사용자 이름 설정 중 알 수 없는 오류가 발생했습니다"
+        },
+        "timezone": {
+            "title": "시간대 설정",
+            "followBrowser": "브라우저 시간대 따르기",
+            "description": "페이지 시간을 사용자의 시간대로 표시하는 데 사용합니다. 설정하지 않으면 브라우저 시간대를 사용합니다.",
+            "label": "시간대",
+            "placeholder": "시간대 선택",
+            "savedTitle": "업데이트됨",
+            "saved": "시간대 설정을 저장했습니다",
+            "failedTitle": "업데이트 실패",
+            "failed": "시간대 업데이트에 실패했습니다. 잠시 후 다시 시도해 주세요"
+        },
+        "flow": {
+            "accountsLoadFailedTitle": "외부 계정을 가져오지 못했습니다",
+            "accountsLoadFailed": "외부 계정 정보를 가져오지 못했습니다",
+            "bindBlockedTitle": "연결에 실패했습니다",
+            "bindBlocked": "{name} 로그인이 활성화되지 않아 연결할 수 없습니다",
+            "bindInProgress": "{name} 연결 중입니다",
+            "bindFailed": "{name} 연결에 실패했습니다",
+            "bindFailedUnknown": "{name} 연결 중 알 수 없는 오류가 발생했습니다",
+            "unlinkFailed": "{provider} 연결 해제에 실패했습니다",
+            "unlinked": "{provider} 연결을 해제했습니다",
+            "unlinkFailedUnknown": "{provider} 연결 해제 중 알 수 없는 오류가 발생했습니다",
+            "confirmUnlinkTitle": "연결 해제 확인",
+            "confirmUnlink": "{provider} 플랫폼의 ID가 {accountId}인 계정 연결을 해제하시겠습니까?",
+            "nicknameInvalidTitle": "닉네임 형식이 올바르지 않습니다",
+            "nicknameInvalid": "닉네임은 2~36자이며 한글·영문·숫자·일반 문장 부호만 사용할 수 있습니다.",
+            "saveFailed": "프로필 저장에 실패했습니다",
+            "saveFailedUnknown": "프로필 저장 중 알 수 없는 오류가 발생했습니다",
+            "saved": "프로필을 저장했습니다",
+            "logoutSuccess": "로그아웃했습니다",
+            "logoutFailed": "로그아웃에 실패했습니다",
+            "logoutFailedUnknown": "로그아웃 중 알 수 없는 오류가 발생했습니다",
+            "confirmLogoutTitle": "로그아웃 확인",
+            "confirmLogout": "로그아웃하시겠습니까? 로그아웃 후에는 다시 로그인해야 계정에 접근할 수 있습니다."
+        }
+    }
+}
