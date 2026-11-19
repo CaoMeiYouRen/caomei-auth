@@ -1,0 +1,91 @@
+{
+    "app": {
+        "name": "草梅 Auth",
+        "title": "草梅 Auth 統合ログインプラットフォーム",
+        "error": {
+            "status": {
+                "400": {
+                    "title": "リクエストエラー (400)",
+                    "description": "リクエストが無効です。パラメータを確認してください。"
+                },
+                "401": {
+                    "title": "未認証 (401)",
+                    "description": "ログインしていないか、ログインの有効期限が切れています。"
+                },
+                "403": {
+                    "title": "アクセス禁止 (403)",
+                    "description": "このページにアクセスする権限がありません。"
+                },
+                "404": {
+                    "title": "ページが見つかりません (404)",
+                    "description": "アクセスしたページは存在しないか、削除されています。"
+                },
+                "500": {
+                    "title": "サーバーエラー (500)",
+                    "description": "サーバーでエラーが発生しました。しばらくしてから再度お試しください。"
+                },
+                "unknown": {
+                    "code": "エラー",
+                    "title": "エラーが発生しました",
+                    "description": "不明なエラーが発生しました。しばらくしてから再度お試しください。"
+                }
+            },
+            "page": {
+                "ariaLabel": "エラーページ",
+                "leftSubtitle": "安全で便利なワンストップのログイン体験"
+            },
+            "actions": {
+                "home": "ホームに戻る",
+                "back": "前のページに戻る"
+            }
+        },
+        "admin": {
+            "nav": {
+                "expand": "サイドバーを展開",
+                "collapse": "サイドバーを折りたたむ",
+                "title": "管理画面",
+                "users": "ユーザー管理",
+                "applications": "アプリ管理",
+                "sso": "SSO 管理",
+                "registration": "登録制御",
+                "logs": "ログイン統計",
+                "quickAccess": "クイックアクセス",
+                "profile": "マイページ",
+                "myApps": "マイアプリ",
+                "docs": "ドキュメント",
+                "home": "ホームに戻る"
+            }
+        },
+        "theme": {
+            "toLight": "ライトモードに切り替え",
+            "toDark": "ダークモードに切り替え"
+        }
+    },
+    "language": {
+        "label": "言語",
+        "short": "日本語"
+    },
+    "footer": {
+        "tagline": "統合ログインプラットフォーム · 安全、便利、拡張可能",
+        "copyright": "草梅 Auth © 2025",
+        "ariaGithub": "GitHub",
+        "ariaHome": "ホーム",
+        "home": "ホーム",
+        "profile": "マイページ",
+        "admin": "管理画面",
+        "forgotPassword": "パスワードをお忘れの方",
+        "privacy": "プライバシーポリシー",
+        "terms": "利用規約",
+        "about": "このサイトについて",
+        "contact": "お問い合わせ",
+        "docs": "ドキュメント"
+    },
+    "feedback": {
+        "title": "ご意見・ご要望",
+        "text": "問題を報告"
+    },
+    "github": {
+        "title": "GitHub でフォローする",
+        "ariaLabel": "GitHub でフォローする"
+    }
+}

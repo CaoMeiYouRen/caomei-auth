@@ -1,0 +1,19 @@
+{
+    "common": {
+        "listSeparator": "、",
+        "status": {
+            "enabled": "有効",
+            "disabled": "無効",
+            "banned": "利用停止",
+            "normal": "正常",
+            "active": "アクティブ",
+            "expired": "期限切れ",
+            "yes": "はい",
+            "no": "いいえ",
+            "role": {
+                "admin": "管理者",
+                "user": "ユーザー"
+            }
+        }
+    }
+}

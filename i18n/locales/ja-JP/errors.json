@@ -1,0 +1,86 @@
+{
+    "errors": {
+        "auth": {
+            "loginRequired": "ログインしてください",
+            "unauthorized": "未ログインユーザー",
+            "forbidden": "アクセス権限がありません",
+            "demoAdminRequired": "デモモード：管理者権限がありません",
+            "rateLimited": "リクエストが多すぎます。しばらくしてから再度お試しください",
+            "oauthRegisterAdminOnly": "アプリ登録 API にアクセスできるのは管理者のみです",
+            "oauthManageAdminOnly": "OAuth アプリを管理できるのは管理者のみです",
+            "ssoManageAdminOnly": "SSO プロバイダー管理 API にアクセスできるのは管理者のみです"
+        },
+        "oauth": {
+            "consentsFetchFailed": "認可済みアプリ一覧の取得に失敗しました",
+            "revokeSucceeded": "認可を取り消しました",
+            "consentNotFound": "このアプリへの認可記録が見つかりません",
+            "revokeFailed": "認可の取り消しに失敗しました",
+            "validationFailed": "パラメータの検証に失敗しました",
+            "clientNotFound": "アプリが存在しないか、無効になっています",
+            "clientFetchFailed": "アプリ情報の取得に失敗しました"
+        },
+        "sso": {
+            "methodNotAllowed": "許可されていないメソッドです"
+        },
+        "server": {
+            "internal": "サーバー内部エラー"
+        },
+        "registration": {
+            "emailDomainNotAllowed": "このメールドメインでは現在登録できません",
+            "phoneCountryNotAllowed": "この電話番号の地域では現在登録できません",
+            "notAllowed": "現在登録は許可されていません。管理者にお問い合わせください"
+        },
+        "admin": {
+            "registrationRuleExists": "同名のルールが既に存在します",
+            "registrationRuleNotFound": "ルールが存在しません",
+            "registrationRuleUpdateFailed": "登録ルールの更新に失敗しました",
+            "registrationRuleDeleteFailed": "登録ルールの削除に失敗しました",
+            "userNotFound": "現在のユーザーが存在しません",
+            "adminOnly": "この操作は管理者のみ実行できます",
+            "cannotRemoveSelf": "自分自身の管理者権限は削除できません",
+            "roleSyncFailed": "管理者ロールの操作に失敗しました",
+            "ssoProviderNotFound": "SSO プロバイダーが存在しません",
+            "ssoProviderExists": "Provider ID は既に存在します",
+            "ssoProviderIdRequired": "プロバイダー ID がありません",
+            "paramsInvalid": "パラメータの検証に失敗しました",
+            "logsStatsFailed": "ログイン統計の取得に失敗しました",
+            "logsSessionsFailed": "ログインログの取得に失敗しました",
+            "roleSyncSucceeded": "管理者ロールの同期に成功しました",
+            "roleSyncFailedDescription": "同期に失敗しました。ユーザーが存在しないか、管理者ではありません",
+            "roleAddSucceeded": "管理者ロールの追加に成功しました",
+            "roleAddFailed": "追加に失敗しました。ユーザーが存在しません",
+            "roleRemoveSucceeded": "管理者ロールの削除に成功しました",
+            "roleRemoveFailed": "削除に失敗しました。ユーザーが存在しないか、操作が拒否されました",
+            "unsupportedAction": "サポートされていない操作です",
+            "oauthAppCreated": "アプリを作成しました",
+            "oauthAppCreateFailed": "アプリの作成に失敗しました",
+            "oauthAppUpdated": "アプリを更新しました",
+            "oauthAppUpdateFailed": "アプリの更新に失敗しました",
+            "oauthAppDeleted": "削除しました",
+            "oauthAppDeleteFailed": "アプリの削除に失敗しました",
+            "oauthAppNotFound": "アプリが存在しません",
+            "oauthAppIncomplete": "パラメータが不足しています",
+            "oauthAppEnabled": "アプリを有効にしました",
+            "oauthAppDisabled": "アプリを無効にしました",
+            "oauthAppListFailed": "アプリ一覧の取得に失敗しました",
+            "invalidRedirectUri": "無効なリダイレクト URI：{uri}",
+            "ssoCreated": "SSO プロバイダーを作成しました",
+            "ssoUpdated": "SSO プロバイダーを更新しました",
+            "ssoDeleted": "SSO プロバイダーを削除しました"
+        },
+        "upload": {
+            "notLoggedIn": "未ログイン",
+            "notFound": "アップロードファイルが見つかりません",
+            "invalid": "無効なファイルアップロードです",
+            "tooLarge": "ファイルサイズが {limit} の制限を超えています",
+            "dailyLimit": "本日のアップロード回数が上限を超えています",
+            "failed": "ファイルのアップロードに失敗しました",
+            "userDailyLimit": "本日のアップロード回数が上限を超えました"
+        },
+        "demo": {
+            "adminRestricted": "デモモードでは管理画面の変更操作を実行できません",
+            "writeRestricted": "デモモードではこの操作を実行できません",
+            "dangerousRestricted": "デモモードではこの危険な操作を実行できません"
+        }
+    }
+}
