@@ -1,0 +1,79 @@
+{
+    "email": {
+        "chrome": {
+            "headerSubtitle": "安全 • 便利 • 統一された本人認証プラットフォーム",
+            "greeting": "こんにちは！",
+            "helpText": "お困りですか？サポートチームまでお問い合わせください",
+            "contact": "お問い合わせ",
+            "privacy": "プライバシーポリシー",
+            "terms": "利用規約",
+            "allRightsReserved": "無断転載を禁じます。",
+            "footerNote": "このメールはシステムから自動送信されています。直接返信しないでください。",
+            "footerNoteCode": "このメールは認証コードを自動送信するものです。直接返信しないでください。",
+            "cannotClick": "ボタンをクリックできない場合",
+            "copyLinkHint": "以下のリンクをコピーしてブラウザのアドレスバーに貼り付けてください：",
+            "importantReminder": "⚠️ 重要なお知らせ：",
+            "securityTipTitle": "🛡️ セキュリティのヒント",
+            "codeExpiresInWithAt": "この認証コードは {minutes} 分以内にご使用ください（有効期限：{time}、{timeZone}）",
+            "codeExpiresIn": "この認証コードは {minutes} 分以内にご使用ください",
+            "fallbackMessage": "メール内容",
+            "fallbackButton": "クリックして操作",
+            "defaultSecurityTip": "• 認証コードは今回の操作にのみ使用されます。第三者に漏らさないでください\n• この操作にお心当たりがない場合は、このメールを無視してください\n• 有効期限内に認証を完了してください。期限切れの場合は再取得が必要です",
+            "codeTitle": "認証コード"
+        },
+        "verification": {
+            "subject": "{appName} のメールアドレスを確認",
+            "title": "{appName} のメールアドレスを確認",
+            "preheader": "{appName} へようこそ！登録を完了するため、メールアドレスを確認してください。",
+            "message": "<strong>{appName}</strong> にご登録いただきありがとうございます！アカウントの安全を確保するため、下のボタンをクリックしてメールアドレスを確認してください。",
+            "buttonText": "メールアドレスを確認",
+            "reminder": "• この確認リンクは <strong>24 時間</strong>後に失効します<br/>• {appName} のアカウントを作成していない場合は、このメールを無視してください<br/>• アカウントの安全のため、このリンクを第三者と共有しないでください",
+            "securityTip": "{appName} がメールでパスワード、認証コード、その他の機密情報をお尋ねすることは決してありません。"
+        },
+        "loginOtp": {
+            "subject": "{appName} のログイン認証コード",
+            "title": "{appName} のログイン認証コード",
+            "preheader": "ログイン認証コードは {code} です",
+            "message": "<strong>{appName}</strong> へのログインを試行しています。以下の認証コードを入力してログインを完了してください：",
+            "securityTip": "ご本人の操作でない場合は、このメールを無視し、アカウントの安全を確認してください。"
+        },
+        "emailVerificationOtp": {
+            "subject": "{appName} のメールアドレスを確認",
+            "title": "{appName} のメールアドレスを確認",
+            "preheader": "メール認証コードは {code} です",
+            "message": "<strong>{appName}</strong> にご登録いただきありがとうございます！以下の認証コードを入力してメールアドレスの確認を完了してください：",
+            "securityTip": "このアカウントを作成していない場合は、このメールを無視してください。"
+        },
+        "passwordResetOtp": {
+            "subject": "{appName} のパスワードを再設定",
+            "title": "{appName} のパスワードを再設定",
+            "preheader": "パスワード再設定用の認証コードは {code} です",
+            "message": "<strong>{appName}</strong> アカウントのパスワード再設定が要求されました。以下の認証コードを入力して再設定を完了してください：",
+            "securityTip": "ご本人の操作でない場合は、このメールを無視し、ただちにアカウントの安全を確認してください。"
+        },
+        "magicLink": {
+            "subject": "{appName} のログインリンク",
+            "title": "{appName} のログインリンク",
+            "preheader": "クリックするだけで、パスワードなしで安全にログインできます。",
+            "message": "下のボタンをクリックすると、パスワードなしで <strong>{appName}</strong> アカウントに安全にログインできます：",
+            "buttonText": "ワンクリックでログイン",
+            "reminder": "• このログインリンクは <strong>15 分</strong>後に失効します<br/>• リンクは 1 回のみ使用できます<br/>• ご本人の操作でない場合は、このメールを無視してください",
+            "securityTip": "アカウントの安全のため、このリンクを誰とも共有しないでください。"
+        },
+        "emailChange": {
+            "subject": "メールアドレス変更の確認 - {appName}",
+            "title": "メールアドレス変更の確認 - {appName}",
+            "preheader": "メールアドレスを {newEmail} に変更することを確認",
+            "message": "メールアドレスを次のように変更します：<strong>{newEmail}</strong><br/><br/>変更を確定する場合は、下のボタンをクリックしてください：",
+            "buttonText": "メールアドレス変更を確定",
+            "reminder": "• この確認リンクは <strong>24 時間</strong>後に失効します<br/>• メールアドレス変更後は、新しいメールアドレスでログインする必要があります<br/>• この操作にお心当たりがない場合は、このメールを無視してください",
+            "securityTip": "アカウントの安全のため、メールアドレス変更の確認リンクは現在のメールアドレスに送信されています。"
+        },
+        "securityNotification": {
+            "subject": "{appName} アカウントのセキュリティ通知",
+            "title": "{appName} アカウントのセキュリティ通知",
+            "preheader": "アカウントにセキュリティ上のアクティビティがありました。詳細をご確認ください。",
+            "message": "<strong>{appName}</strong> アカウントで以下のセキュリティ上のアクティビティを検出しました：<br/><br/><strong>{action}</strong>"
+        }
+    }
+}

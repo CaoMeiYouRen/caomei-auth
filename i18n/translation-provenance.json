@@ -55,7 +55,7 @@
                 "email",
                 "server-only"
             ],
-            "note": "核心 6 模块已产出机翻 draft，业务与 Admin 模块待补齐；键与占位符同构已核对。pendingModules 表示待母语审校的模块（含已交付未审校项）；未做母语审校，不得升级 seo-ready。阶段范围见 docs/design/governance/2026-11-17-phase8-registration.md",
+            "note": "核心 6 模块与业务 6 模块（profile / security / oauth / sso / demo / email）已产出机翻 draft，Admin 与服务端模块待补齐；键与占位符同构已核对，7 类邮件模板已用 ja-JP 文案渲染验证。pendingModules 表示待母语审校的模块（含已交付未审校项）；未做母语审校，不得升级 seo-ready。阶段范围见 docs/design/governance/2026-11-17-phase8-registration.md",
             "updatedAt": "2026-11-19"
         }
     }

@@ -1,0 +1,153 @@
+{
+    "profile": {
+        "page": {
+            "title": "マイページ",
+            "subtitle": "アカウント情報を管理します。"
+        },
+        "header": {
+            "title": "プロフィール",
+            "subtitle": "アカウント情報の管理",
+            "privacyEnableTip": "プライバシーモードを有効にして機密情報を隠す",
+            "privacyDisableTip": "プライバシーモードを無効にしてすべての情報を表示",
+            "privacyOn": "プライバシーモード",
+            "privacyOff": "詳細を表示",
+            "oauthTip": "認可済みアプリの管理",
+            "oauth": "認可済みアプリ",
+            "securityTip": "アカウントのセキュリティ設定",
+            "security": "セキュリティ設定",
+            "logoutTip": "ログアウト",
+            "logout": "ログアウト"
+        },
+        "basic": {
+            "idLabel": "ID",
+            "idTipHidden": "ユーザー ID は非表示です。上部のプライバシーモードスイッチで表示できます",
+            "idTip": "現在のユーザーの一意の識別子です。編集できません",
+            "usernameLabel": "ユーザー名",
+            "usernameTipHidden": "ユーザー名は非表示です。上部のプライバシーモードスイッチで表示できます",
+            "usernameTip": "現在使用中のユーザー名です。編集できません",
+            "setUsernameTip": "クリックしてユーザー名を設定します。設定後はユーザー名とパスワードでログインできます",
+            "setUsername": "ユーザー名を設定",
+            "unsetWarning": "ユーザー名が未設定のため、ユーザー名とパスワードではログインできません",
+            "nicknameLabel": "ニックネーム",
+            "nicknameTip": "ニックネームはいつでも変更できます。2〜36 文字。"
+        },
+        "contact": {
+            "emailLabel": "メールアドレス",
+            "phoneLabel": "電話番号",
+            "fullEmailTip": "メールアドレス全体：{email}",
+            "notBound": "未登録",
+            "emailHiddenTip": "メールアドレス情報は非表示です。上部のプライバシーモードスイッチで表示できます",
+            "changeVerifiedEmailTip": "クリックして確認済みのメールアドレスを変更",
+            "edit": "変更",
+            "emailVerifiedTip": "メールアドレスは確認済みです。ログインとパスワード再設定に使用できます",
+            "verified": "確認済み",
+            "verifyEmailTip": "クリックしてメールアドレスを確認します。確認後はログインとパスワード再設定に使用できます",
+            "verify": "確認",
+            "emailUnverifiedTip": "メールアドレスが未確認のため、ログインとパスワード再設定に使用できません",
+            "unverified": "未確認",
+            "emailWarning": "メールアドレスが未確認のため、メールでのログインもパスワード再設定もできません。",
+            "emailWarningStrong": "アカウントの安全のため、できるだけ早くメールアドレスを確認してください。",
+            "phoneHiddenTip": "電話番号情報は非表示です。上部のプライバシーモードスイッチで表示できます",
+            "changePhoneTip": "クリックして登録済みの電話番号を変更",
+            "bindPhoneTip": "クリックして電話番号を登録します。登録後はログインと認証に使用できます",
+            "smsDisabledTip": "SMS 機能が有効になっていないため、電話番号を登録できません",
+            "bind": "登録",
+            "phoneVerifiedTip": "電話番号は確認済みです。ログインと認証に使用できます"
+        },
+        "social": {
+            "label": "外部アカウント",
+            "unlinkTipPrivate": "クリックして {name} アカウントの連携を解除、ID: {id}",
+            "unlinkTipFull": "クリックして {name} アカウントの連携を解除、完全な ID: {id}",
+            "bind": "{name} アカウントを連携"
+        },
+        "avatar": {
+            "uploadTip": "クリックして新しいアバターをアップロード",
+            "upload": "アバターをアップロード",
+            "invalidType": "画像ファイルを選択してください",
+            "tooLarge": "{size} を超えるファイルはアップロードできません",
+            "uploadFailed": "アバターのアップロードに失敗しました",
+            "uploadSuccess": "アバターをアップロードしました"
+        },
+        "actions": {
+            "saveTip": "クリックして変更した個人情報を保存",
+            "save": "変更を保存",
+            "changePasswordTip": "クリックしてパスワード変更ページへ移動",
+            "changePassword": "パスワードを変更"
+        },
+        "emailDialog": {
+            "titleEdit": "メールアドレスの変更",
+            "titleBind": "メールアドレスの登録",
+            "inputTip": "新しいメールアドレスを入力",
+            "placeholder": "新しいメールアドレスを入力してください",
+            "submitTip": "クリックして新しいメールアドレスに確認リンクを送信",
+            "submit": "確認リンクを送信",
+            "captchaRequired": "先に CAPTCHA 認証を完了してください",
+            "captchaNeeded": "CAPTCHA が必要です",
+            "sentToCurrent": "確認リンクを現在のメールアドレスに送信しました。ご確認ください",
+            "sent": "確認メールを送信しました",
+            "sentDescription": "新しいメールアドレスで確認メールをご確認ください",
+            "bindFailed": "登録に失敗しました",
+            "bindFailedUnknown": "メールアドレス登録時に不明なエラーが発生しました"
+        },
+        "phoneDialog": {
+            "titleEdit": "電話番号の変更",
+            "titleBind": "電話番号の登録",
+            "inputTip": "新しい電話番号を入力",
+            "placeholder": "新しい電話番号を入力してください",
+            "codeTip": "受信した SMS 認証コードを入力",
+            "codePlaceholder": "認証コード",
+            "submitTip": "クリックして電話番号の変更を確定",
+            "submit": "変更を確定",
+            "invalidPhone": "有効な電話番号を入力してください",
+            "verifyFailed": "電話番号の確認に失敗しました",
+            "success": "電話番号を変更しました",
+            "failed": "電話番号の変更に失敗しました",
+            "failedUnknown": "電話番号変更時に不明なエラーが発生しました"
+        },
+        "usernameDialog": {
+            "title": "ユーザー名の設定",
+            "inputTip": "ユーザー名とパスワードでログインするための新しいユーザー名を入力",
+            "placeholder": "新しいユーザー名を入力してください",
+            "submitTip": "クリックして新しいユーザー名の設定を確定",
+            "submit": "設定を確定",
+            "success": "ユーザー名を設定しました",
+            "failed": "ユーザー名の設定に失敗しました",
+            "failedUnknown": "ユーザー名設定時に不明なエラーが発生しました"
+        },
+        "timezone": {
+            "title": "タイムゾーン設定",
+            "followBrowser": "ブラウザのタイムゾーンに合わせる",
+            "description": "ページの時刻をユーザーのタイムゾーンで表示するために使用します。未設定の場合はブラウザのタイムゾーンを使用します。",
+            "label": "タイムゾーン",
+            "placeholder": "タイムゾーンを選択",
+            "savedTitle": "更新しました",
+            "saved": "タイムゾーンの設定を保存しました",
+            "failedTitle": "更新に失敗しました",
+            "failed": "タイムゾーンの更新に失敗しました。しばらくしてから再度お試しください"
+        },
+        "flow": {
+            "accountsLoadFailedTitle": "外部アカウントの取得に失敗しました",
+            "accountsLoadFailed": "外部アカウント情報の取得に失敗しました",
+            "bindBlockedTitle": "連携に失敗しました",
+            "bindBlocked": "{name} ログインが有効になっていないため、連携できません",
+            "bindInProgress": "{name} を連携しています",
+            "bindFailed": "{name} の連携に失敗しました",
+            "bindFailedUnknown": "{name} 連携時に不明なエラーが発生しました",
+            "unlinkFailed": "{provider} の連携解除に失敗しました",
+            "unlinked": "{provider} の連携を解除しました",
+            "unlinkFailedUnknown": "{provider} 連携解除時に不明なエラーが発生しました",
+            "confirmUnlinkTitle": "連携解除の確認",
+            "confirmUnlink": "{provider} プラットフォームの ID が {accountId} のアカウントの連携を解除しますか？",
+            "nicknameInvalidTitle": "ニックネームの形式が正しくありません",
+            "nicknameInvalid": "ニックネームは 2〜36 文字で、日本語・英語・数字・一般的な記号のみ使用できます。",
+            "saveFailed": "プロフィールの保存に失敗しました",
+            "saveFailedUnknown": "プロフィール保存時に不明なエラーが発生しました",
+            "saved": "プロフィールを保存しました",
+            "logoutSuccess": "ログアウトしました",
+            "logoutFailed": "ログアウトに失敗しました",
+            "logoutFailedUnknown": "ログアウト時に不明なエラーが発生しました",
+            "confirmLogoutTitle": "ログアウトの確認",
+            "confirmLogout": "ログアウトしますか？ログアウト後は再度ログインしないとアカウントにアクセスできません。"
+        }
+    }
+}
