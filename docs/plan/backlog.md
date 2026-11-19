@@ -1,6 +1,6 @@
 # 产品 backlog（待办池）
 
-> **状态**：阶段 8「国际化 5 语推广（10 语架构）」已于 2026-11-17 授权启动（[范围登记](../design/governance/2026-11-17-phase8-registration.md)）；阶段 7 / 6 已于 2026-11-17 收口。本表只保留**尚未进入阶段**的候选与未完成项汇总。
+> **状态**：当前无进行中的阶段（阶段 8 已于 2026-11-19 收口，见 [收口记录](../design/governance/2026-11-19-phase8-closure.md)）。本表只保留**尚未进入阶段**的候选与未完成项汇总。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ---
@@ -84,9 +84,9 @@
 - **caomei-ui DataTable 分页 / 排序能力补齐**：1.2.0 的 `CaomeiDataTable` 未透出 `CaomeiPaginator` 的 `showEdges`（迁移后首 / 末页按钮消失），且 `lazy` 只映射 `manualPagination`、未关闭客户端排序（未透出 `manualSorting`，当前页数据会被二次排序）。影响 `/admin/users`（M2）、`/admin/oauth/applications`（M4）与 `/admin/sso/providers`（M6）；`CaomeiDataTable` 的受控排序也不支持清除（空排序事件被忽略）。处理方向：向上游提能力需求，或明确接受并写入口径；不在页面内做临时绕过。
 - **国际化 10 语内容扩展**：阶段 8 只启用 5 语（zh-CN / en-US / zh-TW / ja-JP / ko-KR），es-ES / fr-FR / de-DE / ru-RU / pt-BR 仅登记在 Registry 且 `enabled=false`；后续按 5 语批次复用同一翻译 / 校验流程后再启用。
 - **新语言母语审校与 seo-ready 升级**：zh-TW / ja-JP / ko-KR 本阶段为机器翻译 draft + `ui-ready`（不索引）；母语审校、术语确认与核心页视觉抽检后逐语言升级 `seo-ready` 并进入 sitemap / hreflang。
-- **未启用语言的语言包缺少同构门禁**：`i18n:check` 的 parity 校验、`tests/i18n/message-catalog.spec.ts` 与 `scripts/i18n` 审计都只遍历 `ENABLED_LOCALES`，仍停用的 es-ES / fr-FR / de-DE / ru-RU / pt-BR 在补数据期间即使键缺失或占位符错位也不会红灯（zh-TW / ja-JP / ko-KR 的早期批次只能靠临时脚本把关）。处理方向：`check-locale-parity.mjs` 支持按目录遍历的非启用语言断言，或在 M12 收口前补一条「目录级键 + 占位符同构」校验。
-- **未启用语言的懒加载语言包进入客户端产物**：`locale-runtime-loader` 的 `import.meta.glob` 只排除 core / server 模块，不按 `ENABLED_LOCALES` 过滤，构建产物已包含 `locales/ja-JP/static`（约 10 KB 不可达 chunk），ko-KR 分批交付期间会继续累积。处理方向：按 Registry 过滤 glob，或在 M12 收口时明确接受该体积并写入口径。
-- **`message-catalog` 内容断言覆盖范围待确认**：`tests/i18n/message-catalog.spec.ts` 用 `import.meta.glob` 读语言包；一次实测（`npx vitest run tests/i18n/kana-debug.spec.ts`，主配置 + Nuxt 环境）取到的是带 `type/start/end` 位置元数据的结构（`app.name` → `{type:'0',start:0,end:7}`，flatten 后 10185 条），内容类断言会静默失效；复核未复现（同配置下取到真实文案）。处理方向：先确定稳定 repro（配置 / 版本 / 启动目录），再决定内容类断言统一改 `readFileSync` 还是把该文件从主配置 `include` 排除。
+- **未启用语言的语言包缺少同构门禁**：`i18n:check` 的 parity 校验、`tests/i18n/message-catalog.spec.ts` 与 `scripts/i18n` 审计都只遍历 `ENABLED_LOCALES`，仍停用的 es-ES / fr-FR / de-DE / ru-RU / pt-BR 在补数据期间即使键缺失或占位符错位也不会红灯（zh-TW / ja-JP / ko-KR 的早期批次只能靠临时脚本把关）。处理方向：`check-locale-parity.mjs` 支持按目录遍历的非启用语言断言，或补一条「目录级键 + 占位符同构」校验（阶段 8 收口时未实施，待后续阶段评估）。
+- **未启用语言的懒加载语言包进入客户端产物**：`locale-runtime-loader` 的 `import.meta.glob` 只排除 core / server 模块，不按 `ENABLED_LOCALES` 过滤，构建产物已包含 `locales/ja-JP/static`（约 10 KB 不可达 chunk），ko-KR 分批交付期间会继续累积。处理方向：按 Registry 过滤 glob，或明确接受该体积并写入口径（阶段 8 收口时只记录体积，未做过滤）。
+- **`message-catalog` 内容断言覆盖范围待确认**：`tests/i18n/message-catalog.spec.ts` 用 `import.meta.glob` 读语言包；一次实测（`npx vitest run tests/i18n/kana-debug.spec.ts`，主配置 + Nuxt 环境）取到的是带 `type/start/end` 位置元数据的结构（`app.name` → `{type:'0',start:0,end:7}`，flatten 后 10185 条），内容类断言会静默失效；复核未复现（同配置下取到真实文案）。现状：内容类断言已改为 `readFileSync` 读原始 JSON（阶段 8 M8）；仍需确定稳定 repro（配置 / 版本 / 启动目录）后再决定是否把该文件从主配置 `include` 排除。
 - **译文台账无消费方**：`i18n/translation-provenance.json` 的 `reviewLevel` / `nativeReview` / `reviewedModules` 目前没有脚本或测试引用，「译文批次必须同步更新」靠人工自觉，`readiness` 也需手动与 Registry 对齐（zh-TW 已在 M5 同步为 `ui-ready`）。处理方向：补一条治理脚本或单测，断言模块名 ⊆ `LOCALE_MESSAGE_MODULES`、`reviewedModules ∪ pendingModules` 覆盖全集、`readiness` 与 Registry 一致。
 - **多语言内部链接缺 `localePath`**：`pages/login.vue` 与 `components/app-footer.vue` 仍有字面 `/register`、`/forgot-password`、`/privacy`、`/terms` 链接，从 `/zh-TW` 或 `/en-US` 页面点击后回落到默认语言（Cookie 有 locale，但非根路径不重定向）。M5 复核确认属既有缺陷、非本阶段引入。处理方向：统一改 `NuxtLinkLocale` 或 `localePath()`，并补多语言链接断言。
 - **根路径浏览器语言重定向不识别 `zh-Hant` / `zh-HK`**：`Accept-Language: zh-Hant` / `zh-HK` 首次访问根路径时由 `@nuxtjs/i18n` 自身匹配，落到 zh-CN，与 `matchDetectedLocale` 的别名口径不一致（邮件与服务端协商已落到 zh-TW）。处理方向：接受并写入口径，或补 `zh-HK` / `zh-MO` 别名并评估自定义探测回调。
@@ -96,6 +96,7 @@
 - **stylelint 18 规则补位**：`stylelint-config-cmyr@1.1.0` 为兼容 SCSS 变量关闭了 `value-no-invalid`（实测现有样式 21 条误报），取值拼写错误暂时不再被拦截；待上游支持 SCSS 变量值后恢复。同配置的 `stylelint-config-recommended-scss@17.0.1` peer 仍为 `stylelint ^17`，需上游升 `^18` 才与 stylelint 18 正式对齐。
 - **视觉平板矩阵扩展**：阶段 7 只覆盖 login / register / profile / admin-users / admin-logs 的 768×1024；`/security`、`/change-password` 等核心认证页与横向溢出断言的全矩阵化待评估 CI 时长后补。
 - **视觉矩阵补 1024 横向宽度**：阶段 7 只新增 768×1024 平板基线；1024 横向（小桌面 / 横屏平板）无回归保护，待评估 CI 时长后补。
+- **新增语言视觉矩阵只覆盖桌面 1440**：阶段 8 为 zh-TW / ja-JP / ko-KR 只采登录 + 个人中心（浅 / 暗）共 12 张，移动 390 与平板 768 未覆盖；韩文文案比中文长约 20%，窄屏换行风险未纳入像素保护，待评估 CI 时长后补。
 - **视觉基线对「低于阈值的纯色漂移」无感**：`visualExpect` 的 `threshold: 0.2` 允许单像素 YIQ delta ≤ 1,408.6，`#18181b` → `#1e1e1e` 的 delta 只有 16.6，逐像素判等，`maxDiffPixels: 200` 永不触发。P5-1（f91e6e4）换语言切换器 token 后，暗色基线直到 M4-2 因文案位移被迫重采才暴露。处理方向：为关键 token / 组件计算样式补断言（如 `--admin-surface`、`.language-switcher__trigger` 背景色），或在 token / 主题变更时按「全量暗色基线重采」写入门禁清单；`test:visual:update` 改为 `--update-snapshots=all` 并在报告中打印构建产物 SHA / 提交号，避免增量重采留下混合代基线。
 - **视觉预算分级与允许清单**：评估 Admin 数据页（DataTable 密度 / 选择列 / 空态）的 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单；P4-0 暂用统一阈值，避免在迁移期引入双重标准。
 - **Admin 对话框视觉矩阵未覆盖内部滚动区**：视觉层只截整页首屏，SSO 创建对话框（900px 宽、内部滚动）的 OIDC / SAML / 属性映射配置段落在首屏之外，M7 迁移后自基线无像素变化，只能靠定向 Playwright 验收。处理方向：在矩阵中为长表单补充「滚动到指定分段后再截图」的交互态，或明确接受并写入口径。

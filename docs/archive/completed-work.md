@@ -192,3 +192,17 @@ _2026-11-17 授权，M1–M7 全部完成；收口记录见 [阶段 7 收口记�
 -   [x] **M6 覆盖率**：pages 77.46%、plugins 97.26%；全局 Statements 78.35% / Lines 78.70%；测试规范补模块下限与 jscpd 口径。
 -   [x] **M7 收口**：全量门禁通过；视觉 123；jscpd 3.73%；todo 归档、roadmap / backlog / 设计索引同步。
 -   [x] **遗留**：stylelint 规则补位、平板矩阵扩展与 1024 宽、非 Admin 失败静默、覆盖率下限自动化、Admin 页面深度覆盖保留 backlog。
+
+---
+
+## 14. 阶段 8 · 国际化 5 语推广（10 语架构，2026-11-19 收口）
+
+_2026-11-17 授权，M1A–M12 全部完成；收口记录见 [阶段 8 收口记录](../design/governance/2026-11-19-phase8-closure.md)。_
+
+-   [x] **M1A–M2 基建**：Locale Registry 扩至 10 码 + `enabled` 开关 + 别名单向映射；`User.locale` / 邮件表 / SEO / 切换器 / 组件库注册全部由 Registry 派生；caomei-ui `registerLocale` 桥接与 `switchable` 过滤。
+-   [x] **M3–M5 zh-TW**：核心 599 / 业务 393 / Admin 518 键；opencc 转换 + 台湾术语校订；启用为 `ui-ready`，`EMAIL_MESSAGES` 接线并补邮件渲染断言。
+-   [x] **M6–M8 ja-JP**：核心 599 / 业务 393 / Admin 518 键机翻 draft；7 类邮件用真实 MJML 模板渲染验证；启用为 `ui-ready` 并接线邮件。
+-   [x] **M9–M11 ko-KR**：核心 599 / 业务 393 / Admin 518 键机翻 draft；同样渲染验证后启用为 `ui-ready` 并接线邮件。
+-   [x] **M12 收口**：新增语言视觉基线 12 张（登录 / 个人中心 × 浅暗 × 3 语）+ 5 语切换浏览器断言；i18n 规范补 10 语架构、readiness 生命周期与译文标注规则；译文台账与归档同步。
+-   [x] **终态**：5 语 × 18 模块 × 1510 键；测试 1154 / 155；视觉 136；覆盖率 Statements 78.39% / Lines 78.75%；入口 CSS 415,165 B（+3.86%）；jscpd 3.57%。
+-   [x] **遗留**：母语审校与 `seo-ready` 升级、10 语内容扩展、停用语言同构门禁、未启用语言懒加载包体、`message-catalog` 数据来源复核保留 backlog。

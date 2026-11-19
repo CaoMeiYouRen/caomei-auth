@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { type Page, expect, test } from '@playwright/test'
 import { visualBaseURL, visualSessionHeaders, visualTabletViewport } from './config'
 import { applyTheme, expectNoHorizontalOverflow, expectPageScreenshot, waitForVisualStable, type VisualTheme } from './visual'
+import { ensureVisualUserSession, VISUAL_USER_ACCOUNT as VISUAL_ACCOUNT } from './session'
 
 /**
  * 认证页视觉矩阵（P2/P3）。
@@ -158,7 +159,7 @@ const ROUTES: readonly VisualRoute[] = [
         slug: 'profile',
         auth: true,
         tablet: true,
-        readyText: 'visual-baseline@example.com',
+        readyText: VISUAL_ACCOUNT.email,
         states: [
             {
                 label: '隐私模式',
@@ -171,13 +172,6 @@ const ROUTES: readonly VisualRoute[] = [
     },
 ]
 
-/** 视觉服务固定账号：空库每次重建，首个用例注册，后续用例登录。 */
-const VISUAL_ACCOUNT = {
-    email: 'visual-baseline@example.com',
-    password: 'VisualBaseline123',
-    name: 'Visual Baseline',
-    username: 'visualbaseline',
-}
 
 /** 为登录后页面建立会话；注册与登录都是幂等的，日志不进入截图。 */
 async function ensureSession(page: Page, route: VisualRoute): Promise<void> {
@@ -197,15 +191,7 @@ async function ensureSession(page: Page, route: VisualRoute): Promise<void> {
         }
         return
     }
-    const signUp = await page.request.post(`${visualBaseURL}/api/auth/sign-up/email`, { data: VISUAL_ACCOUNT, headers: visualSessionHeaders })
-    if (signUp.ok()) {
-        return
-    }
-    const signIn = await page.request.post(`${visualBaseURL}/api/auth/sign-in/email`, {
-        data: { email: VISUAL_ACCOUNT.email, password: VISUAL_ACCOUNT.password },
-        headers: visualSessionHeaders,
-    })
-    expect(signIn.ok(), '视觉账号登录失败').toBeTruthy()
+    await ensureVisualUserSession(page)
 }
 
 /** 参考态层（含采集）：由 `test:visual:parity*` 脚本设置 `VISUAL_LAYER=parity`。 */
