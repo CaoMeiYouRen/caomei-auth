@@ -1,0 +1,32 @@
+{
+    "admin": {
+        "registration": {
+            "title": "가입 제어",
+            "subtitle": "이메일 도메인과 전화번호 국가 코드의 허용·차단 목록을 설정합니다",
+            "type": "규칙 유형",
+            "mode": "규칙 모드",
+            "value": "일치 값",
+            "note": "메모",
+            "enabled": "활성화",
+            "actions": "작업",
+            "typeOptions": {
+                "email": "이메일 도메인",
+                "phone": "전화번호 국가 코드"
+            },
+            "modeOptions": {
+                "allow": "허용 목록",
+                "deny": "차단 목록"
+            },
+            "valuePlaceholder": "example.com 또는 .edu.cn / +86",
+            "notePlaceholder": "선택 사항",
+            "add": "규칙 추가",
+            "delete": "삭제",
+            "empty": "규칙이 없습니다",
+            "hint": "허용 목록이 비어 있지 않으면 목록에 있는 항목만 허용하고, 차단 목록에 일치하면 거부합니다. 변경 사항은 30초 이내에 적용됩니다.",
+            "saved": "규칙을 저장했습니다",
+            "deleted": "규칙을 삭제했습니다",
+            "failed": "작업에 실패했습니다",
+            "refresh": "새로고침"
+        }
+    }
+}

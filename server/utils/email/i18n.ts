@@ -2,6 +2,7 @@ import zhEmail from '@/i18n/locales/zh-CN/email.json'
 import enEmail from '@/i18n/locales/en-US/email.json'
 import zhTwEmail from '@/i18n/locales/zh-TW/email.json'
 import jaEmail from '@/i18n/locales/ja-JP/email.json'
+import koEmail from '@/i18n/locales/ko-KR/email.json'
 import {
     DEFAULT_LOCALE,
     LOCALE_COOKIE_KEY,
@@ -23,6 +24,7 @@ const EMAIL_MESSAGES: Partial<Record<LocaleCode, EmailMessages>> = {
     'en-US': enEmail as EmailMessages,
     'zh-TW': zhTwEmail as EmailMessages,
     'ja-JP': jaEmail as EmailMessages,
+    'ko-KR': koEmail as EmailMessages,
 }
 
 /** 已登记邮件消息的语言；单测据此校验「启用语言全覆盖」，防止新语言漏补 import 静默回落 zh-CN */

@@ -45,6 +45,12 @@ describe('utils/shared/seo', () => {
         expect(xml).not.toContain('hreflang="ja-JP"')
         expect(isIndexableHreflang('ja-JP')).toBe(false)
         expect(isIndexableOgLocale('ja_JP')).toBe(false)
+
+        /* ko-KR 同为 ui-ready */
+        expect(xml).not.toContain('/ko-KR')
+        expect(xml).not.toContain('hreflang="ko-KR"')
+        expect(isIndexableHreflang('ko-KR')).toBe(false)
+        expect(isIndexableOgLocale('ko_KR')).toBe(false)
     })
 
     it('marks only seo-ready locales as indexable', () => {
@@ -52,6 +58,7 @@ describe('utils/shared/seo', () => {
         expect(isIndexableLocale('en-US')).toBe(true)
         expect(isIndexableLocale('zh-TW')).toBe(false)
         expect(isIndexableLocale('ja-JP')).toBe(false)
+        expect(isIndexableLocale('ko-KR')).toBe(false)
         expect(isIndexableLocale('')).toBe(false)
         expect(isIndexableLocale(null)).toBe(false)
     })

@@ -33,6 +33,7 @@ describe('language-switcher', () => {
             { code: 'zh-CN', name: '简体中文' },
             { code: 'en-US', name: 'English' },
             { code: 'ja-JP', name: '日本語' },
+            { code: 'ko-KR', name: '한국어' },
         ]
         localeRef.value = 'zh-CN'
         const wrapper = mount(LanguageSwitcher, {
@@ -41,7 +42,7 @@ describe('language-switcher', () => {
 
         await wrapper.find('.language-switcher__trigger').trigger('click')
         const labels = wrapper.findAll('.language-switcher__option-label').map((item) => item.text())
-        expect(labels).toEqual(['简体中文', 'English', '日本語'])
+        expect(labels).toEqual(['简体中文', 'English', '日本語', '한국어'])
 
         await wrapper.findAll('.language-switcher__option')[1]!.trigger('click')
         expect(setLocale).toHaveBeenCalledWith('en-US')

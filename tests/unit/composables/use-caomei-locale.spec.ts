@@ -15,6 +15,7 @@ describe('use-caomei-locale', () => {
         expect(toCaomeiLocale('en-US')).toBe('en-US')
         expect(toCaomeiLocale('zh-TW')).toBe('zh-TW')
         expect(toCaomeiLocale('ja-JP')).toBe('ja-JP')
+        expect(toCaomeiLocale('ko-KR')).toBe('ko-KR')
     })
 
     it('accepts better-auth boundary aliases', () => {
@@ -25,8 +26,8 @@ describe('use-caomei-locale', () => {
     })
 
     it('falls back to the default locale for unknown or empty input', () => {
-        /* ko-KR 已登记但未启用，按未识别处理 */
-        expect(toCaomeiLocale('ko-KR')).toBe(DEFAULT_LOCALE)
+        /* es-ES 已登记但未启用，按未识别处理 */
+        expect(toCaomeiLocale('es-ES')).toBe(DEFAULT_LOCALE)
         expect(toCaomeiLocale('')).toBe(DEFAULT_LOCALE)
         expect(toCaomeiLocale(null)).toBe(DEFAULT_LOCALE)
         expect(toCaomeiLocale(undefined)).toBe(DEFAULT_LOCALE)

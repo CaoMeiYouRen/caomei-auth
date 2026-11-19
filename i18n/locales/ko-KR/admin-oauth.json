@@ -1,0 +1,139 @@
+{
+    "admin": {
+        "oauth": {
+            "page": {
+                "title": "앱 관리",
+                "subtitle": "OAuth 2.0 앱을 관리합니다. 앱은 관리자가 이곳에서 생성하여 연동 대상에 배포합니다",
+                "noticeLabel": "주의:",
+                "noticeText": "현재 OIDC 구현은 Better Auth 기반이며 표준 OpenID Connect 핵심 기능만 지원합니다.",
+                "noticeText2": "암시적 흐름, 비밀번호 흐름, 클라이언트 흐름 등 비표준 모드는 지원하지 않습니다.",
+                "apiDocs": "API 문서",
+                "create": "앱 생성",
+                "searchPlaceholder": "앱 검색(이름, 설명, Client ID)",
+                "searchLabel": "앱 검색",
+                "refresh": "새로고침",
+                "listTitle": "앱 목록 ({count})",
+                "empty": "앱이 없습니다",
+                "createFirst": "첫 앱 만들기",
+                "columns": {
+                    "name": "앱 이름",
+                    "scope": "권한 범위",
+                    "status": "상태",
+                    "createdAt": "생성 일시",
+                    "actions": "작업"
+                },
+                "actions": {
+                    "edit": "편집",
+                    "enable": "앱 활성화",
+                    "disable": "앱 비활성화",
+                    "delete": "삭제"
+                }
+            },
+            "create": {
+                "titleCreate": "새 앱 만들기",
+                "titleEdit": "앱 편집",
+                "name": "앱 이름",
+                "namePlaceholder": "예: 내 블로그 앱",
+                "nameRequired": "앱 이름은 필수입니다",
+                "description": "앱 설명",
+                "descriptionPlaceholder": "앱의 기능과 용도를 간단히 설명해 주세요",
+                "redirect": "리디렉션 URL",
+                "redirectHint": "여러 URL은 쉼표로 구분해 주세요",
+                "redirectRequired": "리디렉션 URL이 최소 1개 필요합니다",
+                "homepage": "앱 홈페이지",
+                "homepageHint": "앱의 공식 웹사이트 주소",
+                "logo": "앱 로고",
+                "logoHint": "앱 아이콘 URL",
+                "scope": "권한 범위",
+                "scopeHint": "여러 범위는 공백으로 구분합니다. 예: openid profile email",
+                "scopeRequired": "권한 범위는 필수입니다",
+                "contact": "연락 이메일",
+                "contactHint": "앱 관리자의 연락 이메일이며 여러 개는 쉼표로 구분해 주세요",
+                "authMethod": "인증 방식",
+                "authMethodHint": "클라이언트가 토큰 엔드포인트에서 인증하는 방식(OIDC 표준 방식 지원)",
+                "grantTypes": "권한 부여 유형",
+                "grantTypesHint": "앱에서 허용할 OAuth 2.0 권한 부여 유형",
+                "tos": "이용약관 링크",
+                "policy": "개인정보 처리방침 링크",
+                "cancel": "취소",
+                "save": "변경 저장",
+                "create": "앱 생성",
+                "validationFailed": "폼 검증에 실패했습니다",
+                "updateSuccessTitle": "수정했습니다",
+                "createSuccessTitle": "생성했습니다",
+                "updateSuccess": "앱 정보를 수정했습니다",
+                "createSuccess": "앱을 생성했습니다",
+                "operationFailed": "작업에 실패했습니다",
+                "updateFailedTitle": "수정에 실패했습니다",
+                "createFailedTitle": "생성에 실패했습니다",
+                "authMethods": {
+                    "basic": "Basic 인증(권장)",
+                    "post": "POST 인증",
+                    "none": "인증 없음(공개 클라이언트만)"
+                },
+                "grantTypesList": {
+                    "code": "권한 부여 코드 흐름(권장)",
+                    "refresh": "리프레시 토큰",
+                    "implicit": "암시적 흐름(미지원)",
+                    "password": "비밀번호 흐름(미지원)",
+                    "clientCredentials": "클라이언트 자격 증명 흐름(미지원)"
+                }
+            },
+            "secret": {
+                "title": "앱을 생성했습니다",
+                "created": "앱 \"{name}\"을(를) 생성했습니다!",
+                "copyClientId": "Client ID 복사",
+                "copyClientSecret": "Client Secret 복사",
+                "warning": "이 자격 증명을 반드시 저장해 주세요. 이 대화 상자를 닫으면 Client Secret을 다시 확인할 수 없습니다.",
+                "saved": "저장했습니다",
+                "copiedTitle": "복사했습니다",
+                "copied": "클립보드에 복사했습니다",
+                "copyFailedTitle": "복사에 실패했습니다",
+                "copyFailed": "클립보드에 복사하지 못했습니다"
+            },
+            "docs": {
+                "title": "OIDC API 엔드포인트 문서",
+                "intro": "OpenID Connect 구성 엔드포인트로, 지원하는 모든 엔드포인트와 기능 정보를 포함합니다.",
+                "discoveryLabel": "Discovery 엔드포인트",
+                "copyDiscovery": "Discovery 엔드포인트 복사",
+                "mainTitle": "주요 OAuth 2.0 / OIDC 엔드포인트",
+                "mainIntro": "다음은 플랫폼에서 제공하는 주요 OAuth 2.0 및 OpenID Connect 엔드포인트입니다.",
+                "copyEndpoint": "{label} 복사",
+                "exampleTitle": "Discovery 구성 예시",
+                "exampleIntro": "다음은 OpenID Connect Discovery 엔드포인트가 반환하는 구성 예시입니다.",
+                "copyExample": "구성 예시 복사",
+                "notesTitle": "주의 사항",
+                "note1": "현재 OIDC 구현은 Better Auth 기반이며 표준 OpenID Connect 핵심 기능만 지원합니다",
+                "note2": "권한 부여 코드 흐름(Authorization Code Flow)과 리프레시 토큰을 지원합니다",
+                "note3": "암시적 흐름, 비밀번호 흐름, 클라이언트 흐름 등 비표준 모드는 지원하지 않습니다",
+                "note4": "동적 클라이언트 등록은 제공하지 않으며, OAuth 앱은 관리자가 관리자 페이지에서 생성해야 합니다",
+                "note5": "모든 엔드포인트는 HTTPS를 사용해야 합니다",
+                "close": "닫기",
+                "endpoints": {
+                    "authorize": "권한 부여 엔드포인트",
+                    "token": "토큰 엔드포인트",
+                    "userinfo": "사용자 정보 엔드포인트",
+                    "jwks": "JWKS 엔드포인트"
+                },
+                "copiedTitle": "복사했습니다",
+                "copied": "클립보드에 복사했습니다",
+                "copyFailedTitle": "복사에 실패했습니다",
+                "copyFailed": "클립보드에 복사하지 못했습니다"
+            },
+            "flow": {
+                "successTitle": "성공",
+                "appEnabled": "앱을 활성화했습니다",
+                "appDisabled": "앱을 비활성화했습니다",
+                "errorTitle": "오류",
+                "operationFailed": "작업에 실패했습니다",
+                "deleteSuccessTitle": "삭제했습니다",
+                "deleteSuccess": "앱을 삭제했습니다",
+                "deleteFailedTitle": "삭제에 실패했습니다",
+                "deleteFailed": "삭제에 실패했습니다",
+                "confirmDeleteTitle": "삭제 확인",
+                "confirmDelete": "앱 \"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+                "deleteLabel": "삭제"
+            }
+        }
+    }
+}

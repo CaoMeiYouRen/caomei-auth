@@ -73,8 +73,8 @@ describe('i18n 语言包运行时门禁', () => {
 
     it('非中文语言包不含中文', () => {
         for (const locale of ENABLED_LOCALES) {
-            /* 日语与中文共用汉字区间，由下一条假名覆盖率断言覆盖 */
-            if (locale.code.startsWith('zh-') || locale.code === 'ja-JP') {
+            /* 日语 / 韩语与中文共用汉字或带品牌名，由下一条「本地文字覆盖率」断言覆盖 */
+            if (locale.code.startsWith('zh-') || locale.code === 'ja-JP' || locale.code === 'ko-KR') {
                 continue
             }
             for (const [key, value] of flattenMessages(mergeModules(locale.code))) {
@@ -87,41 +87,56 @@ describe('i18n 语言包运行时门禁', () => {
         }
     })
 
-    it('ja-JP 为日文文案（假名覆盖达标且不混入简体中文特征字）', () => {
-        const locale = ENABLED_LOCALES.find((item) => item.code === 'ja-JP')
-        expect(locale, 'ja-JP 应处于启用状态（阶段 8 M8 起）').toBeDefined()
-        if (!locale) {
-            return
-        }
+    /* 汉字区间无法区分中日韩，日语与韩语改为「本地文字覆盖率 + 简体特征字黑名单」 */
+    const CJK_SCRIPT_LOCALES = [
+        /* 日语汉字合法，只能靠黑名单兜中文；韩语正文不应出现任何汉字，可做更强的逐条断言 */
+        { code: 'ja-JP', script: /[\u3040-\u30ff]/u, scriptName: '假名', forbidCjk: false },
+        { code: 'ko-KR', script: /[\uac00-\ud7af]/u, scriptName: '한글', forbidCjk: true },
+    ] as const
 
-        /* 直接读原始 JSON：主 vitest 配置（Nuxt 环境）下 `import.meta.glob` 拿到的是带位置元数据的结构，
-         * 不是文案本身，内容类断言会静默失效（见 docs/plan/backlog.md §3.2「message-catalog 内容断言覆盖范围待确认」） */
-        const entries = LOCALE_MESSAGE_MODULES.flatMap((moduleName) => flattenMessages(
-            JSON.parse(readFileSync(join(import.meta.dirname, '..', '..', 'i18n', 'locales', locale.code, `${moduleName}.json`), 'utf8')),
-        ))
-        const kanaPattern = /[\u3040-\u30ff]/u
-        const withKana = entries.filter(([, value]) => kanaPattern.test(value))
-        /* 汉字与中文同区间，改用覆盖率断言：日文文案绝大多数含假名（当前 86%，阈值留足机翻与短标签余量） */
-        expect(withKana.length / entries.length, 'ja-JP 假名覆盖率过低，疑似混入中文原文').toBeGreaterThan(0.7)
+    /* 品牌名「草梅 Auth」是唯一允许出现在非中文语言包里的汉字 */
+    const BRAND_PATTERN = /草梅\s*Auth|草梅/gu
 
-        /* 逐模块下限：整段模块被中文覆盖时全局覆盖率仍可能达标（当前最低 admin / common 约 45%–68%） */
-        for (const moduleName of LOCALE_MESSAGE_MODULES) {
-            const moduleEntries = flattenMessages(JSON.parse(readFileSync(
+    for (const { code, script, scriptName, forbidCjk } of CJK_SCRIPT_LOCALES) {
+        it(`${code} 为本地语言文案（${scriptName}覆盖达标且不混入简体中文特征字）`, () => {
+            const locale = ENABLED_LOCALES.find((item) => item.code === code)
+            expect(locale, `${code} 应处于启用状态`).toBeDefined()
+            if (!locale) {
+                return
+            }
+
+            /* 直接读原始 JSON：主 vitest 配置（Nuxt 环境）下 `import.meta.glob` 取到的可能不是文案本身，
+             * 内容类断言会静默失效（见 docs/plan/backlog.md §3.2「message-catalog 内容断言覆盖范围待确认」） */
+            const readModule = (moduleName: string) => flattenMessages(JSON.parse(readFileSync(
                 join(import.meta.dirname, '..', '..', 'i18n', 'locales', locale.code, `${moduleName}.json`),
                 'utf8',
             )))
-            if (moduleEntries.length === 0) {
-                continue
-            }
-            const moduleKana = moduleEntries.filter(([, value]) => kanaPattern.test(value))
-            expect(moduleKana.length / moduleEntries.length, `ja-JP 的 ${moduleName} 假名覆盖率过低`).toBeGreaterThan(0.4)
-        }
+            const entries = LOCALE_MESSAGE_MODULES.flatMap(readModule)
+            const withScript = entries.filter(([, value]) => script.test(value))
+            expect(withScript.length / entries.length, `${code} 的${scriptName}覆盖率过低，疑似混入中文原文`).toBeGreaterThan(0.7)
 
-        for (const [key, value] of entries) {
-            const simplified = [...value].filter((char) => SIMPLIFIED_ONLY_CHARS.has(char))
-            expect(simplified, `ja-JP 的 ${key} 含简体中文特征字：${simplified.join('')}`).toEqual([])
-        }
-    })
+            /* 逐模块下限：整段模块被中文覆盖时全局覆盖率仍可能达标 */
+            for (const moduleName of LOCALE_MESSAGE_MODULES) {
+                const moduleEntries = readModule(moduleName)
+                if (moduleEntries.length === 0) {
+                    continue
+                }
+                const moduleWithScript = moduleEntries.filter(([, value]) => script.test(value))
+                expect(moduleWithScript.length / moduleEntries.length, `${code} 的 ${moduleName} ${scriptName}覆盖率过低`).toBeGreaterThan(0.4)
+            }
+
+            for (const [key, value] of entries) {
+                const simplified = [...value].filter((char) => SIMPLIFIED_ONLY_CHARS.has(char))
+                expect(simplified, `${code} 的 ${key} 含简体中文特征字：${simplified.join('')}`).toEqual([])
+
+                if (forbidCjk) {
+                    /* 韩语不使用汉字：剥离品牌名后不允许残留任何 CJK，比黑名单更强 */
+                    const withoutBrand = value.replace(BRAND_PATTERN, '')
+                    expect(CJK_PATTERN.test(withoutBrand), `${code} 的 ${key} 残留中文：${value}`).toBe(false)
+                }
+            }
+        })
+    }
 
     it('文案不使用 `|` 复数分隔符', () => {
         for (const locale of ENABLED_LOCALES) {
