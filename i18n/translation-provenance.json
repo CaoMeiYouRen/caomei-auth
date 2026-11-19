@@ -57,6 +57,35 @@
             ],
             "note": "全量 18 模块机翻 draft 已上线（ui-ready：可切换、可访问、不进入索引）；未做母语审校，不得升级 seo-ready。pendingModules 表示待母语审校的模块。阶段范围见 docs/design/governance/2026-11-17-phase8-registration.md",
             "updatedAt": "2026-11-19"
+        },
+        "ko-KR": {
+            "source": "机器翻译 draft（按模块人工抽检术语与占位符）",
+            "reviewLevel": "machine",
+            "nativeReview": false,
+            "readiness": "draft",
+            "reviewedModules": [],
+            "pendingModules": [
+                "app",
+                "common",
+                "errors",
+                "validation",
+                "auth",
+                "profile",
+                "security",
+                "oauth",
+                "sso",
+                "static",
+                "admin",
+                "admin-users",
+                "admin-oauth",
+                "admin-sso",
+                "admin-logs",
+                "demo",
+                "email",
+                "server-only"
+            ],
+            "note": "核心 6 模块（app / common / errors / validation / auth / static，599 键）已产出机翻 draft，键与占位符同构已核对；业务与 Admin 模块待补齐。pendingModules 表示待母语审校的模块（含已交付未审校项）；未做母语审校，不得升级 seo-ready。阶段范围见 docs/design/governance/2026-11-17-phase8-registration.md",
+            "updatedAt": "2026-11-19"
         }
     }
 }

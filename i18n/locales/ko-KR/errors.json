@@ -1,0 +1,86 @@
+{
+    "errors": {
+        "auth": {
+            "loginRequired": "먼저 로그인해 주세요",
+            "unauthorized": "로그인하지 않은 사용자",
+            "forbidden": "접근 권한이 없습니다",
+            "demoAdminRequired": "데모 모드: 관리자 권한이 없습니다",
+            "rateLimited": "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요",
+            "oauthRegisterAdminOnly": "앱 등록 API에는 관리자만 접근할 수 있습니다",
+            "oauthManageAdminOnly": "OAuth 앱은 관리자만 관리할 수 있습니다",
+            "ssoManageAdminOnly": "SSO 공급자 관리 API에는 관리자만 접근할 수 있습니다"
+        },
+        "oauth": {
+            "consentsFetchFailed": "권한을 부여한 앱 목록을 가져오지 못했습니다",
+            "revokeSucceeded": "권한을 취소했습니다",
+            "consentNotFound": "이 앱에 대한 권한 부여 기록을 찾을 수 없습니다",
+            "revokeFailed": "권한 취소에 실패했습니다",
+            "validationFailed": "파라미터 검증에 실패했습니다",
+            "clientNotFound": "앱이 없거나 비활성화되었습니다",
+            "clientFetchFailed": "앱 정보를 가져오지 못했습니다"
+        },
+        "sso": {
+            "methodNotAllowed": "허용되지 않은 메서드입니다"
+        },
+        "server": {
+            "internal": "서버 내부 오류"
+        },
+        "registration": {
+            "emailDomainNotAllowed": "이 이메일 도메인은 현재 가입할 수 없습니다",
+            "phoneCountryNotAllowed": "이 전화번호의 국가/지역은 현재 가입할 수 없습니다",
+            "notAllowed": "현재 가입이 허용되지 않습니다. 관리자에게 문의해 주세요"
+        },
+        "admin": {
+            "registrationRuleExists": "같은 이름의 규칙이 이미 있습니다",
+            "registrationRuleNotFound": "규칙이 존재하지 않습니다",
+            "registrationRuleUpdateFailed": "가입 규칙 수정에 실패했습니다",
+            "registrationRuleDeleteFailed": "가입 규칙 삭제에 실패했습니다",
+            "userNotFound": "현재 사용자가 존재하지 않습니다",
+            "adminOnly": "이 작업은 관리자만 수행할 수 있습니다",
+            "cannotRemoveSelf": "자신의 관리자 권한은 제거할 수 없습니다",
+            "roleSyncFailed": "관리자 역할 작업에 실패했습니다",
+            "ssoProviderNotFound": "SSO 공급자가 존재하지 않습니다",
+            "ssoProviderExists": "Provider ID가 이미 존재합니다",
+            "ssoProviderIdRequired": "공급자 ID가 없습니다",
+            "paramsInvalid": "파라미터 검증에 실패했습니다",
+            "logsStatsFailed": "로그인 통계를 가져오지 못했습니다",
+            "logsSessionsFailed": "로그인 로그를 가져오지 못했습니다",
+            "roleSyncSucceeded": "관리자 역할을 동기화했습니다",
+            "roleSyncFailedDescription": "동기화에 실패했습니다. 사용자가 없거나 관리자가 아닙니다",
+            "roleAddSucceeded": "관리자 역할을 추가했습니다",
+            "roleAddFailed": "추가에 실패했습니다. 사용자가 존재하지 않습니다",
+            "roleRemoveSucceeded": "관리자 역할을 제거했습니다",
+            "roleRemoveFailed": "제거에 실패했습니다. 사용자가 없거나 작업이 거부되었습니다",
+            "unsupportedAction": "지원하지 않는 작업입니다",
+            "oauthAppCreated": "앱을 만들었습니다",
+            "oauthAppCreateFailed": "앱 생성에 실패했습니다",
+            "oauthAppUpdated": "앱을 수정했습니다",
+            "oauthAppUpdateFailed": "앱 수정에 실패했습니다",
+            "oauthAppDeleted": "삭제했습니다",
+            "oauthAppDeleteFailed": "앱 삭제에 실패했습니다",
+            "oauthAppNotFound": "앱이 존재하지 않습니다",
+            "oauthAppIncomplete": "파라미터가 부족합니다",
+            "oauthAppEnabled": "앱을 활성화했습니다",
+            "oauthAppDisabled": "앱을 비활성화했습니다",
+            "oauthAppListFailed": "앱 목록을 가져오지 못했습니다",
+            "invalidRedirectUri": "잘못된 리디렉션 URI: {uri}",
+            "ssoCreated": "SSO 공급자를 만들었습니다",
+            "ssoUpdated": "SSO 공급자를 수정했습니다",
+            "ssoDeleted": "SSO 공급자를 삭제했습니다"
+        },
+        "upload": {
+            "notLoggedIn": "로그인하지 않음",
+            "notFound": "업로드한 파일을 찾을 수 없습니다",
+            "invalid": "잘못된 파일 업로드입니다",
+            "tooLarge": "파일 크기가 {limit} 제한을 초과했습니다",
+            "dailyLimit": "오늘의 업로드 횟수가 제한을 초과했습니다",
+            "failed": "파일 업로드에 실패했습니다",
+            "userDailyLimit": "오늘의 업로드 횟수가 제한을 초과했습니다"
+        },
+        "demo": {
+            "adminRestricted": "데모 모드에서는 관리자 페이지의 변경 작업을 수행할 수 없습니다",
+            "writeRestricted": "데모 모드에서는 이 작업을 수행할 수 없습니다",
+            "dangerousRestricted": "데모 모드에서는 이 위험한 작업을 수행할 수 없습니다"
+        }
+    }
+}

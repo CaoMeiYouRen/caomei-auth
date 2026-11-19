@@ -1,0 +1,19 @@
+{
+    "common": {
+        "listSeparator": ", ",
+        "status": {
+            "enabled": "활성",
+            "disabled": "비활성",
+            "banned": "이용 정지",
+            "normal": "정상",
+            "active": "활성",
+            "expired": "만료됨",
+            "yes": "예",
+            "no": "아니요",
+            "role": {
+                "admin": "관리자",
+                "user": "사용자"
+            }
+        }
+    }
+}
