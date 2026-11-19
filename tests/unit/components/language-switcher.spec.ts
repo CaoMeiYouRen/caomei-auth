@@ -41,7 +41,7 @@ describe('language-switcher', () => {
 
         await wrapper.find('.language-switcher__trigger').trigger('click')
         const labels = wrapper.findAll('.language-switcher__option-label').map((item) => item.text())
-        expect(labels).toEqual(['简体中文', 'English'])
+        expect(labels).toEqual(['简体中文', 'English', '日本語'])
 
         await wrapper.findAll('.language-switcher__option')[1]!.trigger('click')
         expect(setLocale).toHaveBeenCalledWith('en-US')

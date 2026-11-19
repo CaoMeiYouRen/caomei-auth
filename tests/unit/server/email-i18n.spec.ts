@@ -20,6 +20,11 @@ describe('server/utils/email/i18n', () => {
         const zhTw = getEmailTranslator('zh-TW')
         expect(zhTw('email.chrome.greeting')).toBe('您好！')
         expect(zhTw('email.verification.buttonText')).toBe('驗證電子郵件地址')
+
+        /* ja-JP 已启用：邮件必须命中日文，防止 EMAIL_MESSAGES 误指向其他语言文件 */
+        const ja = getEmailTranslator('ja-JP')
+        expect(ja('email.chrome.greeting')).toBe('こんにちは！')
+        expect(ja('email.verification.buttonText')).toBe('メールアドレスを確認')
     })
 
     it('interpolates named parameters and leaves unknown ones intact', () => {

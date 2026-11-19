@@ -1,0 +1,32 @@
+{
+    "admin": {
+        "registration": {
+            "title": "登録制御",
+            "subtitle": "メールドメインと電話番号の国コードの許可・拒否リストを設定",
+            "type": "ルール種別",
+            "mode": "ルールモード",
+            "value": "一致値",
+            "note": "メモ",
+            "enabled": "有効",
+            "actions": "操作",
+            "typeOptions": {
+                "email": "メールドメイン",
+                "phone": "電話番号の国コード"
+            },
+            "modeOptions": {
+                "allow": "許可リスト",
+                "deny": "拒否リスト"
+            },
+            "valuePlaceholder": "example.com または .edu.cn / +86",
+            "notePlaceholder": "任意",
+            "add": "ルールを追加",
+            "delete": "削除",
+            "empty": "ルールはありません",
+            "hint": "許可リストが空でない場合はリスト内のみ許可し、拒否リストに一致した場合は拒否します。変更は 30 秒以内に反映されます。",
+            "saved": "ルールを保存しました",
+            "deleted": "ルールを削除しました",
+            "failed": "操作に失敗しました",
+            "refresh": "更新"
+        }
+    }
+}

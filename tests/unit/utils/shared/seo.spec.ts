@@ -39,6 +39,12 @@ describe('utils/shared/seo', () => {
         expect(xml).not.toContain('hreflang="zh-TW"')
         expect(isIndexableHreflang('zh-TW')).toBe(false)
         expect(isIndexableOgLocale('zh_TW')).toBe(false)
+
+        /* ja-JP 同为 ui-ready：M8 验收「可访问且不入索引」固化在门禁里 */
+        expect(xml).not.toContain('/ja-JP')
+        expect(xml).not.toContain('hreflang="ja-JP"')
+        expect(isIndexableHreflang('ja-JP')).toBe(false)
+        expect(isIndexableOgLocale('ja_JP')).toBe(false)
     })
 
     it('marks only seo-ready locales as indexable', () => {

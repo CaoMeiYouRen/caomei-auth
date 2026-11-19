@@ -17,11 +17,19 @@ describe('i18n/config/locale-registry', () => {
     it('defines the ten target locales and only enables the current batch', () => {
         expect(LOCALE_CODES).toHaveLength(10)
         expect(LOCALE_REGISTRY.map((locale) => locale.code)).toEqual([...LOCALE_CODES])
-        expect(ENABLED_LOCALE_CODES).toEqual(['zh-CN', 'en-US', 'zh-TW'])
+        expect(ENABLED_LOCALE_CODES).toEqual(['zh-CN', 'en-US', 'zh-TW', 'ja-JP'])
         expect(ENABLED_LOCALES.every((locale) => locale.enabled)).toBe(true)
         expect(LOCALE_REGISTRY.filter((locale) => locale.default)).toHaveLength(1)
         expect(DEFAULT_LOCALE).toBe('zh-CN')
         expect(LOCALE_COOKIE_KEY).toBe('i18n_locale')
+    })
+
+    it('ships ja-JP as ui-ready: switchable, reachable, not indexable', () => {
+        const ja = getLocaleDefinition('ja-JP')
+        expect(ja?.enabled).toBe(true)
+        expect(ja?.readiness).toBe('ui-ready')
+        expect(ja?.switchable).toBe(true)
+        expect(ja?.indexable).toBe(false)
     })
 
     it('keeps disabled locales unswitchable and unindexable', () => {
@@ -57,8 +65,11 @@ describe('i18n/config/locale-registry', () => {
         expect(matchDetectedLocale('en-US')).toBe('en-US')
         expect(matchDetectedLocale('zh-Hans')).toBe('zh-CN')
         expect(matchDetectedLocale('fr-FR')).toBeUndefined()
+        /* ja-JP 启用后按自身语言协商 */
+        expect(matchDetectedLocale('ja-JP')).toBe('ja-JP')
+        expect(matchDetectedLocale('ja')).toBe('ja-JP')
         /* 已登记但未启用的语言按“不支持”处理 */
-        expect(matchDetectedLocale('ja-JP')).toBeUndefined()
+        expect(matchDetectedLocale('ko-KR')).toBeUndefined()
         /* zh-TW 启用后，繁体（含 zh-Hant 别名）协商到 zh-TW */
         expect(matchDetectedLocale('zh-TW')).toBe('zh-TW')
         expect(matchDetectedLocale('zh-Hant')).toBe('zh-TW')
@@ -66,8 +77,9 @@ describe('i18n/config/locale-registry', () => {
     })
 
     it('only matches enabled locales and falls back for disabled ones', () => {
-        expect(normalizeDetectedLocale('ja-JP')).toBe(DEFAULT_LOCALE)
+        expect(normalizeDetectedLocale('ja-JP')).toBe('ja-JP')
         expect(normalizeDetectedLocale('zh-Hant')).toBe('zh-TW')
+        /* 未启用语言回退默认语言 */
         expect(normalizeDetectedLocale('ko-KR')).toBe(DEFAULT_LOCALE)
     })
 
@@ -94,7 +106,9 @@ describe('i18n/config/locale-registry', () => {
         expect(stripLocalePrefix('/zh-TW')).toBe('/')
         expect(stripLocalePrefix('/login')).toBe('/login')
         expect(stripLocalePrefix('/en-USfoo')).toBe('/en-USfoo')
+        expect(stripLocalePrefix('/ja-JP/login')).toBe('/login')
+        expect(stripLocalePrefix('/ja-JP')).toBe('/')
         /* 停用语言没有路由，不剥离前缀 */
-        expect(stripLocalePrefix('/ja-JP/login')).toBe('/ja-JP/login')
+        expect(stripLocalePrefix('/ko-KR/login')).toBe('/ko-KR/login')
     })
 })

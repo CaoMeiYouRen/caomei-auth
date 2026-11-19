@@ -23,14 +23,15 @@ describe('plugins/caomei-locale', () => {
     it('按 Registry 的启用语言注册非预注册文案', async () => {
         await registerCaomeiLocales()
         const codes = registerLocale.mock.calls.map(([code]) => code).sort()
-        expect(codes).toEqual(['zh-TW'])
+        expect(codes).toEqual(['ja-JP', 'zh-TW'])
     })
 
     it('只注册非预注册的启用语言', async () => {
         await registerCaomeiLocales([{ code: 'zh-CN' }, { code: 'en-US' }])
         expect(registerLocale).not.toHaveBeenCalled()
 
-        await registerCaomeiLocales([{ code: 'zh-CN' }, { code: 'zh-TW' }])
+        await registerCaomeiLocales([{ code: 'zh-CN' }, { code: 'zh-TW' }, { code: 'ja-JP' }])
         expect(registerLocale).toHaveBeenCalledWith('zh-TW', expect.objectContaining({ pagination: expect.anything() }))
+        expect(registerLocale).toHaveBeenCalledWith('ja-JP', expect.objectContaining({ pagination: expect.anything() }))
     })
 })

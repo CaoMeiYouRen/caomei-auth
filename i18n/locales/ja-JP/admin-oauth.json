@@ -1,0 +1,139 @@
+{
+    "admin": {
+        "oauth": {
+            "page": {
+                "title": "アプリ管理",
+                "subtitle": "OAuth 2.0 アプリを管理します。アプリは管理者がここで作成し、連携先に配布します",
+                "noticeLabel": "注意：",
+                "noticeText": "現在の OIDC 実装は Better Auth に基づいており、標準的な OpenID Connect のコア機能のみをサポートしています。",
+                "noticeText2": "インプリシットフロー、パスワードフロー、クライアントフローなどの非標準モードはサポートしていません。",
+                "apiDocs": "API ドキュメント",
+                "create": "アプリを作成",
+                "searchPlaceholder": "アプリを検索（名前、説明、Client ID）",
+                "searchLabel": "アプリを検索",
+                "refresh": "更新",
+                "listTitle": "アプリ一覧 ({count})",
+                "empty": "アプリはありません",
+                "createFirst": "最初のアプリを作成",
+                "columns": {
+                    "name": "アプリ名",
+                    "scope": "認可スコープ",
+                    "status": "ステータス",
+                    "createdAt": "作成日時",
+                    "actions": "操作"
+                },
+                "actions": {
+                    "edit": "編集",
+                    "enable": "アプリを有効化",
+                    "disable": "アプリを無効化",
+                    "delete": "削除"
+                }
+            },
+            "create": {
+                "titleCreate": "新しいアプリを作成",
+                "titleEdit": "アプリを編集",
+                "name": "アプリ名",
+                "namePlaceholder": "例：私のブログアプリ",
+                "nameRequired": "アプリ名は必須です",
+                "description": "アプリの説明",
+                "descriptionPlaceholder": "アプリの機能と用途を簡単に説明してください",
+                "redirect": "リダイレクト URL",
+                "redirectHint": "複数の URL はカンマで区切ってください",
+                "redirectRequired": "リダイレクト URL が少なくとも 1 つ必要です",
+                "homepage": "アプリのホームページ",
+                "homepageHint": "アプリの公式サイト URL",
+                "logo": "アプリのロゴ",
+                "logoHint": "アプリアイコンの URL",
+                "scope": "認可スコープ",
+                "scopeHint": "複数のスコープはスペースで区切ります。例：openid profile email",
+                "scopeRequired": "認可スコープは必須です",
+                "contact": "連絡先メールアドレス",
+                "contactHint": "アプリ管理者の連絡先メールアドレス。複数の場合はカンマで区切ってください",
+                "authMethod": "認証方式",
+                "authMethodHint": "クライアントがトークンエンドポイントで認証する方式（OIDC 標準方式に対応）",
+                "grantTypes": "認可タイプ",
+                "grantTypesHint": "アプリで使用を許可する OAuth 2.0 認可タイプ",
+                "tos": "利用規約リンク",
+                "policy": "プライバシーポリシーリンク",
+                "cancel": "キャンセル",
+                "save": "変更を保存",
+                "create": "アプリを作成",
+                "validationFailed": "フォームの検証に失敗しました",
+                "updateSuccessTitle": "更新しました",
+                "createSuccessTitle": "作成しました",
+                "updateSuccess": "アプリ情報を更新しました",
+                "createSuccess": "アプリを作成しました",
+                "operationFailed": "操作に失敗しました",
+                "updateFailedTitle": "更新に失敗しました",
+                "createFailedTitle": "作成に失敗しました",
+                "authMethods": {
+                    "basic": "Basic 認証（推奨）",
+                    "post": "POST 認証",
+                    "none": "認証なし（公開クライアントのみ）"
+                },
+                "grantTypesList": {
+                    "code": "認可コードフロー（推奨）",
+                    "refresh": "リフレッシュトークン",
+                    "implicit": "インプリシットフロー（非対応）",
+                    "password": "パスワードフロー（非対応）",
+                    "clientCredentials": "クライアントクレデンシャルフロー（非対応）"
+                }
+            },
+            "secret": {
+                "title": "アプリを作成しました",
+                "created": "アプリ \"{name}\" を作成しました！",
+                "copyClientId": "Client ID をコピー",
+                "copyClientSecret": "Client Secret をコピー",
+                "warning": "これらの認証情報は必ず保存してください。このダイアログを閉じると Client Secret を再度確認できません。",
+                "saved": "保存しました",
+                "copiedTitle": "コピーしました",
+                "copied": "クリップボードにコピーしました",
+                "copyFailedTitle": "コピーに失敗しました",
+                "copyFailed": "クリップボードにコピーできませんでした"
+            },
+            "docs": {
+                "title": "OIDC API エンドポイントドキュメント",
+                "intro": "OpenID Connect の設定エンドポイントです。サポートするすべてのエンドポイントと機能情報を含みます。",
+                "discoveryLabel": "Discovery エンドポイント",
+                "copyDiscovery": "Discovery エンドポイントをコピー",
+                "mainTitle": "主要な OAuth 2.0 / OIDC エンドポイント",
+                "mainIntro": "以下はプラットフォームが提供する主要な OAuth 2.0 / OpenID Connect エンドポイントです。",
+                "copyEndpoint": "{label}をコピー",
+                "exampleTitle": "Discovery 設定の例",
+                "exampleIntro": "以下は OpenID Connect Discovery エンドポイントが返す設定例です。",
+                "copyExample": "設定例をコピー",
+                "notesTitle": "注意事項",
+                "note1": "現在の OIDC 実装は Better Auth に基づいており、標準的な OpenID Connect のコア機能のみをサポートしています",
+                "note2": "認可コードフロー（Authorization Code Flow）とリフレッシュトークンに対応しています",
+                "note3": "インプリシットフロー、パスワードフロー、クライアントフローなどの非標準モードはサポートしていません",
+                "note4": "動的クライアント登録は公開していません。OAuth アプリは管理者が管理画面で作成する必要があります",
+                "note5": "すべてのエンドポイントで HTTPS が必須です",
+                "close": "閉じる",
+                "endpoints": {
+                    "authorize": "認可エンドポイント",
+                    "token": "トークンエンドポイント",
+                    "userinfo": "ユーザー情報エンドポイント",
+                    "jwks": "JWKS エンドポイント"
+                },
+                "copiedTitle": "コピーしました",
+                "copied": "クリップボードにコピーしました",
+                "copyFailedTitle": "コピーに失敗しました",
+                "copyFailed": "クリップボードにコピーできませんでした"
+            },
+            "flow": {
+                "successTitle": "成功",
+                "appEnabled": "アプリを有効化しました",
+                "appDisabled": "アプリを無効化しました",
+                "errorTitle": "エラー",
+                "operationFailed": "操作に失敗しました",
+                "deleteSuccessTitle": "削除しました",
+                "deleteSuccess": "アプリを削除しました",
+                "deleteFailedTitle": "削除に失敗しました",
+                "deleteFailed": "削除に失敗しました",
+                "confirmDeleteTitle": "削除の確認",
+                "confirmDelete": "アプリ \"{name}\" を削除しますか？この操作は元に戻せません。",
+                "deleteLabel": "削除"
+            }
+        }
+    }
+}

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { createI18n } from 'vue-i18n'
 import { LOCALE_MESSAGE_MODULES, getLocaleMessageFilePaths } from '@/i18n/config/locale-modules'
@@ -17,6 +19,16 @@ const catalogs = import.meta.glob('../../i18n/locales/**/*.json', {
 }) as Record<string, LocaleMessages>
 
 const CJK_PATTERN = /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/u
+
+/**
+ * 简体中文特征字（日语新字体里不出现的写法）。
+ *
+ * 兜底而非完备：汉字区间无法区分中日，这里只拦高频简体写法（含「败 / 编 / 辑」这类
+ * 中文 Admin 文案常见字），完整判定仍需母语审校或简繁对照表。
+ */
+const SIMPLIFIED_ONLY_CHARS = new Set([
+    ...'这们应该户录验证设页载时间关于请谢语说读输类选择删认为无网络邮账显权开统图标题帮联变浏览广拦缓备链隐议决产监复击码识记忆转单员组构节环现发确实际质强败编辑',
+])
 
 function localeCatalogPath(locale: string, moduleName: string): string {
     return `../../i18n/locales/${locale}/${moduleName}.json`
@@ -61,7 +73,8 @@ describe('i18n 语言包运行时门禁', () => {
 
     it('非中文语言包不含中文', () => {
         for (const locale of ENABLED_LOCALES) {
-            if (locale.code.startsWith('zh-')) {
+            /* 日语与中文共用汉字区间，由下一条假名覆盖率断言覆盖 */
+            if (locale.code.startsWith('zh-') || locale.code === 'ja-JP') {
                 continue
             }
             for (const [key, value] of flattenMessages(mergeModules(locale.code))) {
@@ -71,6 +84,42 @@ describe('i18n 语言包运行时门禁', () => {
                 }
                 expect(CJK_PATTERN.test(value), `${locale.code} 的 ${key} 仍含中文`).toBe(false)
             }
+        }
+    })
+
+    it('ja-JP 为日文文案（假名覆盖达标且不混入简体中文特征字）', () => {
+        const locale = ENABLED_LOCALES.find((item) => item.code === 'ja-JP')
+        expect(locale, 'ja-JP 应处于启用状态（阶段 8 M8 起）').toBeDefined()
+        if (!locale) {
+            return
+        }
+
+        /* 直接读原始 JSON：主 vitest 配置（Nuxt 环境）下 `import.meta.glob` 拿到的是带位置元数据的结构，
+         * 不是文案本身，内容类断言会静默失效（见 docs/plan/backlog.md §3.2「message-catalog 内容断言覆盖范围待确认」） */
+        const entries = LOCALE_MESSAGE_MODULES.flatMap((moduleName) => flattenMessages(
+            JSON.parse(readFileSync(join(import.meta.dirname, '..', '..', 'i18n', 'locales', locale.code, `${moduleName}.json`), 'utf8')),
+        ))
+        const kanaPattern = /[\u3040-\u30ff]/u
+        const withKana = entries.filter(([, value]) => kanaPattern.test(value))
+        /* 汉字与中文同区间，改用覆盖率断言：日文文案绝大多数含假名（当前 86%，阈值留足机翻与短标签余量） */
+        expect(withKana.length / entries.length, 'ja-JP 假名覆盖率过低，疑似混入中文原文').toBeGreaterThan(0.7)
+
+        /* 逐模块下限：整段模块被中文覆盖时全局覆盖率仍可能达标（当前最低 admin / common 约 45%–68%） */
+        for (const moduleName of LOCALE_MESSAGE_MODULES) {
+            const moduleEntries = flattenMessages(JSON.parse(readFileSync(
+                join(import.meta.dirname, '..', '..', 'i18n', 'locales', locale.code, `${moduleName}.json`),
+                'utf8',
+            )))
+            if (moduleEntries.length === 0) {
+                continue
+            }
+            const moduleKana = moduleEntries.filter(([, value]) => kanaPattern.test(value))
+            expect(moduleKana.length / moduleEntries.length, `ja-JP 的 ${moduleName} 假名覆盖率过低`).toBeGreaterThan(0.4)
+        }
+
+        for (const [key, value] of entries) {
+            const simplified = [...value].filter((char) => SIMPLIFIED_ONLY_CHARS.has(char))
+            expect(simplified, `ja-JP 的 ${key} 含简体中文特征字：${simplified.join('')}`).toEqual([])
         }
     })
 

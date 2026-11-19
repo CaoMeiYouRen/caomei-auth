@@ -1,0 +1,79 @@
+{
+    "admin": {
+        "logs": {
+            "page": {
+                "title": "ログイン統計",
+                "subtitle": "ログインログ、アクティブユーザー、異常ログインなどの統計レポートを表示",
+                "refresh": "データを更新"
+            },
+            "overview": {
+                "totalUsers": "総ユーザー数",
+                "totalSessions": "総ログイン回数",
+                "activeSessions": "アクティブセッション",
+                "activeUsers": "アクティブユーザー（7 日間）"
+            },
+            "period": {
+                "title": "期間別統計",
+                "today": "本日のログイン",
+                "yesterday": "昨日のログイン",
+                "week": "今週のログイン",
+                "month": "今月のログイン"
+            },
+            "providers": {
+                "title": "ログイン方法の統計",
+                "empty": "ログイン方法のデータはありません",
+                "columns": {
+                    "provider": "ログイン方法",
+                    "count": "ログイン回数",
+                    "share": "割合"
+                }
+            },
+            "trend": {
+                "title": "ログイン推移（直近 30 日間）",
+                "series": "ログイン回数",
+                "tooltipDate": "日付: {date}",
+                "tooltipValue": "ログイン回数: {count}",
+                "axisDate": "日付",
+                "axisCount": "ログイン回数"
+            },
+            "table": {
+                "sectionTitle": "ログインログ",
+                "title": "ログインログ ({count})",
+                "searchPlaceholder": "ユーザーまたは IP アドレスで検索",
+                "searchLabel": "ユーザーまたは IP アドレスで検索",
+                "ipLabel": "IP の完全一致で絞り込み",
+                "ipPlaceholder": "完全な IP を入力。例：203.0.113.10",
+                "statusPlaceholder": "セッションステータス",
+                "statusLabel": "セッションステータス",
+                "dateRangePlaceholder": "期間を選択",
+                "dateRangeLabel": "期間を選択",
+                "clearDateRange": "期間を解除",
+                "refresh": "更新",
+                "empty": "ログインログはありません",
+                "revoke": "セッションを取り消す",
+                "columns": {
+                    "user": "ユーザー",
+                    "loginTime": "ログイン日時",
+                    "ipAddress": "IP アドレス",
+                    "device": "デバイス情報",
+                    "status": "ステータス",
+                    "actions": "操作"
+                },
+                "statusOptions": {
+                    "all": "すべてのステータス",
+                    "active": "アクティブセッション",
+                    "expired": "期限切れ"
+                },
+                "unknownDevice": "不明なデバイス"
+            },
+            "flow": {
+                "revokeSuccessTitle": "取り消しました",
+                "revokeSuccess": "セッションを取り消しました",
+                "revokeFailed": "取り消しに失敗しました",
+                "revokeFailedDescription": "セッションの取り消しに失敗しました",
+                "statsFailed": "読み込みに失敗しました",
+                "statsFailedDescription": "統計データの読み込みに失敗しました"
+            }
+        }
+    }
+}
