@@ -8,6 +8,7 @@
 
 -   [项目路线图 (Roadmap)](./plan/roadmap.md)
 -   [待办事项 (Todo)](./plan/todo.md)
+-   [阶段归档索引 (Todo Archive)](./plan/todo-archive.md)
 -   [候选池 (Backlog)](./plan/backlog.md)
 -   [已完成工作归档](./archive/completed-work.md)
 -   [重构总结（归档）](./archive/refactor.md)
@@ -32,7 +33,7 @@
 ### 4. [用户与部署手册 (Usage)](./usage/)
 
 -   [快速开始](./usage/getting-started.md)
--   [部署指南](../deployment/)
+-   [部署指南](./deployment/)
 -   [常见问题解答 (FAQ)](./usage/faq.md)
 
 ### 5. [开发者指南 (Development)](./development/)

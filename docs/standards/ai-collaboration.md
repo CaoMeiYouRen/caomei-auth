@@ -86,11 +86,11 @@
 - **测试覆盖**：编写 Vitest 测试用例。测试代码本身也必须经过 A 阶段的 Lint 和类型检查。
 - **风险导向**：优先补当前缺陷会打断的断言、失败路径与边界行为，不把测试阶段退化为机械补 coverage。
 
-### F (Finish) - 任务完结与单次提交
+### F (Finish) - 任务完结与提交
 
-- **闭环管理**：更新 `todo.md` 状态为 `completed`，并在阶段收口时把完成项迁入 [已完成工作归档](../archive/completed-work.md)；同步受影响的技术文档与 `.session/` 阶段态。
+- **闭环管理**：小条目通过 Review Gate 后，更新 `todo.md` 中对应大条目行的「小条目」计数与状态（大条目状态保持 `进行中`）；仅当该大条目最后一个小条目通过时，把整行置为 `已闭环`。`提交` 列按 [规划规范](./planning.md) §7 的回填规则补录；阶段收口时按 [规划规范](./planning.md) §8 把阶段正文迁入 `docs/plan/archive/` 分片并登记 [todo-archive.md](../plan/todo-archive.md) 索引（`completed-work.md` 已冻结，不再追加）；同步受影响的技术文档与 `.session/` 阶段态。
 - **完成态纪律**：`todo.md` 的完成态不得早于 Review Gate 结论，二者须同批落地；不得预写未落地的完成状态。
-- **单次提交**：整个任务产生的所有改动（业务代码 + 测试代码 + 文档）一次性提交。提交前必须加载 `conventional-committer` skill，通过其前置检查（依赖 A 阶段已放行、`pnpm lint`、`pnpm typecheck`、定向测试均通过），生成符合 Conventional Commits 格式的消息（使用中文或用户使用的语言），然后执行 `git commit`。
+- **提交归属**：一个条目提交只承载一个小条目（业务代码 + 测试代码 + 文档），不得跨条目；同一条目可多次提交，提交说明均指向该条目 ID，回填提交与阶段收口提交按 [规划规范](./planning.md) §4 的例外处理。提交前必须加载 `conventional-committer` skill，通过其前置检查（依赖 A 阶段已放行、`pnpm lint`、`pnpm typecheck`、定向测试均通过），生成符合 Conventional Commits 格式的消息（使用中文或用户使用的语言），然后执行 `git commit`。
 - **推送策略**：默认不推送，`git commit` 后停在本地；仅 [Git 规范 §8](./git.md#8-推送策略) 授权的定时任务三种情形（修复 CI 触发验证、完整条目完成后、修复 PR 分支）允许推送，且推前完成必要本地验证、推后监控 CI。
 
 ## 3. 验证分级矩阵与 Review Gate

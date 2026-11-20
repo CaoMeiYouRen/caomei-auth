@@ -142,7 +142,7 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
     1.  定位字段：`source` + `alertNumber`；或稳定标识（Dependabot 用 `ghsaId`，可配 `package`；Code scanning 用 `ruleId`，可配 `path`）。
     2.  `category`：`no-fix`（上游无可用修复版本）/ `hard-fix`（本发布窗口无法完成）/ `false-positive`（仅用于已 dismiss 的告警，且 `reason` 必须写明原 dismiss 原因）。
     3.  `reason`：为何当前无法修复（`false-positive` 时写原 dismiss 原因）。
-    4.  `tracking`：追踪的 Issue 链接或 `docs/plan/todo.md` 中的待办条目。
+    4.  `tracking`：追踪的 Issue 链接、`docs/plan/todo.md` 中的待办条目，或复核依据记录（`docs/design/governance/*.md`）；条目已归档时指向 `docs/plan/archive/` 的对应分片，不保留已迁移的旧路径（[AGENTS.md §7.4](../../AGENTS.md) 的「Issue 或待办条目」为摘要口径，字段形态以本节为准）。
     5.  `expiresAt`：复核截止日期（`YYYY-MM-DD`），到期即失效并重新阻塞发布。
 -   `category` 与告警状态必须匹配：`open` 告警登记 `false-positive`、或 `dismissed` 告警登记 `no-fix` / `hard-fix`，门禁都判为未通过。
 -   豁免不得用于 `critical`；已修复或已关闭的告警必须删除对应豁免条目，否则报告中会以"豁免清单问题"提示，避免历史条目掩盖新告警。

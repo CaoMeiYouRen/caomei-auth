@@ -1,6 +1,9 @@
 # 项目路线图 (Roadmap)
 
-本文档概述草梅 Auth 的中长期发展方向与大颗粒度阶段规划。候选条目、优先级与验收要点见 [backlog.md](./backlog.md)；进行中阶段的原子条目见 [todo.md](./todo.md)；准入与归档规则见 [规划规范](../standards/planning.md)。
+本文档概述草梅 Auth 的中长期发展方向与大颗粒度阶段规划。候选条目、优先级与验收要点见 [backlog.md](./backlog.md)；进行中阶段的小条目见 [todo.md](./todo.md)；已收口阶段的索引见 [todo-archive.md](./todo-archive.md)（阶段 1–9 的权威记录见 [规划规范](../standards/planning.md) §4，摘要见 [已完成工作归档](../archive/completed-work.md)）；准入与归档规则见 [规划规范](../standards/planning.md)。
+
+> **归档模型（2026-11-20 起）**：阶段 1–9 详情保留在本文件；自阶段 10 起，已收口阶段详情按 [规划规范](../standards/planning.md) §8 迁入 `docs/plan/archive/roadmap-phases-*.md`，本文件只保留里程碑概览与当前阶段。
+
 
 > **当前状态**：**当前无进行中的阶段**。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），范围见 [阶段 9 范围登记](../design/governance/2026-11-19-phase9-registration.md)、记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。阶段 8「国际化 5 语推广（10 语架构）」已于 2026-11-19 收口（M1A–M12 全部交付），范围见 [阶段 8 范围登记](../design/governance/2026-11-17-phase8-registration.md)、记录见 [阶段 8 收口记录](../design/governance/2026-11-19-phase8-closure.md)。阶段 7「质量与测试基建」已于 2026-11-17 收口（M1–M7 全部交付），记录见 [阶段 7 收口记录](../design/governance/2026-11-17-phase7-closure.md)；阶段 6 已于 2026-11-17 收口（M1–M18 全部交付），记录见 [阶段 6 收口记录](../design/governance/2026-11-17-phase6-closure.md)。阶段 5「i18n 全量落地与体验收口」已于 2026-11-16 收口（M1–M19 全部交付），收口记录见 [阶段 5 收口记录](../design/governance/2026-11-16-phase5-closure.md)。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线；未启动候选见 [backlog.md](./backlog.md)。
 

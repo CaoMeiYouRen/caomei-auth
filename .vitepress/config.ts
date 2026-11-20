@@ -186,6 +186,7 @@ export default defineConfig({
                     text: '项目计划',
                     items: [
                         { text: '待办事项 (Todo)', link: '/docs/plan/todo' },
+                        { text: '阶段归档 (Todo Archive)', link: '/docs/plan/todo-archive' },
                         { text: '路线图 (Roadmap)', link: '/docs/plan/roadmap' },
                         { text: '候选池 (Backlog)', link: '/docs/plan/backlog' }
                     ]

@@ -62,7 +62,7 @@ description: 需求守门员，负责需求挖掘、意图抽离、范围判断�
 
 1.  更新 `.session/current-task.yaml`：当前进行的规划、已形成的结论、未完成部分。
 2.  若本 session 形成了值得复用的规划 pattern，追加到 `.session/wisdom.md`。
-3.  确保 `todo.md` 中受本次规划影响的任务状态同步更新（in-progress / completed / 新增）；新候选登记到 `backlog.md`。
+3.  确保 `todo.md` 中受本次规划影响的任务状态同步更新（`未开始` / `进行中` / `已闭环` / `已阻塞` 四值，口径见 [规划规范](../../docs/standards/planning.md) §7）；新候选登记到 `backlog.md`。
 
 ### 关键原则
 
