@@ -54,6 +54,9 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [阶段 5 收口记录](./governance/2026-11-16-phase5-closure.md): M1–M19 全部交付、终态指标、与范围登记的偏差、遗留与验证命令。
 -   [阶段 7 收口记录](./governance/2026-11-17-phase7-closure.md): M1–M7 全部交付、终态指标（测试 1137 / 视觉 123 / pages 77.46%）、偏差与候选回填。
 -   [阶段 8 范围登记：国际化 5 语推广（10 语架构）](./governance/2026-11-17-phase8-registration.md): 10 语 Registry、5 语启用、zh-TW / ja / ko 三批语言包、ui-ready 与审校边界（2026-11-17 授权）。
+-   [阶段 9 范围登记：账号找回与 2FA 边界治理](./governance/2026-11-19-phase9-registration.md): 审计通道、假通道修复、管理员协助恢复（D8 / D9）与验证矩阵（2026-11-19 授权）。
+-   [阶段 9 收口记录](./governance/2026-11-20-phase9-closure.md): M1–M13 交付、测试 1225 / 视觉 136、偏差与遗留（2026-11-20 收口）。
+-   [阶段 10 范围登记：用户侧替代证明](./governance/2026-11-21-phase10-registration.md): 恢复码、替代证明改邮箱、冷静期与撤销、OAuth-only 自助设密码（2026-11-21 登记）。
 -   [发布链路原生多架构评估](./governance/2026-11-08-native-multiarch-docker-review.md): issue #718 的入口核验、方案比较与方案 C 复用工作流落地（已排期阶段 3 插队，待工作流验证）。
 -   [i18n 评估与实施方案](./governance/2026-11-05-i18n-evaluation.md): 原 i18n 规划的复核修订、Locale Registry、模块化消息、Zod v4 错误本地化、服务端 / 邮件方案与批次。
 -   [阶段 2 范围登记：安全收口与迁移预备](./governance/2026-11-05-phase2-registration.md): 阶段 2 的 5 条主线 / 11 条原子条目、验收与边界（2026-11-06 完成归档）。

@@ -5,7 +5,7 @@
 > **归档模型（2026-11-20 起）**：阶段 1–9 详情保留在本文件；自阶段 10 起，已收口阶段详情按 [规划规范](../standards/planning.md) §8 迁入 `docs/plan/archive/roadmap-phases-*.md`，本文件只保留里程碑概览与当前阶段。
 
 
-> **当前状态**：**当前无进行中的阶段**。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），范围见 [阶段 9 范围登记](../design/governance/2026-11-19-phase9-registration.md)、记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。阶段 8「国际化 5 语推广（10 语架构）」已于 2026-11-19 收口（M1A–M12 全部交付），范围见 [阶段 8 范围登记](../design/governance/2026-11-17-phase8-registration.md)、记录见 [阶段 8 收口记录](../design/governance/2026-11-19-phase8-closure.md)。阶段 7「质量与测试基建」已于 2026-11-17 收口（M1–M7 全部交付），记录见 [阶段 7 收口记录](../design/governance/2026-11-17-phase7-closure.md)；阶段 6 已于 2026-11-17 收口（M1–M18 全部交付），记录见 [阶段 6 收口记录](../design/governance/2026-11-17-phase6-closure.md)。阶段 5「i18n 全量落地与体验收口」已于 2026-11-16 收口（M1–M19 全部交付），收口记录见 [阶段 5 收口记录](../design/governance/2026-11-16-phase5-closure.md)。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线；未启动候选见 [backlog.md](./backlog.md)。
+> **当前状态**：**阶段 10「用户侧替代证明」已于 2026-11-21 登记**（5 大条目 / 14 小条目，见 [阶段 10 范围登记](../design/governance/2026-11-21-phase10-registration.md)，条目见 [todo.md](./todo.md)），待确认后开工。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），范围见 [阶段 9 范围登记](../design/governance/2026-11-19-phase9-registration.md)、记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。阶段 8「国际化 5 语推广（10 语架构）」已于 2026-11-19 收口（M1A–M12 全部交付），范围见 [阶段 8 范围登记](../design/governance/2026-11-17-phase8-registration.md)、记录见 [阶段 8 收口记录](../design/governance/2026-11-19-phase8-closure.md)。阶段 7「质量与测试基建」已于 2026-11-17 收口（M1–M7 全部交付），记录见 [阶段 7 收口记录](../design/governance/2026-11-17-phase7-closure.md)；阶段 6 已于 2026-11-17 收口（M1–M18 全部交付），记录见 [阶段 6 收口记录](../design/governance/2026-11-17-phase6-closure.md)。阶段 5「i18n 全量落地与体验收口」已于 2026-11-16 收口（M1–M19 全部交付），收口记录见 [阶段 5 收口记录](../design/governance/2026-11-16-phase5-closure.md)。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线；未启动候选见 [backlog.md](./backlog.md)。
 
 ---
 
@@ -134,6 +134,14 @@ _目标：语言架构扩到 10 码并启用 zh-CN / en-US / zh-TW / ja-JP / ko-
 - **M12 收口**：新语言视觉基线、SEO noindex 断言、文档、台账与归档。
 
 > **不做**：es-ES / fr-FR / de-DE / ru-RU / pt-BR 内容启用、母语者终审与 `seo-ready` 升级、RTL、用户生成内容与 Demo 种子数据翻译。范围与验收见 [阶段 8 范围登记](../design/governance/2026-11-17-phase8-registration.md)，交付结果见 [收口记录](../design/governance/2026-11-19-phase8-closure.md)（5 语 × 1510 键、测试 1154、视觉 136）。
+
+---
+
+## 阶段 10: 用户侧替代证明（恢复码 / 已验证手机 / 冷静期）（2026-11-21 登记）
+
+_目标：旧邮箱失效但持有恢复因子的用户可自助换邮箱；换绑经冷静期可撤销，生效后旧邮箱立即失效；OAuth-only 用户可受控自助设置密码进入自助恢复（L0 扩展）。_
+
+> 范围、决策（D1 / D2 / D3 / D5 / D6 / D7 / D10）、容量基线与不做范围见 [阶段 10 范围登记](../design/governance/2026-11-21-phase10-registration.md)；条目见 [todo.md](./todo.md)。
 
 ## 后续方向（未授权）
 
