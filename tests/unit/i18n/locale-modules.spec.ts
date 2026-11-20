@@ -129,6 +129,7 @@ const PAGE_MODULE_EXPECTATIONS: Record<string, string[]> = {
     '/sso-login': ['sso'],
     '/profile': ['profile'],
     '/security': ['security'],
+    '/channel-change/[id]': ['security'],
     '/oauth/clients': ['oauth'],
     '/oauth/consent': ['oauth'],
     '/admin/users': ['admin', 'admin-users'],

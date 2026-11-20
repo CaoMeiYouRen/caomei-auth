@@ -1,8 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref, reactive } from 'vue'
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useRegisterFlow } from '@/composables/use-register-flow'
 
 vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
+mockNuxtImport('navigateTo', () => vi.fn())
 // Mock Nuxt composables
 const { config, useToastMock, toastMocks } = vi.hoisted(() => {
     const hoistedToastMocks = { show: vi.fn(), success: vi.fn(), danger: vi.fn(), warning: vi.fn(), info: vi.fn() }

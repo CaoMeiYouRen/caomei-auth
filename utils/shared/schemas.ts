@@ -148,10 +148,7 @@ export const createUserFormSchema = z.object({
 // 管理员更新用户表单 Schema
 export const updateUserFormSchema = z.object({
     nickname: nicknameSchema,
-    email: emailSchema,
-    phone: phoneSchema.optional().or(z.literal('')),
     role: z.string().min(1, 'validation.roleRequired'),
-    password: passwordSchema.optional().or(z.literal('')),
 })
 
 // OAuth Application Base Schema

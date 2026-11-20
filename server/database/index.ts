@@ -15,6 +15,7 @@ import { OAuthResource } from '../entities/oauth-resource'
 import { Jwks } from '../entities/jwks'
 import { SSOProvider } from '../entities/sso-provider'
 import { RegistrationRule } from '../entities/registration-rule'
+import { ChannelChangeRequest } from '../entities/channel-change-request'
 import logger from '../utils/logger'
 import { hashClientSecret } from '../utils/oauth-client-view'
 import { CustomLogger } from './logger'
@@ -248,6 +249,7 @@ const entities = [
     Jwks,
     SSOProvider,
     RegistrationRule,
+    ChannelChangeRequest,
 ]
 
 export const initializeDB = async () => {

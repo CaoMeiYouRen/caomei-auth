@@ -128,6 +128,7 @@ const ROUTE_MODULE_RULES: RouteModuleRule[] = [
     { pattern: /^\/sso-login(?:\/|$)/u, modules: ['sso'] },
     { pattern: /^\/profile(?:\/|$)/u, modules: ['profile'] },
     { pattern: /^\/security(?:\/|$)/u, modules: ['security'] },
+    { pattern: /^\/channel-change(?:\/|$)/u, modules: ['security'] },
     { pattern: /^\/oauth(?:\/|$)/u, modules: ['oauth'] },
     { pattern: /^\/$/u, modules: ['static'] },
     { pattern: /^\/(?:about|privacy|terms)(?:\/|$)/u, modules: ['static'] },

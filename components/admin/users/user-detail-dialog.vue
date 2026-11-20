@@ -226,22 +226,32 @@
                     :error="errors.nickname"
                     required
                 />
-                <BaseInputV2
-                    id="editEmail"
-                    v-model="editEmail"
-                    :label="t('admin.users.detail.email')"
-                    type="email"
-                    :placeholder="t('admin.users.detail.emailPlaceholder')"
-                    :error="errors.email"
-                    required
-                />
-                <BaseInputV2
-                    id="editPhone"
-                    v-model="editPhone"
-                    :label="t('admin.users.detail.phone')"
-                    :placeholder="t('admin.users.detail.phonePlaceholder')"
-                    :error="errors.phone"
-                />
+                <CaomeiMessage tone="primary">
+                    <span>{{ t('admin.users.channelChange.directEditNote') }}</span>
+                </CaomeiMessage>
+                <div class="edit-user-form__channel-actions">
+                    <CaomeiButton
+                        variant="secondary"
+                        type="button"
+                        @click="openChannelChange('email')"
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-email-edit-outline" />
+                        </template>
+                        {{ t('admin.users.channelChange.emailAction') }}
+                    </CaomeiButton>
+                    <CaomeiButton
+                        variant="secondary"
+                        type="button"
+                        :disabled="!phoneEnabled"
+                        @click="openChannelChange('phone')"
+                    >
+                        <template #icon>
+                            <i class="mdi mdi-phone-edit-outline" />
+                        </template>
+                        {{ t('admin.users.channelChange.phoneAction') }}
+                    </CaomeiButton>
+                </div>
                 <CaomeiFormItem
                     id="editRole"
                     :label="t('admin.users.detail.role')"
@@ -261,13 +271,6 @@
                         />
                     </template>
                 </CaomeiFormItem>
-                <BasePasswordV2
-                    id="editPassword"
-                    v-model="editPassword"
-                    :label="t('admin.users.detail.newPassword')"
-                    :placeholder="t('admin.users.detail.newPasswordPlaceholder')"
-                    :error="errors.password"
-                />
 
                 <div class="edit-user-form__footer">
                     <CaomeiButton
@@ -286,12 +289,19 @@
             </form>
         </div>
     </BaseDialogV2>
+    <ChannelChangeDialog
+        v-model:visible="showChannelDialog"
+        :user="user"
+        :channel="channelDialogType"
+        @requested="$emit('updated')"
+    />
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { useConfirm, useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
+import ChannelChangeDialog from '@/components/admin/users/channel-change-dialog.vue'
 import { formatPhoneNumberInternational } from '@/utils/shared/phone'
 import { syncAdminRole, addAdminRole, removeAdminRole } from '@/utils/web/admin-role-client'
 import { useUserTable } from '@/composables/admin/use-user-table'
@@ -320,29 +330,26 @@ const { t } = useI18n()
 const toast = useToast()
 const confirm = useConfirm()
 const { roleOptions } = useUserTable()
-
+const config = useRuntimeConfig()
+const phoneEnabled = computed(() => Boolean(config.public.phoneEnabled))
 const loading = ref(false)
 const isEditing = ref(false)
-
+const showChannelDialog = ref(false)
+const channelDialogType = ref<'email' | 'phone'>('email')
+const openChannelChange = (channel: 'email' | 'phone') => {
+    channelDialogType.value = channel
+    showChannelDialog.value = true
+}
 const { values: editForm, errors, submitting: updateLoading, handleSubmit, reset, setField } = useForm({
     initialValues: {
         nickname: '',
-        email: '',
-        phone: '',
         role: 'user',
-        password: '',
     },
     zodSchema: updateUserFormSchema,
 })
-
 const editNickname = computed({ get: () => editForm.value.nickname, set: (v) => setField('nickname', v) })
-const editEmail = computed({ get: () => editForm.value.email, set: (v) => setField('email', v) })
-const editPhone = computed({ get: () => editForm.value.phone || '', set: (v) => setField('phone', v) })
 const editRole = computed({ get: () => editForm.value.role, set: (v) => setField('role', v) })
-const editPassword = computed({ get: () => editForm.value.password || '', set: (v) => setField('password', v) })
-
 const isCurrentUser = (userId: string) => props.currentUserId === userId
-
 const onClose = (val: boolean) => {
     emit('update:visible', val)
     if (!val) {
@@ -355,10 +362,7 @@ watch(isEditing, (val) => {
     if (val && props.user) {
         reset({
             nickname: props.user.name || '',
-            email: props.user.email || '',
-            phone: props.user.phoneNumber || '',
             role: props.user.role || 'user',
-            password: '',
         })
     }
 })
@@ -373,11 +377,7 @@ const updateUser = async () => {
                 userId: targetUser.id,
                 data: {
                     name: vals.nickname,
-                    email: vals.email,
                     role: vals.role,
-                    password: vals.password || undefined,
-                    // phone update might need specific handling if authClient supports it directly in updateUser
-                    // Assuming authClient.admin.updateUser supports these fields
                 },
             })
 

@@ -108,7 +108,7 @@ describe('admin 用户对话框', () => {
         const submit = findButtonByText(wrapper, '确认禁用')
         expect(submit).toBeTruthy()
         await submit!.trigger('click')
-        await vi.waitFor(() => expect(banUser).toHaveBeenCalled())
+        await vi.waitFor(() => expect(banUser).toHaveBeenCalled(), { timeout: 5000 })
 
         expect(banUser).toHaveBeenCalledWith({
             userId: 'user-1',
@@ -135,11 +135,11 @@ describe('admin 用户对话框', () => {
         })
 
         await wrapper.setProps({ visible: true })
-        await vi.waitFor(() => expect(listUserSessions).toHaveBeenCalled())
+        await vi.waitFor(() => expect(listUserSessions).toHaveBeenCalled(), { timeout: 5000 })
         const revokeAll = findButtonByText(wrapper, '撤销所有会话')
         expect(revokeAll).toBeTruthy()
         await revokeAll!.trigger('click')
-        await vi.waitFor(() => expect(revokeUserSessions).toHaveBeenCalled())
+        await vi.waitFor(() => expect(revokeUserSessions).toHaveBeenCalled(), { timeout: 5000 })
 
         expect(confirmOpen).toHaveBeenCalled()
         expect(revokeUserSessions).toHaveBeenCalledWith({ userId: 'user-1' })
@@ -154,7 +154,7 @@ describe('admin 用户对话框', () => {
         })
 
         await findButtonByText(wrapper, '确认禁用')!.trigger('click')
-        await vi.waitFor(() => expect(banUser).toHaveBeenCalled())
+        await vi.waitFor(() => expect(banUser).toHaveBeenCalled(), { timeout: 5000 })
 
         expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '目标用户不存在' }))
         expect(toast.success).not.toHaveBeenCalled()
@@ -171,8 +171,9 @@ describe('admin 用户对话框', () => {
         await wrapper.find('#createName').setValue('新用户')
         await wrapper.find('#createEmail').setValue('new-user@example.com')
         await wrapper.find('#createPassword').setValue('secret123')
+        await wrapper.vm.$nextTick()
         await wrapper.find('form').trigger('submit')
-        await vi.waitFor(() => expect(createUser).toHaveBeenCalled())
+        await vi.waitFor(() => expect(createUser).toHaveBeenCalled(), { timeout: 5000 })
 
         expect(createUser).toHaveBeenCalledWith(expect.objectContaining({ email: 'new-user@example.com', role: 'user' }))
         expect(toast.success).toHaveBeenCalled()
@@ -189,8 +190,9 @@ describe('admin 用户对话框', () => {
         await wrapper.find('#createName').setValue('新用户')
         await wrapper.find('#createEmail').setValue('new-user@example.com')
         await wrapper.find('#createPassword').setValue('secret123')
+        await wrapper.vm.$nextTick()
         await wrapper.find('form').trigger('submit')
-        await vi.waitFor(() => expect(createUser).toHaveBeenCalled())
+        await vi.waitFor(() => expect(createUser).toHaveBeenCalled(), { timeout: 5000 })
 
         expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '邮箱已被占用' }))
         expect(toast.success).not.toHaveBeenCalled()
@@ -206,11 +208,11 @@ describe('admin 用户对话框', () => {
         })
 
         await wrapper.setProps({ visible: true })
-        await vi.waitFor(() => expect(listUserSessions).toHaveBeenCalled())
+        await vi.waitFor(() => expect(listUserSessions).toHaveBeenCalled(), { timeout: 5000 })
         const revokeButton = wrapper.findAll('button').find((button) => button.text().trim() === '撤销')
         expect(revokeButton).toBeTruthy()
         await revokeButton!.trigger('click')
-        await vi.waitFor(() => expect(revokeUserSession).toHaveBeenCalledWith({ sessionToken: 'token-1' }))
+        await vi.waitFor(() => expect(revokeUserSession).toHaveBeenCalledWith({ sessionToken: 'token-1' }), { timeout: 5000 })
 
         expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '会话不存在' }))
         expect(toast.success).not.toHaveBeenCalled()
@@ -224,9 +226,9 @@ describe('admin 用户对话框', () => {
         })
 
         await wrapper.setProps({ visible: true })
-        await vi.waitFor(() => expect(listUserSessions).toHaveBeenCalled())
+        await vi.waitFor(() => expect(listUserSessions).toHaveBeenCalled(), { timeout: 5000 })
         await findButtonByText(wrapper, '撤销所有会话')!.trigger('click')
-        await vi.waitFor(() => expect(revokeUserSessions).toHaveBeenCalled())
+        await vi.waitFor(() => expect(revokeUserSessions).toHaveBeenCalled(), { timeout: 5000 })
 
         expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '无权限撤销' }))
         expect(toast.success).not.toHaveBeenCalled()

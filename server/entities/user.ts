@@ -104,6 +104,12 @@ export class User extends BaseEntity {
     @CustomColumn({ type: 'boolean', default: false })
     twoFactorEnabled: boolean
 
+    /**
+     * 是否必须重置密码（阶段 9 M11）：为 true 时拒绝创建任何新会话
+     */
+    @CustomColumn({ type: 'boolean', default: false })
+    mustResetPassword: boolean
+
     // ========== 关系定义 ==========
 
     /**

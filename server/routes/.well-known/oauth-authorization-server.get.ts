@@ -7,6 +7,4 @@ import { auth } from '@/lib/auth'
  *
  * 同 `openid-configuration`，1.7 起需要应用自行在根路径暴露。
  */
-const handler = oauthProviderAuthServerMetadata(auth)
-
-export default defineEventHandler((event) => handler(toWebRequest(event)))
+export default defineEventHandler((event) => oauthProviderAuthServerMetadata(auth)(toWebRequest(event)))

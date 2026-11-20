@@ -279,6 +279,8 @@ CREATE TABLE IF NOT EXISTS caomei_auth_user (
     locale                VARCHAR (16),
     timezone              VARCHAR (64),
     two_factor_enabled    BOOLEAN       NOT NULL
+                                        DEFAULT (0),
+    must_reset_password   BOOLEAN       NOT NULL
                                         DEFAULT (0)
 );
 
@@ -604,3 +606,21 @@ CREATE TABLE IF NOT EXISTS caomei_auth_registration_rule (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS IDX_registration_rule_unique ON caomei_auth_registration_rule (type, mode, value);
+
+CREATE TABLE IF NOT EXISTS caomei_auth_channel_change_request (
+    id            VARCHAR (36) PRIMARY KEY NOT NULL,
+    created_at    DATETIME NOT NULL DEFAULT (datetime('now')),
+    updated_at    DATETIME NOT NULL DEFAULT (datetime('now')),
+    user_id       VARCHAR (36) NOT NULL,
+    channel       VARCHAR (16) NOT NULL,
+    new_value     VARCHAR (255) NOT NULL,
+    code_hash     VARCHAR (64) NOT NULL,
+    status        VARCHAR (16) NOT NULL DEFAULT 'pending',
+    attempts      INTEGER NOT NULL DEFAULT 0,
+    requested_by  VARCHAR (36),
+    reason        TEXT,
+    expires_at    DATETIME NOT NULL,
+    confirmed_at  DATETIME
+);
+
+CREATE INDEX IF NOT EXISTS IDX_channel_change_user ON caomei_auth_channel_change_request (user_id, channel, status);

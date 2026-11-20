@@ -7,18 +7,18 @@ import { auth } from '@/lib/auth'
  * 这里同时兼容 1.6 时期的旧路径（`/api/auth/.well-known/*`），避免已接入的客户端失效；
  * 标准根路径由 `server/routes/.well-known/*` 暴露。
  */
-const oidcMetadata = oauthProviderOpenIdConfigMetadata(auth)
-const authServerMetadata = oauthProviderAuthServerMetadata(auth)
-
-const LEGACY_METADATA_ROUTES: Record<string, (request: Request) => Promise<Response>> = {
-    '/api/auth/.well-known/openid-configuration': oidcMetadata,
-    '/api/auth/.well-known/oauth-authorization-server': authServerMetadata,
-}
+const LEGACY_METADATA_PATHS = new Set([
+    '/api/auth/.well-known/openid-configuration',
+    '/api/auth/.well-known/oauth-authorization-server',
+])
 
 export default defineEventHandler((event) => {
     const pathname = event.path.split('?')[0] ?? ''
-    const metadataHandler = LEGACY_METADATA_ROUTES[pathname]
-    if (metadataHandler) {
+    if (LEGACY_METADATA_PATHS.has(pathname)) {
+        /* 元数据 handler 依赖 better-auth 实例，必须在请求期创建，避免模块顶层读取 dataSource */
+        const metadataHandler = pathname.endsWith('openid-configuration')
+            ? oauthProviderOpenIdConfigMetadata(auth)
+            : oauthProviderAuthServerMetadata(auth)
         return metadataHandler(toWebRequest(event))
     }
     return auth.handler(toWebRequest(event))
