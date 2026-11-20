@@ -7,14 +7,9 @@
             "plan": "把会话列表与封禁表单拆为子组件，随用户管理批次重构"
         },
         "lib/auth.ts": {
-            "lines": 788,
+            "lines": 604,
             "owner": "认证核心",
             "plan": "按 session / password / mfa 能力拆分到 lib/auth/ 子模块"
-        },
-        "pages/security.vue": {
-            "lines": 616,
-            "owner": "账户安全页",
-            "plan": "拆出会话表、2FA 与密码区块组件"
         },
         "scripts/ai/check-governance.mjs": {
             "lines": 781,
