@@ -74,6 +74,27 @@
             "title": "{appName} account security notice",
             "preheader": "There was security activity on your account.",
             "message": "We detected the following security activity on your <strong>{appName}</strong> account:<br/><br/><strong>{action}</strong>"
+        },
+        "twoFactorOtp": {
+            "subject": "Your {appName} verification code",
+            "title": "Two-factor verification code",
+            "preheader": "Your two-factor verification code is {code}",
+            "message": "You are signing in to <strong>{appName}</strong>. Use the following code to complete two-factor verification:",
+            "securityTip": "The code is valid for 1 minute. If this was not you, ignore this email and change your password soon."
+        },
+        "channelChangeNotification": {
+            "subject": "{appName} contact change notification",
+            "title": "{appName} contact change notification",
+            "preheader": "Your account contact information was changed.",
+            "message": "The contact information of your <strong>{appName}</strong> account was changed:<br/><br/><strong>{detail}</strong>",
+            "securityTip": "If this was not you, contact the site administrator immediately."
+        },
+        "channelChangeCode": {
+            "subject": "Confirm your {appName} contact change",
+            "title": "Confirm contact change",
+            "preheader": "Your contact change verification code is {code}",
+            "message": "You are changing the contact information of your <strong>{appName}</strong> account to <strong>{target}</strong>. Use the following code to confirm:",
+            "securityTip": "The code is valid for 10 minutes. If this was not you, ignore this email."
         }
     }
 }

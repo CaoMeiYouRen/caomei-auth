@@ -29,7 +29,17 @@
             "disableTitle": "禁用双因素认证",
             "enablePrompt": "为了确保是您本人操作，请输入密码以启用双因素认证",
             "disablePrompt": "为了确保是您本人操作，请输入密码以禁用双因素认证",
-            "passwordPlaceholder": "请输入密码"
+            "passwordPlaceholder": "请输入密码",
+            "backupRegenerate": "重新生成备份码",
+            "backupRegenerateTip": "重新生成后，旧的备份码立即失效。请确认已登录本人账号并输入密码。",
+            "backupRegeneratePasswordLabel": "当前密码",
+            "backupRegeneratePasswordPlaceholder": "请输入当前密码以确认",
+            "backupRegenerateSuccess": "备份码已重新生成，请立即保存",
+            "backupRegenerateFailed": "重新生成备份码失败",
+            "backupRegenerateFailedDetail": "重新生成备份码失败：{message}",
+            "backupRegenerateTitle": "新的备份码",
+            "backupRegenerateHint": "每个备份码只能使用一次，请保存在安全的地方。关闭后将无法再次查看。",
+            "lostAccessNotice": "如果同时丢失身份验证器和备份码，管理员也无法重置 2FA 或恢复账号，请务必提前保存备份码。"
         },
         "sessions": {
             "title": "会话管理",
@@ -59,7 +69,12 @@
             "confirmRevokeAllTitle": "确认撤销所有会话",
             "confirmRevokeAll": "确定要撤销所有会话，包括当前会话吗？",
             "cancel": "取消",
-            "confirm": "确认"
+            "confirm": "确认",
+            "revokeFailed": "撤销会话失败",
+            "revokeFailedDetail": "撤销会话失败：{message}",
+            "revokedSuccess": "会话已撤销",
+            "revokedOthersSuccess": "其他会话已全部撤销",
+            "revokedAllSuccess": "全部会话已撤销，请重新登录"
         },
         "flow": {
             "hintTitle": "提示",
@@ -81,6 +96,32 @@
             "enabledSuccess": "双因素认证已成功启用！请保存好备份码",
             "codesCopied": "备份码已复制到剪贴板",
             "codesDownloaded": "备份码已下载"
+        },
+        "recovery": {
+            "pageTitle": "确认联系方式变更",
+            "pageSubtitle": "请输入发送到新联系方式的一次性验证码，确认后本次变更才会生效。",
+            "emailLabel": "新邮箱",
+            "phoneLabel": "新手机号",
+            "codeLabel": "验证码",
+            "codePlaceholder": "请输入 6 位验证码",
+            "submit": "确认变更",
+            "successTitle": "改绑成功",
+            "successDescription": "联系方式已更新，全部会话已失效。",
+            "resetRequired": "为保护账号安全，请立即重置密码后再登录。",
+            "resetCodeSent": "密码重置验证码已发送到新的联系方式。",
+            "resetCodeFailed": "密码重置验证码发送失败，请前往「忘记密码」手动获取。",
+            "goReset": "前往重置密码",
+            "statusPending": "等待确认",
+            "statusConfirmed": "已确认",
+            "statusExpired": "已过期",
+            "statusCancelled": "已取消",
+            "loadFailed": "无法加载改绑请求，请确认链接是否完整",
+            "confirmFailed": "确认失败",
+            "backToLogin": "返回登录",
+            "expiredHint": "该请求已失效，请联系管理员重新发起改绑。",
+            "confirmedHint": "该请求已确认，无需重复提交。",
+            "codeRequired": "请输入验证码",
+            "codeHint": "验证码有效期为 10 分钟，过期后请联系管理员重新发起改绑。"
         }
     }
 }

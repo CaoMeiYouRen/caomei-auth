@@ -81,6 +81,27 @@
             "adminRestricted": "데모 모드에서는 관리자 페이지의 변경 작업을 수행할 수 없습니다",
             "writeRestricted": "데모 모드에서는 이 작업을 수행할 수 없습니다",
             "dangerousRestricted": "데모 모드에서는 이 위험한 작업을 수행할 수 없습니다"
+        },
+        "recovery": {
+            "channelNotConfigured": "SMS가 설정되지 않았습니다. 이메일 복구를 이용해 주세요",
+            "targetTaken": "이 이메일 또는 휴대폰 번호는 다른 계정에서 사용 중입니다",
+            "codeInvalid": "인증 코드가 올바르지 않습니다",
+            "codeExpired": "인증 코드가 만료되었습니다. 다시 요청해 주세요",
+            "requestNotFound": "변경 요청이 없거나 만료되었습니다",
+            "requestConsumed": "이미 처리된 변경 요청입니다",
+            "tooManyAttempts": "인증 시도 횟수를 초과했습니다. 새로 요청해 주세요",
+            "passwordResetRequired": "로그인하려면 먼저 비밀번호를 재설정해야 합니다",
+            "adminDirectEditForbidden": "관리자는 이메일이나 휴대폰 번호를 직접 수정할 수 없습니다. 변경 요청을 시작해 주세요",
+            "adminPasswordForbidden": "관리자는 사용자 비밀번호를 설정할 수 없습니다. 사용자가 직접 재설정해야 합니다",
+            "sendFailed": "인증 코드 전송에 실패했습니다. 잠시 후 다시 시도해 주세요",
+            "reasonRequired": "작업 사유를 입력해 주세요",
+            "targetInvalid": "유효한 이메일 주소 또는 휴대폰 번호를 입력해 주세요",
+            "notPending": "현재 상태에서는 이 변경 요청을 처리할 수 없습니다",
+            "noVerifiedChannel": "사용자에게 사용 가능한 인증된 연락처가 없습니다",
+            "confirmFailed": "변경 확인에 실패했습니다",
+            "notifyFailed": "알림 전송에 실패했습니다",
+            "invalidChannel": "지원되지 않는 변경 채널입니다",
+            "channelChangeSmsNotice": "계정 연락처가 {target}(으)로 변경되었습니다. 본인이 요청하지 않았다면 즉시 관리자에게 문의해 주세요."
         }
     }
 }

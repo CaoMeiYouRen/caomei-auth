@@ -214,6 +214,23 @@
                     "unban": "선택한 사용자 이용 정지 해제",
                     "delete": "선택한 사용자 삭제"
                 }
+            },
+            "channelChange": {
+                "emailTitle": "이메일 변경 시작",
+                "phoneTitle": "휴대폰 번호 변경 시작",
+                "targetEmail": "새 이메일",
+                "targetPhone": "새 휴대폰 번호",
+                "reason": "작업 사유",
+                "reasonPlaceholder": "변경 사유를 입력해 주세요(필수, 감사 로그에 기록됩니다)",
+                "submit": "인증 코드 전송",
+                "cancel": "취소",
+                "successTitle": "변경을 시작했습니다",
+                "successDescription": "{target}(으)로 인증 코드를 보냈습니다. 유효 기간은 10분입니다",
+                "failedTitle": "변경 시작 실패",
+                "failedDescription": "변경을 시작하지 못했습니다. 잠시 후 다시 시도해 주세요",
+                "emailAction": "이메일 변경",
+                "phoneAction": "휴대폰 번호 변경",
+                "directEditNote": "이메일과 휴대폰 번호는 변경 요청으로만 수정할 수 있습니다. 사용자가 새 연락처에서 확인하면 적용되며, 이후 비밀번호를 재설정해야 합니다."
             }
         }
     }

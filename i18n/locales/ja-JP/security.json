@@ -29,7 +29,17 @@
             "disableTitle": "二要素認証を無効にする",
             "enablePrompt": "ご本人の操作であることを確認するため、二要素認証を有効にするためのパスワードを入力してください",
             "disablePrompt": "ご本人の操作であることを確認するため、二要素認証を無効にするためのパスワードを入力してください",
-            "passwordPlaceholder": "パスワードを入力してください"
+            "passwordPlaceholder": "パスワードを入力してください",
+            "backupRegenerate": "バックアップコードを再生成",
+            "backupRegenerateTip": "再生成すると既存のバックアップコードは即座に無効になります。本人のアカウントでログインしていることを確認し、パスワードを入力してください。",
+            "backupRegeneratePasswordLabel": "現在のパスワード",
+            "backupRegeneratePasswordPlaceholder": "確認のため現在のパスワードを入力してください",
+            "backupRegenerateSuccess": "バックアップコードを再生成しました。すぐに保存してください",
+            "backupRegenerateFailed": "バックアップコードの再生成に失敗しました",
+            "backupRegenerateFailedDetail": "バックアップコードの再生成に失敗しました：{message}",
+            "backupRegenerateTitle": "新しいバックアップコード",
+            "backupRegenerateHint": "各バックアップコードは 1 回だけ使用できます。安全な場所に保管してください。閉じると再表示できません。",
+            "lostAccessNotice": "認証アプリとバックアップコードの両方を失うと、管理者も 2FA をリセットできず、アカウントを復旧できません。事前にバックアップコードを保存してください。"
         },
         "sessions": {
             "title": "セッション管理",
@@ -59,7 +69,12 @@
             "confirmRevokeAllTitle": "すべてのセッション取り消しの確認",
             "confirmRevokeAll": "現在のセッションを含むすべてのセッションを取り消しますか？",
             "cancel": "キャンセル",
-            "confirm": "確認"
+            "confirm": "確認",
+            "revokeFailed": "セッションの失効に失敗しました",
+            "revokeFailedDetail": "セッションの失効に失敗しました：{message}",
+            "revokedSuccess": "セッションを失効しました",
+            "revokedOthersSuccess": "他のセッションをすべて失効しました",
+            "revokedAllSuccess": "すべてのセッションを失効しました。再度サインインしてください"
         },
         "flow": {
             "hintTitle": "ヒント",
@@ -81,6 +96,32 @@
             "enabledSuccess": "二要素認証を有効にしました！バックアップコードを保管してください",
             "codesCopied": "バックアップコードをクリップボードにコピーしました",
             "codesDownloaded": "バックアップコードをダウンロードしました"
+        },
+        "recovery": {
+            "pageTitle": "連絡先変更の確認",
+            "pageSubtitle": "新しい連絡先に送信されたワンタイムコードを入力してください。確認後に変更が有効になります。",
+            "emailLabel": "新しいメールアドレス",
+            "phoneLabel": "新しい電話番号",
+            "codeLabel": "確認コード",
+            "codePlaceholder": "6 桁のコードを入力してください",
+            "submit": "変更を確認",
+            "successTitle": "変更が完了しました",
+            "successDescription": "連絡先を更新し、すべてのセッションを失効しました。",
+            "resetRequired": "アカウント保護のため、ログイン前にパスワードを再設定してください。",
+            "resetCodeSent": "新しい連絡先にパスワード再設定コードを送信しました。",
+            "resetCodeFailed": "パスワード再設定コードの送信に失敗しました。「パスワードをお忘れですか」から手動で取得してください。",
+            "goReset": "パスワードを再設定",
+            "statusPending": "確認待ち",
+            "statusConfirmed": "確認済み",
+            "statusExpired": "期限切れ",
+            "statusCancelled": "キャンセル済み",
+            "loadFailed": "変更リクエストを読み込めませんでした。リンクが完全か確認してください",
+            "confirmFailed": "確認に失敗しました",
+            "backToLogin": "ログインに戻る",
+            "expiredHint": "このリクエストは無効です。管理者に再発行を依頼してください。",
+            "confirmedHint": "このリクエストは確認済みです。追加の操作は不要です。",
+            "codeRequired": "確認コードを入力してください",
+            "codeHint": "確認コードの有効期限は 10 分です。期限切れの場合は管理者に再発行を依頼してください。"
         }
     }
 }

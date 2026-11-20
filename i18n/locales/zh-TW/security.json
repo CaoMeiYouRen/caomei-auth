@@ -29,7 +29,17 @@
             "disableTitle": "停用雙因素認證",
             "enablePrompt": "為了確保是您本人操作，請輸入密碼以啟用雙因素認證",
             "disablePrompt": "為了確保是您本人操作，請輸入密碼以停用雙因素認證",
-            "passwordPlaceholder": "請輸入密碼"
+            "passwordPlaceholder": "請輸入密碼",
+            "backupRegenerate": "重新產生備份碼",
+            "backupRegenerateTip": "重新產生後，舊的備份碼會立即失效。請確認已登入本人帳號並輸入密碼。",
+            "backupRegeneratePasswordLabel": "目前密碼",
+            "backupRegeneratePasswordPlaceholder": "請輸入目前密碼以確認",
+            "backupRegenerateSuccess": "備份碼已重新產生，請立即保存",
+            "backupRegenerateFailed": "重新產生備份碼失敗",
+            "backupRegenerateFailedDetail": "重新產生備份碼失敗：{message}",
+            "backupRegenerateTitle": "新的備份碼",
+            "backupRegenerateHint": "每個備份碼只能使用一次，請保存在安全的地方。關閉後將無法再次查看。",
+            "lostAccessNotice": "如果同時遺失驗證器與備份碼，管理員也無法重設 2FA 或復原帳號，請務必提前保存備份碼。"
         },
         "sessions": {
             "title": "工作階段管理",
@@ -59,7 +69,12 @@
             "confirmRevokeAllTitle": "確認撤銷所有工作階段",
             "confirmRevokeAll": "確定要撤銷所有工作階段，包括目前工作階段嗎？",
             "cancel": "取消",
-            "confirm": "確認"
+            "confirm": "確認",
+            "revokeFailed": "撤銷工作階段失敗",
+            "revokeFailedDetail": "撤銷工作階段失敗：{message}",
+            "revokedSuccess": "工作階段已撤銷",
+            "revokedOthersSuccess": "其他工作階段已全部撤銷",
+            "revokedAllSuccess": "全部工作階段已撤銷，請重新登入"
         },
         "flow": {
             "hintTitle": "提示",
@@ -81,6 +96,32 @@
             "enabledSuccess": "雙因素認證已成功啟用！請儲存好備用碼",
             "codesCopied": "備用碼已複製到剪貼簿",
             "codesDownloaded": "備用碼已下載"
+        },
+        "recovery": {
+            "pageTitle": "確認聯絡方式變更",
+            "pageSubtitle": "請輸入傳送到新聯絡方式的一次性驗證碼，確認後本次變更才會生效。",
+            "emailLabel": "新信箱",
+            "phoneLabel": "新手機號碼",
+            "codeLabel": "驗證碼",
+            "codePlaceholder": "請輸入 6 位驗證碼",
+            "submit": "確認變更",
+            "successTitle": "改綁成功",
+            "successDescription": "聯絡方式已更新，全部工作階段已失效。",
+            "resetRequired": "為保護帳號安全，請立即重設密碼後再登入。",
+            "resetCodeSent": "密碼重設驗證碼已傳送到新的聯絡方式。",
+            "resetCodeFailed": "密碼重設驗證碼傳送失敗，請前往「忘記密碼」手動取得。",
+            "goReset": "前往重設密碼",
+            "statusPending": "等待確認",
+            "statusConfirmed": "已確認",
+            "statusExpired": "已過期",
+            "statusCancelled": "已取消",
+            "loadFailed": "無法載入改綁請求，請確認連結是否完整",
+            "confirmFailed": "確認失敗",
+            "backToLogin": "返回登入",
+            "expiredHint": "該請求已失效，請聯絡管理員重新發起改綁。",
+            "confirmedHint": "該請求已確認，無需重複提交。",
+            "codeRequired": "請輸入驗證碼",
+            "codeHint": "驗證碼有效期為 10 分鐘，過期後請聯絡管理員重新發起改綁。"
         }
     }
 }

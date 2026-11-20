@@ -57,6 +57,9 @@ const loggerMock = {
         ssoProviderDeleted: createFn(),
         sessionLogQueryFailed: createFn(),
     },
+    audit: {
+        record: createFn(),
+    },
     email: {
         sent: createFn(),
         failed: createFn(),

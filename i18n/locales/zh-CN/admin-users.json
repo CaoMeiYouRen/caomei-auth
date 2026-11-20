@@ -214,6 +214,23 @@
                     "unban": "解禁选中用户",
                     "delete": "删除选中用户"
                 }
+            },
+            "channelChange": {
+                "emailTitle": "发起邮箱改绑",
+                "phoneTitle": "发起手机改绑",
+                "targetEmail": "新邮箱",
+                "targetPhone": "新手机号",
+                "reason": "操作原因",
+                "reasonPlaceholder": "请说明改绑原因（必填，将写入审计）",
+                "submit": "发送验证码",
+                "cancel": "取消",
+                "successTitle": "改绑已发起",
+                "successDescription": "验证码已发送至 {target}，有效期为 10 分钟",
+                "failedTitle": "发起改绑失败",
+                "failedDescription": "发起改绑失败，请稍后重试",
+                "emailAction": "改绑邮箱",
+                "phoneAction": "改绑手机",
+                "directEditNote": "邮箱与手机号只能通过发起改绑变更；用户在新通道确认后生效，并需要重置密码。"
             }
         }
     }

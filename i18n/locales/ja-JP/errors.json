@@ -81,6 +81,27 @@
             "adminRestricted": "デモモードでは管理画面の変更操作を実行できません",
             "writeRestricted": "デモモードではこの操作を実行できません",
             "dangerousRestricted": "デモモードではこの危険な操作を実行できません"
+        },
+        "recovery": {
+            "channelNotConfigured": "SMS が設定されていません。メールでの復旧をご利用ください",
+            "targetTaken": "このメールアドレスまたは電話番号は別のアカウントで使用されています",
+            "codeInvalid": "確認コードが正しくありません",
+            "codeExpired": "確認コードの有効期限が切れました。再取得してください",
+            "requestNotFound": "変更リクエストが存在しないか、無効になっています",
+            "requestConsumed": "この変更リクエストは既に処理されています",
+            "tooManyAttempts": "確認の試行回数が上限を超えました。最初からやり直してください",
+            "passwordResetRequired": "ログインする前にパスワードを再設定してください",
+            "adminDirectEditForbidden": "管理者はメールアドレスや電話番号を直接変更できません。変更リクエストを開始してください",
+            "adminPasswordForbidden": "管理者はユーザーのパスワードを設定できません。ユーザー自身に再設定させてください",
+            "sendFailed": "確認コードの送信に失敗しました。しばらくしてから再試行してください",
+            "reasonRequired": "操作理由を入力してください",
+            "targetInvalid": "有効なメールアドレスまたは電話番号を入力してください",
+            "notPending": "この変更リクエストは現在の状態では処理できません",
+            "noVerifiedChannel": "ユーザーに利用可能な確認済みの連絡先がありません",
+            "confirmFailed": "変更の確認に失敗しました",
+            "notifyFailed": "通知の送信に失敗しました",
+            "invalidChannel": "サポートされていない変更チャネルです",
+            "channelChangeSmsNotice": "アカウントの連絡先が {target} に変更されました。心当たりがない場合は、直ちに管理者へ連絡してください。"
         }
     }
 }

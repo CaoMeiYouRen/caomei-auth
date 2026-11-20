@@ -74,6 +74,27 @@
             "title": "{appName} 계정 보안 알림",
             "preheader": "계정에 보안 활동이 감지되었습니다. 자세한 내용을 확인해 주세요.",
             "message": "<strong>{appName}</strong> 계정에서 다음과 같은 보안 활동이 감지되었습니다:<br/><br/><strong>{action}</strong>"
+        },
+        "twoFactorOtp": {
+            "subject": "{appName} 인증 코드",
+            "title": "2단계 인증 코드",
+            "preheader": "2단계 인증 코드는 {code}입니다",
+            "message": "<strong>{appName}</strong>에 로그인하고 있습니다. 다음 인증 코드로 2단계 인증을 완료해 주세요:",
+            "securityTip": "인증 코드는 1분 동안 유효합니다. 본인이 요청하지 않았다면 이 메일을 무시하고 비밀번호를 변경해 주세요."
+        },
+        "channelChangeNotification": {
+            "subject": "{appName} 연락처 변경 알림",
+            "title": "{appName} 연락처 변경 알림",
+            "preheader": "계정 연락처가 변경되었습니다.",
+            "message": "<strong>{appName}</strong> 계정 연락처가 변경되었습니다:<br/><br/><strong>{detail}</strong>",
+            "securityTip": "본인이 요청하지 않았다면 즉시 사이트 관리자에게 문의해 주세요."
+        },
+        "channelChangeCode": {
+            "subject": "{appName} 연락처 변경 확인",
+            "title": "연락처 변경 확인",
+            "preheader": "연락처 변경 인증 코드는 {code}입니다",
+            "message": "<strong>{appName}</strong> 계정의 연락처를 <strong>{target}</strong>(으)로 변경하려고 합니다. 다음 인증 코드를 입력해 주세요:",
+            "securityTip": "인증 코드는 10분 동안 유효합니다. 본인이 요청하지 않았다면 이 메일을 무시해 주세요."
         }
     }
 }

@@ -81,6 +81,27 @@
             "adminRestricted": "Admin write operations are not allowed in demo mode",
             "writeRestricted": "This operation is not allowed in demo mode",
             "dangerousRestricted": "This dangerous operation is not allowed in demo mode"
+        },
+        "recovery": {
+            "channelNotConfigured": "SMS is not configured. Use email recovery instead.",
+            "targetTaken": "This email or phone number is already used by another account.",
+            "codeInvalid": "The verification code is incorrect.",
+            "codeExpired": "The verification code has expired. Request a new one.",
+            "requestNotFound": "The channel change request does not exist or has expired.",
+            "requestConsumed": "This channel change request has already been handled.",
+            "tooManyAttempts": "Too many verification attempts. Start a new request.",
+            "passwordResetRequired": "Reset your password before signing in.",
+            "adminDirectEditForbidden": "Administrators cannot edit email or phone directly. Start a channel change request instead.",
+            "adminPasswordForbidden": "Administrators cannot set user passwords. Ask the user to reset it.",
+            "sendFailed": "Failed to send the verification code. Try again later.",
+            "reasonRequired": "Provide a reason for this action.",
+            "targetInvalid": "Enter a valid email address or phone number.",
+            "notPending": "This channel change request cannot be handled in its current state.",
+            "noVerifiedChannel": "The user has no verified contact channel available.",
+            "confirmFailed": "Failed to confirm the channel change.",
+            "notifyFailed": "Failed to send the notification.",
+            "invalidChannel": "Unsupported channel change type.",
+            "channelChangeSmsNotice": "Your account contact was changed to {target}. If this was not you, contact the administrator immediately."
         }
     }
 }

@@ -29,7 +29,17 @@
             "disableTitle": "Disable two-factor authentication",
             "enablePrompt": "To confirm it is you, enter your password to enable two-factor authentication",
             "disablePrompt": "To confirm it is you, enter your password to disable two-factor authentication",
-            "passwordPlaceholder": "Enter your password"
+            "passwordPlaceholder": "Enter your password",
+            "backupRegenerate": "Regenerate backup codes",
+            "backupRegenerateTip": "Regenerating invalidates all existing backup codes immediately. Confirm your password first.",
+            "backupRegeneratePasswordLabel": "Current password",
+            "backupRegeneratePasswordPlaceholder": "Enter your current password to confirm",
+            "backupRegenerateSuccess": "Backup codes regenerated. Save them now.",
+            "backupRegenerateFailed": "Failed to regenerate backup codes",
+            "backupRegenerateFailedDetail": "Failed to regenerate backup codes: {message}",
+            "backupRegenerateTitle": "New backup codes",
+            "backupRegenerateHint": "Each backup code works once. Store them somewhere safe. You cannot view them again after closing.",
+            "lostAccessNotice": "If you lose both your authenticator and backup codes, administrators cannot reset 2FA or recover the account. Save your backup codes in advance."
         },
         "sessions": {
             "title": "Session management",
@@ -59,7 +69,12 @@
             "confirmRevokeAllTitle": "Revoke all sessions",
             "confirmRevokeAll": "Revoke all sessions, including the current one?",
             "cancel": "Cancel",
-            "confirm": "Confirm"
+            "confirm": "Confirm",
+            "revokeFailed": "Failed to revoke the session",
+            "revokeFailedDetail": "Failed to revoke the session: {message}",
+            "revokedSuccess": "Session revoked",
+            "revokedOthersSuccess": "All other sessions revoked",
+            "revokedAllSuccess": "All sessions revoked. Please sign in again."
         },
         "flow": {
             "hintTitle": "Notice",
@@ -81,6 +96,32 @@
             "enabledSuccess": "Two-factor authentication is enabled. Keep your backup codes safe",
             "codesCopied": "Backup codes copied to clipboard",
             "codesDownloaded": "Backup codes downloaded"
+        },
+        "recovery": {
+            "pageTitle": "Confirm contact change",
+            "pageSubtitle": "Enter the one-time code sent to the new contact. The change takes effect only after confirmation.",
+            "emailLabel": "New email",
+            "phoneLabel": "New phone number",
+            "codeLabel": "Verification code",
+            "codePlaceholder": "Enter the 6-digit code",
+            "submit": "Confirm change",
+            "successTitle": "Contact changed",
+            "successDescription": "Your contact information was updated and all sessions were revoked.",
+            "resetRequired": "To protect your account, reset your password before signing in.",
+            "resetCodeSent": "A password reset code was sent to the new contact.",
+            "resetCodeFailed": "Failed to send the password reset code. Use \"Forgot password\" to request one manually.",
+            "goReset": "Reset password",
+            "statusPending": "Pending confirmation",
+            "statusConfirmed": "Confirmed",
+            "statusExpired": "Expired",
+            "statusCancelled": "Cancelled",
+            "loadFailed": "Failed to load the channel change request. Check that the link is complete.",
+            "confirmFailed": "Confirmation failed",
+            "backToLogin": "Back to sign in",
+            "expiredHint": "This request has expired. Ask an administrator to start a new one.",
+            "confirmedHint": "This request was already confirmed. No further action is needed.",
+            "codeRequired": "Enter the verification code",
+            "codeHint": "The code is valid for 10 minutes. If it expires, ask an administrator to start a new request."
         }
     }
 }

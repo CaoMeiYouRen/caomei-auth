@@ -5,6 +5,7 @@ import DailyRotateFile from 'winston-daily-rotate-file'
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
 import { WinstonTransport as AxiomTransport } from '@axiomhq/winston'
 import { createSafeLogData, maskEmail, maskPhone } from './privacy'
+import { writeAuditRecord } from './audit-logger'
 import { LOG_LEVEL, LOGFILES, AXIOM_DATASET_NAME, AXIOM_API_TOKEN, LOG_DIR } from '@/utils/shared/env'
 
 // 日志目录路径
@@ -172,7 +173,6 @@ const createWinstonLogger = () => {
 }
 
 const winstonLogger = createWinstonLogger()
-
 // 基于 Winston 的标准日志级别
 const baseLogger = {
     withTag: (tag: string) => ({
@@ -244,7 +244,6 @@ interface ExtendedLogger {
         shutdown: (data: { reason?: string, graceful?: boolean }) => void
         healthCheck: (data: { status: 'healthy' | 'unhealthy', checks?: Record<string, boolean> }) => void
     }
-
     // 业务相关日志
     business: {
         userRegistered: (data: { userId: string, email: string, provider?: string }) => void
@@ -270,6 +269,8 @@ interface ExtendedLogger {
         rateLimited: (data: { email?: string, limitType: 'global' | 'user', remainingTime?: number }) => void
     }
 
+    // 账号恢复审计（结构化事件，独立文件通道）
+    audit: { record: (data: Record<string, unknown>) => void }
     // 短信相关日志
     phone: {
         sent: (data: {
@@ -291,7 +292,6 @@ interface ExtendedLogger {
         rateLimited: (data: { phone?: string, limitType: 'global' | 'user', remainingTime?: number }) => void
     }
 }
-
 // 创建带标签的 logger 实例 - 去除 emoji
 const securityLogger = baseLogger.withTag('Security')
 const apiLogger = baseLogger.withTag('API')
@@ -304,7 +304,6 @@ const phoneLogger = baseLogger.withTag('Phone')
 // 创建扩展的 logger
 const extendedLogger: ExtendedLogger = {
     ...logger,
-
     // 安全相关日志
     security: {
         loginAttempt: (data) => {
@@ -357,7 +356,6 @@ const extendedLogger: ExtendedLogger = {
             const safeData = createSafeLogData(data)
             const responseTime = data.responseTime ? ` (${data.responseTime}ms)` : ''
             const message = `${data.method} ${data.path} - ${data.statusCode}${responseTime}`
-
             if (data.statusCode >= 500) {
                 apiLogger.error(message, { userId: safeData.userId })
             } else if (data.statusCode >= 400) {
@@ -372,7 +370,6 @@ const extendedLogger: ExtendedLogger = {
             apiLogger.error(message, { userId: safeData.userId, stack: data.stack })
         },
     },
-
     // 数据库相关日志
     database: {
         query: (data) => {
@@ -527,6 +524,9 @@ const extendedLogger: ExtendedLogger = {
             emailLogger.warn(message, { limitType: data.limitType, remainingTime: data.remainingTime })
         },
     },
+
+    // 账号恢复审计
+    audit: { record: writeAuditRecord },
 
     // 短信相关日志
     phone: {

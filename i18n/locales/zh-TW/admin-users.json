@@ -214,6 +214,23 @@
                     "unban": "解禁選中使用者",
                     "delete": "刪除選中使用者"
                 }
+            },
+            "channelChange": {
+                "emailTitle": "發起信箱改綁",
+                "phoneTitle": "發起手機改綁",
+                "targetEmail": "新信箱",
+                "targetPhone": "新手機號碼",
+                "reason": "操作原因",
+                "reasonPlaceholder": "請說明改綁原因（必填，將寫入稽核）",
+                "submit": "傳送驗證碼",
+                "cancel": "取消",
+                "successTitle": "改綁已發起",
+                "successDescription": "驗證碼已傳送至 {target}，有效期為 10 分鐘",
+                "failedTitle": "發起改綁失敗",
+                "failedDescription": "發起改綁失敗，請稍後重試",
+                "emailAction": "改綁信箱",
+                "phoneAction": "改綁手機",
+                "directEditNote": "信箱與手機號碼只能透過發起改綁變更；使用者在新通道確認後生效，並需要重設密碼。"
             }
         }
     }

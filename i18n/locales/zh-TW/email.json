@@ -74,6 +74,27 @@
             "title": "{appName} 帳號安全通知",
             "preheader": "您的帳號有安全活動，請檢視詳情。",
             "message": "我們偵測到您的 <strong>{appName}</strong> 帳號有以下安全活動：<br/><br/><strong>{action}</strong>"
+        },
+        "twoFactorOtp": {
+            "subject": "您的 {appName} 驗證碼",
+            "title": "兩步驟驗證碼",
+            "preheader": "您的兩步驟驗證碼是 {code}",
+            "message": "您正在登入 <strong>{appName}</strong>。請使用以下驗證碼完成兩步驟驗證：",
+            "securityTip": "驗證碼 1 分鐘內有效。如果不是您本人操作，請忽略此郵件並盡快修改密碼。"
+        },
+        "channelChangeNotification": {
+            "subject": "{appName} 聯絡方式變更通知",
+            "title": "{appName} 聯絡方式變更通知",
+            "preheader": "您的帳號聯絡方式已變更。",
+            "message": "您的 <strong>{appName}</strong> 帳號聯絡方式已變更：<br/><br/><strong>{detail}</strong>",
+            "securityTip": "如果這不是您本人的操作，請立即聯絡網站管理員。"
+        },
+        "channelChangeCode": {
+            "subject": "確認您的 {appName} 聯絡方式變更",
+            "title": "確認聯絡方式變更",
+            "preheader": "您的聯絡方式變更驗證碼是 {code}",
+            "message": "您正在將 <strong>{appName}</strong> 帳號的聯絡方式變更為 <strong>{target}</strong>。請使用以下驗證碼完成確認：",
+            "securityTip": "驗證碼 10 分鐘內有效。如果這不是您本人的操作，請忽略此郵件。"
         }
     }
 }

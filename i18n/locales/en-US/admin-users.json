@@ -214,6 +214,23 @@
                     "unban": "Unban selected users",
                     "delete": "Delete selected users"
                 }
+            },
+            "channelChange": {
+                "emailTitle": "Start email change",
+                "phoneTitle": "Start phone change",
+                "targetEmail": "New email",
+                "targetPhone": "New phone number",
+                "reason": "Reason",
+                "reasonPlaceholder": "Explain why this change is needed (required, written to the audit log)",
+                "submit": "Send verification code",
+                "cancel": "Cancel",
+                "successTitle": "Channel change started",
+                "successDescription": "A verification code was sent to {target} and expires in 10 minutes",
+                "failedTitle": "Failed to start channel change",
+                "failedDescription": "Failed to start the channel change. Try again later.",
+                "emailAction": "Change email",
+                "phoneAction": "Change phone",
+                "directEditNote": "Email and phone can only be changed through a channel change request. It takes effect after the user confirms on the new channel, and the password must then be reset."
             }
         }
     }

@@ -74,6 +74,27 @@
             "title": "{appName} 账户安全通知",
             "preheader": "您的账户有安全活动，请查看详情。",
             "message": "我们检测到您的 <strong>{appName}</strong> 账户有以下安全活动：<br/><br/><strong>{action}</strong>"
+        },
+        "twoFactorOtp": {
+            "subject": "您的 {appName} 验证码",
+            "title": "两步验证码",
+            "preheader": "您的两步验证码是 {code}",
+            "message": "您正在登录 <strong>{appName}</strong>。请使用以下验证码完成两步验证：",
+            "securityTip": "验证码 1 分钟内有效。如果不是您本人操作，请忽略此邮件并尽快修改密码。"
+        },
+        "channelChangeNotification": {
+            "subject": "{appName} 联系方式变更通知",
+            "title": "{appName} 联系方式变更通知",
+            "preheader": "您的账户联系方式已变更。",
+            "message": "您的 <strong>{appName}</strong> 账户联系方式已变更：<br/><br/><strong>{detail}</strong>",
+            "securityTip": "如果这不是您本人的操作，请立即联系站点管理员。"
+        },
+        "channelChangeCode": {
+            "subject": "确认您的 {appName} 联系方式变更",
+            "title": "确认联系方式变更",
+            "preheader": "您的联系方式变更验证码是 {code}",
+            "message": "您正在将 <strong>{appName}</strong> 账户的联系方式变更为 <strong>{target}</strong>。请使用以下验证码完成确认：",
+            "securityTip": "验证码 10 分钟内有效。如果不是您本人的操作，请忽略此邮件。"
         }
     }
 }

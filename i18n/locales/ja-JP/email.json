@@ -74,6 +74,27 @@
             "title": "{appName} アカウントのセキュリティ通知",
             "preheader": "アカウントにセキュリティ上のアクティビティがありました。詳細をご確認ください。",
             "message": "<strong>{appName}</strong> アカウントで以下のセキュリティ上のアクティビティを検出しました：<br/><br/><strong>{action}</strong>"
+        },
+        "twoFactorOtp": {
+            "subject": "{appName} の確認コード",
+            "title": "二段階認証コード",
+            "preheader": "二段階認証コードは {code} です",
+            "message": "<strong>{appName}</strong> にサインインしています。次の確認コードで二段階認証を完了してください：",
+            "securityTip": "確認コードの有効期限は 1 分です。心当たりがない場合は、このメールを無視し、速やかにパスワードを変更してください。"
+        },
+        "channelChangeNotification": {
+            "subject": "{appName} 連絡先変更のお知らせ",
+            "title": "{appName} 連絡先変更のお知らせ",
+            "preheader": "アカウントの連絡先が変更されました。",
+            "message": "<strong>{appName}</strong> アカウントの連絡先が変更されました：<br/><br/><strong>{detail}</strong>",
+            "securityTip": "心当たりがない場合は、直ちにサイト管理者へ連絡してください。"
+        },
+        "channelChangeCode": {
+            "subject": "{appName} の連絡先変更を確認",
+            "title": "連絡先変更の確認",
+            "preheader": "連絡先変更の確認コードは {code} です",
+            "message": "<strong>{appName}</strong> アカウントの連絡先を <strong>{target}</strong> に変更しようとしています。次の確認コードを入力して完了してください：",
+            "securityTip": "確認コードの有効期限は 10 分です。心当たりがない場合は、このメールを無視してください。"
         }
     }
 }

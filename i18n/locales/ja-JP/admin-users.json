@@ -214,6 +214,23 @@
                     "unban": "選択したユーザーの利用停止を解除",
                     "delete": "選択したユーザーを削除"
                 }
+            },
+            "channelChange": {
+                "emailTitle": "メールアドレス変更を開始",
+                "phoneTitle": "電話番号変更を開始",
+                "targetEmail": "新しいメールアドレス",
+                "targetPhone": "新しい電話番号",
+                "reason": "操作理由",
+                "reasonPlaceholder": "変更理由を入力してください（必須、監査ログに記録されます）",
+                "submit": "確認コードを送信",
+                "cancel": "キャンセル",
+                "successTitle": "変更を開始しました",
+                "successDescription": "確認コードを {target} に送信しました。有効期限は 10 分です",
+                "failedTitle": "変更の開始に失敗しました",
+                "failedDescription": "変更を開始できませんでした。しばらくしてから再試行してください",
+                "emailAction": "メールアドレス変更",
+                "phoneAction": "電話番号変更",
+                "directEditNote": "メールアドレスと電話番号は変更リクエストでのみ変更できます。ユーザーが新しい連絡先で確認すると有効になり、その後パスワードの再設定が必要です。"
             }
         }
     }

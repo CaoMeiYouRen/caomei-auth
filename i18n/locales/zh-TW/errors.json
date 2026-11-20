@@ -81,6 +81,27 @@
             "adminRestricted": "Demo 模式下不允許執行管理後台的修改操作",
             "writeRestricted": "Demo 模式下不允許執行此操作",
             "dangerousRestricted": "Demo 模式下不允許執行此危險操作"
+        },
+        "recovery": {
+            "channelNotConfigured": "簡訊通道未設定，請改用信箱找回",
+            "targetTaken": "該信箱或手機號碼已被其他帳號使用",
+            "codeInvalid": "驗證碼不正確",
+            "codeExpired": "驗證碼已過期，請重新取得",
+            "requestNotFound": "改綁請求不存在或已失效",
+            "requestConsumed": "改綁請求已處理，不能重複提交",
+            "tooManyAttempts": "驗證碼嘗試次數過多，請重新發起",
+            "passwordResetRequired": "帳號需要先重設密碼才能登入",
+            "adminDirectEditForbidden": "管理員不能直接修改信箱或手機號碼，請發起改綁申請",
+            "adminPasswordForbidden": "管理員不能設定使用者密碼，請讓使用者自行重設",
+            "sendFailed": "驗證碼傳送失敗，請稍後重試",
+            "reasonRequired": "請填寫操作原因",
+            "targetInvalid": "請輸入有效的信箱或手機號碼",
+            "notPending": "改綁請求狀態不允許該操作",
+            "noVerifiedChannel": "使用者沒有可用的已驗證聯絡方式",
+            "confirmFailed": "改綁確認失敗",
+            "notifyFailed": "通知傳送失敗",
+            "invalidChannel": "不支援的改綁通道",
+            "channelChangeSmsNotice": "您的帳號聯絡方式已變更為 {target}。如非本人操作，請立即聯絡管理員。"
         }
     }
 }

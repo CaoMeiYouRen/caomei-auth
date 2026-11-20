@@ -20,10 +20,11 @@
         "server/utils/email/templates.ts": 3,
         "server/utils/locale.ts": 7,
         "server/utils/logger.ts": 3,
-        "server/utils/sms/index.ts": 2,
+        "server/utils/recovery-messages-data.ts": 57,
+        "server/utils/sms/index.ts": 1,
         "server/utils/sms/providers/index.ts": 1,
         "server/utils/sms/providers/spug.ts": 5,
-        "server/utils/sms/providers/twilio.ts": 3,
+        "server/utils/sms/providers/twilio.ts": 2,
         "server/utils/snowflake.ts": 1,
         "server/utils/validation.ts": 1
     }
