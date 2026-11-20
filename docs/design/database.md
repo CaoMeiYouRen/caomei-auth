@@ -151,3 +151,37 @@ const usersWithTokens = await userRepository
 2. 避免在循环中进行关系查询，使用预加载或批量查询
 3. 对于大量数据，考虑使用分页和选择性加载
 4. 定期监控查询性能，必要时添加额外索引
+
+## 阶段 9：联系方式改绑与强制重置字段
+
+### `user.must_reset_password`
+
+- 类型：`BOOLEAN NOT NULL DEFAULT 0`。
+- 含义：为 `true` 时拒绝创建任何新会话（密码 / 邮箱 OTP / 手机 OTP / 社交 / SSO），直到用户完成密码重置。
+- 由「改绑确认」置为 `true`，由 `emailAndPassword.onPasswordReset` 清除；管理端不提供直接清除入口（运维脚本除外）。
+
+### `channel_change_request`
+
+| 列 | 类型 | 说明 |
+| :--- | :--- | :--- |
+| `id` | `VARCHAR(36) PK` | 雪花 ID，同时作为确认页的不透明请求 ID |
+| `user_id` | `VARCHAR(36)` | 被改绑用户 |
+| `channel` | `VARCHAR(16)` | `email` / `phone` |
+| `new_value` | `VARCHAR(255)` | 规范化后的目标值 |
+| `code_hash` | `VARCHAR(64)` | `sha256(requestId:code)`，禁止落盘明文 |
+| `status` | `VARCHAR(16)` | `pending` / `confirmed` / `cancelled` / `expired` |
+| `attempts` | `INTEGER` | 验证码错误次数，达到 3 次作废 |
+| `requested_by` | `VARCHAR(36)` | 发起管理员（用户自助改绑为空） |
+| `reason` | `TEXT` | 管理员填写的原因 |
+| `expires_at` | `DATETIME` | 创建后 10 分钟 |
+| `confirmed_at` | `DATETIME` | 确认时间 |
+
+索引：`(user_id, channel, status)`，用于「同一用户同一通道只保留一条 pending」。
+
+生产环境（`synchronize=false`）需要先执行：
+
+```sql
+ALTER TABLE caomei_auth_user ADD COLUMN must_reset_password BOOLEAN NOT NULL DEFAULT 0;
+```
+
+并创建 `caomei_auth_channel_change_request` 表（列名遵循 snake_case 命名策略，SQLite 建表语句见 `database/sqlite/create.sql`）。MySQL / PostgreSQL 按同一列定义创建，`attempts` 用 `INT`，`expires_at` / `confirmed_at` 用 `DATETIME` / `TIMESTAMP`。
