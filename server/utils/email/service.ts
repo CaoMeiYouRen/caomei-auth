@@ -193,6 +193,125 @@ export const emailService = {
     },
 
     /**
+     * 发送两步验证验证码邮件（阶段 9 M6）
+     */
+    async sendTwoFactorOTP(email: string, otp: string, expiresInMinutes: number = 1, options?: EmailLocaleOptions): Promise<void> {
+        try {
+            const locale = await resolveLocale(email, options)
+            const t = getEmailTranslator(locale)
+            const { html, text } = await emailTemplateEngine.generateCodeEmailTemplate(
+                {
+                    headerIcon: '🔐',
+                    message: t('email.twoFactorOtp.message', { appName: APP_NAME }),
+                    verificationCode: otp,
+                    expiresIn: expiresInMinutes,
+                    timeZone: (await getUserTimeZoneByEmail(email)) ?? undefined,
+                    securityTip: t('email.twoFactorOtp.securityTip'),
+                },
+                {
+                    title: t('email.twoFactorOtp.title', { appName: APP_NAME }),
+                    preheader: t('email.twoFactorOtp.preheader', { code: otp }),
+                },
+                locale,
+            )
+
+            await sendEmail({
+                to: email,
+                subject: t('email.twoFactorOtp.subject', { appName: APP_NAME }),
+                html,
+                text,
+            })
+
+            logger.email.sent({ type: 'two-factor-otp', email })
+        } catch (error) {
+            logger.email.failed({
+                type: 'two-factor-otp',
+                email,
+                error: error instanceof Error ? error.message : String(error),
+            })
+            throw error
+        }
+    },
+
+    /**
+     * 发送联系方式变更通知（阶段 9 M10，投递到旧通道）
+     */
+    async sendChannelChangeNotification(email: string, detail: string, options?: EmailLocaleOptions): Promise<void> {
+        try {
+            const locale = await resolveLocale(email, options)
+            const t = getEmailTranslator(locale)
+            const { html, text } = await emailTemplateEngine.generateSimpleMessageTemplate(
+                {
+                    headerIcon: '🔔',
+                    message: t('email.channelChangeNotification.message', { appName: APP_NAME, detail }),
+                },
+                {
+                    title: t('email.channelChangeNotification.title', { appName: APP_NAME }),
+                    preheader: t('email.channelChangeNotification.preheader'),
+                },
+                locale,
+            )
+
+            await sendEmail({
+                to: email,
+                subject: t('email.channelChangeNotification.subject', { appName: APP_NAME }),
+                html,
+                text,
+            })
+
+            logger.email.sent({ type: 'channel-change-notification', email })
+        } catch (error) {
+            logger.email.failed({
+                type: 'channel-change-notification',
+                email,
+                error: error instanceof Error ? error.message : String(error),
+            })
+            throw error
+        }
+    },
+
+    /**
+     * 发送联系方式变更验证码（阶段 9 M9 / M10）
+     */
+    async sendChannelChangeCode(email: string, code: string, target: string, expiresInMinutes: number = 10, options?: EmailLocaleOptions): Promise<void> {
+        try {
+            const locale = await resolveLocale(email, options)
+            const t = getEmailTranslator(locale)
+            const { html, text } = await emailTemplateEngine.generateCodeEmailTemplate(
+                {
+                    headerIcon: '📧',
+                    message: t('email.channelChangeCode.message', { appName: APP_NAME, target }),
+                    verificationCode: code,
+                    expiresIn: expiresInMinutes,
+                    timeZone: (await getUserTimeZoneByEmail(email)) ?? undefined,
+                    securityTip: t('email.channelChangeCode.securityTip'),
+                },
+                {
+                    title: t('email.channelChangeCode.title', { appName: APP_NAME }),
+                    preheader: t('email.channelChangeCode.preheader', { code }),
+                },
+                locale,
+            )
+
+            await sendEmail({
+                to: email,
+                subject: t('email.channelChangeCode.subject', { appName: APP_NAME }),
+                html,
+                text,
+            })
+
+            logger.email.sent({ type: 'channel-change-code', email })
+        } catch (error) {
+            logger.email.failed({
+                type: 'channel-change-code',
+                email,
+                error: error instanceof Error ? error.message : String(error),
+            })
+            throw error
+        }
+    },
+
+    /**
      * 发送Magic Link邮件
      */
     async sendMagicLink(email: string, magicUrl: string, options?: EmailLocaleOptions): Promise<void> {

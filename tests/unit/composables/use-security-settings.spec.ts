@@ -12,6 +12,7 @@ const {
     mockGetBrowser,
     mockGetOs,
     mockNavigateTo,
+    mockFetch,
 } = vi.hoisted(() => ({
     mockUseToast: {
         show: vi.fn(),
@@ -36,9 +37,12 @@ const {
     mockGetBrowser: vi.fn(),
     mockGetOs: vi.fn(),
     mockNavigateTo: vi.fn(),
+    mockFetch: vi.fn(),
 }))
 
 mockNuxtImport('navigateTo', () => mockNavigateTo)
+
+vi.mock('#build/fetch.mjs', () => ({ $fetch: mockFetch }))
 
 vi.mock('caomei-ui', () => ({
     useToast: () => mockUseToast,
@@ -127,7 +131,7 @@ describe('useSecuritySettings', () => {
             expect(mockUseToast.warning).toHaveBeenCalledWith(expect.objectContaining({
                 title: '警告',
             }))
-            expect(mockAuthClient.twoFactor.enable).not.toHaveBeenCalled()
+            expect(mockFetch).not.toHaveBeenCalled()
         })
 
         it('should enable 2FA successfully', async () => {
@@ -136,20 +140,20 @@ describe('useSecuritySettings', () => {
             password.value = 'password123'
             passwordDialogMode.value = 'enable'
 
-            mockAuthClient.twoFactor.enable.mockResolvedValue({
-                data: {
-                    method: 'totp',
-                    totpURI: 'otpauth://totp/test',
-                    backupCodes: ['code1', 'code2'],
-                },
-                error: null,
+            mockFetch.mockResolvedValue({
+                method: 'totp',
+                totpURI: 'otpauth://totp/test',
+                backupCodes: ['code1', 'code2'],
             })
 
             mockGenerateQRCode.mockResolvedValue('data:image/png;base64,...')
 
             await onPasswordConfirm()
 
-            expect(mockAuthClient.twoFactor.enable).toHaveBeenCalledWith({ password: 'password123', method: 'totp' })
+            expect(mockFetch).toHaveBeenCalledWith('/api/security/two-factor/enable', {
+                method: 'POST',
+                body: { password: 'password123', method: 'totp' },
+            })
             expect(totpUri.value).toBe('otpauth://totp/test')
             expect(qrCodeUrl.value).toBe('data:image/png;base64,...')
             expect(backupCodes.value).toEqual(['code1', 'code2'])
@@ -163,10 +167,7 @@ describe('useSecuritySettings', () => {
             password.value = 'password123'
             passwordDialogMode.value = 'enable'
 
-            mockAuthClient.twoFactor.enable.mockResolvedValue({
-                data: null,
-                error: { message: 'Invalid password' },
-            })
+            mockFetch.mockRejectedValue(Object.assign(new Error('bad'), { data: { message: 'Invalid password' } }))
 
             await onPasswordConfirm()
 
@@ -182,13 +183,14 @@ describe('useSecuritySettings', () => {
             passwordDialogMode.value = 'disable'
             showPasswordDialog.value = true
 
-            mockAuthClient.twoFactor.disable.mockResolvedValue({
-                error: null,
-            })
+            mockFetch.mockResolvedValue({ status: true })
 
             await onPasswordConfirm()
 
-            expect(mockAuthClient.twoFactor.disable).toHaveBeenCalledWith({ password: 'password123' })
+            expect(mockFetch).toHaveBeenCalledWith('/api/security/two-factor/disable', {
+                method: 'POST',
+                body: { password: 'password123' },
+            })
             expect(showPasswordDialog.value).toBe(false)
             expect(mockUseToast.success).toHaveBeenCalled()
         })
@@ -344,7 +346,6 @@ describe('useSecuritySettings', () => {
         })
 
         it('should handle revoke session error', async () => {
-            const consoleSpy = vi.spyOn(console, 'error')
             mockAuthClient.revokeSession.mockRejectedValue(new Error('Revoke failed'))
 
             const { confirmRevokeSession, revokeSingleSession } = useSecuritySettings()
@@ -352,12 +353,12 @@ describe('useSecuritySettings', () => {
 
             await revokeSingleSession()
 
-            expect(consoleSpy).toHaveBeenCalled()
-            consoleSpy.mockRestore()
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: expect.stringContaining('Revoke failed'),
+            }))
         })
 
         it('should handle revoke other sessions error', async () => {
-            const consoleSpy = vi.spyOn(console, 'error')
             mockAuthClient.revokeOtherSessions.mockRejectedValue(new Error('Revoke failed'))
 
             const { confirmRevokeOtherSessions, revokeOtherSessions } = useSecuritySettings()
@@ -365,12 +366,10 @@ describe('useSecuritySettings', () => {
 
             await revokeOtherSessions()
 
-            expect(consoleSpy).toHaveBeenCalled()
-            consoleSpy.mockRestore()
+            expect(mockUseToast.danger).toHaveBeenCalled()
         })
 
         it('should handle revoke all sessions error', async () => {
-            const consoleSpy = vi.spyOn(console, 'error')
             mockAuthClient.revokeSessions.mockRejectedValue(new Error('Revoke failed'))
 
             const { confirmRevokeAllSessions, revokeAllSessions } = useSecuritySettings()
@@ -378,8 +377,7 @@ describe('useSecuritySettings', () => {
 
             await revokeAllSessions()
 
-            expect(consoleSpy).toHaveBeenCalled()
-            consoleSpy.mockRestore()
+            expect(mockUseToast.danger).toHaveBeenCalled()
         })
     })
 
@@ -506,14 +504,76 @@ describe('useSecuritySettings', () => {
             passwordDialogMode.value = 'disable'
             showPasswordDialog.value = true
 
-            mockAuthClient.twoFactor.disable.mockResolvedValue({
-                error: { message: 'Invalid password' },
-            })
+            mockFetch.mockRejectedValue(Object.assign(new Error('bad'), { data: { message: 'Invalid password' } }))
 
             await onPasswordConfirm()
 
             expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
                 description: expect.stringContaining('Invalid password'),
+            }))
+        })
+    })
+
+    describe('Session revocation error handling', () => {
+        it('keeps the dialog open and shows a localized error when revocation fails', async () => {
+            mockAuthClient.revokeSession.mockResolvedValue({ error: { message: 'network down' } })
+            const { confirmRevokeSession, revokeSingleSession, showRevokeSessionConfirm } = useSecuritySettings()
+            confirmRevokeSession('token123')
+
+            await revokeSingleSession()
+
+            expect(showRevokeSessionConfirm.value).toBe(true)
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                title: '撤销会话失败',
+                description: expect.stringContaining('network down'),
+            }))
+        })
+
+        it('reports other-session revocation failures', async () => {
+            mockAuthClient.revokeOtherSessions.mockResolvedValue({ error: { message: 'denied' } })
+            const { confirmRevokeOtherSessions, revokeOtherSessions } = useSecuritySettings()
+            confirmRevokeOtherSessions()
+
+            await revokeOtherSessions()
+
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                title: '撤销会话失败',
+            }))
+        })
+    })
+
+    describe('Backup code regeneration', () => {
+        it('regenerates backup codes after password confirmation and shows them once', async () => {
+            mockFetch.mockResolvedValue({ status: true, backupCodes: ['NEWCODE1', 'NEWCODE2'] })
+            const { openBackupRegenerateDialog, confirmRegenerateBackupCodes, password, backupCodes, showBackupCodes, showBackupRegenerateDialog } = useSecuritySettings()
+
+            openBackupRegenerateDialog()
+            expect(showBackupRegenerateDialog.value).toBe(true)
+            password.value = 'password123'
+
+            await confirmRegenerateBackupCodes()
+
+            expect(mockFetch).toHaveBeenCalledWith('/api/security/backup-codes/regenerate', {
+                method: 'POST',
+                body: { password: 'password123' },
+            })
+            expect(backupCodes.value).toEqual(['NEWCODE1', 'NEWCODE2'])
+            expect(showBackupCodes.value).toBe(true)
+            expect(showBackupRegenerateDialog.value).toBe(false)
+            expect(mockUseToast.success).toHaveBeenCalled()
+        })
+
+        it('reports regeneration failures without exposing codes', async () => {
+            mockFetch.mockRejectedValue(Object.assign(new Error('bad'), { data: { message: '密码错误' } }))
+            const { openBackupRegenerateDialog, confirmRegenerateBackupCodes, password, backupCodes } = useSecuritySettings()
+
+            openBackupRegenerateDialog()
+            password.value = 'wrong'
+            await confirmRegenerateBackupCodes()
+
+            expect(backupCodes.value).toEqual([])
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: expect.stringContaining('密码错误'),
             }))
         })
     })

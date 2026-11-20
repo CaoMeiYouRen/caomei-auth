@@ -11,7 +11,7 @@ export class TwilioSmsProvider implements SmsProvider {
     async sendOtp(phoneNumber: string, code: string, expiresInMinutes: number): Promise<SmsResult> {
         // 验证必要配置
         if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
-            throw new Error('Twilio 配置不完整，请检查 TWILIO_ACCOUNT_SID、TWILIO_AUTH_TOKEN、TWILIO_PHONE_NUMBER')
+            throw new Error('Twilio is not configured: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER')
         }
 
         const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -38,6 +38,30 @@ export class TwilioSmsProvider implements SmsProvider {
             priceUnit: message.priceUnit,
             errorCode: message.errorCode,
             errorMessage: message.errorMessage,
+        }
+    }
+
+    async sendNotification(phoneNumber: string, message: string): Promise<SmsResult> {
+        if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
+            throw new Error('Twilio is not configured: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER')
+        }
+        const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        const sent = await client.messages.create({
+            body: message,
+            from: TWILIO_PHONE_NUMBER,
+            to: phoneNumber,
+        })
+        return {
+            success: true,
+            sid: sent.sid,
+            message: 'SMS notification sent',
+            status: sent.status,
+            direction: sent.direction,
+            numSegments: sent.numSegments,
+            price: sent.price,
+            priceUnit: sent.priceUnit,
+            errorCode: sent.errorCode,
+            errorMessage: sent.errorMessage,
         }
     }
 }

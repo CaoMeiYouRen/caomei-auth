@@ -40,6 +40,34 @@ export function resetSmsDeps() {
 }
 
 /**
+ * 发送通用短信通知（阶段 9 M10：旧手机号可投递时告知变更）。
+ *
+ * 验证码模板类渠道（如 Spug）不支持任意文案，返回 `false` 交给调用方记录原因。
+ * 未配置短信渠道或号码无效时抛出错误。
+ */
+export async function sendPhoneNotification(phoneNumber: string, message: string): Promise<boolean> {
+    if (!PHONE_CHANNEL) {
+        throw new Error('SMS channel is not configured')
+    }
+    const smsProvider = smsProviderFactory(PHONE_CHANNEL)
+    if (!smsProvider.validatePhoneNumber(phoneNumber)) {
+        throw new Error('Unsupported phone number format')
+    }
+    if (!smsProvider.sendNotification) {
+        return false
+    }
+    const result = await smsProvider.sendNotification(phoneNumber, message)
+    phoneLogger.phone.sent({
+        type: 'notification',
+        phone: phoneNumber,
+        success: true,
+        sid: result.sid,
+        channel: PHONE_CHANNEL.toLowerCase(),
+    })
+    return true
+}
+
+/**
  * 支持多种短信渠道：Spug、Twilio
  * 发送短信验证码
  *
@@ -64,7 +92,7 @@ export async function sendPhoneOtp(phoneNumber: string, code: string, expiresIn 
 
     // 验证手机号格式
     if (!smsProvider.validatePhoneNumber(phoneNumber)) {
-        throw new Error('不支持的国家或地区手机号格式')
+        throw new Error('Unsupported phone number format')
     }
 
     // 检查全局限流

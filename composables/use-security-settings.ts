@@ -7,6 +7,7 @@ import { getBrowser, getOs } from '@/utils/shared/useragent'
 import { formatDateLocale } from '@/utils/shared/date'
 import { useUserTimezone } from '@/composables/use-user-timezone'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
+import { getApiErrorMessage, throwIfAuthError } from '@/utils/shared/api-error'
 
 /** 当前 UI 语言（响应式，`Composer.locale` 本身即 ref）；脱离 Nuxt 上下文时回退 zh-CN。 */
 function resolveLocale(): Ref<string> {
@@ -34,6 +35,7 @@ export function useSecuritySettings() {
     const password = ref('')
     const showPasswordDialog = ref(false)
     const passwordDialogMode = ref<'enable' | 'disable'>('enable')
+    const showBackupRegenerateDialog = ref(false)
 
     // --- Session State ---
     const sessions = ref<Prettify<{
@@ -84,17 +86,16 @@ export function useSecuritySettings() {
         try {
             showPasswordDialog.value = false
 
-            const { data, error } = await authClient.twoFactor.enable({
-                password: password.value,
-                method: 'totp',
-            })
-
-            if (error) {
-                throw new Error(error.message || t('security.flow.setupFailed'))
-            }
+            const data = await $fetch<{ method: 'totp' | 'otp', totpURI?: string, backupCodes?: string[] }>(
+                '/api/security/two-factor/enable',
+                {
+                    method: 'POST',
+                    body: { password: password.value, method: 'totp' },
+                },
+            )
 
             // 1.7 起 enableTwoFactor 返回按 method 区分的联合类型，仅在 totp 分支包含密钥与备份码
-            if (!data || data.method !== 'totp') {
+            if (!data || data.method !== 'totp' || !data.totpURI || !data.backupCodes) {
                 throw new Error(t('security.flow.totpMissing'))
             }
 
@@ -108,7 +109,7 @@ export function useSecuritySettings() {
         } catch (error: any) {
             toast.danger({
                 title: t('security.flow.errorTitle'),
-                description: t('security.flow.setupFailedDetail', { message: error.message || t('security.flow.unknownError') }),
+                description: t('security.flow.setupFailedDetail', { message: getApiErrorMessage(error, t('security.flow.unknownError')) }),
                 duration: 3000,
             })
         }
@@ -116,20 +117,17 @@ export function useSecuritySettings() {
 
     const confirmDisable2FA = async () => {
         try {
-            const { error } = await authClient.twoFactor.disable({
-                password: password.value,
+            await $fetch('/api/security/two-factor/disable', {
+                method: 'POST',
+                body: { password: password.value },
             })
-
-            if (error) {
-                throw new Error(error.message || t('security.flow.disableFailed'))
-            }
 
             showPasswordDialog.value = false
             toast.success({ title: t('security.flow.successTitle'), description: t('security.flow.disableSuccess'), duration: 3000 })
         } catch (error: any) {
             toast.danger({
                 title: t('security.flow.errorTitle'),
-                description: t('security.flow.disableFailedDetail', { message: error.message || t('security.flow.unknownError') }),
+                description: t('security.flow.disableFailedDetail', { message: getApiErrorMessage(error, t('security.flow.unknownError')) }),
                 duration: 3000,
             })
         }
@@ -176,6 +174,41 @@ export function useSecuritySettings() {
         }
     }
 
+    // --- Backup code regeneration (M5) ---
+    const openBackupRegenerateDialog = () => {
+        password.value = ''
+        showBackupRegenerateDialog.value = true
+    }
+
+    const onBackupRegenerateDialogHide = () => {
+        password.value = ''
+    }
+
+    const confirmRegenerateBackupCodes = async () => {
+        if (!password.value) {
+            toast.warning({ title: t('security.flow.warningTitle'), description: t('security.flow.passwordRequired'), duration: 3000 })
+            return
+        }
+        try {
+            const response = await $fetch<{ status: boolean, backupCodes: string[] }>('/api/security/backup-codes/regenerate', {
+                method: 'POST',
+                body: { password: password.value },
+            })
+            backupCodes.value = response.backupCodes
+            showBackupRegenerateDialog.value = false
+            showBackupCodes.value = true
+            password.value = ''
+            toast.success({ title: t('security.flow.successTitle'), description: t('security.twoFactor.backupRegenerateSuccess'), duration: 5000 })
+        } catch (error: unknown) {
+            const errorMessage = getApiErrorMessage(error, t('security.flow.unknownError'))
+            toast.danger({
+                title: t('security.twoFactor.backupRegenerateFailed'),
+                description: t('security.twoFactor.backupRegenerateFailedDetail', { message: errorMessage }),
+                duration: 5000,
+            })
+        }
+    }
+
     const copyBackupCodes = () => {
         const codesText = backupCodes.value.join('\n')
         void navigator.clipboard.writeText(codesText)
@@ -218,10 +251,19 @@ export function useSecuritySettings() {
 
     const revokeSession = async (token: string) => {
         try {
-            await authClient.revokeSession({ token })
+            const response = await authClient.revokeSession({ token })
+            throwIfAuthError(response, t('security.sessions.revokeFailed'))
             await listSessions()
-        } catch (error) {
-            console.error('Failed to revoke session:', error)
+            toast.success({ title: t('security.flow.successTitle'), description: t('security.sessions.revokedSuccess'), duration: 2500 })
+            return true
+        } catch (error: unknown) {
+            const errorMessage = getApiErrorMessage(error, t('security.flow.unknownError'))
+            toast.danger({
+                title: t('security.sessions.revokeFailed'),
+                description: t('security.sessions.revokeFailedDetail', { message: errorMessage }),
+                duration: 5000,
+            })
+            return false
         }
     }
 
@@ -231,8 +273,10 @@ export function useSecuritySettings() {
     }
 
     const revokeSingleSession = async () => {
-        await revokeSession(selectedSessionToken.value)
-        showRevokeSessionConfirm.value = false
+        const revoked = await revokeSession(selectedSessionToken.value)
+        if (revoked) {
+            showRevokeSessionConfirm.value = false
+        }
     }
 
     const confirmRevokeOtherSessions = () => {
@@ -241,11 +285,18 @@ export function useSecuritySettings() {
 
     const revokeOtherSessions = async () => {
         try {
-            await authClient.revokeOtherSessions()
+            const response = await authClient.revokeOtherSessions()
+            throwIfAuthError(response, t('security.sessions.revokeFailed'))
             await listSessions()
             showRevokeOtherSessionsConfirm.value = false
-        } catch (error) {
-            console.error('Failed to revoke other sessions:', error)
+            toast.success({ title: t('security.flow.successTitle'), description: t('security.sessions.revokedOthersSuccess'), duration: 2500 })
+        } catch (error: unknown) {
+            const errorMessage = getApiErrorMessage(error, t('security.flow.unknownError'))
+            toast.danger({
+                title: t('security.sessions.revokeFailed'),
+                description: t('security.sessions.revokeFailedDetail', { message: errorMessage }),
+                duration: 5000,
+            })
         }
     }
 
@@ -255,12 +306,19 @@ export function useSecuritySettings() {
 
     const revokeAllSessions = async () => {
         try {
-            await authClient.revokeSessions()
+            const response = await authClient.revokeSessions()
+            throwIfAuthError(response, t('security.sessions.revokeFailed'))
             await listSessions()
             showRevokeAllSessionsConfirm.value = false
+            toast.success({ title: t('security.flow.successTitle'), description: t('security.sessions.revokedAllSuccess'), duration: 2500 })
             void navigateTo('/login')
-        } catch (error) {
-            console.error('Failed to revoke all sessions:', error)
+        } catch (error: unknown) {
+            const errorMessage = getApiErrorMessage(error, t('security.flow.unknownError'))
+            toast.danger({
+                title: t('security.sessions.revokeFailed'),
+                description: t('security.sessions.revokeFailedDetail', { message: errorMessage }),
+                duration: 5000,
+            })
         }
     }
 
@@ -289,6 +347,7 @@ export function useSecuritySettings() {
         password,
         showPasswordDialog,
         passwordDialogMode,
+        showBackupRegenerateDialog,
 
         // 2FA Actions
         onPasswordDialogHide,
@@ -296,6 +355,9 @@ export function useSecuritySettings() {
         enable2FA,
         disable2FA,
         verifyAndEnable2FA,
+        openBackupRegenerateDialog,
+        onBackupRegenerateDialogHide,
+        confirmRegenerateBackupCodes,
         copyBackupCodes,
         downloadBackupCodes,
         finishSetup,

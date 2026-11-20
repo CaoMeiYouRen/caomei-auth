@@ -84,7 +84,7 @@ describe('server/utils/phone', () => {
         const phoneNumber = 'invalid-phone'
         mockSmsProvider.validatePhoneNumber.mockReturnValue(false)
 
-        await expect(sendPhoneOtp(phoneNumber, '123456')).rejects.toThrow('不支持的国家或地区手机号格式')
+        await expect(sendPhoneOtp(phoneNumber, '123456')).rejects.toThrow('Unsupported phone number format')
         expect(mockLimiter.increment).not.toHaveBeenCalled()
     })
 

@@ -2,7 +2,7 @@ import { ref, computed, onMounted, unref } from 'vue'
 import { useToast } from 'caomei-ui'
 import { useUrlSearchParams } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
-import { emailSchema, phoneSchema, usernameSchema } from '@/utils/shared/validators'
+import { emailSchema, phoneSchema } from '@/utils/shared/validators'
 import {
     loginEmailFormSchema,
     loginEmailOtpFormSchema,
@@ -131,15 +131,20 @@ export function useLoginFlow() {
                 toast.warning({ title: t('auth.common.captchaNeeded'), description: errorMessage, duration: 2500 })
                 return false
             }
-            const { error } = await authClient.twoFactor.sendOtp({
-                fetchOptions: {
-                    headers: captchaContext ? { 'x-captcha-response': captchaContext.token } : {},
+            const response = await $fetch<{ status: boolean, channel: 'email' | 'phone' | null, fallback: boolean }>(
+                '/api/security/two-factor/send-otp',
+                {
+                    method: 'POST',
+                    headers: captchaContext ? { 'x-captcha-response': captchaContext.token } : undefined,
                 },
-            })
-            if (error) {
-                throw new Error(error.message || t('auth.login.codeSendFailed'))
+            )
+            let description = t('auth.login.codeSentEmail')
+            if (response?.channel === 'phone') {
+                description = response.fallback
+                    ? t('auth.login.codeSentPhoneFallback')
+                    : t('auth.login.codeSentPhone')
             }
-            toast.success({ title: t('auth.common.sendSuccess'), description: t('auth.login.codeSent'), duration: 3000 })
+            toast.success({ title: t('auth.common.sendSuccess'), description, duration: 3000 })
             return true
         } catch (error: any) {
             const errorMessage = error instanceof Error ? error.message : t('auth.login.codeSendFailed')

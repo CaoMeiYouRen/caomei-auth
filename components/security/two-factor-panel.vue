@@ -30,7 +30,20 @@
             <CaomeiMessage tone="success">
                 <span>{{ t('security.twoFactor.enabledNote') }}</span>
             </CaomeiMessage>
+            <CaomeiMessage tone="primary" class="mt-2">
+                <span>{{ t('security.twoFactor.lostAccessNotice') }}</span>
+            </CaomeiMessage>
             <div class="security-actions">
+                <CaomeiButton
+                    variant="secondary"
+                    class="btn"
+                    @click="$emit('openBackupRegenerate')"
+                >
+                    <template #icon>
+                        <i class="mdi mdi-refresh" />
+                    </template>
+                    {{ t('security.twoFactor.backupRegenerate') }}
+                </CaomeiButton>
                 <CaomeiButton
                     class="btn btn-danger"
                     tone="danger"
@@ -43,6 +56,37 @@
                 </CaomeiButton>
             </div>
         </div>
+
+        <!-- 重新生成备份码确认 -->
+        <BaseDialogV2
+            :visible="showBackupRegenerateDialog"
+            :title="t('security.twoFactor.backupRegenerateTitle')"
+            @update:visible="$emit('update:showBackupRegenerateDialog', $event)"
+            @hide="$emit('backupRegenerateDialogHide')"
+        >
+            <p class="mb-3">
+                {{ t('security.twoFactor.backupRegenerateTip') }}
+            </p>
+            <BasePasswordV2
+                id="backup-regenerate-password"
+                :model-value="password"
+                :label="t('security.twoFactor.backupRegeneratePasswordLabel')"
+                :placeholder="t('security.twoFactor.backupRegeneratePasswordPlaceholder')"
+                :feedback="false"
+                @update:model-value="$emit('update:password', $event)"
+            />
+            <template #footer>
+                <CaomeiButton
+                    variant="secondary"
+                    @click="$emit('update:showBackupRegenerateDialog', false)"
+                >
+                    {{ t('security.sessions.cancel') }}
+                </CaomeiButton>
+                <CaomeiButton @click="$emit('confirmBackupRegenerate')">
+                    {{ t('security.twoFactor.backupRegenerate') }}
+                </CaomeiButton>
+            </template>
+        </BaseDialogV2>
 
         <!-- 设置双因素验证器 -->
         <div v-if="showTotpSetup" class="totp-setup">
@@ -86,6 +130,9 @@
             </h4>
             <CaomeiMessage tone="primary">
                 <span>{{ t('security.twoFactor.backupDesc') }}</span>
+            </CaomeiMessage>
+            <CaomeiMessage tone="warning">
+                <span>{{ t('security.twoFactor.backupRegenerateHint') }}</span>
             </CaomeiMessage>
 
             <div class="backup-codes-list mb-4">
@@ -175,12 +222,16 @@ defineProps<{
     password: string
     showPasswordDialog: boolean
     passwordDialogMode: 'enable' | 'disable'
+    showBackupRegenerateDialog: boolean
 }>()
 
 defineEmits<{
     (e: 'enable'): void
     (e: 'disable'): void
     (e: 'verify'): void
+    (e: 'openBackupRegenerate'): void
+    (e: 'confirmBackupRegenerate'): void
+    (e: 'backupRegenerateDialogHide'): void
     (e: 'copyBackupCodes'): void
     (e: 'downloadBackupCodes'): void
     (e: 'finishSetup'): void
@@ -189,6 +240,7 @@ defineEmits<{
     (e: 'update:verificationCode', value: string): void
     (e: 'update:password', value: string): void
     (e: 'update:showPasswordDialog', value: boolean): void
+    (e: 'update:showBackupRegenerateDialog', value: boolean): void
 }>()
 </script>
 

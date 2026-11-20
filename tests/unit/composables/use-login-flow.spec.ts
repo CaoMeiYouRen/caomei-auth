@@ -9,7 +9,7 @@ import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
 
 vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 // Mock Nuxt composables
-const { config, useToastMock, useFetchMock, useNuxtAppMock, toastMocks } = vi.hoisted(() => {
+const { config, useToastMock, useFetchMock, useNuxtAppMock, toastMocks, fetchMock } = vi.hoisted(() => {
     const hoistedToastMocks = { show: vi.fn(), success: vi.fn(), danger: vi.fn(), warning: vi.fn(), info: vi.fn() }
     return {
         config: {
@@ -26,6 +26,7 @@ const { config, useToastMock, useFetchMock, useNuxtAppMock, toastMocks } = vi.ho
         useNuxtAppMock: vi.fn(() => ({
             $clarity: {},
         })),
+        fetchMock: vi.fn(),
     }
 })
 
@@ -39,6 +40,9 @@ vi.mock('#app/nuxt', async (importOriginal) => {
 })
 
 mockNuxtImport('useFetch', () => useFetchMock)
+vi.mock('#build/fetch.mjs', () => ({
+    $fetch: fetchMock,
+}))
 
 vi.mock('caomei-ui', () => ({
     useToast: useToastMock,
@@ -277,16 +281,33 @@ describe('useLoginFlow', () => {
     it('sends otp with resolved captcha token', async () => {
         const reset = vi.fn()
         vi.mocked(resolveCaptchaToken).mockResolvedValue({ token: 'captcha-token', instance: { reset } } as any)
-        const sendOtpMock = vi.fn().mockResolvedValue({ error: null })
-        ;(authClient as any).twoFactor = { sendOtp: sendOtpMock }
+        fetchMock.mockResolvedValue({ status: true, channel: 'email', fallback: false })
 
         const { sendOtp, otpSending } = useLoginFlow()
         const sent = await sendOtp()
 
         expect(sent).toBe(true)
-        expect(sendOtpMock).toHaveBeenCalledWith({ fetchOptions: { headers: { 'x-captcha-response': 'captcha-token' } } })
+        expect(fetchMock).toHaveBeenCalledWith('/api/security/two-factor/send-otp', {
+            method: 'POST',
+            headers: { 'x-captcha-response': 'captcha-token' },
+        })
+        expect(toastMocks.success).toHaveBeenCalledWith(expect.objectContaining({
+            description: '验证码已发送，请检查您的邮箱',
+        }))
         expect(reset).toHaveBeenCalled()
         expect(otpSending.value).toBe(false)
+    })
+
+    it('reports the phone fallback when email delivery failed', async () => {
+        vi.mocked(resolveCaptchaToken).mockResolvedValue(null)
+        fetchMock.mockResolvedValue({ status: true, channel: 'phone', fallback: true })
+
+        const { sendOtp } = useLoginFlow()
+
+        expect(await sendOtp()).toBe(true)
+        expect(toastMocks.success).toHaveBeenCalledWith(expect.objectContaining({
+            description: '邮件发送失败，验证码已改发到您的手机',
+        }))
     })
 
     it('reports captcha failure when sending otp', async () => {
@@ -301,9 +322,7 @@ describe('useLoginFlow', () => {
 
     it('reports api failure when sending otp', async () => {
         vi.mocked(resolveCaptchaToken).mockResolvedValue(null)
-        ;(authClient as any).twoFactor = {
-            sendOtp: vi.fn().mockResolvedValue({ error: { message: '发送失败' } }),
-        }
+        fetchMock.mockRejectedValue(new Error('发送失败'))
 
         const { sendOtp } = useLoginFlow()
 
@@ -357,6 +376,19 @@ describe('useLoginFlow', () => {
 
         expect(twoFactorError.value).toBe('验证码错误')
         expect(show2FADialog.value).toBe(false)
+    })
+
+    it('reports exhausted backup codes (M2)', async () => {
+        ;(authClient as any).twoFactor = {
+            verifyBackupCode: vi.fn().mockResolvedValue({ data: null, error: { message: '备份码已全部使用' } }),
+        }
+
+        const { verify2FA, twoFactorCode, twoFactorError, activeAuthTab } = useLoginFlow()
+        twoFactorCode.value = 'used-backup-code'
+        activeAuthTab.value = 2
+        await verify2FA()
+
+        expect(twoFactorError.value).toBe('备份码已全部使用')
     })
 
     it('rejects disabled social provider', async () => {

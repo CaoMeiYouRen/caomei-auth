@@ -24,6 +24,13 @@ export interface SmsProvider {
     sendOtp(phoneNumber: string, code: string, expiresInMinutes: number): Promise<SmsResult>
 
     /**
+     * 发送通用短信通知（可选；验证码模板类渠道可能不支持）
+     * @param phoneNumber 手机号码
+     * @param message 通知内容
+     */
+    sendNotification?(phoneNumber: string, message: string): Promise<SmsResult>
+
+    /**
      * 验证手机号格式
      * @param phoneNumber 手机号码
      * @returns 是否有效

@@ -6,7 +6,7 @@
                     <CaomeiButton
                         variant="ghost"
                         class="btn-link"
-                        @click="goProfile"
+                        @click="security.goProfile"
                     >
                         <template #icon>
                             <i class="mdi mdi-arrow-left" />
@@ -16,7 +16,7 @@
                     <CaomeiButton
                         variant="ghost"
                         class="btn-link"
-                        @click="goOAuthClients"
+                        @click="security.goOAuthClients"
                     >
                         <template #icon>
                             <i class="mdi mdi-key-variant" aria-hidden="true" />
@@ -32,39 +32,43 @@
                 </p>
 
                 <TwoFactorPanel
-                    v-model:verification-code="verificationCode"
-                    v-model:password="password"
-                    v-model:show-password-dialog="showPasswordDialog"
-                    :user-session="userSession"
-                    :show-totp-setup="showTotpSetup"
-                    :show-backup-codes="showBackupCodes"
-                    :qr-code-url="qrCodeUrl"
-                    :backup-codes="backupCodes"
-                    :password-dialog-mode="passwordDialogMode"
-                    @enable="enable2FA"
-                    @disable="disable2FA"
-                    @verify="verifyAndEnable2FA"
-                    @copy-backup-codes="copyBackupCodes"
-                    @download-backup-codes="downloadBackupCodes"
-                    @finish-setup="finishSetup"
-                    @password-dialog-hide="onPasswordDialogHide"
-                    @password-confirm="onPasswordConfirm"
+                    v-model:verification-code="security.verificationCode"
+                    v-model:password="security.password"
+                    v-model:show-password-dialog="security.showPasswordDialog"
+                    v-model:show-backup-regenerate-dialog="security.showBackupRegenerateDialog"
+                    :user-session="security.userSession"
+                    :show-totp-setup="security.showTotpSetup"
+                    :show-backup-codes="security.showBackupCodes"
+                    :qr-code-url="security.qrCodeUrl"
+                    :backup-codes="security.backupCodes"
+                    :password-dialog-mode="security.passwordDialogMode"
+                    @enable="security.enable2FA"
+                    @disable="security.disable2FA"
+                    @verify="security.verifyAndEnable2FA"
+                    @open-backup-regenerate="security.openBackupRegenerateDialog"
+                    @confirm-backup-regenerate="security.confirmRegenerateBackupCodes"
+                    @backup-regenerate-dialog-hide="security.onBackupRegenerateDialogHide"
+                    @copy-backup-codes="security.copyBackupCodes"
+                    @download-backup-codes="security.downloadBackupCodes"
+                    @finish-setup="security.finishSetup"
+                    @password-dialog-hide="security.onPasswordDialogHide"
+                    @password-confirm="security.onPasswordConfirm"
                 />
 
                 <div class="divider" />
 
                 <SessionTable
-                    v-model:show-revoke-session-confirm="showRevokeSessionConfirm"
-                    v-model:show-revoke-other-sessions-confirm="showRevokeOtherSessionsConfirm"
-                    v-model:show-revoke-all-sessions-confirm="showRevokeAllSessionsConfirm"
-                    :user-session="userSession"
-                    :session-list="sessionList"
-                    @revoke-session="confirmRevokeSession"
-                    @revoke-other-sessions="confirmRevokeOtherSessions"
-                    @revoke-all-sessions="confirmRevokeAllSessions"
-                    @confirm-revoke-session="revokeSingleSession"
-                    @confirm-revoke-other-sessions="revokeOtherSessions"
-                    @confirm-revoke-all-sessions="revokeAllSessions"
+                    v-model:show-revoke-session-confirm="security.showRevokeSessionConfirm"
+                    v-model:show-revoke-other-sessions-confirm="security.showRevokeOtherSessionsConfirm"
+                    v-model:show-revoke-all-sessions-confirm="security.showRevokeAllSessionsConfirm"
+                    :user-session="security.userSession"
+                    :session-list="security.sessionList"
+                    @revoke-session="security.confirmRevokeSession"
+                    @revoke-other-sessions="security.confirmRevokeOtherSessions"
+                    @revoke-all-sessions="security.confirmRevokeAllSessions"
+                    @confirm-revoke-session="security.revokeSingleSession"
+                    @confirm-revoke-other-sessions="security.revokeOtherSessions"
+                    @confirm-revoke-all-sessions="security.revokeAllSessions"
                 />
             </div>
         </div>
@@ -82,45 +86,7 @@ const { t } = useI18n()
 usePageMeta('security.page.title', 'security.page.subtitle')
 useNoIndex()
 
-const {
-    userSession,
-
-    // 2FA State
-    showTotpSetup,
-    showBackupCodes,
-    qrCodeUrl,
-    verificationCode,
-    backupCodes,
-    password,
-    showPasswordDialog,
-    passwordDialogMode,
-
-    // 2FA Actions
-    onPasswordDialogHide,
-    onPasswordConfirm,
-    enable2FA,
-    disable2FA,
-    verifyAndEnable2FA,
-    copyBackupCodes,
-    downloadBackupCodes,
-    finishSetup,
-
-    // Session State
-    sessionList,
-    showRevokeSessionConfirm,
-    showRevokeOtherSessionsConfirm,
-    showRevokeAllSessionsConfirm,
-
-    // Session Actions
-    confirmRevokeSession,
-    revokeSingleSession,
-    confirmRevokeOtherSessions,
-    revokeOtherSessions,
-    confirmRevokeAllSessions,
-    revokeAllSessions,
-    goProfile,
-    goOAuthClients,
-} = useSecuritySettings()
+const security = reactive(useSecuritySettings())
 </script>
 
 <style scoped lang="scss">

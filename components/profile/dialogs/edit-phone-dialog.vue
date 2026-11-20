@@ -57,7 +57,6 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { useToast } from 'caomei-ui'
-import { authClient } from '@/lib/auth-client'
 import { usePhoneOtp } from '@/composables/use-otp'
 import Captcha from '@/components/captcha.vue'
 import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
@@ -65,6 +64,7 @@ import type { CaptchaExpose } from '@/utils/web/captcha'
 import { useForm } from '@/composables/core/use-form'
 import { editPhoneFormSchema } from '@/utils/shared/schemas'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 
 const props = defineProps<{
     user: {
@@ -124,15 +124,13 @@ const sendPhoneCode = async () => {
 const bindPhone = async () => {
     await handleSubmit(async (vals) => {
         try {
-            const result = await authClient.phoneNumber.verify({
-                phoneNumber: vals.phone,
-                code: vals.code,
-                updatePhoneNumber: true,
+            await $fetch('/api/security/bind-phone', {
+                method: 'POST',
+                body: {
+                    phoneNumber: vals.phone,
+                    code: vals.code,
+                },
             })
-
-            if (result.error) {
-                throw new Error(result.error.message || t('profile.phoneDialog.verifyFailed'))
-            }
 
             emit('update:user', {
                 ...props.user,
@@ -143,7 +141,7 @@ const bindPhone = async () => {
             visible.value = false
             toast.success({ title: t('profile.phoneDialog.success'), duration: 2000 })
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : t('profile.phoneDialog.failedUnknown')
+            const errorMessage = getApiErrorMessage(error, t('profile.phoneDialog.failedUnknown'))
             toast.danger({ title: t('profile.phoneDialog.failed'), description: errorMessage, duration: 5000 })
         }
     })

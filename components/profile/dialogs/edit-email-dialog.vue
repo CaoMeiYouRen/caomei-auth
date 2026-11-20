@@ -38,11 +38,11 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { useToast } from 'caomei-ui'
-import { authClient } from '@/lib/auth-client'
 import Captcha from '@/components/captcha.vue'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 import { useForm } from '@/composables/core/use-form'
 import { emailSchema } from '@/utils/shared/validators'
+import { getApiErrorMessage } from '@/utils/shared/api-error'
 import { z } from 'zod'
 
 const props = defineProps<{
@@ -96,12 +96,16 @@ async function bindEmail() {
         }
 
         try {
-            const requestOptions = captchaContext ? { headers: { 'x-captcha-response': captchaContext.token } } : undefined
-            await authClient.changeEmail({
-                newEmail: vals.email,
-                // 验证后重定向
-                callbackURL: '/profile',
-            }, requestOptions)
+            const headers = captchaContext ? { 'x-captcha-response': captchaContext.token } : undefined
+            await $fetch('/api/security/change-email', {
+                method: 'POST',
+                body: {
+                    newEmail: vals.email,
+                    // 验证后重定向
+                    callbackURL: '/profile',
+                },
+                headers,
+            })
             if (props.user.emailVerified) {
                 toast.info({ title: t('profile.emailDialog.sentToCurrent'), duration: 2000 })
                 return
@@ -116,7 +120,7 @@ async function bindEmail() {
             visible.value = false
             toast.success({ title: t('profile.emailDialog.sent'), description: t('profile.emailDialog.sentDescription'), duration: 3000 })
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : t('profile.emailDialog.bindFailedUnknown')
+            const errorMessage = getApiErrorMessage(error, t('profile.emailDialog.bindFailedUnknown'))
             toast.danger({ title: t('profile.emailDialog.bindFailed'), description: errorMessage, duration: 5000 })
         }
     })
