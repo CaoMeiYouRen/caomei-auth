@@ -22,13 +22,14 @@
 
 ## 3. 提交规范
 
-所有 `git commit` 操作必须遵循以下约束（与 `AGENTS.md` 提交规范一致）：
+所有 `git commit` 操作必须遵循以下约束（`AGENTS.md` §7.3 为摘要，本节为项目内细化；破坏性提交确认尚未回写 `AGENTS.md`，已登记 backlog 待授权同步）：
 
 1. **必须使用 `conventional-committer` skill**：任何代码、文档、配置或脚本的提交都必须通过 `conventional-committer` skill 执行。禁止直接使用 `git commit -m "..."` 裸提交。
 2. **格式要求**：提交消息必须符合 Conventional Commits 规范（`type(scope): description`），且 `description` 统一使用**中文或用户使用的语言**。
 3. **质量前置**：提交前必须确认 `@code-auditor` Review Gate 已放行（核验 `pnpm lint`、`pnpm typecheck` 和必要的定向测试证据），质量门禁未通过时不得提交。
 4. **原子粒度**：一个提交对应一个逻辑变更，关联且仅关联 `docs/plan/todo.md` 中的一个原子条目；规划 / 治理类改动可关联 `docs/plan/backlog.md` 中的对应候选，并在提交说明中注明。
 5. **推送约束**：默认不推送，具体授权情形、目标与前置验证由 [§8 推送策略](#8-推送策略) 单点定义；未授权时提交完成后应告知用户"已提交到本地，等待推送确认"。
+6. **破坏性提交人工确认**：消息含 `!` 头部（`<type>(<scope>)!:`）或 `BREAKING CHANGE:` footer 的提交，进入共享历史前必须取得人工确认（本地待推送提交也应先确认），并按 §3.2 写入 `Breaking-Review:` 记录；AI 自查与 Review Gate 不替代该确认。
 
 ### 3.1 提交消息格式
 
@@ -83,6 +84,52 @@
 - 说明**做了什么**与**为什么这么做**。
 - 使用简体中文或用户指定语言。
 - 无必要可不写正文；条目太多时内容应精简。
+
+### 3.2 破坏性提交人工审查
+
+本条落地 [issue #746](https://github.com/CaoMeiYouRen/caomei-auth/issues/746) 的提案，并固定本项目口径；`conventional-committer` skill 只引用本节，不重复定义格式。
+
+**定义**：提交消息含 `!` 头部（`<type>(<scope>)!:`）或 `BREAKING CHANGE:` footer 即为破坏性提交。头部不应带 `!`：本仓 changelog parser 不匹配 `!` 头部，纯 `!` 提交会被发布链整体忽略（既不升版本也不生成破坏面说明）；`!` + footer 仍会丢失 changelog 条目（仅 footer 触发 major bump）。破坏性只由 `BREAKING CHANGE:` footer 表达，头部保持标准 `<type>(<scope>):`。
+
+**时机**：在提交进入**共享历史**（推送到远端 / 合并到 `master`）之前确认；本地待推送提交也应先确认，未确认不得推送或合并。issue #746 原文要求确认发生在「本地历史之前」；本项目把硬门禁落在推送 / 合并前，因为 PR review 阶段才可能发现破坏面。确认对象是最终 diff 与最终提交消息，AI 自查、`@code-auditor` Review Gate 与作者自检都不能替代。
+
+**留痕**：直接提交时，先确认、再把记录写入消息并提交。PR 场景确认应早于破坏性提交创建；若 review 阶段才发现破坏面，仍须在合并前完成确认，并按确认后的消息重写该提交。贡献者可在自己的 fork 改写；本仓已推送分支若需改写，只能由项目所有者手动执行（自动化推送不得 force push，见 [§8](#8-推送策略)），或放弃该分支、从基线新建分支重提；不得由合并者代填或事后追加到无关提交。PR 模板要求填写确认人与确认出处（审批 / 评论链接）；无法提供出处的记录视为未确认，不得合并。
+
+**主体**：项目所有者，或经其在 issue / PR 中书面授权的贡献者。机器人（含 `dependabot[bot]` / `dependfix[bot]`）不得作为确认人。
+
+**记录格式**：
+
+```text
+Breaking-Review: <确认人 GitHub 登录名> <YYYY-MM-DD> <approved|approved-with-migration>
+```
+
+- 标识为单个 token（无空格），使用 GitHub 登录名以便追溯；本项目当前为 `CaoMeiYouRen`。
+- `<YYYY-MM-DD>` 是确认发生的日期（`Asia/Shanghai`，UTC+8），不是提交日期。
+- `approved` 表示确认破坏面可接受；`approved-with-migration` 还必须在提交正文或项目文档中给出迁移路径，说明接入方需要做什么。
+- 记录行必须独立成行，且放在 `BREAKING CHANGE:` **之前**（两者之间最多允许一个空行）：写在之后会被发布链并入 note 文本，`git log -1 --format=%B` 也读不出独立记录。
+
+示例：
+
+```text
+feat(api): 移除 v1 响应包装
+
+- 响应体改为直接返回业务数据
+
+Breaking-Review: CaoMeiYouRen 2026-11-21 approved-with-migration
+BREAKING CHANGE: 移除 { code, message, data } 包装；客户端把 res.data 改为 res，并删除对 code / message 的判空分支。
+```
+
+**重确认**：确认后提交树或消息文本发生变化（含 amend、rebase、合并时改写正文）必须重新确认；比较时排除 `Breaking-Review:` 行本身。
+
+**合并落库**：PR 中的每个破坏性提交都必须自带记录。含破坏性提交的 PR **不得使用 squash 合并**：GitHub 按提交顺序拼接 squash 正文，后一个破坏性提交的记录会被并入前一个 `BREAKING CHANGE:` 的 note 文本；此类 PR 必须走 rebase 或 merge commit，二者原样保留提交消息。合并前用 `git log --format=%B <base>..HEAD` 逐条核验，落库后用 `git log --no-merges --format=%B <base>..HEAD` 或 `git log -1 --format=%B <破坏性提交 hash>` 抽查，确认每条 `Breaking-Review:` 都在其所属 `BREAKING CHANGE:` 之前且未被前一条 note 吸收；不满足则不得合并，或按重确认规则改写落库消息。PR 模板的「破坏性变更确认」段用于在合并前暴露确认结果与出处。
+
+**例外**：依赖类 PR 由 Mergify 按 CI 门禁自动合并（rebase），其消息不写 `!` 头部或 `BREAKING CHANGE:` footer，因此不触发本节确认；依赖包自身的 major 升级不等于本项目对外契约破坏。该例外以消息形态为前提：Mergify 当前不校验消息形态，若自动合并队列中出现含 `!` 头部或 `BREAKING CHANGE:` footer 的依赖 PR，必须摘除 `dependencies` label（或移出自动合并），转常规流程补确认与迁移路径。
+
+**历史**：不追溯回补；已推送历史不 reset / rebase。
+
+**失败判据**：破坏性提交无记录、记录被并入 `BREAKING CHANGE:` 文本、`approved-with-migration` 未给迁移路径、头部含 `!`、含破坏性提交的 PR 使用 squash 导致记录被前一条 note 吸收，任一出现即未达标。
+
+**机检**：本期只落人工纪律；`commit-msg` 机检登记在 [backlog 3.2](../plan/backlog.md#32-质量与测试) 待实施。
 
 ## 4. AI 行为准则
 

@@ -21,6 +21,8 @@ metadata:
 - [ ] Step 3: 生成提交消息
 	- [ ] 3.1 先判断 type，再决定是否需要 scope。
 	- [ ] 3.2 描述聚焦“为什么”和“本次改了什么”，保持简洁可读。
+	- [ ] 3.3 判定是否为破坏性提交（`!` 头部或 `BREAKING CHANGE:` footer）；是则先取得人工确认，未确认不得进入 Step 4。
+	- [ ] 3.4 确认后按「破坏性提交」写入 `Breaking-Review:` 行，置于 `BREAKING CHANGE:` 之前。
 - [ ] Step 4: 执行提交 (conditional)
 	- [ ] 4.1 只有在用户明确允许时才执行 git add / git commit。
 	- [ ] 4.2 提交后复查消息是否符合 commitlint 习惯。
@@ -40,18 +42,28 @@ metadata:
 - perf
 - revert
 
+## 破坏性提交
+
+破坏性提交指消息含 `!` 头部（`<type>(<scope>)!:`）或 `BREAKING CHANGE:` footer 的提交。
+
+- 提交前必须取得人工确认；AI 自查与 Review Gate 不替代。
+- 头部不应带 `!`，破坏性只由 `BREAKING CHANGE:` footer 表达。
+- 记录格式、确认主体、重确认与合并落库口径见 [Git 规范](../../../docs/standards/git.md) 的「3.2 破坏性提交人工审查」。
+
 ## 反模式
 
 - 不看 diff，直接用模糊消息如 update files。
 - 把多类变更混成一个没有 scope 的提交。
 - 在质量检查未完成时默认提交。
 - 在 husky hook 兼容的环境下滥用 `--no-verify`，跳过了本应生效的检查。
+- 破坏性提交未经人工确认就落库，或只写 `!` 而不写 `BREAKING CHANGE:` footer。
 
 ## 交付前检查
 
 - [ ] 已确认本次允许提交。
 - [ ] 暂存范围只包含相关变更。
 - [ ] 提交消息符合 Conventional Commits 语义。
+- [ ] 破坏性提交已取得人工确认，且同时含 `Breaking-Review:` 与 `BREAKING CHANGE:` footer（前者在前）。
 - [ ] 已说明任何未完成的质量风险。
 
 

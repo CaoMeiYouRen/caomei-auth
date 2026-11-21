@@ -21,6 +21,15 @@ Close #
 - [ ] 我已经添加了测试用例(如果适用) / I have added test cases (if applicable)
 - [ ] 我已经检查了代码风格(lint) / I have checked the code style (lint)
 
+## 破坏性变更确认 / Breaking Change Review
+
+- [ ] 本 PR 无破坏性变更（无 `!` 头部、无 `BREAKING CHANGE:` footer）/ No breaking change
+- [ ] 本 PR 含破坏性变更，已取得人工确认 / Breaking change reviewed
+    - `Breaking-Review: <确认人 GitHub 登录名> <YYYY-MM-DD> <approved|approved-with-migration>`
+    - 确认出处（审批 / 评论链接）：<URL>
+
+> 含破坏性变更时，PR 内每个相关提交必须同时包含 `Breaking-Review:` 与 `BREAKING CHANGE:` footer，前者在前；此类 PR 不得使用 squash 合并，合并时不得删除记录。详见 [Git 规范 §3.2](https://github.com/CaoMeiYouRen/caomei-auth/blob/master/docs/standards/git.md#32-破坏性提交人工审查)。
+
 ## 其他信息 / Additional Information
 
 如有任何其他需要说明的地方,请在此补充
