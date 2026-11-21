@@ -50,12 +50,12 @@ describe('two-factor coverage factors and abuse controls', () => {
     it('rejects an expired magic link', async () => {
         const expiredDatabase = createMemoryDatabase()
         const expiredCaptured: CapturedCodes = {}
-        const expiredClient = new TestClient(createTestAuth(expiredCaptured, expiredDatabase, { magicLinkExpiresIn: 1 }))
+        const expiredClient = new TestClient(createTestAuth(expiredCaptured, expiredDatabase, { magicLinkExpiresIn: 2 }))
         await expiredClient.request('/sign-up/email', { body: { email: 'expired-link@example.com', password: 'passw0rd123', name: 'Expired Link' } })
         await expiredClient.request('/two-factor/enable', { body: { password: 'passw0rd123', method: 'otp' } })
         await expiredClient.request('/sign-out')
         await expiredClient.request('/sign-in/magic-link', { body: { email: 'expired-link@example.com' } })
-        await new Promise((resolve) => setTimeout(resolve, 1200))
+        await new Promise((resolve) => setTimeout(resolve, 2200))
 
         const expired = await expiredClient.get(pathFromUrl(expiredCaptured.magicLinkUrl!))
         expect(expiredDatabase.session).toHaveLength(0)
@@ -117,14 +117,14 @@ describe('two-factor coverage factors and abuse controls', () => {
     it('re-challenges after the trusted device expires', async () => {
         const expiringDatabase = createMemoryDatabase()
         const expiringCaptured: CapturedCodes = {}
-        const expiringClient = new TestClient(createTestAuth(expiringCaptured, expiringDatabase, { trustDeviceMaxAge: 1 }))
+        const expiringClient = new TestClient(createTestAuth(expiringCaptured, expiringDatabase, { trustDeviceMaxAge: 2 }))
         await setupTwoFactorUser(expiringClient, expiringDatabase)
         await expiringClient.request('/email-otp/send-verification-otp', { body: { email: 'twofa@example.com', type: 'sign-in' } })
         await expiringClient.request('/sign-in/email-otp', { body: { email: 'twofa@example.com', otp: expiringCaptured.emailCode } })
         await expiringClient.request('/two-factor/send-otp')
         await expiringClient.request('/two-factor/verify-otp', { body: { code: expiringCaptured.twoFactorCode, trustDevice: true } })
         await expiringClient.request('/sign-out')
-        await new Promise((resolve) => setTimeout(resolve, 1200))
+        await new Promise((resolve) => setTimeout(resolve, 2200))
 
         await expiringClient.request('/email-otp/send-verification-otp', { body: { email: 'twofa@example.com', type: 'sign-in' } })
         const challenged = await expiringClient.request('/sign-in/email-otp', { body: { email: 'twofa@example.com', otp: expiringCaptured.emailCode } })

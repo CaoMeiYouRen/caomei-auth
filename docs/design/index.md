@@ -28,7 +28,7 @@
 
 AI 基建、依赖治理、架构演进等决策与规划文档。
 
--   [账号找回与 2FA 边界设计草案](./governance/2026-11-18-account-recovery-design.md): 现状取证、威胁模型、恢复等级、分阶段路线与待定决策（2026-11-18 草案；阶段 0–1 随阶段 9、阶段 3 随阶段 10 交付，阶段 4 已随阶段 11 登记，阶段 2 剩余（审批流 / 工单）与阶段 5 仍为候选）。
+-   [账号找回与 2FA 边界设计草案](./governance/2026-11-18-account-recovery-design.md): 现状取证、威胁模型、恢复等级、分阶段路线与待定决策（2026-11-18 草案；阶段 0–1 随阶段 9、阶段 3 随阶段 10 交付，阶段 4 已随阶段 11 交付，阶段 2 剩余（审批流 / 工单）与阶段 5 仍为候选）。
 -   [主流平台账号找回与改邮箱机制调研](./governance/2026-11-18-account-recovery-research.md): Google / Microsoft / Apple / GitHub / Supabase / Auth0 / Okta / Cognito / Keycloak / Firebase 与 NIST / OWASP 的公开口径（2026-11-18 快照）。
 -   [AI 基建优化规划](./governance/ai-infrastructure-optimization.md): Skills / Agents / 项目规范 / i18n 规划的评估与分批复核清单。
 -   [PrimeVue → caomei-ui 迁移评估](./governance/2026-11-05-caomei-ui-migration-evaluation.md): 组件库迁移的现状盘点、逐组件映射、主题 / 测试耦合、分阶段计划与风险。
@@ -58,8 +58,9 @@ AI 基建、依赖治理、架构演进等决策与规划文档。
 -   [阶段 9 收口记录](./governance/2026-11-20-phase9-closure.md): M1–M13 交付、测试 1225 / 视觉 136、偏差与遗留（2026-11-20 收口）。
 -   [阶段 10 范围登记：用户侧替代证明](./governance/2026-11-21-phase10-registration.md): 恢复码、替代证明改邮箱、冷静期与撤销、OAuth-only 自助设密码（2026-11-21 登记）。
 -   [阶段 10 收口记录](./governance/2026-11-21-phase10-closure.md): M1–M5 交付、测试 1325 / 视觉 138、与范围登记的偏差与遗留（2026-11-21 收口）。
--   [阶段 11 范围登记：2FA 覆盖收紧与登录通道闭环](./governance/2026-11-21-phase11-registration.md): 5 大条目 / 15 小条目、逐通道覆盖矩阵、上游挑战复用、D11–D17 拟定决策（2026-11-21 登记，进行中）。
--   [2FA 覆盖矩阵](./two-factor-coverage.md): 阶段 11 的通道 / 端点 / 响应形态 / 开关 / 测试状态与实现约束（2026-11-21 建立，随条目更新）。
+-   [阶段 11 范围登记：2FA 覆盖收紧与登录通道闭环](./governance/2026-11-21-phase11-registration.md): 5 大条目 / 15 小条目、逐通道覆盖矩阵、上游挑战复用、D11–D17 决策（2026-11-21 登记 → 收口）。
+-   [阶段 11 收口记录](./governance/2026-11-21-phase11-closure.md): M1–M5 交付、测试 1370 / 视觉 144、偏差与遗留（2026-11-21 收口）。
+-   [2FA 覆盖矩阵](./two-factor-coverage.md): 通道 / 端点 / 响应形态 / 开关 / 测试状态与实现约束（阶段 11 收口，长期口径）。
 -   [发布链路原生多架构评估](./governance/2026-11-08-native-multiarch-docker-review.md): issue #718 的入口核验、方案比较与方案 C 复用工作流落地（已排期阶段 3 插队，待工作流验证）。
 -   [i18n 评估与实施方案](./governance/2026-11-05-i18n-evaluation.md): 原 i18n 规划的复核修订、Locale Registry、模块化消息、Zod v4 错误本地化、服务端 / 邮件方案与批次。
 -   [阶段 2 范围登记：安全收口与迁移预备](./governance/2026-11-05-phase2-registration.md): 阶段 2 的 5 条主线 / 11 条原子条目、验收与边界（2026-11-06 完成归档）。

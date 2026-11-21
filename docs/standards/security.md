@@ -54,7 +54,7 @@
 
 本节是账号恢复路径的唯一口径，实施见 [阶段 9 范围登记](../design/governance/2026-11-19-phase9-registration.md)、[阶段 10 范围登记](../design/governance/2026-11-21-phase10-registration.md) 与 [阶段 11 范围登记](../design/governance/2026-11-21-phase11-registration.md)。
 
--   **2FA 覆盖边界（阶段 11 进行中，2026-11-21）**: 阶段 11 已把邮箱 OTP、手机 OTP、邮箱验证码 / 邮箱验证链接自动登录、魔法链接、社交（内置 / genericOAuth / `idToken`）与 SSO（OIDC 专属 / 共享回调、SAML ACS）接入第二因子挑战；逐通道开关缺省开启（`TWO_FACTOR_COVERAGE_*`），关闭单通道等价回退。覆盖矩阵、响应形态与未覆盖边界见 [2FA 覆盖矩阵](../design/two-factor-coverage.md)，范围与决策见 [阶段 11 范围登记](../design/governance/2026-11-21-phase11-registration.md)。阶段收口后本节改为最终覆盖矩阵。
+-   **2FA 覆盖边界（阶段 11 已收口，2026-11-21）**: 阶段 11 已把邮箱 OTP、手机 OTP、邮箱验证码 / 邮箱验证链接自动登录、魔法链接、社交（内置 / genericOAuth / `idToken`）与 SSO（OIDC 专属 / 共享回调、SAML ACS）接入第二因子挑战；逐通道开关缺省开启（`TWO_FACTOR_COVERAGE_*`），关闭单通道等价回退。覆盖矩阵、响应形态与未覆盖边界见 [2FA 覆盖矩阵](../design/two-factor-coverage.md)，范围与决策见 [阶段 11 范围登记](../design/governance/2026-11-21-phase11-registration.md)。覆盖矩阵作为长期口径维护；后续变更同步本节与矩阵。
 -   **恢复等级**:
     -   **L0 自助恢复**:
         -   已验证邮箱 / 手机通过一次性验证码重置密码；已登录会话使用密码确认后重新生成备份码；使用备份码完成 2FA。短信通道未配置（`PHONE_CHANNEL` 为空）时手机入口必须隐藏，服务端返回 `CHANNEL_NOT_CONFIGURED`，不得表现为「已发送」。

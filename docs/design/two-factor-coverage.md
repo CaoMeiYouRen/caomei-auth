@@ -1,6 +1,6 @@
 # 2FA 覆盖矩阵（阶段 11）
 
-> **状态**：2026-11-21 建立并随阶段 11 各条目更新；当前 M1–M5 均已接线，验收进度见 [todo.md](../plan/todo.md)。
+> **状态**：阶段 11 已于 2026-11-21 收口；本矩阵作为 2FA 覆盖的长期口径维护。
 > **范围与决策**：[阶段 11 范围登记](./governance/2026-11-21-phase11-registration.md)。
 > **唯一口径**：[安全规范 §1.3](../standards/security.md#13-2fa-覆盖边界与账号恢复等级-2fa-coverage--recovery-levels)。
 > **实现**：`server/utils/two-factor-coverage/`（通道定义、挑战适配、插件）。
