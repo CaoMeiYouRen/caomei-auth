@@ -115,7 +115,8 @@
             "noPendingRequest": "처리 대기 중인 변경 신청이 없습니다.",
             "kindMismatch": "이 신청은 관리자만 확인할 수 있습니다.",
             "proofOtpPhoneRequired": "휴대폰 인증 코드를 사용하기 전에 휴대폰 번호 인증을 완료해 주세요.",
-            "selfServicePasswordDisabled": "이 계정은 직접 비밀번호를 설정할 수 없습니다."
+            "selfServicePasswordDisabled": "이 계정은 직접 비밀번호를 설정할 수 없습니다.",
+            "passwordTooWeak": "비밀번호는 6~64자로 입력해 주세요."
         }
     }
 }

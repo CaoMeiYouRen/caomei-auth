@@ -115,7 +115,8 @@
             "noPendingRequest": "没有待处理的改绑申请",
             "kindMismatch": "该申请只能由管理员确认",
             "proofOtpPhoneRequired": "请先完成手机号验证再使用手机验证码",
-            "selfServicePasswordDisabled": "当前账号不能自助设置密码"
+            "selfServicePasswordDisabled": "当前账号不能自助设置密码",
+            "passwordTooWeak": "密码长度需为 6–64 位"
         }
     }
 }

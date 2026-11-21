@@ -115,7 +115,8 @@
             "noPendingRequest": "There is no pending change request.",
             "kindMismatch": "This request can only be confirmed by an administrator.",
             "proofOtpPhoneRequired": "Verify a phone number before using phone verification codes.",
-            "selfServicePasswordDisabled": "This account cannot set a password on its own."
+            "selfServicePasswordDisabled": "This account cannot set a password on its own.",
+            "passwordTooWeak": "Use a password between 6 and 64 characters."
         }
     }
 }

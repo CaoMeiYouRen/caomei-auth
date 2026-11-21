@@ -115,7 +115,8 @@
             "noPendingRequest": "処理待ちの変更申請はありません。",
             "kindMismatch": "この申請は管理者のみ確認できます。",
             "proofOtpPhoneRequired": "電話番号の認証コードを使用する前に、電話番号の確認を完了してください。",
-            "selfServicePasswordDisabled": "このアカウントは自力でパスワードを設定できません。"
+            "selfServicePasswordDisabled": "このアカウントは自力でパスワードを設定できません。",
+            "passwordTooWeak": "パスワードは 6〜64 文字で入力してください。"
         }
     }
 }
