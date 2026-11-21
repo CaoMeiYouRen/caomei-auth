@@ -115,7 +115,7 @@ describe('登录页', () => {
         expect(wrapper.html()).not.toContain('phonePassword')
     })
 
-    it('2FA 对话框展示验证码与备份码标签', async () => {
+    it('2FA 对话框按状态挂载并接收验证码与提交状态', async () => {
         const wrapper = shallowMount(LoginPage, { global: { renderStubDefaultSlot: true } })
         await flushPromises()
 
@@ -123,7 +123,9 @@ describe('登录页', () => {
         await nextTick()
         await flushPromises()
 
-        expect(wrapper.html()).toContain('一次性验证码')
-        expect(wrapper.html()).toContain('备份码')
+        const dialog = wrapper.find('auth-two-factor-dialog-stub')
+        expect(dialog.exists()).toBe(true)
+        expect(dialog.attributes('open')).toBe('true')
+        expect(dialog.attributes('verifying')).toBe('false')
     })
 })

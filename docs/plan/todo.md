@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-**当前阶段：阶段 11「2FA 覆盖收紧与登录通道闭环」，2026-11-21 登记，尚未开工。** 范围与拟定决策见 [阶段 11 范围登记](../design/governance/2026-11-21-phase11-registration.md)；阶段 10「用户侧替代证明」已于 2026-11-21 收口（阶段正文见 [todo-archive-phases-10](./archive/todo-archive-phases-10.md)）。
+**当前阶段：阶段 11「2FA 覆盖收紧与登录通道闭环」，2026-11-21 登记，进行中。** 范围与拟定决策见 [阶段 11 范围登记](../design/governance/2026-11-21-phase11-registration.md)；阶段 10「用户侧替代证明」已于 2026-11-21 收口（阶段正文见 [todo-archive-phases-10](./archive/todo-archive-phases-10.md)）。
 
 ---
 
@@ -17,11 +17,11 @@
 
 | 大条目 | 小条目 | 状态 | 提交 | 审计 | 容量（计划→实际） |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| M1 通道盘点与挑战基座 | 0/3 | 未开始 | — | — | 3–4 → — |
-| M2 无密码会话通道 | 0/3 | 未开始 | — | — | 3–4 → — |
-| M3 社交与 SSO 通道 | 0/3 | 未开始 | — | — | 3–4 → — |
-| M4 恢复、审计与边界 | 0/3 | 未开始 | — | — | 3–4 → — |
-| M5 界面、文档与收口 | 0/3 | 未开始 | — | — | 4–5 → — |
+| M1 通道盘点与挑战基座 | 3/3 | 进行中 | — | — | 3–4 → — |
+| M2 无密码会话通道 | 3/3 | 进行中 | — | — | 3–4 → — |
+| M3 社交与 SSO 通道 | 2/3 | 进行中 | — | — | 3–4 → — |
+| M4 恢复、审计与边界 | 2/3 | 进行中 | — | — | 3–4 → — |
+| M5 界面、文档与收口 | 2/3 | 进行中 | — | — | 4–5 → — |
 
 ### M1 通道盘点与挑战基座（P0 🛠️🛡️）
 
@@ -31,14 +31,14 @@
 - **验收标准**：矩阵清单与测试一一对应；当前仅 3 条凭据路径通过，其余断言失败并输出实际响应；挑战适配器删除凭据会话、写入 `two_factor` cookie、返回实际可用的 `twoFactorMethods`；信任设备命中时不挑战；异常 fail-closed；开关默认 `true`、显式 `false` 生效、全部关闭等价回退。
 - **不做什么**：不重写 TOTP / OTP / 备份码 / 信任设备判定；不新增独立挑战页；不改匿名登录。
 - **依赖**：阶段 9 / 10 的测试夹具、`logger.audit`、`AUDIT_ACTIONS`。
-- **交付物**：`docs/design/two-factor-coverage.md`、`tests/unit/server/two-factor-coverage-integration.spec.ts`、`server/utils/two-factor-coverage/`、`utils/shared/env.ts` 开关、单测；3–4 次提交。
+- **交付物**：`docs/design/two-factor-coverage.md`、`tests/unit/server/two-factor-coverage-core.spec.ts`、`server/utils/two-factor-coverage/`、`utils/shared/env.ts` 开关、单测；3–4 次提交。
 - **风险与缓解**：上游内部 hook 漂移 → 契约测试锁定 + 升级必跑；复制 cookie 丢失 → 断言会话删除与 cookie 同时成立，失败即 fail-closed；`lib/auth.ts` 触达 600 行上限 → 适配与钩子全部落在独立模块。
 
 #### M1.1 会话入口清单与失败断言
 
 - **目标**：产出入会创建会话的端点矩阵（端点、当前是否挑战、响应形态、开关名），并先写红灯集成测试。
 - **验收标准**：清单覆盖凭据登录、邮箱 OTP、手机 OTP（`/phone-number/verify`）、邮箱验证码（`/email-otp/verify-email`）、魔法链接、`/verify-email`、`/sign-in/social`（`idToken`）、`/callback/:id`、SSO OIDC（`/sso/callback/:providerId` 与共享 `/sso/callback`）与 SAML（`/sso/saml2/sp/acs/:providerId`）；每条断言「2FA 用户登录后无可用会话，响应为挑战或 302 挑战」，并额外断言端点真实存在（先注册 SSO / OAuth fixture provider，再断言非 404），禁止用 404 充当预期失败；除 3 条凭据路径外全部失败；匿名登录、新用户首次注册登录与管理员扮演断言不受影响；测试可在内存 SQLite 下独立运行。
-- **交付物**：`docs/design/two-factor-coverage.md`（矩阵与开关名）、`tests/unit/server/two-factor-coverage-integration.spec.ts` 骨架（沿用仓库现有 `tests/unit/server/*-integration.spec.ts` 位置）。
+- **交付物**：`docs/design/two-factor-coverage.md`（矩阵与开关名）、`tests/unit/server/two-factor-coverage-core.spec.ts` 骨架（沿用仓库现有 `tests/unit/server/*-integration.spec.ts` 位置）。
 - **依赖**：阶段 10 的 `channel-change-integration.spec.ts` 夹具写法。
 
 #### M1.2 挑战适配器

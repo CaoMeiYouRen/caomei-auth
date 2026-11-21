@@ -243,100 +243,24 @@
         </div>
 
         <!-- 双因素认证对话框 -->
-        <CaomeiDialog
+        <AuthTwoFactorDialog
             v-model:open="show2FADialog"
-            :closable="false"
-            :close-on-overlay="false"
-            size="md"
-            :title="t('auth.login.twoFactor.title')"
-        >
-            <div>
-                <CaomeiTabs v-model="activeAuthTab" :unmount-on-hide="false">
-                    <CaomeiTabList>
-                        <CaomeiTabTrigger :value="0">
-                            {{ t('auth.login.twoFactor.tabAuthenticator') }}
-                        </CaomeiTabTrigger>
-                        <CaomeiTabTrigger :value="1">
-                            {{ t('auth.login.twoFactor.tabOtp') }}
-                        </CaomeiTabTrigger>
-                        <CaomeiTabTrigger :value="2">
-                            {{ t('auth.login.twoFactor.tabBackup') }}
-                        </CaomeiTabTrigger>
-                    </CaomeiTabList>
-                    <CaomeiTabContent :value="0">
-                        <p class="mb-3">
-                            {{ t('auth.login.twoFactor.authenticatorHint') }}
-                        </p>
-                        <div class="field">
-                            <CaomeiInput
-                                v-model="twoFactorCode"
-                                class="w-full"
-                                :aria-label="t('auth.login.twoFactor.authenticatorLabel')"
-                                :placeholder="t('auth.login.twoFactor.codePlaceholder')"
-                                @enter="verify2FA"
-                            />
-                        </div>
-                    </CaomeiTabContent>
-                    <CaomeiTabContent :value="1">
-                        <p class="mb-3">
-                            {{ t('auth.login.twoFactor.otpHint1') }}<br>
-                            {{ t('auth.login.twoFactor.otpHint2') }}
-                        </p>
-                        <div class="field">
-                            <div class="code-row">
-                                <BaseTooltip :content="t('auth.login.twoFactor.otpTip')">
-                                    <CaomeiInput
-                                        v-model="twoFactorCode"
-                                        class="w-full"
-                                        :aria-label="t('auth.login.twoFactor.otpLabel')"
-                                        :placeholder="t('auth.login.twoFactor.codePlaceholder')"
-                                        @enter="verify2FA"
-                                    />
-                                </BaseTooltip>
-                                <SendCodeButtonV2
-                                    :disabled="otpSending"
-                                    :loading="otpSending"
-                                    :on-send="sendOtp"
-                                    :duration="60"
-                                />
-                            </div>
-                        </div>
-                    </CaomeiTabContent>
-                    <CaomeiTabContent :value="2">
-                        <p class="mb-3">
-                            {{ t('auth.login.twoFactor.backupHint') }}
-                        </p>
-                        <div class="field">
-                            <BaseTooltip :content="t('auth.login.twoFactor.backupTip')">
-                                <CaomeiInput
-                                    v-model="twoFactorCode"
-                                    class="w-full"
-                                    :aria-label="t('auth.login.twoFactor.backupLabel')"
-                                    :placeholder="t('auth.login.twoFactor.backupPlaceholder')"
-                                    @enter="verify2FA"
-                                />
-                            </BaseTooltip>
-                        </div>
-                    </CaomeiTabContent>
-                </CaomeiTabs>
-                <div v-if="twoFactorError" class="error-message mt-2">
-                    {{ twoFactorError }}
-                </div>
-            </div>
-            <template #footer>
-                <CaomeiButton
-                    :loading="verifying2FA"
-                    @click="verify2FA"
-                >
-                    {{ t('auth.login.twoFactor.verify') }}
-                </CaomeiButton>
-            </template>
-        </CaomeiDialog>
+            v-model:code="twoFactorCode"
+            v-model:active-tab="activeAuthTab"
+            :channel-label="twoFactorChannelLabel"
+            :error="twoFactorError"
+            :otp-sending="otpSending"
+            :verifying="verifying2FA"
+            :on-send-otp="sendOtp"
+            @verify="verify2FA"
+            @cancel="cancel2FA"
+        />
     </div>
 </template>
 
 <script lang="ts" setup>
 import SendCodeButtonV2 from '@/components/send-code-button-v2.vue'
+import AuthTwoFactorDialog from '@/components/auth/two-factor-dialog.vue'
 import AuthLeft from '@/components/auth-left.vue'
 import { usePageMeta } from '@/composables/utils/use-page-meta'
 import Captcha from '@/components/captcha.vue'
@@ -363,6 +287,7 @@ const {
     phoneCodeSending,
     captcha,
     show2FADialog,
+    twoFactorChannelLabel,
     twoFactorCode,
     twoFactorError,
     verifying2FA,
@@ -373,6 +298,7 @@ const {
     usernameEnabled,
     changeMode,
     sendOtp,
+    cancel2FA,
     verify2FA,
     login,
     loginWithSocial,
@@ -561,12 +487,6 @@ const {
 
 .btn-primary:hover {
     background-color: $primary-dark !important;
-}
-
-.code-row {
-    display: flex;
-    gap: 0.5rem;
-    align-items: flex-start;
 }
 
 .switch-btn {

@@ -58,3 +58,14 @@ export function navigateAfterLoginWithDelay(delay: number = 1200) {
         navigateAfterLogin()
     }, delay)
 }
+
+/**
+ * 跳转到指定站内路径（2FA 挑战完成后回到原始目标）
+ * @param path 站内路径
+ * @param delay 延迟时间（毫秒），默认 1200ms
+ */
+export function navigateToWithDelay(path: string, delay: number = 1200) {
+    setTimeout(() => {
+        navigateHandler(path)
+    }, delay)
+}

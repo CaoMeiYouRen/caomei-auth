@@ -5,7 +5,7 @@
 > **归档模型（2026-11-20 起）**：阶段 1–9 详情保留在本文件；自阶段 10 起，已收口阶段详情按 [规划规范](../standards/planning.md) §8 迁入 `docs/plan/archive/roadmap-phases-*.md`，本文件只保留里程碑概览与当前阶段。
 
 
-> **当前状态**：**阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 登记、尚未开工**（范围与拟定决策见 [阶段 11 范围登记](../design/governance/2026-11-21-phase11-registration.md)，条目见 [todo.md](./todo.md)）。阶段 10「用户侧替代证明」已于 2026-11-21 收口（5 大条目 / 14 小条目全部交付，里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)、阶段正文见 [todo-archive-phases-10](./archive/todo-archive-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），范围见 [阶段 9 范围登记](../design/governance/2026-11-19-phase9-registration.md)、记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。阶段 8「国际化 5 语推广（10 语架构）」已于 2026-11-19 收口（M1A–M12 全部交付），范围见 [阶段 8 范围登记](../design/governance/2026-11-17-phase8-registration.md)、记录见 [阶段 8 收口记录](../design/governance/2026-11-19-phase8-closure.md)。阶段 7「质量与测试基建」已于 2026-11-17 收口（M1–M7 全部交付），记录见 [阶段 7 收口记录](../design/governance/2026-11-17-phase7-closure.md)；阶段 6 已于 2026-11-17 收口（M1–M18 全部交付），记录见 [阶段 6 收口记录](../design/governance/2026-11-17-phase6-closure.md)。阶段 5「i18n 全量落地与体验收口」已于 2026-11-16 收口（M1–M19 全部交付），收口记录见 [阶段 5 收口记录](../design/governance/2026-11-16-phase5-closure.md)。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线；未启动候选见 [backlog.md](./backlog.md)。
+> **当前状态**：**阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 登记，进行中**（范围与拟定决策见 [阶段 11 范围登记](../design/governance/2026-11-21-phase11-registration.md)，条目见 [todo.md](./todo.md)）。阶段 10「用户侧替代证明」已于 2026-11-21 收口（5 大条目 / 14 小条目全部交付，里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)、阶段正文见 [todo-archive-phases-10](./archive/todo-archive-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），范围见 [阶段 9 范围登记](../design/governance/2026-11-19-phase9-registration.md)、记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。阶段 8「国际化 5 语推广（10 语架构）」已于 2026-11-19 收口（M1A–M12 全部交付），范围见 [阶段 8 范围登记](../design/governance/2026-11-17-phase8-registration.md)、记录见 [阶段 8 收口记录](../design/governance/2026-11-19-phase8-closure.md)。阶段 7「质量与测试基建」已于 2026-11-17 收口（M1–M7 全部交付），记录见 [阶段 7 收口记录](../design/governance/2026-11-17-phase7-closure.md)；阶段 6 已于 2026-11-17 收口（M1–M18 全部交付），记录见 [阶段 6 收口记录](../design/governance/2026-11-17-phase6-closure.md)。阶段 5「i18n 全量落地与体验收口」已于 2026-11-16 收口（M1–M19 全部交付），收口记录见 [阶段 5 收口记录](../design/governance/2026-11-16-phase5-closure.md)。阶段 4「caomei-ui P4 Admin 与 P5 单库收尾」已于 2026-11-14 收口，PrimeVue 已完整下线；未启动候选见 [backlog.md](./backlog.md)。
 
 ---
 
@@ -143,7 +143,7 @@ _目标：旧邮箱失效但持有恢复因子的用户可自助换邮箱；换�
 
 > 已完成（M1–M5 全部交付）。里程碑详情、提交清单与未覆盖边界见 [roadmap-phases-10](./archive/roadmap-phases-10.md)，阶段正文见 [todo-archive-phases-10](./archive/todo-archive-phases-10.md)，范围与决策见 [阶段 10 范围登记](../design/governance/2026-11-21-phase10-registration.md)。后续候选见 [backlog §2.12](./backlog.md)。
 
-## 阶段 11: 2FA 覆盖收紧与登录通道闭环（2026-11-21 登记，尚未开工）
+## 阶段 11: 2FA 覆盖收紧与登录通道闭环（2026-11-21 登记，进行中）
 
 _目标：开启 2FA 的用户经邮箱 / 手机 OTP、邮箱验证码 / 链接自动登录、魔法链接、社交（内置 / genericOAuth / `idToken`）与 SSO（OIDC 共享 / 专属回调与 SAML ACS）登录时同样要求第二因子；复用上游挑战、提供逐通道开关与回退，并保持恢复路径与信任设备语义不变。_
 

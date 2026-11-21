@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref, reactive } from 'vue'
+import { defineComponent, h, ref, reactive } from 'vue'
+import { mount } from '@vue/test-utils'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import { authClient } from '@/lib/auth-client'
 import { useLoginFlow } from '@/composables/use-login-flow'
 import { resolveCaptchaToken } from '@/utils/web/captcha'
-import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
+import { navigateAfterLoginWithDelay, navigateToWithDelay } from '@/utils/web/navigation'
 
 vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 // Mock Nuxt composables
@@ -39,6 +40,11 @@ vi.mock('#app/nuxt', async (importOriginal) => {
     }
 })
 
+const { routeRef } = vi.hoisted(() => ({
+    routeRef: { query: {} as Record<string, unknown> },
+}))
+
+mockNuxtImport('useRoute', () => () => routeRef)
 mockNuxtImport('useFetch', () => useFetchMock)
 vi.mock('#build/fetch.mjs', () => ({
     $fetch: fetchMock,
@@ -82,11 +88,59 @@ vi.mock('@/utils/web/captcha', () => ({
 
 vi.mock('@/utils/web/navigation', () => ({
     navigateAfterLoginWithDelay: vi.fn(),
+    navigateToWithDelay: vi.fn(),
 }))
 
 describe('useLoginFlow', () => {
     beforeEach(() => {
         vi.clearAllMocks()
+        routeRef.query = {}
+    })
+
+    it('opens the 2FA dialog from a challenge query and navigates back after verification', async () => {
+        routeRef.query = { twoFactor: '1', channel: 'magic-link', redirect: '/profile?tab=security' }
+        const component = defineComponent({
+            setup() {
+                const flow = useLoginFlow()
+                return { flow }
+            },
+            render: () => h('div'),
+        })
+        const wrapper = mount(component)
+        const flow = wrapper.vm.flow as ReturnType<typeof useLoginFlow>
+
+        expect(flow.show2FADialog.value).toBe(true)
+        expect(flow.twoFactorChannel.value).toBe('magic-link')
+        expect(flow.redirectAfterLogin.value).toBe('/profile?tab=security')
+
+        flow.twoFactorCode.value = '123456'
+        ;(authClient as any).twoFactor = {
+            verifyTotp: vi.fn().mockResolvedValue({ error: null }),
+        }
+        await flow.verify2FA()
+
+        expect(navigateToWithDelay).toHaveBeenCalledWith('/profile?tab=security', 600)
+        expect(navigateAfterLoginWithDelay).not.toHaveBeenCalled()
+    })
+
+    it('does not open the dialog for unknown channels and clears state on cancel', () => {
+        routeRef.query = { twoFactor: '1', channel: 'unknown-channel' }
+        const component = defineComponent({
+            setup() {
+                const flow = useLoginFlow()
+                return { flow }
+            },
+            render: () => h('div'),
+        })
+        const wrapper = mount(component)
+        const flow = wrapper.vm.flow as ReturnType<typeof useLoginFlow>
+
+        expect(flow.show2FADialog.value).toBe(false)
+        flow.show2FADialog.value = true
+        flow.twoFactorChannel.value = 'email-otp'
+        flow.cancel2FA()
+        expect(flow.show2FADialog.value).toBe(false)
+        expect(flow.twoFactorChannel.value).toBeNull()
     })
 
     it('initializes with default values', () => {

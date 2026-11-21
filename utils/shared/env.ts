@@ -247,3 +247,34 @@ export const HCAPTCHA_SITE_KEY = process.env.NUXT_PUBLIC_HCAPTCHA_SITE_KEY || im
 
 // 反馈配置
 export const FEEDBACK_URL = process.env.NUXT_PUBLIC_FEEDBACK_URL || import.meta.env.NUXT_PUBLIC_FEEDBACK_URL || ''
+
+/**
+ * 2FA 覆盖收紧（阶段 11）
+ *
+ * 逐通道显式开关，缺省全部开启；非法值回落默认并告警。
+ * 关闭单通道等价回退到「仅凭据登录触发 2FA」，不需要回滚代码。
+ */
+export function parseBooleanFlag(value: string | undefined, fallback: boolean, name = 'flag'): boolean {
+    if (value === undefined || value.trim() === '') {
+        return fallback
+    }
+    const normalized = value.trim().toLowerCase()
+    if (['1', 'true', 'yes', 'on'].includes(normalized)) {
+        return true
+    }
+    if (['0', 'false', 'no', 'off'].includes(normalized)) {
+        return false
+    }
+    console.warn(`[env] 无法解析 ${name}="${value}"，回落默认值 ${fallback}`)
+    return fallback
+}
+
+export const TWO_FACTOR_COVERAGE = {
+    emailOtp: parseBooleanFlag(process.env.TWO_FACTOR_COVERAGE_EMAIL_OTP, true, 'TWO_FACTOR_COVERAGE_EMAIL_OTP'),
+    phoneOtp: parseBooleanFlag(process.env.TWO_FACTOR_COVERAGE_PHONE_OTP, true, 'TWO_FACTOR_COVERAGE_PHONE_OTP'),
+    magicLink: parseBooleanFlag(process.env.TWO_FACTOR_COVERAGE_MAGIC_LINK, true, 'TWO_FACTOR_COVERAGE_MAGIC_LINK'),
+    emailVerification: parseBooleanFlag(process.env.TWO_FACTOR_COVERAGE_EMAIL_VERIFICATION, true, 'TWO_FACTOR_COVERAGE_EMAIL_VERIFICATION'),
+    social: parseBooleanFlag(process.env.TWO_FACTOR_COVERAGE_SOCIAL, true, 'TWO_FACTOR_COVERAGE_SOCIAL'),
+    sso: parseBooleanFlag(process.env.TWO_FACTOR_COVERAGE_SSO, true, 'TWO_FACTOR_COVERAGE_SSO'),
+}
+

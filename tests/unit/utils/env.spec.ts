@@ -85,6 +85,60 @@ describe('utils/env derived values', () => {
         expect(fallbackEnv.PHONE_ENABLED).toBe(DEFAULT_PHONE_ENABLED)
     })
 
+
+    it('parses explicit boolean flags and warns on invalid values', async () => {
+        const envModule = await loadEnvModule()
+
+        expect(envModule.parseBooleanFlag('true', false)).toBe(true)
+        expect(envModule.parseBooleanFlag('1', false)).toBe(true)
+        expect(envModule.parseBooleanFlag('yes', false)).toBe(true)
+        expect(envModule.parseBooleanFlag('on', false)).toBe(true)
+        expect(envModule.parseBooleanFlag('false', true)).toBe(false)
+        expect(envModule.parseBooleanFlag('0', true)).toBe(false)
+        expect(envModule.parseBooleanFlag('no', true)).toBe(false)
+        expect(envModule.parseBooleanFlag('off', true)).toBe(false)
+        expect(envModule.parseBooleanFlag(undefined, true)).toBe(true)
+        expect(envModule.parseBooleanFlag('', false)).toBe(false)
+
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+        expect(envModule.parseBooleanFlag('definitely-not-a-flag', true)).toBe(true)
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('无法解析'))
+        warn.mockRestore()
+    })
+
+    it('reads 2FA coverage switches with per-channel explicit overrides', async () => {
+        const defaults = await loadEnvModule({
+            processEnv: {
+                TWO_FACTOR_COVERAGE_EMAIL_OTP: undefined,
+                TWO_FACTOR_COVERAGE_PHONE_OTP: undefined,
+                TWO_FACTOR_COVERAGE_MAGIC_LINK: undefined,
+                TWO_FACTOR_COVERAGE_EMAIL_VERIFICATION: undefined,
+                TWO_FACTOR_COVERAGE_SOCIAL: undefined,
+                TWO_FACTOR_COVERAGE_SSO: undefined,
+            },
+        })
+        expect(defaults.TWO_FACTOR_COVERAGE).toEqual({
+            emailOtp: true,
+            phoneOtp: true,
+            magicLink: true,
+            emailVerification: true,
+            social: true,
+            sso: true,
+        })
+
+        const overridden = await loadEnvModule({
+            processEnv: {
+                TWO_FACTOR_COVERAGE_EMAIL_OTP: 'false',
+                TWO_FACTOR_COVERAGE_SSO: '0',
+                TWO_FACTOR_COVERAGE_PHONE_OTP: 'true',
+            },
+        })
+        expect(overridden.TWO_FACTOR_COVERAGE.emailOtp).toBe(false)
+        expect(overridden.TWO_FACTOR_COVERAGE.sso).toBe(false)
+        expect(overridden.TWO_FACTOR_COVERAGE.phoneOtp).toBe(true)
+        expect(overridden.TWO_FACTOR_COVERAGE.magicLink).toBe(true)
+    })
+
     it('falls back to NODE_ENV defaults for log level when explicit value missing', async () => {
         const devEnv = await loadEnvModule({
             processEnv: {

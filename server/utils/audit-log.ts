@@ -35,6 +35,8 @@ export const AUDIT_ACTIONS = [
     'email.change.cancel',
     'email.change.apply',
     'password.set.selfService',
+    'twoFactor.challenge',
+    'twoFactor.verify',
 ] as const
 
 export type AuditAction = typeof AUDIT_ACTIONS[number]

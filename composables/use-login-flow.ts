@@ -1,4 +1,4 @@
-import { ref, computed, onMounted, unref } from 'vue'
+import { ref, computed, onMounted, unref, watch } from 'vue'
 import { useToast } from 'caomei-ui'
 import { useUrlSearchParams } from '@vueuse/core'
 import { authClient } from '@/lib/auth-client'
@@ -10,7 +10,7 @@ import {
     loginPhoneFormSchema,
     loginPhoneOtpFormSchema,
 } from '@/utils/shared/schemas'
-import { navigateAfterLoginWithDelay } from '@/utils/web/navigation'
+import { navigateAfterLoginWithDelay, navigateToWithDelay } from '@/utils/web/navigation'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import { getSocialColor } from '@/utils/web/social-colors'
@@ -18,6 +18,8 @@ import type { SocialProvider } from '@/types/social'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
+import { readTwoFactorChallengeQuery } from '@/utils/web/login-challenge'
+import { resolveTwoFactorErrorMessage } from '@/utils/web/two-factor-errors'
 
 // Helper function to get first Zod error
 function getFirstZodError(
@@ -33,6 +35,8 @@ function getFirstZodError(
 
 export function useLoginFlow() {
     const config = useRuntimeConfig().public
+    const route = useRoute()
+    const router = useRouter()
     const translate = useValidationMessage()
     const t = useI18nText()
     const phoneEnabled = config.phoneEnabled
@@ -58,6 +62,8 @@ export function useLoginFlow() {
 
     // 2FA State
     const show2FADialog = ref(false)
+    const twoFactorChannel = ref<string | null>(null)
+    const redirectAfterLogin = ref<string | null>(null)
     const twoFactorCode = ref('')
     const twoFactorError = ref('')
     const verifying2FA = ref(false)
@@ -103,20 +109,52 @@ export function useLoginFlow() {
     const handle2FA = (result: any) => {
         if (result.data?.twoFactorRedirect) {
             pendingLoginData.value = result.data
+            twoFactorChannel.value = typeof result.data.channel === 'string' ? result.data.channel : null
             show2FADialog.value = true
             return true
         }
         return false
     }
 
+    const twoFactorChannelLabel = computed(() => {
+        switch (twoFactorChannel.value) {
+            case 'email-otp': return t('auth.login.twoFactor.channels.emailOtp')
+            case 'phone-otp': return t('auth.login.twoFactor.channels.phoneOtp')
+            case 'email-otp-verification': return t('auth.login.twoFactor.channels.emailOtpVerification')
+            case 'email-link-verification': return t('auth.login.twoFactor.channels.emailLinkVerification')
+            case 'magic-link': return t('auth.login.twoFactor.channels.magicLink')
+            case 'social-callback':
+            case 'social-id-token': return t('auth.login.twoFactor.channels.social')
+            case 'sso-oidc':
+            case 'sso-oidc-shared':
+            case 'sso-saml': return t('auth.login.twoFactor.channels.sso')
+            default: return ''
+        }
+    })
+
     const reset2FAState = () => {
         twoFactorCode.value = ''
         twoFactorError.value = ''
         activeAuthTab.value = 0
         show2FADialog.value = false
+        twoFactorChannel.value = null
+        redirectAfterLogin.value = null
         verifying2FA.value = false
         pendingLoginData.value = null
     }
+
+    const cancel2FA = () => {
+        reset2FAState()
+    }
+
+    watch(show2FADialog, (open) => {
+        if (!open) {
+            twoFactorChannel.value = null
+            redirectAfterLogin.value = null
+            twoFactorCode.value = ''
+            twoFactorError.value = ''
+        }
+    })
 
     const sendOtp = async () => {
         let captchaContext: ResolvedCaptchaToken | null = null
@@ -195,14 +233,19 @@ export function useLoginFlow() {
             }
 
             if (result.error) {
-                throw new Error(result.error.message || t('auth.login.verifyFailed'))
+                throw Object.assign(new Error(result.error.message || t('auth.login.verifyFailed')), { code: result.error.code })
             }
 
+            const redirect = redirectAfterLogin.value
             reset2FAState()
             toast.success({ title: t('auth.common.loginSuccess'), description: t('auth.common.redirectHome'), duration: 2000 })
-            navigateAfterLoginWithDelay(600)
+            if (redirect) {
+                navigateToWithDelay(redirect, 600)
+            } else {
+                navigateAfterLoginWithDelay(600)
+            }
         } catch (error: any) {
-            twoFactorError.value = error.message || t('auth.login.verifyFailed')
+            twoFactorError.value = resolveTwoFactorErrorMessage(error.code, error.message, t)
         } finally {
             verifying2FA.value = false
         }
@@ -446,6 +489,20 @@ export function useLoginFlow() {
 
         activeTab.value = params.mode
 
+        const challengeQuery = readTwoFactorChallengeQuery(route.query as Record<string, unknown>)
+        if (challengeQuery.active) {
+            show2FADialog.value = true
+            twoFactorChannel.value = challengeQuery.channel
+            redirectAfterLogin.value = challengeQuery.redirect
+            const cleanedQuery = { ...route.query }
+            delete cleanedQuery.twoFactor
+            delete cleanedQuery.channel
+            delete cleanedQuery.redirect
+            if (router) {
+                Promise.resolve(router.replace({ query: cleanedQuery })).catch(() => undefined)
+            }
+        }
+
         clarity.setTag('page_type', 'login')
         clarity.setTag('initial_login_method', params.mode)
     })
@@ -469,6 +526,9 @@ export function useLoginFlow() {
         phoneCodeSending,
         captcha,
         show2FADialog,
+        twoFactorChannel,
+        twoFactorChannelLabel,
+        redirectAfterLogin,
         twoFactorCode,
         twoFactorError,
         verifying2FA,
@@ -481,6 +541,7 @@ export function useLoginFlow() {
         // Methods
         changeMode,
         sendOtp,
+        cancel2FA,
         verify2FA,
         login,
         loginWithSocial,
