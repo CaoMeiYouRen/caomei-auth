@@ -58,4 +58,18 @@ describe('channel change read-only API', () => {
             statusCode: 404,
         })
     })
+
+    it('refuses to render self-service requests (source gate)', async () => {
+        state.repository.findOne.mockResolvedValue({
+            id: 'req-1',
+            channel: 'email',
+            newValue: 'new@example.com',
+            status: 'pending',
+            source: 'user',
+            expiresAt: new Date(Date.now() + 60000),
+        })
+        await expect(handler({ path: '/api/channel-change/req-1', context: {} } as never)).rejects.toMatchObject({
+            statusCode: 403,
+        })
+    })
 })

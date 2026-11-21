@@ -6,7 +6,7 @@ const state = vi.hoisted(() => ({
     verify: vi.fn(),
     markConfirmed: vi.fn(),
     userRepository: { findOne: vi.fn(), save: vi.fn(async (item) => item) },
-    channelRepository: { save: vi.fn(async (item) => item) },
+    channelRepository: { save: vi.fn(async (item) => item), findOne: vi.fn(async () => ({ id: 'req-1', source: 'admin' })) },
     deleteUserSessions: vi.fn(),
     sendNotification: vi.fn(),
     requestEmailReset: vi.fn(),
@@ -184,5 +184,14 @@ describe('channel change confirmation API', () => {
             result: 'failure',
             reason: 'old inbox unavailable',
         }))
+    })
+
+    it('rejects self-service requests before verifying the code (M2.1 source gate)', async () => {
+        state.channelRepository.findOne.mockResolvedValue({ id: 'req-1', source: 'user' })
+        await expect(handler({ headers: new Headers() } as any)).rejects.toMatchObject({
+            statusCode: 403,
+            data: { code: 'CHANNEL_CHANGE_KIND_MISMATCH' },
+        })
+        expect(state.verify).not.toHaveBeenCalled()
     })
 })

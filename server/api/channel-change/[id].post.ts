@@ -53,6 +53,17 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    /* 来源门禁（阶段 10 M2.1）：用户自助请求必须走冷静期端点，不能被管理员确认路径消费 */
+    const requestRepository = dataSource.getRepository(ChannelChangeRequest)
+    const pendingRequest = await requestRepository.findOne({ where: { id: params.data.id } })
+    if (pendingRequest?.source === 'user') {
+        throw await createLocalizedError(event, {
+            statusCode: 403,
+            key: 'errors.recovery.kindMismatch',
+            data: { code: 'CHANNEL_CHANGE_KIND_MISMATCH' },
+        })
+    }
+
     const result = await verifyChannelChangeRequest({ id: params.data.id, code: parsed.data.code })
     if (!result.ok) {
         const mapping = {
@@ -83,6 +94,7 @@ export default defineEventHandler(async (event) => {
         : await userRepository.findOne({ where: { phoneNumber: request.newValue } })
     if (existing && existing.id !== user.id) {
         request.status = 'cancelled'
+        request.cancelledAt = new Date()
         await dataSource.getRepository(ChannelChangeRequest).save(request)
         throw await createLocalizedError(event, {
             statusCode: 409,
@@ -96,6 +108,7 @@ export default defineEventHandler(async (event) => {
     )
     if (!registrationDecision.allowed) {
         request.status = 'cancelled'
+        request.cancelledAt = new Date()
         await dataSource.getRepository(ChannelChangeRequest).save(request)
         throw await createLocalizedError(event, {
             statusCode: 400,

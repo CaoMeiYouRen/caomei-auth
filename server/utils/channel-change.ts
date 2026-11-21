@@ -1,10 +1,9 @@
 import { createHash, randomBytes, randomInt, timingSafeEqual } from 'node:crypto'
 import type { Repository } from 'typeorm'
 import { maskEmail, maskPhone } from './privacy'
-import { ChannelChangeRequest, type ChannelChangeType } from '@/server/entities/channel-change-request'
+import { ChannelChangeRequest, type ChannelChangeSource, type ChannelChangeType } from '@/server/entities/channel-change-request'
 import { dataSource } from '@/server/database'
-
-/** 改绑验证码有效期：10 分钟（阶段 9 §5.3） */
+/** 改绑验证码有效期：10 分钟（阶段 9 §5.3），自助请求统一使用该窗口 */
 export const CHANNEL_CHANGE_EXPIRES_IN_MS = 10 * 60 * 1000
 
 /** 验证码最多尝试次数 */
@@ -43,15 +42,46 @@ export function maskChannelValue(channel: ChannelChangeType, value: string): str
     return channel === 'email' ? maskEmail(value) : maskPhone(value)
 }
 
-export function isChannelChangeExpired(request: Pick<ChannelChangeRequest, 'expiresAt'>, now = Date.now()): boolean {
-    const expires = request.expiresAt instanceof Date ? request.expiresAt.getTime() : new Date(request.expiresAt).getTime()
-    return !Number.isFinite(expires) || expires <= now
+/**
+ * 验证码窗口截止时间：统一按 `createdAt + CHANNEL_CHANGE_EXPIRES_IN_MS`。
+ *
+ * `expiresAt` 只作为老数据的回落值（阶段 9 请求创建时两者等价），
+ * 且不参与冷静期生效判定（阶段 10 M2.1）。
+ */
+function toTimestamp(value: Date | string | number | null | undefined): number {
+    if (value === null || value === undefined) {
+        return Number.NaN
+    }
+    return value instanceof Date ? value.getTime() : new Date(value).getTime()
+}
+
+export function getVerificationDeadline(
+    request: Partial<Pick<ChannelChangeRequest, 'createdAt' | 'expiresAt'>>,
+): Date {
+    const created = toTimestamp(request.createdAt)
+    if (Number.isFinite(created)) {
+        return new Date(created + CHANNEL_CHANGE_EXPIRES_IN_MS)
+    }
+    const expires = toTimestamp(request.expiresAt)
+    return new Date(Number.isFinite(expires) ? expires : 0)
+}
+
+/** 验证码窗口是否已关闭（与冷静期无关） */
+export function isChannelChangeExpired(
+    request: Partial<Pick<ChannelChangeRequest, 'createdAt' | 'expiresAt'>>,
+    now = Date.now(),
+): boolean {
+    return getVerificationDeadline(request).getTime() <= now
 }
 
 export interface CreateChannelChangeInput {
     userId: string
     channel: ChannelChangeType
     value: string
+    /** 发起方；管理员协助默认 admin，用户自助传 user */
+    source?: ChannelChangeSource
+    /** 用户自助申请使用的恢复因子类型 */
+    proofFactor?: string | null
     requestedBy?: string | null
     reason?: string | null
     repository?: ChannelChangeRepository
@@ -77,6 +107,7 @@ export async function createChannelChangeRequest(input: CreateChannelChangeInput
     })
     for (const previous of pending) {
         previous.status = 'cancelled'
+        previous.cancelledAt = new Date(now)
         await repository.save(previous)
     }
 
@@ -87,10 +118,14 @@ export async function createChannelChangeRequest(input: CreateChannelChangeInput
         newValue: normalizedValue,
         codeHash: '',
         status: 'pending',
+        source: input.source ?? 'admin',
         attempts: 0,
         requestedBy: input.requestedBy ?? null,
         reason: input.reason ?? null,
         expiresAt: new Date(now + CHANNEL_CHANGE_EXPIRES_IN_MS),
+        scheduledAt: null,
+        cancelledAt: null,
+        proofFactor: input.proofFactor ?? null,
         confirmedAt: null,
     })
     const code = generateChannelChangeCode()

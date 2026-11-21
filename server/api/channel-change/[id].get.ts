@@ -5,7 +5,8 @@ import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
 import { validateParamsSafe } from '@/server/utils/validation'
 import { idParamSchema } from '@/utils/shared/api-schemas'
 import { createZodErrorMap } from '@/utils/shared/zod-error-map'
-import { isChannelChangeExpired, maskChannelValue } from '@/server/utils/channel-change'
+import { maskChannelValue } from '@/server/utils/channel-change'
+import { resolveRequestState } from '@/server/utils/channel-change-state'
 
 /**
  * 改绑确认页只读信息（阶段 9 M10）。
@@ -25,7 +26,17 @@ export default defineEventHandler(async (event) => {
     if (!request) {
         throw await createLocalizedError(event, { statusCode: 404, key: 'errors.recovery.requestNotFound' })
     }
-    if (request.status === 'pending' && isChannelChangeExpired(request)) {
+    /* 来源门禁（阶段 10 M2.1）：用户自助请求不渲染管理员确认页 */
+    if (request.source === 'user') {
+        throw await createLocalizedError(event, {
+            statusCode: 403,
+            key: 'errors.recovery.kindMismatch',
+            data: { code: 'CHANNEL_CHANGE_KIND_MISMATCH' },
+        })
+    }
+
+    const state = resolveRequestState(request)
+    if (request.status === 'pending' && state === 'expired') {
         request.status = 'expired'
         await repository.save(request)
     }
@@ -36,8 +47,11 @@ export default defineEventHandler(async (event) => {
             id: request.id,
             channel: request.channel,
             maskedTarget: maskChannelValue(request.channel, request.newValue),
-            status: request.status,
+            status: state,
+            source: request.source,
             expiresAt: request.expiresAt,
+            scheduledAt: request.scheduledAt,
+            cancelledAt: request.cancelledAt,
         },
     }
 })

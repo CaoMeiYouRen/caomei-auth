@@ -617,10 +617,14 @@ CREATE TABLE IF NOT EXISTS caomei_auth_channel_change_request (
     new_value     VARCHAR (255) NOT NULL,
     code_hash     VARCHAR (64) NOT NULL,
     status        VARCHAR (16) NOT NULL DEFAULT 'pending',
+    source        VARCHAR (16) NOT NULL DEFAULT 'admin',
     attempts      INTEGER NOT NULL DEFAULT 0,
     requested_by  VARCHAR (36),
     reason        TEXT,
     expires_at    DATETIME NOT NULL,
+    scheduled_at  DATETIME,
+    cancelled_at  DATETIME,
+    proof_factor  VARCHAR (16),
     confirmed_at  DATETIME
 );
 
