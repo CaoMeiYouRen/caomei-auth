@@ -106,6 +106,8 @@ export function useChannelChange(options: { api?: ChannelChangeApi } = {}) {
             remainingMs.value = Math.max(0, remainingMs.value - 1000)
             if (remainingMs.value === 0) {
                 stopCountdown()
+                /* 到期后刷新一次：服务端读路径负责惰性生效，前端据此切换为已生效 */
+                void refresh().catch(() => undefined)
             }
         }, 1000)
     }

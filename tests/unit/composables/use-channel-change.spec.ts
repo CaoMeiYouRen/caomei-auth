@@ -55,6 +55,7 @@ describe('composables/use-channel-change', () => {
         vi.advanceTimersByTime(3000)
         expect(flow.remainingMs.value).toBe(0)
         expect(flow.canCancel.value).toBe(false)
+        await vi.waitFor(() => expect(api.status).toHaveBeenCalledTimes(2))
         flow.stopCountdown()
         vi.useRealTimers()
     })
