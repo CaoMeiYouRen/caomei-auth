@@ -5,7 +5,7 @@
 > **归档模型（2026-11-20 起）**：阶段 1–9 详情保留在本文件；自阶段 10 起，已收口阶段详情按 [规划规范](../standards/planning.md) §8 迁入 `docs/plan/archive/roadmap-phases-*.md`，本文件只保留里程碑概览与当前阶段。
 
 
-> **当前状态**：**阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口**（M1–M5 交付，M3.3 / 撤销脚本迁入 backlog；里程碑见 [roadmap-phases-11](./archive/roadmap-phases-11.md)，阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)），当前无进行中阶段，下一阶段需另行评估与授权。阶段 10「用户侧替代证明」已于 2026-11-21 收口（里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。
+> **当前状态**：**阶段 12「安全可观测性与会话治理」已于 2026-11-21 登记、尚未开工**（范围与拟定决策见 [阶段 12 范围登记](../design/governance/2026-11-21-phase12-registration.md)，条目见 [todo.md](./todo.md)）。阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（里程碑见 [roadmap-phases-11](./archive/roadmap-phases-11.md)，阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)）。阶段 10「用户侧替代证明」已于 2026-11-21 收口（里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。
 
 ---
 
@@ -147,6 +147,18 @@ _目标：旧邮箱失效但持有恢复因子的用户可自助换邮箱；换�
 
 > 5 大条目 / 15 小条目；邮箱 / 手机 OTP、邮箱验证码 / 链接、魔法链接、社交与 SSO 登录已接入第二因子挑战，登录页完成挑战接线，新增 6 张视觉基线。里程碑详情、提交清单与未覆盖边界见 [roadmap-phases-11](./archive/roadmap-phases-11.md)，阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)，范围与决策见 [阶段 11 范围登记](../design/governance/2026-11-21-phase11-registration.md)，收口记录见 [2026-11-21-phase11-closure](../design/governance/2026-11-21-phase11-closure.md)。OAuth 授权链 state 回跳与会话撤销脚本已迁入 backlog。
 
+## 阶段 12: 安全可观测性与会话治理（2026-11-21 登记，尚未开工）
+
+_目标：建立可查询的登录事件数据源与时间 × 事件类型热力图，补齐管理端事件视图；提供可信设备列表 / 吊销与按用户批量撤销会话，并补多方言撤销脚本。_
+
+- **M1 登录事件基座**：`LoginEvent` 实体与索引、生命周期写入、保留期与清理、事件契约。
+- **M2 Admin 事件查询**：查询 / 统计 API、`/admin/logs` 事件视图与 5 语文案。
+- **M3 热力图**：时间桶 × 事件类型聚合、组件与 6 张视觉基线。
+- **M4 可信设备与会话治理**：`TrustedDevice` 采集、用户安全页、管理端吊销与多方言撤销脚本。
+- **M5 隐私、门禁与收口**：权限 / 保留期口径、全量门禁、归档。
+
+> 5 大条目 / 15 小条目；范围、拟定决策 D18–D25、容量基线与不做范围见 [阶段 12 范围登记](../design/governance/2026-11-21-phase12-registration.md)，条目明细见 [todo.md](./todo.md)。
+
 ## 后续方向（未授权）
 
 以下方向不属于当前阶段，作为中长期方向保留；候选详情与触发条件见 [backlog.md](./backlog.md)。未授权方向不构成启动授权。
@@ -220,7 +232,10 @@ _目标：旧邮箱失效但持有恢复因子的用户可自助换邮箱；换�
 阶段 11（已收口 2026-11-21）：2FA 覆盖收紧与登录通道闭环
         │  通道矩阵与挑战基座 → OTP / 验证码 / 链接自动登录 / 魔法链接 → 社交 / SSO（含共享回调）→ 恢复与审计边界 → 界面与收口
         ▼
-后续方向（未授权）：登录事件与日志可视化 / 安全增强 / 开发者生态 / 企业级
+阶段 12（2026-11-21 登记）：安全可观测性与会话治理
+        │  登录事件基座 → Admin 事件查询 / 统计 → 热力图 → 可信设备与会话治理 → 隐私 / 门禁 / 收口
+        ▼
+后续方向（未授权）：审计检索 / 安全增强 / 开发者生态 / 企业级
         │
         └─ 候选详情：backlog.md
 ```
