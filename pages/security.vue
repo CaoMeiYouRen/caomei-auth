@@ -37,6 +37,12 @@
 
                 <div class="divider" />
 
+                <ChannelChangeCard
+                    :phone-verified="Boolean(security.userSession?.user.phoneNumberVerified)"
+                />
+
+                <div class="divider" />
+
                 <TwoFactorPanel
                     v-model:verification-code="security.verificationCode"
                     v-model:password="security.password"
@@ -85,6 +91,7 @@
 import TwoFactorPanel from '@/components/security/two-factor-panel.vue'
 import SessionTable from '@/components/security/session-table.vue'
 import RecoveryCodePanel from '@/components/security/recovery-code-panel.vue'
+import ChannelChangeCard from '@/components/security/channel-change-card.vue'
 import { useSecuritySettings } from '@/composables/use-security-settings'
 import { usePageMeta } from '@/composables/utils/use-page-meta'
 import { useNoIndex } from '@/composables/utils/use-no-index'
