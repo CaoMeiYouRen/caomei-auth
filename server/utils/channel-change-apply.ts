@@ -111,7 +111,8 @@ async function applyWithinTransaction(
     if (!request) {
         return { applied: false, reason: 'NOT_FOUND' }
     }
-    if (request.status !== 'pending' || !request.scheduledAt) {
+    /* cancelledAt 优先于状态：状态判定与 resolveRequestState 保持同一口径 */
+    if (request.status !== 'pending' || !request.scheduledAt || request.cancelledAt) {
         return { applied: false, reason: 'ALREADY_HANDLED', request }
     }
     if (toTime(request.scheduledAt) > now) {

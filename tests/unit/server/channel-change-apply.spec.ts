@@ -127,6 +127,13 @@ describe('server/utils/channel-change-apply', () => {
         state.request.status = 'cancelled'
         expect(await applyScheduledChannelChange('req-1', { now: NOW }))
             .toMatchObject({ applied: false, reason: 'ALREADY_HANDLED' })
+
+        /* 状态仍为 pending 但已写 cancelledAt：按已撤销处理，不得生效 */
+        state.request.status = 'pending'
+        state.request.cancelledAt = new Date(NOW - 500)
+        expect(await applyScheduledChannelChange('req-1', { now: NOW }))
+            .toMatchObject({ applied: false, reason: 'ALREADY_HANDLED' })
+        expect(state.update).not.toHaveBeenCalled()
     })
 
     it('loses the race without touching user fields', async () => {
