@@ -154,3 +154,18 @@ describe('server/utils/recovery-code', () => {
         expect(isFreshSession('not-a-date')).toBe(false)
     })
 })
+
+describe('server/utils/recovery-code rotation', () => {
+    it('rejects every old code after regeneration', async () => {
+        const repository = createRepository()
+        const codes = await generateRecoveryCodes({ userId: 'u1', repository: repository as any })
+        const rotated = await generateRecoveryCodes({ userId: 'u1', repository: repository as any })
+        expect(rotated).not.toEqual(codes)
+        for (const code of codes) {
+            expect(await consumeRecoveryCode({ userId: 'u1', code, repository: repository as any }))
+                .toEqual({ ok: false, reason: 'NOT_FOUND' })
+        }
+        expect(await consumeRecoveryCode({ userId: 'u1', code: rotated[0]!, repository: repository as any }))
+            .toEqual({ ok: true })
+    })
+})
