@@ -1,5 +1,6 @@
 import { parse } from 'better-bytes'
 import { ms } from 'ms'
+import { resolveCoolingOffHours } from './cooling-off'
 /**
  * 基础配置
  * 包含服务器基本设置、备案信息等
@@ -163,6 +164,9 @@ export const EMAIL_SINGLE_USER_DAILY_LIMIT = Number(process.env.EMAIL_SINGLE_USE
 export const EMAIL_LIMIT_WINDOW = Number(process.env.EMAIL_LIMIT_WINDOW || ms('1d') / 1000)
 // 邮件验证码有效时间（秒）
 export const EMAIL_EXPIRES_IN = Number(process.env.EMAIL_EXPIRES_IN || 300)
+
+// 换邮箱冷静期（小时）；默认 24，上限 72，越界回退默认（阶段 10 D5）
+export const CHANNEL_CHANGE_COOLING_OFF_HOURS = resolveCoolingOffHours(process.env.CHANNEL_CHANGE_COOLING_OFF_HOURS)
 
 // 匿名和临时邮箱配置
 export const ANONYMOUS_EMAIL_DOMAIN_NAME = process.env.ANONYMOUS_EMAIL_DOMAIN_NAME || 'anonymous.com'
