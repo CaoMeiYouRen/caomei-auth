@@ -1,5 +1,5 @@
 import { betterAuth } from 'better-auth'
-import { APIError, createAuthMiddleware } from 'better-auth/api'
+import { createAuthMiddleware } from 'better-auth/api'
 import {
     username,
     anonymous,
@@ -61,9 +61,6 @@ import { getTempEmail, getTempName } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email/service'
 import { getUserLocale } from '@/server/utils/locale'
 import { isValidTimeZone } from '@/utils/shared/timezone'
-import { evaluateRegistration } from '@/server/utils/registration-policy'
-import zhErrors from '@/i18n/locales/zh-CN/errors.json'
-import enErrors from '@/i18n/locales/en-US/errors.json'
 import { getCaptchaConfig } from '@/server/utils/captcha-config'
 import { isCaptchaEnabled } from '@/utils/web/captcha'
 import { AUTH_DISABLED_PATHS } from '@/utils/shared/auth-disabled-paths'
@@ -77,24 +74,7 @@ import {
 import { sendPasswordResetOtp, deliverTwoFactorOtp } from '@/server/utils/recovery-channels'
 import { assertAdminWriteAllowed, assertPasswordResetCompleted, clearPasswordResetRequirement } from '@/server/utils/recovery-guards'
 import { applyChannelChangeBeforeSession } from '@/server/utils/channel-change-apply'
-
-/** 注册准入校验：拒绝时抛出统一错误码，避免暴露命中的名单类型 */
-async function assertRegistrationAllowed(
-    input: { email?: string | null, phone?: string | null },
-    context: unknown,
-): Promise<void> {
-    const decision = await evaluateRegistration(input)
-    if (decision.allowed) {
-        return
-    }
-    const acceptLanguage = (context as { headers?: Headers } | undefined)?.headers?.get?.('accept-language') ?? ''
-    const locale = acceptLanguage.toLowerCase().startsWith('en') ? 'en' : 'zh'
-    const messages = locale === 'en' ? enErrors.errors.registration : zhErrors.errors.registration
-    throw new APIError('BAD_REQUEST', {
-        message: messages.notAllowed,
-        code: 'REGISTRATION_NOT_ALLOWED',
-    })
-}
+import { assertRegistrationAllowed } from '@/server/utils/registration-guard'
 
 function createAuthInstance() {
     return betterAuth({

@@ -109,6 +109,7 @@
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本条目只保留 `/api/admin/sso/providers` 系列补录（i18n 相关文档已在阶段 5 M19 同步）。
 - **`AGENTS.md` §7.3.4 提交粒度口径待同步**：规划规范 v1 新增「回填提交 / 阶段收口提交」两类不承载小条目的提交（回填只补表格字段、收口跨多个大条目），`AGENTS.md` §7.3.4 目前只覆盖「规划 / 治理类改动关联 backlog 候选」；修改 AGENTS.md 需用户授权，故先在规范侧按 §7.3.4 口径解释并保留差异。处理方向：取得授权后把两类例外写入 §7.3.4，并与 `git.md` §3 同批对齐。
 - **文档站锚点与 GitHub slug 不一致**：文档站（VitePress）对数字开头的标题会补 `_` 前缀、把 `7.3` 归一为 `7-3`（如 `planning.html` 的实际 id 是 `_7-进度表`、`AGENTS.html` 是 `_7-3-提交规范-commit-convention`），而仓库内 30+ 处交叉引用沿用 GitHub slug（`#7-进度表`、`#8-推送策略`），在站点上全部点不到；`ignoreDeadLinks: true` 使 `docs:build` 不会报错。处理方向：统一一种 slug 形式（或给长引用标题加显式 `id`），并补一条比对 `dist` 实际 `id` 的校验脚本；与「规划文档机检」候选合并实施更划算。
+- **`lib/auth.ts` 能力拆分**：注册准入校验已抽到 `server/utils/registration-guard.ts`（2026-11-21，CI 文件规模门禁修复），`lib/auth.ts` 由 609 降至 589 行并移出文件规模基线；基线条目原有的拆分计划（session / password / mfa 能力拆到 `lib/auth/` 子模块）随之失去记录位置，在此保留线索。处理方向：按 session / password / mfa 三段拆分，拆分后 `lib/auth.ts` 只保留实例装配。
 - **迁入来源**：原 `todo.md`「低优先级 · 文档同步」与既有 backlog 质量类条目。
 
 ### 3.3 基础设施

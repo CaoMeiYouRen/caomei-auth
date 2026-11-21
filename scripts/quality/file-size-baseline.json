@@ -6,11 +6,6 @@
             "owner": "Admin 用户管理",
             "plan": "把会话列表与封禁表单拆为子组件，随用户管理批次重构"
         },
-        "lib/auth.ts": {
-            "lines": 604,
-            "owner": "认证核心",
-            "plan": "按 session / password / mfa 能力拆分到 lib/auth/ 子模块"
-        },
         "scripts/ai/check-governance.mjs": {
             "lines": 781,
             "owner": "AI 治理脚本",
