@@ -1,3 +1,4 @@
+import type { EntityManager } from 'typeorm'
 import {
     checkBackupCodeFactor,
     checkTotpFactor,
@@ -8,6 +9,9 @@ import {
 import { checkRecoveryCode, consumeRecoveryCode, isFreshSession } from './recovery-code'
 import { checkProofOtp, consumeProofOtp } from './proof-otp'
 import { auth } from '@/lib/auth'
+import { RecoveryCode } from '@/server/entities/recovery-code'
+import { TwoFactor } from '@/server/entities/two-factor'
+import { Verification } from '@/server/entities/verification'
 
 /**
  * 自助恢复证明校验与消费（阶段 10 M2.2）。
@@ -241,38 +245,57 @@ export async function verifyRecoveryProof(input: VerifyRecoveryProofInput): Prom
     return { ok: true, factor, timeStep }
 }
 
-/** 在业务事务内消费已校验的因子；保证同一因子只能成功消费一次 */
+/**
+ * 在业务事务内消费已校验的因子；保证同一因子只能成功消费一次。
+ *
+ * 传入 `manager` 时所有写入都走该事务，业务失败可整体回滚（失败计数仍在事务外）。
+ */
 export async function consumeProofFactor(input: {
     userId: string
     factor: ProofFactor
     code: string
     timeStep?: number
     now?: number
+    manager?: EntityManager
 }): Promise<{ ok: boolean, reason?: RecoveryProofFailure }> {
     const code = input.code.trim()
+    const manager = input.manager
     switch (input.factor) {
         case 'recovery-code': {
-            const result = await consumeRecoveryCode({ userId: input.userId, code, now: input.now })
+            const result = await consumeRecoveryCode({
+                userId: input.userId,
+                code,
+                now: input.now,
+                repository: manager ? manager.getRepository(RecoveryCode) : undefined,
+            })
             return result.ok ? { ok: true } : { ok: false, reason: mapFactorFailure(result.reason) }
         }
         case 'phone-otp': {
-            const result = await consumeProofOtp({ userId: input.userId, code, now: input.now })
+            const result = await consumeProofOtp({
+                userId: input.userId,
+                code,
+                now: input.now,
+                repository: manager ? manager.getRepository(Verification) : undefined,
+            })
             return result.ok ? { ok: true } : { ok: false, reason: mapFactorFailure(result.reason) }
         }
         case 'totp': {
+            const repository = manager ? manager.getRepository(TwoFactor) : undefined
             let timeStep = input.timeStep
             if (timeStep === undefined) {
-                const check = await checkTotpFactor(input.userId, code, { now: input.now })
+                const check = await checkTotpFactor(input.userId, code, { now: input.now, repository })
                 if (!check.valid || check.timeStep === undefined) {
                     return { ok: false, reason: mapFactorFailure(check.reason) }
                 }
                 timeStep = check.timeStep
             }
-            const consumed = await consumeTotpFactor(input.userId, timeStep)
+            const consumed = await consumeTotpFactor(input.userId, timeStep, { repository })
             return consumed ? { ok: true } : { ok: false, reason: 'PROOF_CONSUMED' }
         }
         case 'backup-code': {
-            const result = await consumeBackupCodeFactor(input.userId, code)
+            const result = await consumeBackupCodeFactor(input.userId, code, {
+                repository: manager ? manager.getRepository(TwoFactor) : undefined,
+            })
             return result.ok ? { ok: true } : { ok: false, reason: mapFactorFailure(result.reason) }
         }
     }

@@ -141,6 +141,26 @@ export async function consumeProofOtp(input: {
     return { ok: true }
 }
 
+/** 单用户发送节流（进程内，1 分钟一次；多实例缺口见 backlog） */
+const lastSentAt = new Map<string, number>()
+export const PROOF_OTP_RESEND_INTERVAL_MS = 60 * 1000
+
+/** 是否允许再次发送（同一用户 1 分钟一次） */
+export function canSendProofOtp(userId: string, now = Date.now()): boolean {
+    const last = lastSentAt.get(userId)
+    return last === undefined || now - last >= PROOF_OTP_RESEND_INTERVAL_MS
+}
+
+/** 记录发送时间 */
+export function markProofOtpSent(userId: string, now = Date.now()): void {
+    lastSentAt.set(userId, now)
+}
+
+/** 仅供单测重置节流状态 */
+export function resetProofOtpThrottle(): void {
+    lastSentAt.clear()
+}
+
 /** 证明 OTP 是否已签发未过期（发送端点用于防止无意义重复投递） */
 export async function hasPendingProofOtp(
     userId: string,

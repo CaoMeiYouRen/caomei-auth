@@ -29,6 +29,7 @@ export const AUDIT_ACTIONS = [
     'recoveryCodes.consume',
     'recoveryCodes.delete',
     'proof.verify',
+    'proof.otp.send',
     'email.change.request',
     'email.change.confirm',
     'email.change.cancel',
