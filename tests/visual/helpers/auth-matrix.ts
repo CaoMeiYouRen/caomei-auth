@@ -22,6 +22,8 @@ interface VisualState {
     label: string
     slug: string
     action: (page: Page) => Promise<void>
+    /** 迁移后新增的交互态没有参考态，只在自基线层登记 */
+    reference?: boolean
 }
 
 interface VisualRoute {
@@ -129,6 +131,24 @@ const ROUTES: readonly VisualRoute[] = [
                 slug: 'revoke-all-confirm',
                 action: async (page) => {
                     await page.getByRole('button', { name: '撤销所有会话' }).click()
+                },
+            },
+            {
+                label: '更换邮箱对话框',
+                slug: 'email-change-dialog',
+                reference: false,
+                action: async (page) => {
+                    await page.getByRole('button', { name: /更换邮箱/u }).click()
+                    await expect(page.getByText('新邮箱', { exact: true })).toBeVisible()
+                },
+            },
+            {
+                label: '恢复码生成对话框',
+                slug: 'recovery-code-dialog',
+                reference: false,
+                action: async (page) => {
+                    await page.getByRole('button', { name: /恢复码/u }).click()
+                    await expect(page.getByText('重新签发会立即让全部旧恢复码失效。', { exact: true })).toBeVisible()
                 },
             },
         ],
@@ -283,6 +303,9 @@ function defineInteractionStates(): void {
             }
 
             for (const state of route.states ?? []) {
+                if (state.reference === false && isReferenceLayer()) {
+                    continue
+                }
                 test(`${route.slug} ${state.label}`, async ({ page }) => {
                     await open(page, route, 'light')
                     await state.action(page)
