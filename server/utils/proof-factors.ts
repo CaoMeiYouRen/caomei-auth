@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { IsNull, type Repository } from 'typeorm'
-import { symmetricDecrypt } from 'better-auth/crypto'
+import { symmetricDecrypt, symmetricEncrypt } from 'better-auth/crypto'
 import { TwoFactor } from '@/server/entities/two-factor'
 import { dataSource } from '@/server/database'
 import { auth } from '@/lib/auth'
@@ -138,6 +138,28 @@ export async function readBackupCodes(
     }
 }
 
+/**
+ * 按原存储格式写回备份码。
+ *
+ * 项目未开启 `storeBackupCodes: 'encrypted'`，默认是明文 JSON；若部署侧改为加密存储，
+ * 这里必须继续写密文，否则 better-auth 的解密校验会失败、其余备份码全部不可用。
+ */
+export async function writeBackupCodes(
+    codes: string[],
+    stored: string,
+    secretConfig?: SecretKey,
+): Promise<string> {
+    const json = JSON.stringify(codes)
+    try {
+        const key = secretConfig ?? await resolveSecretConfig()
+        await symmetricDecrypt({ key, data: stored })
+        /* 解密成功说明原值为密文：继续写密文 */
+        return await symmetricEncrypt({ key, data: json })
+    } catch {
+        return json
+    }
+}
+
 /** 备份码比较：去空格并统一大写，兼容 better-auth 的 `XXXXX-XXXXX` 形态 */
 export function normalizeBackupCode(code: string): string {
     return code.replace(/\s+/gu, '').toUpperCase()
@@ -253,9 +275,10 @@ export async function consumeBackupCodeFactor(
     }
     const normalized = normalizeBackupCode(code)
     const remaining = check.codes.filter((item) => item !== normalized)
+    const nextValue = await writeBackupCodes(remaining, twoFactor.backupCodes, options.secretConfig)
     const result = await repo.update(
         { userId, backupCodes: twoFactor.backupCodes },
-        { backupCodes: JSON.stringify(remaining) },
+        { backupCodes: nextValue },
     )
     const affected = (result as { affected?: number }).affected ?? 0
     if (!affected) {

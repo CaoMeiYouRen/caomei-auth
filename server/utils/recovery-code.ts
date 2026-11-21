@@ -76,15 +76,27 @@ export async function generateRecoveryCodes(input: {
     count?: number
     repository?: RecoveryCodeRepository
 }): Promise<string[]> {
-    const repository = input.repository ?? dataSource.getRepository(RecoveryCode)
-    const count = input.count ?? RECOVERY_CODE_COUNT
-    const existing = await repository.find({ where: { userId: input.userId } })
+    /* 重签必须在单事务内「删除旧码 + 写入新码」，避免中途失败把用户恢复到零码状态 */
+    if (input.repository) {
+        return writeRecoveryCodes(input.repository, input.userId, input.count)
+    }
+    return dataSource.transaction(async (manager) => (
+        writeRecoveryCodes(manager.getRepository(RecoveryCode), input.userId, input.count)
+    ))
+}
+
+async function writeRecoveryCodes(
+    repository: RecoveryCodeRepository,
+    userId: string,
+    count = RECOVERY_CODE_COUNT,
+): Promise<string[]> {
+    const existing = await repository.find({ where: { userId } })
     if (existing.length) {
-        await repository.delete({ userId: input.userId })
+        await repository.delete({ userId })
     }
     const codes = Array.from({ length: count }, () => generateRecoveryCode())
     const rows = codes.map((code) => repository.create({
-        userId: input.userId,
+        userId,
         codeHash: hashRecoveryCode(code),
         usedAt: null,
     }))

@@ -1,4 +1,4 @@
-import { symmetricEncrypt } from 'better-auth/crypto'
+import { symmetricDecrypt, symmetricEncrypt } from 'better-auth/crypto'
 import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/server/database', () => ({ dataSource: { getRepository: vi.fn() } }))
@@ -121,5 +121,17 @@ describe('server/utils/proof-factors', () => {
     it('returns an empty list for malformed backup code stores', async () => {
         expect(await readBackupCodes(null)).toEqual([])
         expect(await readBackupCodes('not-json')).toEqual([])
+    })
+
+    it('preserves encrypted backup-code storage when a code is consumed', async () => {
+        const codes = ['AAAAA-BBBBB', 'CCCCC-DDDDD']
+        const encrypted = await symmetricEncrypt({ key: SECRET_KEY, data: JSON.stringify(codes) })
+        const repository = createTwoFactorRepository([
+            { id: 'tf-1', userId: 'u1', secret: 'x', backupCodes: encrypted, lastUsedTimeStep: null },
+        ])
+        expect(await consumeBackupCodeFactor('u1', 'AAAAA-BBBBB', { repository: repository as any })).toEqual({ ok: true })
+        const stored = repository.store.get('tf-1').backupCodes
+        expect(stored).not.toContain('CCCCC-DDDDD')
+        expect(JSON.parse(await symmetricDecrypt({ key: SECRET_KEY, data: stored }))).toEqual(['CCCCC-DDDDD'])
     })
 })

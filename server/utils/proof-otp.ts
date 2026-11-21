@@ -1,4 +1,4 @@
-import { createHash, randomInt } from 'node:crypto'
+import { createHash, randomInt, timingSafeEqual } from 'node:crypto'
 import type { Repository } from 'typeorm'
 import { Verification } from '@/server/entities/verification'
 import { dataSource } from '@/server/database'
@@ -26,6 +26,16 @@ interface ProofOtpPayload {
 
 function toHash(userId: string, code: string): string {
     return createHash('sha256').update(`${userId}:${code}`).digest('hex')
+}
+
+/** 常量时间比较哈希，避免按字节提前返回 */
+function hashEquals(actual: string, expected: string): boolean {
+    const left = Buffer.from(actual, 'hex')
+    const right = Buffer.from(expected, 'hex')
+    if (left.length !== right.length || left.length === 0) {
+        return false
+    }
+    return timingSafeEqual(left, right)
 }
 
 function identifierFor(userId: string): string {
@@ -104,7 +114,7 @@ export async function checkProofOtp(input: {
         await repository.delete({ id: row.id })
         return { valid: false, reason: 'TOO_MANY_ATTEMPTS' }
     }
-    if (payload.hash !== toHash(input.userId, input.code.trim())) {
+    if (!hashEquals(payload.hash, toHash(input.userId, input.code.trim()))) {
         payload.attempts += 1
         if (payload.attempts >= PROOF_OTP_MAX_ATTEMPTS) {
             await repository.delete({ id: row.id })
@@ -141,11 +151,12 @@ export async function consumeProofOtp(input: {
     return { ok: true }
 }
 
-/** 单用户发送节流（进程内，1 分钟一次；多实例缺口见 backlog） */
+/** 单用户发送节流（进程内，3 次/分；多实例缺口见 backlog） */
 const lastSentAt = new Map<string, number>()
-export const PROOF_OTP_RESEND_INTERVAL_MS = 60 * 1000
+/** 20 秒间隔等价于每分钟最多 3 次 */
+export const PROOF_OTP_RESEND_INTERVAL_MS = 20 * 1000
 
-/** 是否允许再次发送（同一用户 1 分钟一次） */
+/** 是否允许再次发送（同一用户 3 次/分） */
 export function canSendProofOtp(userId: string, now = Date.now()): boolean {
     const last = lastSentAt.get(userId)
     return last === undefined || now - last >= PROOF_OTP_RESEND_INTERVAL_MS

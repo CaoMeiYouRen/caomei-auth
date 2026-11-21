@@ -220,7 +220,7 @@ describe('server/utils/recovery-proof', () => {
 
         state.consumeTotp.mockResolvedValue(true)
         expect(await consumeProofFactor({ userId: 'u1', factor: 'totp', code: '123456', timeStep: 100 })).toEqual({ ok: true })
-        expect(state.consumeTotp).toHaveBeenCalledWith('u1', 100)
+        expect(state.consumeTotp).toHaveBeenCalledWith('u1', 100, { repository: undefined })
         state.consumeTotp.mockResolvedValue(false)
         expect(await consumeProofFactor({ userId: 'u1', factor: 'totp', code: '123456', timeStep: 100 }))
             .toEqual({ ok: false, reason: 'PROOF_CONSUMED' })
