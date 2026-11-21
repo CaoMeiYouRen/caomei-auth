@@ -225,6 +225,7 @@
 - 改邮箱进入冷静期，支持撤销与通知；生效后旧邮箱失效。
 - **退出条件**：旧邮箱失效但有恢复因子的用户可自助换邮箱；无恢复因子仍被拒。
 - **风险**：恢复码泄露 = 账号泄露；需要一次性展示、离线保存提示、使用通知与轮换。
+- **落地口径（2026-11-21，阶段 10）**：D2 定为**独立恢复码**（不复用备份码）；手机 OTP 只用于改邮箱 / 关 2FA，不用于设置密码（D3 延伸）；冷静期默认 24h、上限 72h（D5）；生效后旧邮箱立即失效（D7）。实现见 `server/utils/recovery-code.ts`、`server/utils/recovery-proof.ts`、`server/utils/channel-change-state.ts`、`server/utils/channel-change-apply.ts`；唯一口径已回写 [安全规范 §1.3](../../standards/security.md#13-2fa-覆盖边界与账号恢复等级-2fa-coverage--recovery-levels)。设计草案中的 `R0–R3` 仅作参照代号，落地统一映射到 `L0–L2`。
 
 ### 阶段 4：收紧 2FA 覆盖（可选，需评估）
 
