@@ -101,7 +101,21 @@
             "confirmFailed": "변경 확인에 실패했습니다",
             "notifyFailed": "알림 전송에 실패했습니다",
             "invalidChannel": "지원되지 않는 변경 채널입니다",
-            "channelChangeSmsNotice": "계정 연락처가 {target}(으)로 변경되었습니다. 본인이 요청하지 않았다면 즉시 관리자에게 문의해 주세요."
+            "channelChangeSmsNotice": "계정 연락처가 {target}(으)로 변경되었습니다. 본인이 요청하지 않았다면 즉시 관리자에게 문의해 주세요.",
+            "sessionNotFresh": "세션이 15분을 초과했습니다. 다시 로그인한 후 작업해 주세요.",
+            "proofRequired": "이 작업에는 복구 코드, 인증 앱 코드 또는 백업 코드를 두 번째 요소로 입력해야 합니다.",
+            "proofInvalid": "복구 증명 확인에 실패했습니다. 코드를 확인한 후 다시 시도해 주세요.",
+            "proofConsumed": "이 복구 코드 또는 인증 코드는 이미 사용되었습니다. 다른 코드를 사용해 주세요.",
+            "proofLocked": "복구 증명 시도 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요.",
+            "factorUnavailable": "이 계정에서 사용할 수 있는 복구 요소가 없습니다.",
+            "factorNotAllowed": "이 작업에는 휴대폰 인증 코드를 두 번째 요소로 사용할 수 없습니다.",
+            "passwordInvalid": "비밀번호가 올바르지 않습니다.",
+            "recoveryCodeNotFound": "복구 코드가 없거나 현재 계정의 것이 아닙니다.",
+            "alreadyEffective": "변경이 이미 적용되어 취소할 수 없습니다.",
+            "noPendingRequest": "처리 대기 중인 변경 신청이 없습니다.",
+            "kindMismatch": "이 신청은 관리자만 확인할 수 있습니다.",
+            "proofOtpPhoneRequired": "휴대폰 인증 코드를 사용하기 전에 휴대폰 번호 인증을 완료해 주세요.",
+            "selfServicePasswordDisabled": "이 계정은 직접 비밀번호를 설정할 수 없습니다."
         }
     }
 }

@@ -101,7 +101,21 @@
             "confirmFailed": "改绑确认失败",
             "notifyFailed": "通知发送失败",
             "invalidChannel": "不支持的改绑通道",
-            "channelChangeSmsNotice": "您的账号联系方式已变更为 {target}。如非本人操作，请立即联系管理员。"
+            "channelChangeSmsNotice": "您的账号联系方式已变更为 {target}。如非本人操作，请立即联系管理员。",
+            "sessionNotFresh": "当前会话已超过 15 分钟，请重新登录后再操作",
+            "proofRequired": "该操作需要恢复码、验证器验证码或备份码作为第二因子",
+            "proofInvalid": "恢复证明校验失败，请检查验证码",
+            "proofConsumed": "该恢复码或验证码已被使用，请换一个",
+            "proofLocked": "恢复证明尝试次数过多，请稍后再试",
+            "factorUnavailable": "当前账号没有可用的恢复因子",
+            "factorNotAllowed": "该操作不允许使用手机验证码作为第二因子",
+            "passwordInvalid": "密码不正确",
+            "recoveryCodeNotFound": "恢复码不存在或不属于当前账号",
+            "alreadyEffective": "改绑已生效，不能撤销",
+            "noPendingRequest": "没有待处理的改绑申请",
+            "kindMismatch": "该申请只能由管理员确认",
+            "proofOtpPhoneRequired": "请先完成手机号验证再使用手机验证码",
+            "selfServicePasswordDisabled": "当前账号不能自助设置密码"
         }
     }
 }

@@ -16,6 +16,7 @@ import { Jwks } from '../entities/jwks'
 import { SSOProvider } from '../entities/sso-provider'
 import { RegistrationRule } from '../entities/registration-rule'
 import { ChannelChangeRequest } from '../entities/channel-change-request'
+import { RecoveryCode } from '../entities/recovery-code'
 import logger from '../utils/logger'
 import { hashClientSecret } from '../utils/oauth-client-view'
 import { CustomLogger } from './logger'
@@ -250,6 +251,7 @@ const entities = [
     SSOProvider,
     RegistrationRule,
     ChannelChangeRequest,
+    RecoveryCode,
 ]
 
 export const initializeDB = async () => {

@@ -238,6 +238,7 @@ CREATE TABLE IF NOT EXISTS caomei_auth_two_factor (
                               NOT NULL
                               DEFAULT 0,
     locked_until DATETIME,
+    last_used_time_step INTEGER,
     CONSTRAINT UQ_4916ed9f34f6e9e0a0cfb89a752 UNIQUE (
         user_id
     ),
@@ -624,3 +625,14 @@ CREATE TABLE IF NOT EXISTS caomei_auth_channel_change_request (
 );
 
 CREATE INDEX IF NOT EXISTS IDX_channel_change_user ON caomei_auth_channel_change_request (user_id, channel, status);
+
+CREATE TABLE IF NOT EXISTS caomei_auth_recovery_code (
+    id         VARCHAR (36) PRIMARY KEY NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT (datetime('now')),
+    updated_at DATETIME NOT NULL DEFAULT (datetime('now')),
+    user_id    VARCHAR (36) NOT NULL,
+    code_hash  VARCHAR (64) NOT NULL,
+    used_at    DATETIME
+);
+
+CREATE INDEX IF NOT EXISTS IDX_recovery_code_user ON caomei_auth_recovery_code (user_id);

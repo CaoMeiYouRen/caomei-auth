@@ -28,7 +28,7 @@ export class TwoFactor extends BaseEntity {
     secret: string
 
     /**
-     * 备份恢复码（用逗号分隔的哈希值）
+     * 备份恢复码（JSON 数组；better-auth 默认明文存储，开启加密时才为密文）
      */
     @CustomColumn({ type: 'text', nullable: true })
     backupCodes: string
@@ -50,5 +50,14 @@ export class TwoFactor extends BaseEntity {
      */
     @CustomColumn({ type: 'datetime', nullable: true })
     lockedUntil: Date
+
+    /**
+     * 最近一次被消费的 TOTP 时间步（阶段 10 M2.2）。
+     *
+     * 恢复证明消费 TOTP 时以 CAS 推进该值，保证同一时间步只能成功一次；
+     * 不参与 better-auth 的登录校验。
+     */
+    @CustomColumn({ type: 'integer', nullable: true })
+    lastUsedTimeStep: number | null
 
 }

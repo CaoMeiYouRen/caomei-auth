@@ -101,7 +101,21 @@
             "confirmFailed": "改綁確認失敗",
             "notifyFailed": "通知傳送失敗",
             "invalidChannel": "不支援的改綁通道",
-            "channelChangeSmsNotice": "您的帳號聯絡方式已變更為 {target}。如非本人操作，請立即聯絡管理員。"
+            "channelChangeSmsNotice": "您的帳號聯絡方式已變更為 {target}。如非本人操作，請立即聯絡管理員。",
+            "sessionNotFresh": "目前工作階段已超過 15 分鐘，請重新登入後再操作",
+            "proofRequired": "此操作需要恢復碼、驗證器驗證碼或備份碼作為第二因素",
+            "proofInvalid": "恢復證明驗證失敗，請檢查驗證碼",
+            "proofConsumed": "此恢復碼或驗證碼已被使用，請改用其他碼",
+            "proofLocked": "恢復證明嘗試次數過多，請稍後再試",
+            "factorUnavailable": "目前帳號沒有可用的恢復因素",
+            "factorNotAllowed": "此操作不允許使用手機驗證碼作為第二因素",
+            "passwordInvalid": "密碼不正確",
+            "recoveryCodeNotFound": "恢復碼不存在或不屬於目前帳號",
+            "alreadyEffective": "改綁已生效，無法撤銷",
+            "noPendingRequest": "沒有待處理的改綁申請",
+            "kindMismatch": "此申請只能由管理員確認",
+            "proofOtpPhoneRequired": "請先完成手機號碼驗證再使用手機驗證碼",
+            "selfServicePasswordDisabled": "目前帳號無法自助設定密碼"
         }
     }
 }

@@ -101,7 +101,21 @@
             "confirmFailed": "Failed to confirm the channel change.",
             "notifyFailed": "Failed to send the notification.",
             "invalidChannel": "Unsupported channel change type.",
-            "channelChangeSmsNotice": "Your account contact was changed to {target}. If this was not you, contact the administrator immediately."
+            "channelChangeSmsNotice": "Your account contact was changed to {target}. If this was not you, contact the administrator immediately.",
+            "sessionNotFresh": "Your session is older than 15 minutes. Sign in again before continuing.",
+            "proofRequired": "This action needs a recovery code, authenticator code or backup code as a second factor.",
+            "proofInvalid": "Recovery proof verification failed. Check the code and try again.",
+            "proofConsumed": "This recovery code or verification code has already been used. Use another one.",
+            "proofLocked": "Too many recovery proof attempts. Try again later.",
+            "factorUnavailable": "No recovery factor is available for this account.",
+            "factorNotAllowed": "Phone verification codes cannot be used as a second factor for this action.",
+            "passwordInvalid": "The password is incorrect.",
+            "recoveryCodeNotFound": "The recovery code does not exist or belongs to another account.",
+            "alreadyEffective": "This change is already effective and cannot be cancelled.",
+            "noPendingRequest": "There is no pending change request.",
+            "kindMismatch": "This request can only be confirmed by an administrator.",
+            "proofOtpPhoneRequired": "Verify a phone number before using phone verification codes.",
+            "selfServicePasswordDisabled": "This account cannot set a password on its own."
         }
     }
 }

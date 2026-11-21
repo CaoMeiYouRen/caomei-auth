@@ -101,7 +101,21 @@
             "confirmFailed": "変更の確認に失敗しました",
             "notifyFailed": "通知の送信に失敗しました",
             "invalidChannel": "サポートされていない変更チャネルです",
-            "channelChangeSmsNotice": "アカウントの連絡先が {target} に変更されました。心当たりがない場合は、直ちに管理者へ連絡してください。"
+            "channelChangeSmsNotice": "アカウントの連絡先が {target} に変更されました。心当たりがない場合は、直ちに管理者へ連絡してください。",
+            "sessionNotFresh": "セッションの有効期限が 15 分を超えています。再度サインインしてから操作してください。",
+            "proofRequired": "この操作には復旧コード、認証アプリのコード、またはバックアップコードを第二要素として入力する必要があります。",
+            "proofInvalid": "復旧証明の確認に失敗しました。コードを確認して再試行してください。",
+            "proofConsumed": "この復旧コードまたは認証コードは既に使用されています。別のコードを使用してください。",
+            "proofLocked": "復旧証明の試行回数が多すぎます。しばらくしてから再試行してください。",
+            "factorUnavailable": "このアカウントで利用できる復旧要素がありません。",
+            "factorNotAllowed": "この操作では電話番号の認証コードを第二要素として使用できません。",
+            "passwordInvalid": "パスワードが正しくありません。",
+            "recoveryCodeNotFound": "復旧コードが存在しないか、別のアカウントのものです。",
+            "alreadyEffective": "この変更は既に有効になっており、取り消せません。",
+            "noPendingRequest": "処理待ちの変更申請はありません。",
+            "kindMismatch": "この申請は管理者のみ確認できます。",
+            "proofOtpPhoneRequired": "電話番号の認証コードを使用する前に、電話番号の確認を完了してください。",
+            "selfServicePasswordDisabled": "このアカウントは自力でパスワードを設定できません。"
         }
     }
 }

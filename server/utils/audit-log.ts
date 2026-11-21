@@ -24,6 +24,16 @@ export const AUDIT_ACTIONS = [
     'password.reset.forced',
     'social.bind',
     'phone.bind',
+    'recoveryCodes.generate',
+    'recoveryCodes.regenerate',
+    'recoveryCodes.consume',
+    'recoveryCodes.delete',
+    'proof.verify',
+    'email.change.request',
+    'email.change.confirm',
+    'email.change.cancel',
+    'email.change.apply',
+    'password.set.selfService',
 ] as const
 
 export type AuditAction = typeof AUDIT_ACTIONS[number]
