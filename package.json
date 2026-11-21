@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "ai:check": "node scripts/ai/check-governance.mjs",
+    "planning:check": "node scripts/quality/check-planning-docs.mjs",
     "migration:check-imports": "node scripts/migration/check-caomei-imports.mjs",
     "migration:measure": "node scripts/migration/measure-bundle.mjs",
     "migration:check-budget": "node scripts/migration/check-bundle-budget.mjs",

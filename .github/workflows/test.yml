@@ -28,6 +28,7 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run lint:css
       - run: pnpm run ai:check
+      - run: pnpm run planning:check
       - name: Check file size budget
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}

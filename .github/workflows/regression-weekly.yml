@@ -152,6 +152,9 @@ jobs:
       - name: Check AI governance
         run: pnpm run ai:check
 
+      - name: Check planning docs
+        run: pnpm run planning:check
+
       - name: Check file size budget
         run: pnpm run quality:file-size
 

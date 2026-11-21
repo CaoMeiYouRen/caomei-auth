@@ -1,6 +1,6 @@
 # 产品 backlog（待办池）
 
-> **状态**：阶段 10「用户侧替代证明」已于 2026-11-21 登记（待确认后开工，见 [范围登记](../design/governance/2026-11-21-phase10-registration.md)）；阶段 9 已于 2026-11-20 收口。本表只保留**尚未进入阶段**的候选与未完成项汇总。
+> **状态**：阶段 10「用户侧替代证明」已于 2026-11-21 收口（见 [阶段正文](./archive/todo-archive-phases-10.md) 与 [范围登记](../design/governance/2026-11-21-phase10-registration.md)）；当前无进行中阶段。本表只保留**尚未进入阶段**的候选与未完成项汇总。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ---
@@ -58,7 +58,7 @@
 ### 2.12 账号找回（阶段 2–5 剩余部分）
 
 - **已完成（2026-11-20，阶段 9）**：设计草案「阶段 0 + 阶段 1」已交付——结构化审计、假通道修复（短信重置 / 备份码再生成 / 2FA 邮件 OTP 回落 / 改绑与撤销会话错误检查）、管理员协助恢复（发起改绑 → 新通道确认 → 强制重置密码；不触碰 2FA / 备份码，D9）。记录见 [阶段 9 收口](../design/governance/2026-11-20-phase9-closure.md)。
-- **已上收（2026-11-21，阶段 10）**：恢复码（与备份码分离）、已验证手机作为自助恢复证明、改邮箱冷静期与撤销、OAuth-only 受控自助设置密码；D1 / D2 / D3 / D5 / D6 / D7 / D10 已裁定，见 [阶段 10 范围登记](../design/governance/2026-11-21-phase10-registration.md)。
+- **已完成（2026-11-21，阶段 10）**：恢复码（与备份码分离）、已验证手机作为自助恢复证明、改邮箱冷静期与撤销、OAuth-only 受控自助设置密码；D1 / D2 / D3 / D5 / D6 / D7 / D10 已落地，见 [阶段正文](./archive/todo-archive-phases-10.md) 与 [范围登记](../design/governance/2026-11-21-phase10-registration.md)。
 - **剩余方向**：设计阶段 4 收紧 2FA 覆盖（邮箱 OTP / 手机 OTP / 魔法链接 / 社交 / SSO）；设计阶段 2 剩余的管理员协助恢复审批流与工单；设计阶段 5 审计表与管理端审计检索、可信设备与 passkey。
 - **准入条件**：收紧 2FA 覆盖必须晚于阶段 10（否则「邮箱失联 + 设备丢失」会变成真死锁）；审批流与审计检索需用户另行授权。
 - **明确不做**：管理员重置 2FA / 备份码（D4）、管理员代设密码（D8）保持不允许。
@@ -107,7 +107,6 @@
 - **caomei-ui FormItem 的必填语义与 label 可点击聚焦**：`CaomeiFormItem` 的 `required` 只渲染 `aria-hidden` 的 `*`，不向控件注入 `required` / `aria-required`；label 是 `<span aria-labelledby>`，点击标签不再聚焦输入框。M2 / M5 / M7 均沿用该约定，属于库级能力缺口。处理方向：向上游提能力需求（或由 FormItem 透传 `required` 语义），在上游补齐后统一评估。
 - **2FA / captcha / Toast 视觉覆盖**：为 2FA 弹窗、验证码启用态、提交中 / 提交成功 Toast 补充参考态与自基线；需已启用 2FA 的测试账号与 captcha provider。阶段 3 已登记为环境限制，M6-1 收口时迁入本候选（不再保留阶段编号）。
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本条目只保留 `/api/admin/sso/providers` 系列补录（i18n 相关文档已在阶段 5 M19 同步）。
-- **规划文档机检（进度表 / 归档索引 / 分片命名）**：规划文档模型 v1（[issue #745](https://github.com/CaoMeiYouRen/caomei-auth/issues/745)）落地后，`todo.md` 进度表行数 = 正文大条目数、状态四值、`todo-archive.md` 索引倒序 / 全覆盖 / 无重复 / 无正文、分片名匹配 `todo-archive-phases-<起>[-<止>].md` / `roadmap-phases-<起>[-<止>].md`、归档块 6 项字段目前全靠人工核对。处理方向：新增 `scripts/quality/check-planning-docs.mjs` 并接入 CI；启动条件为首个归档分片落盘，避免空索引期空转。
 - **`AGENTS.md` §7.3.4 提交粒度口径待同步**：规划规范 v1 新增「回填提交 / 阶段收口提交」两类不承载小条目的提交（回填只补表格字段、收口跨多个大条目），`AGENTS.md` §7.3.4 目前只覆盖「规划 / 治理类改动关联 backlog 候选」；修改 AGENTS.md 需用户授权，故先在规范侧按 §7.3.4 口径解释并保留差异。处理方向：取得授权后把两类例外写入 §7.3.4，并与 `git.md` §3 同批对齐。
 - **文档站锚点与 GitHub slug 不一致**：文档站（VitePress）对数字开头的标题会补 `_` 前缀、把 `7.3` 归一为 `7-3`（如 `planning.html` 的实际 id 是 `_7-进度表`、`AGENTS.html` 是 `_7-3-提交规范-commit-convention`），而仓库内 30+ 处交叉引用沿用 GitHub slug（`#7-进度表`、`#8-推送策略`），在站点上全部点不到；`ignoreDeadLinks: true` 使 `docs:build` 不会报错。处理方向：统一一种 slug 形式（或给长引用标题加显式 `id`），并补一条比对 `dist` 实际 `id` 的校验脚本；与「规划文档机检」候选合并实施更划算。
 - **迁入来源**：原 `todo.md`「低优先级 · 文档同步」与既有 backlog 质量类条目。
