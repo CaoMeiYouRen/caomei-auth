@@ -11,6 +11,7 @@ const state = vi.hoisted(() => ({
     consume: vi.fn(),
     createRequest: vi.fn(),
     sendCode: vi.fn(),
+    notifyLifecycle: vi.fn(),
     evaluateRegistration: vi.fn(),
     audit: vi.fn(),
 }))
@@ -33,6 +34,9 @@ vi.mock('@/server/utils/audit-log', () => ({ auditFromEvent: state.audit }))
 vi.mock('@/server/utils/registration-policy', () => ({ evaluateRegistration: state.evaluateRegistration }))
 vi.mock('@/server/utils/email/service', () => ({
     emailService: { sendChannelChangeCode: state.sendCode },
+}))
+vi.mock('@/server/utils/channel-change-notify', () => ({
+    notifyChannelChangeLifecycle: state.notifyLifecycle,
 }))
 vi.mock('@/server/utils/recovery-proof', async (importOriginal) => {
     const actual = await importOriginal<typeof import('@/server/utils/recovery-proof')>()
@@ -77,6 +81,7 @@ describe('POST /api/security/email/change-with-proof', () => {
         state.manager.getRepository.mockReturnValue(state.channelRepository)
         state.transaction.mockImplementation(async (callback: any) => callback(state.manager))
         state.sendCode.mockResolvedValue(undefined)
+        state.notifyLifecycle.mockResolvedValue(true)
     })
 
     it('consumes the proof, creates a pending request and sends the ownership code', async () => {
@@ -101,6 +106,11 @@ describe('POST /api/security/email/change-with-proof', () => {
         }))
         expect(state.sendCode).toHaveBeenCalledWith('new@example.com', '654321', 'n***@example.com', 10, expect.anything())
         expect(state.audit).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ action: 'email.change.request' }))
+        expect(state.notifyLifecycle).toHaveBeenCalledWith(expect.objectContaining({
+            event: 'request',
+            oldEmail: 'old@example.com',
+            newEmail: 'new@example.com',
+        }))
     })
 
     it('rejects an invalid password before touching the database transaction', async () => {

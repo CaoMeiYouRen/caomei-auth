@@ -11,6 +11,7 @@ import { consumeProofFactor, verifyRecoveryProof, type RecoveryProofFailure } fr
 import { createChannelChangeRequest } from '@/server/utils/channel-change'
 import { evaluateRegistration } from '@/server/utils/registration-policy'
 import { emailService } from '@/server/utils/email/service'
+import { notifyChannelChangeLifecycle } from '@/server/utils/channel-change-notify'
 import { maskEmail } from '@/server/utils/privacy'
 import { emailSchema } from '@/utils/shared/validators'
 
@@ -179,6 +180,14 @@ export default defineEventHandler(async (event) => {
             data: { code: 'SEND_FAILED' },
         })
     }
+
+    /* 申请通知：旧邮箱可投递时提醒；失败只记录，不影响已创建的请求 */
+    await notifyChannelChangeLifecycle({
+        userId,
+        event: 'request',
+        oldEmail: user.email ?? null,
+        newEmail,
+    })
 
     return {
         status: true,
