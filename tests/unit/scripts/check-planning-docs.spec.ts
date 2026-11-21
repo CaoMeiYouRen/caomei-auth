@@ -9,7 +9,7 @@ import {
     parseProgressTable,
 } from '../../../scripts/quality/check-planning-docs.mjs'
 
-function createRoot(files) {
+function createRoot(files: Record<string, string>) {
     const root = mkdtempSync(join(tmpdir(), 'planning-docs-'))
     for (const [relative, content] of Object.entries(files)) {
         const absolute = join(root, relative)
@@ -68,7 +68,7 @@ describe('scripts/quality/check-planning-docs', () => {
     it('parses stage sections and progress rows', () => {
         const sections = extractStageSections(TODO_VALID)
         expect(sections).toHaveLength(1)
-        const rows = parseProgressTable(sections[0].lines)
+        const rows = parseProgressTable(sections[0]!.lines)
         expect(rows[0]).toMatchObject({ milestone: 'M1 甲', items: '2/2', status: '已闭环', audit: 'R1 Pass' })
     })
 
