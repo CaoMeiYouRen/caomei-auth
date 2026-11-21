@@ -76,6 +76,7 @@ import {
 } from '@/server/utils/audit-hooks'
 import { sendPasswordResetOtp, deliverTwoFactorOtp } from '@/server/utils/recovery-channels'
 import { assertAdminWriteAllowed, assertPasswordResetCompleted, clearPasswordResetRequirement } from '@/server/utils/recovery-guards'
+import { applyChannelChangeBeforeSession } from '@/server/utils/channel-change-apply'
 
 /** 注册准入校验：拒绝时抛出统一错误码，避免暴露命中的名单类型 */
 async function assertRegistrationAllowed(
@@ -153,6 +154,10 @@ function createAuthInstance() {
                 create: {
                     /* 强制重置密码期间拒绝任何新会话（阶段 9 M11） */
                     before: async (session, context) => {
+                        /* 冷静期到期即生效：旧邮箱不得再拿到新会话（阶段 10 M3.1） */
+                        if (typeof session.userId === 'string') {
+                            await applyChannelChangeBeforeSession(session.userId)
+                        }
                         await assertPasswordResetCompleted(session, context?.request)
                         return { data: session }
                     },
