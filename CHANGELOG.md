@@ -1,5 +1,96 @@
 # caomei-auth
 
+# [1.18.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.17.0...v1.18.0) (2026-11-21)
+
+
+### ⚡ 性能优化
+
+* **db:** 会话热点查询基准与索引补齐 ([735eb30](https://github.com/CaoMeiYouRen/caomei-auth/commit/735eb30))
+* 增加会话性能回归阈值与缓存策略说明 ([bbbacab](https://github.com/CaoMeiYouRen/caomei-auth/commit/bbbacab))
+
+
+### ✨ 新功能
+
+* **admin:** 日志支持 IP 精确筛选与统计联动 ([7afe3bf](https://github.com/CaoMeiYouRen/caomei-auth/commit/7afe3bf))
+* **admin:** 注册控制管理端与审计日志 ([0b1920d](https://github.com/CaoMeiYouRen/caomei-auth/commit/0b1920d))
+* **auth:** 修复账号恢复假通道与 2FA OTP 回落 ([80c7c45](https://github.com/CaoMeiYouRen/caomei-auth/commit/80c7c45))
+* **auth:** 增加账号恢复审计与 5 语文案基座 ([887a930](https://github.com/CaoMeiYouRen/caomei-auth/commit/887a930))
+* **auth:** 实现冷静期到期生效事务 ([0fb0ef2](https://github.com/CaoMeiYouRen/caomei-auth/commit/0fb0ef2))
+* **auth:** 实现自助恢复证明校验与消费 ([15c821d](https://github.com/CaoMeiYouRen/caomei-auth/commit/15c821d))
+* **auth:** 扩展改绑请求模型与来源门禁 ([5ed0573](https://github.com/CaoMeiYouRen/caomei-auth/commit/5ed0573))
+* **auth:** 新增受控自助设置密码端点 ([42cf4d3](https://github.com/CaoMeiYouRen/caomei-auth/commit/42cf4d3))
+* **auth:** 新增恢复码实体与签发端点 ([6e43905](https://github.com/CaoMeiYouRen/caomei-auth/commit/6e43905))
+* **auth:** 新增换邮箱撤销、状态查询与生命周期通知 ([f8e579d](https://github.com/CaoMeiYouRen/caomei-auth/commit/f8e579d))
+* **auth:** 新增新邮箱归属验证与冷静期配置 ([b6106aa](https://github.com/CaoMeiYouRen/caomei-auth/commit/b6106aa))
+* **auth:** 新增自助改邮箱与受控证明 OTP 端点 ([19383fc](https://github.com/CaoMeiYouRen/caomei-auth/commit/19383fc))
+* **auth:** 注册控制规则与注册入口校验 ([65f6d75](https://github.com/CaoMeiYouRen/caomei-auth/commit/65f6d75))
+* **auth:** 管理员协助改绑与强制重置密码 ([71c2817](https://github.com/CaoMeiYouRen/caomei-auth/commit/71c2817))
+* **auth:** 补齐恢复码列表、删除与轮换校验 ([9669e89](https://github.com/CaoMeiYouRen/caomei-auth/commit/9669e89))
+* **demo:** Demo 会话数据支持种子与真实分布 ([026a858](https://github.com/CaoMeiYouRen/caomei-auth/commit/026a858))
+* **email:** 验证码邮件按收件人时区显示有效期 ([f7bfb33](https://github.com/CaoMeiYouRen/caomei-auth/commit/f7bfb33))
+* **i18n:** Admin OAuth 域文案双语化（M12） ([d6c7422](https://github.com/CaoMeiYouRen/caomei-auth/commit/d6c7422))
+* **i18n:** Admin SSO 域文案双语化（M13） ([f7b06b6](https://github.com/CaoMeiYouRen/caomei-auth/commit/f7b06b6))
+* **i18n:** Admin 日志域文案双语化（M14） ([6f6c0c8](https://github.com/CaoMeiYouRen/caomei-auth/commit/6f6c0c8))
+* **i18n:** Admin 用户域文案双语化（M11） ([de67194](https://github.com/CaoMeiYouRen/caomei-auth/commit/de67194))
+* **i18n:** API 错误面与内容协商双语化（M16） ([03c389e](https://github.com/CaoMeiYouRen/caomei-auth/commit/03c389e))
+* **i18n:** OAuth 同意页与授权列表双语化（M8） ([c65cfdc](https://github.com/CaoMeiYouRen/caomei-auth/commit/c65cfdc))
+* **i18n:** SSO 登录页与流程文案双语化（M5） ([ffa42df](https://github.com/CaoMeiYouRen/caomei-auth/commit/ffa42df))
+* **i18n:** 个人中心文案双语化（M6） ([e7cea72](https://github.com/CaoMeiYouRen/caomei-auth/commit/e7cea72))
+* **i18n:** 启用 zh-TW 并补齐 Admin 语言包 ([4bb8713](https://github.com/CaoMeiYouRen/caomei-auth/commit/4bb8713))
+* **i18n:** 安全设置文案双语化（M7） ([4e1f4fa](https://github.com/CaoMeiYouRen/caomei-auth/commit/4e1f4fa))
+* **i18n:** 扩展硬编码扫描并接入双语门禁（M3） ([e2c00fd](https://github.com/CaoMeiYouRen/caomei-auth/commit/e2c00fd))
+* **i18n:** 桥接 caomei-ui 多语言并收敛切换器 ([8590df3](https://github.com/CaoMeiYouRen/caomei-auth/commit/8590df3))
+* **i18n:** 治理清理与核心页英文基线（M17） ([bd98955](https://github.com/CaoMeiYouRen/caomei-auth/commit/bd98955))
+* **i18n:** 消息按 17 模块拆分并支持路由懒加载（M2） ([fa2b2b6](https://github.com/CaoMeiYouRen/caomei-auth/commit/fa2b2b6))
+* **i18n:** 组件库内建文案接入应用 locale（M1） ([ed5158c](https://github.com/CaoMeiYouRen/caomei-auth/commit/ed5158c))
+* **i18n:** 补齐 ja-JP Admin 语言包并启用 ja-JP ([30a9af3](https://github.com/CaoMeiYouRen/caomei-auth/commit/30a9af3))
+* **i18n:** 补齐 ja-JP 业务 6 模块语言包 ([83e8b9b](https://github.com/CaoMeiYouRen/caomei-auth/commit/83e8b9b))
+* **i18n:** 补齐 ja-JP 核心 6 模块语言包 ([0263902](https://github.com/CaoMeiYouRen/caomei-auth/commit/0263902))
+* **i18n:** 补齐 ko-KR Admin 语言包并启用 ko-KR ([06a8ed9](https://github.com/CaoMeiYouRen/caomei-auth/commit/06a8ed9))
+* **i18n:** 补齐 ko-KR 业务 6 模块语言包 ([eaae38a](https://github.com/CaoMeiYouRen/caomei-auth/commit/eaae38a))
+* **i18n:** 补齐 ko-KR 核心 6 模块语言包 ([e97918f](https://github.com/CaoMeiYouRen/caomei-auth/commit/e97918f))
+* **i18n:** 补齐 zh-TW 业务 6 模块语言包 ([3cc7ed0](https://github.com/CaoMeiYouRen/caomei-auth/commit/3cc7ed0))
+* **i18n:** 补齐 zh-TW 核心 6 模块语言包 ([ce5e96e](https://github.com/CaoMeiYouRen/caomei-auth/commit/ce5e96e))
+* **i18n:** 认证组合式函数与共享组件文案双语化（M4-1） ([ef3e69e](https://github.com/CaoMeiYouRen/caomei-auth/commit/ef3e69e))
+* **i18n:** 认证页面文案双语化并清理旧密码工具（M4-2） ([36e7ad1](https://github.com/CaoMeiYouRen/caomei-auth/commit/36e7ad1))
+* **i18n:** 语言注册表扩展至 10 码并引入启用开关 ([f0e632e](https://github.com/CaoMeiYouRen/caomei-auth/commit/f0e632e))
+* **i18n:** 邮件模板与用户语言偏好双语化（M15） ([a70e47b](https://github.com/CaoMeiYouRen/caomei-auth/commit/a70e47b))
+* **i18n:** 错误页双语化并修复暗色主题未初始化（M5） ([5bb37c0](https://github.com/CaoMeiYouRen/caomei-auth/commit/5bb37c0))
+* **i18n:** 首页、静态页与共享壳文案双语化（M9） ([008787a](https://github.com/CaoMeiYouRen/caomei-auth/commit/008787a))
+* **nav:** 打通个人中心 / 授权应用 / 安全设置互联（M10） ([a3a3032](https://github.com/CaoMeiYouRen/caomei-auth/commit/a3a3032))
+* **profile:** 新增用户时区偏好与本地化时间展示 ([64f2c47](https://github.com/CaoMeiYouRen/caomei-auth/commit/64f2c47))
+* **quality:** 新增文件规模门禁与基线 ([6a4672b](https://github.com/CaoMeiYouRen/caomei-auth/commit/6a4672b))
+* **security:** 安全页新增恢复码面板 ([3d07e77](https://github.com/CaoMeiYouRen/caomei-auth/commit/3d07e77))
+* **security:** 安全页新增换邮箱弹窗与冷静期卡 ([f618916](https://github.com/CaoMeiYouRen/caomei-auth/commit/f618916))
+* **seo:** sitemap / robots / hreflang 与 en-US 索引放量（M18） ([0b2e819](https://github.com/CaoMeiYouRen/caomei-auth/commit/0b2e819))
+
+
+### 🐛 Bug 修复
+
+* **admin:** Admin 日期统一按 locale 格式化 ([9e94f3f](https://github.com/CaoMeiYouRen/caomei-auth/commit/9e94f3f))
+* **admin:** OAuth 应用接口失败改用 4xx/5xx + 本地化文案 ([83bc847](https://github.com/CaoMeiYouRen/caomei-auth/commit/83bc847))
+* **admin:** 校验 better-auth 失败响应并给出本地化反馈 ([f6b6fb9](https://github.com/CaoMeiYouRen/caomei-auth/commit/f6b6fb9))
+* **admin:** 注册规则更新日志补变更前快照 ([1013654](https://github.com/CaoMeiYouRen/caomei-auth/commit/1013654))
+* **admin:** 统一 API 错误文案读取链路 ([25884f2](https://github.com/CaoMeiYouRen/caomei-auth/commit/25884f2))
+* **admin:** 统一参数校验的 Zod error map ([dad42c5](https://github.com/CaoMeiYouRen/caomei-auth/commit/dad42c5))
+* **auth:** 修正恢复码与备份码消费边界 ([36faaa1](https://github.com/CaoMeiYouRen/caomei-auth/commit/36faaa1))
+* **auth:** 生效事务补撤销判定 ([c26e6dc](https://github.com/CaoMeiYouRen/caomei-auth/commit/c26e6dc))
+* **ci:** 消除 CodeQL 高危告警（注释剥离与标签匹配） ([d117ed1](https://github.com/CaoMeiYouRen/caomei-auth/commit/d117ed1))
+* **i18n:** 校正 M4-1 文案漂移与校验兜底（M4-1） ([1048867](https://github.com/CaoMeiYouRen/caomei-auth/commit/1048867))
+* **i18n:** 补齐恢复码与换邮箱错误文案副本 ([0d7d922](https://github.com/CaoMeiYouRen/caomei-auth/commit/0d7d922))
+* **quality:** 抽出注册准入守卫修复文件规模门禁 ([b3100bd](https://github.com/CaoMeiYouRen/caomei-auth/commit/b3100bd))
+* **security:** 冷静期倒计时归零后自动刷新状态 ([54d1a18](https://github.com/CaoMeiYouRen/caomei-auth/commit/54d1a18))
+* **seo:** 修正 sitemap 首页收录与英文基线稳定性 ([149e662](https://github.com/CaoMeiYouRen/caomei-auth/commit/149e662))
+* **seo:** 配置站点地址归一化与收口文档回填 ([e5a0df3](https://github.com/CaoMeiYouRen/caomei-auth/commit/e5a0df3))
+* **test:** 修正反向键校验类型与 admin 校验断言 ([b1bad83](https://github.com/CaoMeiYouRen/caomei-auth/commit/b1bad83))
+* 时区与邮件文案收口 ([412b67b](https://github.com/CaoMeiYouRen/caomei-auth/commit/412b67b))
+
+
+### 📦 代码重构
+
+* **auth:** 下线邮件链接重置通道（M5） ([a3b9958](https://github.com/CaoMeiYouRen/caomei-auth/commit/a3b9958))
+* **i18n:** 合并 auth.quick 到 auth.quickLogin 命名空间 ([de5ad2a](https://github.com/CaoMeiYouRen/caomei-auth/commit/de5ad2a))
+
 # [1.17.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.16.0...v1.17.0) (2026-11-14)
 
 

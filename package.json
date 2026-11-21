@@ -217,6 +217,6 @@
       "node scripts/i18n/audit-hardcoded-text.mjs"
     ]
   },
-  "version": "1.17.0",
+  "version": "1.18.0",
   "packageManager": "pnpm@11.17.0"
 }
