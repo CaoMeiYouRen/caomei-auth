@@ -4,7 +4,7 @@
 
 ## 文档列表
 
--   [账号找回与 2FA 边界设计草案](./2026-11-18-account-recovery-design.md): 现状取证、威胁模型、恢复等级、分阶段路线与待定决策（2026-11-18 草案，未进入阶段）。
+-   [账号找回与 2FA 边界设计草案](./2026-11-18-account-recovery-design.md): 现状取证、威胁模型、恢复等级、分阶段路线与待定决策（2026-11-18 草案；阶段 0–1 随阶段 9、阶段 3 随阶段 10 交付，阶段 4 已随阶段 11 登记，阶段 2 剩余（审批流 / 工单）与阶段 5 仍为候选）。
 -   [主流平台账号找回与改邮箱机制调研](./2026-11-18-account-recovery-research.md): Google / Microsoft / Apple / GitHub / Supabase / Auth0 / Okta / Cognito / Keycloak / Firebase 与 NIST / OWASP 的公开口径（2026-11-18 快照）。
 -   [AI 基建优化规划](./ai-infrastructure-optimization.md): Skills / Agents / 项目规范 / i18n 规划的评估与分批复核清单。
 -   [PrimeVue → caomei-ui 迁移评估](./2026-11-05-caomei-ui-migration-evaluation.md): 组件库迁移的现状盘点、逐组件映射、主题 / 测试耦合、分阶段计划与风险。
@@ -25,6 +25,7 @@
 -   [阶段 9 收口记录：账号找回与 2FA 边界治理](./2026-11-20-phase9-closure.md): 交付清单、终态指标（测试 1225 / 视觉 136 / 覆盖率 78.53%）、偏差与遗留（2026-11-20 收口）。
 -   [阶段 10 范围登记：用户侧替代证明（恢复码 / 已验证手机 / 冷静期）](./2026-11-21-phase10-registration.md): 5 大条目 / 14 小条目、D1 / D2 / D3 / D5 / D6 / D7 / D10 决策、容量基线与不做范围（2026-11-21 登记 → 收口）。
 -   [阶段 10 收口记录：用户侧替代证明](./2026-11-21-phase10-closure.md): 交付清单、终态指标（测试 1325 / 视觉 138）、偏差与遗留（2026-11-21 收口）。
+-   [阶段 11 范围登记：2FA 覆盖收紧与登录通道闭环](./2026-11-21-phase11-registration.md): 5 大条目 / 15 小条目、D11–D17 拟定决策、通道覆盖矩阵、容量基线与不做范围（2026-11-21 登记，尚未开工）。
 -   [缓存策略与性能回归阈值](./2026-11-16-cache-strategy.md): 会话校验缓存边界、Redis 可选路径、绝对毫秒阈值与验证命令（2026-11-16）。
 -   [P4-0 技术方案：Admin 数据页迁移基座](./2026-11-10-p4-admin-migration-plan.md): DataTable / Dialog / DatePicker / 暗色主题 / 视觉夹具 / 白名单的验证项与退出条件。
 -   [P4-0 决策记录：Admin 迁移基座](./2026-11-10-p4-0-decisions.md): DataTable / Dialog / DatePicker / Toast 映射、Admin token 契约、视觉矩阵与白名单判定点。
