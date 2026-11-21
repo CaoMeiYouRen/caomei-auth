@@ -141,7 +141,7 @@ _目标：语言架构扩到 10 码并启用 zh-CN / en-US / zh-TW / ja-JP / ko-
 
 _目标：旧邮箱失效但持有恢复因子的用户可自助换邮箱；换绑经冷静期可撤销，生效后旧邮箱立即失效；OAuth-only 用户可受控自助设置密码进入自助恢复（L0 扩展）。_
 
-> 已完成（M1–M5 全部交付）。里程碑详情、提交清单与未覆盖边界见 [roadmap-phases-10](../plan/archive/roadmap-phases-10.md)，阶段正文见 [todo-archive-phases-10](./archive/todo-archive-phases-10.md)，范围与决策见 [阶段 10 范围登记](../design/governance/2026-11-21-phase10-registration.md)。后续候选见 [backlog §2.12](./backlog.md)。
+> 已完成（M1–M5 全部交付）。里程碑详情、提交清单与未覆盖边界见 [roadmap-phases-10](./archive/roadmap-phases-10.md)，阶段正文见 [todo-archive-phases-10](./archive/todo-archive-phases-10.md)，范围与决策见 [阶段 10 范围登记](../design/governance/2026-11-21-phase10-registration.md)。后续候选见 [backlog §2.12](./backlog.md)。
 
 ## 后续方向（未授权）
 

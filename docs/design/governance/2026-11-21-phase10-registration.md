@@ -1,6 +1,6 @@
 # 2026-11-21 阶段 10 范围登记：用户侧替代证明（恢复码 / 已验证手机 / 冷静期）
 
-> **状态**：2026-11-21 登记 → 2026-11-21 收口（M1–M5 全部交付并通过 Review Gate）。阶段正文见 [todo-archive-phases-10](../../plan/archive/todo-archive-phases-10.md)，里程碑见 [roadmap-phases-10](../../plan/archive/roadmap-phases-10.md)。
+> **状态**：2026-11-21 登记 → 2026-11-21 收口（M1–M5 全部交付并通过 Review Gate）。阶段正文见 [todo-archive-phases-10](../../plan/archive/todo-archive-phases-10.md)，里程碑见 [roadmap-phases-10](../../plan/archive/roadmap-phases-10.md)，收口记录见 [2026-11-21-phase10-closure](./2026-11-21-phase10-closure.md)。
 > **决策**：D1 / D2 / D3 / D5 / D6 / D7 / D10 于 2026-11-21 由用户裁定（§2）；D4 / D8 / D9 沿用阶段 9 已决口径。
 > **依据**：[账号找回与 2FA 边界设计草案](./2026-11-18-account-recovery-design.md) §5–§6「阶段 3：用户侧替代证明」、[backlog §2.12](../../plan/backlog.md)、[阶段 9 收口](./2026-11-20-phase9-closure.md)。
 > **规划模型**：v1 首个阶段（[规划规范](../../standards/planning.md) §4 / §7 / §8）——5 大条目 / 14 小条目。

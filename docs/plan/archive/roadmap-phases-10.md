@@ -1,6 +1,6 @@
 # 阶段 10 里程碑：用户侧替代证明（2026-11-21 收口）
 
-> 索引与阶段正文见 [todo-archive-phases-10.md](./todo-archive-phases-10.md)；范围登记见 [2026-11-21-phase10-registration.md](../../design/governance/2026-11-21-phase10-registration.md)。
+> 索引与阶段正文见 [todo-archive-phases-10.md](./todo-archive-phases-10.md)；范围登记见 [2026-11-21-phase10-registration.md](../../design/governance/2026-11-21-phase10-registration.md)，收口记录见 [2026-11-21-phase10-closure.md](../../design/governance/2026-11-21-phase10-closure.md)。
 
 - **目标**：旧邮箱失效但持有恢复因子的用户可自助更换已验证邮箱（密码 + 第二因子，冷静期可撤销）；OAuth-only 用户可受控自助设置密码；无恢复因子仍明确拒绝并引导人工。
 - **交付**：
