@@ -37,6 +37,7 @@ export const AUDIT_ACTIONS = [
     'password.set.selfService',
     'twoFactor.challenge',
     'twoFactor.verify',
+    'session.revokeAll',
     'trustedDevice.create',
     'trustedDevice.revoke',
 ] as const
