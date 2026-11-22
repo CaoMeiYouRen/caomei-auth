@@ -120,6 +120,17 @@ const ROUTES: readonly VisualRoute[] = [
         readyText: '当前会话',
         states: [
             {
+                label: '可信设备面板',
+                slug: 'trusted-devices',
+                reference: false,
+                action: async (page) => {
+                    const panel = page.locator('.trusted-devices')
+                    await panel.scrollIntoViewIfNeeded()
+                    await expect(panel.getByRole('heading', { name: '可信设备' })).toBeVisible()
+                    await expect(panel.getByText('暂无可信设备')).toBeVisible()
+                },
+            },
+            {
                 label: '启用 2FA 对话框',
                 slug: 'enable-2fa-dialog',
                 action: async (page) => {

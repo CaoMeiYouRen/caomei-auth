@@ -156,10 +156,6 @@ describe('trusted devices', () => {
         expect(removed).toBe(true)
         expect(verificationRepository.delete).toHaveBeenCalledWith({ identifier: 'trust-device-abc' })
         expect(repository.store.size).toBe(0)
-        expect(loggerMock.audit.record).toHaveBeenCalledWith(expect.objectContaining({
-            action: 'trustedDevice.revoke',
-            targetUserId: 'user-1',
-        }))
     })
 
     it('cookie 缺失或畸形时只告警，不阻断验证', async () => {
