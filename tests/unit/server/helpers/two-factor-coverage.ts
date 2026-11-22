@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto'
 import { expect } from 'vitest'
-import { betterAuth } from 'better-auth'
+import { betterAuth, type BetterAuthPlugin } from 'better-auth'
 import { emailOTP, magicLink, phoneNumber, twoFactor } from 'better-auth/plugins'
 import { memoryAdapter } from 'better-auth/adapters/memory'
 import { twoFactorCoveragePlugin } from '@/server/utils/two-factor-coverage/plugin'
@@ -29,7 +29,7 @@ export function createMemoryDatabase() {
 export function createTestAuth(
     captured: CapturedCodes,
     database: ReturnType<typeof createMemoryDatabase>,
-    options: { rateLimit?: boolean, magicLinkExpiresIn?: number, trustDeviceMaxAge?: number } = {},
+    options: { rateLimit?: boolean, magicLinkExpiresIn?: number, trustDeviceMaxAge?: number, extraPlugins?: BetterAuthPlugin[] } = {},
 ) {
     return betterAuth({
         baseURL: 'http://localhost:3000',
@@ -91,6 +91,7 @@ export function createTestAuth(
                 },
             }),
             twoFactorCoveragePlugin(),
+            ...(options.extraPlugins ?? []),
         ],
     })
 }

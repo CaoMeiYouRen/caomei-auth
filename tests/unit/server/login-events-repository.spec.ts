@@ -230,6 +230,19 @@ describe('登录事件仓储', () => {
         expect(ascending.items.map((item) => item.id)).toEqual([first.id, second.id].sort())
     })
 
+    it('支持显式回填 createdAt（Demo 与历史数据）', async () => {
+        const createdAt = new Date(Date.UTC(2026, 10, 20, 8, 30, 0))
+        const event = await recordLoginEvent({
+            type: 'sign_in_success',
+            result: 'success',
+            channel: 'email',
+            userId: 'user-1',
+            createdAt,
+        }, { repository })
+        const stored = await repository.findOneByOrFail({ id: event.id })
+        expect(stored.createdAt.getTime()).toBe(createdAt.getTime())
+    })
+
     it('查询条件构造只包含已提供的筛选', () => {
         expect(buildLoginEventWhere({})).toEqual({})
         const where = buildLoginEventWhere({ types: ['sign_out'] })
