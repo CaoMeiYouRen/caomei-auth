@@ -75,13 +75,30 @@ const eventRow = {
     createdAt: '2026-11-20T08:00:00.000Z',
 }
 
+const heatmapResponse = {
+    success: true,
+    data: {
+        days: 7,
+        timezone: 'UTC',
+        bucketUnit: 'hour',
+        buckets: ['2026-06-15 03:00'],
+        rows: [{ type: 'sign_in_success', values: [1] }],
+        max: 1,
+    },
+}
+
 function mockResponse(events = [eventRow], total = events.length) {
-    fetchMock.mockResolvedValue({
-        success: true,
-        data: {
-            events,
-            pagination: { page: 1, limit: 20, total, totalPages: Math.ceil(total / 20) },
-        },
+    fetchMock.mockImplementation(async (url: string) => {
+        if (url === '/api/admin/login-events/heatmap') {
+            return heatmapResponse
+        }
+        return {
+            success: true,
+            data: {
+                events,
+                pagination: { page: 1, limit: 20, total, totalPages: Math.ceil(total / 20) },
+            },
+        }
     })
 }
 
@@ -101,7 +118,6 @@ describe('LoginEventsPanel', () => {
         const wrapper = mountPanel()
         await flushPromises()
 
-        expect(fetchMock).toHaveBeenCalledTimes(1)
         expect(wrapper.text()).toContain('登录失败')
         expect(wrapper.text()).toContain('失败')
         expect(wrapper.text()).toContain('邮箱')
@@ -182,16 +198,18 @@ describe('LoginEventsPanel', () => {
     })
 
     it('加载失败展示错误态并可重试', async () => {
-        fetchMock.mockRejectedValueOnce(new Error('network down'))
+        fetchMock.mockImplementation(async (url: string) => {
+            if (url === '/api/admin/login-events/heatmap') {
+                return heatmapResponse
+            }
+            throw new Error('network down')
+        })
         const wrapper = mountPanel()
         await flushPromises()
 
         expect(wrapper.find('[role="alert"]').text()).toContain('network down')
 
-        fetchMock.mockResolvedValueOnce({
-            success: true,
-            data: { events: [eventRow], pagination: { page: 1, limit: 20, total: 1, totalPages: 1 } },
-        })
+        mockResponse()
         await wrapper.find('[role="alert"] button').trigger('click')
         await flushPromises()
 

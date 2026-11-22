@@ -27,6 +27,7 @@ describe('server/api/admin/login-events/stats.get', () => {
     const event = {} as never
     const stats = {
         total: 4,
+        timezone: 'UTC',
         byType: [{ type: 'sign_in_failure', count: 1 }],
         byResult: [{ result: 'failure', count: 1 }],
         distinctUsers: 2,
