@@ -171,7 +171,21 @@
                 "revokeAllSuccessTitle": "取り消しました",
                 "revokeAllSuccess": "すべてのセッションを取り消しました",
                 "revokeAllFailedTitle": "取り消しに失敗しました",
-                "revokeAllFailed": "すべてのセッションの取り消しに失敗しました"
+                "revokeAllFailed": "すべてのセッションの取り消しに失敗しました",
+                "trustedDevices": {
+                    "title": "信頼済みデバイス",
+                    "empty": "信頼済みデバイスはありません",
+                    "loadFailed": "信頼済みデバイスの読み込みに失敗しました",
+                    "revoke": "失効",
+                    "revokeSuccess": "信頼済みデバイスを失効しました",
+                    "revokeFailed": "信頼済みデバイスの失効に失敗しました",
+                    "confirmTitle": "信頼済みデバイスを失効",
+                    "confirmDescription": "失効後、このデバイスは次回ログイン時に 2FA 検証が必要です。",
+                    "expired": "期限切れ",
+                    "unknownDevice": "不明なデバイス",
+                    "loading": "信頼済みデバイスを読み込み中…",
+                    "retry": "再試行"
+                }
             },
             "flow": {
                 "unbanSuccessTitle": "解除しました",

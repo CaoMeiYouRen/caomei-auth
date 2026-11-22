@@ -171,7 +171,21 @@
                 "revokeAllSuccessTitle": "撤銷成功",
                 "revokeAllSuccess": "所有工作階段已撤銷",
                 "revokeAllFailedTitle": "撤銷失敗",
-                "revokeAllFailed": "撤銷所有工作階段失敗"
+                "revokeAllFailed": "撤銷所有工作階段失敗",
+                "trustedDevices": {
+                    "title": "可信裝置",
+                    "empty": "尚無可信裝置",
+                    "loadFailed": "載入可信裝置失敗",
+                    "revoke": "撤銷",
+                    "revokeSuccess": "已撤銷可信裝置",
+                    "revokeFailed": "撤銷可信裝置失敗",
+                    "confirmTitle": "撤銷可信裝置",
+                    "confirmDescription": "撤銷後該裝置下次登入需要重新進行 2FA 驗證。",
+                    "expired": "已過期",
+                    "unknownDevice": "未知裝置",
+                    "loading": "載入可信裝置…",
+                    "retry": "重試"
+                }
             },
             "flow": {
                 "unbanSuccessTitle": "解禁成功",

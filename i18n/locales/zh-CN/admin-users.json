@@ -171,7 +171,21 @@
                 "revokeAllSuccessTitle": "撤销成功",
                 "revokeAllSuccess": "所有会话已撤销",
                 "revokeAllFailedTitle": "撤销失败",
-                "revokeAllFailed": "撤销所有会话失败"
+                "revokeAllFailed": "撤销所有会话失败",
+                "trustedDevices": {
+                    "title": "可信设备",
+                    "empty": "暂无可信设备",
+                    "loadFailed": "加载可信设备失败",
+                    "revoke": "吊销",
+                    "revokeSuccess": "已吊销可信设备",
+                    "revokeFailed": "吊销可信设备失败",
+                    "confirmTitle": "吊销可信设备",
+                    "confirmDescription": "吊销后该设备下次登录需要重新进行 2FA 验证。",
+                    "expired": "已过期",
+                    "unknownDevice": "未知设备",
+                    "loading": "加载可信设备…",
+                    "retry": "重试"
+                }
             },
             "flow": {
                 "unbanSuccessTitle": "解禁成功",

@@ -171,7 +171,21 @@
                 "revokeAllSuccessTitle": "Revoked",
                 "revokeAllSuccess": "All sessions were revoked",
                 "revokeAllFailedTitle": "Revoke failed",
-                "revokeAllFailed": "Failed to revoke all sessions"
+                "revokeAllFailed": "Failed to revoke all sessions",
+                "trustedDevices": {
+                    "title": "Trusted devices",
+                    "empty": "No trusted devices",
+                    "loadFailed": "Failed to load trusted devices",
+                    "revoke": "Revoke",
+                    "revokeSuccess": "Trusted device revoked",
+                    "revokeFailed": "Failed to revoke trusted device",
+                    "confirmTitle": "Revoke trusted device",
+                    "confirmDescription": "This device will need to complete 2FA on its next sign-in.",
+                    "expired": "Expired",
+                    "unknownDevice": "Unknown device",
+                    "loading": "Loading trusted devices…",
+                    "retry": "Retry"
+                }
             },
             "flow": {
                 "unbanSuccessTitle": "Unbanned",

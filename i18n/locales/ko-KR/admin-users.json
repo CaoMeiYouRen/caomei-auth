@@ -171,7 +171,21 @@
                 "revokeAllSuccessTitle": "취소했습니다",
                 "revokeAllSuccess": "모든 세션을 취소했습니다",
                 "revokeAllFailedTitle": "취소에 실패했습니다",
-                "revokeAllFailed": "모든 세션 취소에 실패했습니다"
+                "revokeAllFailed": "모든 세션 취소에 실패했습니다",
+                "trustedDevices": {
+                    "title": "신뢰할 수 있는 기기",
+                    "empty": "신뢰할 수 있는 기기가 없습니다",
+                    "loadFailed": "신뢰할 수 있는 기기를 불러오지 못했습니다",
+                    "revoke": "해지",
+                    "revokeSuccess": "신뢰할 수 있는 기기를 해지했습니다",
+                    "revokeFailed": "신뢰할 수 있는 기기를 해지하지 못했습니다",
+                    "confirmTitle": "신뢰할 수 있는 기기 해지",
+                    "confirmDescription": "해지 후 이 기기는 다음 로그인 시 2FA 검증이 필요합니다.",
+                    "expired": "만료됨",
+                    "unknownDevice": "알 수 없는 기기",
+                    "loading": "신뢰할 수 있는 기기를 불러오는 중…",
+                    "retry": "다시 시도"
+                }
             },
             "flow": {
                 "unbanSuccessTitle": "해제했습니다",

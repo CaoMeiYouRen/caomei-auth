@@ -58,6 +58,61 @@
                     </div>
                 </template>
             </CaomeiDataTable>
+
+            <div class="user-sessions__trusted">
+                <div class="user-sessions__header">
+                    <h4 class="user-sessions__title">
+                        {{ t('admin.users.sessions.trustedDevices.title') }}
+                    </h4>
+                </div>
+                <p v-if="trustedLoading && !trustedDevices.length" class="user-sessions__hint">
+                    {{ t('admin.users.sessions.trustedDevices.loading') }}
+                </p>
+                <div
+                    v-else-if="trustedError"
+                    class="user-sessions__trusted-error"
+                    role="alert"
+                >
+                    <span>{{ t('admin.users.sessions.trustedDevices.loadFailed') }}</span>
+                    <CaomeiButton
+                        variant="secondary"
+                        size="sm"
+                        @click="loadTrustedDevices"
+                    >
+                        {{ t('admin.users.sessions.trustedDevices.retry') }}
+                    </CaomeiButton>
+                </div>
+                <p v-else-if="!trustedDevices.length" class="user-sessions__hint">
+                    {{ t('admin.users.sessions.trustedDevices.empty') }}
+                </p>
+                <ul v-else class="user-sessions__trusted-list">
+                    <li
+                        v-for="device in trustedDevices"
+                        :key="device.id"
+                        class="user-sessions__trusted-item"
+                    >
+                        <div>
+                            <div>{{ formatDevice(device.userAgent || '') || t('admin.users.sessions.trustedDevices.unknownDevice') }}</div>
+                            <small>{{ device.ip || '—' }} · {{ formatDateTimeShort(device.lastUsedAt) }}</small>
+                        </div>
+                        <CaomeiTag
+                            v-if="device.expired"
+                            tone="danger"
+                            variant="soft"
+                        >
+                            {{ t('admin.users.sessions.trustedDevices.expired') }}
+                        </CaomeiTag>
+                        <CaomeiButton
+                            variant="secondary"
+                            tone="danger"
+                            size="sm"
+                            @click="revokeTrusted(device)"
+                        >
+                            {{ t('admin.users.sessions.trustedDevices.revoke') }}
+                        </CaomeiButton>
+                    </li>
+                </ul>
+            </div>
         </div>
     </BaseDialogV2>
 </template>
@@ -68,11 +123,10 @@ import type { DataTableColumn } from 'caomei-ui'
 import { useConfirm, useToast } from 'caomei-ui'
 import { authClient } from '@/lib/auth-client'
 import { parseUserAgent } from '@/utils/shared/useragent'
+import { formatDevice } from '@/utils/web/device'
 import type { AdminUserProfile, AdminUserSession } from '@/types/admin'
 import { getApiErrorMessage, throwIfAuthError } from '@/utils/shared/api-error'
 import { useLocaleDate } from '@/composables/use-locale-date'
-
-const { formatDateTimeShort } = useLocaleDate()
 
 const props = defineProps<{
     visible: boolean
@@ -84,12 +138,55 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const { formatDateTimeShort } = useLocaleDate()
 const toast = useToast()
 const confirm = useConfirm()
 
 const sessionsLoading = ref(false)
 const revokeAllLoading = ref(false)
 const revokingSession = ref('')
+const trustedDevices = ref<Array<{ id: string, userAgent: string | null, ip: string | null, lastUsedAt: string, expiresAt: string, expired: boolean }>>([])
+const trustedLoading = ref(false)
+const trustedError = ref(false)
+
+const loadTrustedDevices = async () => {
+    const targetUser = props.user
+    if (!targetUser) return
+    try {
+        trustedLoading.value = true
+        trustedError.value = false
+        const response = await $fetch<{ data: { devices: typeof trustedDevices.value } }>(`/api/admin/users/${encodeURIComponent(targetUser.id)}/trusted-devices`)
+        trustedDevices.value = response.data.devices
+    } catch (error) {
+        console.error('Failed to load trusted devices:', error)
+        trustedError.value = true
+        trustedDevices.value = []
+    } finally {
+        trustedLoading.value = false
+    }
+}
+
+const revokeTrusted = async (device: { id: string }) => {
+    const targetUser = props.user
+    if (!targetUser) return
+    const confirmed = await confirm.open({
+        title: t('admin.users.sessions.trustedDevices.confirmTitle'),
+        description: t('admin.users.sessions.trustedDevices.confirmDescription'),
+        tone: 'danger',
+    })
+    if (!confirmed) return
+    try {
+        await $fetch(`/api/admin/users/${encodeURIComponent(targetUser.id)}/trusted-devices/${encodeURIComponent(device.id)}`, { method: 'DELETE' })
+        toast.success({ title: t('admin.users.sessions.trustedDevices.revokeSuccess'), duration: 3000 })
+        await loadTrustedDevices()
+    } catch (error) {
+        toast.danger({
+            title: t('admin.users.sessions.trustedDevices.revokeFailed'),
+            description: getApiErrorMessage(error, t('admin.users.sessions.trustedDevices.revokeFailed')),
+            duration: 3000,
+        })
+    }
+}
 const userSessions = ref<AdminUserSession[]>([])
 
 const columns: DataTableColumn<AdminUserSession>[] = [
@@ -137,6 +234,7 @@ const loadUserSessions = async () => {
 watch(() => props.visible, (newValue) => {
     if (newValue && props.user) {
         loadUserSessions()
+        loadTrustedDevices()
     }
 })
 
@@ -186,20 +284,14 @@ const revokeAllUserSessions = async () => {
     try {
         revokeAllLoading.value = true
 
-        const response = await authClient.admin.revokeUserSessions({
-            userId: targetUser.id,
+        await $fetch(`/api/admin/users/${encodeURIComponent(targetUser.id)}/revoke-sessions`, { method: 'POST' })
+
+        toast.success({
+            title: t('admin.users.sessions.revokeAllSuccessTitle'),
+            description: t('admin.users.sessions.revokeAllSuccess'),
+            duration: 3000,
         })
-
-        throwIfAuthError(response, t('admin.users.sessions.revokeAllFailed'))
-
-        if (response.data) {
-            toast.success({
-                title: t('admin.users.sessions.revokeAllSuccessTitle'),
-                description: t('admin.users.sessions.revokeAllSuccess'),
-                duration: 3000,
-            })
-            emit('update:visible', false)
-        }
+        emit('update:visible', false)
     } catch (error: unknown) {
         console.error('Failed to revoke all sessions:', error)
         toast.danger({
@@ -261,5 +353,43 @@ const revokeAllUserSessions = async () => {
         padding: 2rem;
         color: var(--admin-muted);
     }
+}
+
+.user-sessions__trusted {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--admin-border);
+    padding-top: 1rem;
+}
+
+.user-sessions__hint {
+    color: var(--admin-muted);
+}
+
+.user-sessions__trusted-error {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+}
+
+.user-sessions__trusted-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.user-sessions__trusted-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
 }
 </style>

@@ -13,7 +13,7 @@ interface AuthResponse {
     error?: { message?: string } | null
 }
 
-const { toast, confirmOpen, banUser, createUser, listUserSessions, revokeUserSessions, revokeUserSession } = vi.hoisted(() => ({
+const { toast, confirmOpen, banUser, createUser, listUserSessions, revokeUserSessions, revokeUserSession, fetchMock } = vi.hoisted(() => ({
     toast: { success: vi.fn(), danger: vi.fn() },
     confirmOpen: vi.fn(async () => true),
     banUser: vi.fn(async (): Promise<AuthResponse> => ({ data: {} })),
@@ -21,6 +21,7 @@ const { toast, confirmOpen, banUser, createUser, listUserSessions, revokeUserSes
     listUserSessions: vi.fn(async (): Promise<AuthResponse> => ({ data: { sessions: [] } })),
     revokeUserSessions: vi.fn(async (): Promise<AuthResponse> => ({ data: {} })),
     revokeUserSession: vi.fn(async (): Promise<AuthResponse> => ({ data: {} })),
+    fetchMock: vi.fn(),
 }))
 
 vi.mock('caomei-ui', async (importOriginal) => {
@@ -50,6 +51,7 @@ vi.mock('@/composables/admin/use-user-table', () => ({
 }))
 
 mockNuxtImport('useI18n', () => () => ({ t: useI18nText(), locale: { value: 'zh-CN' } }))
+mockNuxtImport('$fetch', () => fetchMock)
 
 const ButtonStub = {
     props: ['label'],
@@ -93,6 +95,13 @@ function findButtonByText(wrapper: ReturnType<typeof mount>, text: string) {
 
 describe('admin 用户对话框', () => {
     beforeEach(() => {
+        fetchMock.mockReset()
+        fetchMock.mockImplementation(async (url: string) => {
+            if (String(url).includes('/trusted-devices')) {
+                return { data: { devices: [] } }
+            }
+            return { status: true }
+        })
         vi.clearAllMocks()
         confirmOpen.mockResolvedValue(true)
     })
@@ -139,10 +148,9 @@ describe('admin 用户对话框', () => {
         const revokeAll = findButtonByText(wrapper, '撤销所有会话')
         expect(revokeAll).toBeTruthy()
         await revokeAll!.trigger('click')
-        await vi.waitFor(() => expect(revokeUserSessions).toHaveBeenCalled(), { timeout: 5000 })
+        await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/api/admin/users/user-1/revoke-sessions', { method: 'POST' }), { timeout: 5000 })
 
         expect(confirmOpen).toHaveBeenCalled()
-        expect(revokeUserSessions).toHaveBeenCalledWith({ userId: 'user-1' })
         expect(wrapper.emitted('update:visible')?.at(-1)).toEqual([false])
     })
 
@@ -219,7 +227,15 @@ describe('admin 用户对话框', () => {
     })
 
     it('撤销全部会话失败时弹出错误提示且不关闭对话框', async () => {
-        revokeUserSessions.mockResolvedValueOnce({ error: { message: '无权限撤销' } })
+        fetchMock.mockImplementation(async (url: string) => {
+            if (String(url).endsWith('/revoke-sessions')) {
+                throw new Error('无权限撤销')
+            }
+            if (String(url).includes('/trusted-devices')) {
+                return { data: { devices: [] } }
+            }
+            return { status: true }
+        })
         const wrapper = mount(UserSessionsDialog, {
             props: { visible: false, user },
             ...mountOptions,
@@ -228,7 +244,7 @@ describe('admin 用户对话框', () => {
         await wrapper.setProps({ visible: true })
         await vi.waitFor(() => expect(listUserSessions).toHaveBeenCalled(), { timeout: 5000 })
         await findButtonByText(wrapper, '撤销所有会话')!.trigger('click')
-        await vi.waitFor(() => expect(revokeUserSessions).toHaveBeenCalled(), { timeout: 5000 })
+        await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/api/admin/users/user-1/revoke-sessions', { method: 'POST' }), { timeout: 5000 })
 
         expect(toast.danger).toHaveBeenCalledWith(expect.objectContaining({ description: '无权限撤销' }))
         expect(toast.success).not.toHaveBeenCalled()
