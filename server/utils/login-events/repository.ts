@@ -6,6 +6,8 @@ import { maskEmail } from '@/utils/shared/privacy'
 import {
     isLoginEventResult,
     isLoginEventType,
+    isSupportedLoginEventCombination,
+    isSupportedLoginEventResult,
     normalizeLoginEventChannel,
     type LoginEventChannel,
     type LoginEventResult,
@@ -125,6 +127,7 @@ export interface LoginEventPruneResult {
 }
 
 type LoginEventRepository = Pick<Repository<LoginEvent>, 'create' | 'save' | 'findAndCount' | 'delete' | 'update'>
+type LoginEventWriteRepository = Pick<Repository<LoginEvent>, 'create' | 'save' | 'update'>
 
 function resolveRepository(repository?: LoginEventRepository): LoginEventRepository {
     return repository ?? dataSource.getRepository(LoginEvent)
@@ -147,7 +150,7 @@ function normalizePageSize(value: number | undefined): number {
 /** 单条写入；失败向上抛出，由认证链路决定降级策略 */
 export async function recordLoginEvent(
     input: LoginEventInput,
-    options: { repository?: LoginEventRepository } = {},
+    options: { repository?: LoginEventWriteRepository } = {},
 ): Promise<LoginEvent> {
     if (!isLoginEventType(input.type)) {
         throw new TypeError(`Unknown login event type: ${String(input.type)}`)
@@ -155,11 +158,22 @@ export async function recordLoginEvent(
     if (!isLoginEventResult(input.result)) {
         throw new TypeError(`Unknown login event result: ${String(input.result)}`)
     }
-    const repository = resolveRepository(options.repository)
+    if (!isSupportedLoginEventResult(input.type, input.result)) {
+        throw new TypeError(`Unsupported login event result: ${input.type} / ${input.result}`)
+    }
+    let channel = normalizeLoginEventChannel(input.channel)
+    if (!isSupportedLoginEventCombination(input.type, channel)) {
+        logger.warn('Login event channel is not supported, falling back to unknown', {
+            type: input.type,
+            channel,
+        })
+        channel = 'unknown'
+    }
+    const repository = options.repository ?? dataSource.getRepository(LoginEvent)
     const event = repository.create({
         type: input.type,
         result: input.result,
-        channel: normalizeLoginEventChannel(input.channel),
+        channel,
         userId: input.userId ?? null,
         ip: input.ip?.trim() || null,
         userAgent: input.userAgent?.trim() || null,

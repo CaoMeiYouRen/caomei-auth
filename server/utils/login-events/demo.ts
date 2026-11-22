@@ -1,6 +1,11 @@
 import type { LoginEventInput } from './repository'
 import { createSeededRandom } from '@/server/utils/demo-data-generator'
-import type { LoginEventChannel, LoginEventResult, LoginEventType } from '@/utils/shared/login-events'
+import {
+    isSupportedLoginEventCombination,
+    type LoginEventChannel,
+    type LoginEventResult,
+    type LoginEventType,
+} from '@/utils/shared/login-events'
 
 /**
  * Demo 模式登录事件生成（阶段 12 M1.2）。
@@ -97,7 +102,8 @@ export function generateDemoLoginEvents(options: DemoLoginEventOptions): Array<L
     const events: Array<LoginEventInput & { createdAt: Date }> = []
     for (let index = 0; index < count; index += 1) {
         const type = pickWeightedType(random)
-        const channel = DEMO_CHANNELS[Math.floor(random() * DEMO_CHANNELS.length)] ?? 'unknown'
+        const candidateChannel = DEMO_CHANNELS[Math.floor(random() * DEMO_CHANNELS.length)] ?? 'unknown'
+        const channel = isSupportedLoginEventCombination(type, candidateChannel) ? candidateChannel : 'unknown'
         const createdAt = new Date(now.getTime() - Math.floor(random() * windowMs / 60_000) * 60_000)
         const userId = type === 'sign_in_failure' && random() < 0.2
             ? null
