@@ -117,6 +117,9 @@
             "proofOtpPhoneRequired": "Verify a phone number before using phone verification codes.",
             "selfServicePasswordDisabled": "This account cannot set a password on its own.",
             "passwordTooWeak": "Use a password between 6 and 64 characters."
+        },
+        "security": {
+            "trustedDeviceNotFound": "Trusted device not found or already revoked"
         }
     }
 }

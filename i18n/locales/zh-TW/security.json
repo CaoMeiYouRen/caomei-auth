@@ -180,6 +180,25 @@
             "sendFailed": "驗證碼傳送失敗",
             "statusFailed": "更換信箱狀態載入失敗",
             "hoursMinutes": "{hours} 小時 {minutes} 分"
+        },
+        "trustedDevices": {
+            "title": "可信裝置",
+            "desc": "已信任的瀏覽器 / 裝置在登入時可跳過 2FA 驗證。",
+            "empty": "尚無可信裝置",
+            "loadFailed": "載入可信裝置失敗",
+            "retry": "重試",
+            "revoke": "撤銷",
+            "confirmTitle": "撤銷可信裝置",
+            "confirmDescription": "撤銷後該裝置下次登入需要重新進行 2FA 驗證。",
+            "revokeSuccess": "已撤銷可信裝置",
+            "revokeFailed": "撤銷可信裝置失敗",
+            "createdAt": "建立時間",
+            "lastUsedAt": "最近使用",
+            "expiresAt": "到期時間",
+            "expired": "已過期",
+            "currentDevice": "目前裝置",
+            "unknownDevice": "未知裝置",
+            "loading": "載入可信裝置…"
         }
     }
 }

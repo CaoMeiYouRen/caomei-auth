@@ -12,10 +12,32 @@ import { requestAuditMeta, writeAuditEvent } from '@/server/utils/audit-log'
  * 这里只解析 identifier 用于与 `verification` 行对齐；解析失败只 warn，不影响 2FA 验证。
  */
 export const TRUST_DEVICE_COOKIE_NAME = 'trust_device'
+export const TRUST_DEVICE_COOKIE_NAMES = [
+    `better-auth.${TRUST_DEVICE_COOKIE_NAME}`,
+    `__Secure-better-auth.${TRUST_DEVICE_COOKIE_NAME}`,
+] as const
 export const TRUST_DEVICE_DEFAULT_MAX_AGE_SECONDS = 30 * 24 * 60 * 60
 
 export type TrustedDeviceRepository = Pick<Repository<TrustedDevice>, 'findOne' | 'create' | 'save' | 'update' | 'find' | 'delete'>
 type VerificationRepository = Pick<Repository<Verification>, 'delete'>
+
+/** 解析已解码的 `trust_device` cookie 值（`<token>!<identifier>.<signature>`） */
+export function parseTrustedDeviceIdentifierValue(value: string | null | undefined): string | null {
+    if (!value) {
+        return null
+    }
+    let decoded: string
+    try {
+        decoded = value.includes('%') ? decodeURIComponent(value) : value
+    } catch {
+        return null
+    }
+    const identifier = decoded.split('!')[1]?.split('.')[0]
+    if (!identifier || !identifier.startsWith('trust-device-')) {
+        return null
+    }
+    return identifier
+}
 
 /** 从 Set-Cookie 中提取 `trust_device` 的 identifier；找不到或格式不符返回 null */
 export function parseTrustedDeviceIdentifier(setCookies: readonly string[]): string | null {
@@ -24,21 +46,7 @@ export function parseTrustedDeviceIdentifier(setCookies: readonly string[]): str
         return null
     }
     const rawValue = cookie.slice(cookie.indexOf('=') + 1).split(';', 1)[0]?.trim()
-    if (!rawValue) {
-        return null
-    }
-    let decoded: string
-    try {
-        decoded = decodeURIComponent(rawValue)
-    } catch {
-        return null
-    }
-    /* 签名 cookie：<token>!<identifier>.<signature> */
-    const identifier = decoded.split('!')[1]?.split('.')[0]
-    if (!identifier || !identifier.startsWith('trust-device-')) {
-        return null
-    }
-    return identifier
+    return parseTrustedDeviceIdentifierValue(rawValue)
 }
 
 /** 从 Set-Cookie 的 Max-Age 推导过期时间；缺失时回落 30 天 */
@@ -115,7 +123,17 @@ export async function listTrustedDevices(
     })
 }
 
-/** 吊销：删除 verification 行 + 实体；返回是否命中 */
+/** 查询本人单条可信设备（不存在或非本人返回 null） */
+export async function findTrustedDevice(input: {
+    userId: string
+    id: string
+    repository?: Pick<TrustedDeviceRepository, 'findOne'>
+}): Promise<TrustedDevice | null> {
+    const repository = input.repository ?? dataSource.getRepository(TrustedDevice)
+    return repository.findOne({ where: { id: input.id, userId: input.userId } })
+}
+
+/** 吊销：删除 verification 行 + 实体；返回是否命中。调用方负责写 `trustedDevice.revoke` 审计 */
 export async function revokeTrustedDevice(input: {
     userId: string
     id: string
@@ -132,12 +150,6 @@ export async function revokeTrustedDevice(input: {
         }
         await verificationRepository.delete({ identifier: device.identifier })
         await deviceRepository.delete({ id: device.id, userId: input.userId })
-        writeAuditEvent({
-            action: 'trustedDevice.revoke',
-            actorId: input.userId,
-            targetUserId: input.userId,
-            after: { identifier: device.identifier },
-        })
         return true
     }
 

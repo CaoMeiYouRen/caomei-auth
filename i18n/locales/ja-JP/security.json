@@ -180,6 +180,25 @@
             "sendFailed": "認証コードの送信に失敗しました",
             "statusFailed": "メール変更の状態を読み込めませんでした",
             "hoursMinutes": "{hours} 時間 {minutes} 分"
+        },
+        "trustedDevices": {
+            "title": "信頼済みデバイス",
+            "desc": "信頼済みのブラウザ / デバイスはログイン時に 2FA 検証をスキップできます。",
+            "empty": "信頼済みデバイスはありません",
+            "loadFailed": "信頼済みデバイスの読み込みに失敗しました",
+            "retry": "再試行",
+            "revoke": "失効",
+            "confirmTitle": "信頼済みデバイスを失効",
+            "confirmDescription": "失効後、このデバイスは次回ログイン時に 2FA 検証が必要になります。",
+            "revokeSuccess": "信頼済みデバイスを失効しました",
+            "revokeFailed": "信頼済みデバイスの失効に失敗しました",
+            "createdAt": "作成日時",
+            "lastUsedAt": "最終使用",
+            "expiresAt": "有効期限",
+            "expired": "期限切れ",
+            "currentDevice": "現在のデバイス",
+            "unknownDevice": "不明なデバイス",
+            "loading": "信頼済みデバイスを読み込み中…"
         }
     }
 }

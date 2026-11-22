@@ -82,6 +82,8 @@
                     @confirm-revoke-other-sessions="security.revokeOtherSessions"
                     @confirm-revoke-all-sessions="security.revokeAllSessions"
                 />
+
+                <div class="divider" /><TrustedDevicesPanel />
             </div>
         </div>
     </div>
@@ -90,6 +92,7 @@
 <script setup lang="ts">
 import TwoFactorPanel from '@/components/security/two-factor-panel.vue'
 import SessionTable from '@/components/security/session-table.vue'
+import TrustedDevicesPanel from '@/components/security/trusted-devices-panel.vue'
 import RecoveryCodePanel from '@/components/security/recovery-code-panel.vue'
 import ChannelChangeCard from '@/components/security/channel-change-card.vue'
 import { useSecuritySettings } from '@/composables/use-security-settings'

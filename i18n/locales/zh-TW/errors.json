@@ -117,6 +117,9 @@
             "proofOtpPhoneRequired": "請先完成手機號碼驗證再使用手機驗證碼",
             "selfServicePasswordDisabled": "目前帳號無法自助設定密碼",
             "passwordTooWeak": "密碼長度需為 6–64 位"
+        },
+        "security": {
+            "trustedDeviceNotFound": "可信裝置不存在或已被撤銷"
         }
     }
 }

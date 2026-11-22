@@ -117,6 +117,9 @@
             "proofOtpPhoneRequired": "휴대폰 인증 코드를 사용하기 전에 휴대폰 번호 인증을 완료해 주세요.",
             "selfServicePasswordDisabled": "이 계정은 직접 비밀번호를 설정할 수 없습니다.",
             "passwordTooWeak": "비밀번호는 6~64자로 입력해 주세요."
+        },
+        "security": {
+            "trustedDeviceNotFound": "신뢰할 수 있는 기기가 없거나 이미 해지되었습니다"
         }
     }
 }

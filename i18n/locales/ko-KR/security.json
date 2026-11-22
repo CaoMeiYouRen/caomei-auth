@@ -180,6 +180,25 @@
             "sendFailed": "인증 코드 전송에 실패했습니다",
             "statusFailed": "이메일 변경 상태를 불러오지 못했습니다",
             "hoursMinutes": "{hours}시간 {minutes}분"
+        },
+        "trustedDevices": {
+            "title": "신뢰할 수 있는 기기",
+            "desc": "신뢰하는 브라우저 / 기기는 로그인 시 2FA 검증을 건너뛸 수 있습니다.",
+            "empty": "신뢰할 수 있는 기기가 없습니다",
+            "loadFailed": "신뢰할 수 있는 기기를 불러오지 못했습니다",
+            "retry": "다시 시도",
+            "revoke": "해지",
+            "confirmTitle": "신뢰할 수 있는 기기 해지",
+            "confirmDescription": "해지 후 이 기기는 다음 로그인 시 2FA 검증을 다시 수행해야 합니다.",
+            "revokeSuccess": "신뢰할 수 있는 기기를 해지했습니다",
+            "revokeFailed": "신뢰할 수 있는 기기를 해지하지 못했습니다",
+            "createdAt": "생성 시간",
+            "lastUsedAt": "최근 사용",
+            "expiresAt": "만료 시간",
+            "expired": "만료됨",
+            "currentDevice": "현재 기기",
+            "unknownDevice": "알 수 없는 기기",
+            "loading": "신뢰할 수 있는 기기를 불러오는 중…"
         }
     }
 }

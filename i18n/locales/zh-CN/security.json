@@ -180,6 +180,25 @@
             "sendFailed": "验证码发送失败",
             "statusFailed": "更换邮箱状态加载失败",
             "hoursMinutes": "{hours} 小时 {minutes} 分"
+        },
+        "trustedDevices": {
+            "title": "可信设备",
+            "desc": "已信任的浏览器 / 设备在登录时可跳过 2FA 验证。",
+            "empty": "暂无可信设备",
+            "loadFailed": "加载可信设备失败",
+            "retry": "重试",
+            "revoke": "吊销",
+            "confirmTitle": "吊销可信设备",
+            "confirmDescription": "吊销后该设备下次登录需要重新进行 2FA 验证。",
+            "revokeSuccess": "已吊销可信设备",
+            "revokeFailed": "吊销可信设备失败",
+            "createdAt": "创建时间",
+            "lastUsedAt": "最近使用",
+            "expiresAt": "过期时间",
+            "expired": "已过期",
+            "currentDevice": "当前设备",
+            "unknownDevice": "未知设备",
+            "loading": "加载可信设备…"
         }
     }
 }

@@ -10,6 +10,7 @@ export const defaultErrorMessages: Record<string, string> = {
     'admin.invalidRedirectUri': '无效的重定向URI：{uri}',
     'admin.logsSessionsFailed': '获取登录日志失败',
     'admin.logsStatsFailed': '获取登录统计失败',
+    'security.trustedDeviceNotFound': '可信设备不存在或已被吊销',
     'admin.oauthAppCreateFailed': '创建应用失败',
     'admin.oauthAppCreated': '应用创建成功',
     'admin.oauthAppDeleteFailed': '删除应用失败',

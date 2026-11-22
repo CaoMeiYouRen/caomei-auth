@@ -180,6 +180,25 @@
             "sendFailed": "Failed to send the verification code",
             "statusFailed": "Failed to load the email change status",
             "hoursMinutes": "{hours}h {minutes}m"
+        },
+        "trustedDevices": {
+            "title": "Trusted devices",
+            "desc": "Trusted browsers / devices can skip 2FA verification when signing in.",
+            "empty": "No trusted devices",
+            "loadFailed": "Failed to load trusted devices",
+            "retry": "Retry",
+            "revoke": "Revoke",
+            "confirmTitle": "Revoke trusted device",
+            "confirmDescription": "This device will need to complete 2FA verification on its next sign-in.",
+            "revokeSuccess": "Trusted device revoked",
+            "revokeFailed": "Failed to revoke trusted device",
+            "createdAt": "Created",
+            "lastUsedAt": "Last used",
+            "expiresAt": "Expires",
+            "expired": "Expired",
+            "currentDevice": "Current device",
+            "unknownDevice": "Unknown device",
+            "loading": "Loading trusted devices…"
         }
     }
 }
