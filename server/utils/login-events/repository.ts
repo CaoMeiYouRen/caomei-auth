@@ -258,7 +258,7 @@ export async function queryLoginEvents(
 export async function pruneLoginEvents(options: {
     retentionDays: number
     now?: Date
-    repository?: LoginEventRepository
+    repository?: Pick<Repository<LoginEvent>, 'delete'>
 }): Promise<LoginEventPruneResult> {
     if (!Number.isFinite(options.retentionDays) || options.retentionDays <= 0) {
         throw new RangeError(`Invalid login event retention days: ${String(options.retentionDays)}`)
@@ -268,6 +268,7 @@ export async function pruneLoginEvents(options: {
     if (!Number.isFinite(now.getTime()) || !Number.isFinite(cutoff.getTime())) {
         throw new RangeError(`Invalid login event cutoff: ${String(now)}`)
     }
-    const result = await resolveRepository(options.repository).delete({ createdAt: LessThan(cutoff) })
+    const repository = options.repository ?? dataSource.getRepository(LoginEvent)
+    const result = await repository.delete({ createdAt: LessThan(cutoff) })
     return { cutoff, deleted: result.affected ?? 0 }
 }

@@ -119,6 +119,8 @@
 
 ### 3.3 基础设施
 
+- **登录事件多方言手动清理**：阶段 12 M1.3 的 `scripts/maintenance/prune-login-events.mjs` 仅支持 SQLite（MySQL / PostgreSQL 依赖管理端统计查询的惰性清理）。备份前清 PII 或下调保留期后立即生效的场景缺少手动入口。处理方向：用 TypeORM 复用 `pruneLoginEvents` 连接三种数据库，或在部署文档写明仅 SQLite 并保留此候选。
+
 - **注册规则多实例缓存**：规则缓存为进程内 30 秒 TTL，多实例部署时最坏 30 秒内仍按旧规则；如需强一致，引入 Redis 共享缓存并在管理端变更时发布失效。
 
 - **Dependency Cruiser 依赖图**：配置 `depcruise` 验证 `utils/shared` / `server/utils` / `utils/web` 分层约束。

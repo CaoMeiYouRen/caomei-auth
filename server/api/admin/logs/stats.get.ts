@@ -10,6 +10,7 @@ import { validateQuery } from '@/server/utils/validation'
 import { logStatsQuerySchema, type LogStatsQuery } from '@/utils/shared/api-schemas'
 import { createZodErrorMap } from '@/utils/shared/zod-error-map'
 import { createLocalizedError, getServerI18n } from '@/server/utils/i18n'
+import { pruneLoginEventsIfDue } from '@/server/utils/login-events/retention'
 
 export default defineEventHandler(async (event) => {
     // 检查管理员权限
@@ -18,6 +19,9 @@ export default defineEventHandler(async (event) => {
     const filters: LogStatsQuery = await validateQuery(event, logStatsQuerySchema, { errorMap: createZodErrorMap(t) })
 
     try {
+        /* 登录事件保留期惰性清理：进程内 1 小时节流，失败不影响统计 */
+        void pruneLoginEventsIfDue().catch(() => undefined)
+
         const sessionRepo = dataSource.getRepository(Session)
         const userRepo = dataSource.getRepository(User)
         const accountRepo = dataSource.getRepository(Account)
