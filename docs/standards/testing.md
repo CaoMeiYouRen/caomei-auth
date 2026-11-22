@@ -70,5 +70,6 @@
 -   **门禁**：自基线 `pnpm test:visual`（CI 阻断）；参考态快照自阶段 4 P5 起仅作历史证据，CI 不再执行 parity（本地 `pnpm test:visual:parity` 仍可审计）。
 -   **环境**：本地与 CI 共用 Playwright 官方容器（`scripts/testing/run-visual.mjs` 自动调用）；基线只在容器内采集，宿主直跑仅用于调试。
 -   **更新纪律**：差异逐项归因后才可 `pnpm test:visual:update`；参考态快照不可原地刷新。
+-   **阈值与重采**：`maxDiffPixels` 只统计超过阈值的像素（本仓库 `threshold: 0.2`），阈值内的整片色差不会被计入；受影响 spec 必须用 `pnpm test:visual:update`（`--update-snapshots=all`）重采，跨全站 token / 主题变更才整层重采，中间态快照不得写回基线。定稿时序与 verify 留痕见 [视觉参考态基座](../design/governance/2026-11-08-visual-baseline-harness.md)。
 -   **升级联动**：升级 `@playwright/test` 必须同批重采自基线并说明差异。
 -   详见 [视觉参考态基座](../design/governance/2026-11-08-visual-baseline-harness.md)。
