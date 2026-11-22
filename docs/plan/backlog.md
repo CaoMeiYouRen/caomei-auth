@@ -73,6 +73,7 @@
 
 - **`docker-publish` 重建路径纳入安全告警门禁**：`mode=build` 会重新构建并推送生产镜像，但目前未执行 `scripts/security/check-alerts.mjs`；`retag` 复用已构建镜像，可按现状处理。待评估后决定是否在 `mode=build` 前增加 gate。
 - **上游未修复依赖告警跟进**：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4，lock 仍为 3.0.3）暂无已发布补丁版本，仅存在于构建 / 开发工具链；待上游发版后升级并复查 `pnpm audit`。`node-forge` 已升至 1.4.3（满足 GHSA-86w9-cpqp-85rv 的 ≥1.4.1），从本条移除。
+- **2026-11-23 中危依赖告警跟进**：阶段 12 推送后 Dependabot 报告 3 条 `medium`，均为构建 / 开发工具链传递依赖，不阻塞发布：`@nuxt/schema`（需 ≥4.6.4，当前经 Nuxt 模块引入的 3.x 分支）、`minimatch`（需 ≥11.0.1，跨多级传递、升级牵涉大版本）、`glob`（需 ≥14.0.2，可由 override 收紧）。处理方向：随下一次 Nuxt / 工具链整体升级统一处理，`glob` 可先单独 override；处理前在发布前安全告警门禁报告中按 `medium` 记录。
 - **迁入来源**：既有 backlog「上游未修复依赖告警跟进」与原 `todo.md`「低优先级 · 安全审计工具集成」（安全审计已由 `.github/workflows/security-auto-fix.yml` 每日巡检 + Dependabot 落地，不再作为候选）。
 
 ### 3.2 质量与测试
