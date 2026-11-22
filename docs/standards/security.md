@@ -73,6 +73,16 @@
 -   **验证码与请求**: 统一 6 位数字验证码，有效期 10 分钟、最多 3 次尝试；验证码窗统一按 `createdAt + 10 分钟` 判定（`expiresAt` 只作老数据回落，不参与冷静期生效）；过期、已验证、已取消不可重放。恢复证明的因子失败按 `userId + factor` 计数（15 分钟 5 次锁定），计数写在业务事务之外，回滚不清零。
 -   **审计**: 改绑发起 / 确认 / 通知 / 撤销 / 生效、恢复码生成 / 重签 / 使用 / 删除、恢复证明校验与证明 OTP 发送、自助设置密码、2FA 开关、备份码再生成、密码重置请求 / 完成 / 强制重置、社交与手机绑定必须写入 `logger.audit` 结构化事件，包含 `action`、`actorId`、`targetUserId`、`before`、`after`、`result`、`reason`、`ip`、`userAgent`、`source`；禁止记录密码、验证码、恢复码、备份码明文。当前 `action` 枚举见 `server/utils/audit-log.ts` 的 `AUDIT_ACTIONS`（`recoveryCodes.*` / `proof.*` / `email.change.*` / `password.set.selfService` / `channel.change.*`）。
 
+## 1.4 登录事件与可信设备访问矩阵 (Login Events & Trusted Devices)
+
+阶段 12 引入 `login_event` 与 `trusted_device` 两张表；完整字段、保留期与审计清单见 [安全可观测性口径](../design/security-observability.md)。
+
+-   **访问矩阵**: 匿名无事件 / 统计 / 可信设备权限（会话仅限本人，框架内建）；普通用户只能查看 / 吊销**本人**可信设备与会话，不提供用户侧事件列表；管理员可按类型 / 结果 / 通道 / 用户 / IP / 时间查询全部事件、统计与热力图，并可查看 / 吊销任意用户的可信设备与会话。所有管理端端点必须先过 `checkAdmin`，用户端点按 `userId` 作用域过滤，不存在与越权统一 404。
+-   **禁止字段**: 事件与可信设备不得落密码、验证码、令牌、备份码 / 恢复码；`metadata` 只接受白名单键与标量值，读取时再过滤一次。值级脱敏覆盖邮箱与令牌形态，手机号依赖白名单键与写入方约束（自由文本尚未做值级手机号脱敏）。
+-   **保留与导出**: 登录事件默认保留 90 天（`LOGIN_EVENT_RETENTION_DAYS`，1–3650），管理端统计查询按进程内 1 小时节流惰性清理，不引入常驻调度器；不提供 CSV / JSON 导出，不做风险评分与异地告警。
+-   **D14 边界**: 启用 2FA 前的既有会话不回溯；只有主动撤销或重新登录后才按当前 2FA 策略重新校验。
+-   **审计**: `trustedDevice.create` / `trustedDevice.revoke` / `session.revokeAll` 与 `twoFactor.challenge` / `twoFactor.verify` 统一走 `logger.audit`，只记录标识与结果，不记录凭据。
+
 ## 2. 数据安全 (Data Security)
 
 -   **输入校验**: 所有 API 请求参数必须使用 `utils/shared/` 下的 Zod Schema 校验，禁止直接信任 `getQuery` 或 `readBody` 的原始结果（见 [API 规范 - 参数校验](./api.md#5-参数校验-zod)）。
