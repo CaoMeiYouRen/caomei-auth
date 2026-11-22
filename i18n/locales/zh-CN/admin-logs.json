@@ -73,6 +73,63 @@
                 "revokeFailedDescription": "撤销会话失败",
                 "statsFailed": "加载失败",
                 "statsFailedDescription": "加载统计数据失败"
+            },
+            "events": {
+                "sectionTitle": "登录事件",
+                "description": "查看成功 / 失败登录、2FA 挑战与验证、登出等安全事件",
+                "title": "共 {count} 条事件",
+                "typeLabel": "事件类型",
+                "typePlaceholder": "全部事件类型",
+                "resultLabel": "结果",
+                "resultPlaceholder": "全部结果",
+                "channelLabel": "登录通道",
+                "channelPlaceholder": "全部通道",
+                "ipLabel": "IP 精确筛选",
+                "ipPlaceholder": "输入完整 IP，如 203.0.113.10",
+                "dateRangeLabel": "时间范围",
+                "dateRangePlaceholder": "选择时间范围",
+                "clearDateRange": "清除时间范围",
+                "refresh": "刷新事件",
+                "retry": "重试",
+                "empty": "暂无登录事件",
+                "unknownUser": "匿名 / 未知用户",
+                "unknownUserAgent": "未知 UA",
+                "unknownIp": "未知 IP",
+                "columns": {
+                    "time": "时间",
+                    "type": "事件类型",
+                    "result": "结果",
+                    "channel": "通道",
+                    "user": "用户",
+                    "ip": "IP",
+                    "userAgent": "用户代理"
+                },
+                "results": {
+                    "success": "成功",
+                    "failure": "失败"
+                },
+                "types": {
+                    "signInSuccess": "登录成功",
+                    "signInFailure": "登录失败",
+                    "twoFactorChallenge": "2FA 挑战",
+                    "twoFactorSuccess": "2FA 验证成功",
+                    "twoFactorFailure": "2FA 验证失败",
+                    "signOut": "登出",
+                    "sessionRevoked": "会话撤销"
+                },
+                "channels": {
+                    "email": "邮箱",
+                    "username": "用户名",
+                    "phone": "手机号",
+                    "emailOtp": "邮箱验证码",
+                    "phoneOtp": "手机验证码",
+                    "magicLink": "魔法链接",
+                    "emailVerification": "邮箱验证",
+                    "social": "社交登录",
+                    "sso": "SSO",
+                    "unknown": "未知"
+                },
+                "loadFailedDescription": "加载登录事件失败"
             }
         }
     }

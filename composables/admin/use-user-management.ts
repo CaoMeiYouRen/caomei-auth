@@ -4,16 +4,17 @@ import { debounce } from 'lodash-es'
 import { useDataTable, type DataTableFetchParams } from '../core/use-data-table'
 import { useUserTable } from './use-user-table'
 import { authClient } from '@/lib/auth-client'
-import { validateEmail } from '@/utils/shared/validate'
 import { syncAdminRole } from '@/utils/web/admin-role-client'
 import type { AdminUserProfile, AdminUserRow } from '@/types/admin'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
 import { getApiErrorMessage, throwIfAuthError } from '@/utils/shared/api-error'
+import { buildAdminUserSearchQuery } from '@/utils/web/user-search'
 
 export function useUserManagement() {
     const toast = useToast()
     const t = useI18nText()
     const confirm = useConfirm()
+    const route = useRoute()
     const { getSortField } = useUserTable()
 
     const sessionState = authClient.useSession()
@@ -23,6 +24,8 @@ export function useUserManagement() {
     const selectedRole = ref<string | null>(null)
     const selectedStatus = ref<string | null>(null)
     const selectedUsers = ref<AdminUserRow[]>([])
+    /** 从 /admin/users?userId=<id> 进入时的固定用户过滤 */
+    const initialUserId = ref('')
 
     const fetcher = async (params: DataTableFetchParams) => {
         const query: Record<string, unknown> = {
@@ -30,25 +33,8 @@ export function useUserManagement() {
             offset: params.page * params.limit,
         }
 
-        // 添加搜索条件 - 智能搜索多个字段
-        if (params.searchQuery) {
-            const query_value = params.searchQuery.trim()
-            // 如果以@开头，搜索用户名（由于API限制，用email字段代替）
-            if (query_value.startsWith('@')) {
-                // 注意：API不支持username搜索，这里使用name字段搜索
-                query.searchField = 'name'
-                query.searchValue = query_value.substring(1) // 移除@符号
-            } else if (validateEmail(query_value)) {
-                // 如果是有效的邮箱格式，搜索邮箱
-                query.searchField = 'email'
-                query.searchValue = query_value
-            } else {
-                // 否则搜索姓名
-                query.searchField = 'name'
-                query.searchValue = query_value
-            }
-            query.searchOperator = 'contains'
-        }
+        // 搜索条件：普通姓名 / 邮箱 / @用户名；从登录事件跳转时按显式 userId 等值过滤
+        Object.assign(query, buildAdminUserSearchQuery(params.searchQuery, initialUserId.value))
 
         // 添加筛选条件
         const filters: { field: string, operator: string, value: unknown }[] = []
@@ -74,7 +60,7 @@ export function useUserManagement() {
         // 如果有多个筛选条件，使用数组；否则使用单个条件
         if (filters.length > 1) {
             query.filters = filters
-        } else if (filters.length === 1) {
+        } else if (filters.length === 1 && !query.filterField) {
             query.filterField = filters[0]!.field
             query.filterOperator = filters[0]!.operator
             query.filterValue = filters[0]!.value
@@ -419,7 +405,22 @@ export function useUserManagement() {
 
     // 初始化
     onMounted(() => {
+        /* 支持从登录事件的用户链接 /admin/users?userId=<id> 直达 */
+        const userId = route.query.userId
+        if (typeof userId === 'string' && userId.trim()) {
+            initialUserId.value = userId.trim()
+            searchQuery.value = initialUserId.value
+        }
         loadUsers()
+    })
+
+    /* 选择角色 / 状态即退出单用户深链，避免两种筛选互相覆盖 */
+    watch([selectedRole, selectedStatus], () => {
+        if (!initialUserId.value) {
+            return
+        }
+        initialUserId.value = ''
+        searchQuery.value = ''
     })
 
     return {

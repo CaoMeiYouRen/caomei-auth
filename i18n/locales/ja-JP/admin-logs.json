@@ -73,6 +73,63 @@
                 "revokeFailedDescription": "セッションの取り消しに失敗しました",
                 "statsFailed": "読み込みに失敗しました",
                 "statsFailedDescription": "統計データの読み込みに失敗しました"
+            },
+            "events": {
+                "sectionTitle": "ログインイベント",
+                "description": "成功 / 失敗ログイン、2FA チャレンジと検証、ログアウトなどのセキュリティイベント",
+                "title": "{count} 件のイベント",
+                "typeLabel": "イベント種別",
+                "typePlaceholder": "すべてのイベント種別",
+                "resultLabel": "結果",
+                "resultPlaceholder": "すべての結果",
+                "channelLabel": "ログイン経路",
+                "channelPlaceholder": "すべての経路",
+                "ipLabel": "IP 完全一致",
+                "ipPlaceholder": "完全な IP を入力（例: 203.0.113.10）",
+                "dateRangeLabel": "期間",
+                "dateRangePlaceholder": "期間を選択",
+                "clearDateRange": "期間をクリア",
+                "refresh": "イベントを更新",
+                "retry": "再試行",
+                "empty": "ログインイベントはありません",
+                "unknownUser": "匿名 / 不明なユーザー",
+                "unknownUserAgent": "不明な UA",
+                "unknownIp": "不明な IP",
+                "columns": {
+                    "time": "時刻",
+                    "type": "イベント種別",
+                    "result": "結果",
+                    "channel": "経路",
+                    "user": "ユーザー",
+                    "ip": "IP",
+                    "userAgent": "ユーザーエージェント"
+                },
+                "results": {
+                    "success": "成功",
+                    "failure": "失敗"
+                },
+                "types": {
+                    "signInSuccess": "ログイン成功",
+                    "signInFailure": "ログイン失敗",
+                    "twoFactorChallenge": "2FA チャレンジ",
+                    "twoFactorSuccess": "2FA 検証成功",
+                    "twoFactorFailure": "2FA 検証失敗",
+                    "signOut": "ログアウト",
+                    "sessionRevoked": "セッション失効"
+                },
+                "channels": {
+                    "email": "メール",
+                    "username": "ユーザー名",
+                    "phone": "電話番号",
+                    "emailOtp": "メールコード",
+                    "phoneOtp": "電話コード",
+                    "magicLink": "マジックリンク",
+                    "emailVerification": "メール確認",
+                    "social": "ソーシャルログイン",
+                    "sso": "SSO",
+                    "unknown": "不明"
+                },
+                "loadFailedDescription": "ログインイベントの読み込みに失敗しました"
             }
         }
     }

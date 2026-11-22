@@ -40,6 +40,9 @@
                 @sort="onSort"
                 @filter-change="onFilterChange"
             />
+
+            <!-- 登录事件视图（阶段 12 M2.3）：与会话分区展示 -->
+            <LoginEventsPanel />
         </div>
     </div>
 </template>
@@ -55,6 +58,7 @@ import PeriodStats from '@/components/admin/logs/period-stats.vue'
 import ProviderStats from '@/components/admin/logs/provider-stats.vue'
 import TrendChart from '@/components/admin/logs/trend-chart.vue'
 import LogsTable from '@/components/admin/logs/logs-table.vue'
+import LoginEventsPanel from '@/components/admin/logs/login-events-panel.vue'
 
 definePageMeta({
     layout: 'admin',

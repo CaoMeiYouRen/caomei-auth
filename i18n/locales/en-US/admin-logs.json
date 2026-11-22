@@ -73,6 +73,63 @@
                 "revokeFailedDescription": "Could not revoke the session",
                 "statsFailed": "Load failed",
                 "statsFailedDescription": "Could not load statistics"
+            },
+            "events": {
+                "sectionTitle": "Login events",
+                "description": "Successful / failed sign-ins, 2FA challenges and verifications, sign-outs and other security events",
+                "title": "{count} events",
+                "typeLabel": "Event type",
+                "typePlaceholder": "All event types",
+                "resultLabel": "Result",
+                "resultPlaceholder": "All results",
+                "channelLabel": "Channel",
+                "channelPlaceholder": "All channels",
+                "ipLabel": "Exact IP",
+                "ipPlaceholder": "Full IP, e.g. 203.0.113.10",
+                "dateRangeLabel": "Time range",
+                "dateRangePlaceholder": "Select time range",
+                "clearDateRange": "Clear time range",
+                "refresh": "Refresh events",
+                "retry": "Retry",
+                "empty": "No login events",
+                "unknownUser": "Anonymous / unknown user",
+                "unknownUserAgent": "Unknown UA",
+                "unknownIp": "Unknown IP",
+                "columns": {
+                    "time": "Time",
+                    "type": "Event type",
+                    "result": "Result",
+                    "channel": "Channel",
+                    "user": "User",
+                    "ip": "IP",
+                    "userAgent": "User agent"
+                },
+                "results": {
+                    "success": "Success",
+                    "failure": "Failure"
+                },
+                "types": {
+                    "signInSuccess": "Sign-in success",
+                    "signInFailure": "Sign-in failure",
+                    "twoFactorChallenge": "2FA challenge",
+                    "twoFactorSuccess": "2FA verified",
+                    "twoFactorFailure": "2FA failed",
+                    "signOut": "Sign-out",
+                    "sessionRevoked": "Session revoked"
+                },
+                "channels": {
+                    "email": "Email",
+                    "username": "Username",
+                    "phone": "Phone",
+                    "emailOtp": "Email code",
+                    "phoneOtp": "Phone code",
+                    "magicLink": "Magic link",
+                    "emailVerification": "Email verification",
+                    "social": "Social",
+                    "sso": "SSO",
+                    "unknown": "Unknown"
+                },
+                "loadFailedDescription": "Failed to load login events"
             }
         }
     }
