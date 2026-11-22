@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { LOGIN_EVENT_CHANNELS, LOGIN_EVENT_RESULTS, LOGIN_EVENT_TYPES } from './login-events'
 
 // ============================================
 // Path Parameter Schemas
@@ -120,6 +121,48 @@ export const socialProvidersQuerySchema = z.object({
 })
 
 // ============================================
+// Login event schemas（阶段 12 M2.1）
+// ============================================
+
+/** 可被 `Date.parse` 解析的时间字符串；非法日期在边界直接 400 */
+const isoDateString = z.string().refine(
+    (value) => !Number.isNaN(Date.parse(value)),
+    { message: 'validation.invalid' },
+)
+
+export const loginEventsQuerySchema = z.object({
+    page: stringToNumber.optional().default(1).pipe(z.number().int().min(1)),
+    limit: stringToNumber.optional().default(20).pipe(z.number().int().min(1).max(100)),
+    type: z.enum(LOGIN_EVENT_TYPES).optional(),
+    result: z.enum(LOGIN_EVENT_RESULTS).optional(),
+    channel: z.enum(LOGIN_EVENT_CHANNELS).optional(),
+    userId: z.string().trim().max(36).optional(),
+    /** 精确匹配 IP；TEXT 列无索引，建议与时间窗组合使用（M2.3 默认 30 天） */
+    ip: z.string().trim().max(64).optional(),
+    /** 按时刻解释；日期粒度需自行补齐当日末刻 */
+    startDate: isoDateString.optional(),
+    /** 按时刻解释；日期粒度需自行补齐当日末刻 */
+    endDate: isoDateString.optional(),
+    sort: z.enum(['asc', 'desc']).optional().default('desc'),
+}).refine(
+    (value) => !value.startDate || !value.endDate || Date.parse(value.startDate) <= Date.parse(value.endDate),
+    { message: 'validation.invalidValue', path: ['startDate'] },
+)
+
+/** 事件视图 DTO：只暴露脱敏后的字段，metadata 已在写入时白名单过滤 */
+export const loginEventViewSchema = z.object({
+    id: z.string(),
+    type: z.enum(LOGIN_EVENT_TYPES),
+    result: z.enum(LOGIN_EVENT_RESULTS),
+    channel: z.enum(LOGIN_EVENT_CHANNELS),
+    userId: z.string().nullable(),
+    ip: z.string().nullable(),
+    userAgent: z.string().nullable(),
+    metadata: z.record(z.string(), z.unknown()).nullable(),
+    createdAt: z.string(),
+})
+
+// ============================================
 // Type Exports (inferred from schemas)
 // ============================================
 
@@ -131,3 +174,5 @@ export type LogStatsQuery = z.infer<typeof logStatsQuerySchema>
 export type RegistrationRuleInput = z.infer<typeof registrationRuleSchema>
 export type RegistrationRuleUpdate = z.infer<typeof registrationRuleUpdateSchema>
 export type SocialProvidersQuery = z.infer<typeof socialProvidersQuerySchema>
+export type LoginEventsQuery = z.infer<typeof loginEventsQuerySchema>
+export type LoginEventView = z.infer<typeof loginEventViewSchema>

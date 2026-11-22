@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
     idParamSchema,
+    loginEventViewSchema,
+    loginEventsQuerySchema,
     paginationQuerySchema,
     sessionLogsQuerySchema,
     socialProvidersQuerySchema,
@@ -137,5 +139,63 @@ describe('registrationRule schemas', () => {
         const { registrationRuleSchema } = await import('@/utils/shared/api-schemas')
         expect(registrationRuleSchema.safeParse({ type: 'ip', mode: 'deny', value: 'x' }).success).toBe(false)
         expect(registrationRuleSchema.safeParse({ type: 'email-domain', mode: 'deny', value: 'x'.repeat(129) }).success).toBe(false)
+    })
+})
+
+describe('loginEventsQuerySchema', () => {
+    it('为空查询提供默认分页与倒序', () => {
+        expect(loginEventsQuerySchema.parse({})).toMatchObject({
+            page: 1,
+            limit: 20,
+            sort: 'desc',
+        })
+    })
+
+    it('把字符串分页转为数字并接受合法筛选', () => {
+        const parsed = loginEventsQuerySchema.parse({
+            page: '2',
+            limit: '50',
+            type: 'sign_in_failure',
+            result: 'failure',
+            channel: 'sso',
+            sort: 'asc',
+        })
+        expect(parsed).toMatchObject({
+            page: 2,
+            limit: 50,
+            type: 'sign_in_failure',
+            result: 'failure',
+            channel: 'sso',
+            sort: 'asc',
+        })
+    })
+
+    it('拒绝越界分页、未知枚举、非法日期与倒置时间窗', () => {
+        expect(loginEventsQuerySchema.safeParse({ page: '0' }).success).toBe(false)
+        expect(loginEventsQuerySchema.safeParse({ limit: '101' }).success).toBe(false)
+        expect(loginEventsQuerySchema.safeParse({ type: 'sign_up' }).success).toBe(false)
+        expect(loginEventsQuerySchema.safeParse({ result: 'partial' }).success).toBe(false)
+        expect(loginEventsQuerySchema.safeParse({ channel: 'saml' }).success).toBe(false)
+        expect(loginEventsQuerySchema.safeParse({ startDate: 'not-a-date' }).success).toBe(false)
+        expect(loginEventsQuerySchema.safeParse({
+            startDate: '2026-11-22T00:00:00.000Z',
+            endDate: '2026-11-21T00:00:00.000Z',
+        }).success).toBe(false)
+    })
+
+    it('视图 schema 只接受展示字段', () => {
+        const view = {
+            id: 'event-1',
+            type: 'sign_in_success',
+            result: 'success',
+            channel: 'email',
+            userId: 'user-1',
+            ip: '203.0.113.9',
+            userAgent: 'UA',
+            metadata: { provider: 'github' },
+            createdAt: '2026-11-20T08:00:00.000Z',
+        }
+        expect(loginEventViewSchema.parse(view)).toEqual(view)
+        expect(loginEventViewSchema.safeParse({ ...view, type: 'sign_up' }).success).toBe(false)
     })
 })

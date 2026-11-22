@@ -93,6 +93,7 @@ describe('登录事件枚举与实体契约', () => {
             { name: 'IDX_login_event_type_created_at', columns: ['type', 'createdAt'] },
             { name: 'IDX_login_event_user_id_created_at', columns: ['userId', 'createdAt'] },
             { name: 'IDX_login_event_result_created_at', columns: ['result', 'createdAt'] },
+            { name: 'IDX_login_event_channel_created_at', columns: ['channel', 'createdAt'] },
         ]))
     })
 
@@ -102,6 +103,7 @@ describe('登录事件枚举与实体契约', () => {
             'IDX_login_event_type_created_at',
             'IDX_login_event_user_id_created_at',
             'IDX_login_event_result_created_at',
+            'IDX_login_event_channel_created_at',
         ]
         const sql = readFileSync(resolve(process.cwd(), 'database/sqlite/create.sql'), 'utf-8')
         const tableStart = sql.indexOf('CREATE TABLE IF NOT EXISTS caomei_auth_login_event')

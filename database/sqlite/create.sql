@@ -661,3 +661,5 @@ CREATE INDEX IF NOT EXISTS IDX_login_event_type_created_at ON caomei_auth_login_
 CREATE INDEX IF NOT EXISTS IDX_login_event_user_id_created_at ON caomei_auth_login_event (user_id, created_at);
 
 CREATE INDEX IF NOT EXISTS IDX_login_event_result_created_at ON caomei_auth_login_event (result, created_at);
+
+CREATE INDEX IF NOT EXISTS IDX_login_event_channel_created_at ON caomei_auth_login_event (channel, created_at);

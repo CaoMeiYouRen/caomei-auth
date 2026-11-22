@@ -359,5 +359,6 @@ CREATE TABLE `caomei_auth_login_event` (
     KEY `IDX_login_event_created_at` (`created_at`),
     KEY `IDX_login_event_type_created_at` (`type`, `created_at`),
     KEY `IDX_login_event_user_id_created_at` (`user_id`, `created_at`),
-    KEY `IDX_login_event_result_created_at` (`result`, `created_at`)
+    KEY `IDX_login_event_result_created_at` (`result`, `created_at`),
+    KEY `IDX_login_event_channel_created_at` (`channel`, `created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -19,6 +19,7 @@ import type { LoginEventChannel, LoginEventResult, LoginEventType } from '@/util
 @Index('IDX_login_event_type_created_at', ['type', 'createdAt'])
 @Index('IDX_login_event_user_id_created_at', ['userId', 'createdAt'])
 @Index('IDX_login_event_result_created_at', ['result', 'createdAt'])
+@Index('IDX_login_event_channel_created_at', ['channel', 'createdAt'])
 export class LoginEvent extends BaseEntity {
 
     /** 事件类型（固定枚举，见 `utils/shared/login-events.ts`） */
