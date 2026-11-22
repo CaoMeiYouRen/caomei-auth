@@ -53,7 +53,7 @@ for (const theme of ['light', 'dark'] as const) {
         await applyTheme(page, theme)
         await page.goto('/login', { waitUntil: 'domcontentloaded' })
 
-        const button = page.locator('.theme-toggle')
+        const button = page.locator('.theme-toggle button')
         await expect(button).toBeVisible()
         if (theme === 'dark') {
             await expect(page.locator('html')).toHaveClass(/dark/u)

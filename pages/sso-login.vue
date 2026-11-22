@@ -286,7 +286,7 @@ const {
         }
     }
 
-    .sso-button {
+    :deep(.sso-button) {
         width: 100%;
     }
 }

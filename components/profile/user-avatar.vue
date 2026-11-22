@@ -138,7 +138,7 @@ async function onFileSelect(event: Event) {
         border-radius: 50%;
     }
 
-    &__upload {
+    :deep(.avatar-block__upload) {
         position: absolute;
         right: 0;
         bottom: 0;
@@ -158,7 +158,7 @@ async function onFileSelect(event: Event) {
             border-radius: 50%;
         }
 
-        :deep(.mdi) {
+        .mdi {
             font-size: 0.875rem;
             line-height: 1;
         }

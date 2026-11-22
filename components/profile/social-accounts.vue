@@ -102,7 +102,7 @@ const getProviderColor = (provider: string) => {
         color: #fff;
     }
 
-    .social-btn {
+    :deep(.social-btn) {
         margin-bottom: 0.2rem;
     }
 }

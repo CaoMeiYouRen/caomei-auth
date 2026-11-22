@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-**当前阶段：阶段 12「安全可观测性与会话治理」，2026-11-21 登记，尚未开工。** 范围与拟定决策见 [阶段 12 范围登记](../design/governance/2026-11-21-phase12-registration.md)；阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)）。
+**当前阶段：阶段 12「安全可观测性与会话治理」，2026-11-21 登记，尚未开工。** 范围与拟定决策见 [阶段 12 范围登记](../design/governance/2026-11-21-phase12-registration.md)；阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)）。2026-11-22 完成依赖治理插队 [caomei-ui 1.4.0 升级与回归](../design/governance/2026-11-22-caomei-ui-1.4.0-upgrade.md)，不改变阶段 12 范围与开工顺序。
 
 ---
 

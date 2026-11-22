@@ -4,7 +4,7 @@
  * - `nuxt.config.ts` 的 `i18n.locales` 由本文件生成，禁止手写第二份。
  * - `server` 侧 detector 与服务端翻译共享同一份定义。
  * - better-auth 的 `zh-Hans` / `zh-Hant` / `default` 只在认证边界映射，不进入本表。
- * - 目标语言面与 caomei-ui 1.3.0 的 10 语对齐；`enabled` 控制当前实际启用的语言。
+ * - 目标语言面与 caomei-ui 1.4.0 的 10 语对齐；`enabled` 控制当前实际启用的语言。
  */
 
 /* 治理脚本用 Node 类型擦除直接 import 本文件，相对 import 必须带 `.ts` 扩展名 */

@@ -77,6 +77,7 @@
 
 ### 3.2 质量与测试
 
+- **stylelint 未覆盖全局样式层**：`.stylelintignore` 以 `_*` 忽略了 `styles/` 下全部 6 个 SCSS 文件（`_form.scss` / `_theme.scss` / `_mixins.scss` / `_dark-mode.scss` / `_global.scss` / `_common.scss`），`pnpm lint:css` 实际只检查 `.vue` 文件；本批 `styles/_form.scss` 的 `!important` 改动没有 stylelint 证据，仅由视觉基线兜底。处理方向：确认 `_*` 是否误配（若本意是跳过临时文件应改为具体模式），修正后对 `styles/` 补跑一次 lint。
 - **改绑确认页视觉基线**：`/channel-change/[id]` 新增页面只做了浏览器功能验证，尚无桌面 / 移动 / 暗色自基线；待评估与认证页矩阵（390 / 768 / 1024）一并补采。
 - **Spug 短信通知能力**：Spug 渠道只支持模板变量，无法发送任意变更通知文本；手机改绑的旧通道通知在 Spug 下会记录 `sms-provider-does-not-support-notification`。如需覆盖自建 Spug 部署，需在模板平台新增通知模板或改用支持自由文本的渠道。
 
@@ -126,6 +127,10 @@
 
 ### 3.4 UI 与主题
 
+- **caomei-ui 1.4.0 按钮根节点 scoped id 缺口**：`CaomeiButton` 在未启用内建提示时也会把根节点包到 `CaomeiPassthrough` 组件，父组件 scoped 类无法落到内层 `<button>`，导致 `theme-toggle` / `.btn` / `.social-btn` 等根类样式失效。2026-11-22 升级已用 wrapper + `:deep()` 与局部 `!important` 规避（见 [升级记录](../design/governance/2026-11-22-caomei-ui-1.4.0-upgrade.md)）。处理方向：向上游提报最小复现；上游恢复「未启用提示时根节点即 button」后删除项目侧规避，并复核 `styles/_form.scss` 的 `!important` 与登录页 `white-space` 覆盖是否仍需要。
+- **社交按钮覆盖与库 token 同值**：`.caomei-button.social-btn` 的 `background-color` / `border-radius` / `font-size` 与 1.4.0 默认 token 恰好等值，视觉零差异无法证明覆盖生效；下次 caomei-ui 升级前改用库文档化钩子，或补计算样式断言。
+- **长语言窄容器溢出未纳入视觉矩阵**：localized-core 只覆盖 login / profile，ja / ko 的 register / forgot-password / sso-login 在 1.4.0 `nowrap` 内容契约下未验证；补 2 条 localized-core 用例后再评估是否需要在其他 `CaomeiButtonGroup` 容器恢复 `white-space: normal`。
+- **认证页死规则清理**：`login` / `register` / `forgot-password` / `change-password` 中与全局 `.btn` / `.btn-primary` 完全等值的 scoped 规则在 1.4.0 后已不可命中 CaomeiButton 根节点（`switch-btn` 的 `width: 100%` 由 `block` 兜底），随下一次触及这些文件的提交删除。
 - **Demo 模式语言切换偏移验证**：`data-preset` / GitHub 角标与右上角语言切换共存时的偏移仅在 `NUXT_PUBLIC_DEMO_MODE=true` 下可见，需在 Demo 构建中补一次视觉确认。
 
 ---

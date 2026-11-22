@@ -300,7 +300,7 @@ async function copyToClipboard(text: string) {
         color: #e2e8f0;
     }
 
-    &__copy {
+    :deep(.config-example__copy) {
         position: absolute;
         top: 0.5rem;
         right: 0.5rem;

@@ -1,21 +1,22 @@
 <template>
     <BaseTooltip :content="buttonLabel">
-        <CaomeiButton
-            class="theme-toggle"
-            type="button"
-            icon-only
-            :label="buttonLabel"
-            :aria-pressed="effectiveDark"
-            @click="toggle()"
-        >
-            <template #icon>
-                <i
-                    class="mdi"
-                    :class="iconClass"
-                    aria-hidden="true"
-                />
-            </template>
-        </CaomeiButton>
+        <div class="theme-toggle">
+            <CaomeiButton
+                type="button"
+                icon-only
+                :label="buttonLabel"
+                :aria-pressed="effectiveDark"
+                @click="toggle()"
+            >
+                <template #icon>
+                    <i
+                        class="mdi"
+                        :class="iconClass"
+                        aria-hidden="true"
+                    />
+                </template>
+            </CaomeiButton>
+        </div>
     </BaseTooltip>
 </template>
 
@@ -47,30 +48,36 @@ const iconClass = computed(() => (effectiveDark.value ? 'mdi-weather-night' : 'm
 
 <style scoped lang="scss">
 .theme-toggle {
-    /* 用组件库文档化的覆盖钩子，保证 hover / active 由同一来源派生（避免 primary hover 覆盖成同色） */
-    --caomei-button-bg: #fff;
-    --caomei-button-fg: #{$primary};
-
-    /* hover / active 的混合色改浅，避免按下时红图标落在偏深灰底（对比度 < 3:1） */
-    --caomei-color-neutral-solid: #f2f2f2;
-
     position: fixed;
     right: 20px;
     bottom: 88px;
     z-index: 1100;
     width: 44px;
     height: 44px;
-    border: none;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgb(0 0 0 / 0.2);
-    transition: all 0.3s ease;
 
-    &:hover {
+    /* caomei-ui 1.4.0：CaomeiButton 根节点被内建提示包装层截断 scoped id，组件根样式改由祖先 :deep 命中 */
+    :deep(.caomei-button) {
+        /* 用组件库文档化的覆盖钩子，保证 hover / active 由同一来源派生（避免 primary hover 覆盖成同色） */
+        --caomei-button-bg: #fff;
+        --caomei-button-fg: #{$primary};
+
+        /* hover / active 的混合色改浅，避免按下时红图标落在偏深灰底（对比度 < 3:1） */
+        --caomei-color-neutral-solid: #f2f2f2;
+
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.2);
+        transition: all 0.3s ease;
+    }
+
+    &:hover :deep(.caomei-button) {
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgb(0 0 0 / 0.24);
     }
 
-    &:focus-visible {
+    :deep(.caomei-button):focus-visible {
         outline: 2px solid $primary;
         outline-offset: 2px;
     }
@@ -82,12 +89,14 @@ const iconClass = computed(() => (effectiveDark.value ? 'mdi-weather-night' : 'm
 
 @include dark-mode {
     .theme-toggle {
-        --caomei-button-bg: #1f2937;
-        --caomei-button-fg: #fbbf24;
+        :deep(.caomei-button) {
+            --caomei-button-bg: #1f2937;
+            --caomei-button-fg: #fbbf24;
 
-        box-shadow: 0 4px 12px rgb(0 0 0 / 0.35);
+            box-shadow: 0 4px 12px rgb(0 0 0 / 0.35);
+        }
 
-        &:hover {
+        &:hover :deep(.caomei-button) {
             box-shadow: 0 6px 16px rgb(0 0 0 / 0.45);
         }
     }

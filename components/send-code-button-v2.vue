@@ -71,7 +71,8 @@ defineExpose({ start, reset })
 </script>
 
 <style scoped lang="scss">
-.code-btn {
+/* caomei-ui 1.4.0：CaomeiButton 根节点的 scoped id 由其内部包装组件截断，根类样式改用全局选择器承接 */
+:global(.caomei-button.code-btn) {
     flex-shrink: 0;
     max-width: 135px;
     padding: 0 0.75rem;

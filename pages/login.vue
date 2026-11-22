@@ -218,7 +218,7 @@
                         >
                             <CaomeiButton
                                 class="social-btn"
-                                :style="{'--social-color': provider.color, '--social-color-dark': provider.colorDark}"
+                                :style="{'--social-color': provider.color}"
                                 variant="secondary"
                                 @click="loginWithSocial(provider)"
                             >
@@ -317,12 +317,21 @@ const {
 }
 
 // 社交按钮品牌色：按 CSS 变量切换，避免 SSR 依赖系统主题
-.social-btn {
+// caomei-ui 1.4.0：CaomeiButton 根节点的 scoped id 被内建 tooltip 包装层截断，改用祖先 + :deep 命中
+.social-login :deep(.social-btn) {
     color: var(--social-color);
 }
 
-:global(.dark) .social-btn {
-    color: var(--social-color-dark, var(--social-color));
+@include dark-mode {
+    /* 暗色下沿用中性前景色（与既有基线一致），避免深色品牌色在深底上不可读 */
+    .social-login :deep(.social-btn) {
+        color: #{$dark-secondary};
+    }
+}
+
+/* 长语言（ja / ko）下标签组不能被 1.4.0 的 nowrap 内容撑出卡片，恢复可换行的收缩语义 */
+.login-btn :deep(.caomei-button__content) {
+    white-space: normal;
 }
 
 // 添加媒体查询优化小屏幕显示

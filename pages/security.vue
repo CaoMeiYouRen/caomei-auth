@@ -165,7 +165,7 @@ const security = reactive(useSecuritySettings())
     justify-content: flex-end;
     margin-bottom: 0.5rem;
 
-    .btn-link {
+    :deep(.btn-link) {
         flex: 0 1 auto;
     }
 }
@@ -354,7 +354,7 @@ const security = reactive(useSecuritySettings())
     justify-content: flex-end;
     margin-bottom: 0.5rem;
 
-    .btn-link {
+    :deep(.btn-link) {
         flex: 0 1 auto;
     }
 }
@@ -432,7 +432,7 @@ const security = reactive(useSecuritySettings())
     margin-top: 1rem;
     justify-content: flex-end;
 
-    .btn {
+    :deep(.btn) {
         max-width: 180px;
     }
 }

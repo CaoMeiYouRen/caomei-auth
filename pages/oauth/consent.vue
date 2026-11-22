@@ -401,7 +401,7 @@ const legalKeypath = computed(() => {
         gap: 1rem;
         justify-content: flex-end;
 
-        .btn-allow {
+        :deep(.btn-allow) {
             &:disabled {
                 cursor: not-allowed;
                 opacity: 0.6;
@@ -462,8 +462,8 @@ const legalKeypath = computed(() => {
             .consent-footer {
                 flex-direction: column;
 
-                .btn-deny,
-                .btn-allow {
+                :deep(.btn-deny),
+                :deep(.btn-allow) {
                     width: 100%;
                 }
             }

@@ -230,7 +230,7 @@ defineEmits<{
     margin-top: 1rem;
     justify-content: flex-end;
 
-    .btn {
+    :deep(.btn) {
         max-width: 180px;
     }
 }

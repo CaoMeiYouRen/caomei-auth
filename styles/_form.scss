@@ -123,10 +123,15 @@
     display: block;
 }
 
-.social-btn {
-    border: 1px solid $secondary-bg;
+/*
+ * 组件库 1.4.0 的 `.caomei-button[data-v-*]` 为双类特异性，与项目 `.caomei-button.social-btn`
+ * 相同且后加载，会把 `display: flex` 改回 `inline-flex`（末项 margin 不再塌陷，卡片高 8px），
+ * 也会覆盖项目边框色；因此这两项需 `!important` 才能保留认证页 / 个人中心既有观感。
+ */
+.caomei-button.social-btn {
+    border: 1px solid $secondary-bg !important;
     background-color: $background-light;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -146,14 +151,14 @@
 
     .form-group .social-btn,
     .social-btn {
-        background-color: #{$dark-background-light};
-        border-color: #{$dark-border-color};
+        background-color: #{$dark-background-light} !important;
+        border-color: #{$dark-border-color} !important;
         color: #{$dark-secondary};
     }
 
     .form-group .social-btn:hover,
     .social-btn:hover {
-        background-color: #{$dark-border-color};
+        background-color: #{$dark-border-color} !important;
     }
 
     .form-group .error-message,

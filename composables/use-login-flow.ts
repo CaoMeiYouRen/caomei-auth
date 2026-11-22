@@ -73,12 +73,11 @@ export function useLoginFlow() {
 
     // Social
     const { data: providersData } = useFetch('/api/social/providers')
-    // 明暗品牌色都输出到 CSS 变量，由 .dark 选择器切换：
+    // 亮色品牌色输出到 CSS 变量，由页面样式统一消费：
     // 服务端不需要知道系统主题，避免 SSR 与客户端配色不一致造成 hydration mismatch
     const socialProviders = computed<SocialProvider[]>(() => providersData?.value?.providers?.map((provider: any) => ({
         ...provider,
         color: getSocialColor(provider.provider, 'light'),
-        colorDark: getSocialColor(provider.provider, 'dark'),
     })) || [])
 
     // URL Params
