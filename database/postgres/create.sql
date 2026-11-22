@@ -411,3 +411,23 @@ CREATE INDEX "IDX_login_event_user_id_created_at" ON public.caomei_auth_login_ev
 CREATE INDEX "IDX_login_event_result_created_at" ON public.caomei_auth_login_event USING btree (result, created_at);
 
 CREATE INDEX "IDX_login_event_channel_created_at" ON public.caomei_auth_login_event USING btree (channel, created_at);
+
+DROP TABLE IF EXISTS public.caomei_auth_trusted_device;
+
+CREATE TABLE public.caomei_auth_trusted_device (
+	id varchar(36) NOT NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+	user_id varchar(36) NOT NULL,
+	identifier varchar(128) NOT NULL,
+	user_agent text NULL,
+	ip text NULL,
+	expires_at timestamptz NOT NULL,
+	last_used_at timestamptz NOT NULL,
+	CONSTRAINT "PK_trusted_device" PRIMARY KEY (id),
+	CONSTRAINT "FK_trusted_device_user" FOREIGN KEY (user_id) REFERENCES public.caomei_auth_user(id) ON DELETE CASCADE
+);
+
+CREATE UNIQUE INDEX "IDX_trusted_device_identifier" ON public.caomei_auth_trusted_device USING btree (identifier);
+
+CREATE INDEX "IDX_trusted_device_user_created_at" ON public.caomei_auth_trusted_device USING btree (user_id, created_at);

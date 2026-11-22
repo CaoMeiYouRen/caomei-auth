@@ -663,3 +663,20 @@ CREATE INDEX IF NOT EXISTS IDX_login_event_user_id_created_at ON caomei_auth_log
 CREATE INDEX IF NOT EXISTS IDX_login_event_result_created_at ON caomei_auth_login_event (result, created_at);
 
 CREATE INDEX IF NOT EXISTS IDX_login_event_channel_created_at ON caomei_auth_login_event (channel, created_at);
+
+CREATE TABLE IF NOT EXISTS caomei_auth_trusted_device (
+    id          VARCHAR (36) PRIMARY KEY NOT NULL,
+    created_at  DATETIME NOT NULL DEFAULT (datetime('now')),
+    updated_at  DATETIME NOT NULL DEFAULT (datetime('now')),
+    user_id     VARCHAR (36) NOT NULL,
+    identifier  VARCHAR (128) NOT NULL,
+    user_agent  TEXT,
+    ip          TEXT,
+    expires_at  DATETIME NOT NULL,
+    last_used_at DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES caomei_auth_user (id) ON DELETE CASCADE
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS IDX_trusted_device_identifier ON caomei_auth_trusted_device (identifier);
+
+CREATE INDEX IF NOT EXISTS IDX_trusted_device_user_created_at ON caomei_auth_trusted_device (user_id, created_at);

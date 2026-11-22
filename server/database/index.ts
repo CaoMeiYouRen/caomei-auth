@@ -18,6 +18,7 @@ import { RegistrationRule } from '../entities/registration-rule'
 import { ChannelChangeRequest } from '../entities/channel-change-request'
 import { RecoveryCode } from '../entities/recovery-code'
 import { LoginEvent } from '../entities/login-event'
+import { TrustedDevice } from '../entities/trusted-device'
 import logger from '../utils/logger'
 import { hashClientSecret } from '../utils/oauth-client-view'
 import { CustomLogger } from './logger'
@@ -275,6 +276,7 @@ const entities = [
     ChannelChangeRequest,
     RecoveryCode,
     LoginEvent,
+    TrustedDevice,
 ]
 
 export const initializeDB = async () => {
