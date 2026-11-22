@@ -9,7 +9,7 @@ const {
     DEFAULT_LOGIN_EVENT_PAGE_SIZE,
     MAX_LOGIN_EVENT_PAGE_SIZE,
     buildLoginEventWhere,
-    formatTrendDate,
+    getLoginEventHeatmap,
     getLoginEventStats,
     pruneLoginEvents,
     queryLoginEvents,
@@ -315,6 +315,7 @@ describe('登录事件仓储', () => {
 
         const stats = await getLoginEventStats({}, { repository, now: new Date('2026-11-22T12:00:00.000Z') })
         expect(stats.total).toBe(4)
+        expect(stats.timezone).toBe('UTC')
         expect(stats.byType.find((item) => item.type === 'sign_in_success')?.count).toBe(2)
         expect(stats.byType.find((item) => item.type === 'sign_in_failure')?.count).toBe(1)
         expect(stats.byType.find((item) => item.type === 'two_factor_success')?.count).toBe(1)
@@ -334,9 +335,53 @@ describe('登录事件仓储', () => {
         expect(filtered.byType.find((item) => item.type === 'sign_in_failure')?.count).toBe(1)
     })
 
-    it('趋势日期在字符串与 Date 两种驱动返回下保持一致', () => {
-        expect(formatTrendDate('2026-11-20')).toBe('2026-11-20')
-        expect(formatTrendDate('2026-11-20 00:00:00.000')).toBe('2026-11-20')
-        expect(formatTrendDate(new Date(2026, 10, 20))).toBe('2026-11-20')
+    it('热力图按小时 / 天分桶并补零，窗口边界闭区间', async () => {
+        const now = new Date('2026-11-22T12:34:56.000Z')
+        /* 7 天窗口：2026-11-15 13:00 ~ 2026-11-22 12:00（UTC） */
+        const windowStart = new Date('2026-11-15T13:00:00.000Z')
+        const windowEnd = new Date('2026-11-22T12:00:00.000Z')
+        const seeds = [
+            { type: 'sign_in_success', result: 'success', channel: 'email', userId: 'user-1', ip: '203.0.113.1', at: '2026-11-15T12:59:59.000Z' },
+            { type: 'sign_in_success', result: 'success', channel: 'email', userId: 'user-1', ip: '203.0.113.1', at: windowStart.toISOString() },
+            { type: 'sign_in_success', result: 'success', channel: 'email', userId: 'user-1', ip: '203.0.113.1', at: '2026-11-22T11:30:00.000Z' },
+            { type: 'sign_in_failure', result: 'failure', channel: 'email', userId: null, ip: '203.0.113.2', at: windowEnd.toISOString() },
+            { type: 'sign_in_failure', result: 'failure', channel: 'email', userId: null, ip: '203.0.113.2', at: '2026-11-22T12:00:01.000Z' },
+        ] as const
+        for (const seed of seeds) {
+            await recordLoginEvent({ ...seed, createdAt: new Date(seed.at) }, { repository })
+        }
+
+        const hourly = await getLoginEventHeatmap({}, { days: 7, now, repository })
+        expect(hourly.timezone).toBe('UTC')
+        expect(hourly.bucketUnit).toBe('hour')
+        expect(hourly.buckets).toHaveLength(168)
+        expect(hourly.buckets[0]).toBe('2026-11-15 13:00')
+        expect(hourly.buckets.at(-1)).toBe('2026-11-22 12:00')
+        expect(hourly.rows).toHaveLength(7)
+        expect(hourly.rows.every((row) => row.values.length === 168)).toBe(true)
+        const success = hourly.rows.find((row) => row.type === 'sign_in_success')
+        const failure = hourly.rows.find((row) => row.type === 'sign_in_failure')
+        expect(success?.values.reduce((sum, value) => sum + value, 0)).toBe(2)
+        expect(success?.values[0]).toBe(1)
+        expect(failure?.values.reduce((sum, value) => sum + value, 0)).toBe(2)
+        expect(failure?.values.at(-1)).toBe(2)
+        expect(hourly.max).toBe(2)
+
+        const daily = await getLoginEventHeatmap({}, { days: 30, now, repository })
+        expect(daily.bucketUnit).toBe('day')
+        expect(daily.buckets).toHaveLength(30)
+        expect(daily.buckets.at(-1)).toBe('2026-11-22')
+
+        const filtered = await getLoginEventHeatmap({ types: ['sign_in_failure'] }, { days: 7, now, repository })
+        expect(filtered.rows.find((row) => row.type === 'sign_in_failure')?.values.at(-1)).toBe(2)
+        expect(filtered.rows.find((row) => row.type === 'sign_in_success')?.values.every((value) => value === 0)).toBe(true)
+    })
+
+    it('热力图空数据返回全零矩阵', async () => {
+        const heatmap = await getLoginEventHeatmap({}, { days: 7, now: new Date('2026-11-22T12:00:00.000Z'), repository })
+        expect(heatmap.max).toBe(0)
+        expect(heatmap.rows).toHaveLength(7)
+        expect(heatmap.rows.every((row) => row.values.every((value) => value === 0))).toBe(true)
+        expect(heatmap.buckets).toHaveLength(168)
     })
 })

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
     idParamSchema,
+    loginEventHeatmapQuerySchema,
     loginEventStatsQuerySchema,
     loginEventViewSchema,
     loginEventsQuerySchema,
@@ -207,6 +208,21 @@ describe('loginEventStatsQuerySchema', () => {
         expect(parsed).toEqual({ type: 'sign_out', channel: 'sso' })
         expect(loginEventStatsQuerySchema.parse({ page: '2' })).toEqual({})
         expect(loginEventStatsQuerySchema.safeParse({
+            startDate: '2026-11-22T00:00:00.000Z',
+            endDate: '2026-11-21T00:00:00.000Z',
+        }).success).toBe(false)
+    })
+})
+
+describe('loginEventHeatmapQuerySchema', () => {
+    it('days 默认 7，接受 30 并转为数字', () => {
+        expect(loginEventHeatmapQuerySchema.parse({})).toMatchObject({ days: 7 })
+        expect(loginEventHeatmapQuerySchema.parse({ days: '30' })).toMatchObject({ days: 30 })
+    })
+
+    it('拒绝非法天数与倒置时间窗', () => {
+        expect(loginEventHeatmapQuerySchema.safeParse({ days: '14' }).success).toBe(false)
+        expect(loginEventHeatmapQuerySchema.safeParse({
             startDate: '2026-11-22T00:00:00.000Z',
             endDate: '2026-11-21T00:00:00.000Z',
         }).success).toBe(false)

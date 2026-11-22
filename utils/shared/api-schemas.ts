@@ -158,9 +158,27 @@ export const loginEventStatsQuerySchema = loginEventFiltersSchema.refine(
     { message: 'validation.invalidValue', path: ['startDate'] },
 )
 
+/** 热力图查询：7 天按小时、30 天按天；其余筛选与列表 / 统计一致 */
+export const loginEventHeatmapQuerySchema = loginEventFiltersSchema.extend({
+    days: z.union([z.literal('7'), z.literal('30')]).optional().default('7').transform((value) => Number(value)),
+}).refine(validateDateRange, { message: 'validation.invalidValue', path: ['startDate'] })
+
+export const loginEventHeatmapSchema = z.object({
+    days: z.number(),
+    timezone: z.literal('UTC'),
+    bucketUnit: z.enum(['hour', 'day']),
+    buckets: z.array(z.string().regex(/^\d{4}-\d{2}-\d{2}( \d{2}:00)?$/u)),
+    rows: z.array(z.object({
+        type: z.enum(LOGIN_EVENT_TYPES),
+        values: z.array(z.number()),
+    })),
+    max: z.number(),
+})
+
 /** 统计响应：空数据也返回全部类型 / 结果的零值 */
 export const loginEventStatsSchema = z.object({
     total: z.number(),
+    timezone: z.literal('UTC'),
     byType: z.array(z.object({ type: z.enum(LOGIN_EVENT_TYPES), count: z.number() })),
     byResult: z.array(z.object({ result: z.enum(LOGIN_EVENT_RESULTS), count: z.number() })),
     distinctUsers: z.number(),
@@ -199,3 +217,5 @@ export type LoginEventsQuery = z.infer<typeof loginEventsQuerySchema>
 export type LoginEventView = z.infer<typeof loginEventViewSchema>
 export type LoginEventStats = z.infer<typeof loginEventStatsSchema>
 export type LoginEventStatsQuery = z.infer<typeof loginEventStatsQuerySchema>
+export type LoginEventHeatmapQuery = z.infer<typeof loginEventHeatmapQuerySchema>
+export type LoginEventHeatmap = z.infer<typeof loginEventHeatmapSchema>

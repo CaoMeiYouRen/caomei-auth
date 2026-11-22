@@ -119,6 +119,7 @@
 
 ### 3.3 基础设施
 
+- **登录事件统计 / 热力图全量分桶**：M2.2 `dailyTrend` 与 M3.1 热力图会在窗口内把 `createdAt` 拉到服务端内存分桶，30 天量级的大实例下内存与延迟随事件量线性增长（保留期只是上限）。处理方向：改为方言 SQL 聚合（`strftime` / `DATE_FORMAT` / `date_trunc`），或加行数上限 + 超限告警，覆盖统计与热力图两处。
 - **登录事件多方言手动清理**：阶段 12 M1.3 的 `scripts/maintenance/prune-login-events.mjs` 仅支持 SQLite（MySQL / PostgreSQL 依赖管理端统计查询的惰性清理）。备份前清 PII 或下调保留期后立即生效的场景缺少手动入口。处理方向：用 TypeORM 复用 `pruneLoginEvents` 连接三种数据库，或在部署文档写明仅 SQLite 并保留此候选。
 
 - **注册规则多实例缓存**：规则缓存为进程内 30 秒 TTL，多实例部署时最坏 30 秒内仍按旧规则；如需强一致，引入 Redis 共享缓存并在管理端变更时发布失效。

@@ -302,16 +302,6 @@ function applyLoginEventWhere(
     return queryBuilder
 }
 
-/** 跨方言统一趋势日期：SQLite 返回字符串，MySQL / PostgreSQL 返回 Date（本地零点） */
-export function formatTrendDate(value: unknown): string {
-    if (value instanceof Date && !Number.isNaN(value.getTime())) {
-        const year = value.getFullYear()
-        const month = String(value.getMonth() + 1).padStart(2, '0')
-        const day = String(value.getDate()).padStart(2, '0')
-        return `${year}-${month}-${day}`
-    }
-    return String(value).slice(0, 10)
-}
 
 /**
  * 统计查询与列表共用 `buildLoginEventWhere`，保证筛选口径一致。
@@ -319,7 +309,7 @@ export function formatTrendDate(value: unknown): string {
  */
 export async function getLoginEventStats(
     query: LoginEventQuery = {},
-    options: { repository?: Pick<Repository<LoginEvent>, 'createQueryBuilder'>, now?: Date } = {},
+    options: { repository?: Pick<Repository<LoginEvent>, 'createQueryBuilder' | 'find'>, now?: Date } = {},
 ): Promise<LoginEventStats> {
     const repository = options.repository ?? dataSource.getRepository(LoginEvent)
     const where = buildLoginEventWhere(query)
@@ -348,23 +338,137 @@ export async function getLoginEventStats(
     }
     const trendEnd = query.end ?? now
     const trendDays = Math.max(1, Math.ceil((trendEnd.getTime() - trendStart.getTime()) / MILLISECONDS_PER_DAY))
-    const rawTrend = await applyLoginEventWhere(repository.createQueryBuilder('event'), trendWhere)
-        .select('DATE(event.createdAt)', 'date')
-        .addSelect('COUNT(*)', 'count')
-        .groupBy('DATE(event.createdAt)')
-        .orderBy('DATE(event.createdAt)', 'ASC')
-        .getRawMany()
+    /* 与热力图共用 UTC 分桶，避免 DATE() 随数据库会话时区漂移 */
+    const trendEvents = await repository.find({ where: trendWhere, select: ['createdAt'] })
+    const trendCounts = new Map<string, number>()
+    for (const trendEvent of trendEvents) {
+        const createdAt = trendEvent.createdAt instanceof Date ? trendEvent.createdAt : new Date(trendEvent.createdAt)
+        if (Number.isNaN(createdAt.getTime())) {
+            continue
+        }
+        const key = formatBucket(floorToDay(createdAt), 'day')
+        trendCounts.set(key, (trendCounts.get(key) ?? 0) + 1)
+    }
 
     return {
         total,
+        timezone: 'UTC',
         byType: LOGIN_EVENT_TYPES.map((type) => ({ type, count: typeCounts.get(type) ?? 0 })),
         byResult: LOGIN_EVENT_RESULTS.map((result) => ({ result, count: resultCounts.get(result) ?? 0 })),
         distinctUsers: Number(userRow?.count ?? 0),
         distinctIps: Number(ipRow?.count ?? 0),
         trendDays,
-        dailyTrend: (rawTrend as Array<{ date: unknown, count: string | number }>).map((row) => ({
-            date: formatTrendDate(row.date),
-            count: Number(row.count),
-        })),
+        dailyTrend: [...trendCounts.entries()]
+            .sort(([left], [right]) => left.localeCompare(right))
+            .map(([date, count]) => ({ date, count })),
+    }
+}
+
+export interface LoginEventHeatmap {
+    days: number
+    timezone: 'UTC'
+    bucketUnit: 'hour' | 'day'
+    /** 按时间升序的时间桶标签：小时 `YYYY-MM-DD HH:00`，天 `YYYY-MM-DD`（UTC） */
+    buckets: string[]
+    rows: Array<{ type: LoginEventType, values: number[] }>
+    /** 最大桶计数，供前端色阶使用；空数据为 0 */
+    max: number
+}
+
+const HOUR_MS = 60 * 60 * 1000
+
+function floorToHour(date: Date): Date {
+    const result = new Date(date)
+    result.setUTCMinutes(0, 0, 0)
+    return result
+}
+
+function floorToDay(date: Date): Date {
+    const result = new Date(date)
+    result.setUTCHours(0, 0, 0, 0)
+    return result
+}
+
+function formatBucket(date: Date, unit: 'hour' | 'day'): string {
+    const iso = date.toISOString()
+    return unit === 'hour' ? `${iso.slice(0, 10)} ${iso.slice(11, 13)}:00` : iso.slice(0, 10)
+}
+
+/**
+ * 时间 × 事件类型热力图聚合（阶段 12 M3.1）。
+ *
+ * 只按窗口取 `type` / `createdAt` 两列后在服务端分桶，避免 SQLite / MySQL / PostgreSQL
+ * 的时间格式化差异；窗口上限 30 天，事件量受保留期约束。
+ */
+export async function getLoginEventHeatmap(
+    query: LoginEventQuery,
+    options: {
+        days: 7 | 30
+        now?: Date
+        repository?: Pick<Repository<LoginEvent>, 'find'>
+    },
+): Promise<LoginEventHeatmap> {
+    const { days } = options
+    const unit: 'hour' | 'day' = days === 7 ? 'hour' : 'day'
+    const now = options.now ?? new Date()
+    const bucketCount = unit === 'hour' ? 7 * 24 : 30
+    const windowEnd = unit === 'hour' ? floorToHour(now) : floorToDay(now)
+    const windowStart = unit === 'hour'
+        ? new Date(windowEnd.getTime() - (bucketCount - 1) * HOUR_MS)
+        : new Date(windowEnd.getTime() - (bucketCount - 1) * MILLISECONDS_PER_DAY)
+
+    const start = query.start && query.start > windowStart ? query.start : windowStart
+    /* 当前小时 / 当前天只含已过去片段，右边界必须取 now，否则最新一列恒为 0 */
+    const end = query.end && query.end < now ? query.end : now
+    const where = { ...buildLoginEventWhere(query) }
+    where.createdAt = Between(start, end)
+
+    const repository = options.repository ?? dataSource.getRepository(LoginEvent)
+    const events = await repository.find({
+        where,
+        select: ['type', 'createdAt'],
+    })
+
+    const buckets = Array.from({ length: bucketCount }, (_, index) => formatBucket(
+        unit === 'hour'
+            ? new Date(windowStart.getTime() + index * HOUR_MS)
+            : new Date(windowStart.getTime() + index * MILLISECONDS_PER_DAY),
+        unit,
+    ))
+    const indexByBucket = new Map(buckets.map((bucket, index) => [bucket, index]))
+    const rowValues = new Map<LoginEventType, number[]>(
+        LOGIN_EVENT_TYPES.map((type) => [type, Array.from({ length: bucketCount }, () => 0)]),
+    )
+
+    for (const event of events) {
+        const createdAt = event.createdAt instanceof Date ? event.createdAt : new Date(event.createdAt)
+        if (Number.isNaN(createdAt.getTime())) {
+            continue
+        }
+        const bucket = formatBucket(unit === 'hour' ? floorToHour(createdAt) : floorToDay(createdAt), unit)
+        const index = indexByBucket.get(bucket)
+        if (index === undefined) {
+            continue
+        }
+        const values = rowValues.get(event.type)
+        if (values) {
+            values[index] = (values[index] ?? 0) + 1
+        }
+    }
+
+    let max = 0
+    for (const values of rowValues.values()) {
+        for (const value of values) {
+            max = Math.max(max, value)
+        }
+    }
+
+    return {
+        days,
+        timezone: 'UTC',
+        bucketUnit: unit,
+        buckets,
+        rows: LOGIN_EVENT_TYPES.map((type) => ({ type, values: rowValues.get(type) ?? [] })),
+        max,
     }
 }
