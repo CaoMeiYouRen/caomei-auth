@@ -341,3 +341,23 @@ CREATE TABLE `caomei_auth_registration_rule` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `IDX_registration_rule_unique` (`type`, `mode`, `value`)
 );
+
+DROP TABLE IF EXISTS `caomei_auth_login_event`;
+
+CREATE TABLE `caomei_auth_login_event` (
+    `id` VARCHAR(36) NOT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `type` VARCHAR(32) NOT NULL,
+    `result` VARCHAR(16) NOT NULL,
+    `channel` VARCHAR(32) NOT NULL DEFAULT 'unknown',
+    `user_id` VARCHAR(36) NULL,
+    `ip` TEXT NULL,
+    `user_agent` TEXT NULL,
+    `metadata` TEXT NULL,
+    PRIMARY KEY (`id`),
+    KEY `IDX_login_event_created_at` (`created_at`),
+    KEY `IDX_login_event_type_created_at` (`type`, `created_at`),
+    KEY `IDX_login_event_user_id_created_at` (`user_id`, `created_at`),
+    KEY `IDX_login_event_result_created_at` (`result`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

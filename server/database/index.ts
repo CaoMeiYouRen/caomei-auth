@@ -17,6 +17,7 @@ import { SSOProvider } from '../entities/sso-provider'
 import { RegistrationRule } from '../entities/registration-rule'
 import { ChannelChangeRequest } from '../entities/channel-change-request'
 import { RecoveryCode } from '../entities/recovery-code'
+import { LoginEvent } from '../entities/login-event'
 import logger from '../utils/logger'
 import { hashClientSecret } from '../utils/oauth-client-view'
 import { CustomLogger } from './logger'
@@ -252,6 +253,7 @@ const entities = [
     RegistrationRule,
     ChannelChangeRequest,
     RecoveryCode,
+    LoginEvent,
 ]
 
 export const initializeDB = async () => {

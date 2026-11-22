@@ -640,3 +640,24 @@ CREATE TABLE IF NOT EXISTS caomei_auth_recovery_code (
 );
 
 CREATE INDEX IF NOT EXISTS IDX_recovery_code_user ON caomei_auth_recovery_code (user_id);
+
+CREATE TABLE IF NOT EXISTS caomei_auth_login_event (
+    id         VARCHAR (36) PRIMARY KEY NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT (datetime('now')),
+    updated_at DATETIME NOT NULL DEFAULT (datetime('now')),
+    type       VARCHAR (32) NOT NULL,
+    result     VARCHAR (16) NOT NULL,
+    channel    VARCHAR (32) NOT NULL DEFAULT 'unknown',
+    user_id    VARCHAR (36),
+    ip         TEXT,
+    user_agent TEXT,
+    metadata   TEXT
+);
+
+CREATE INDEX IF NOT EXISTS IDX_login_event_created_at ON caomei_auth_login_event (created_at);
+
+CREATE INDEX IF NOT EXISTS IDX_login_event_type_created_at ON caomei_auth_login_event (type, created_at);
+
+CREATE INDEX IF NOT EXISTS IDX_login_event_user_id_created_at ON caomei_auth_login_event (user_id, created_at);
+
+CREATE INDEX IF NOT EXISTS IDX_login_event_result_created_at ON caomei_auth_login_event (result, created_at);

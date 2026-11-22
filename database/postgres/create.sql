@@ -385,3 +385,27 @@ CREATE TABLE public.caomei_auth_registration_rule (
 );
 
 CREATE UNIQUE INDEX "IDX_registration_rule_unique" ON public.caomei_auth_registration_rule USING btree (type, mode, value);
+
+DROP TABLE IF EXISTS public.caomei_auth_login_event;
+
+CREATE TABLE public.caomei_auth_login_event (
+	id varchar(36) NOT NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+	type varchar(32) NOT NULL,
+	result varchar(16) NOT NULL,
+	channel varchar(32) DEFAULT 'unknown' NOT NULL,
+	user_id varchar(36) NULL,
+	ip text NULL,
+	user_agent text NULL,
+	metadata text NULL,
+	CONSTRAINT "PK_login_event" PRIMARY KEY (id)
+);
+
+CREATE INDEX "IDX_login_event_created_at" ON public.caomei_auth_login_event USING btree (created_at);
+
+CREATE INDEX "IDX_login_event_type_created_at" ON public.caomei_auth_login_event USING btree (type, created_at);
+
+CREATE INDEX "IDX_login_event_user_id_created_at" ON public.caomei_auth_login_event USING btree (user_id, created_at);
+
+CREATE INDEX "IDX_login_event_result_created_at" ON public.caomei_auth_login_event USING btree (result, created_at);
