@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
     idParamSchema,
+    loginEventStatsQuerySchema,
     loginEventViewSchema,
     loginEventsQuerySchema,
     paginationQuerySchema,
@@ -197,5 +198,17 @@ describe('loginEventsQuerySchema', () => {
         }
         expect(loginEventViewSchema.parse(view)).toEqual(view)
         expect(loginEventViewSchema.safeParse({ ...view, type: 'sign_up' }).success).toBe(false)
+    })
+})
+
+describe('loginEventStatsQuerySchema', () => {
+    it('与列表共用筛选但不接收分页 / 排序', () => {
+        const parsed = loginEventStatsQuerySchema.parse({ type: 'sign_out', channel: 'sso' })
+        expect(parsed).toEqual({ type: 'sign_out', channel: 'sso' })
+        expect(loginEventStatsQuerySchema.parse({ page: '2' })).toEqual({})
+        expect(loginEventStatsQuerySchema.safeParse({
+            startDate: '2026-11-22T00:00:00.000Z',
+            endDate: '2026-11-21T00:00:00.000Z',
+        }).success).toBe(false)
     })
 })

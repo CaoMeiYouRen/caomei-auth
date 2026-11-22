@@ -3,7 +3,10 @@ import { LoginEvent } from '@/server/entities/login-event'
 import { dataSource } from '@/server/database'
 import logger from '@/server/utils/logger'
 import { maskEmail } from '@/utils/shared/privacy'
+import type { LoginEventStats } from '@/utils/shared/api-schemas'
 import {
+    LOGIN_EVENT_RESULTS,
+    LOGIN_EVENT_TYPES,
     isLoginEventResult,
     isLoginEventType,
     isSupportedLoginEventCombination,
@@ -285,4 +288,83 @@ export async function pruneLoginEvents(options: {
     const repository = options.repository ?? dataSource.getRepository(LoginEvent)
     const result = await repository.delete({ createdAt: LessThan(cutoff) })
     return { cutoff, deleted: result.affected ?? 0 }
+}
+
+const DEFAULT_TREND_DAYS = 30
+
+function applyLoginEventWhere(
+    queryBuilder: ReturnType<Repository<LoginEvent>['createQueryBuilder']>,
+    where: FindOptionsWhere<LoginEvent>,
+) {
+    if (Object.keys(where).length) {
+        queryBuilder.where(where)
+    }
+    return queryBuilder
+}
+
+/** 跨方言统一趋势日期：SQLite 返回字符串，MySQL / PostgreSQL 返回 Date（本地零点） */
+export function formatTrendDate(value: unknown): string {
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        const year = value.getFullYear()
+        const month = String(value.getMonth() + 1).padStart(2, '0')
+        const day = String(value.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+    }
+    return String(value).slice(0, 10)
+}
+
+/**
+ * 统计查询与列表共用 `buildLoginEventWhere`，保证筛选口径一致。
+ * 未指定时间范围时，每日趋势默认只取最近 30 天，避免大时间窗全表聚合。
+ */
+export async function getLoginEventStats(
+    query: LoginEventQuery = {},
+    options: { repository?: Pick<Repository<LoginEvent>, 'createQueryBuilder'>, now?: Date } = {},
+): Promise<LoginEventStats> {
+    const repository = options.repository ?? dataSource.getRepository(LoginEvent)
+    const where = buildLoginEventWhere(query)
+    const base = () => applyLoginEventWhere(repository.createQueryBuilder('event'), where)
+
+    const [total, rawByType, rawByResult, userRow, ipRow] = await Promise.all([
+        base().getCount(),
+        base().select('event.type', 'type').addSelect('COUNT(*)', 'count').groupBy('event.type').getRawMany(),
+        base().select('event.result', 'result').addSelect('COUNT(*)', 'count').groupBy('event.result').getRawMany(),
+        base().select('COUNT(DISTINCT event.userId)', 'count').getRawOne(),
+        base().select('COUNT(DISTINCT event.ip)', 'count').getRawOne(),
+    ])
+
+    const typeCounts = new Map<string, number>(
+        (rawByType as Array<{ type: string, count: string | number }>).map((row) => [row.type, Number(row.count)]),
+    )
+    const resultCounts = new Map<string, number>(
+        (rawByResult as Array<{ result: string, count: string | number }>).map((row) => [row.result, Number(row.count)]),
+    )
+
+    const now = options.now ?? new Date()
+    const trendStart = query.start ?? new Date(now.getTime() - DEFAULT_TREND_DAYS * MILLISECONDS_PER_DAY)
+    const trendWhere: FindOptionsWhere<LoginEvent> = { ...where }
+    if (!trendWhere.createdAt) {
+        trendWhere.createdAt = MoreThanOrEqual(trendStart)
+    }
+    const trendEnd = query.end ?? now
+    const trendDays = Math.max(1, Math.ceil((trendEnd.getTime() - trendStart.getTime()) / MILLISECONDS_PER_DAY))
+    const rawTrend = await applyLoginEventWhere(repository.createQueryBuilder('event'), trendWhere)
+        .select('DATE(event.createdAt)', 'date')
+        .addSelect('COUNT(*)', 'count')
+        .groupBy('DATE(event.createdAt)')
+        .orderBy('DATE(event.createdAt)', 'ASC')
+        .getRawMany()
+
+    return {
+        total,
+        byType: LOGIN_EVENT_TYPES.map((type) => ({ type, count: typeCounts.get(type) ?? 0 })),
+        byResult: LOGIN_EVENT_RESULTS.map((result) => ({ result, count: resultCounts.get(result) ?? 0 })),
+        distinctUsers: Number(userRow?.count ?? 0),
+        distinctIps: Number(ipRow?.count ?? 0),
+        trendDays,
+        dailyTrend: (rawTrend as Array<{ date: unknown, count: string | number }>).map((row) => ({
+            date: formatTrendDate(row.date),
+            count: Number(row.count),
+        })),
+    }
 }

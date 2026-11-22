@@ -130,9 +130,7 @@ const isoDateString = z.string().refine(
     { message: 'validation.invalid' },
 )
 
-export const loginEventsQuerySchema = z.object({
-    page: stringToNumber.optional().default(1).pipe(z.number().int().min(1)),
-    limit: stringToNumber.optional().default(20).pipe(z.number().int().min(1).max(100)),
+const loginEventFiltersSchema = z.object({
     type: z.enum(LOGIN_EVENT_TYPES).optional(),
     result: z.enum(LOGIN_EVENT_RESULTS).optional(),
     channel: z.enum(LOGIN_EVENT_CHANNELS).optional(),
@@ -143,11 +141,34 @@ export const loginEventsQuerySchema = z.object({
     startDate: isoDateString.optional(),
     /** 按时刻解释；日期粒度需自行补齐当日末刻 */
     endDate: isoDateString.optional(),
+})
+
+const validateDateRange = (value: { startDate?: string, endDate?: string }) =>
+    !value.startDate || !value.endDate || Date.parse(value.startDate) <= Date.parse(value.endDate)
+
+export const loginEventsQuerySchema = loginEventFiltersSchema.extend({
+    page: stringToNumber.optional().default(1).pipe(z.number().int().min(1)),
+    limit: stringToNumber.optional().default(20).pipe(z.number().int().min(1).max(100)),
     sort: z.enum(['asc', 'desc']).optional().default('desc'),
-}).refine(
-    (value) => !value.startDate || !value.endDate || Date.parse(value.startDate) <= Date.parse(value.endDate),
+}).refine(validateDateRange, { message: 'validation.invalidValue', path: ['startDate'] })
+
+/** 统计与列表共用筛选，不接收分页 / 排序 */
+export const loginEventStatsQuerySchema = loginEventFiltersSchema.refine(
+    validateDateRange,
     { message: 'validation.invalidValue', path: ['startDate'] },
 )
+
+/** 统计响应：空数据也返回全部类型 / 结果的零值 */
+export const loginEventStatsSchema = z.object({
+    total: z.number(),
+    byType: z.array(z.object({ type: z.enum(LOGIN_EVENT_TYPES), count: z.number() })),
+    byResult: z.array(z.object({ result: z.enum(LOGIN_EVENT_RESULTS), count: z.number() })),
+    distinctUsers: z.number(),
+    distinctIps: z.number(),
+    /** dailyTrend 覆盖的天数；默认 30 天，指定更早 startDate 时随之扩大 */
+    trendDays: z.number(),
+    dailyTrend: z.array(z.object({ date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/u), count: z.number() })),
+})
 
 /** 事件视图 DTO：只暴露脱敏后的字段，metadata 已在写入时白名单过滤 */
 export const loginEventViewSchema = z.object({
@@ -176,3 +197,5 @@ export type RegistrationRuleUpdate = z.infer<typeof registrationRuleUpdateSchema
 export type SocialProvidersQuery = z.infer<typeof socialProvidersQuerySchema>
 export type LoginEventsQuery = z.infer<typeof loginEventsQuerySchema>
 export type LoginEventView = z.infer<typeof loginEventViewSchema>
+export type LoginEventStats = z.infer<typeof loginEventStatsSchema>
+export type LoginEventStatsQuery = z.infer<typeof loginEventStatsQuerySchema>

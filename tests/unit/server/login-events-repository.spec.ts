@@ -9,6 +9,8 @@ const {
     DEFAULT_LOGIN_EVENT_PAGE_SIZE,
     MAX_LOGIN_EVENT_PAGE_SIZE,
     buildLoginEventWhere,
+    formatTrendDate,
+    getLoginEventStats,
     pruneLoginEvents,
     queryLoginEvents,
     recordLoginEvent,
@@ -283,5 +285,58 @@ describe('登录事件仓储', () => {
         await expect(pruneLoginEvents({ retentionDays: 0, repository })).rejects.toThrow(RangeError)
         await expect(pruneLoginEvents({ retentionDays: Number.NaN, repository })).rejects.toThrow(RangeError)
         await expect(pruneLoginEvents({ retentionDays: 90, now: new Date(Number.NaN), repository })).rejects.toThrow(RangeError)
+    })
+
+    it('统计空数据返回零值并补齐全部枚举', async () => {
+        const stats = await getLoginEventStats({}, { repository, now: new Date('2026-11-22T12:00:00.000Z') })
+        expect(stats.total).toBe(0)
+        expect(stats.byType).toHaveLength(7)
+        expect(stats.byType.every((item) => item.count === 0)).toBe(true)
+        expect(stats.byResult).toEqual([
+            { result: 'success', count: 0 },
+            { result: 'failure', count: 0 },
+        ])
+        expect(stats.distinctUsers).toBe(0)
+        expect(stats.distinctIps).toBe(0)
+        expect(stats.dailyTrend).toEqual([])
+        expect(stats.trendDays).toBe(30)
+    })
+
+    it('统计与列表共用筛选并返回类型 / 结果 / 独立用户与 IP / 每日趋势', async () => {
+        const seeds = [
+            { type: 'sign_in_success', result: 'success', channel: 'email', userId: 'user-1', ip: '203.0.113.1', at: '2026-11-20T08:00:00.000Z' },
+            { type: 'sign_in_success', result: 'success', channel: 'email', userId: 'user-1', ip: '203.0.113.2', at: '2026-11-20T09:00:00.000Z' },
+            { type: 'sign_in_failure', result: 'failure', channel: 'username', userId: 'user-2', ip: '203.0.113.1', at: '2026-11-21T10:00:00.000Z' },
+            { type: 'two_factor_success', result: 'success', channel: 'unknown', userId: 'user-2', ip: '203.0.113.2', at: '2026-11-21T11:00:00.000Z' },
+        ] as const
+        for (const seed of seeds) {
+            await recordLoginEvent({ ...seed, createdAt: new Date(seed.at) }, { repository })
+        }
+
+        const stats = await getLoginEventStats({}, { repository, now: new Date('2026-11-22T12:00:00.000Z') })
+        expect(stats.total).toBe(4)
+        expect(stats.byType.find((item) => item.type === 'sign_in_success')?.count).toBe(2)
+        expect(stats.byType.find((item) => item.type === 'sign_in_failure')?.count).toBe(1)
+        expect(stats.byType.find((item) => item.type === 'two_factor_success')?.count).toBe(1)
+        expect(stats.byResult).toEqual([
+            { result: 'success', count: 3 },
+            { result: 'failure', count: 1 },
+        ])
+        expect(stats.distinctUsers).toBe(2)
+        expect(stats.distinctIps).toBe(2)
+        expect(stats.dailyTrend).toEqual([
+            { date: '2026-11-20', count: 2 },
+            { date: '2026-11-21', count: 2 },
+        ])
+
+        const filtered = await getLoginEventStats({ types: ['sign_in_failure'] }, { repository, now: new Date('2026-11-22T12:00:00.000Z') })
+        expect(filtered.total).toBe(1)
+        expect(filtered.byType.find((item) => item.type === 'sign_in_failure')?.count).toBe(1)
+    })
+
+    it('趋势日期在字符串与 Date 两种驱动返回下保持一致', () => {
+        expect(formatTrendDate('2026-11-20')).toBe('2026-11-20')
+        expect(formatTrendDate('2026-11-20 00:00:00.000')).toBe('2026-11-20')
+        expect(formatTrendDate(new Date(2026, 10, 20))).toBe('2026-11-20')
     })
 })

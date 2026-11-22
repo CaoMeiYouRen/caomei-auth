@@ -81,7 +81,7 @@ export default defineEventHandler(async (event) => {
         })
         throw await createLocalizedError(event, {
             statusCode: 500,
-            key: 'errors.internal',
+            key: 'errors.server.internal',
         })
     }
 })

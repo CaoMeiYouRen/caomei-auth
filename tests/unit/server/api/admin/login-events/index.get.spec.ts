@@ -121,7 +121,7 @@ describe('server/api/admin/login-events/index.get', () => {
         }))
         expect(createLocalizedError).toHaveBeenCalledWith(event, {
             statusCode: 500,
-            key: 'errors.internal',
+            key: 'errors.server.internal',
         })
     })
 })
