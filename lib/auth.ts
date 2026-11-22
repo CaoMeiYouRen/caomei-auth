@@ -73,6 +73,7 @@ import {
 } from '@/server/utils/audit-hooks'
 import { sendPasswordResetOtp, deliverTwoFactorOtp } from '@/server/utils/recovery-channels'
 import { twoFactorCoveragePlugin } from '@/server/utils/two-factor-coverage/plugin'
+import { loginEventPlugin } from '@/server/utils/login-events/plugin'
 import { assertAdminWriteAllowed, assertPasswordResetCompleted, clearPasswordResetRequirement } from '@/server/utils/recovery-guards'
 import { applyChannelChangeBeforeSession } from '@/server/utils/channel-change-apply'
 import { assertRegistrationAllowed } from '@/server/utils/registration-guard'
@@ -422,6 +423,7 @@ function createAuthInstance() {
                 },
             }),
             twoFactorCoveragePlugin(),
+            loginEventPlugin(),
             genericOAuth({ config: GENERIC_OAUTH_CONFIG }),
             oauthProvider({
                 loginPage: '/login', // 登录页面的路径

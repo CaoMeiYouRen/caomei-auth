@@ -1,6 +1,7 @@
 import { Between, In, LessThan, LessThanOrEqual, MoreThanOrEqual, type FindOptionsWhere, type Repository } from 'typeorm'
 import { LoginEvent } from '@/server/entities/login-event'
 import { dataSource } from '@/server/database'
+import logger from '@/server/utils/logger'
 import { maskEmail } from '@/utils/shared/privacy'
 import {
     isLoginEventResult,
@@ -90,6 +91,8 @@ export interface LoginEventInput {
     ip?: string | null
     userAgent?: string | null
     metadata?: Record<string, unknown> | null
+    /** 仅 Demo / 回填使用；默认由数据库写入当前时间 */
+    createdAt?: Date
 }
 
 export interface LoginEventQuery {
@@ -121,7 +124,7 @@ export interface LoginEventPruneResult {
     deleted: number
 }
 
-type LoginEventRepository = Pick<Repository<LoginEvent>, 'create' | 'save' | 'findAndCount' | 'delete'>
+type LoginEventRepository = Pick<Repository<LoginEvent>, 'create' | 'save' | 'findAndCount' | 'delete' | 'update'>
 
 function resolveRepository(repository?: LoginEventRepository): LoginEventRepository {
     return repository ?? dataSource.getRepository(LoginEvent)
@@ -162,7 +165,41 @@ export async function recordLoginEvent(
         userAgent: input.userAgent?.trim() || null,
         metadata: sanitizeLoginEventMetadata(input.metadata),
     })
-    return repository.save(event)
+    const saved = await repository.save(event)
+    if (input.createdAt && Number.isFinite(input.createdAt.getTime())) {
+        /* CreateDateColumn 的默认值由数据库接管，回填历史时间需显式更新一次 */
+        await repository.update(saved.id, { createdAt: input.createdAt })
+        saved.createdAt = input.createdAt
+    }
+    return saved
+}
+
+/** 单条事件写入的超时上限：认证可用性优先，不因事件表写入挂起登录 */
+const LOGIN_EVENT_WRITE_TIMEOUT_MS = 2000
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const timeout = new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(() => reject(new Error(`login event write timed out after ${timeoutMs}ms`)), timeoutMs)
+    })
+    return Promise.race([promise, timeout]).finally(() => {
+        if (timer) {
+            clearTimeout(timer)
+        }
+    })
+}
+
+/** 认证链路使用的 fail-open 写入：失败 / 超时只 warn，绝不阻断登录 */
+export async function recordLoginEventSafely(input: LoginEventInput): Promise<void> {
+    try {
+        await withTimeout(recordLoginEvent(input), LOGIN_EVENT_WRITE_TIMEOUT_MS)
+    } catch (error) {
+        logger.warn('Failed to write login event, skipped', {
+            type: input.type,
+            channel: normalizeLoginEventChannel(input.channel),
+            error: error instanceof Error ? error.message : String(error),
+        })
+    }
 }
 
 /** 查询条件构造与查询共用，供 M2.1 / M2.2 / M3.1 复用 */

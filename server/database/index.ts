@@ -216,6 +216,27 @@ async function populateDemoDataAsync(): Promise<void> {
             }
         }
 
+        // Demo 模式登录事件：固定 seed / 窗口，供事件视图与热力图复用
+        try {
+            const demoEventUsers = await userRepository.find({ select: ['id'], take: 20 })
+            if (demoEventUsers.length) {
+                const [{ generateDemoLoginEvents }, { recordLoginEvent }] = await Promise.all([
+                    import('../utils/login-events/demo'),
+                    import('../utils/login-events/repository'),
+                ])
+                const loginEventRepository = AppDataSource.getRepository(LoginEvent)
+                const demoEvents = generateDemoLoginEvents({
+                    userIds: demoEventUsers.map((user) => user.id),
+                })
+                for (const event of demoEvents) {
+                    await recordLoginEvent(event, { repository: loginEventRepository })
+                }
+                logger.info(`Demo模式登录事件填充完成：${demoEvents.length} 条`)
+            }
+        } catch (error: any) {
+            logger.warn(`Demo模式登录事件填充失败: ${error.message}`)
+        }
+
         logger.info(`Demo模式假数据填充完成：
 - 用户：2个演示账号 + ${createdUsersCount - 2}个假用户
 - OAuth应用：${demoOAuthApps.length}个
