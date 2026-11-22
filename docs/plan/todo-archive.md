@@ -8,5 +8,6 @@
 
 | 阶段 | 主题 | 归档文件 | 归档日期 |
 | :--- | :--- | :--- | :--- |
+| 12 | 安全可观测性与会话治理 | [todo-archive-phases-12.md](./archive/todo-archive-phases-12.md) | 2026-11-23 |
 | 11 | 2FA 覆盖收紧与登录通道闭环 | [todo-archive-phases-11.md](./archive/todo-archive-phases-11.md) | 2026-11-21 |
 | 10 | 用户侧替代证明（恢复码 / 已验证手机 / 冷静期） | [todo-archive-phases-10.md](./archive/todo-archive-phases-10.md) | 2026-11-21 |

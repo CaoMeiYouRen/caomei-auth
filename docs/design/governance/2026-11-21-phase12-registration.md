@@ -1,6 +1,6 @@
 # 2026-11-21 阶段 12 范围登记：安全可观测性与会话治理
 
-> **状态**：2026-11-21 登记（尚未开工）。§2 的 D18–D25 为拟定口径，随登记生效；如用户改判，M1 开工前同批更新本文件、[todo.md](../../plan/todo.md) 与 [security.md](../../standards/security.md)。
+> **状态**：2026-11-21 登记 → 2026-11-23 收口（见 [收口记录](./2026-11-23-phase12-closure.md)）。§2 的 D18–D25 为拟定口径，随登记生效；如用户改判，M1 开工前同批更新本文件、[todo.md](../../plan/todo.md) 与 [security.md](../../standards/security.md)。
 > **依据**：[backlog §2.4](../../plan/backlog.md)（登录事件与热力图）、[backlog §2.12](../../plan/backlog.md)（审计检索 / 可信设备 / 会话撤销）、[阶段 11 收口记录](./2026-11-21-phase11-closure.md)（M3.3 / 撤销脚本迁入）、[安全规范 §1.3](../../standards/security.md#13-2fa-覆盖边界与账号恢复等级-2fa-coverage--recovery-levels)。
 > **规划模型**：5 大条目 / 15 小条目（[规划规范](../../standards/planning.md) §4 / §7 / §8）。
 
