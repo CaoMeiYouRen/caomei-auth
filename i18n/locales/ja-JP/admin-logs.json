@@ -130,6 +130,21 @@
                     "unknown": "不明"
                 },
                 "loadFailedDescription": "ログインイベントの読み込みに失敗しました"
+            },
+            "heatmap": {
+                "title": "イベントヒートマップ",
+                "description": "時間 × イベント種別の分布",
+                "days7": "直近 7 日（時間単位）",
+                "days30": "直近 30 日（日単位）",
+                "loading": "ヒートマップを読み込み中…",
+                "empty": "イベントデータがありません",
+                "loadFailedDescription": "イベントヒートマップの読み込みに失敗しました",
+                "retry": "再試行",
+                "legendLow": "少",
+                "legendHigh": "多",
+                "range": "{start} – {end}（UTC）",
+                "cellLabel": "{type} · {bucket}：{count} 回",
+                "groupLabel": "ログインイベントヒートマップ（イベント種別 × 時間）"
             }
         }
     }

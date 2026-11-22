@@ -14,6 +14,8 @@
             </div>
         </div>
 
+        <LoginEventHeatmap />
+
         <div class="events-filters">
             <div class="filter-item">
                 <CaomeiSelect
@@ -188,6 +190,7 @@
 import { computed } from 'vue'
 import type { DataTableColumn, DataTablePageEvent, DataTableSortEvent } from 'caomei-ui'
 import { useLoginEvents } from '@/composables/admin/use-login-events'
+import LoginEventHeatmap from '@/components/admin/logs/login-event-heatmap.vue'
 import { useLocaleDate } from '@/composables/use-locale-date'
 import {
     LOGIN_EVENT_CHANNELS,
@@ -198,6 +201,7 @@ import {
     type LoginEventType,
 } from '@/utils/shared/login-events'
 import type { LoginEventView } from '@/utils/shared/api-schemas'
+import { loginEventChannelLabelKey, loginEventResultLabelKey, loginEventTypeLabelKey } from '@/utils/web/login-event-labels'
 
 const { t } = useI18n()
 const { formatDateTimeShort } = useLocaleDate()
@@ -223,39 +227,16 @@ const {
     onIpChange,
 } = useLoginEvents()
 
-const EVENT_TYPE_LABEL_KEYS: Record<LoginEventType, string> = {
-    sign_in_success: 'types.signInSuccess',
-    sign_in_failure: 'types.signInFailure',
-    two_factor_challenge: 'types.twoFactorChallenge',
-    two_factor_success: 'types.twoFactorSuccess',
-    two_factor_failure: 'types.twoFactorFailure',
-    sign_out: 'types.signOut',
-    session_revoked: 'types.sessionRevoked',
-}
-
-const CHANNEL_LABEL_KEYS: Record<LoginEventChannel, string> = {
-    email: 'channels.email',
-    username: 'channels.username',
-    phone: 'channels.phone',
-    'email-otp': 'channels.emailOtp',
-    'phone-otp': 'channels.phoneOtp',
-    'magic-link': 'channels.magicLink',
-    'email-verification': 'channels.emailVerification',
-    social: 'channels.social',
-    sso: 'channels.sso',
-    unknown: 'channels.unknown',
-}
-
 function typeLabel(type: LoginEventType) {
-    return t(`admin.logs.events.${EVENT_TYPE_LABEL_KEYS[type]}`)
+    return t(loginEventTypeLabelKey(type))
 }
 
 function resultLabel(result: LoginEventResult) {
-    return t(`admin.logs.events.results.${result}`)
+    return t(loginEventResultLabelKey(result))
 }
 
 function channelLabel(channel: LoginEventChannel) {
-    return t(`admin.logs.events.${CHANNEL_LABEL_KEYS[channel]}`)
+    return t(loginEventChannelLabelKey(channel))
 }
 
 const typeOptions = computed(() => LOGIN_EVENT_TYPES.map((type) => ({ label: typeLabel(type), value: type })))
@@ -331,7 +312,7 @@ function onTableSort(event: DataTableSortEvent) {
 
 .section-description {
     margin: 0.35rem 0 0;
-    color: var(--admin-text-muted);
+    color: var(--admin-muted);
     font-size: 0.9rem;
 }
 
@@ -381,7 +362,7 @@ function onTableSort(event: DataTableSortEvent) {
     display: inline-block;
     max-width: 10rem;
     overflow: hidden;
-    color: var(--admin-accent);
+    color: var(--color-primary);
     text-decoration: underline;
     text-overflow: ellipsis;
     text-underline-offset: 2px;
@@ -391,7 +372,7 @@ function onTableSort(event: DataTableSortEvent) {
 
 .user-unknown,
 .user-agent {
-    color: var(--admin-text-muted);
+    color: var(--admin-muted);
 }
 
 .user-agent {

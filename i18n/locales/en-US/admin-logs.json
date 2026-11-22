@@ -130,6 +130,21 @@
                     "unknown": "Unknown"
                 },
                 "loadFailedDescription": "Failed to load login events"
+            },
+            "heatmap": {
+                "title": "Event heatmap",
+                "description": "Security events by time and event type",
+                "days7": "Last 7 days (hourly)",
+                "days30": "Last 30 days (daily)",
+                "loading": "Loading heatmap…",
+                "empty": "No event data",
+                "loadFailedDescription": "Failed to load event heatmap",
+                "retry": "Retry",
+                "legendLow": "Less",
+                "legendHigh": "More",
+                "range": "{start} – {end} (UTC)",
+                "cellLabel": "{type} · {bucket}: {count}",
+                "groupLabel": "Login event heatmap (event type × time)"
             }
         }
     }

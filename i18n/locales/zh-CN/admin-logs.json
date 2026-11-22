@@ -130,6 +130,21 @@
                     "unknown": "未知"
                 },
                 "loadFailedDescription": "加载登录事件失败"
+            },
+            "heatmap": {
+                "title": "事件热力图",
+                "description": "时间 × 事件类型分布，用于识别安全事件的时段特征",
+                "days7": "近 7 天（小时）",
+                "days30": "近 30 天（天）",
+                "loading": "加载热力图…",
+                "empty": "暂无事件数据",
+                "loadFailedDescription": "加载事件热力图失败",
+                "retry": "重试",
+                "legendLow": "少",
+                "legendHigh": "多",
+                "range": "{start} – {end}（UTC）",
+                "cellLabel": "{type} · {bucket}：{count} 次",
+                "groupLabel": "登录事件热力图（事件类型 × 时间）"
             }
         }
     }

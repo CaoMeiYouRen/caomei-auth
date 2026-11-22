@@ -130,6 +130,21 @@
                     "unknown": "알 수 없음"
                 },
                 "loadFailedDescription": "로그인 이벤트를 불러오지 못했습니다"
+            },
+            "heatmap": {
+                "title": "이벤트 히트맵",
+                "description": "시간 × 이벤트 유형 분포",
+                "days7": "최근 7일(시간 단위)",
+                "days30": "최근 30일(일 단위)",
+                "loading": "히트맵 불러오는 중…",
+                "empty": "이벤트 데이터가 없습니다",
+                "loadFailedDescription": "이벤트 히트맵을 불러오지 못했습니다",
+                "retry": "다시 시도",
+                "legendLow": "적음",
+                "legendHigh": "많음",
+                "range": "{start} – {end}(UTC)",
+                "cellLabel": "{type} · {bucket}: {count}회",
+                "groupLabel": "로그인 이벤트 히트맵(이벤트 유형 × 시간)"
             }
         }
     }

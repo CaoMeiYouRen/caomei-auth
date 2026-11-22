@@ -170,6 +170,36 @@ function buildSessions(anchor) {
     return rows
 }
 
+/**
+ * 登录事件夹具：覆盖 7 种事件类型与多种通道，时间分布在锚点前 56 小时内，
+ * 供事件面板与热力图（7 天 / 小时桶）呈现稳定的非空分布。
+ */
+function buildLoginEvents(anchor) {
+    const types = [
+        'sign_in_success', 'sign_in_success', 'sign_in_success', 'sign_in_success', 'sign_in_success',
+        'sign_in_failure', 'sign_in_failure',
+        'two_factor_challenge', 'two_factor_success', 'two_factor_failure',
+        'sign_out', 'session_revoked',
+    ]
+    const channels = ['email', 'username', 'phone', 'email-otp', 'social', 'sso']
+    const users = PEOPLE.map((person) => person.id)
+
+    return Array.from({ length: 80 }, (_, index) => {
+        const type = types[index % types.length]
+        const createdAt = new Date(anchor.getTime() - (1 + (index % 56)) * HOUR)
+        return {
+            id: `visual-login-event-${index.toString().padStart(3, '0')}`,
+            createdAt,
+            type,
+            result: ['sign_in_failure', 'two_factor_failure'].includes(type) ? 'failure' : 'success',
+            channel: channels[index % channels.length],
+            userId: users[index % users.length],
+            ip: IP_ADDRESSES[index % IP_ADDRESSES.length],
+            userAgent: USER_AGENTS[index % USER_AGENTS.length],
+        }
+    })
+}
+
 function buildSsoProviders(anchor, adminUserId) {
     const oidcConfig = {
         clientId: 'visual-oidc-client',
@@ -233,6 +263,7 @@ export function seedVisualDatabase(db, options = {}) {
     const accounts = buildAccounts(users)
     const sessions = buildSessions(anchor)
     const ssoProviders = buildSsoProviders(anchor, 'visual-user-admin')
+    const loginEvents = buildLoginEvents(anchor)
 
     const insertUser = db.prepare(`
         INSERT INTO caomei_auth_user
@@ -269,6 +300,13 @@ export function seedVisualDatabase(db, options = {}) {
         VALUES
             (@id, @createdAt, @updatedAt, @issuer, @domain, @oidcConfig, @samlConfig, @providerId, @userId,
              @name, @description, @enabled, @type)
+    `)
+
+    const insertLoginEvent = db.prepare(`
+        INSERT INTO caomei_auth_login_event
+            (id, created_at, updated_at, type, result, channel, user_id, ip, user_agent, metadata)
+        VALUES
+            (@id, @createdAt, @updatedAt, @type, @result, @channel, @userId, @ip, @userAgent, NULL)
     `)
 
     const seed = db.transaction(() => {
@@ -310,6 +348,20 @@ export function seedVisualDatabase(db, options = {}) {
                 ipAddress: session.ipAddress,
                 userAgent: session.userAgent,
                 userId: session.userId,
+            })
+        }
+
+        for (const event of loginEvents) {
+            insertLoginEvent.run({
+                id: event.id,
+                createdAt: toSqliteDate(event.createdAt),
+                updatedAt: toSqliteDate(event.createdAt),
+                type: event.type,
+                result: event.result,
+                channel: event.channel,
+                userId: event.userId,
+                ip: event.ip,
+                userAgent: event.userAgent,
             })
         }
 

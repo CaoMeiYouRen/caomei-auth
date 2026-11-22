@@ -130,6 +130,21 @@
                     "unknown": "未知"
                 },
                 "loadFailedDescription": "載入登入事件失敗"
+            },
+            "heatmap": {
+                "title": "事件熱力圖",
+                "description": "時間 × 事件類型分布，用於識別安全事件的時段特徵",
+                "days7": "近 7 天（小時）",
+                "days30": "近 30 天（天）",
+                "loading": "載入熱力圖…",
+                "empty": "尚無事件資料",
+                "loadFailedDescription": "載入事件熱力圖失敗",
+                "retry": "重試",
+                "legendLow": "少",
+                "legendHigh": "多",
+                "range": "{start} – {end}（UTC）",
+                "cellLabel": "{type} · {bucket}：{count} 次",
+                "groupLabel": "登入事件熱力圖（事件類型 × 時間）"
             }
         }
     }
