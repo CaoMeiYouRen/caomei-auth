@@ -15,7 +15,7 @@
 
 | 编号 | 决策 | 结论 | 依据 / 影响 |
 | :--- | :--- | :--- | :--- |
-| D26 | IP 列类型与索引 | `login_event.ip` 由 `text` 改为 `varchar(45)`，新增 `(ip, created_at)` 复合索引；同步实体、三方言 `create.sql` 与 `database.md` 的 ALTER 指引。SQLite 动态类型不受影响，MySQL / PostgreSQL 需执行 ALTER。**不新增隐式时间窗**：IP-only 查询由复合索引按 `created_at` 有序覆盖，API 筛选语义保持不变；文档建议大时间跨度时显式带时间窗 | MySQL 无法对 `TEXT` 建全列索引；45 覆盖 IPv6 文本上限；强制加窗会改变既有 API 返回集合，需推翻兼容性而不划算 |
+| D26 | IP 列类型与索引 | `login_event.ip` 由 `text` 改为 `varchar(45)`，新增 `(ip, created_at)` 复合索引；同步实体、三方言 `create.sql` 与 `database.md` 的 ALTER 指引。SQLite 动态类型不受影响，MySQL / PostgreSQL 需执行 ALTER。**不新增隐式时间窗**：IP-only 查询由复合索引按 `created_at` 有序覆盖（`id` 次级排序在 SQLite 等方言仍可能走临时排序，见 `database.md`），API 筛选语义保持不变；文档建议大时间跨度时显式带时间窗 | MySQL 无法对 `TEXT` 建全列索引；45 覆盖 IPv6 文本上限；强制加窗会改变既有 API 返回集合，需推翻兼容性而不划算 |
 | D27 | 统计与热力图聚合位置 | `dailyTrend` 与热力图改为方言 SQL `GROUP BY` 聚合，JS 只补零桶与排序；响应字段、时区（UTC）与窗口上限不变 | 当前两者把窗口内全部 `createdAt` / `type` 拉入内存分桶，30 天大实例下随事件量线性增长；聚合下推后内存与传输只随桶数增长 |
 | D28 | 多方言清理脚本 | `scripts/maintenance/prune-login-events.mjs` 增加 MySQL / PostgreSQL 分支，复用「方言客户端 + 参数化 DELETE」模式；保留默认 dry-run 与 `--confirm`，表名前缀仍受校验 | 阶段 12 M1.3 只支持 SQLite；服务端惰性清理已覆盖三方言，手动入口不应缺方言 |
 | D29 | 发布门禁覆盖 | `docker-publish.yml` 的 `mode=build` 在构建前执行 `scripts/security/check-alerts.mjs`；`mode=retag` 复用已构建镜像，不重复扫描 | 当前只有 `docker.yml` / `release.yml` / 每周回归执行门禁，重建并推送生产镜像的路径绕过检查 |
