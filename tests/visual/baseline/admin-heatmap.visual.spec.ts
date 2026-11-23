@@ -7,9 +7,10 @@ import { useAdminSession } from '../helpers/admin-session'
  *
  * - 1800 / 768 / 390 截取 `.login-event-heatmap` 元素，浅 / 暗各 1 张；
  * - 1440 交互态基准宽度下，168 个桶的最小内容宽度（1480px）超过容器（1336px），
- *   容器内部横向滚动 144px。该宽度改用「可视框 + 断言」口径：滚动位置固定为 0（保证
- *   类型轴与左段桶入镜），断言溢出量、7 个类型标签、7 × 168 个 cell 均存在；
- *   右端 144px 不进入像素基线，由 cell 计数断言覆盖（不声称「完整矩阵截图」）。
+ *   容器内部横向滚动 144px；该页在 1440 下还有页面级横向溢出。该宽度改用「视口截图 +
+ *   断言」口径：纵向滚到面板、横向滚动归零后截当前视口（含左侧固定导航与热力图类型轴），
+ *   断言溢出量、7 个类型标签、7 × 168 个 cell 且首个标签进入视口；右端溢出区不入像素基线，
+ *   由 cell 计数断言覆盖（不声称「完整矩阵截图」）。
  * 数据来自 `scripts/testing/visual-fixtures.mjs` 的 80 条确定性登录事件。
  */
 const VIEWPORTS = [
@@ -48,11 +49,14 @@ for (const theme of THEMES) {
                 })
                 expect(overflow).toBeGreaterThan(0)
                 await expect(heatmap.locator('.heatmap-row__label')).toHaveCount(7)
-                await expect(heatmap.locator('.heatmap-row__label').first()).toBeVisible()
                 await expect(heatmap.locator('.heatmap-cell')).toHaveCount(7 * 168)
+                /* 页面在 1440 下有横向溢出：把页面横向滚动归零，避免固定导航遮住类型轴 */
+                await page.evaluate(() => window.scrollTo(0, window.scrollY))
+                await expect(heatmap.locator('.heatmap-row__label').first()).toBeInViewport()
+                await expect(page).toHaveScreenshot(`login-event-heatmap-${theme}-${viewport.name}.png`)
+            } else {
+                await expect(heatmap).toHaveScreenshot(`login-event-heatmap-${theme}-${viewport.name}.png`)
             }
-
-            await expect(heatmap).toHaveScreenshot(`login-event-heatmap-${theme}-${viewport.name}.png`)
         })
     }
 }
