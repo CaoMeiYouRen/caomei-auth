@@ -13,7 +13,8 @@ import { createZodErrorMap } from '@/utils/shared/zod-error-map'
  *
  * 只返回脱敏后的展示字段；metadata 在写入时已按白名单过滤，读取端再过滤一次
  * 以覆盖历史回填 / 手工 SQL 的异常数据。IP / UA 与既有会话视图同口径，仅管理员可见。
- * `ip` 过滤为 TEXT 列且无索引，请与时间窗组合使用（M2.3 默认 30 天）。
+ * `ip` 为 `varchar(45)` 且带 `(ip, created_at)` 复合索引，不再强制组合时间窗；
+ * 大时间跨度仍建议显式传 `startDate` / `endDate`（口径见 `docs/design/security-observability.md` §7）。
  */
 function toLoginEventView(event: LoginEvent): LoginEventView {
     return {

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import { DataSource, type Repository } from 'typeorm'
+import { DataSource, type FindOperator, type Repository } from 'typeorm'
 import { LoginEvent } from '@/server/entities/login-event'
 import { SnakeCaseNamingStrategy } from '@/server/database/naming-strategy'
 
@@ -249,6 +249,37 @@ describe('登录事件仓储', () => {
         expect(buildLoginEventWhere({})).toEqual({})
         const where = buildLoginEventWhere({ types: ['sign_out'] })
         expect(Object.keys(where)).toEqual(['type'])
+    })
+
+    it('IP 条件不追加隐式时间窗，只有显式 start / end 才生成时间谓词', async () => {
+        const ipOnly = buildLoginEventWhere({ ip: '198.51.100.9' })
+        expect(ipOnly).toEqual({ ip: '198.51.100.9' })
+
+        const start = new Date(Date.UTC(2026, 9, 1, 0, 0, 0))
+        const end = new Date(Date.UTC(2026, 10, 1, 0, 0, 0))
+        const startOnly = buildLoginEventWhere({ ip: '198.51.100.9', start })
+        expect(Object.keys(startOnly).sort()).toEqual(['createdAt', 'ip'])
+        expect((startOnly.createdAt as FindOperator<Date>).type).toBe('moreThanOrEqual')
+        const endOnly = buildLoginEventWhere({ ip: '198.51.100.9', end })
+        expect(Object.keys(endOnly).sort()).toEqual(['createdAt', 'ip'])
+        expect((endOnly.createdAt as FindOperator<Date>).type).toBe('lessThanOrEqual')
+        const range = buildLoginEventWhere({ start, end })
+        expect(Object.keys(range)).toEqual(['createdAt'])
+        expect((range.createdAt as FindOperator<Date>).type).toBe('between')
+
+        // 行为锁定：IP-only 查询不受任何默认窗口裁剪，返回字段仍为仓储分页契约
+        const oldEvent = await recordLoginEvent({
+            type: 'sign_in_success',
+            result: 'success',
+            channel: 'email',
+            userId: 'user-1',
+            ip: '198.51.100.9',
+        }, { repository })
+        await repository.update(oldEvent.id, { createdAt: new Date(Date.UTC(2026, 6, 1, 0, 0, 0)) })
+        const page = await queryLoginEvents({ ip: '198.51.100.9' }, { repository })
+        expect(page.total).toBe(1)
+        expect(Object.keys(page).sort()).toEqual(['items', 'page', 'pageSize', 'total'])
+        expect(page.items[0]?.ip).toBe('198.51.100.9')
     })
 
     it('清理只删除保留期之前的事件，cutoff 等值保留', async () => {

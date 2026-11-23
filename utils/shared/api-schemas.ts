@@ -135,7 +135,13 @@ const loginEventFiltersSchema = z.object({
     result: z.enum(LOGIN_EVENT_RESULTS).optional(),
     channel: z.enum(LOGIN_EVENT_CHANNELS).optional(),
     userId: z.string().trim().max(36).optional(),
-    /** 精确匹配 IP；TEXT 列无索引，建议与时间窗组合使用（M2.3 默认 30 天） */
+    /**
+     * 精确匹配 IP；列为 `varchar(45)` 且带 `(ip, created_at)` 复合索引，
+     * 不再强制要求时间窗；大时间跨度仍建议显式传 `startDate` / `endDate`
+     * （理由见 `docs/design/security-observability.md` §7）。
+     * 上限保留 64 以兼容历史值与超长输入：MySQL / PostgreSQL 受列长限制不会命中，
+     * SQLite 不强制列长，仍可能查回历史超长值。
+     */
     ip: z.string().trim().max(64).optional(),
     /** 按时刻解释；日期粒度需自行补齐当日末刻 */
     startDate: isoDateString.optional(),
