@@ -11,6 +11,8 @@ import { useAdminSession } from '../helpers/admin-session'
  *   断言」口径：纵向滚到面板、横向滚动归零后截当前视口（含左侧固定导航与热力图类型轴），
  *   断言溢出量、7 个类型标签、7 × 168 个 cell 且首个标签进入视口；右端溢出区不入像素基线，
  *   由 cell 计数断言覆盖（不声称「完整矩阵截图」）。
+ *   注意：视口截图同时绑定纵向滚动位置（面板上方内容高度变化会整图 diff），
+ *   属预期维护成本，不要误判为热力图回归。
  * 数据来自 `scripts/testing/visual-fixtures.mjs` 的 80 条确定性登录事件。
  */
 const VIEWPORTS = [

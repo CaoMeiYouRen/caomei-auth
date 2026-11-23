@@ -18,19 +18,19 @@
 - 视觉：**154** 个用例通过，自基线 PNG **151** 张（热力图 1440 浅 / 暗、可信设备非空态为新增 / 重采）。
 - 重复代码 3.71%（阈值 5%）；入口 CSS 405,342 B（+1.40%，上限 +10%）；`docs:build` 通过（VitePress 配置 `ignoreDeadLinks: true`，链接有效性另由归档分片路径核对补充）。
 - 依赖告警：Dependabot `open` 归零（3 条 medium 推送后自动关闭）；`gh api .../dependabot/alerts?state=open` 于 2026-11-23 核对为 0，无 critical / high。
-- 提交：14 个条目提交（M1 2 / M2 3 / M3 3 / M4 5 / M5 1）+ 1 个阶段收口提交（`8f25a85`，不计容量）；回填提交 `8d82d72`、`ecba69f`、`17cbf9a` 不归属条目。
+- 提交：14 个条目提交（M1 2 / M2 3 / M3 3 / M4 5 / M5 1）+ 1 个阶段收口提交（`8f25a85`，不计容量）；回填提交 `8d82d72`、`ecba69f`、`17cbf9a`、`d9ae320` 不归属条目。
 
 ## 3. Review Gate 轮次
 
 - M1.1 R1 Pass → R2 Pass；M1.2 R1 Pass。
 - M2.1 R1 Pass；M2.2 R1 Pass；M2.3 R1 Reject → R2 Reject → R3 Pass。
 - M3.1 R1 Reject → R2 Pass；M3.2 R1 Pass；M3.3 R1 Pass。
-- M4.1 R1 Reject → R2 Pass；M4.2 R1 Pass；M5.1 R1 Pass；M5.2 R1 Pass（门禁证据采信）；M5.3 R1 Reject → R2 Pass。
-- M4 / M5 的首轮曾以 `code-reviewer` skill 自查代行；subagent 额度恢复后补做独立复审，M4.1 与 M5.3 各退回一轮并在修复后通过。
+- M4.1 R1 Reject → R2 Reject → R3 Pass；M4.2 R1 Pass；M5.1 R1 Pass；M5.2 R1 Pass（门禁证据采信）；M5.3 R1 Reject → R2 Reject → R3 Pass。
+- M4 / M5 的首轮曾以 `code-reviewer` skill 自查代行；subagent 额度恢复后补做独立复审，M4.1 与 M5.3 各退回两轮（R1 / R2）并在修复后通过。
 
 ## 4. 偏差
 
-- 容量：计划 commits 13–18 / files 40–55 / 行 1,500–2,200；实际 14 个条目提交 + 1 个阶段收口提交（收口提交不计容量），files 与行数在区间内；M3.3 因 commitizen 兼容问题多一次嵌套 override 修复（含在 `97524f7` 内）。
+- 容量：计划 commits 13–18 / files 40–55 / 行 1,500–2,200；实际 14 个条目提交 + 1 个阶段收口提交（收口提交不计容量），files 与行数在区间内；M3.3 因 commitizen 兼容问题多一次嵌套 override 修复（含在 `97524f7` 内）；M4 因独立复审 R1 / R2 退回多 3 次修复提交（`9928c29`、`b893123`、`7fdfaa2`），容量由计划 2 增至 5。
 - M4.1 期间发现 1440 宽度下热力图确有内部横向滚动（168 个桶的最小内容宽约 1480px > 容器 1336px）；独立复审指出「完整矩阵」截图不成立，最终口径改为「页面横向滚动归零 + 溢出 / 7 个类型标签 / 7 × 168 cell 断言 + 1440×900 视口截图」，右端溢出区仅由计数断言覆盖。
 
 ## 5. 未覆盖边界

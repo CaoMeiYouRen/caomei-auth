@@ -6,7 +6,7 @@
 - **大条目**：M1 登录事件 IP 索引（已闭环） / M2 统计与热力图方言聚合（已闭环） / M3 运维脚本与发布门禁（已闭环） / M4 回归基线补充（已闭环） / M5 文档与阶段收口（已闭环）
 - **提交清单**：M1 `7264e25`、`681d274`；M2 `62aa4ef`、`dd7ab6c`、`92466cc`；M3 `398d45e`、`9a5eee5`、`97524f7`；M4 `c808bf6`、`0cf8040`、`9928c29`、`b893123`、`7fdfaa2`；M5 `49d351e`（M5.2 / M5.3 并入阶段收口提交 `8f25a85`，不计容量）
 - **质量门**：`lint`（0 error / 26 既有 warning）/ `lint:css` / `lint:md:check` / `typecheck` / `test`（214 文件 / 1512 用例）/ `test:coverage`（Statements 78.88% / Branch 65.79% / Functions 72.6% / Lines 79.08%）/ `i18n:check` / `ai:check` / `planning:check` / `quality:file-size` / `lint:duplicate`（3.71%）/ `migration:check-imports` / `migration:check-budget`（入口 CSS +1.40%）/ `build` / `docs:build` / `test:visual`（154 用例 / 151 张自基线）全绿
-- **Review Gate**：M1.1 R1 Pass → R2 Pass；M1.2 R1 Pass；M2.1 R1 Pass；M2.2 R1 Pass；M2.3 R1 Reject → R2 Reject → R3 Pass；M3.1 R1 Reject → R2 Pass；M3.2 R1 Pass；M3.3 R1 Pass；M4.1 R1 Reject → R2 Pass；M4.2 R1 Pass；M5.1 R1 Pass；M5.2 R1 Pass（门禁证据采信）；M5.3 R1 Reject → R2 Pass
+- **Review Gate**：M1.1 R1 Pass → R2 Pass；M1.2 R1 Pass；M2.1 R1 Pass；M2.2 R1 Pass；M2.3 R1 Reject → R2 Reject → R3 Pass；M3.1 R1 Reject → R2 Pass；M3.2 R1 Pass；M3.3 R1 Pass；M4.1 R1 Reject → R2 Reject → R3 Pass；M4.2 R1 Pass；M5.1 R1 Pass；M5.2 R1 Pass（门禁证据采信）；M5.3 R1 Reject → R2 Reject → R3 Pass
 - **未覆盖边界**：MySQL / PostgreSQL 无运行时实例，索引命中与方言分桶只由表达式 / SQL 契约断言覆盖；M3.2 的运行态验证需手动 `workflow_dispatch`（`tag` + `rebuild=true`）后确认 gate 阻断链路；`docker-publish` 未上传门禁报告产物；AGENTS.md §7.4 已补 `docker-publish.yml`（`17cbf9a`）；登录事件写入侧 IP 长度契约（`net.isIP` 校验）仍登记 backlog。
 
 ---
@@ -20,8 +20,8 @@ _目标：把阶段 12 的登录事件推进到可持续运行——索引、数
 | M1 登录事件 IP 索引 | 2/2 | 已闭环 | `7264e25`、`681d274` | R2 Pass（M1.1 R1 Pass → R2 Pass；M1.2 R1 Pass） | 2 → 2 commits |
 | M2 统计与热力图方言聚合 | 3/3 | 已闭环 | `62aa4ef`、`dd7ab6c`、`92466cc` | R3 Pass（M2.1 R1 Pass；M2.2 R1 Pass；M2.3 R1 Reject → R2 Reject → R3 Pass） | 3–4 → 3 commits |
 | M3 运维脚本与发布门禁 | 3/3 | 已闭环 | `398d45e`、`9a5eee5`、`97524f7` | R2 Pass（M3.1 R1 Reject → R2 Pass；M3.2 R1 Pass，运行态待 dispatch；M3.3 R1 Pass） | 3–4 → 3 commits |
-| M4 回归基线补充 | 2/2 | 已闭环 | `7fdfaa2 等 5 个` | R2 Pass（M4.1 R1 Reject → R2 Pass；M4.2 R1 Pass） | 2 → 5 commits |
-| M5 文档与阶段收口 | 3/3 | 已闭环 | `49d351e`（`8f25a85` 为阶段收口提交，不计容量） | R2 Pass（M5.1 R1 Pass；M5.2 R1 Pass；M5.3 R1 Reject → R2 Pass） | 2–3 → 1 commit |
+| M4 回归基线补充 | 2/2 | 已闭环 | `7fdfaa2 等 5 个` | R3 Pass（M4.1 R1 Reject → R2 Reject → R3 Pass；M4.2 R1 Pass） | 2 → 5 commits |
+| M5 文档与阶段收口 | 3/3 | 已闭环 | `49d351e`（`8f25a85` 为阶段收口提交，不计容量） | R3 Pass（M5.1 R1 Pass；M5.2 R1 Pass；M5.3 R1 Reject → R2 Reject → R3 Pass） | 2–3 → 1 commit |
 
 - **执行顺序**：M1 → M2 → M3 → M4 → M5。
 - **不做范围**：审计迁库 / 检索 UI / 导出、风险评分与实时告警、Redis 与常驻调度器、事件模型 / 权限 / 2FA 行为变更（详见 [登记记录 §7](../../design/governance/2026-11-23-phase13-registration.md#7-不做什么)）。
