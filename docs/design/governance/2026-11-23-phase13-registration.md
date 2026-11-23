@@ -1,6 +1,6 @@
 # 2026-11-23 阶段 13 范围登记：可观测性规模化与运维闭环
 
-> **状态**：2026-11-23 登记，进行中（M1.1 已交付）。§2 的 D26–D32 为拟定口径，随登记生效；如用户改判，M1 开工前同批更新本文件、[todo.md](../../plan/todo.md) 与 [security-observability.md](../security-observability.md)。
+> **状态**：2026-11-23 登记 → 2026-11-23 收口（见 [收口记录](./2026-11-23-phase13-closure.md)）。§2 的 D26–D32 为拟定口径，随登记生效；如用户改判，M1 开工前同批更新本文件、[todo.md](../../plan/todo.md) 与 [security-observability.md](../security-observability.md)。
 > **依据**：[backlog §3.1](../../plan/backlog.md)（依赖告警 / 发布门禁）、[backlog §3.3](../../plan/backlog.md)（登录事件索引 / 聚合 / 多方言清理 / 可视化基线）、[阶段 12 收口记录](./2026-11-23-phase12-closure.md)（未覆盖边界）、[安全可观测性口径](../security-observability.md)。
 > **规划模型**：5 大条目 / 13 小条目（[规划规范](../../standards/planning.md) §4 / §7 / §8）。
 
