@@ -55,9 +55,7 @@
 
 ### 2.12 账号找回（阶段 2–5 剩余部分）
 
-- **已完成（2026-11-20，阶段 9）**：设计草案「阶段 0 + 阶段 1」已交付——结构化审计、假通道修复（短信重置 / 备份码再生成 / 2FA 邮件 OTP 回落 / 改绑与撤销会话错误检查）、管理员协助恢复（发起改绑 → 新通道确认 → 强制重置密码；不触碰 2FA / 备份码，D9）。记录见 [阶段 9 收口](../design/governance/2026-11-20-phase9-closure.md)。
-- **已完成（2026-11-21，阶段 10）**：恢复码（与备份码分离）、已验证手机作为自助恢复证明、改邮箱冷静期与撤销、OAuth-only 受控自助设置密码；D1 / D2 / D3 / D5 / D6 / D7 / D10 已落地，见 [阶段正文](./archive/todo-archive-phases-10.md) 与 [范围登记](../design/governance/2026-11-21-phase10-registration.md)。
-- **已完成（2026-11-21，阶段 11）**：设计草案阶段 4「收紧 2FA 覆盖」——邮箱 / 手机 OTP、邮箱验证码 / 链接、魔法链接、社交（内置 / genericOAuth / `idToken`）、SSO（OIDC 共享 / 专属回调、SAML ACS）已接入第二因子挑战；逐通道开关默认开启。收口记录见 [阶段 11 收口](../design/governance/2026-11-21-phase11-closure.md)。
+- **已交付部分**：阶段 9 / 10 / 11 见 [阶段归档索引](./todo-archive.md)（不再保留交付摘要）。
 - **剩余方向**：设计阶段 2 剩余的管理员协助恢复审批流与工单；管理端审计检索（文件审计迁库）与 passkey / 硬件密钥；关闭 2FA 要求第二因子（D15，阶段 11 明确不做）。可信设备列表 / 吊销已于阶段 12 交付。
 - **准入条件**：审批流与审计检索需用户另行授权；关闭 2FA 门槛变更须在阶段 11 收口后单独评估（避免与覆盖收紧叠加扩大「同时丢失因子」的死锁面）。
 - **明确不做**：管理员重置 2FA / 备份码（D4）、管理员代设密码（D8）保持不允许。
@@ -75,7 +73,6 @@
 
 ### 3.2 质量与测试
 
-- **stylelint 未覆盖全局样式层**：`.stylelintignore` 以 `_*` 忽略了 `styles/` 下全部 6 个 SCSS 文件（`_form.scss` / `_theme.scss` / `_mixins.scss` / `_dark-mode.scss` / `_global.scss` / `_common.scss`），`pnpm lint:css` 实际只检查 `.vue` 文件；本批 `styles/_form.scss` 的 `!important` 改动没有 stylelint 证据，仅由视觉基线兜底。处理方向：确认 `_*` 是否误配（若本意是跳过临时文件应改为具体模式），修正后对 `styles/` 补跑一次 lint。
 - **改绑确认页视觉基线**：`/channel-change/[id]` 新增页面只做了浏览器功能验证，尚无桌面 / 移动 / 暗色自基线；待评估与认证页矩阵（390 / 768 / 1024）一并补采。
 - **Spug 短信通知能力**：Spug 渠道只支持模板变量，无法发送任意变更通知文本；手机改绑的旧通道通知在 Spug 下会记录 `sms-provider-does-not-support-notification`。如需覆盖自建 Spug 部署，需在模板平台新增通知模板或改用支持自由文本的渠道。
 
@@ -83,24 +80,16 @@
 - **测试覆盖率长期达标**：核心逻辑 Lines 覆盖率长期目标 ≥ 60%，2026-11-05 基线（75.95%）已达到；2026-11-06 阶段 2 复测 Statements 78.26% / Lines 78.49%，后续关注 `pages`（34.92%）与 `plugins`（25.00%）等未覆盖区域，不再以全局数字作为阶段门槛。
     - 阶段 2 按范围设下限并全部达标：`server/api` ≥95%（95.94%）、`composables` ≥80%（84.35%）、`components/base` ≥75%（90.11%），全局不跌破 75.74%。
     - 详见 [测试规范](../standards/testing.md)。
-- **非 Admin 流程 better-auth 失败静默**：`use-change-password-flow`（修改密码成功提示）、`edit-email-dialog`（修改邮箱）、`use-security-settings`（撤销 / 退出其他会话）、`use-profile-flow`（登出）仍只 `catch` 抛错路径，4xx/5xx 的 `{ error }` 不校验，会提示成功或静默。处理方向：复用 `utils/shared/api-error.ts` 的 `throwIfAuthError`，逐流程补失败 Toast 与单测；M5 只覆盖 Admin 面。
-- **Admin composable 泛型化**：`useDataTable<any>` 与 `selectedUsers: any[]` 收紧为 `AdminUser` / 表格行泛型，去掉 `pages/admin/users.vue` 的 `users.value as AdminUser[]` 断言（`use-application-management` 与 OAuth 页面已在 M5 完成泛型化，可作参照）。
 - **caomei-ui DataTable 分页 / 排序能力补齐**：1.2.0 的 `CaomeiDataTable` 未透出 `CaomeiPaginator` 的 `showEdges`（迁移后首 / 末页按钮消失），且 `lazy` 只映射 `manualPagination`、未关闭客户端排序（未透出 `manualSorting`，当前页数据会被二次排序）。影响 `/admin/users`（M2）、`/admin/oauth/applications`（M4）与 `/admin/sso/providers`（M6）；`CaomeiDataTable` 的受控排序也不支持清除（空排序事件被忽略）。处理方向：向上游提能力需求，或明确接受并写入口径；不在页面内做临时绕过。
 - **国际化 10 语内容扩展**：阶段 8 只启用 5 语（zh-CN / en-US / zh-TW / ja-JP / ko-KR），es-ES / fr-FR / de-DE / ru-RU / pt-BR 仅登记在 Registry 且 `enabled=false`；后续按 5 语批次复用同一翻译 / 校验流程后再启用。
 - **新语言母语审校与 seo-ready 升级**：zh-TW / ja-JP / ko-KR 本阶段为机器翻译 draft + `ui-ready`（不索引）；母语审校、术语确认与核心页视觉抽检后逐语言升级 `seo-ready` 并进入 sitemap / hreflang。
-- **未启用语言的语言包缺少同构门禁**：`i18n:check` 的 parity 校验、`tests/i18n/message-catalog.spec.ts` 与 `scripts/i18n` 审计都只遍历 `ENABLED_LOCALES`，仍停用的 es-ES / fr-FR / de-DE / ru-RU / pt-BR 在补数据期间即使键缺失或占位符错位也不会红灯（zh-TW / ja-JP / ko-KR 的早期批次只能靠临时脚本把关）。处理方向：`check-locale-parity.mjs` 支持按目录遍历的非启用语言断言，或补一条「目录级键 + 占位符同构」校验（阶段 8 收口时未实施，待后续阶段评估）。
-- **未启用语言的懒加载语言包进入客户端产物**：`locale-runtime-loader` 的 `import.meta.glob` 只排除 core / server 模块，不按 `ENABLED_LOCALES` 过滤，构建产物已包含 `locales/ja-JP/static`（约 10 KB 不可达 chunk），ko-KR 分批交付期间会继续累积。处理方向：按 Registry 过滤 glob，或明确接受该体积并写入口径（阶段 8 收口时只记录体积，未做过滤）。
 - **`message-catalog` 内容断言覆盖范围待确认**：`tests/i18n/message-catalog.spec.ts` 用 `import.meta.glob` 读语言包；一次实测（`npx vitest run tests/i18n/kana-debug.spec.ts`，主配置 + Nuxt 环境）取到的是带 `type/start/end` 位置元数据的结构（`app.name` → `{type:'0',start:0,end:7}`，flatten 后 10185 条），内容类断言会静默失效；复核未复现（同配置下取到真实文案）。现状：内容类断言已改为 `readFileSync` 读原始 JSON（阶段 8 M8）；仍需确定稳定 repro（配置 / 版本 / 启动目录）后再决定是否把该文件从主配置 `include` 排除。
-- **译文台账无消费方**：`i18n/translation-provenance.json` 的 `reviewLevel` / `nativeReview` / `reviewedModules` 目前没有脚本或测试引用，「译文批次必须同步更新」靠人工自觉，`readiness` 也需手动与 Registry 对齐（zh-TW 已在 M5 同步为 `ui-ready`）。处理方向：补一条治理脚本或单测，断言模块名 ⊆ `LOCALE_MESSAGE_MODULES`、`reviewedModules ∪ pendingModules` 覆盖全集、`readiness` 与 Registry 一致。
-- **多语言内部链接缺 `localePath`**：`pages/login.vue` 与 `components/app-footer.vue` 仍有字面 `/register`、`/forgot-password`、`/privacy`、`/terms` 链接，从 `/zh-TW` 或 `/en-US` 页面点击后回落到默认语言（Cookie 有 locale，但非根路径不重定向）。M5 复核确认属既有缺陷、非本阶段引入。处理方向：统一改 `NuxtLinkLocale` 或 `localePath()`，并补多语言链接断言。
 - **根路径浏览器语言重定向不识别 `zh-Hant` / `zh-HK`**：`Accept-Language: zh-Hant` / `zh-HK` 首次访问根路径时由 `@nuxtjs/i18n` 自身匹配，落到 zh-CN，与 `matchDetectedLocale` 的别名口径不一致（邮件与服务端协商已落到 zh-TW）。处理方向：接受并写入口径，或补 `zh-HK` / `zh-MO` 别名并评估自定义探测回调。
 - **Admin 页面深度覆盖与 pages 分母口径**：当前页面测试只覆盖首页 / 登录页 / 静态页（pages 77.46% 仅统计测试导入的 5 个文件）；补 Admin 页 smoke 测试会加载大量低覆盖模板，把全局从 78.3% 拉到 73%（低于阶段 6 基线），故未纳入阶段 7。处理方向：为 Admin 页按交互深度补测（表格选择 / 筛选 / 对话框流程），达标后再纳入覆盖率分母，并同步评估 `coverage.include`。
 - **覆盖率模块下限自动化校验**：`pages` ≥ 40% / `plugins` ≥ 40% 与全局非回归基线目前只写规范，CI 不阻断；Vitest 4 移除 `coverage.all` 后报告只统计被测试导入的文件，数字回落无人发现。评估用 `coverage.thresholds`（glob）或脚本读取 `coverage-final.json` 做门禁。
-- **移动端安全页会话表逐字折行**：`session-table` 的 6 列 `flex: 1` + `word-break: break-all` + 100 px 固定操作列，在 390 px 视口下每列只剩约 12 px（掩码盒 12×116 即证据），日期换 locale 只把折行从 19 行降到 18 行。处理方向：移动端改为卡片式会话项，随本条移动端布局改造落地。
 - **stylelint 18 规则补位**：`stylelint-config-cmyr@1.1.0` 为兼容 SCSS 变量关闭了 `value-no-invalid`（实测现有样式 21 条误报），取值拼写错误暂时不再被拦截；待上游支持 SCSS 变量值后恢复。同配置的 `stylelint-config-recommended-scss@17.0.1` peer 仍为 `stylelint ^17`，需上游升 `^18` 才与 stylelint 18 正式对齐。
 - **视觉平板矩阵扩展**：阶段 7 只覆盖 login / register / profile / admin-users / admin-logs 的 768×1024；`/security`、`/change-password` 等核心认证页与横向溢出断言的全矩阵化待评估 CI 时长后补。
 - **视觉矩阵补 1024 横向宽度**：阶段 7 只新增 768×1024 平板基线；1024 横向（小桌面 / 横屏平板）无回归保护，待评估 CI 时长后补。
-- **新增语言视觉矩阵只覆盖桌面 1440**：阶段 8 为 zh-TW / ja-JP / ko-KR 只采登录 + 个人中心（浅 / 暗）共 12 张，移动 390 与平板 768 未覆盖；韩文文案比中文长约 20%，窄屏换行风险未纳入像素保护，待评估 CI 时长后补。
 - **视觉基线对「低于阈值的纯色漂移」无感**：`visualExpect` 的 `threshold: 0.2` 允许单像素 YIQ delta ≤ 1,408.6，`#18181b` → `#1e1e1e` 的 delta 只有 16.6，逐像素判等，`maxDiffPixels: 200` 永不触发。P5-1（f91e6e4）换语言切换器 token 后，暗色基线直到 M4-2 因文案位移被迫重采才暴露。处理方向：为关键 token / 组件计算样式补断言（如 `--admin-surface`、`.language-switcher__trigger` 背景色），或在 token / 主题变更时按「全量暗色基线重采」写入门禁清单；`test:visual:update` 改为 `--update-snapshots=all` 并在报告中打印构建产物 SHA / 提交号，避免增量重采留下混合代基线。
 - **视觉预算分级与允许清单**：评估 Admin 数据页（DataTable 密度 / 选择列 / 空态）的 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单；P4-0 暂用统一阈值，避免在迁移期引入双重标准。
 - **Admin 对话框视觉矩阵未覆盖内部滚动区**：视觉层只截整页首屏，SSO 创建对话框（900px 宽、内部滚动）的 OIDC / SAML / 属性映射配置段落在首屏之外，M7 迁移后自基线无像素变化，只能靠定向 Playwright 验收。处理方向：在矩阵中为长表单补充「滚动到指定分段后再截图」的交互态，或明确接受并写入口径。
@@ -127,10 +116,8 @@
 
 ### 3.4 UI 与主题
 
-- **Admin 日志页在 1440 宽度下页面级横向溢出**（2026-11-24 登记，阶段 13 M4.1 复审发现）：`/admin/logs` 的统计卡与热力图区块最小宽度合计超过 1440 视口（内容区 1160px、区块约 1400px），页面整体可横向滚动；Playwright 元素截图会因此被推入固定侧栏下方。当前 1440 热力图基线改为「页面横向滚动归零 + 视口截图 + cell 计数断言」绕开该问题。处理方向：收敛统计卡 / 热力图的 min-width 或改为容器内滚动（不改 168 桶默认展示），并补 1440 页面级无横向溢出断言与基线；需 UI 验证。
 - **caomei-ui 1.4.0 按钮根节点 scoped id 缺口**：`CaomeiButton` 在未启用内建提示时也会把根节点包到 `CaomeiPassthrough` 组件，父组件 scoped 类无法落到内层 `<button>`，导致 `theme-toggle` / `.btn` / `.social-btn` 等根类样式失效。2026-11-22 升级已用 wrapper + `:deep()` 与局部 `!important` 规避（见 [升级记录](../design/governance/2026-11-22-caomei-ui-1.4.0-upgrade.md)）。处理方向：向上游提报最小复现；上游恢复「未启用提示时根节点即 button」后删除项目侧规避，并复核 `styles/_form.scss` 的 `!important` 与登录页 `white-space` 覆盖是否仍需要。
 - **社交按钮覆盖与库 token 同值**：`.caomei-button.social-btn` 的 `background-color` / `border-radius` / `font-size` 与 1.4.0 默认 token 恰好等值，视觉零差异无法证明覆盖生效；下次 caomei-ui 升级前改用库文档化钩子，或补计算样式断言。
-- **长语言窄容器溢出未纳入视觉矩阵**：localized-core 只覆盖 login / profile，ja / ko 的 register / forgot-password / sso-login 在 1.4.0 `nowrap` 内容契约下未验证；补 2 条 localized-core 用例后再评估是否需要在其他 `CaomeiButtonGroup` 容器恢复 `white-space: normal`。
 - **认证页死规则清理**：`login` / `register` / `forgot-password` / `change-password` 中与全局 `.btn` / `.btn-primary` 完全等值的 scoped 规则在 1.4.0 后已不可命中 CaomeiButton 根节点（`switch-btn` 的 `width: 100%` 由 `block` 兜底），随下一次触及这些文件的提交删除。
 - **Demo 模式语言切换偏移验证**：`data-preset` / GitHub 角标与右上角语言切换共存时的偏移仅在 `NUXT_PUBLIC_DEMO_MODE=true` 下可见，需在 Demo 构建中补一次视觉确认。
 
