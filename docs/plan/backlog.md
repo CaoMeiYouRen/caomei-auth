@@ -127,6 +127,7 @@
 
 ### 3.4 UI 与主题
 
+- **Admin 日志页在 1440 宽度下页面级横向溢出**（2026-11-24 登记，阶段 13 M4.1 复审发现）：`/admin/logs` 的统计卡与热力图区块最小宽度合计超过 1440 视口（内容区 1160px、区块约 1400px），页面整体可横向滚动；Playwright 元素截图会因此被推入固定侧栏下方。当前 1440 热力图基线改为「页面横向滚动归零 + 视口截图 + cell 计数断言」绕开该问题。处理方向：收敛统计卡 / 热力图的 min-width 或改为容器内滚动（不改 168 桶默认展示），并补 1440 页面级无横向溢出断言与基线；需 UI 验证。
 - **caomei-ui 1.4.0 按钮根节点 scoped id 缺口**：`CaomeiButton` 在未启用内建提示时也会把根节点包到 `CaomeiPassthrough` 组件，父组件 scoped 类无法落到内层 `<button>`，导致 `theme-toggle` / `.btn` / `.social-btn` 等根类样式失效。2026-11-22 升级已用 wrapper + `:deep()` 与局部 `!important` 规避（见 [升级记录](../design/governance/2026-11-22-caomei-ui-1.4.0-upgrade.md)）。处理方向：向上游提报最小复现；上游恢复「未启用提示时根节点即 button」后删除项目侧规避，并复核 `styles/_form.scss` 的 `!important` 与登录页 `white-space` 覆盖是否仍需要。
 - **社交按钮覆盖与库 token 同值**：`.caomei-button.social-btn` 的 `background-color` / `border-radius` / `font-size` 与 1.4.0 默认 token 恰好等值，视觉零差异无法证明覆盖生效；下次 caomei-ui 升级前改用库文档化钩子，或补计算样式断言。
 - **长语言窄容器溢出未纳入视觉矩阵**：localized-core 只覆盖 login / profile，ja / ko 的 register / forgot-password / sso-login 在 1.4.0 `nowrap` 内容契约下未验证；补 2 条 localized-core 用例后再评估是否需要在其他 `CaomeiButtonGroup` 容器恢复 `white-space: normal`。
