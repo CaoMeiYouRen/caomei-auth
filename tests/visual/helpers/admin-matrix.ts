@@ -1,4 +1,4 @@
-import { type Page, expect, test } from '@playwright/test'
+import { type Locator, type Page, expect, test } from '@playwright/test'
 import { useAdminSession } from './admin-session'
 import { pressDialogButton, selectDialogOption } from './dialog'
 import { visualFixedNow, visualTabletViewport } from './config'
@@ -26,6 +26,8 @@ interface VisualState {
     label: string
     slug: string
     action: (page: Page) => Promise<void>
+    /** 自定义截图目标（默认整页）；用于只覆盖对话框等局部区域 */
+    target?: (page: Page) => Locator
     /** 是否参与参考态层；新增交互态没有迁移前参考态时设为 false */
     reference?: boolean
 }
@@ -144,14 +146,19 @@ const ROUTES: readonly AdminRoute[] = [
                 label: '用户会话对话框（可信设备）',
                 slug: 'sessions-trusted',
                 reference: false,
+                /* 只截对话框本体：可信设备在第 2 条含过期标记与吊销按钮 */
+                target: (page) => page.getByRole('dialog').filter({ hasText: '用户会话' }).first(),
                 action: async (page) => {
                     await tableRow(page, 'wang.qiang@example.com').getByRole('button', { name: '会话管理' }).click()
                     await expectDialog(page, '用户会话')
                     const trusted = page.locator('.user-sessions__trusted')
-                    await expect(trusted.locator('.user-sessions__trusted-item')).toHaveCount(2)
-                    /* 第 2 条为已过期设备：锁定过期标记与吊销按钮同屏可见 */
-                    await expect(trusted.getByText('已过期', { exact: true })).toBeVisible()
-                    await trusted.getByRole('button', { name: '吊销' }).first().scrollIntoViewIfNeeded()
+                    const items = trusted.locator('.user-sessions__trusted-item')
+                    await expect(items).toHaveCount(2)
+                    /* 顺序由 createdAt DESC 决定：第 1 条启用中、第 2 条已过期 */
+                    await expect(items.nth(0).getByText('已过期', { exact: true })).toHaveCount(0)
+                    await expect(items.nth(1).getByText('已过期', { exact: true })).toBeVisible()
+                    await items.nth(1).getByRole('button', { name: '吊销' }).scrollIntoViewIfNeeded()
+                    await expect(items.nth(1)).toBeInViewport()
                 },
             },
             {
@@ -318,8 +325,12 @@ async function open(page: Page, route: AdminRoute, theme: VisualTheme): Promise<
     await assertReferenceSource(page, route)
 }
 
-async function shot(page: Page, name: string): Promise<void> {
+async function shot(page: Page, name: string, target?: Locator): Promise<void> {
     await waitForVisualStable(page)
+    if (target) {
+        await expect(target).toHaveScreenshot(`${name}.png`)
+        return
+    }
     await expectPageScreenshot(page, name)
 }
 
@@ -358,7 +369,7 @@ function defineInteractionStates(): void {
                 test(`${route.slug} ${state.label}`, async ({ page }) => {
                     await open(page, route, 'light')
                     await state.action(page)
-                    await shot(page, `${route.slug}-light-desktop-${state.slug}`)
+                    await shot(page, `${route.slug}-light-desktop-${state.slug}`, state.target?.(page))
                 })
             }
         }
