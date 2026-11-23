@@ -38,7 +38,7 @@
 
 - `LOGIN_EVENT_RETENTION_DAYS` 默认 90 天，范围 1–3650；非法 / 越界回落 90。
 - 管理端统计查询触发进程内 1 小时节流的惰性清理；并发复用同一 in-flight 任务，失败重置节流。
-- 手动脚本 `scripts/maintenance/prune-login-events.mjs` 默认 dry-run，`--confirm` 才删除，当前支持 SQLite；MySQL / PostgreSQL 由惰性清理覆盖（多方言脚本登记在 backlog）。
+- 手动脚本 `scripts/maintenance/prune-login-events.mjs` 默认 dry-run，`--confirm` 才删除，支持 SQLite / MySQL / PostgreSQL（方言由 `DATABASE_TYPE` 选择，MySQL / PostgreSQL 用 `DATABASE_URL`，`--database` 只对 SQLite 生效）；删除语句参数化，表名前缀受校验。
 - 不引入常驻调度器；删除只影响早于截止时间的事件。
 
 ## 5. 审计

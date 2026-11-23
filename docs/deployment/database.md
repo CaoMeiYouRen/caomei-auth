@@ -543,6 +543,23 @@ ALTER TABLE caomei_auth_user ADD COLUMN timezone VARCHAR(64) NULL;
 ALTER TABLE caomei_auth_user ADD COLUMN timezone VARCHAR(64);
 ```
 
+## 登录事件清理脚本（多方言）
+
+`scripts/maintenance/prune-login-events.mjs` 按保留期删除登录事件，默认 dry-run：
+
+```bash
+# 预览（不删除）
+node scripts/maintenance/prune-login-events.mjs --days=90
+# 确认删除
+node scripts/maintenance/prune-login-events.mjs --days=90 --confirm
+```
+
+- **方言选择**：`DATABASE_TYPE=sqlite|mysql|postgres`；SQLite 用 `DATABASE_PATH`（或 `--database=<path>`，该参数只对 SQLite 生效），MySQL / PostgreSQL 用 `DATABASE_URL`。
+- **必须与 app 同环境执行**：MySQL 的 `created_at` 是 `DATETIME`，截止时间由 mysql2 按 `DATABASE_TIMEZONE` 序列化；脚本已继承该变量与 `DATABASE_SSL`，但若在宿主机而非容器内运行，仍需保证 `TZ` / `DATABASE_TIMEZONE` 与 app 一致，否则会以偏移的截止时间删除（可能删掉仍在保留期内的事件）。`DATABASE_TIMEZONE` 需使用 mysql2 支持的格式（`local` / `Z` / `±HH:MM`），IANA 名会被静默回落。
+- **语义**：`created_at < cutoff`，截止时刻等值保留；`--days` 经 `LOGIN_EVENT_RETENTION_DAYS` 同口径夹取（1–3650，非法回落 90）。
+- **执行前**：先跑 dry-run 看 `candidates`；大量积压时单条 `DELETE` 可能长时间持锁（MySQL）或产生死元组（PostgreSQL），建议低峰执行，必要时先备份。
+- 服务端另有惰性清理（管理端统计查询触发，1 小时节流），脚本用于备份前清 PII 或下调保留期后立即生效。
+
 ## 相关链接
 
 -   [PostgreSQL 官方文档](https://www.postgresql.org/docs/)
