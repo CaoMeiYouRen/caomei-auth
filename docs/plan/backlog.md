@@ -1,6 +1,6 @@
 # 产品 backlog（待办池）
 
-> **状态**：阶段 12「安全可观测性与会话治理」已于 2026-11-21 登记、尚未开工（见 [范围登记](../design/governance/2026-11-21-phase12-registration.md) 与 [todo.md](./todo.md)）；阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（见 [阶段正文](./archive/todo-archive-phases-11.md)）。本表只保留**尚未进入阶段**的候选与未完成项汇总。
+> **状态**：阶段 13「可观测性规模化与运维闭环」已于 2026-11-23 登记、尚未开工（见 [范围登记](../design/governance/2026-11-23-phase13-registration.md) 与 [todo.md](./todo.md)）；阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（见 [阶段正文](./archive/todo-archive-phases-12.md)）。本表只保留**尚未进入阶段**的候选与未完成项汇总。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ---
@@ -71,9 +71,9 @@
 
 ### 3.1 安全与合规
 
-- **`docker-publish` 重建路径纳入安全告警门禁**：`mode=build` 会重新构建并推送生产镜像，但目前未执行 `scripts/security/check-alerts.mjs`；`retag` 复用已构建镜像，可按现状处理。待评估后决定是否在 `mode=build` 前增加 gate。
+- **已上收（2026-11-23，阶段 13，尚未开工）· `docker-publish` 重建路径纳入安全告警门禁**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M3.2）：`mode=build` 会重新构建并推送生产镜像，但目前未执行 `scripts/security/check-alerts.mjs`；`retag` 复用已构建镜像，可按现状处理。待评估后决定是否在 `mode=build` 前增加 gate。
 - **上游未修复依赖告警跟进**：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4，lock 仍为 3.0.3）暂无已发布补丁版本，仅存在于构建 / 开发工具链；待上游发版后升级并复查 `pnpm audit`。`node-forge` 已升至 1.4.3（满足 GHSA-86w9-cpqp-85rv 的 ≥1.4.1），从本条移除。
-- **2026-11-23 中危依赖告警跟进**：阶段 12 推送后 Dependabot 报告 3 条 `medium`，均为构建 / 开发工具链传递依赖，不阻塞发布：`@nuxt/schema`（需 ≥4.6.4，当前经 Nuxt 模块引入的 3.x 分支）、`minimatch`（需 ≥11.0.1，跨多级传递、升级牵涉大版本）、`glob`（需 ≥14.0.2，可由 override 收紧）。处理方向：随下一次 Nuxt / 工具链整体升级统一处理，`glob` 可先单独 override；处理前在发布前安全告警门禁报告中按 `medium` 记录。
+- **已上收（2026-11-23，阶段 13，尚未开工）· 中危依赖告警跟进**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M3.3）：阶段 12 推送后 Dependabot 报告 3 条 `medium`，均为构建 / 开发工具链传递依赖，不阻塞发布：`@nuxt/schema`（需 ≥4.6.4，当前经 Nuxt 模块引入的 3.x 分支）、`minimatch`（需 ≥11.0.1，跨多级传递、升级牵涉大版本）、`glob`（需 ≥14.0.2，可由 override 收紧）。处理方向：随下一次 Nuxt / 工具链整体升级统一处理，`glob` 可先单独 override；处理前在发布前安全告警门禁报告中按 `medium` 记录。
 - **迁入来源**：既有 backlog「上游未修复依赖告警跟进」与原 `todo.md`「低优先级 · 安全审计工具集成」（安全审计已由 `.github/workflows/security-auto-fix.yml` 每日巡检 + Dependabot 落地，不再作为候选）。
 
 ### 3.2 质量与测试
@@ -120,10 +120,10 @@
 
 ### 3.3 基础设施
 
-- **登录事件 IP 维度索引 / 查询约束**：`login_event.ip` 为 `TEXT`，MySQL 无法直接建全列索引，当前 IP 精确筛选需与时间窗组合使用（M2.1 已注明）；大时间窗下仍可能全表扫描。处理方向：改为 `varchar(45)` 并补 `(ip, created_at)` 索引，或在查询层强制要求时间窗。
-- **登录事件可视化基线补充**：热力图桌面基线采用 1800×900 元素视口，1440 桌面宽度下的内部横向滚动未单独覆盖；可信设备管理端列表只有空态基线（视觉安全页使用随机隔离账号，无法预置设备）。处理方向：补 1440 热力图与可信设备列表（含过期项）基线，或明确接受为既有布局行为。
-- **登录事件统计 / 热力图全量分桶**：M2.2 `dailyTrend` 与 M3.1 热力图会在窗口内把 `createdAt` 拉到服务端内存分桶，30 天量级的大实例下内存与延迟随事件量线性增长（保留期只是上限）。处理方向：改为方言 SQL 聚合（`strftime` / `DATE_FORMAT` / `date_trunc`），或加行数上限 + 超限告警，覆盖统计与热力图两处。
-- **登录事件多方言手动清理**：阶段 12 M1.3 的 `scripts/maintenance/prune-login-events.mjs` 仅支持 SQLite（MySQL / PostgreSQL 依赖管理端统计查询的惰性清理）。备份前清 PII 或下调保留期后立即生效的场景缺少手动入口。处理方向：用 TypeORM 复用 `pruneLoginEvents` 连接三种数据库，或在部署文档写明仅 SQLite 并保留此候选。
+- **已上收（2026-11-23，阶段 13，尚未开工）· 登录事件 IP 维度索引 / 查询约束**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M1）：`login_event.ip` 为 `TEXT`，MySQL 无法直接建全列索引，当前 IP 精确筛选需与时间窗组合使用（M2.1 已注明）；大时间窗下仍可能全表扫描。处理方向：改为 `varchar(45)` 并补 `(ip, created_at)` 索引，或在查询层强制要求时间窗。
+- **已上收（2026-11-23，阶段 13，尚未开工）· 登录事件可视化基线补充**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M4）：热力图桌面基线采用 1800×900 元素视口，1440 桌面宽度下的内部横向滚动未单独覆盖；可信设备管理端列表只有空态基线（视觉安全页使用随机隔离账号，无法预置设备）。处理方向：补 1440 热力图与可信设备列表（含过期项）基线，或明确接受为既有布局行为。
+- **已上收（2026-11-23，阶段 13，尚未开工）· 登录事件统计 / 热力图全量分桶**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M2）：M2.2 `dailyTrend` 与 M3.1 热力图会在窗口内把 `createdAt` 拉到服务端内存分桶，30 天量级的大实例下内存与延迟随事件量线性增长（保留期只是上限）。处理方向：改为方言 SQL 聚合（`strftime` / `DATE_FORMAT` / `date_trunc`），或加行数上限 + 超限告警，覆盖统计与热力图两处。
+- **已上收（2026-11-23，阶段 13，尚未开工）· 登录事件多方言手动清理**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M3.1）：阶段 12 M1.3 的 `scripts/maintenance/prune-login-events.mjs` 仅支持 SQLite（MySQL / PostgreSQL 依赖管理端统计查询的惰性清理）。备份前清 PII 或下调保留期后立即生效的场景缺少手动入口。处理方向：用 TypeORM 复用 `pruneLoginEvents` 连接三种数据库，或在部署文档写明仅 SQLite 并保留此候选。
 
 - **注册规则多实例缓存**：规则缓存为进程内 30 秒 TTL，多实例部署时最坏 30 秒内仍按旧规则；如需强一致，引入 Redis 共享缓存并在管理端变更时发布失效。
 
