@@ -36,7 +36,7 @@
 ## 5. 未覆盖边界
 
 - MySQL / PostgreSQL 无运行时实例：索引命中、`ALTER` 行为与方言分桶结果由表达式 / SQL 契约与 SQLite 实跑覆盖，未做 EXPLAIN。
-- `docker-publish` 的运行态验证需手动 `workflow_dispatch`（`tag=<最新 tag>` + `rebuild=true`）确认 gate 通过后 `docker` 执行、门禁失败时阻断；门禁报告产物未上传 artifact。
+- `docker-publish` 运行态已用 `workflow_dispatch` 验证（`tag=v1.18.0` + `rebuild=true`，run 45195283261）：`Security alert gate` 在构建前执行成功、`Retag images` 跳过、amd64 / arm64 构建与 manifest 校验通过；门禁失败时阻断的负向路径未单独构造，门禁报告产物未上传 artifact。
 - AGENTS.md §7.4 已按用户授权补 `docker-publish.yml`（`17cbf9a`），与 `security.md` §5.1.3 对齐。
 - 登录事件写入侧 IP 长度契约（`net.isIP` 校验 / 超长回落）未在本阶段实施，保留在 backlog §3.3 并写明触发条件。
 
