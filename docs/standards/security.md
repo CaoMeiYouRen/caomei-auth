@@ -142,7 +142,7 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 
 ### 5.1.3 发布前安全告警门禁 (Release Security Alert Gate)
 
-适用于任何生产发布（`release.yml`、`docker.yml` 的版本与镜像发布）以及每周回归检查（`regression-weekly.yml` 的 schedule 运行）。检查对象是 GitHub Dependabot alerts 与 Code scanning alerts 中 `state=open` **与 `state=dismissed`** 的告警（`auto_dismissed` 不再适用，不参与阻断），两者采用同一处置口径。
+适用于任何生产发布（`release.yml`、`docker.yml` 的版本与镜像发布、`docker-publish.yml` 的 `mode=build` 重建）以及每周回归检查（`regression-weekly.yml` 的 schedule 运行）。检查对象是 GitHub Dependabot alerts 与 Code scanning alerts 中 `state=open` **与 `state=dismissed`** 的告警（`auto_dismissed` 不再适用，不参与阻断），两者采用同一处置口径。
 
 | 严重级别 | 是否允许发布 | 要求 |
 | --- | --- | --- |
@@ -168,7 +168,7 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 门禁实现：
 
 -   脚本：`scripts/security/check-alerts.mjs`，本地等价命令 `pnpm security:alerts`（支持 `--scope=release|weekly`、`--report=`、`--json=`）。
--   发布前检查：`.github/workflows/release.yml`（semantic-release 与镜像推送）与 `.github/workflows/docker.yml`（master 推送触发的 latest / sha-* 镜像发布及 Jenkins 部署）均在发布动作之前执行，未通过则终止发布。
+-   发布前检查：`.github/workflows/release.yml`（semantic-release 与镜像推送）、`.github/workflows/docker.yml`（master 推送触发的 latest / sha-* 镜像发布及 Jenkins 部署）与 `.github/workflows/docker-publish.yml`（手动补发的 `mode=build` 重建路径；`retag` 复用已构建镜像，不重复扫描）均在发布动作之前执行，未通过则终止发布。
 -   每周回归检查：`.github/workflows/regression-weekly.yml` 每周一 09:00（UTC+8）运行，内容等价于 `release.yml` 发布前质量门（`install` + `lint` + `lint:css` + `typecheck` + `build` + 测试与覆盖率，另补 `lint:md` / `ai:check` / `lint:duplicate` / `docs:build`，不含 semantic-release 与镜像推送），并同时执行本告警门禁；未通过时自动创建或更新「安全告警追踪」Issue（含阻塞项与豁免到期时间），恢复通过后自动关闭。
 -   读取 Dependabot alerts 必须使用 `GH_TOKEN`（fine-grained PAT：Dependabot alerts: read）；`GITHUB_TOKEN` 无法读取该 API（403），Token 轮换流程见 5.1.2。Code scanning 使用 workflow 的 `GITHUB_TOKEN`（权限 `security-events: read`，环境变量 `CODE_SCANNING_TOKEN`），本地执行时回退 `GH_TOKEN`；两类 token 不共用，避免单一凭据失效同时中断两路扫描。
 -   报告输出：完整 Markdown 写入 `--report` 文件与 GitHub Step Summary；设置 `GITHUB_STEP_SUMMARY` 时 stdout 仅输出一行状态，避免同一份报告同时出现在 Step Summary 与 Step Log。本地运行或显式 `--verbose` 时 stdout 输出完整 Markdown。weekly 的追踪 Issue 仍读取 `security-alert-report.md`，不受影响。

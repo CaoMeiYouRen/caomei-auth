@@ -206,9 +206,46 @@ jobs:
             docker buildx imagetools create "${args[@]}" "${image}:${SOURCE}"
           done
 
+  gate:
+    name: Security alert gate
+    needs: prepare
+    if: needs.prepare.outputs.mode == 'build'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: read
+    steps:
+      # 门禁策略（脚本 + 豁免清单）取默认分支，与 docker.yml / release.yml 一致：
+      # 避免补发旧 tag 时回落到更宽松的豁免清单，也避免早期 tag 不含门禁脚本。
+      - name: Checkout default branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+
+      # 重建路径会重新推送生产镜像，必须与 docker.yml / release.yml 同口径通过安全告警门禁；
+      # retag 复用已构建镜像，不重复扫描。Dependabot 用 GH_TOKEN，Code scanning 用 GITHUB_TOKEN。
+      - name: Security alert gate
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          CODE_SCANNING_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/security/check-alerts.mjs \
+            --scope=release \
+            --report=security-alert-report.md \
+            --json=security-alert-report.json
+
   docker:
     name: Docker
-    needs: prepare
+    needs:
+      - prepare
+      - gate
     if: needs.prepare.outputs.mode == 'build'
     permissions:
       contents: read
