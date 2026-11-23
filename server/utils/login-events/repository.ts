@@ -1,6 +1,7 @@
 import { Between, In, LessThan, LessThanOrEqual, MoreThanOrEqual, type FindOptionsWhere, type Repository } from 'typeorm'
 import { LoginEvent } from '@/server/entities/login-event'
 import { dataSource } from '@/server/database'
+import { getLoginEventBucketExpression, isLoginEventBucketLabel } from '@/server/utils/login-events/dialect'
 import logger from '@/server/utils/logger'
 import { maskEmail } from '@/utils/shared/privacy'
 import type { LoginEventStats } from '@/utils/shared/api-schemas'
@@ -306,10 +307,11 @@ function applyLoginEventWhere(
 /**
  * 统计查询与列表共用 `buildLoginEventWhere`，保证筛选口径一致。
  * 未指定时间范围时，每日趋势默认只取最近 30 天，避免大时间窗全表聚合。
+ * 每日趋势在数据库侧按 UTC 天 `GROUP BY`，JS 只做排序与形状收敛；热力图在后续条目复用同一表达式。
  */
 export async function getLoginEventStats(
     query: LoginEventQuery = {},
-    options: { repository?: Pick<Repository<LoginEvent>, 'createQueryBuilder' | 'find'>, now?: Date } = {},
+    options: { repository?: Pick<Repository<LoginEvent>, 'createQueryBuilder'>, now?: Date } = {},
 ): Promise<LoginEventStats> {
     const repository = options.repository ?? dataSource.getRepository(LoginEvent)
     const where = buildLoginEventWhere(query)
@@ -338,16 +340,24 @@ export async function getLoginEventStats(
     }
     const trendEnd = query.end ?? now
     const trendDays = Math.max(1, Math.ceil((trendEnd.getTime() - trendStart.getTime()) / MILLISECONDS_PER_DAY))
-    /* 与热力图共用 UTC 分桶，避免 DATE() 随数据库会话时区漂移 */
-    const trendEvents = await repository.find({ where: trendWhere, select: ['createdAt'] })
+    /* 与热力图共用同一分桶表达式，避免 DATE() / DATE_FORMAT() 随数据库会话时区漂移 */
+    const trendBucket = getLoginEventBucketExpression('day')
+    const trendRows = await applyLoginEventWhere(repository.createQueryBuilder('event'), trendWhere)
+        .select(trendBucket, 'bucket')
+        .addSelect('COUNT(*)', 'count')
+        .groupBy(trendBucket)
+        .getRawMany()
     const trendCounts = new Map<string, number>()
-    for (const trendEvent of trendEvents) {
-        const createdAt = trendEvent.createdAt instanceof Date ? trendEvent.createdAt : new Date(trendEvent.createdAt)
-        if (Number.isNaN(createdAt.getTime())) {
+    let droppedTrendBuckets = 0
+    for (const row of trendRows as Array<{ bucket: unknown, count: string | number }>) {
+        if (!isLoginEventBucketLabel(row.bucket, 'day')) {
+            droppedTrendBuckets += 1
             continue
         }
-        const key = formatBucket(floorToDay(createdAt), 'day')
-        trendCounts.set(key, (trendCounts.get(key) ?? 0) + 1)
+        trendCounts.set(row.bucket, Number(row.count))
+    }
+    if (droppedTrendBuckets > 0) {
+        logger.warn('Dropped login event trend buckets with unexpected labels', { droppedTrendBuckets })
     }
 
     return {

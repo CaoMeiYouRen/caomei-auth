@@ -366,6 +366,41 @@ describe('登录事件仓储', () => {
         expect(filtered.byType.find((item) => item.type === 'sign_in_failure')?.count).toBe(1)
     })
 
+    it('每日趋势按 UTC 天在数据库侧聚合，跨日事件不并桶且不再全量拉取', async () => {
+        const seeds = [
+            '2026-11-20T23:59:59.000Z',
+            '2026-11-21T00:00:00.000Z',
+            '2026-11-21T23:59:59.000Z',
+            '2026-09-01T00:00:00.000Z',
+        ]
+        for (const at of seeds) {
+            await recordLoginEvent({
+                type: 'sign_in_success',
+                result: 'success',
+                channel: 'email',
+                createdAt: new Date(at),
+            }, { repository })
+        }
+
+        const findSpy = vi.spyOn(repository, 'find')
+        const stats = await getLoginEventStats({}, { repository, now: new Date('2026-11-22T00:00:00.000Z') })
+        expect(findSpy).not.toHaveBeenCalled()
+        findSpy.mockRestore()
+
+        expect(stats.timezone).toBe('UTC')
+        // 默认 30 天窗口：2026-10-23 起，9 月的事件不计入趋势
+        expect(stats.dailyTrend).toEqual([
+            { date: '2026-11-20', count: 1 },
+            { date: '2026-11-21', count: 2 },
+        ])
+
+        const windowed = await getLoginEventStats({
+            start: new Date('2026-09-01T00:00:00.000Z'),
+            end: new Date('2026-09-02T00:00:00.000Z'),
+        }, { repository, now: new Date('2026-11-22T00:00:00.000Z') })
+        expect(windowed.dailyTrend).toEqual([{ date: '2026-09-01', count: 1 }])
+    })
+
     it('热力图按小时 / 天分桶并补零，窗口边界闭区间', async () => {
         const now = new Date('2026-11-22T12:34:56.000Z')
         /* 7 天窗口：2026-11-15 13:00 ~ 2026-11-22 12:00（UTC） */
