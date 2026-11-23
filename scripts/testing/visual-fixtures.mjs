@@ -171,6 +171,35 @@ function buildSessions(anchor) {
 }
 
 /**
+ * 可信设备夹具：给「王强」预置 2 条确定设备（1 条启用中、1 条已过期），
+ * 供管理端会话对话框的可信设备列表与过期标记复用；不同会话层写入相同 id 不冲突。
+ */
+function buildTrustedDevices(anchor) {
+    return [
+        {
+            id: 'visual-trusted-device-01',
+            userId: 'visual-user-03',
+            identifier: 'visual-trusted-identifier-01',
+            createdAt: daysBefore(anchor, 6),
+            lastUsedAt: hoursBefore(anchor, 5),
+            expiresAt: new Date(anchor.getTime() + 24 * DAY),
+            ip: IP_ADDRESSES[0],
+            userAgent: USER_AGENTS[0],
+        },
+        {
+            id: 'visual-trusted-device-02',
+            userId: 'visual-user-03',
+            identifier: 'visual-trusted-identifier-02',
+            createdAt: daysBefore(anchor, 40),
+            lastUsedAt: daysBefore(anchor, 12),
+            expiresAt: daysBefore(anchor, 2),
+            ip: IP_ADDRESSES[2],
+            userAgent: USER_AGENTS[2],
+        },
+    ]
+}
+
+/**
  * 登录事件夹具：覆盖 7 种事件类型与多种通道，时间分布在锚点前 56 小时内，
  * 供事件面板与热力图（7 天 / 小时桶）呈现稳定的非空分布。
  */
@@ -264,6 +293,7 @@ export function seedVisualDatabase(db, options = {}) {
     const sessions = buildSessions(anchor)
     const ssoProviders = buildSsoProviders(anchor, 'visual-user-admin')
     const loginEvents = buildLoginEvents(anchor)
+    const trustedDevices = buildTrustedDevices(anchor)
 
     const insertUser = db.prepare(`
         INSERT INTO caomei_auth_user
@@ -300,6 +330,13 @@ export function seedVisualDatabase(db, options = {}) {
         VALUES
             (@id, @createdAt, @updatedAt, @issuer, @domain, @oidcConfig, @samlConfig, @providerId, @userId,
              @name, @description, @enabled, @type)
+    `)
+
+    const insertTrustedDevice = db.prepare(`
+        INSERT INTO caomei_auth_trusted_device
+            (id, created_at, updated_at, user_id, identifier, user_agent, ip, expires_at, last_used_at)
+        VALUES
+            (@id, @createdAt, @createdAt, @userId, @identifier, @userAgent, @ip, @expiresAt, @lastUsedAt)
     `)
 
     const insertLoginEvent = db.prepare(`
@@ -365,6 +402,19 @@ export function seedVisualDatabase(db, options = {}) {
             })
         }
 
+        for (const device of trustedDevices) {
+            insertTrustedDevice.run({
+                id: device.id,
+                createdAt: toSqliteDate(device.createdAt),
+                userId: device.userId,
+                identifier: device.identifier,
+                userAgent: device.userAgent,
+                ip: device.ip,
+                expiresAt: toSqliteDate(device.expiresAt),
+                lastUsedAt: toSqliteDate(device.lastUsedAt),
+            })
+        }
+
         for (const client of FIXTURE_APPLICATIONS) {
             insertClient.run({
                 id: client.id,
@@ -409,5 +459,6 @@ export function seedVisualDatabase(db, options = {}) {
         // 日志字段名禁用 oauth / password / secret / token / apiKey 等触发词，否则 js/clear-text-logging 会复发
         applications: FIXTURE_APPLICATIONS.length,
         ssoProviders: ssoProviders.length,
+        trustedDevices: trustedDevices.length,
     }
 }

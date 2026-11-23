@@ -141,6 +141,20 @@ const ROUTES: readonly AdminRoute[] = [
                 },
             },
             {
+                label: '用户会话对话框（可信设备）',
+                slug: 'sessions-trusted',
+                reference: false,
+                action: async (page) => {
+                    await tableRow(page, 'wang.qiang@example.com').getByRole('button', { name: '会话管理' }).click()
+                    await expectDialog(page, '用户会话')
+                    const trusted = page.locator('.user-sessions__trusted')
+                    await expect(trusted.locator('.user-sessions__trusted-item')).toHaveCount(2)
+                    /* 第 2 条为已过期设备：锁定过期标记与吊销按钮同屏可见 */
+                    await expect(trusted.getByText('已过期', { exact: true })).toBeVisible()
+                    await trusted.getByRole('button', { name: '吊销' }).first().scrollIntoViewIfNeeded()
+                },
+            },
+            {
                 label: '会话撤销确认（键盘）',
                 slug: 'sessions-revoke-confirm',
                 reference: false,
