@@ -26,6 +26,9 @@
     -   遵循 `ESLint` 和 `Stylelint` 规则。
     -   使用项目预设的 `eslint-config-cmyr` 和 `stylelint-config-cmyr`。
     -   提交代码前必须通过 `pnpm lint` 检查。
+-   **导入规范**:
+    -   同一模块同时需要值和类型时，统一写 `import { fn, type T }` 合并导入。
+    -   禁止用 `import type { ... }` 整行替换原本含值导入的行：`typecheck` 可能仍绿，但生产构建会丢失值绑定并在 hydration 时直接报错。
 
 ## 3. 技术栈约束
 

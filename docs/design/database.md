@@ -185,3 +185,10 @@ ALTER TABLE caomei_auth_user ADD COLUMN must_reset_password BOOLEAN NOT NULL DEF
 ```
 
 并创建 `caomei_auth_channel_change_request` 表（列名遵循 snake_case 命名策略，SQLite 建表语句见 `database/sqlite/create.sql`）。MySQL / PostgreSQL 按同一列定义创建，`attempts` 用 `INT`，`expires_at` / `confirmed_at` 用 `DATETIME` / `TIMESTAMP`。
+
+## 跨方言注意事项
+
+-   **实体与 DDL 同步**：新增 / 修改实体必须同批更新 `server/database/index.ts` 的 entities 与 `database/{sqlite,mysql,postgres}/create.sql`；视觉与集成夹具直接用 `create.sql` 建表，漏列会让登录链在运行时 500。
+-   **聚合返回类型**：`DATE()` 在 SQLite 返回字符串、MySQL / PostgreSQL 返回 `Date`；按本地分量统一格式化，并提供可注入的 `now` 避免测试时间炸弹。
+-   **布尔谓词**：PostgreSQL 的 `bool` 列不能与整数比较（`two_factor_enabled = 1` 报 42883），须按方言生成 `IS TRUE`；SQLite / MySQL 保持 `= 1`。
+-   **多方言 SQL 验证**：按方言断言生成的 SQL 契约（占位符 `?` / `$n`、谓词形态），不要用单一方的本地实例结果代表三方言。
