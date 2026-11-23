@@ -5,10 +5,11 @@ import { useAdminSession } from '../helpers/admin-session'
 /**
  * 登录事件热力图基线（阶段 12 M3.2；阶段 13 M4.1 补 1440 交互态基准宽度）。
  *
- * 4 个视口 × 浅 / 暗色共 8 张：
- * - 1800 / 768 / 390 截取 `.login-event-heatmap`（与阶段 12 口径一致）；
- * - 1440 交互态基准宽度下 `.heatmap-scroll` 存在内部横向滚动（min-width 520px + 面板宽度），
- *   因此断言 `scrollWidth > clientWidth` 并改截 `.heatmap-grid`，把完整矩阵纳入基线。
+ * - 1800 / 768 / 390 截取 `.login-event-heatmap` 元素，浅 / 暗各 1 张；
+ * - 1440 交互态基准宽度下，168 个桶的最小内容宽度（1480px）超过容器（1336px），
+ *   容器内部横向滚动 144px。该宽度改用「可视框 + 断言」口径：滚动位置固定为 0（保证
+ *   类型轴与左段桶入镜），断言溢出量、7 个类型标签、7 × 168 个 cell 均存在；
+ *   右端 144px 不进入像素基线，由 cell 计数断言覆盖（不声称「完整矩阵截图」）。
  * 数据来自 `scripts/testing/visual-fixtures.mjs` 的 80 条确定性登录事件。
  */
 const VIEWPORTS = [
@@ -41,13 +42,14 @@ for (const theme of THEMES) {
             await waitForVisualStable(page)
 
             if (viewport.name === 'desktop-1440') {
-                // 1440 下矩阵超出滚动容器：明确口径为「断言存在内滚动 + 截完整矩阵」
-                const overflow = await heatmap.locator('.heatmap-scroll').evaluate(
-                    (element) => element.scrollWidth - element.clientWidth,
-                )
+                const overflow = await heatmap.locator('.heatmap-scroll').evaluate((element) => {
+                    element.scrollLeft = 0
+                    return element.scrollWidth - element.clientWidth
+                })
                 expect(overflow).toBeGreaterThan(0)
-                await expect(heatmap.locator('.heatmap-grid')).toHaveScreenshot(`login-event-heatmap-${theme}-${viewport.name}.png`)
-                return
+                await expect(heatmap.locator('.heatmap-row__label')).toHaveCount(7)
+                await expect(heatmap.locator('.heatmap-row__label').first()).toBeVisible()
+                await expect(heatmap.locator('.heatmap-cell')).toHaveCount(7 * 168)
             }
 
             await expect(heatmap).toHaveScreenshot(`login-event-heatmap-${theme}-${viewport.name}.png`)
