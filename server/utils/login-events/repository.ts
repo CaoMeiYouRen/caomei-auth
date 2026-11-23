@@ -307,7 +307,7 @@ function applyLoginEventWhere(
 /**
  * 统计查询与列表共用 `buildLoginEventWhere`，保证筛选口径一致。
  * 未指定时间范围时，每日趋势默认只取最近 30 天，避免大时间窗全表聚合。
- * 每日趋势在数据库侧按 UTC 天 `GROUP BY`，JS 只做排序与形状收敛；热力图在后续条目复用同一表达式。
+ * 每日趋势在数据库侧按 UTC 天 `GROUP BY`，JS 只做排序与形状收敛；热力图复用同一分桶表达式。
  */
 export async function getLoginEventStats(
     query: LoginEventQuery = {},
@@ -405,17 +405,16 @@ function formatBucket(date: Date, unit: 'hour' | 'day'): string {
 }
 
 /**
- * 时间 × 事件类型热力图聚合（阶段 12 M3.1）。
+ * 时间 × 事件类型热力图聚合。
  *
- * 只按窗口取 `type` / `createdAt` 两列后在服务端分桶，避免 SQLite / MySQL / PostgreSQL
- * 的时间格式化差异；窗口上限 30 天，事件量受保留期约束。
+ * `type × bucket` 计数在数据库侧 `GROUP BY`，JS 只补零桶与排序；窗口上限 30 天。
  */
 export async function getLoginEventHeatmap(
     query: LoginEventQuery,
     options: {
         days: 7 | 30
         now?: Date
-        repository?: Pick<Repository<LoginEvent>, 'find'>
+        repository?: Pick<Repository<LoginEvent>, 'createQueryBuilder'>
     },
 ): Promise<LoginEventHeatmap> {
     const { days } = options
@@ -434,10 +433,15 @@ export async function getLoginEventHeatmap(
     where.createdAt = Between(start, end)
 
     const repository = options.repository ?? dataSource.getRepository(LoginEvent)
-    const events = await repository.find({
-        where,
-        select: ['type', 'createdAt'],
-    })
+    const bucketExpression = getLoginEventBucketExpression(unit)
+    const rawRows = await repository.createQueryBuilder('event')
+        .where(where)
+        .select('event.type', 'type')
+        .addSelect(bucketExpression, 'bucket')
+        .addSelect('COUNT(*)', 'count')
+        .groupBy('event.type')
+        .addGroupBy(bucketExpression)
+        .getRawMany()
 
     const buckets = Array.from({ length: bucketCount }, (_, index) => formatBucket(
         unit === 'hour'
@@ -449,21 +453,25 @@ export async function getLoginEventHeatmap(
     const rowValues = new Map<LoginEventType, number[]>(
         LOGIN_EVENT_TYPES.map((type) => [type, Array.from({ length: bucketCount }, () => 0)]),
     )
+    let droppedBuckets = 0
 
-    for (const event of events) {
-        const createdAt = event.createdAt instanceof Date ? event.createdAt : new Date(event.createdAt)
-        if (Number.isNaN(createdAt.getTime())) {
+    for (const row of rawRows as Array<{ type: unknown, bucket: unknown, count: string | number }>) {
+        if (!isLoginEventType(row.type) || !isLoginEventBucketLabel(row.bucket, unit)) {
+            droppedBuckets += 1
             continue
         }
-        const bucket = formatBucket(unit === 'hour' ? floorToHour(createdAt) : floorToDay(createdAt), unit)
-        const index = indexByBucket.get(bucket)
+        const index = indexByBucket.get(row.bucket)
         if (index === undefined) {
+            droppedBuckets += 1
             continue
         }
-        const values = rowValues.get(event.type)
+        const values = rowValues.get(row.type)
         if (values) {
-            values[index] = (values[index] ?? 0) + 1
+            values[index] = Number(row.count)
         }
+    }
+    if (droppedBuckets > 0) {
+        logger.warn('Dropped login event heatmap buckets with unexpected labels', { droppedBuckets, unit })
     }
 
     let max = 0
