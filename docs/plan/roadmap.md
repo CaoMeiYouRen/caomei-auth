@@ -5,7 +5,7 @@
 > **归档模型（2026-11-20 起）**：阶段 1–9 详情保留在本文件；自阶段 10 起，已收口阶段详情按 [规划规范](../standards/planning.md) §8 迁入 `docs/plan/archive/roadmap-phases-*.md`，本文件只保留里程碑概览与当前阶段。
 
 
-> **当前状态**：**阶段 13「可观测性规模化与运维闭环」已于 2026-11-23 登记、进行中**（范围与拟定决策见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md)，条目见 [todo.md](./todo.md)）。阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（里程碑见 [roadmap-phases-12](./archive/roadmap-phases-12.md)，阶段正文见 [todo-archive-phases-12](./archive/todo-archive-phases-12.md)）。阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（里程碑见 [roadmap-phases-11](./archive/roadmap-phases-11.md)，阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)）。阶段 10「用户侧替代证明」已于 2026-11-21 收口（里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。
+> **当前状态**：**当前无进行中阶段**；阶段 13「可观测性规模化与运维闭环」已于 2026-11-23 收口（里程碑见 [roadmap-phases-13](./archive/roadmap-phases-13.md)，阶段正文见 [todo-archive-phases-13](./archive/todo-archive-phases-13.md)，收口记录见 [阶段 13 收口记录](../design/governance/2026-11-23-phase13-closure.md)）。下一阶段须经需求评估与用户决策后登记。阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（里程碑见 [roadmap-phases-12](./archive/roadmap-phases-12.md)，阶段正文见 [todo-archive-phases-12](./archive/todo-archive-phases-12.md)）。阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（里程碑见 [roadmap-phases-11](./archive/roadmap-phases-11.md)，阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)）。阶段 10「用户侧替代证明」已于 2026-11-21 收口（里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。
 
 ---
 
@@ -159,17 +159,17 @@ _目标：建立可查询的登录事件数据源与时间 × 事件类型热力
 
 > 5 大条目 / 15 小条目；范围、决策 D18–D25 见 [阶段 12 范围登记](../design/governance/2026-11-21-phase12-registration.md)，交付与未覆盖边界见 [roadmap-phases-12](./archive/roadmap-phases-12.md)、[阶段正文](./archive/todo-archive-phases-12.md) 与 [收口记录](../design/governance/2026-11-23-phase12-closure.md)。
 
-## 阶段 13: 可观测性规模化与运维闭环（2026-11-23 登记，进行中）
+## 阶段 13: 可观测性规模化与运维闭环（2026-11-23 收口）
 
 _目标：把阶段 12 的登录事件推进到可持续运行——索引、数据库侧聚合、多方言清理、发布门禁收敛与回归基座补齐。_
 
-- **M1 登录事件 IP 索引**：`varchar(45)` 列类型、`(ip, created_at)` 索引与筛选口径。
-- **M2 统计与热力图方言聚合**：`dailyTrend` 与热力图改为方言 SQL 聚合，响应与时区不变。
-- **M3 运维脚本与发布门禁**：多方言清理脚本、`docker-publish` 重建门禁、3 条 medium 依赖收敛。
-- **M4 回归基线补充**：1440 热力图基线与可信设备非空态基线。
-- **M5 文档与阶段收口**：口径同步、全量门禁、归档。
+- **M1 登录事件 IP 索引**：`varchar(45)` 列类型、`(ip, created_at)` 索引与筛选口径（已闭环）。
+- **M2 统计与热力图方言聚合**：`dailyTrend` 与热力图改为方言 SQL 聚合，响应与时区不变（已闭环）。
+- **M3 运维脚本与发布门禁**：多方言清理脚本、`docker-publish` 重建门禁、3 条 medium 依赖收敛（已闭环）。
+- **M4 回归基线补充**：1440 热力图基线与可信设备非空态基线（已闭环）。
+- **M5 文档与阶段收口**：口径同步、全量门禁、归档（已闭环）。
 
-> 5 大条目 / 13 小条目；范围、决策 D26–D32 与不做边界见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md)，条目明细见 [todo.md](./todo.md)。
+> 5 大条目 / 13 小条目全部交付；里程碑与未覆盖边界见 [roadmap-phases-13](./archive/roadmap-phases-13.md)，阶段正文见 [todo-archive-phases-13](./archive/todo-archive-phases-13.md)，收口记录见 [2026-11-23-phase13-closure](../design/governance/2026-11-23-phase13-closure.md)。
 
 ## 后续方向（未授权）
 
@@ -247,7 +247,7 @@ _目标：把阶段 12 的登录事件推进到可持续运行——索引、数
 阶段 12（已收口 2026-11-23）：安全可观测性与会话治理
         │  登录事件基座 → Admin 事件查询 / 统计 → 热力图 → 可信设备与会话治理 → 隐私 / 门禁 / 收口
         ▼
-阶段 13（2026-11-23 登记，进行中）：可观测性规模化与运维闭环
+阶段 13（已收口 2026-11-23）：可观测性规模化与运维闭环
         │  IP 索引 → 方言聚合 → 多方言清理 / 发布门禁 / 依赖收敛 → 回归基线 → 收口
         ▼
 后续方向（未授权）：审计检索 / 安全增强 / 开发者生态 / 企业级
