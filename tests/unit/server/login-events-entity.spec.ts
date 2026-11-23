@@ -94,7 +94,15 @@ describe('登录事件枚举与实体契约', () => {
             { name: 'IDX_login_event_user_id_created_at', columns: ['userId', 'createdAt'] },
             { name: 'IDX_login_event_result_created_at', columns: ['result', 'createdAt'] },
             { name: 'IDX_login_event_channel_created_at', columns: ['channel', 'createdAt'] },
+            { name: 'IDX_login_event_ip_created_at', columns: ['ip', 'createdAt'] },
         ]))
+    })
+
+    it('ip 列使用 varchar(45) 以支持三方言索引（D26）', () => {
+        const ipColumn = getMetadataArgsStorage().columns
+            .find((item) => item.target === LoginEvent && item.propertyName === 'ip')
+        expect(ipColumn?.options.type).toBe('varchar')
+        expect(ipColumn?.options.length).toBe(45)
     })
 
     it('SQLite / MySQL / PostgreSQL 建表脚本与实体同步', () => {
@@ -104,6 +112,7 @@ describe('登录事件枚举与实体契约', () => {
             'IDX_login_event_user_id_created_at',
             'IDX_login_event_result_created_at',
             'IDX_login_event_channel_created_at',
+            'IDX_login_event_ip_created_at',
         ]
         const sql = readFileSync(resolve(process.cwd(), 'database/sqlite/create.sql'), 'utf-8')
         const tableStart = sql.indexOf('CREATE TABLE IF NOT EXISTS caomei_auth_login_event')
@@ -112,20 +121,35 @@ describe('登录事件枚举与实体契约', () => {
         for (const column of ['type', 'result', 'channel', 'user_id', 'ip', 'user_agent', 'metadata', 'created_at']) {
             expect(tableBlock).toMatch(new RegExp(`^\\s*${column}\\s`, 'mu'))
         }
+        expect(tableBlock).toMatch(/^\s*ip\s+VARCHAR \(45\)/mu)
         for (const index of indexNames) {
             expect(sql).toContain(`CREATE INDEX IF NOT EXISTS ${index}`)
         }
 
         const mysql = readFileSync(resolve(process.cwd(), 'database/mysql/create.sql'), 'utf-8')
         expect(mysql).toContain('CREATE TABLE `caomei_auth_login_event`')
+        const mysqlStart = mysql.indexOf('CREATE TABLE `caomei_auth_login_event`')
+        const mysqlBlock = mysql.slice(mysqlStart, mysql.indexOf(') ENGINE=', mysqlStart) + 1)
+        expect(mysqlBlock).toMatch(/`ip` VARCHAR\(45\) NULL/u)
+        // 锁完整索引片段：列顺序反写会让 IP 精确筛选失去 created_at 有序性
+        expect(mysqlBlock).toContain('KEY `IDX_login_event_ip_created_at` (`ip`, `created_at`)')
         for (const index of indexNames) {
-            expect(mysql).toContain(`KEY \`${index}\``)
+            expect(mysqlBlock).toContain(`KEY \`${index}\``)
         }
 
         const postgres = readFileSync(resolve(process.cwd(), 'database/postgres/create.sql'), 'utf-8')
         expect(postgres).toContain('CREATE TABLE public.caomei_auth_login_event')
+        const postgresBlock = postgres.slice(
+            postgres.indexOf('CREATE TABLE public.caomei_auth_login_event'),
+            postgres.indexOf(');', postgres.indexOf('CREATE TABLE public.caomei_auth_login_event')) + 2,
+        )
+        expect(postgresBlock).toMatch(/ip varchar\(45\) NULL/u)
+        expect(postgres).toContain('CREATE INDEX "IDX_login_event_ip_created_at" ON public.caomei_auth_login_event USING btree (ip, created_at)')
         for (const index of indexNames) {
             expect(postgres).toContain(`CREATE INDEX "${index}"`)
         }
+
+        // SQLite 建表块已在上方切出；索引语句按整句锁定列顺序
+        expect(sql).toContain('CREATE INDEX IF NOT EXISTS IDX_login_event_ip_created_at ON caomei_auth_login_event (ip, created_at)')
     })
 })

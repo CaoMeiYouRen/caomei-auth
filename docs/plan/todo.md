@@ -4,15 +4,15 @@
 
 ## 当前状态
 
-**当前阶段：阶段 13「可观测性规模化与运维闭环」，2026-11-23 登记，尚未开工。** 范围与拟定决策见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md)；阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（阶段正文见 [todo-archive-phases-12](./archive/todo-archive-phases-12.md)）。
+**当前阶段：阶段 13「可观测性规模化与运维闭环」，2026-11-23 登记，进行中（M1.1 已交付）。** 范围与拟定决策见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md)；阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（阶段正文见 [todo-archive-phases-12](./archive/todo-archive-phases-12.md)）。
 
-## 阶段 13：可观测性规模化与运维闭环（2026-11-23 登记，尚未开工）
+## 阶段 13：可观测性规模化与运维闭环（2026-11-23 登记，进行中）
 
 _目标：把阶段 12 的登录事件推进到可持续运行——索引、数据库侧聚合、多方言清理、发布门禁收敛与回归基座补齐。_
 
 | 大条目 | 小条目 | 状态 | 提交 | 审计 | 容量（计划→实际） |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| M1 登录事件 IP 索引 | 0/2 | 未开始 | — | — | 2 → — |
+| M1 登录事件 IP 索引 | 1/2 | 进行中 | — | — | 2 → — |
 | M2 统计与热力图方言聚合 | 0/3 | 未开始 | — | — | 3–4 → — |
 | M3 运维脚本与发布门禁 | 0/3 | 未开始 | — | — | 3–4 → — |
 | M4 回归基线补充 | 0/2 | 未开始 | — | — | 2 → — |
@@ -36,14 +36,14 @@ _目标：把阶段 12 的登录事件推进到可持续运行——索引、数
 
 - **目标**: `login_event.ip` 改为 `varchar(45)` 并补 `(ip, created_at)` 复合索引。
 - **验收标准**: 实体与 SQLite / MySQL / PostgreSQL `create.sql` 同步；`database.md` 含 ALTER 语句；新装与升级路径均可用。
-- **交付物**: `server/entities/login-event.ts`、三方言 `create.sql`、`docs/design/database.md`。
+- **交付物**: `server/entities/login-event.ts`、三方言 `create.sql`、`docs/design/database.md`、`tests/unit/server/login-events-entity.spec.ts`。
 - **依赖**: 无。
 
 #### M1.2 IP 筛选与索引口径
 
 - **目标**: 固定 IP-only 查询由 `(ip, created_at)` 复合索引覆盖，不引入隐式时间窗。
 - **验收标准**: 查询构造器在有 IP 条件时不追加默认时间窗（有 `start` / `end` 时才使用）；单测锁定谓词与响应字段不变；文档写明大时间跨度建议显式带时间窗及原因。
-- **交付物**: 查询 schema / 仓储过滤、单测、`security-observability.md` 口径。
+- **交付物**: 查询 schema / 仓储过滤、单测、`server/api/admin/login-events/index.get.ts` 注释、`security-observability.md` 口径。
 - **依赖**: M1.1。
 
 ### M2 统计与热力图方言聚合

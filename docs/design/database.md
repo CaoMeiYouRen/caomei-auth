@@ -186,6 +186,63 @@ ALTER TABLE caomei_auth_user ADD COLUMN must_reset_password BOOLEAN NOT NULL DEF
 
 并创建 `caomei_auth_channel_change_request` 表（列名遵循 snake_case 命名策略，SQLite 建表语句见 `database/sqlite/create.sql`）。MySQL / PostgreSQL 按同一列定义创建，`attempts` 用 `INT`，`expires_at` / `confirmed_at` 用 `DATETIME` / `TIMESTAMP`。
 
+## 阶段 13：登录事件 IP 列与索引
+
+- **列定义**：`login_event.ip` 由 `TEXT` 改为 `VARCHAR(45)`（覆盖 IPv6 文本上限）。MySQL 无法对 `TEXT` 建全列索引，改定长类型后 IP 精确筛选才可走索引。
+- **索引**：`IDX_login_event_ip_created_at`（`ip, created_at`），让 IP 精确筛选先按 `ip` 定位子集，避免大时间窗全表扫描；索引不含 `id`，InnoDB / PostgreSQL 下最多减少排序量、不保证完全免排序，SQLite 的 `created_at DESC, id DESC` 仍可能残留临时排序。不引入隐式时间窗。
+- **新装库**：直接使用 `database/{sqlite,mysql,postgres}/create.sql`。注意 MySQL / PostgreSQL 的脚本以 `DROP TABLE IF EXISTS` 开头，**只能对空库执行**，对已有库执行会清空登录事件。
+- **升级库**（`synchronize=false`）：先改列类型、后建索引；两步之间失败须手工执行回滚语句恢复（MySQL 的 DDL 隐式提交，没有可用的自动回滚）。
+- **执行窗口**：MySQL 的 `TEXT → VARCHAR(45)` 走 COPY 重建、PostgreSQL 的非并发 `CREATE INDEX` 持 SHARE 锁，期间登录事件写入会阻塞并可能被 `LOGIN_EVENT_WRITE_TIMEOUT_MS` 丢事件，建议在低峰执行；PostgreSQL 大表可用下方 `CONCURRENTLY` 变体（不能包在事务里，失败会留下 INVALID 索引，需先 `DROP INDEX` 再重试）。
+- **升级前预检**：`ip` 列现有值若超过 45 字符，MySQL / PostgreSQL 的 ALTER 会失败或被截断，先执行
+  `SELECT COUNT(*) FROM caomei_auth_login_event WHERE CHAR_LENGTH(ip) > 45;`（PostgreSQL 用 `length(ip)`）。
+- **写入侧长度契约**：当前写入路径不对 `ip` 做 `net.isIP` 校验与长度归一化，超长 / 非法头值在 MySQL / PostgreSQL 下会整行拒绝、SQLite 下照存，该缺口已登记 [backlog §3.3](../plan/backlog.md#33-基础设施)。
+
+### 升级语句
+
+SQLite（动态类型，列类型无需重建，只补索引）：
+
+```sql
+CREATE INDEX IF NOT EXISTS IDX_login_event_ip_created_at ON caomei_auth_login_event (ip, created_at);
+```
+
+MySQL：
+
+```sql
+ALTER TABLE caomei_auth_login_event MODIFY COLUMN ip VARCHAR(45) NULL;
+CREATE INDEX IDX_login_event_ip_created_at ON caomei_auth_login_event (ip, created_at);
+```
+
+PostgreSQL（二选一：小表用普通 `CREATE INDEX`；大表用并发变体，避免阻塞写入，但**不能包在事务里**，失败会留下 INVALID 索引，需先 `DROP INDEX` 再重试）：
+
+```sql
+ALTER TABLE public.caomei_auth_login_event ALTER COLUMN ip TYPE varchar(45);
+CREATE INDEX "IDX_login_event_ip_created_at" ON public.caomei_auth_login_event USING btree (ip, created_at);
+```
+
+```sql
+ALTER TABLE public.caomei_auth_login_event ALTER COLUMN ip TYPE varchar(45);
+CREATE INDEX CONCURRENTLY "IDX_login_event_ip_created_at" ON public.caomei_auth_login_event USING btree (ip, created_at);
+```
+
+### 回滚语句
+
+顺序与升级相反：先删索引再回退列类型（MySQL 在 `TEXT` 列上无法保留该复合索引）。以下语句需人工执行；`ip` 列回退成 `TEXT` 不会丢失数据，前提是升级前已完成长度预检。
+
+```sql
+-- SQLite
+DROP INDEX IF EXISTS IDX_login_event_ip_created_at;
+
+-- MySQL
+DROP INDEX IDX_login_event_ip_created_at ON caomei_auth_login_event;
+ALTER TABLE caomei_auth_login_event MODIFY COLUMN ip TEXT NULL;
+
+-- PostgreSQL
+DROP INDEX IF EXISTS "IDX_login_event_ip_created_at";
+ALTER TABLE public.caomei_auth_login_event ALTER COLUMN ip TYPE text;
+```
+
+回退列类型不改变已有数据：`VARCHAR(45)` 与 `TEXT` 之间双向转换对合法 IP 均无损。
+
 ## 跨方言注意事项
 
 -   **实体与 DDL 同步**：新增 / 修改实体必须同批更新 `server/database/index.ts` 的 entities 与 `database/{sqlite,mysql,postgres}/create.sql`；视觉与集成夹具直接用 `create.sql` 建表，漏列会让登录链在运行时 500。

@@ -396,7 +396,7 @@ CREATE TABLE public.caomei_auth_login_event (
 	result varchar(16) NOT NULL,
 	channel varchar(32) DEFAULT 'unknown' NOT NULL,
 	user_id varchar(36) NULL,
-	ip text NULL,
+	ip varchar(45) NULL,
 	user_agent text NULL,
 	metadata text NULL,
 	CONSTRAINT "PK_login_event" PRIMARY KEY (id)
@@ -411,6 +411,8 @@ CREATE INDEX "IDX_login_event_user_id_created_at" ON public.caomei_auth_login_ev
 CREATE INDEX "IDX_login_event_result_created_at" ON public.caomei_auth_login_event USING btree (result, created_at);
 
 CREATE INDEX "IDX_login_event_channel_created_at" ON public.caomei_auth_login_event USING btree (channel, created_at);
+
+CREATE INDEX "IDX_login_event_ip_created_at" ON public.caomei_auth_login_event USING btree (ip, created_at);
 
 DROP TABLE IF EXISTS public.caomei_auth_trusted_device;
 

@@ -649,7 +649,7 @@ CREATE TABLE IF NOT EXISTS caomei_auth_login_event (
     result     VARCHAR (16) NOT NULL,
     channel    VARCHAR (32) NOT NULL DEFAULT 'unknown',
     user_id    VARCHAR (36),
-    ip         TEXT,
+    ip         VARCHAR (45),
     user_agent TEXT,
     metadata   TEXT
 );
@@ -663,6 +663,8 @@ CREATE INDEX IF NOT EXISTS IDX_login_event_user_id_created_at ON caomei_auth_log
 CREATE INDEX IF NOT EXISTS IDX_login_event_result_created_at ON caomei_auth_login_event (result, created_at);
 
 CREATE INDEX IF NOT EXISTS IDX_login_event_channel_created_at ON caomei_auth_login_event (channel, created_at);
+
+CREATE INDEX IF NOT EXISTS IDX_login_event_ip_created_at ON caomei_auth_login_event (ip, created_at);
 
 CREATE TABLE IF NOT EXISTS caomei_auth_trusted_device (
     id          VARCHAR (36) PRIMARY KEY NOT NULL,

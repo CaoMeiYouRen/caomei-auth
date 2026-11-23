@@ -1,6 +1,6 @@
 # 产品 backlog（待办池）
 
-> **状态**：阶段 13「可观测性规模化与运维闭环」已于 2026-11-23 登记、尚未开工（见 [范围登记](../design/governance/2026-11-23-phase13-registration.md) 与 [todo.md](./todo.md)）；阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（见 [阶段正文](./archive/todo-archive-phases-12.md)）。本表只保留**尚未进入阶段**的候选与未完成项汇总。
+> **状态**：阶段 13「可观测性规模化与运维闭环」已于 2026-11-23 登记、进行中（见 [范围登记](../design/governance/2026-11-23-phase13-registration.md) 与 [todo.md](./todo.md)）；阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（见 [阶段正文](./archive/todo-archive-phases-12.md)）。本表只保留**尚未进入阶段**的候选与未完成项汇总。
 > 准入、流转与归档规则见 [规划规范](../standards/planning.md)；阶段方向见 [roadmap.md](./roadmap.md)。
 
 ---
@@ -71,9 +71,9 @@
 
 ### 3.1 安全与合规
 
-- **已上收（2026-11-23，阶段 13，尚未开工）· `docker-publish` 重建路径纳入安全告警门禁**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M3.2）：`mode=build` 会重新构建并推送生产镜像，但目前未执行 `scripts/security/check-alerts.mjs`；`retag` 复用已构建镜像，可按现状处理。待评估后决定是否在 `mode=build` 前增加 gate。
+- **已上收（2026-11-23，阶段 13，进行中）· `docker-publish` 重建路径纳入安全告警门禁**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M3.2）：`mode=build` 会重新构建并推送生产镜像，但目前未执行 `scripts/security/check-alerts.mjs`；`retag` 复用已构建镜像，可按现状处理。待评估后决定是否在 `mode=build` 前增加 gate。
 - **上游未修复依赖告警跟进**：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4，lock 仍为 3.0.3）暂无已发布补丁版本，仅存在于构建 / 开发工具链；待上游发版后升级并复查 `pnpm audit`。`node-forge` 已升至 1.4.3（满足 GHSA-86w9-cpqp-85rv 的 ≥1.4.1），从本条移除。
-- **已上收（2026-11-23，阶段 13，尚未开工）· 中危依赖告警跟进**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M3.3）：阶段 12 推送后 Dependabot 报告 3 条 `medium`，均为构建 / 开发工具链传递依赖，不阻塞发布：`@nuxt/schema`（需 ≥4.6.4，当前经 Nuxt 模块引入的 3.x 分支）、`minimatch`（需 ≥11.0.1，跨多级传递、升级牵涉大版本）、`glob`（需 ≥14.0.2，可由 override 收紧）。处理方向：随下一次 Nuxt / 工具链整体升级统一处理，`glob` 可先单独 override；处理前在发布前安全告警门禁报告中按 `medium` 记录。
+- **已上收（2026-11-23，阶段 13，进行中）· 中危依赖告警跟进**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M3.3）：阶段 12 推送后 Dependabot 报告 3 条 `medium`，均为构建 / 开发工具链传递依赖，不阻塞发布：`@nuxt/schema`（需 ≥4.6.4，当前经 Nuxt 模块引入的 3.x 分支）、`minimatch`（需 ≥11.0.1，跨多级传递、升级牵涉大版本）、`glob`（需 ≥14.0.2，可由 override 收紧）。处理方向：随下一次 Nuxt / 工具链整体升级统一处理，`glob` 可先单独 override；处理前在发布前安全告警门禁报告中按 `medium` 记录。
 - **OAuth 客户端 PKCE 策略可配置化**：管理端创建客户端时固定写入 `requirePKCE = false`（`server/api/admin/oauth/applications/index.post.ts`），创建 / 更新 Schema、管理端视图与表单均未暴露该字段，管理员无法为新客户端开启 PKCE；上游 1.7 的安全默认已改为「必需」（`requirePKCE ?? true`），本项与 [1.7 升级记录](../design/governance/better-auth-1.7-upgrade.md) 中的兼容取舍同源。公开客户端（`token_endpoint_auth_method: none`）与申请 `offline_access` 的请求由上游无条件强制 PKCE，因此现状只影响机密客户端；`docs/api/oauth.md` 仍写「当前版本不支持 PKCE」，与现行为不一致。处理方向：Schema 增加可选 `require_pkce`（新建默认 `true`）、管理端开关与 i18n、创建 / 更新端点与视图透传、补契约测试，并更正 API 文档；不回溯改写存量客户端，保持既有接入方行为不变。依据 RFC 9700 / RFC 7636 对全客户端启用 PKCE 的建议。
 - **迁入来源**：既有 backlog「上游未修复依赖告警跟进」与原 `todo.md`「低优先级 · 安全审计工具集成」（安全审计已由 `.github/workflows/security-auto-fix.yml` 每日巡检 + Dependabot 落地，不再作为候选）；PKCE 策略项来自 2026-11-23 维护者评审（按安全加固登记）。
 
@@ -121,11 +121,12 @@
 
 ### 3.3 基础设施
 
-- **已上收（2026-11-23，阶段 13，尚未开工）· 登录事件 IP 维度索引 / 查询约束**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M1）：`login_event.ip` 为 `TEXT`，MySQL 无法直接建全列索引，当前 IP 精确筛选需与时间窗组合使用（M2.1 已注明）；大时间窗下仍可能全表扫描。处理方向：改为 `varchar(45)` 并补 `(ip, created_at)` 索引，或在查询层强制要求时间窗。
-- **已上收（2026-11-23，阶段 13，尚未开工）· 登录事件可视化基线补充**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M4）：热力图桌面基线采用 1800×900 元素视口，1440 桌面宽度下的内部横向滚动未单独覆盖；可信设备管理端列表只有空态基线（视觉安全页使用随机隔离账号，无法预置设备）。处理方向：补 1440 热力图与可信设备列表（含过期项）基线，或明确接受为既有布局行为。
-- **已上收（2026-11-23，阶段 13，尚未开工）· 登录事件统计 / 热力图全量分桶**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M2）：M2.2 `dailyTrend` 与 M3.1 热力图会在窗口内把 `createdAt` 拉到服务端内存分桶，30 天量级的大实例下内存与延迟随事件量线性增长（保留期只是上限）。处理方向：改为方言 SQL 聚合（`strftime` / `DATE_FORMAT` / `date_trunc`），或加行数上限 + 超限告警，覆盖统计与热力图两处。
-- **已上收（2026-11-23，阶段 13，尚未开工）· 登录事件多方言手动清理**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M3.1）：阶段 12 M1.3 的 `scripts/maintenance/prune-login-events.mjs` 仅支持 SQLite（MySQL / PostgreSQL 依赖管理端统计查询的惰性清理）。备份前清 PII 或下调保留期后立即生效的场景缺少手动入口。处理方向：用 TypeORM 复用 `pruneLoginEvents` 连接三种数据库，或在部署文档写明仅 SQLite 并保留此候选。
+- **已上收（2026-11-23，阶段 13，进行中）· 登录事件 IP 维度索引 / 查询约束**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M1）：`login_event.ip` 为 `TEXT`，MySQL 无法直接建全列索引，当前 IP 精确筛选需与时间窗组合使用（M2.1 已注明）；大时间窗下仍可能全表扫描。处理方向：改为 `varchar(45)` 并补 `(ip, created_at)` 索引，或在查询层强制要求时间窗。（M1.1 已交付列类型与索引，剩余查询层口径见 M1.2。）
+- **已上收（2026-11-23，阶段 13，进行中）· 登录事件可视化基线补充**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M4）：热力图桌面基线采用 1800×900 元素视口，1440 桌面宽度下的内部横向滚动未单独覆盖；可信设备管理端列表只有空态基线（视觉安全页使用随机隔离账号，无法预置设备）。处理方向：补 1440 热力图与可信设备列表（含过期项）基线，或明确接受为既有布局行为。
+- **已上收（2026-11-23，阶段 13，进行中）· 登录事件统计 / 热力图全量分桶**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M2）：M2.2 `dailyTrend` 与 M3.1 热力图会在窗口内把 `createdAt` 拉到服务端内存分桶，30 天量级的大实例下内存与延迟随事件量线性增长（保留期只是上限）。处理方向：改为方言 SQL 聚合（`strftime` / `DATE_FORMAT` / `date_trunc`），或加行数上限 + 超限告警，覆盖统计与热力图两处。
+- **已上收（2026-11-23，阶段 13，进行中）· 登录事件多方言手动清理**（见 [阶段 13 范围登记](../design/governance/2026-11-23-phase13-registration.md) M3.1）：阶段 12 M1.3 的 `scripts/maintenance/prune-login-events.mjs` 仅支持 SQLite（MySQL / PostgreSQL 依赖管理端统计查询的惰性清理）。备份前清 PII 或下调保留期后立即生效的场景缺少手动入口。处理方向：用 TypeORM 复用 `pruneLoginEvents` 连接三种数据库，或在部署文档写明仅 SQLite 并保留此候选。
 
+- **登录事件 IP 写入侧长度契约**（2026-11-23 登记，阶段 13 M1.1 Review Gate W-1）：`login_event.ip` 已改 `varchar(45)`，但写入路径仍直接取 `x-forwarded-for` 首段 / `x-real-ip` 原值，无 `net.isIP` 校验与长度归一化。超长或带端口 / 方括号 / zone index 的取值在 MySQL 严格模式与 PostgreSQL 下会整行拒绝（事件被丢弃且仅 warn），SQLite 则照存，形成三方言行为分叉；客户端自造长头还可能让自身事件不被记录。**触发条件**：出现以下任一项即必须处理——① 生产采集到 `CHAR_LENGTH(ip) > 45` 的写入失败告警；② 部署确认未强制覆盖 `X-Forwarded-For`；③ 阶段 13 收口前仍未处理，则在 M5 收口记录中确认延期理由。处理方向：在持久化入口做 `[...]` / 端口剥离 + `net.isIP` 校验 + 非法值回落 `null`，并补三方言写入断言。
 - **注册规则多实例缓存**：规则缓存为进程内 30 秒 TTL，多实例部署时最坏 30 秒内仍按旧规则；如需强一致，引入 Redis 共享缓存并在管理端变更时发布失效。
 
 - **Dependency Cruiser 依赖图**：配置 `depcruise` 验证 `utils/shared` / `server/utils` / `utils/web` 分层约束。
