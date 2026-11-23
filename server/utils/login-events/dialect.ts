@@ -8,11 +8,12 @@ import { DATABASE_TYPE } from '@/utils/shared/env'
  * `docs/design/security-observability.md` §8）：
  * - SQLite：`created_at` 由驱动写为 UTC 文本，`strftime` 直接取 UTC 分量。
  * - PostgreSQL：`created_at` 为 `timestamptz`，`AT TIME ZONE 'UTC'` 还原 UTC 墙钟。
- * - MySQL：`created_at` 为 `DATETIME`，`DEFAULT CURRENT_TIMESTAMP` 与会话时区同基准，
- *   `UNIX_TIMESTAMP` 也按会话时区解释，因此 epoch 正确；再按 epoch 整除得到 UTC 日 / 小时，
- *   避免依赖时区表（`CONVERT_TZ` 在未加载时区表时返回 `NULL`）。
- *   前提：数据库会话时区与应用时区一致（`DATABASE_TIMEZONE` 只影响客户端序列化，不改变会话时区）；
- *   显式回填 `createdAt` 的行按客户端时区写入，与默认值基准不同。
+ * - MySQL：`created_at` 为 `DATETIME`。普通插入由 TypeORM 对 `@CreateDateColumn` 发 `DEFAULT`，
+ *   数据库按会话 `time_zone` 生成 `CURRENT_TIMESTAMP`；显式回填 `createdAt` 时 mysql2 按
+ *   `DATABASE_TIMEZONE` 序列化为墙钟。`UNIX_TIMESTAMP` 一律按会话 `time_zone` 解释回 epoch，
+ *   再按 epoch 整除得到 UTC 日 / 小时，避免依赖时区表（`CONVERT_TZ` 在未加载时区表时返回 `NULL`）。
+ *   前提：会话 `time_zone` 与 `DATABASE_TIMEZONE` 一致，否则回填行桶整体平移、默认值行读回的时间也平移。
+ *   部署时用 `SELECT @@session.time_zone` 核对。
  */
 
 export type LoginEventBucketUnit = 'hour' | 'day'

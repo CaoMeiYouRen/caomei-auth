@@ -1,6 +1,6 @@
 # 安全可观测性与会话治理口径（阶段 12）
 
-> 状态：2026-11-23 随阶段 12 M5.1 落地；阶段 13 M1 追加查询与索引口径（§7）。
+> 状态：2026-11-23 随阶段 12 M5.1 落地；阶段 13 M1 追加查询与索引口径（§7），M2 追加聚合口径（§8）。
 > 依据：[阶段 12 范围登记](./2026-11-21-phase12-registration.md) D18–D25、[安全规范 §1.4](../standards/security.md#14-登录事件与可信设备访问矩阵-login-events--trusted-devices)、[登录事件登记 §2](./2026-11-21-phase12-registration.md#2-决策记录拟定2026-11-21)。
 
 ## 1. 数据源
@@ -73,3 +73,12 @@
 
 - 写入侧不对 `ip` 做 `net.isIP` 校验与长度归一化，超长 / 非法值在 MySQL 严格模式与 PostgreSQL 下会整行拒绝，缺口见 [backlog §3.3](../plan/backlog.md#33-基础设施)。
 - 验证方式：`tests/unit/server/login-events-repository.spec.ts` 锁定「IP-only 无时间谓词」「显式窗口才生成谓词」「分页契约字段不变」。
+
+## 8. 聚合口径（阶段 13 M2）
+
+- **下推位置**：`dailyTrend`（按 UTC 天）与热力图（`type × 桶`）都在数据库侧 `GROUP BY`，JS 只做补零桶（热力图固定桶轴）、排序与形状收敛；内存与传输随桶数（≤ 30 天 / 168 小时 × 7 类型）增长，不再随窗口内事件量增长。
+- **UTC 口径**：分桶表达式按方言生成，见 `server/utils/login-events/dialect.ts`——SQLite 用 `strftime` 取 UTC 文本分量；PostgreSQL 用 `AT TIME ZONE 'UTC'`；MySQL 先 `UNIX_TIMESTAMP` 还原 epoch 再整除换算（不用依赖时区表的 `CONVERT_TZ`）。MySQL 的 `created_at` 为 `DATETIME`：普通插入由 TypeORM 对 `@CreateDateColumn` 发 `DEFAULT`、数据库按会话 `time_zone` 生成 `CURRENT_TIMESTAMP`；显式回填 `createdAt` 时 mysql2 按 `DATABASE_TIMEZONE` 序列化为墙钟。因此前提是**数据库会话 `time_zone` 与 `DATABASE_TIMEZONE` 一致**，否则回填行桶整体平移、默认值行读回的时间也平移；部署时用 `SELECT @@session.time_zone` 核对。
+- **异常值兜底**：桶标签按 `YYYY-MM-DD` / `YYYY-MM-DD HH:00` 校验，方言差异产生的脏桶直接丢弃并记录 `warn`，不进入响应；未知事件类型同样丢弃（类型枚举仍由 `LOGIN_EVENT_TYPES` 补零）。
+- **响应不变**：字段、`timezone: 'UTC'`、`trendDays`、窗口上限（趋势默认 30 天、热力图 7 / 30 天）与排序均与阶段 12 一致。
+- **契约测试**：`tests/unit/server/login-events-dialect.spec.ts` 按方言断言分桶表达式与 `GROUP BY`，并用不含 `find` 的仓储替身证明统计 / 热力图不再全量拉取事件。
+- **未覆盖边界**：MySQL / PostgreSQL 无运行时实例，执行计划与真实方言结果仅由表达式契约保证；如需 EXPLAIN 级证据，随部署环境复核。

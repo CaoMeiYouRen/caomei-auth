@@ -2,6 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { DataSource, type FindOperator, type Repository } from 'typeorm'
 import { LoginEvent } from '@/server/entities/login-event'
 import { SnakeCaseNamingStrategy } from '@/server/database/naming-strategy'
+import { getLoginEventBucketExpression } from '@/server/utils/login-events/dialect'
 
 vi.mock('@/server/database', () => ({ dataSource: { getRepository: vi.fn() } }))
 
@@ -449,5 +450,26 @@ describe('登录事件仓储', () => {
         expect(heatmap.rows).toHaveLength(7)
         expect(heatmap.rows.every((row) => row.values.every((value) => value === 0))).toBe(true)
         expect(heatmap.buckets).toHaveLength(168)
+    })
+
+    it('统计与热力图生成的 SQL 含 GROUP BY 分桶，且不再全量拉取事件', async () => {
+        const querySpy = vi.spyOn(repository, 'createQueryBuilder')
+        const findSpy = vi.spyOn(repository, 'find')
+        try {
+            await getLoginEventStats({}, { repository, now: new Date('2026-11-22T00:00:00.000Z') })
+            await getLoginEventHeatmap({}, { days: 7, now: new Date('2026-11-22T12:34:56.000Z'), repository })
+
+            const sqls = querySpy.mock.results
+                .map((result) => (result.value as { getQuery?: () => string }).getQuery?.() ?? '')
+                .filter((sql) => sql.length > 0)
+            const bucketExpression = getLoginEventBucketExpression('day')
+            const bucketMarker = /strftime|UNIX_TIMESTAMP|AT TIME ZONE/iu.exec(bucketExpression)?.[0]
+            expect(bucketMarker).toBeDefined()
+            expect(sqls.some((sql) => /GROUP BY/iu.test(sql) && new RegExp(bucketMarker!, 'iu').test(sql))).toBe(true)
+            expect(findSpy).not.toHaveBeenCalled()
+        } finally {
+            querySpy.mockRestore()
+            findSpy.mockRestore()
+        }
     })
 })
