@@ -17,7 +17,7 @@
 
 | 编号 | 决策 | 结论 | 依据 / 影响 |
 | :--- | :--- | :--- | :--- |
-| D33 | 未启用语言门禁范围 | `check-locale-parity` 增加「按目录遍历」模式：对 es-ES / fr-FR / de-DE / ru-RU / pt-BR 断言键集合与占位符同构，缺失只拦截该目录自身完整性，不阻塞 5 语发布门禁 | 现有 parity / catalog / 审计只遍历 `ENABLED_LOCALES`，未启用语言补数据期可静默缺键；阻塞发布会把补数据变成发布阻塞，故采用「目录级完整性」口径 |
+| D33 | 未启用语言门禁范围 | `check-locale-parity` 增加「按目录遍历」模式：对 es-ES / fr-FR / de-DE / ru-RU / pt-BR 断言键集合与占位符同构（双向）；目录未创建只输出待建清单，目录一旦创建即进入发布校验，分批补数据用 `--allow-incomplete=<locale>` 白名单临时降级为 warning | 现有 parity / catalog / 审计只遍历 `ENABLED_LOCALES`，未启用语言补数据期可静默缺键；阻塞发布会把补数据变成发布阻塞，故采用「目录级完整性」口径 |
 | D34 | 语言包产物过滤 | `locale-runtime-loader` 的 `import.meta.glob` 按 `ENABLED_LOCALES` 过滤静态语言包，core / server 模块不过滤；构建产物保留 core 与已启用语言 | 当前产物含 ja-JP 等不可达 chunk（阶段 8 记录约 10 KB 且会累积）；过滤只影响未启用语言，不改运行时回退 |
 | D35 | 译文台账消费方 | 新增治理脚本断言：`reviewedModules ∪ pendingModules ⊆ LOCALE_MESSAGE_MODULES`、`readiness` 与 Registry 一致、`nativeReview` 取值合法；接入 `pnpm i18n:check` | 台账目前无消费方，全靠人工自觉；脚本化后与 `message-catalog` 校验互补 |
 | D36 | 多语言内部链接 | 认证页与页脚的字面路径统一改 `localePath()` / `NuxtLinkLocale`，保留原有视觉与文案；补多语言链接断言 | `/zh-TW`、`/en-US` 下点击注册 / 忘记密码 / 隐私 / 条款会回落默认语言，属既有缺陷 |

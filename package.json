@@ -210,7 +210,7 @@
     ],
     "i18n/locales/**/*.json": [
       "node scripts/i18n/audit-locale-keys.mjs --only=missing --fail-on-missing",
-      "node scripts/i18n/check-locale-parity.mjs",
+      "pnpm i18n:check-sync",
       "cross-env NODE_ENV=production eslint --config eslint.i18n.config.mjs --quiet"
     ],
     "{app.vue,pages/**/*.vue,components/**/*.vue,layouts/**/*.vue,composables/**/*.ts,server/api/**/*.ts,server/utils/**/*.ts,server/routes/**/*.ts,server/middleware/**/*.ts,server/templates/**/*.{ts,mjml}}": [

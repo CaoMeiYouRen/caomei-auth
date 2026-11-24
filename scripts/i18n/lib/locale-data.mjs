@@ -109,6 +109,59 @@ export function diffFlatKeys(base, target) {
     return { missing, extra }
 }
 
+/** vue-i18n 命名占位符：`{name}`、`{count, number}`、`{0}`；`{'@'}` 属字面量转义，不是占位符 */
+const PLACEHOLDER_PATTERN = /\{([^{}]*)\}/gu
+const PLACEHOLDER_NAME_PATTERN = /^(?:[A-Za-z_$][\w$]*|\d+)$/u
+
+/**
+ * 抽取单条文案中的占位符名（去重排序）。
+ * 只识别简单命名 / 位置占位符；复数、链接消息等嵌套语法不在此展开。
+ * @param {unknown} value
+ * @returns {string[]}
+ */
+export function extractPlaceholders(value) {
+    if (typeof value !== 'string') {
+        return []
+    }
+    const names = new Set()
+    for (const match of value.matchAll(PLACEHOLDER_PATTERN)) {
+        const token = match[1].trim()
+        if (!token || token.startsWith('\'')) {
+            continue
+        }
+        const name = token.split(',')[0].trim()
+        if (PLACEHOLDER_NAME_PATTERN.test(name)) {
+            names.add(name)
+        }
+    }
+    return [...names].sort()
+}
+
+/**
+ * 逐键比较占位符集合（双向）。缺键由 `diffFlatKeys` 报告，这里跳过，避免重复计数。
+ * @param {Map<string, unknown>} base
+ * @param {Map<string, unknown>} target
+ * @returns {{ key: string, missing: string[], extra: string[] }[]}
+ */
+export function diffPlaceholders(base, target) {
+    const diffs = []
+    for (const [key, baseValue] of base) {
+        if (!target.has(key)) {
+            continue
+        }
+        const baseNames = extractPlaceholders(baseValue)
+        const targetNames = extractPlaceholders(target.get(key))
+        const baseSet = new Set(baseNames)
+        const targetSet = new Set(targetNames)
+        const missing = baseNames.filter((name) => !targetSet.has(name))
+        const extra = targetNames.filter((name) => !baseSet.has(name))
+        if (missing.length > 0 || extra.length > 0) {
+            diffs.push({ key, missing, extra })
+        }
+    }
+    return diffs
+}
+
 export function escapeRegExp(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')
 }
