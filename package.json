@@ -14,8 +14,9 @@
     "i18n:audit:hardcoded": "node scripts/i18n/audit-hardcoded-text.mjs",
     "i18n:audit:hardcoded:update": "node scripts/i18n/audit-hardcoded-text.mjs --update",
     "i18n:check-sync": "node scripts/i18n/check-locale-parity.mjs",
+    "i18n:check-provenance": "node scripts/i18n/check-translation-provenance.mjs",
     "i18n:check-fallback": "node scripts/i18n/check-locale-fallback.mjs",
-    "i18n:check": "pnpm i18n:audit:missing && pnpm i18n:check-sync && pnpm i18n:check-fallback && pnpm i18n:audit:source && pnpm i18n:audit:hardcoded && pnpm lint:i18n && pnpm test:i18n",
+    "i18n:check": "pnpm i18n:audit:missing && pnpm i18n:check-sync && pnpm i18n:check-provenance && pnpm i18n:check-fallback && pnpm i18n:audit:source && pnpm i18n:audit:hardcoded && pnpm lint:i18n && pnpm test:i18n",
     "i18n:verify": "pnpm lint:i18n && pnpm test:i18n",
     "security:alerts": "node scripts/security/check-alerts.mjs",
     "quality:file-size": "node scripts/quality/check-file-size.mjs",
@@ -212,6 +213,9 @@
       "node scripts/i18n/audit-locale-keys.mjs --only=missing --fail-on-missing",
       "pnpm i18n:check-sync",
       "cross-env NODE_ENV=production eslint --config eslint.i18n.config.mjs --quiet"
+    ],
+    "{i18n/translation-provenance.json,i18n/config/locale-registry.ts,i18n/config/locale-modules.ts}": [
+      "pnpm i18n:check-provenance"
     ],
     "{app.vue,pages/**/*.vue,components/**/*.vue,layouts/**/*.vue,composables/**/*.ts,server/api/**/*.ts,server/utils/**/*.ts,server/routes/**/*.ts,server/middleware/**/*.ts,server/templates/**/*.{ts,mjml}}": [
       "node scripts/i18n/audit-hardcoded-text.mjs"

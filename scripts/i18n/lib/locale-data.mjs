@@ -8,6 +8,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 export const projectRoot = path.resolve(__dirname, '..', '..', '..')
 export const localesRoot = path.join(projectRoot, 'i18n', 'locales')
 export const registryPath = path.join(projectRoot, 'i18n', 'config', 'locale-registry.ts')
+export const localeModulesPath = path.join(projectRoot, 'i18n', 'config', 'locale-modules.ts')
+export const provenancePath = path.join(projectRoot, 'i18n', 'translation-provenance.json')
 
 /** 默认语言与回退语言必须使用 CJK 判定“是否翻译”，与翻译文案本身无关 */
 export const CJK_PATTERN = /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/u
