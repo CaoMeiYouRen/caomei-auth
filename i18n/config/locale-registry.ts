@@ -208,7 +208,8 @@ export const ENABLED_LOCALE_CODES = ENABLED_LOCALES.map((locale) => locale.code)
 
 const ENABLED_LOCALE_CODE_SET = new Set<string>(ENABLED_LOCALE_CODES)
 
-function isEnabledLocale(code: string): code is LocaleCode {
+/** 是否属于已启用语言（加载器 / 守卫共用，避免各写一份判定） */
+export function isEnabledLocaleCode(code: string): code is LocaleCode {
     return ENABLED_LOCALE_CODE_SET.has(code)
 }
 
@@ -266,12 +267,12 @@ export function matchDetectedLocale(input?: string | null): LocaleCode | undefin
     }
 
     const aliased = matchAuthLocaleAlias(raw) ?? matchAuthLocaleAlias(raw.split('-')[0] ?? '')
-    if (aliased && isEnabledLocale(aliased)) {
+    if (aliased && isEnabledLocaleCode(aliased)) {
         return aliased
     }
     /* 仅在 zh-TW 停用时生效（当前 Registry 已启用 zh-TW，本分支不可达）：
      * 繁体用户回退简体，避免按 tag 协商时被跳过而落到英文 */
-    if (aliased === 'zh-TW' && isEnabledLocale('zh-CN')) {
+    if (aliased === 'zh-TW' && isEnabledLocaleCode('zh-CN')) {
         return 'zh-CN'
     }
     return undefined

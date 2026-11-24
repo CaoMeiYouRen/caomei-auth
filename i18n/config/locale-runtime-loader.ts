@@ -1,4 +1,4 @@
-import { normalizeDetectedLocale } from './locale-registry'
+import { isEnabledLocaleCode, normalizeDetectedLocale } from './locale-registry'
 import { LOCALE_CORE_MODULES, resolveLocaleMessageModulesForPath, type LocaleMessageModule } from './locale-modules'
 
 /**
@@ -19,16 +19,31 @@ interface ComposerLike {
     mergeLocaleMessage: (locale: string, message: LocaleMessages) => void
 }
 
+/** 静态语言包路径是否属于已启用语言（路径形态 `../locales/<locale>/<module>.json`） */
+export function isEnabledLocaleModulePath(filePath: string): boolean {
+    const locale = /^\.\.\/locales\/([^/]+)\/[^/]+\.json$/u.exec(filePath)?.[1]
+    return locale ? isEnabledLocaleCode(locale) : false
+}
+
 /**
- * 只覆盖客户端懒加载模块（排除 core 与 server）：core 由 `files[]` 预装，
- * server 模块在服务端装配（M15 / M16）。负向模式避免 core 文案被二次打包。
+ * 静态懒加载入口：键为 `../locales/<locale>/<module>.json`；只读，仅门禁 / 测试消费，
+ * 业务侧请走 `ensureLocaleMessageModules`。
+ *
+ * 只覆盖客户端懒加载模块（排除 core 与 server）：core 由 `files[]` 预装，server 模块在服务端装配。
+ * 未启用语言目录同样用负向模式排除，避免补数据期间的半成品被编入客户端产物；运行期再按
+ * Registry 的启用判定过滤一次，作为反向兜底（只剔除多余键，补不回漏排除项）。新增停用语言目录
+ * 或启用语言时，须同步负向清单与 `tests/unit/i18n/locale-runtime-loader.spec.ts` 的守卫。
  */
-const localeModuleImporters = import.meta.glob([
-    '../locales/**/*.json',
-    '!../locales/**/{app,common,errors,validation,auth,email,server-only}.json',
-], {
-    import: 'default',
-}) as Record<string, () => Promise<LocaleMessages>>
+export const localeModuleImporters: Readonly<Record<string, () => Promise<LocaleMessages>>> = Object.freeze(Object.fromEntries(
+    Object.entries(import.meta.glob([
+        '../locales/**/*.json',
+        '!../locales/**/{app,common,errors,validation,auth,email,server-only}.json',
+        '!../locales/{es-ES,fr-FR,de-DE,ru-RU,pt-BR}/**/*.json',
+    ], {
+        import: 'default',
+    }) as Record<string, () => Promise<LocaleMessages>>)
+        .filter(([filePath]) => isEnabledLocaleModulePath(filePath)),
+))
 
 /** 以 i18n 实例为 key 的弱引用缓存：实例销毁后自动释放，避免热更新串状态 */
 const loadedModulesRegistry = new WeakMap<object, Map<string, Set<LocaleMessageModule>>>()

@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { LOCALE_CORE_MODULES, LOCALE_SERVER_MODULES, getClientLazyLocaleMessageModules } from '@/i18n/config/locale-modules'
+import { LOCALE_REGISTRY } from '@/i18n/config/locale-registry'
 import { ensureLocaleMessageModules, ensureRouteLocaleMessages } from '@/i18n/config/locale-runtime-loader'
 
 function createI18n() {
@@ -87,6 +88,17 @@ describe('i18n/config/locale-runtime-loader', () => {
 
         expect(excluded).toBeTruthy()
         expect(excluded?.split(',').sort()).toEqual([...LOCALE_CORE_MODULES, ...LOCALE_SERVER_MODULES].sort())
+    })
+
+    it('keeps the negative locale pattern in sync with disabled registry locales', () => {
+        /* 启用新语言时必须同步负向清单，否则该语言的懒加载模块会被静默排除 */
+        const source = readFileSync(path.resolve(process.cwd(), 'i18n/config/locale-runtime-loader.ts'), 'utf8')
+        const excluded = source.match(/!\.\.\/locales\/\{([^}]+)\}\//u)?.[1]
+
+        expect(excluded).toBeTruthy()
+        expect(excluded?.split(',').sort()).toEqual(
+            LOCALE_REGISTRY.filter((locale) => locale.enabled !== true).map((locale) => locale.code).sort(),
+        )
     })
 
     it('ignores instances without a mergeLocaleMessage API', async () => {
