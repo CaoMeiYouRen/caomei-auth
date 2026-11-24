@@ -173,6 +173,19 @@ fine-grained PAT 有有效期，到期后会持续失败，轮换流程：
 -   读取 Dependabot alerts 必须使用 `GH_TOKEN`（fine-grained PAT：Dependabot alerts: read）；`GITHUB_TOKEN` 无法读取该 API（403），Token 轮换流程见 5.1.2。Code scanning 使用 workflow 的 `GITHUB_TOKEN`（权限 `security-events: read`，环境变量 `CODE_SCANNING_TOKEN`），本地执行时回退 `GH_TOKEN`；两类 token 不共用，避免单一凭据失效同时中断两路扫描。
 -   报告输出：完整 Markdown 写入 `--report` 文件与 GitHub Step Summary；设置 `GITHUB_STEP_SUMMARY` 时 stdout 仅输出一行状态，避免同一份报告同时出现在 Step Summary 与 Step Log。本地运行或显式 `--verbose` 时 stdout 输出完整 Markdown。weekly 的追踪 Issue 仍读取 `security-alert-report.md`，不受影响。
 
+### 5.1.4 漏洞研判与安全公告 (Vulnerability Triage & Security Advisory)
+
+适用于每日 12:00 的定时任务「CI 失败巡检修复」。
+
+1.  **来源与权限**：Security advisories（含私下漏洞报告，入口见 [SECURITY.md](../../SECURITY.md)；需仓库管理级凭据，如 fine-grained PAT 的 `Repository security advisories: Read`，凭据不足时改为人工在 GHSA 页面读取并抄录到本地报告，并在摘要中显式告警）、Dependabot alerts（依赖 `GH_TOKEN`，见 §5.1.2）、Code scanning alerts（`GITHUB_TOKEN` / `GH_TOKEN`，见 §5.1.3）、issue 关键词检索（`security` / `vulnerability` / `CVE` / `漏洞` / `安全`）。任一来源不可用按「未扫描」记录，不得当作「无漏洞」（§5.1.3）。
+2.  **本地研判，不得外泄**：安全公告与私下报告的内容**不得写入 issue、PR、评论，也不得推送到远端分支**；提交信息、分支名与 CHANGELOG 同样不得包含漏洞细节，统一使用中性描述（如 `fix(security): 修复鉴权边界判断`）。研判记录只落在本地 `.session/security-triage/<YYYY-MM-DD>.md`（`.session/` 已被 git 忽略），最少包含：来源与编号、报告摘要、复现与影响版本、攻击面前提、影响数据范围、严重级别（对照 §5.1.3 与 CVSS）、结论（真 / 误报 / 信息不足）、建议动作、时间戳。每周回归自动创建的「安全告警追踪」Issue 只承载告警元数据（编号 / 包 / 级别 / 豁免到期），不承载研判内容。
+3.  **误报**：写明依据并记录到本地报告；Dependabot 告警 dismissal 使用 `fix_started` / `inaccurate` / `no_bandwidth` / `not_used` / `tolerable_risk`，Code scanning 使用 `false positive` / `won't fix` / `used in tests`，并填写 `dismissed_comment`；**仍须**按 §5.1.3 登记 `.github/security-alert-exemptions.json`（定位字段 `source` + `alertNumber`，或 `ghsaId` / `ruleId`；以及 `category=false-positive` + `reason` + `tracking` + `expiresAt`），否则发布门禁照旧判未通过。
+4.  **为真**：在本地报告中给出修复方案（受影响文件、修复思路、回归范围、发布影响、公告要点），等待人工审查；**人工批准前不得改代码、不得推送、不得对外沟通**。研判结论与本地报告路径必须写进本次巡检摘要并标注「待人工审查」。已确认真实性且人工批准修复的漏洞，按 [规划规范 §3](./planning.md#3-准入规则) 的插队例外进入当前阶段并写明理由；尚未研判的新候选登记 `backlog.md`，不得直接写入 `todo.md`。
+5.  **修复**：按 [AI 协作规范](./ai-collaboration.md) 走 PDTFC；安全 / 鉴权改动 `audit-depth=deep`；`critical` 必须修、`high` 默认阻塞（§5.1.3）；`pnpm security:alerts` 必须通过。
+6.  **发布（两道人工门）**：方案批准 ≠ 发布批准。**发布批准须在合入 `master` 之前取得**——推送 `master` 即触发 `Publish Docker Image`（镜像发布与部署），合入本身已属发布动作（见 [Git 规范 §8](./git.md#8-推送策略)）。发布时需同时满足：人工批准发布、修复已合入 `master`、CI 全绿、`pnpm security:alerts` 通过、release notes 与公告文案已由人工确认；发版批准口径以本节为唯一事实源，`release.yml` 的触发方式见 Git 规范 §8。
+7.  **发布方式**：release 用 `gh workflow run release.yml --ref master`（或仓库既有流程），版本号遵循 semver，安全修复默认 patch，触发后等待该次 run 结果；公告载体为 GitHub Security Advisory（GHSA），如需 CVE 编号须在 GHSA 草稿中 Request CVE 由 GitHub（CNA）分配，未获编号前公告写 `CVE ID: Pending`，不得对外声称已有 CVE；模板与协同披露顺序见 [SECURITY.md](../../SECURITY.md)。
+8.  任一条件不满足时停在方案 / 草稿阶段，把缺口写入本地报告；禁止跳过人工确认直接发布。
+
 ### 5.2 供应链信任边界 (Supply Chain Trust Boundary)
 
 引入新的依赖、MCP server、外部 skill/agent 或 AI 推荐的包时，必须执行来源核验，默认不信任：
