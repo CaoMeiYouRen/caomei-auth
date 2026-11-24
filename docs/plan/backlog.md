@@ -104,6 +104,9 @@
 - **`conventional-committer` 项目副本落后上游**：`.github/skills/conventional-committer/SKILL.md` 是上游 `cmyr-skills-agents@41d9160` 的裁剪版，缺消息格式规范、多提交交付、项目覆盖锚点，且 Step 4.3 允许 `--no-verify`（与 `AGENTS.md` §7.3.6 冲突）。当前破坏性提交规则已把格式与示例改为指向 [Git 规范 §3.2](../standards/git.md#32-破坏性提交人工审查)，仅保留定义与约束；待整体同步上游时一并消除 `--no-verify` 口径差异。
 - **迁入来源**：原 `todo.md`「低优先级 · 文档同步」与既有 backlog 质量类条目。
 
+- **译文台账字段存在性断言**：`scripts/i18n/check-translation-provenance.mjs` 已断言条目集合（非 seo-ready 启用语言必须登记）、模块覆盖与重叠、`readiness` 与 `nativeReview`；`source` / `reviewLevel` / `updatedAt` 的存在性与格式仍未校验，台账可长期缺少来源说明而不报错。处理方向：补字段必填与日期格式断言，并与 `reviewLevel` 取值枚举一起收紧（需先确认历史条目是否需要回填）。
+- **2FA 魔法链接过期用例时序抖动**：`tests/unit/server/two-factor-coverage-factors.spec.ts > rejects an expired magic link` 以 `magicLinkExpiresIn: 2` + `sleep 2200ms` 验证过期，负载高时偶发失败（2026-11-24 两次全量运行出现，单文件复跑 8/8 通过）。处理方向：改用可控时钟或放大过期余量，并排查同类「短 TTL + sleep」用例。
+
 ### 3.3 基础设施
 
 
