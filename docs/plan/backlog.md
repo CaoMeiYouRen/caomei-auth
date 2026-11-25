@@ -5,6 +5,28 @@
 
 ---
 
+## 0. 优先级评分视图（当前期）
+
+> 口径见 [规划规范 §9](../standards/planning.md#9-backlog-优先级双轴)（issue #747）。只列已评分候选；未列入者为「未评估」，不得作为高优先依据，触碰时补分。分数为 2026-11-26 判断，季度或状态变化时复评。
+
+| 候选 | 重要 | 紧急 | 建议 | 可复算依据 |
+| :--- | :-: | :-: | :--- | :--- |
+| [验证码服务端校验与插件注册条件](#31-安全与合规) | 4 | 4 | 首排 | 自定义端点无 `x-captcha-response` 校验；provider + siteKey 缺 secret 时 500 |
+| [登录事件 IP 写入契约](#33-基础设施) | 4 | 3 | 排期 | 三方言对超长 / 带端口 IP 行为分叉，触发条件已登记 |
+| [上游未修复依赖 `braces`](#31-安全与合规) | 3 | 2 | 延后 | 仅构建链、上游无补丁；发版后升级 |
+| [PKCE 策略可配置化](#31-安全与合规) | 3 | 2 | 延后 | 上游 1.7 默认收紧，管理端未暴露 `requirePKCE` |
+| [时序型测试抖动](#32-质量与测试) | 3 | 3 | 延后 | 2026-11-24/25 共 5 次偶发，单文件复跑通过 |
+| [剩余站内字面路径 localePath 收敛](#32-质量与测试) | 3 | 2 | 延后 | 2026-11-25 扫描 18 文件 / 44 处 |
+| [视觉矩阵补 1024 横向宽度](#32-质量与测试) | 2 | 1 | 延后 | 无回归保护，需评估 CI 时长 |
+| [覆盖率模块下限自动化校验](#32-质量与测试) | 2 | 2 | 延后 | 规范有阈值、CI 不阻断 |
+| [文档站锚点与 GitHub slug 不一致](#32-质量与测试) | 2 | 2 | 延后 | 30+ 交叉引用在站点落空，`ignoreDeadLinks` 掩盖 |
+| [i18n 10 语内容扩展](#32-质量与测试) | 2 | 1 | 延后 | 5 语已启用，其余 `enabled=false` |
+| [`/sso-login` 暗色主题缺失](#34-ui-与主题) | 3 | 2 | 延后 | 硬编码浅色，暗色基线呈现浅色内容 |
+| [Admin 数据表移动端卡片化](#34-ui-与主题) | 2 | 1 | 延后 | 阶段 15 只做基础可用（D49） |
+| [OAuth web 客户端 http 回环](#35-移动端与认证可用性) | 2 | 1 | 延后 | 仅本地联调，native + PKCE 可用 |
+
+---
+
 ## 1. 专项子规划
 
 暂无独立子规划候选。
@@ -67,10 +89,10 @@
 
 ### 3.1 安全与合规
 
-- **上游未修复依赖告警跟进**：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4，lock 仍为 3.0.3）暂无已发布补丁版本，仅存在于构建 / 开发工具链；待上游发版后升级并复查 `pnpm audit`。`node-forge` 已升至 1.4.3（满足 GHSA-86w9-cpqp-85rv 的 ≥1.4.1），从本条移除。
-- **OAuth 客户端 PKCE 策略可配置化**：管理端创建客户端时固定写入 `requirePKCE = false`（`server/api/admin/oauth/applications/index.post.ts`），创建 / 更新 Schema、管理端视图与表单均未暴露该字段，管理员无法为新客户端开启 PKCE；上游 1.7 的安全默认已改为「必需」（`requirePKCE ?? true`），本项与 [1.7 升级记录](../design/governance/better-auth-1.7-upgrade.md) 中的兼容取舍同源。公开客户端（`token_endpoint_auth_method: none`）与申请 `offline_access` 的请求由上游无条件强制 PKCE，因此现状只影响机密客户端；`docs/api/oauth.md` 仍写「当前版本不支持 PKCE」，与现行为不一致。处理方向：Schema 增加可选 `require_pkce`（新建默认 `true`）、管理端开关与 i18n、创建 / 更新端点与视图透传、补契约测试，并更正 API 文档；不回溯改写存量客户端，保持既有接入方行为不变。依据 RFC 9700 / RFC 7636 对全客户端启用 PKCE 的建议。
+- **上游未修复依赖告警跟进**（重要 3 / 紧急 2 · 延后）：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4，lock 仍为 3.0.3）暂无已发布补丁版本，仅存在于构建 / 开发工具链；待上游发版后升级并复查 `pnpm audit`。`node-forge` 已升至 1.4.3（满足 GHSA-86w9-cpqp-85rv 的 ≥1.4.1），从本条移除。
+- **OAuth 客户端 PKCE 策略可配置化**（重要 3 / 紧急 2 · 延后）：管理端创建客户端时固定写入 `requirePKCE = false`（`server/api/admin/oauth/applications/index.post.ts`），创建 / 更新 Schema、管理端视图与表单均未暴露该字段，管理员无法为新客户端开启 PKCE；上游 1.7 的安全默认已改为「必需」（`requirePKCE ?? true`），本项与 [1.7 升级记录](../design/governance/better-auth-1.7-upgrade.md) 中的兼容取舍同源。公开客户端（`token_endpoint_auth_method: none`）与申请 `offline_access` 的请求由上游无条件强制 PKCE，因此现状只影响机密客户端；`docs/api/oauth.md` 仍写「当前版本不支持 PKCE」，与现行为不一致。处理方向：Schema 增加可选 `require_pkce`（新建默认 `true`）、管理端开关与 i18n、创建 / 更新端点与视图透传、补契约测试，并更正 API 文档；不回溯改写存量客户端，保持既有接入方行为不变。依据 RFC 9700 / RFC 7636 对全客户端启用 PKCE 的建议。
 - **迁入来源**：既有 backlog「上游未修复依赖告警跟进」与原 `todo.md`「低优先级 · 安全审计工具集成」（安全审计已由 `.github/workflows/security-auto-fix.yml` 每日巡检 + Dependabot 落地，不再作为候选）；PKCE 策略项来自 2026-11-23 维护者评审（按安全加固登记）。
-- **验证码服务端注册条件与配置可用性不一致**（2026-11-25，M8.1 复审 RG-W6）：`lib/auth.ts` 以 `isCaptchaEnabled()`（provider + siteKey）决定是否挂载 captcha 插件，但 `getCaptchaConfig()` 缺 secret 时返回 `null`，插件以非空断言注册后在请求期读取 `options.endpoints` 报 `Cannot read properties of null`，表现为 500 而非「未启用」；同时 `/api/security/change-email`、`/api/security/two-factor/send-otp` 是自定义包装端点，不在插件 endpoints 内，服务端不校验 `x-captcha-response`，验证码只有前端门禁。处理方向：按 `getCaptchaConfig() !== null` 注册插件，补齐自定义端点的服务端校验或明确「仅前端」口径，并补部分配置与端点覆盖测试。
+- **验证码服务端注册条件与配置可用性不一致**（重要 4 / 紧急 4 · 首排）（2026-11-25，M8.1 复审 RG-W6）：`lib/auth.ts` 以 `isCaptchaEnabled()`（provider + siteKey）决定是否挂载 captcha 插件，但 `getCaptchaConfig()` 缺 secret 时返回 `null`，插件以非空断言注册后在请求期读取 `options.endpoints` 报 `Cannot read properties of null`，表现为 500 而非「未启用」；同时 `/api/security/change-email`、`/api/security/two-factor/send-otp` 是自定义包装端点，不在插件 endpoints 内，服务端不校验 `x-captcha-response`，验证码只有前端门禁。处理方向：按 `getCaptchaConfig() !== null` 注册插件，补齐自定义端点的服务端校验或明确「仅前端」口径，并补部分配置与端点覆盖测试。
 
 ### 3.2 质量与测试
 
@@ -82,15 +104,15 @@
     - 阶段 2 按范围设下限并全部达标：`server/api` ≥95%（95.94%）、`composables` ≥80%（84.35%）、`components/base` ≥75%（90.11%），全局不跌破 75.74%。
     - 详见 [测试规范](../standards/testing.md)。
 - **caomei-ui DataTable 分页 / 排序能力补齐**：1.2.0 的 `CaomeiDataTable` 未透出 `CaomeiPaginator` 的 `showEdges`（迁移后首 / 末页按钮消失），且 `lazy` 只映射 `manualPagination`、未关闭客户端排序（未透出 `manualSorting`，当前页数据会被二次排序）。影响 `/admin/users`（M2）、`/admin/oauth/applications`（M4）与 `/admin/sso/providers`（M6）；`CaomeiDataTable` 的受控排序也不支持清除（空排序事件被忽略）。处理方向：向上游提能力需求，或明确接受并写入口径；不在页面内做临时绕过。
-- **国际化 10 语内容扩展**：阶段 8 只启用 5 语（zh-CN / en-US / zh-TW / ja-JP / ko-KR），es-ES / fr-FR / de-DE / ru-RU / pt-BR 仅登记在 Registry 且 `enabled=false`；后续按 5 语批次复用同一翻译 / 校验流程后再启用。
+- **国际化 10 语内容扩展**（重要 2 / 紧急 1 · 延后）：阶段 8 只启用 5 语（zh-CN / en-US / zh-TW / ja-JP / ko-KR），es-ES / fr-FR / de-DE / ru-RU / pt-BR 仅登记在 Registry 且 `enabled=false`；后续按 5 语批次复用同一翻译 / 校验流程后再启用。
 - **新语言母语审校与 seo-ready 升级**：zh-TW / ja-JP / ko-KR 本阶段为机器翻译 draft + `ui-ready`（不索引）；母语审校、术语确认与核心页视觉抽检后逐语言升级 `seo-ready` 并进入 sitemap / hreflang。
 - **`message-catalog` 内容断言覆盖范围待确认**：`tests/i18n/message-catalog.spec.ts` 用 `import.meta.glob` 读语言包；一次实测（`npx vitest run tests/i18n/kana-debug.spec.ts`，主配置 + Nuxt 环境）取到的是带 `type/start/end` 位置元数据的结构（`app.name` → `{type:'0',start:0,end:7}`，flatten 后 10185 条），内容类断言会静默失效；复核未复现（同配置下取到真实文案）。现状：内容类断言已改为 `readFileSync` 读原始 JSON（阶段 8 M8）；仍需确定稳定 repro（配置 / 版本 / 启动目录）后再决定是否把该文件从主配置 `include` 排除。
 - **根路径浏览器语言重定向不识别 `zh-Hant` / `zh-HK`**：`Accept-Language: zh-Hant` / `zh-HK` 首次访问根路径时由 `@nuxtjs/i18n` 自身匹配，落到 zh-CN，与 `matchDetectedLocale` 的别名口径不一致（邮件与服务端协商已落到 zh-TW）。处理方向：接受并写入口径，或补 `zh-HK` / `zh-MO` 别名并评估自定义探测回调。
 - **Admin 页面深度覆盖与 pages 分母口径**：当前页面测试只覆盖首页 / 登录页 / 静态页（pages 77.46% 仅统计测试导入的 5 个文件）；补 Admin 页 smoke 测试会加载大量低覆盖模板，把全局从 78.3% 拉到 73%（低于阶段 6 基线），故未纳入阶段 7。处理方向：为 Admin 页按交互深度补测（表格选择 / 筛选 / 对话框流程），达标后再纳入覆盖率分母，并同步评估 `coverage.include`。
-- **覆盖率模块下限自动化校验**：`pages` ≥ 40% / `plugins` ≥ 40% 与全局非回归基线目前只写规范，CI 不阻断；Vitest 4 移除 `coverage.all` 后报告只统计被测试导入的文件，数字回落无人发现。评估用 `coverage.thresholds`（glob）或脚本读取 `coverage-final.json` 做门禁。
+- **覆盖率模块下限自动化校验**（重要 2 / 紧急 2 · 延后）：`pages` ≥ 40% / `plugins` ≥ 40% 与全局非回归基线目前只写规范，CI 不阻断；Vitest 4 移除 `coverage.all` 后报告只统计被测试导入的文件，数字回落无人发现。评估用 `coverage.thresholds`（glob）或脚本读取 `coverage-final.json` 做门禁。
 - **stylelint 18 规则补位**：`stylelint-config-cmyr@1.1.0` 为兼容 SCSS 变量关闭了 `value-no-invalid`（实测现有样式 21 条误报），取值拼写错误暂时不再被拦截；待上游支持 SCSS 变量值后恢复。同配置的 `stylelint-config-recommended-scss@17.0.1` peer 仍为 `stylelint ^17`，需上游升 `^18` 才与 stylelint 18 正式对齐。
 - **视觉平板矩阵扩展**：阶段 7 只覆盖 login / register / profile / admin-users / admin-logs 的 768×1024；`/security`、`/change-password` 等核心认证页与横向溢出断言的全矩阵化待评估 CI 时长后补。
-- **视觉矩阵补 1024 横向宽度**：阶段 7 只新增 768×1024 平板基线；1024 横向（小桌面 / 横屏平板）无回归保护，待评估 CI 时长后补。
+- **视觉矩阵补 1024 横向宽度**（重要 2 / 紧急 1 · 延后）：阶段 7 只新增 768×1024 平板基线；1024 横向（小桌面 / 横屏平板）无回归保护，待评估 CI 时长后补。
 - **视觉基线对「低于阈值的纯色漂移」无感**：`visualExpect` 的 `threshold: 0.2` 允许单像素 YIQ delta ≤ 1,408.6，`#18181b` → `#1e1e1e` 的 delta 只有 16.6，逐像素判等，`maxDiffPixels: 200` 永不触发。P5-1（f91e6e4）换语言切换器 token 后，暗色基线直到 M4-2 因文案位移被迫重采才暴露。处理方向：为关键 token / 组件计算样式补断言（如 `--admin-surface`、`.language-switcher__trigger` 背景色），或在 token / 主题变更时按「全量暗色基线重采」写入门禁清单；`test:visual:update` 改为 `--update-snapshots=all` 并在报告中打印构建产物 SHA / 提交号，避免增量重采留下混合代基线。
 - **视觉预算分级与允许清单**：评估 Admin 数据页（DataTable 密度 / 选择列 / 空态）的 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单；P4-0 暂用统一阈值，避免在迁移期引入双重标准。
 - **Admin 对话框视觉矩阵未覆盖内部滚动区**：视觉层只截整页首屏，SSO 创建对话框（900px 宽、内部滚动）的 OIDC / SAML / 属性映射配置段落在首屏之外，M7 迁移后自基线无像素变化，只能靠定向 Playwright 验收。处理方向：在矩阵中为长表单补充「滚动到指定分段后再截图」的交互态，或明确接受并写入口径。
@@ -98,7 +120,7 @@
 - **2FA / captcha / Toast 视觉覆盖**：为 2FA 弹窗、验证码启用态、提交中 / 提交成功 Toast 补充参考态与自基线；需已启用 2FA 的测试账号与 captcha provider。阶段 3 已登记为环境限制，M6-1 收口时迁入本候选（不再保留阶段编号）。
 - **API 参考文档同步**：M2-3 已覆盖 Zod 相关 API 文档；本条目只保留 `/api/admin/sso/providers` 系列补录（i18n 相关文档已在阶段 5 M19 同步）。
 - **`AGENTS.md` §7.3.4 提交粒度口径待同步**：规划规范 v1 新增「回填提交 / 阶段收口提交」两类不承载小条目的提交（回填只补表格字段、收口跨多个大条目），`AGENTS.md` §7.3.4 目前只覆盖「规划 / 治理类改动关联 backlog 候选」；修改 AGENTS.md 需用户授权，故先在规范侧按 §7.3.4 口径解释并保留差异。处理方向：取得授权后把两类例外写入 §7.3.4，并与 `git.md` §3 同批对齐。
-- **文档站锚点与 GitHub slug 不一致**：文档站（VitePress）对数字开头的标题会补 `_` 前缀、把 `7.3` 归一为 `7-3`（如 `planning.html` 的实际 id 是 `_7-进度表`、`AGENTS.html` 是 `_7-3-提交规范-commit-convention`），而仓库内 30+ 处交叉引用沿用 GitHub slug（`#7-进度表`、`#8-推送策略`），在站点上全部点不到；`ignoreDeadLinks: true` 使 `docs:build` 不会报错。处理方向：统一一种 slug 形式（或给长引用标题加显式 `id`），并补一条比对 `dist` 实际 `id` 的校验脚本；与「规划文档机检」候选合并实施更划算。清点范围含 2026-11-21 新增的 `#3-提交规范`、`#32-破坏性提交人工审查`、`#32-质量与测试`。
+- **文档站锚点与 GitHub slug 不一致**（重要 2 / 紧急 2 · 延后）：文档站（VitePress）对数字开头的标题会补 `_` 前缀、把 `7.3` 归一为 `7-3`（如 `planning.html` 的实际 id 是 `_7-进度表`、`AGENTS.html` 是 `_7-3-提交规范-commit-convention`），而仓库内 30+ 处交叉引用沿用 GitHub slug（`#7-进度表`、`#8-推送策略`），在站点上全部点不到；`ignoreDeadLinks: true` 使 `docs:build` 不会报错。处理方向：统一一种 slug 形式（或给长引用标题加显式 `id`），并补一条比对 `dist` 实际 `id` 的校验脚本；与「规划文档机检」候选合并实施更划算。清点范围含 2026-11-21 新增的 `#3-提交规范`、`#32-破坏性提交人工审查`、`#32-质量与测试`。
 - **`lib/auth.ts` 能力拆分**：注册准入校验已抽到 `server/utils/registration-guard.ts`（2026-11-21，CI 文件规模门禁修复），`lib/auth.ts` 由 609 降至 589 行并移出文件规模基线；基线条目原有的拆分计划（session / password / mfa 能力拆到 `lib/auth/` 子模块）随之失去记录位置，在此保留线索。处理方向：按 session / password / mfa 三段拆分，拆分后 `lib/auth.ts` 只保留实例装配。
 - **破坏性提交 `commit-msg` 机检**：issue #746 本期只落人工纪律与 `Breaking-Review:` 记录格式（见 [Git 规范 §3.2](../standards/git.md#32-破坏性提交人工审查)）。待补 `.husky/commit-msg` 同构检查：消息含 `BREAKING CHANGE:` 或 `!` 头部时，要求存在独立成行的 `^Breaking-Review: [^\s]+ \d{4}-\d{2}-\d{2} (approved|approved-with-migration)$`，位于其所属 `BREAKING CHANGE:` 之前且中间最多一个空行，否则给出可操作提示。接入前先确认 `!` 头部判定口径（本仓 changelog parser 不识别 `!`，属上游独立缺陷），覆盖 amend 与「含破坏性提交禁止 squash」场景，并先以 warning 运行一个发布周期再考虑阻断。
 - **`AGENTS.md` §7.3 对齐破坏性提交确认**：issue #746 已把规则落到 [Git 规范 §3](../standards/git.md#3-提交规范)，但 `AGENTS.md` §7.3 仍是旧 6 条（第 6 条为提交钩子），两边编号与内容不一致。修改 `AGENTS.md` 需用户授权；待授权后把破坏性提交确认写入 §7.3（或改为一行引用 `git.md` §3.2），并同步 `docs/standards/ai-collaboration.md` 的提交前置检查。
@@ -106,14 +128,14 @@
 - **迁入来源**：原 `todo.md`「低优先级 · 文档同步」与既有 backlog 质量类条目。
 
 - **译文台账字段存在性断言**：`scripts/i18n/check-translation-provenance.mjs` 已断言条目集合（非 seo-ready 启用语言必须登记）、模块覆盖与重叠、`readiness` 与 `nativeReview`；`source` / `reviewLevel` / `updatedAt` 的存在性与格式仍未校验，台账可长期缺少来源说明而不报错。处理方向：补字段必填与日期格式断言，并与 `reviewLevel` 取值枚举一起收紧（需先确认历史条目是否需要回填）。
-- **时序型测试抖动**：`tests/unit/server/two-factor-coverage-factors.spec.ts` 的 `rejects an expired magic link`（`magicLinkExpiresIn: 2` + `sleep 2200ms`）与 `re-challenges after the trusted device expires`（`trustDeviceMaxAge: 2` + 同款 sleep）在高负载全量运行中偶发失败（2026-11-24/25 共 5 次出现，单文件复跑 8/8 通过；把 TTL 收到 1s 仍复现，疑似与计时器 / 时钟精度或共享状态有关）；`tests/unit/components/caomei-data-table.spec.ts` 的「多选使用受控 selection」「受控分页」也出现过 3 次类似抖动。处理方向：改用可控时钟（`vi.useFakeTimers`）并显式推进，或改用可注入的过期判定；不要靠放大 sleep 掩盖。
+- **时序型测试抖动**（重要 3 / 紧急 3 · 延后）：`tests/unit/server/two-factor-coverage-factors.spec.ts` 的 `rejects an expired magic link`（`magicLinkExpiresIn: 2` + `sleep 2200ms`）与 `re-challenges after the trusted device expires`（`trustDeviceMaxAge: 2` + 同款 sleep）在高负载全量运行中偶发失败（2026-11-24/25 共 5 次出现，单文件复跑 8/8 通过；把 TTL 收到 1s 仍复现，疑似与计时器 / 时钟精度或共享状态有关）；`tests/unit/components/caomei-data-table.spec.ts` 的「多选使用受控 selection」「受控分页」也出现过 3 次类似抖动。处理方向：改用可控时钟（`vi.useFakeTimers`）并显式推进，或改用可注入的过期判定；不要靠放大 sleep 掩盖。
 
-- **剩余站内字面路径 localePath 收敛**：阶段 14 D36 只覆盖登录页与页脚，以下仍直接写绝对路径（2026-11-25 扫描：18 文件 / 44 处；口径 `to="/…"`、`:to="'/…'"`、`navigateTo('/…')`、`navigateTo({ path: '/…' })`）：认证流程 `pages/register.vue`（terms / privacy / login）、`pages/quick-login.vue`、`pages/forgot-password.vue`、`pages/change-password.vue`、`pages/sso-login.vue`、`pages/channel-change/[id].vue`；静态内容页 `pages/about.vue`、`pages/privacy.vue`、`pages/terms.vue` 的「返回首页」；后台 `layouts/admin.vue` 导航、`components/admin/logs/login-events-panel.vue`；composable `navigateTo('/…')` 见 `use-profile-flow` / `use-oauth-clients` / `use-security-settings` / `use-oauth-consent` / `use-index-flow` / `use-forgot-password-flow` / `use-register-flow`。另有非 `navigateTo` 型字面跳转（`composables/use-change-password-flow.ts` 的 `window.location.href = '/login'`、`use-sso-login-flow` 的 `callbackURL` / `errorCallbackURL`）需在抽样时单独判定是否纳入。处理方向：先补一条「站内绝对路径必须经 localePath」的扫描门禁（可复用 `scripts/i18n`），再按认证流程 → 静态内容页 → 后台布局 → composable 的批次收敛，避免无门禁的全局禁令。
+- **剩余站内字面路径 localePath 收敛**（重要 3 / 紧急 2 · 延后）：阶段 14 D36 只覆盖登录页与页脚，以下仍直接写绝对路径（2026-11-25 扫描：18 文件 / 44 处；口径 `to="/…"`、`:to="'/…'"`、`navigateTo('/…')`、`navigateTo({ path: '/…' })`）：认证流程 `pages/register.vue`（terms / privacy / login）、`pages/quick-login.vue`、`pages/forgot-password.vue`、`pages/change-password.vue`、`pages/sso-login.vue`、`pages/channel-change/[id].vue`；静态内容页 `pages/about.vue`、`pages/privacy.vue`、`pages/terms.vue` 的「返回首页」；后台 `layouts/admin.vue` 导航、`components/admin/logs/login-events-panel.vue`；composable `navigateTo('/…')` 见 `use-profile-flow` / `use-oauth-clients` / `use-security-settings` / `use-oauth-consent` / `use-index-flow` / `use-forgot-password-flow` / `use-register-flow`。另有非 `navigateTo` 型字面跳转（`composables/use-change-password-flow.ts` 的 `window.location.href = '/login'`、`use-sso-login-flow` 的 `callbackURL` / `errorCallbackURL`）需在抽样时单独判定是否纳入。处理方向：先补一条「站内绝对路径必须经 localePath」的扫描门禁（可复用 `scripts/i18n`），再按认证流程 → 静态内容页 → 后台布局 → composable 的批次收敛，避免无门禁的全局禁令。
 
 ### 3.3 基础设施
 
 
-- **登录事件 IP 写入侧长度契约**（2026-11-23 登记，阶段 13 M1.1 Review Gate W-1）：`login_event.ip` 已改 `varchar(45)`，但写入路径仍直接取 `x-forwarded-for` 首段 / `x-real-ip` 原值，无 `net.isIP` 校验与长度归一化。超长或带端口 / 方括号 / zone index 的取值在 MySQL 严格模式与 PostgreSQL 下会整行拒绝（事件被丢弃且仅 warn），SQLite 则照存，形成三方言行为分叉；客户端自造长头还可能让自身事件不被记录。**触发条件**：出现以下任一项即必须处理——① 生产采集到 `CHAR_LENGTH(ip) > 45` 的写入失败告警；② 部署确认未强制覆盖 `X-Forwarded-For`；③ 阶段 13 收口前仍未处理，则在 M5 收口记录中确认延期理由。处理方向：在持久化入口做 `[...]` / 端口剥离 + `net.isIP` 校验 + 非法值回落 `null`，并补三方言写入断言。
+- **登录事件 IP 写入侧长度契约**（重要 4 / 紧急 3 · 排期）（2026-11-23 登记，阶段 13 M1.1 Review Gate W-1）：`login_event.ip` 已改 `varchar(45)`，但写入路径仍直接取 `x-forwarded-for` 首段 / `x-real-ip` 原值，无 `net.isIP` 校验与长度归一化。超长或带端口 / 方括号 / zone index 的取值在 MySQL 严格模式与 PostgreSQL 下会整行拒绝（事件被丢弃且仅 warn），SQLite 则照存，形成三方言行为分叉；客户端自造长头还可能让自身事件不被记录。**触发条件**：出现以下任一项即必须处理——① 生产采集到 `CHAR_LENGTH(ip) > 45` 的写入失败告警；② 部署确认未强制覆盖 `X-Forwarded-For`；③ 阶段 13 收口前仍未处理，则在 M5 收口记录中确认延期理由。处理方向：在持久化入口做 `[...]` / 端口剥离 + `net.isIP` 校验 + 非法值回落 `null`，并补三方言写入断言。
 - **注册规则多实例缓存**：规则缓存为进程内 30 秒 TTL，多实例部署时最坏 30 秒内仍按旧规则；如需强一致，引入 Redis 共享缓存并在管理端变更时发布失效。
 
 - **Dependency Cruiser 依赖图**：配置 `depcruise` 验证 `utils/shared` / `server/utils` / `utils/web` 分层约束。
@@ -125,14 +147,14 @@
 - **caomei-ui 1.4.0 按钮根节点 scoped id 缺口**：`CaomeiButton` 在未启用内建提示时也会把根节点包到 `CaomeiPassthrough` 组件，父组件 scoped 类无法落到内层 `<button>`，导致 `theme-toggle` / `.btn` / `.social-btn` 等根类样式失效。2026-11-22 升级已用 wrapper + `:deep()` 与局部 `!important` 规避（见 [升级记录](../design/governance/2026-11-22-caomei-ui-1.4.0-upgrade.md)）。处理方向：向上游提报最小复现；上游恢复「未启用提示时根节点即 button」后删除项目侧规避，并复核 `styles/_form.scss` 的 `!important` 与登录页 `white-space` 覆盖是否仍需要。
 - **社交按钮覆盖与库 token 同值**：`.caomei-button.social-btn` 的 `background-color` / `border-radius` / `font-size` 与 1.4.0 默认 token 恰好等值，视觉零差异无法证明覆盖生效；下次 caomei-ui 升级前改用库文档化钩子，或补计算样式断言。
 - **认证页死规则清理**：`login` / `register` / `forgot-password` / `change-password` 中与全局 `.btn` / `.btn-primary` 完全等值的 scoped 规则在 1.4.0 后已不可命中 CaomeiButton 根节点（`switch-btn` 的 `width: 100%` 由 `block` 兜底），随下一次触及这些文件的提交删除。
-- **`/sso-login` 暗色主题缺失**（2026-11-26，阶段 14 M3 基线复核）：页面使用硬编码浅色（`#f8fafc` / `#e2e8f0`）且 `styles/_dark-mode.scss` 无 `.sso-` 覆盖，暗色模式下仅页脚与全局控件变暗，内容区仍为浅色；`*-sso-login-dark-tablet` 基线因此呈现浅色内容 + 暗色页脚。处理方向：接入既有暗色 token，重采该基线并补暗色断言。
-- **Admin 数据表移动端卡片化**（2026-11-26 阶段 15 D49 延后）：当前移动端只保证侧栏收起、输入字号 ≥16px 与表格横向滚动；卡片化需要新的行 / 列映射、选择态与视觉矩阵，待评估后另立条目。
+- **`/sso-login` 暗色主题缺失**（重要 3 / 紧急 2 · 延后）（2026-11-26，阶段 14 M3 基线复核）：页面使用硬编码浅色（`#f8fafc` / `#e2e8f0`）且 `styles/_dark-mode.scss` 无 `.sso-` 覆盖，暗色模式下仅页脚与全局控件变暗，内容区仍为浅色；`*-sso-login-dark-tablet` 基线因此呈现浅色内容 + 暗色页脚。处理方向：接入既有暗色 token，重采该基线并补暗色断言。
+- **Admin 数据表移动端卡片化**（重要 2 / 紧急 1 · 延后）（2026-11-26 阶段 15 D49 延后）：当前移动端只保证侧栏收起、输入字号 ≥16px 与表格横向滚动；卡片化需要新的行 / 列映射、选择态与视觉矩阵，待评估后另立条目。
 - **Demo 模式语言切换偏移验证**：`data-preset` / GitHub 角标与右上角语言切换共存时的偏移仅在 `NUXT_PUBLIC_DEMO_MODE=true` 下可见，需在 Demo 构建中补一次视觉确认。
 
 ### 3.5 移动端与认证可用性
 
 > 2026-11-25 移动端审计（390×844 / 360×640，5 语言 × 19 页）登记；完整证据、复测现状与排期建议见 [移动端认证审计](../design/governance/2026-11-25-mobile-auth-audit.md)。下列条目均为复测后仍存在、尚未进入阶段的候选。
-- **OAuth web 客户端 http 回环回调**（P3）：better-auth 1.7.20 不允许 web 类型客户端使用 http 回环回调，本地联调直接 `invalid_request`；native + PKCE 与生产 https 不受影响。处理方向：文档写明本地联调用 native + PKCE，评估开发环境 `allowInsecureRedirectUri`。
+- **OAuth web 客户端 http 回环回调**（重要 2 / 紧急 1 · 延后）（P3）：better-auth 1.7.20 不允许 web 类型客户端使用 http 回环回调，本地联调直接 `invalid_request`；native + PKCE 与生产 https 不受影响。处理方向：文档写明本地联调用 native + PKCE，评估开发环境 `allowInsecureRedirectUri`。
 
 ---
 
