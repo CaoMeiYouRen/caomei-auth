@@ -25,19 +25,31 @@
                     v-if="userSession?.session?.id === session.id"
                     :content="t('security.sessions.currentTip', {id: session.id})"
                 >
-                    <span>{{ t('security.sessions.current') }}</span>
+                    <span :data-label="t('security.sessions.columns.token')">{{ t('security.sessions.current') }}</span>
                 </BaseTooltip>
                 <BaseTooltip
                     v-else
                     :content="t('security.sessions.tokenTip', {id: session.id})"
                 >
-                    <span data-visual-mask>{{ session.id }}</span>
+                    <span
+                        data-visual-mask
+                        :data-label="t('security.sessions.columns.token')"
+                    >{{ session.id }}</span>
                 </BaseTooltip>
-                <span>{{ session.browser }}</span>
-                <span>{{ session.os }}</span>
-                <span data-visual-mask>{{ session.ipAddress }}</span>
-                <span data-visual-mask>{{ session.createdAt }}</span>
-                <span data-visual-mask>{{ session.expiresAt }}</span>
+                <span :data-label="t('security.sessions.columns.browser')">{{ session.browser }}</span>
+                <span :data-label="t('security.sessions.columns.os')">{{ session.os }}</span>
+                <span
+                    data-visual-mask
+                    :data-label="t('security.sessions.columns.ip')"
+                >{{ session.ipAddress }}</span>
+                <span
+                    data-visual-mask
+                    :data-label="t('security.sessions.columns.createdAt')"
+                >{{ session.createdAt }}</span>
+                <span
+                    data-visual-mask
+                    :data-label="t('security.sessions.columns.expiresAt')"
+                >{{ session.expiresAt }}</span>
                 <span class="device-action-col">
                     <BaseTooltip :content="userSession?.session?.id === session.id ? t('security.sessions.cannotRevokeTip') : t('security.sessions.revokeTip')">
                         <CaomeiButton
@@ -235,6 +247,46 @@ defineEmits<{
     }
 }
 
+/* 移动端：会话表改为卡片式，保留设备 / 掩码 / 时间 / 操作四类信息，桌面表格不变 */
+@media (width <= 768px) {
+    .security-device-list {
+        .device-list-header {
+            display: none;
+        }
+
+        .device-list-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 0.35rem;
+            margin-bottom: 0.75rem;
+            padding: 0.9rem 1rem;
+            border: 1px solid $secondary-bg;
+            border-radius: 10px;
+
+            span {
+                flex: none;
+                word-break: normal;
+                overflow-wrap: anywhere;
+            }
+
+            span[data-label]::before {
+                content: attr(data-label);
+                margin-inline-end: 0.35rem;
+                color: $secondary-light;
+                font-weight: 500;
+            }
+
+            .device-action-col {
+                justify-content: flex-start;
+
+                :deep(.btn) {
+                    width: auto;
+                }
+            }
+        }
+    }
+}
+
 // 暗色模式支持
 @include dark-mode {
     .section-title {
@@ -252,7 +304,13 @@ defineEmits<{
         }
 
         .device-list-row {
+            border-color: #{$dark-border-color} !important;
+
             span {
+                color: #{$dark-secondary-light} !important;
+            }
+
+            span[data-label]::before {
                 color: #{$dark-secondary-light} !important;
             }
         }
