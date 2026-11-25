@@ -20,7 +20,7 @@
 | D33 | 未启用语言门禁范围 | `check-locale-parity` 增加「按目录遍历」模式：对 es-ES / fr-FR / de-DE / ru-RU / pt-BR 断言键集合与占位符同构（双向）；目录未创建只输出待建清单，目录一旦创建即进入发布校验，分批补数据用 `--allow-incomplete=<locale>` 白名单临时降级为 warning | 现有 parity / catalog / 审计只遍历 `ENABLED_LOCALES`，未启用语言补数据期可静默缺键；阻塞发布会把补数据变成发布阻塞，故采用「目录级完整性」口径 |
 | D34 | 语言包产物过滤 | `locale-runtime-loader` 的 `import.meta.glob` 按 `ENABLED_LOCALES` 过滤静态语言包，core / server 模块不过滤；构建产物保留 core 与已启用语言 | 当前产物含 ja-JP 等不可达 chunk（阶段 8 记录约 10 KB 且会累积）；过滤只影响未启用语言，不改运行时回退 |
 | D35 | 译文台账消费方 | 新增治理脚本断言：`reviewedModules ∪ pendingModules ⊆ LOCALE_MESSAGE_MODULES`、`readiness` 与 Registry 一致、`nativeReview` 取值合法；接入 `pnpm i18n:check` | 台账目前无消费方，全靠人工自觉；脚本化后与 `message-catalog` 校验互补 |
-| D36 | 多语言内部链接 | 认证页与页脚的字面路径统一改 `localePath()` / `NuxtLinkLocale`，保留原有视觉与文案；补多语言链接断言 | `/zh-TW`、`/en-US` 下点击注册 / 忘记密码 / 隐私 / 条款会回落默认语言，属既有缺陷 |
+| D36 | 多语言内部链接 | 本阶段只改登录页（注册 / 忘记密码 / 隐私 / 条款）与页脚的站内字面路径为 `localePath()`，保留原有视觉与文案；其余认证页 / 后台布局 / `navigateTo` 的字面路径登记 backlog 收敛 | `/zh-TW`、`/en-US` 下登录页点击注册 / 忘记密码 / 隐私 / 条款会回落默认语言，属既有缺陷；全域收敛需独立门禁与存量清点，避免本阶段静默扩容 |
 | D37 | i18n 视觉矩阵扩展 | ja-JP / ko-KR 补 390（移动）与 768（平板）基线，覆盖 register / forgot-password / sso-login；长语言窄容器补 2 条 localized-core 用例，`white-space` 仅在用例证明溢出时恢复 `normal` | 阶段 8 只采 1440 桌面 12 张，韩文比中文长约 20%，窄屏换行与 `nowrap` 无像素保护 |
 | D38 | 前端失败处理口径 | 4 条非 Admin 流程（改密码 / 改邮箱 / 安全设置 / 个人资料）统一复用 `throwIfAuthError`，4xx / 5xx 给失败 Toast，不改成功路径与既有文案键；`use-profile-flow` 的登出失败按同一口径 | 现只 `catch` 抛错路径，`{ error }` 响应会提示成功或静默；仅补错误分支，不加新交互 |
 | D39 | 类型与样式门禁 | `useDataTable` / 选中集收紧为 `AdminUser` 等具体行类型，去掉断言；`.stylelintignore` 只忽略临时模式，`styles/` 6 个 SCSS 纳入 `pnpm lint:css`；不新增 stylelint 规则 | `any` 逃逸与样式层未检查都是既有缺口；先恢复覆盖，规则调整另行评估 |

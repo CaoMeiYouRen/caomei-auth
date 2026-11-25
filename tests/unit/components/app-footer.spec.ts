@@ -155,6 +155,59 @@ describe('AppFooter', () => {
         expect(linkTexts).toContain('管理后台')
     })
 
+    async function mountAdminFooter() {
+        const mockSession = ref({
+            user: { id: '1', role: ['admin'] },
+            session: {},
+        } as any)
+        vi.mocked(authClient.useSession).mockResolvedValue({
+            data: mockSession,
+            isPending: ref(false),
+            error: ref(null),
+        } as any)
+
+        return mountAsync(AppFooter, {
+            global: {
+                stubs: {
+                    NuxtLink: NuxtLinkStub,
+                },
+            },
+        })
+    }
+
+    function footerTargets(wrapper: Awaited<ReturnType<typeof mountAdminFooter>>): unknown[] {
+        return wrapper.findAllComponents(NuxtLinkStub).map((link) => link.props('to'))
+    }
+
+    it.each(['zh-TW', 'en-US'] as const)('%s 下站内链接保持当前语言，外链不变', async (locale) => {
+        const { $i18n } = useNuxtApp()
+        const externalTargets = footerTargets(await mountAdminFooter())
+            .map(String)
+            .filter((to) => /^(?:https?:|mailto:)/u.test(to))
+
+        $i18n.locale.value = locale
+        try {
+            const targets = footerTargets(await mountAdminFooter())
+            expect(targets).toContain(`/${locale}`)
+            expect(targets).toContain(`/${locale}/profile`)
+            expect(targets).toContain(`/${locale}/admin/users`)
+            expect(targets).toContain(`/${locale}/forgot-password`)
+            expect(targets).toContain(`/${locale}/privacy`)
+            expect(targets).toContain(`/${locale}/terms`)
+            expect(targets).toContain(`/${locale}/about`)
+            expect(targets.some((to) => String(to).includes('/zh-CN/'))).toBe(false)
+
+            const localizedExternalTargets = targets
+                .map(String)
+                .filter((to) => /^(?:https?:|mailto:)/u.test(to))
+            expect(localizedExternalTargets.length).toBeGreaterThanOrEqual(2)
+            expect(localizedExternalTargets.sort()).toEqual(externalTargets.sort())
+            expect(localizedExternalTargets.some((to) => to.startsWith('mailto:'))).toBe(true)
+        } finally {
+            $i18n.locale.value = 'zh-CN'
+        }
+    })
+
     it('shows beian numbers when configured', async () => {
         const config = useRuntimeConfig()
         config.public.icpBeianNumber = 'ICP-123456'

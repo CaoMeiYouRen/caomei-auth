@@ -115,6 +115,57 @@ describe('登录页', () => {
         expect(wrapper.html()).not.toContain('phonePassword')
     })
 
+    function linkTargets(wrapper: ReturnType<typeof shallowMount>): unknown[] {
+        return wrapper.findAllComponents({ name: 'NuxtLink' }).map((link) => link.props('to'))
+    }
+
+    it.each(['zh-TW', 'en-US'] as const)('%s 下注册 / 忘记密码 / 隐私 / 条款链接保持当前语言', async (locale) => {
+        const { $i18n } = useNuxtApp()
+        $i18n.locale.value = locale
+        try {
+            const wrapper = shallowMount(LoginPage, { global: { renderStubDefaultSlot: true } })
+            await flushPromises()
+
+            const targets = linkTargets(wrapper)
+            expect(targets).toContain(`/${locale}/terms`)
+            expect(targets).toContain(`/${locale}/privacy`)
+            expect(targets).toContain(`/${locale}/register?mode=username`)
+            expect(targets).toContain(`/${locale}/forgot-password?mode=username`)
+            /* 默认语言不生成前缀，防止 strategy 变更或误传 locale 时静默回归 */
+            expect(targets.some((to) => String(to).includes('/zh-CN/'))).toBe(false)
+        } finally {
+            $i18n.locale.value = 'zh-CN'
+        }
+    })
+
+    it('默认语言下站内链接不带语言前缀', async () => {
+        const wrapper = shallowMount(LoginPage, { global: { renderStubDefaultSlot: true } })
+        await flushPromises()
+
+        const targets = linkTargets(wrapper)
+        expect(targets).toContain('/terms')
+        expect(targets).toContain('/privacy')
+        expect(targets).toContain('/register?mode=username')
+        expect(targets).toContain('/forgot-password?mode=username')
+        expect(targets.some((to) => String(to).includes('/zh-CN/'))).toBe(false)
+    })
+
+    it('切换语言后站内链接跟随更新', async () => {
+        const wrapper = shallowMount(LoginPage, { global: { renderStubDefaultSlot: true } })
+        await flushPromises()
+        expect(linkTargets(wrapper)).toContain('/register?mode=username')
+
+        const { $i18n } = useNuxtApp()
+        $i18n.locale.value = 'ja-JP'
+        try {
+            await nextTick()
+            await flushPromises()
+            expect(linkTargets(wrapper)).toContain('/ja-JP/register?mode=username')
+        } finally {
+            $i18n.locale.value = 'zh-CN'
+        }
+    })
+
     it('2FA 对话框按状态挂载并接收验证码与提交状态', async () => {
         const wrapper = shallowMount(LoginPage, { global: { renderStubDefaultSlot: true } })
         await flushPromises()

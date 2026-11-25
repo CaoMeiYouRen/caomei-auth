@@ -188,7 +188,7 @@
                 <div class="agreement-notice">
                     {{ t('auth.login.agreementPrefix') }}
                     <NuxtLink
-                        to="/terms"
+                        :to="localePath('/terms')"
                         target="_blank"
                         class="agreement-link"
                     >
@@ -196,7 +196,7 @@
                     </NuxtLink>
                     {{ t('auth.login.agreementAnd') }}
                     <NuxtLink
-                        to="/privacy"
+                        :to="localePath('/privacy')"
                         target="_blank"
                         class="agreement-link"
                     >
@@ -231,11 +231,11 @@
                     </div>
                 </template>
                 <div class="toggle-login">
-                    {{ t('auth.login.noAccount') }} <NuxtLink :to="`/register?mode=${activeTab}`" class="toggle-link">
+                    {{ t('auth.login.noAccount') }} <NuxtLink :to="localePath({path: '/register', query: {mode: activeTab}})" class="toggle-link">
                         {{ t('auth.login.registerNow') }}
                     </NuxtLink>
                     <span class="divider">|</span>
-                    <NuxtLink :to="`/forgot-password?mode=${activeTab}`" class="toggle-link">
+                    <NuxtLink :to="localePath({path: '/forgot-password', query: {mode: activeTab}})" class="toggle-link">
                         {{ t('auth.login.forgotPassword') }}
                     </NuxtLink>
                 </div>
@@ -267,6 +267,7 @@ import Captcha from '@/components/captcha.vue'
 import { useLoginFlow } from '@/composables/use-login-flow'
 
 const { t } = useI18n()
+const localePath = useLocalePath()
 usePageMeta('auth.login.title', 'auth.login.subtitle')
 
 const {

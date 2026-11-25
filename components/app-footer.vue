@@ -35,45 +35,45 @@
 
             <div class="app-footer__bottom-links">
                 <NuxtLink
-                    to="/"
+                    :to="localePath('/')"
                     class="app-footer__bottom-link"
                 >
                     {{ t('footer.home') }}
                 </NuxtLink>
                 <NuxtLink
                     v-if="session?.user"
-                    to="/profile"
+                    :to="localePath('/profile')"
                     class="app-footer__bottom-link"
                 >
                     {{ t('footer.profile') }}
                 </NuxtLink>
                 <NuxtLink
                     v-if="session?.user?.role?.includes('admin')"
-                    to="/admin/users"
+                    :to="localePath('/admin/users')"
                     class="app-footer__bottom-link"
                 >
                     {{ t('footer.admin') }}
                 </NuxtLink>
                 <NuxtLink
-                    to="/forgot-password"
+                    :to="localePath('/forgot-password')"
                     class="app-footer__bottom-link"
                 >
                     {{ t('footer.forgotPassword') }}
                 </NuxtLink>
                 <NuxtLink
-                    to="/privacy"
+                    :to="localePath('/privacy')"
                     class="app-footer__bottom-link"
                 >
                     {{ t('footer.privacy') }}
                 </NuxtLink>
                 <NuxtLink
-                    to="/terms"
+                    :to="localePath('/terms')"
                     class="app-footer__bottom-link"
                 >
                     {{ t('footer.terms') }}
                 </NuxtLink>
                 <NuxtLink
-                    to="/about"
+                    :to="localePath('/about')"
                     class="app-footer__bottom-link"
                 >
                     {{ t('footer.about') }}
@@ -126,6 +126,7 @@ import { authClient } from '@/lib/auth-client'
 
 /* 必须在顶层 await 之前调用，保证 setup 上下文可用 */
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const { data: session } = await authClient.useSession((url, options) => useFetch(url, {
     ...options,
