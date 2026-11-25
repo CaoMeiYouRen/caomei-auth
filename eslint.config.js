@@ -18,6 +18,7 @@ export default withNuxt(cmyrConfig,
         'coverage',
         'logs',
         'jscpd-report',
+        '.session',
     ]),
     {
         rules: {
