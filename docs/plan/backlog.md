@@ -105,7 +105,9 @@
 - **迁入来源**：原 `todo.md`「低优先级 · 文档同步」与既有 backlog 质量类条目。
 
 - **译文台账字段存在性断言**：`scripts/i18n/check-translation-provenance.mjs` 已断言条目集合（非 seo-ready 启用语言必须登记）、模块覆盖与重叠、`readiness` 与 `nativeReview`；`source` / `reviewLevel` / `updatedAt` 的存在性与格式仍未校验，台账可长期缺少来源说明而不报错。处理方向：补字段必填与日期格式断言，并与 `reviewLevel` 取值枚举一起收紧（需先确认历史条目是否需要回填）。
-- **2FA 魔法链接过期用例时序抖动**：`tests/unit/server/two-factor-coverage-factors.spec.ts > rejects an expired magic link` 以 `magicLinkExpiresIn: 2` + `sleep 2200ms` 验证过期，负载高时偶发失败（2026-11-24 两次全量运行出现，单文件复跑 8/8 通过）。处理方向：改用可控时钟或放大过期余量，并排查同类「短 TTL + sleep」用例。
+- **时序型测试抖动**：`tests/unit/server/two-factor-coverage-factors.spec.ts` 的 `rejects an expired magic link`（`magicLinkExpiresIn: 2` + `sleep 2200ms`）与 `re-challenges after the trusted device expires`（`trustDeviceMaxAge: 2` + 同款 sleep）在高负载全量运行中偶发失败（2026-11-24/25 共 5 次出现，单文件复跑 8/8 通过；把 TTL 收到 1s 仍复现，疑似与计时器 / 时钟精度或共享状态有关）；`tests/unit/components/caomei-data-table.spec.ts` 的「多选使用受控 selection」「受控分页」也出现过 3 次类似抖动。处理方向：改用可控时钟（`vi.useFakeTimers`）并显式推进，或改用可注入的过期判定；不要靠放大 sleep 掩盖。
+
+- **剩余站内字面路径 localePath 收敛**：阶段 14 D36 只覆盖登录页与页脚，以下仍直接写绝对路径（2026-11-25 扫描：18 文件 / 44 处；口径 `to="/…"`、`:to="'/…'"`、`navigateTo('/…')`、`navigateTo({ path: '/…' })`）：认证流程 `pages/register.vue`（terms / privacy / login）、`pages/quick-login.vue`、`pages/forgot-password.vue`、`pages/change-password.vue`、`pages/sso-login.vue`、`pages/channel-change/[id].vue`；静态内容页 `pages/about.vue`、`pages/privacy.vue`、`pages/terms.vue` 的「返回首页」；后台 `layouts/admin.vue` 导航、`components/admin/logs/login-events-panel.vue`；composable `navigateTo('/…')` 见 `use-profile-flow` / `use-oauth-clients` / `use-security-settings` / `use-oauth-consent` / `use-index-flow` / `use-forgot-password-flow` / `use-register-flow`。另有非 `navigateTo` 型字面跳转（`composables/use-change-password-flow.ts` 的 `window.location.href = '/login'`、`use-sso-login-flow` 的 `callbackURL` / `errorCallbackURL`）需在抽样时单独判定是否纳入。处理方向：先补一条「站内绝对路径必须经 localePath」的扫描门禁（可复用 `scripts/i18n`），再按认证流程 → 静态内容页 → 后台布局 → composable 的批次收敛，避免无门禁的全局禁令。
 
 ### 3.3 基础设施
 
