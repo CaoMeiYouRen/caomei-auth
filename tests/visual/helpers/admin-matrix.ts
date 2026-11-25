@@ -347,6 +347,7 @@ function defineDefaultStates(): void {
                     }
                     test(`${route.slug} 默认态（${theme} / ${viewport.name}）`, async ({ page }) => {
                         await open(page, route, theme)
+                        await expectNoHorizontalOverflow(page, `${viewport.name} 下页面出现横向溢出`)
                         await shot(page, `${route.slug}-${theme}-${viewport.name}-default`)
                     })
                 }
@@ -369,6 +370,7 @@ function defineInteractionStates(): void {
                 test(`${route.slug} ${state.label}`, async ({ page }) => {
                     await open(page, route, 'light')
                     await state.action(page)
+                    await expectNoHorizontalOverflow(page)
                     await shot(page, `${route.slug}-light-desktop-${state.slug}`, state.target?.(page))
                 })
             }

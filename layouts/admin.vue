@@ -433,6 +433,11 @@ const toggleSidebar = () => {
     margin-left: 280px;
     transition: margin-left 0.3s ease;
 
+    /* 桌面宽度下允许主区收缩：宽表格 / 热力图各自在容器内滚动，不把页面撑宽 */
+    @media (width >= 769px) {
+        min-width: 0;
+    }
+
     &.collapsed {
         margin-left: 80px;
     }

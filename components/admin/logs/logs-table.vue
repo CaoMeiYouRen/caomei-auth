@@ -292,6 +292,7 @@ function onTableSort(event: DataTableSortEvent) {
 .detail-filters {
     .filter-row {
         display: flex;
+        flex-wrap: wrap;
         gap: 1rem;
         align-items: center;
 
@@ -312,12 +313,9 @@ function onTableSort(event: DataTableSortEvent) {
 
     .filter-controls {
         display: flex;
+        flex-wrap: wrap;
         gap: 0.75rem;
         align-items: center;
-
-        @media (width <= 768px) {
-            flex-wrap: wrap;
-        }
     }
 
     .filter-item {

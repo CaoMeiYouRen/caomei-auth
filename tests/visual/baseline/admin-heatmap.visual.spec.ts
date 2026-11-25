@@ -1,18 +1,15 @@
 import { expect, test } from '@playwright/test'
-import { applyTheme, waitForVisualStable, type VisualTheme } from '../helpers/visual'
+import { applyTheme, expectNoHorizontalOverflow, waitForVisualStable, type VisualTheme } from '../helpers/visual'
 import { useAdminSession } from '../helpers/admin-session'
 
 /**
  * 登录事件热力图基线（阶段 12 M3.2；阶段 13 M4.1 补 1440 交互态基准宽度）。
  *
- * - 1800 / 768 / 390 截取 `.login-event-heatmap` 元素，浅 / 暗各 1 张；
- * - 1440 交互态基准宽度下，168 个桶的最小内容宽度（1480px）超过容器（1336px），
- *   容器内部横向滚动 144px；该页在 1440 下还有页面级横向溢出。该宽度改用「视口截图 +
- *   断言」口径：纵向滚到面板、横向滚动归零后截当前视口（含左侧固定导航与热力图类型轴），
- *   断言溢出量、7 个类型标签、7 × 168 个 cell 且首个标签进入视口；右端溢出区不入像素基线，
- *   由 cell 计数断言覆盖（不声称「完整矩阵截图」）。
- *   注意：视口截图同时绑定纵向滚动位置（面板上方内容高度变化会整图 diff），
- *   属预期维护成本，不要误判为热力图回归。
+ * - 四个视口均截取 `.login-event-heatmap` 元素，浅 / 暗各 1 张；
+ * - 1440 交互态基准宽度下，168 个桶的最小内容宽度（1480px）超过容器，
+ *   由容器内部横向滚动承载；阶段 14 M5.2 起同时断言页面级横向溢出为 0
+ *   （布局主区允许收缩，宽表格 / 热力图各自内部滚动），并断言溢出量、
+ *   7 个类型标签与 7 × 168 个 cell；右端溢出区不入像素基线，由 cell 计数断言覆盖。
  * 数据来自 `scripts/testing/visual-fixtures.mjs` 的 80 条确定性登录事件。
  */
 const VIEWPORTS = [
@@ -52,10 +49,9 @@ for (const theme of THEMES) {
                 expect(overflow).toBeGreaterThan(0)
                 await expect(heatmap.locator('.heatmap-row__label')).toHaveCount(7)
                 await expect(heatmap.locator('.heatmap-cell')).toHaveCount(7 * 168)
-                /* 页面在 1440 下有横向溢出：把页面横向滚动归零，避免固定导航遮住类型轴 */
-                await page.evaluate(() => window.scrollTo(0, window.scrollY))
-                await expect(heatmap.locator('.heatmap-row__label').first()).toBeInViewport()
-                await expect(page).toHaveScreenshot(`login-event-heatmap-${theme}-${viewport.name}.png`)
+                /* 主区允许收缩后页面不应再有横向滚动，宽内容由热力图 / 表格容器内部承载 */
+                await expectNoHorizontalOverflow(page, '1440 桌面下日志页出现横向溢出')
+                await expect(heatmap).toHaveScreenshot(`login-event-heatmap-${theme}-${viewport.name}.png`)
             } else {
                 await expect(heatmap).toHaveScreenshot(`login-event-heatmap-${theme}-${viewport.name}.png`)
             }
