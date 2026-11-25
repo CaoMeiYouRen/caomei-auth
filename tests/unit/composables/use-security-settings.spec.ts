@@ -379,6 +379,49 @@ describe('useSecuritySettings', () => {
 
             expect(mockUseToast.danger).toHaveBeenCalled()
         })
+        it('should not report success when revokeSession returns { error }', async () => {
+            mockAuthClient.revokeSession.mockResolvedValue({ error: { message: '会话已失效' } })
+
+            const { confirmRevokeSession, revokeSingleSession } = useSecuritySettings()
+            confirmRevokeSession('token123')
+
+            await revokeSingleSession()
+
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: expect.stringContaining('会话已失效'),
+            }))
+            expect(mockUseToast.success).not.toHaveBeenCalled()
+        })
+
+        it('should not report success when revokeOtherSessions returns { error }', async () => {
+            mockAuthClient.revokeOtherSessions.mockResolvedValue({ error: { message: '撤销失败' } })
+
+            const { confirmRevokeOtherSessions, revokeOtherSessions } = useSecuritySettings()
+            confirmRevokeOtherSessions()
+
+            await revokeOtherSessions()
+
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: expect.stringContaining('撤销失败'),
+            }))
+            expect(mockUseToast.success).not.toHaveBeenCalled()
+        })
+
+        it('should not redirect when revokeSessions returns { error }', async () => {
+            mockAuthClient.revokeSessions.mockResolvedValue({ error: { message: '撤销全部失败' } })
+
+            const { confirmRevokeAllSessions, revokeAllSessions, showRevokeAllSessionsConfirm } = useSecuritySettings()
+            confirmRevokeAllSessions()
+
+            await revokeAllSessions()
+
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: expect.stringContaining('撤销全部失败'),
+            }))
+            expect(mockUseToast.success).not.toHaveBeenCalled()
+            expect(showRevokeAllSessionsConfirm.value).toBe(true)
+            expect(mockNavigateTo).not.toHaveBeenCalledWith('/login')
+        })
     })
 
     describe('Utility Functions', () => {

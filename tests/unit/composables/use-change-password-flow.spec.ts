@@ -5,14 +5,16 @@ import { authClient } from '../../../lib/auth-client'
 
 vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 // Mock dependencies
+const toastMock = vi.hoisted(() => ({
+    show: vi.fn(),
+    success: vi.fn(),
+    danger: vi.fn(),
+    warning: vi.fn(),
+    info: vi.fn(),
+}))
+
 vi.mock('caomei-ui', () => ({
-    useToast: () => ({
-        show: vi.fn(),
-        success: vi.fn(),
-        danger: vi.fn(),
-        warning: vi.fn(),
-        info: vi.fn(),
-    }),
+    useToast: () => toastMock,
 }))
 
 vi.mock('../../../lib/auth-client', () => ({
@@ -100,6 +102,21 @@ describe('useChangePasswordFlow', () => {
 
         vi.advanceTimersByTime(1500)
         expect(window.location.href).toBe('/login')
+    })
+
+    it('should show failure toast and not redirect when better-auth returns { error }', async () => {
+        const { changePassword } = useChangePasswordFlow()
+
+        vi.mocked(authClient.changePassword).mockResolvedValue({ error: { message: '当前密码错误' } } as any)
+
+        await changePassword()
+
+        expect(toastMock.danger).toHaveBeenCalledWith(expect.objectContaining({
+            description: '当前密码错误',
+        }))
+        expect(toastMock.success).not.toHaveBeenCalled()
+        vi.advanceTimersByTime(1500)
+        expect(window.location.href).toBe('')
     })
 
     it('should handle error', async () => {

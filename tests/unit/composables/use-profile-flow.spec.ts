@@ -308,6 +308,20 @@ describe('useProfileFlow', () => {
             expect(mockNavigateTo).toHaveBeenCalledWith('/security')
         })
 
+        it('should show failure toast and stay when signOut returns { error }', async () => {
+            const { handleLogout } = await useProfileFlow()
+            mockUseConfirm.open.mockResolvedValue(true)
+            mockAuthClient.signOut.mockResolvedValue({ error: { message: 'Logout failed' } })
+
+            await handleLogout()
+
+            expect(mockUseToast.danger).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'Logout failed',
+            }))
+            expect(mockUseToast.success).not.toHaveBeenCalled()
+            expect(mockNavigateTo).not.toHaveBeenCalledWith('/login')
+        })
+
         it('should handle logout', async () => {
             const { handleLogout } = await useProfileFlow()
             mockUseConfirm.open.mockResolvedValue(true)

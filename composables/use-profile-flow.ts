@@ -7,6 +7,7 @@ import { AUTH_BASE_URL } from '@/utils/shared/env'
 import { getSocialColor } from '@/utils/web/social-colors'
 import type { SocialProvider } from '@/types/social'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
+import { throwIfAuthError } from '@/utils/shared/api-error'
 
 export async function useProfileFlow() {
     const config = useRuntimeConfig().public
@@ -218,7 +219,8 @@ export async function useProfileFlow() {
 
     async function performLogout() {
         try {
-            await authClient.signOut({})
+            const response = await authClient.signOut({})
+            throwIfAuthError(response, t('profile.flow.logoutFailedUnknown'))
             toast.success({ title: t('profile.flow.logoutSuccess'), duration: 2000 })
             navigateTo('/login')
         } catch (error) {
