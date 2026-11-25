@@ -15,7 +15,7 @@ _目标：把 i18n 从「5 语可用」推进到「未启用语言也有门禁�
 | M1 i18n 门禁与产物 | 2/2 | 已闭环 | `35c03b2`、`b418af7` | R5 Pass（M1.1 R1 Reject → R2 Reject → R3 Pass → R4 Reject → R5 Pass；M1.2 R1 Pass → R2 Pass） | 2 → 2 commits |
 | M2 台账与多语言链接 | 2/2 | 已闭环 | `b18323e` 等 2 个 | R3 Pass（M2.1 R1 Reject → R2 Pass；M2.2 R1 Reject → R2 Reject → R3 Pass） | 2 → 2 commits |
 | M3 i18n 视觉回归 | 0/2 | 未开始 | — | — | 2 → — |
-| M4 前端健壮性与样式门禁 | 0/3 | 未开始 | — | — | 3 → — |
+| M4 前端健壮性与样式门禁 | 3/3 | 已闭环 | `5937a4e`、`0d12400`、`711acad` | R1 Pass（标准审计：W01 lint:css 覆盖与 W02 安全设置失败用例已补，W03 按条目拆分提交，W04 视觉 154 张通过） | 3 → 3 commits |
 | M5 Admin 日志页 1440 布局 | 0/2 | 未开始 | — | — | 2 → — |
 | M6 移动端安全页会话表 | 0/2 | 未开始 | — | — | 2 → — |
 | M7 文档与阶段收口 | 0/2 | 未开始 | — | — | 2 → — |
@@ -120,7 +120,7 @@ _目标：把 i18n 从「5 语可用」推进到「未启用语言也有门禁�
 
 - **目标**: `useDataTable` 与选中集使用具体行类型，去掉 `any` 与断言。
 - **验收标准**: `pages/admin/users.vue` 无 `any` / `as AdminUser[]`；`pnpm typecheck` 通过；表格行为不变。
-- **交付物**: `composables/use-admin-users.ts`、`pages/admin/users.vue`、单测（如有）。
+- **交付物**: `composables/admin/use-user-management.ts`、`composables/core/use-data-table.ts`、`pages/admin/users.vue`。
 - **依赖**: 无。
 
 #### M4.3 stylelint 覆盖全局样式
