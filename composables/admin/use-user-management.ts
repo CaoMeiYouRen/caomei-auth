@@ -95,7 +95,7 @@ export function useUserManagement() {
         onSort,
         onFilter,
         onSearch,
-    } = useDataTable({
+    } = useDataTable<AdminUserRow>({
         fetcher,
         defaultPageSize: 10,
         defaultSortField: 'createdAt',

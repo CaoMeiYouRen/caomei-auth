@@ -323,7 +323,7 @@ const {
     getSortFieldLabel,
 } = useUserTable()
 
-const userRows = computed<AdminUser[]>(() => users.value as AdminUser[])
+const userRows = computed<AdminUser[]>(() => users.value)
 
 /* 操作列只通过 `#cell-actions` 插槽渲染；`createdAt` 用 accessor 统一格式化，避免大小写插槽名 */
 const { t } = useI18n()
@@ -345,7 +345,7 @@ const columns: DataTableColumn<AdminUser>[] = [
 
 /** 当前页可见的选中行：`CaomeiDataTable` 按对象身份匹配勾选态，必须重新绑定到当前页的行对象 */
 const visibleSelection = computed<AdminUser[]>(() => {
-    const selectedIds = new Set(selectedUsers.value.map((user: AdminUser) => user.id))
+    const selectedIds = new Set(selectedUsers.value.map((user) => user.id))
     return userRows.value.filter((user) => selectedIds.has(user.id))
 })
 
@@ -366,7 +366,7 @@ function onTableSort(event: DataTableSortEvent) {
 function onSelectionChange(selection: AdminUser | AdminUser[] | null) {
     const pageIds = new Set(userRows.value.map((user) => user.id))
     const currentPageSelection = Array.isArray(selection) ? selection : []
-    const otherPagesSelection = selectedUsers.value.filter((user: AdminUser) => !pageIds.has(user.id))
+    const otherPagesSelection = selectedUsers.value.filter((user) => !pageIds.has(user.id))
     selectedUsers.value = [...otherPagesSelection, ...currentPageSelection]
 }
 </script>

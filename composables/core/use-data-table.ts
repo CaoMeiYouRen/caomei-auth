@@ -17,7 +17,7 @@ export interface UseDataTableOptions<T> {
     immediate?: boolean
 }
 
-export function useDataTable<T = any>(options: UseDataTableOptions<T>) {
+export function useDataTable<T>(options: UseDataTableOptions<T>) {
     const {
         fetcher,
         defaultPageSize = 10,
