@@ -154,6 +154,7 @@
 
         .auth-section {
             color: #{$secondary-light} !important;
+
             ul {
                 li {
                     color: #{$secondary-light} !important;
@@ -219,7 +220,7 @@
 
         &:focus {
             border-color: #{$primary} !important;
-            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3) !important;
+            box-shadow: 0 0 0 3px rgb(230 57 70 / 0.3) !important;
         }
     }
 }
@@ -381,7 +382,6 @@
     @include auth-page-dark-theme;
 
     @include dark-mode {
-
         // 表单标签暗色模式
         .form-label {
             color: #{$dark-secondary} !important;
@@ -395,7 +395,7 @@
 
             &:focus {
                 border-color: #{$primary} !important;
-                box-shadow: 0 0 0 0.2rem rgba(230, 57, 70, 0.25) !important;
+                box-shadow: 0 0 0 0.2rem rgb(230 57 70 / 0.25) !important;
             }
 
             &::placeholder {

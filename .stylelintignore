@@ -3,5 +3,4 @@
 *.min.css
 *.js
 *.ts
-_*
 /coverage

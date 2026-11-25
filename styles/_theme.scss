@@ -14,10 +14,12 @@ $primary-700: #a52834;
 $primary-800: #7c1d28;
 $primary-900: #5a151d;
 $primary-950: #3a0c12;
+
 // 辅助色
 $secondary: #2d3748;
 $secondary-light: #718096;
 $secondary-bg: #e2e8f0;
+
 // 蓝色主题（用于数据展示）
 $blue: #4285f4;
 $blue-light: #60a5fa;
@@ -31,10 +33,10 @@ $color-github: #24292e; // GitHub
 $color-google: #4285f4; // Google
 $color-microsoft: #0078d4; // Microsoft
 $color-discord: #5865f2; // Discord - Discord Brand Guidelines 2024
-$color-apple: #000000; // Apple
-$color-apple-dark: #ffffff; // Apple (Dark Theme)
+$color-apple: #000; // Apple
+$color-apple-dark: #fff; // Apple (Dark Theme)
 $color-facebook: #1877f2; // Facebook - Meta Brand Guidelines 2024
-$color-facebook-dark: #ffffff; // Facebook (Dark Theme)
+$color-facebook-dark: #fff; // Facebook (Dark Theme)
 $color-twitter: #1da1f2; // Twitter(X) - Twitter Brand Guidelines（历史版本）
 $color-wechat: #07c160; // 微信
 $color-qq: #ea1c26; // QQ - QQ 红 - QQ 互联平台品牌指南
@@ -48,7 +50,7 @@ $border-dashed: 2px dashed $border-color;
 
 // 背景色
 $background: #f8fafc;
-$background-light: #ffffff;
+$background-light: #fff;
 
 // 错误色
 $error: #e53e3e;
@@ -57,7 +59,7 @@ $error-dark: #c82333;
 // 深色主题颜色变量
 $dark-background: #121212;
 $dark-background-light: #1e1e1e;
-$dark-secondary: #ffffff;
+$dark-secondary: #fff;
 $dark-secondary-light: #a1a1aa;
 $dark-secondary-bg: #374151;
 $dark-border-color: #374151;
@@ -114,7 +116,6 @@ $dark-border-color: #374151;
 }
 
 // 深色主题支持
-//
 // 注意：不能用 `@include dark-mode { :root { … } }` —— 它会被编译成
 // `html.dark :root{…}`（后代选择器），`:root` 是 <html> 自身，class-only 路径永远不生效。
 // 因此显式区分 `html.dark`（手动切换）与 `@media`（跟随系统）。
@@ -149,7 +150,6 @@ html.dark {
 
 // ============================================================
 // Admin 内容区 token 契约（P4-0）
-//
 // 只约束 Admin 布局与数据页的「背景 / 表面 / 边框 / 文本 / 弱化文本」，
 // 不覆盖品牌色与 caomei-ui 的暗色 preset（html.dark 由 useAppTheme 同步）。
 // 页面不再直接写 #fff / #f8fafc / #1a202c 等浅色值。

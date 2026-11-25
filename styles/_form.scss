@@ -17,6 +17,7 @@
     border-radius: 8px;
     transition: border-color 0.2s, box-shadow 0.2s;
     font-size: 1rem;
+
     // overflow: hidden;
     line-height: 1.5;
     color: $secondary;
@@ -24,7 +25,7 @@
 
 .form-input:focus {
     border-color: $primary;
-    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+    box-shadow: 0 0 0 3px rgb(230 57 70 / 0.2);
     outline: none;
 }
 
@@ -46,7 +47,7 @@
     .form-group .form-input:focus,
     .form-input:focus {
         border-color: #{$primary};
-        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3);
+        box-shadow: 0 0 0 3px rgb(230 57 70 / 0.3);
     }
 
     // 输入框类型的暗色优化（合并重复选择器）
@@ -89,7 +90,7 @@
 
 .code-btn {
     min-width: 110px;
-    padding: 0.75rem 0.75rem;
+    padding: 0.75rem;
     font-size: 0.95rem;
 }
 
@@ -118,6 +119,7 @@
 
 .error-message {
     color: $error;
+
     // font-size: 0.875rem;
     margin-top: 0.25rem;
     display: block;
