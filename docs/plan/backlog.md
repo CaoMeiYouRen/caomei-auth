@@ -70,6 +70,7 @@
 - **上游未修复依赖告警跟进**：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4，lock 仍为 3.0.3）暂无已发布补丁版本，仅存在于构建 / 开发工具链；待上游发版后升级并复查 `pnpm audit`。`node-forge` 已升至 1.4.3（满足 GHSA-86w9-cpqp-85rv 的 ≥1.4.1），从本条移除。
 - **OAuth 客户端 PKCE 策略可配置化**：管理端创建客户端时固定写入 `requirePKCE = false`（`server/api/admin/oauth/applications/index.post.ts`），创建 / 更新 Schema、管理端视图与表单均未暴露该字段，管理员无法为新客户端开启 PKCE；上游 1.7 的安全默认已改为「必需」（`requirePKCE ?? true`），本项与 [1.7 升级记录](../design/governance/better-auth-1.7-upgrade.md) 中的兼容取舍同源。公开客户端（`token_endpoint_auth_method: none`）与申请 `offline_access` 的请求由上游无条件强制 PKCE，因此现状只影响机密客户端；`docs/api/oauth.md` 仍写「当前版本不支持 PKCE」，与现行为不一致。处理方向：Schema 增加可选 `require_pkce`（新建默认 `true`）、管理端开关与 i18n、创建 / 更新端点与视图透传、补契约测试，并更正 API 文档；不回溯改写存量客户端，保持既有接入方行为不变。依据 RFC 9700 / RFC 7636 对全客户端启用 PKCE 的建议。
 - **迁入来源**：既有 backlog「上游未修复依赖告警跟进」与原 `todo.md`「低优先级 · 安全审计工具集成」（安全审计已由 `.github/workflows/security-auto-fix.yml` 每日巡检 + Dependabot 落地，不再作为候选）；PKCE 策略项来自 2026-11-23 维护者评审（按安全加固登记）。
+- **验证码服务端注册条件与配置可用性不一致**（2026-11-25，M8.1 复审 RG-W6）：`lib/auth.ts` 以 `isCaptchaEnabled()`（provider + siteKey）决定是否挂载 captcha 插件，但 `getCaptchaConfig()` 缺 secret 时返回 `null`，插件以非空断言注册后在请求期读取 `options.endpoints` 报 `Cannot read properties of null`，表现为 500 而非「未启用」；同时 `/api/security/change-email`、`/api/security/two-factor/send-otp` 是自定义包装端点，不在插件 endpoints 内，服务端不校验 `x-captcha-response`，验证码只有前端门禁。处理方向：按 `getCaptchaConfig() !== null` 注册插件，补齐自定义端点的服务端校验或明确「仅前端」口径，并补部分配置与端点覆盖测试。
 
 ### 3.2 质量与测试
 
@@ -128,7 +129,7 @@
 
 ### 3.5 移动端与认证可用性
 
-> 2026-11-25 移动端审计（390×844 / 360×640，5 语言 × 19 页）登记；完整证据、复测现状与排期建议见 [移动端认证审计](../design/governance/2026-11-25-mobile-auth-audit.md)。阶段 14 M6 已交付会话表卡片布局；验证码可选修复已由用户授权插入阶段 14 M8，不在本表重复。下列条目均为复测后仍存在、尚未进入阶段的候选。
+> 2026-11-25 移动端审计（390×844 / 360×640，5 语言 × 19 页）登记；完整证据、复测现状与排期建议见 [移动端认证审计](../design/governance/2026-11-25-mobile-auth-audit.md)。阶段 14 M6 已交付会话表卡片布局；验证码可选修复已随阶段 14 M8 交付（`2debcf2`），不在本表重复。下列条目均为复测后仍存在、尚未进入阶段的候选。
 - **找回密码 / 快速登录验证码行窄屏溢出**（P2，原审计 P1）：360 宽下输入框与按钮超出 264px 行容器，按钮探出 32px；ja-JP 触发 9px 页面溢出。处理方向：输入 `flex: 1 1 0; min-width: 0`、按钮 `flex: none`、窄屏允许换行；同组件用于 2FA / 换邮箱，需一并回归。
 - **登录页第三个 Tab 默认不可见**（P2）：390 下 en-US / zh-TW / ja-JP / ko-KR 的 Tab 组内容宽 313–419px，容器 294px，手机号登录需横向滑动才发现。处理方向：窄屏 3 列自适应或换行，补 5 语言 390 断言。
 - **固定悬浮按钮遮挡可交互控件**（P2）：主题切换按钮遮挡登录页社交按钮、注册页协议复选框与隐私链接、SSO 域名登录入口；反馈按钮遮挡注册按钮与「忘记密码？」。处理方向：认证页预留底部安全区或改不遮挡的底部工具条，补重叠面积断言。
