@@ -5,6 +5,12 @@ import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
 import { authClient } from '@/lib/auth-client'
 import { useLoginFlow } from '@/composables/use-login-flow'
+const captchaState = vi.hoisted(() => ({ enabled: true }))
+vi.mock('@/composables/use-captcha', async () => {
+    const { computed } = await import('vue')
+    return { useCaptchaEnabled: () => computed(() => captchaState.enabled) }
+})
+
 import { resolveCaptchaToken } from '@/utils/web/captcha'
 import { navigateAfterLoginWithDelay, navigateToWithDelay } from '@/utils/web/navigation'
 
@@ -84,6 +90,7 @@ vi.mock('@/composables/use-otp', () => ({
 
 vi.mock('@/utils/web/captcha', () => ({
     resolveCaptchaToken: vi.fn(),
+    isCaptchaEnabled: vi.fn(() => true),
 }))
 
 vi.mock('@/utils/web/navigation', () => ({
@@ -93,6 +100,7 @@ vi.mock('@/utils/web/navigation', () => ({
 
 describe('useLoginFlow', () => {
     beforeEach(() => {
+        captchaState.enabled = true
         vi.clearAllMocks()
         routeRef.query = {}
     })
@@ -341,6 +349,7 @@ describe('useLoginFlow', () => {
         const sent = await sendOtp()
 
         expect(sent).toBe(true)
+        expect(resolveCaptchaToken).toHaveBeenCalledWith(expect.anything(), false)
         expect(fetchMock).toHaveBeenCalledWith('/api/security/two-factor/send-otp', {
             method: 'POST',
             headers: { 'x-captcha-response': 'captcha-token' },
@@ -350,6 +359,21 @@ describe('useLoginFlow', () => {
         }))
         expect(reset).toHaveBeenCalled()
         expect(otpSending.value).toBe(false)
+    })
+
+    it('sends otp without captcha when captcha is disabled', async () => {
+        captchaState.enabled = false
+        vi.mocked(resolveCaptchaToken).mockResolvedValue(null)
+        fetchMock.mockResolvedValue({ status: true, channel: 'email', fallback: false })
+
+        const { sendOtp } = useLoginFlow()
+
+        expect(await sendOtp()).toBe(true)
+        expect(resolveCaptchaToken).toHaveBeenCalledWith(expect.anything(), true)
+        expect(fetchMock).toHaveBeenCalledWith('/api/security/two-factor/send-otp', {
+            method: 'POST',
+            headers: undefined,
+        })
     })
 
     it('reports the phone fallback when email delivery failed', async () => {

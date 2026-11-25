@@ -2,6 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref, reactive } from 'vue'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useRegisterFlow } from '@/composables/use-register-flow'
+const captchaState = vi.hoisted(() => ({ enabled: true }))
+vi.mock('@/composables/use-captcha', async () => {
+    const { computed } = await import('vue')
+    return { useCaptchaEnabled: () => computed(() => captchaState.enabled) }
+})
+
 
 vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 mockNuxtImport('navigateTo', () => vi.fn())
@@ -65,11 +71,13 @@ vi.mock('@/lib/auth-client', () => ({
 
 vi.mock('@/utils/web/captcha', () => ({
     resolveCaptchaToken: vi.fn(),
+    isCaptchaEnabled: vi.fn(() => true),
 }))
 
 describe('useRegisterFlow', () => {
     beforeEach(() => {
         vi.clearAllMocks()
+        captchaState.enabled = true
     })
 
     it('initializes with default values', () => {
@@ -119,9 +127,11 @@ describe('useRegisterFlow', () => {
         const signUpMock = vi.fn().mockResolvedValue({ data: { user: { id: '1' } }, error: null })
         const { authClient } = await import('@/lib/auth-client')
         authClient.signUp.email = signUpMock
+        const { resolveCaptchaToken } = await import('@/utils/web/captcha')
 
         await register()
 
+        expect(resolveCaptchaToken).toHaveBeenCalledWith(expect.anything(), false)
         expect(signUpMock).toHaveBeenCalledWith({
             email: 'test@example.com',
             password: 'password123',
@@ -182,6 +192,28 @@ describe('useRegisterFlow', () => {
         expect(signUpMock).not.toHaveBeenCalled()
         expect(errors.value.captcha).toBe('请先完成验证码验证')
         expect(toastMocks.warning).toHaveBeenCalled()
+    })
+
+    it('registers without captcha when captcha is disabled', async () => {
+        const { activeTab, email, password, confirmPassword, agreedToTerms, register } = useRegisterFlow()
+        activeTab.value = 'email'
+        email.value = 'test@example.com'
+        password.value = 'password123'
+        confirmPassword.value = 'password123'
+        agreedToTerms.value = true
+
+        const { resolveCaptchaToken } = await import('@/utils/web/captcha')
+        captchaState.enabled = false
+        vi.mocked(resolveCaptchaToken).mockResolvedValue(null)
+
+        const signUpMock = vi.fn().mockResolvedValue({ data: { user: { id: '1' } }, error: null })
+        const { authClient } = await import('@/lib/auth-client')
+        authClient.signUp.email = signUpMock
+
+        await register()
+
+        expect(resolveCaptchaToken).toHaveBeenCalledWith(expect.anything(), true)
+        expect(signUpMock).toHaveBeenCalled()
     })
 
     it('reports email registration api error', async () => {

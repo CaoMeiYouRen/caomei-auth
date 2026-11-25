@@ -1,6 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ref } from 'vue'
 import { useEmailOtp, usePhoneOtp } from '@/composables/use-otp'
+const captchaState = vi.hoisted(() => ({ enabled: true }))
+vi.mock('@/composables/use-captcha', async () => {
+    const { computed } = await import('vue')
+    return { useCaptchaEnabled: () => computed(() => captchaState.enabled) }
+})
+
 
 vi.mock('@/composables/utils/use-i18n-text', () => import('@/tests/mocks/i18n-text'))
 const { toastMocks, toastStub, emailOtpServiceMock, phoneOtpServiceMock, resolveCaptchaTokenMock } = vi.hoisted(() => {
@@ -42,6 +48,7 @@ beforeEach(() => {
     emailOtpServiceMock.mockReset()
     phoneOtpServiceMock.mockReset()
     resolveCaptchaTokenMock.mockReset()
+    captchaState.enabled = true
     vi.useRealTimers()
 })
 
@@ -117,7 +124,7 @@ describe('composables/use-otp', () => {
             )
 
             expect(result).toBe(true)
-            expect(resolveCaptchaTokenMock).toHaveBeenCalled()
+            expect(resolveCaptchaTokenMock).toHaveBeenCalledWith(expect.anything(), false)
             expect(emailOtpServiceMock).toHaveBeenCalledWith(
                 'user@example.com',
                 'email-verification',
@@ -131,6 +138,23 @@ describe('composables/use-otp', () => {
             await vi.runAllTimersAsync()
             expect(sending.value).toBe(false)
             expect(resetMock).toHaveBeenCalled()
+        })
+
+        it('sends email without captcha when captcha is disabled', async () => {
+            vi.useFakeTimers()
+            captchaState.enabled = false
+            resolveCaptchaTokenMock.mockResolvedValueOnce(null)
+            emailOtpServiceMock.mockResolvedValueOnce({ data: {}, error: null })
+
+            const { send } = useEmailOtp()
+            const captchaRef = ref({ reset: vi.fn(), token: '', loading: false })
+
+            const result = await send('user@example.com', 'email-verification', captchaRef, () => true)
+
+            expect(result).toBe(true)
+            expect(resolveCaptchaTokenMock).toHaveBeenCalledWith(expect.anything(), true)
+            expect(emailOtpServiceMock).toHaveBeenCalledWith('user@example.com', 'email-verification', undefined)
+            await vi.runAllTimersAsync()
         })
 
         it('notifies about backend failures during send', async () => {
@@ -208,6 +232,23 @@ describe('composables/use-otp', () => {
                 description: 'Captcha missing',
             })
             expect(phoneOtpServiceMock).not.toHaveBeenCalled()
+        })
+
+        it('sends phone otp without captcha when captcha is disabled', async () => {
+            vi.useFakeTimers()
+            captchaState.enabled = false
+            resolveCaptchaTokenMock.mockResolvedValueOnce(null)
+            phoneOtpServiceMock.mockResolvedValueOnce({ data: {}, error: null })
+
+            const { send } = usePhoneOtp()
+            const captchaRef = ref({ reset: vi.fn(), token: '', loading: false })
+
+            const result = await send('13500000000', 'sign-in', captchaRef, () => true)
+
+            expect(result).toBe(true)
+            expect(resolveCaptchaTokenMock).toHaveBeenCalledWith(expect.anything(), true)
+            expect(phoneOtpServiceMock).toHaveBeenCalledWith('13500000000', 'sign-in', undefined)
+            await vi.runAllTimersAsync()
         })
 
         it('sends phone otp successfully', async () => {

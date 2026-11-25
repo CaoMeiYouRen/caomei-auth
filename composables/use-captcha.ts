@@ -2,6 +2,41 @@ import { ref, computed } from 'vue'
 import { useChallengeV3, type UseChallengeV3Return } from 'vue-recaptcha'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
 
+interface CaptchaRuntimeConfig {
+    captchaProvider?: string
+    recaptchaSiteKey?: string
+    turnstileSiteKey?: string
+    hcaptchaSiteKey?: string
+}
+
+/** 从运行时配置解析验证码 site key；组件与门禁必须共用这一份判定。 */
+function resolveCaptchaSiteKey(config: CaptchaRuntimeConfig): string | null {
+    switch (config.captchaProvider) {
+        case 'google-recaptcha':
+            return config.recaptchaSiteKey || null
+
+        case 'cloudflare-turnstile':
+            return config.turnstileSiteKey || null
+
+        case 'hcaptcha':
+            return config.hcaptchaSiteKey || null
+
+        default:
+            return null
+    }
+}
+
+/**
+ * 验证码是否启用（浏览器侧）。
+ *
+ * 与 `components/captcha.vue` 共用 `useRuntimeConfig().public`：
+ * `utils/shared/env` 的 CAPTCHA_PROVIDER 在客户端产物中不可用，不能用它做浏览器门禁。
+ */
+export function useCaptchaEnabled() {
+    const config = useRuntimeConfig().public
+    return computed(() => Boolean(config.captchaProvider && resolveCaptchaSiteKey(config)))
+}
+
 export function useCaptcha() {
     const translate = useI18nText()
     const token = ref<string>('')
@@ -12,20 +47,7 @@ export function useCaptcha() {
     const config = useRuntimeConfig().public
 
     const provider = computed(() => config.captchaProvider)
-    const siteKey = computed(() => {
-        switch (config.captchaProvider) {
-            case 'google-recaptcha':
-                return config.recaptchaSiteKey || null
-
-            case 'cloudflare-turnstile':
-                return config.turnstileSiteKey || null
-
-            case 'hcaptcha':
-                return config.hcaptchaSiteKey || null
-            default:
-                return null
-        }
-    })
+    const siteKey = computed(() => resolveCaptchaSiteKey(config))
     const enabled = computed(() => Boolean(provider.value && siteKey.value))
 
     let challengeV3: UseChallengeV3Return | null = null

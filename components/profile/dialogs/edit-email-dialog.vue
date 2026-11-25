@@ -41,6 +41,7 @@ import { useToast } from 'caomei-ui'
 import Captcha from '@/components/captcha.vue'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 import { useForm } from '@/composables/core/use-form'
+import { useCaptchaEnabled } from '@/composables/use-captcha'
 import { emailSchema } from '@/utils/shared/validators'
 import { getApiErrorMessage } from '@/utils/shared/api-error'
 import { z } from 'zod'
@@ -60,6 +61,7 @@ const visible = defineModel<boolean>('visible', { required: true })
 
 const { t } = useI18n()
 const toast = useToast()
+const captchaEnabled = useCaptchaEnabled()
 const emailCaptcha = ref<CaptchaExpose | null>(null)
 const emailCaptchaError = ref('')
 
@@ -86,7 +88,7 @@ async function bindEmail() {
     await handleSubmit(async (vals) => {
         let captchaContext: ResolvedCaptchaToken | null = null
         try {
-            captchaContext = await resolveCaptchaToken(emailCaptcha)
+            captchaContext = await resolveCaptchaToken(emailCaptcha, !captchaEnabled.value)
             emailCaptchaError.value = ''
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : t('profile.emailDialog.captchaRequired')

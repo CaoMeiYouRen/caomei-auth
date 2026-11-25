@@ -18,6 +18,7 @@ import type { SocialProvider } from '@/types/social'
 import { resolveValidationMessage } from '@/utils/shared/zod-messages'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
+import { useCaptchaEnabled } from '@/composables/use-captcha'
 import { readTwoFactorChallengeQuery } from '@/utils/web/login-challenge'
 import { resolveTwoFactorErrorMessage } from '@/utils/web/two-factor-errors'
 
@@ -34,6 +35,7 @@ function getFirstZodError(
 }
 
 export function useLoginFlow() {
+    const captchaEnabled = useCaptchaEnabled()
     const config = useRuntimeConfig().public
     const route = useRoute()
     const router = useRouter()
@@ -160,7 +162,7 @@ export function useLoginFlow() {
         try {
             otpSending.value = true
             try {
-                captchaContext = await resolveCaptchaToken(captcha)
+                captchaContext = await resolveCaptchaToken(captcha, !captchaEnabled.value)
                 errors.value.captcha = ''
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : t('auth.common.captchaRequired')

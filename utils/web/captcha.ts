@@ -91,7 +91,9 @@ export interface ResolvedCaptchaToken {
 
 /**
  * 解析验证码实例并返回 token
- * @throws Error 当验证码未完成或执行失败时
+ * @param captchaRef 验证码组件实例
+ * @param isOptional 验证码未启用时为 true：实例缺失或 token 为空返回 null，不抛错
+ * @throws Error 验证码启用但未完成或执行失败时
  */
 export async function resolveCaptchaToken(
     captchaRef: Ref<CaptchaExpose | null>,
@@ -118,6 +120,10 @@ export async function resolveCaptchaToken(
     const token = isRef(captchaInstance.token) ? captchaInstance.token.value : captchaInstance.token
 
     if (!token) {
+        /* 验证码未启用（可选）时组件实例仍存在但 token 为空，应放行而不是报错 */
+        if (isOptional) {
+            return null
+        }
         throw new Error('请先完成验证码验证')
     }
 

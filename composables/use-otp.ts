@@ -3,8 +3,10 @@ import { useToast } from 'caomei-ui'
 import { resolveCaptchaToken, type CaptchaExpose } from '@/utils/web/captcha'
 import { sendEmailOtpService, sendPhoneOtpService } from '@/utils/web/otp-service'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
+import { useCaptchaEnabled } from '@/composables/use-captcha'
 
 export function useEmailOtp() {
+    const captchaEnabled = useCaptchaEnabled()
     const toast = useToast()
     const t = useI18nText()
     const sending = ref(false)
@@ -24,9 +26,10 @@ export function useEmailOtp() {
         let cooldown = false
         try {
             let token: string | undefined
+            /* ref 只表示调用方挂了验证码组件；是否必填由 isOptional 决定 */
             if (captchaRef) {
                 try {
-                    const res = await resolveCaptchaToken(captchaRef)
+                    const res = await resolveCaptchaToken(captchaRef, !captchaEnabled.value)
                     if (res) {
                         token = res.token
                     }
@@ -73,6 +76,7 @@ export function useEmailOtp() {
 }
 
 export function usePhoneOtp() {
+    const captchaEnabled = useCaptchaEnabled()
     const toast = useToast()
     const t = useI18nText()
     const sending = ref(false)
@@ -92,9 +96,10 @@ export function usePhoneOtp() {
         let cooldown = false
         try {
             let token: string | undefined
+            /* ref 只表示调用方挂了验证码组件；是否必填由 isOptional 决定 */
             if (captchaRef) {
                 try {
-                    const res = await resolveCaptchaToken(captchaRef)
+                    const res = await resolveCaptchaToken(captchaRef, !captchaEnabled.value)
                     if (res) {
                         token = res.token
                     }

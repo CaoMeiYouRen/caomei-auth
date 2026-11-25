@@ -93,6 +93,18 @@ describe('utils/captcha', () => {
         expect(resetMock).toHaveBeenCalled()
     })
 
+    it('returns null when optional and token is empty', async () => {
+        const captcha = await importCaptcha()
+        const captchaRef = ref({
+            token: ref(''),
+            reset: vi.fn(),
+            execute: vi.fn(),
+            loading: ref(false),
+        })
+
+        await expect(captcha.resolveCaptchaToken(captchaRef, true)).resolves.toBeNull()
+    })
+
     it('throws when token missing after execution', async () => {
         const captcha = await importCaptcha()
         const captchaRef = ref({

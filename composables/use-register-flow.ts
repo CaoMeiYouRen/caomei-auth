@@ -7,10 +7,12 @@ import { usePhoneOtp } from '@/composables/use-otp'
 import { authClient } from '@/lib/auth-client'
 import { useValidationMessage } from '@/composables/utils/use-validation-message'
 import { useI18nText } from '@/composables/utils/use-i18n-text'
+import { useCaptchaEnabled } from '@/composables/use-captcha'
 import { resolveCaptchaToken, type CaptchaExpose, type ResolvedCaptchaToken } from '@/utils/web/captcha'
 import { useForm } from '@/composables/core/use-form'
 
 export function useRegisterFlow() {
+    const captchaEnabled = useCaptchaEnabled()
     const config = useRuntimeConfig().public
     const translate = useValidationMessage()
     const t = useI18nText()
@@ -130,7 +132,7 @@ export function useRegisterFlow() {
             try {
                 if (activeTab.value === 'email') {
                     try {
-                        captchaContext = await resolveCaptchaToken(captcha)
+                        captchaContext = await resolveCaptchaToken(captcha, !captchaEnabled.value)
                     } catch (error) {
                         const errorMessage = error instanceof Error ? error.message : t('auth.common.captchaRequired')
                         errors.value.captcha = errorMessage
