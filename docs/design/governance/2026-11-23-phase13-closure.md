@@ -1,6 +1,6 @@
 # 2026-11-23 阶段 13 收口记录：可观测性规模化与运维闭环
 
-> 范围与决策见 [阶段 13 范围登记](./2026-11-23-phase13-registration.md)；阶段正文见 [todo-archive-phases-13](../plan/archive/todo-archive-phases-13.md)，里程碑见 [roadmap-phases-13](../plan/archive/roadmap-phases-13.md)。
+> 范围与决策见 [阶段 13 范围登记](./2026-11-23-phase13-registration.md)；阶段正文见 [todo-archive-phases-13](../../plan/archive/todo-archive-phases-13.md)，里程碑见 [roadmap-phases-13](../../plan/archive/roadmap-phases-13.md)。
 
 ## 1. 交付清单
 

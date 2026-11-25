@@ -8,6 +8,7 @@
 
 | 阶段 | 主题 | 归档文件 | 归档日期 |
 | :--- | :--- | :--- | :--- |
+| 14 | 国际化门禁与前端健壮性 | [todo-archive-phases-14.md](./archive/todo-archive-phases-14.md) | 2026-11-26 |
 | 13 | 可观测性规模化与运维闭环 | [todo-archive-phases-13.md](./archive/todo-archive-phases-13.md) | 2026-11-23 |
 | 12 | 安全可观测性与会话治理 | [todo-archive-phases-12.md](./archive/todo-archive-phases-12.md) | 2026-11-23 |
 | 11 | 2FA 覆盖收紧与登录通道闭环 | [todo-archive-phases-11.md](./archive/todo-archive-phases-11.md) | 2026-11-21 |
