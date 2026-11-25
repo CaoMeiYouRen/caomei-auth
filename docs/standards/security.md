@@ -96,6 +96,8 @@
 -   **CSRF 防护**: 确保 API 使用 cookie 认证时带 SameSite 属性；敏感写操作按 better-auth 约定处理。
 -   **CORS 配置**: 禁止在生产环境放开 `Access-Control-Allow-Origin: *`；按 OAuth 应用配置白名单。
 -   **验证码与风控**: 登录、注册、验证码发送等接口接入 `server/utils/captcha-config.ts` / `rate-limit.ts` 能力，防止暴力破解与滥用。
+    -   未配置 CAPTCHA（provider 或 site key 缺失）时不挂载 better-auth captcha 插件，前端按运行时配置（`useRuntimeConfig().public`）跳过 token 解析；配置部分缺失（有 provider、缺 secret）时的注册条件与服务端可用性不一致属已知缺口，见 [backlog §3.1](../plan/backlog.md#31-安全与合规)。
+    -   `/api/security/change-email` 与 `/api/security/two-factor/send-otp` 为自定义包装端点，不在插件 endpoints 内，目前 `x-captcha-response` 只有前端门禁；服务端校验补齐与上述缺口同批评估。
 
 ## 4. 日志与监控 (Logging & Monitoring)
 

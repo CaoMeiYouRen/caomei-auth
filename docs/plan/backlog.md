@@ -125,6 +125,7 @@
 - **caomei-ui 1.4.0 按钮根节点 scoped id 缺口**：`CaomeiButton` 在未启用内建提示时也会把根节点包到 `CaomeiPassthrough` 组件，父组件 scoped 类无法落到内层 `<button>`，导致 `theme-toggle` / `.btn` / `.social-btn` 等根类样式失效。2026-11-22 升级已用 wrapper + `:deep()` 与局部 `!important` 规避（见 [升级记录](../design/governance/2026-11-22-caomei-ui-1.4.0-upgrade.md)）。处理方向：向上游提报最小复现；上游恢复「未启用提示时根节点即 button」后删除项目侧规避，并复核 `styles/_form.scss` 的 `!important` 与登录页 `white-space` 覆盖是否仍需要。
 - **社交按钮覆盖与库 token 同值**：`.caomei-button.social-btn` 的 `background-color` / `border-radius` / `font-size` 与 1.4.0 默认 token 恰好等值，视觉零差异无法证明覆盖生效；下次 caomei-ui 升级前改用库文档化钩子，或补计算样式断言。
 - **认证页死规则清理**：`login` / `register` / `forgot-password` / `change-password` 中与全局 `.btn` / `.btn-primary` 完全等值的 scoped 规则在 1.4.0 后已不可命中 CaomeiButton 根节点（`switch-btn` 的 `width: 100%` 由 `block` 兜底），随下一次触及这些文件的提交删除。
+- **`/sso-login` 暗色主题缺失**（2026-11-26，阶段 14 M3 基线复核）：页面使用硬编码浅色（`#f8fafc` / `#e2e8f0`）且 `styles/_dark-mode.scss` 无 `.sso-` 覆盖，暗色模式下仅页脚与全局控件变暗，内容区仍为浅色；`*-sso-login-dark-tablet` 基线因此呈现浅色内容 + 暗色页脚。处理方向：接入既有暗色 token，重采该基线并补暗色断言。
 - **Demo 模式语言切换偏移验证**：`data-preset` / GitHub 角标与右上角语言切换共存时的偏移仅在 `NUXT_PUBLIC_DEMO_MODE=true` 下可见，需在 Demo 构建中补一次视觉确认。
 
 ### 3.5 移动端与认证可用性

@@ -71,5 +71,7 @@
 -   **环境**：本地与 CI 共用 Playwright 官方容器（`scripts/testing/run-visual.mjs` 自动调用）；基线只在容器内采集，宿主直跑仅用于调试。
 -   **更新纪律**：差异逐项归因后才可 `pnpm test:visual:update`；参考态快照不可原地刷新。
 -   **阈值与重采**：`maxDiffPixels` 只统计超过阈值的像素（本仓库 `threshold: 0.2`），阈值内的整片色差不会被计入；受影响 spec 必须用 `pnpm test:visual:update`（`--update-snapshots=all`）重采，跨全站 token / 主题变更才整层重采，中间态快照不得写回基线。定稿时序与 verify 留痕见 [视觉参考态基座](../design/governance/2026-11-08-visual-baseline-harness.md)。
+-   **窄屏基线（阶段 14 D44）**：`localized-narrow.visual.spec.ts` 覆盖 ja-JP / ko-KR 的 register、forgot-password、sso-login，390×844 采浅色、768×1024 采暗色，共 12 张整页截图；同时断言 `html lang`、`noindex` 与页面级无横向溢出。每个视口不重复覆盖双主题（CI 预算取舍）；整页口径下固定定位控件（主题切换）按视口锚点绘制，控件移位会在截图中段制造归因噪声，重采前需先确认其位置未变。
+-   **长语言窄容器结论（阶段 14 M3.2）**：`localized-narrow-360.visual.spec.ts` 在 360×640 下检查 ja / ko 的 register 与 sso-login，页面无横向溢出、提交按钮不越出卡片；当前无需恢复 `white-space: normal`，长文案由 caomei-ui 按钮文本层的 `min-width: 0` + `nowrap` + ellipsis 承接。若后续组件移除该截断契约，本条用例与基线需同步复核。
 -   **升级联动**：升级 `@playwright/test` 必须同批重采自基线并说明差异。
 -   详见 [视觉参考态基座](../design/governance/2026-11-08-visual-baseline-harness.md)。

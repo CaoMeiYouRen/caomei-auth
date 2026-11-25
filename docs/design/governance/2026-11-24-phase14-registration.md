@@ -21,7 +21,7 @@
 | D34 | 语言包产物过滤 | `locale-runtime-loader` 的 `import.meta.glob` 按 `ENABLED_LOCALES` 过滤静态语言包，core / server 模块不过滤；构建产物保留 core 与已启用语言 | 当前产物含 ja-JP 等不可达 chunk（阶段 8 记录约 10 KB 且会累积）；过滤只影响未启用语言，不改运行时回退 |
 | D35 | 译文台账消费方 | 新增治理脚本断言：`reviewedModules ∪ pendingModules ⊆ LOCALE_MESSAGE_MODULES`、`readiness` 与 Registry 一致、`nativeReview` 取值合法；接入 `pnpm i18n:check` | 台账目前无消费方，全靠人工自觉；脚本化后与 `message-catalog` 校验互补 |
 | D36 | 多语言内部链接 | 本阶段只改登录页（注册 / 忘记密码 / 隐私 / 条款）与页脚的站内字面路径为 `localePath()`，保留原有视觉与文案；其余认证页 / 后台布局 / `navigateTo` 的字面路径登记 backlog 收敛 | `/zh-TW`、`/en-US` 下登录页点击注册 / 忘记密码 / 隐私 / 条款会回落默认语言，属既有缺陷；全域收敛需独立门禁与存量清点，避免本阶段静默扩容 |
-| D37 | i18n 视觉矩阵扩展 | ja-JP / ko-KR 补 390（移动）与 768（平板）基线，覆盖 register / forgot-password / sso-login；长语言窄容器补 2 条 localized-core 用例，`white-space` 仅在用例证明溢出时恢复 `normal` | 阶段 8 只采 1440 桌面 12 张，韩文比中文长约 20%，窄屏换行与 `nowrap` 无像素保护 |
+| D37 | i18n 视觉矩阵扩展 | ja-JP / ko-KR 补 390（移动）与 768（平板）基线，覆盖 register / forgot-password / sso-login；长语言窄容器补 2 条 localized-narrow-360 用例，`white-space` 仅在用例证明溢出时恢复 `normal` | 阶段 8 只采 1440 桌面 12 张，韩文比中文长约 20%，窄屏换行与 `nowrap` 无像素保护 |
 | D38 | 前端失败处理口径 | 4 条非 Admin 流程（改密码 / 改邮箱 / 安全设置 / 个人资料）统一复用 `throwIfAuthError`，4xx / 5xx 给失败 Toast，不改成功路径与既有文案键；`use-profile-flow` 的登出失败按同一口径 | 现只 `catch` 抛错路径，`{ error }` 响应会提示成功或静默；仅补错误分支，不加新交互 |
 | D39 | 类型与样式门禁 | `useDataTable` / 选中集收紧为 `AdminUser` 等具体行类型，去掉断言；`.stylelintignore` 只忽略临时模式，`styles/` 6 个 SCSS 纳入 `pnpm lint:css`；不新增 stylelint 规则 | `any` 逃逸与样式层未检查都是既有缺口；先恢复覆盖，规则调整另行评估 |
 | D40 | Admin 日志页 1440 布局 | 统计卡与热力图改为容器内滚动 / 收敛 `min-width`，**不减少热力图 168 桶默认展示**；补 1440 页面级无横向溢出断言，热力图基线恢复常规元素口径 | 阶段 13 以「页面横向滚动归零 + 视口截图」绕开，属临时口径；根因是区块最小宽度超出内容区 |
@@ -86,7 +86,7 @@ M1 → M2 → M3 → M4 → M5 → M6 → M7。
 | :--- | :--- |
 | 未启用语言同构门禁因补齐缺失直接红灯 | 首轮先记录缺失清单，再按批次补齐；门禁只断言「目录完整」，不阻塞 5 语发布 |
 | 语言包过滤后遗漏运行时回退 | 保留 core / server 模块与回退语言；构建后核对产物与 `enabled=false` 目录不一致即失败 |
-| 视觉矩阵扩展拉长 CI | 只加 2 语言 × 2 视口 × 3 页（12 张）+ 2 条 localized-core，控制在现有 154 张的 +10% 内 |
+| 视觉矩阵扩展拉长 CI | 只加 2 语言 × 2 视口 × 3 页（12 张）+ 2 条 localized-core，控制在阶段 14 前 153 张的 +10% 内 |
 | 失败 Toast 改动触碰成功路径 | 只改错误分支，成功分支与文案键不变；逐流程补单测 |
 | 1440 布局收敛改变热力图观感 | 不改 168 桶与色阶，只改容器滚动 / 最小宽度；先出对照截图再定 |
 | 移动端卡片化影响桌面 | 断点隔离（≤768），桌面表格与既有基线不变 |
