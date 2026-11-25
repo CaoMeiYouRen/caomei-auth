@@ -4,7 +4,7 @@
 
 - **阶段**：阶段 14「国际化门禁与前端健壮性」/ 2026-11-24 登记 → 2026-11-26 收口
 - **大条目**：M1 i18n 门禁与产物（已闭环） / M2 台账与多语言链接（已闭环） / M3 i18n 视觉回归（已闭环） / M4 前端健壮性与样式门禁（已闭环） / M5 Admin 日志页 1440 布局（已闭环） / M6 移动端安全页会话表（已闭环） / M7 文档与阶段收口（已闭环） / M8 验证码可选配置修复（插队，已闭环）
-- **提交清单**：M1 `35c03b2`、`b418af7`；M2 `b18323e`、`e6dda59`；M3 `044ed57`、`33cc218`；M4 `5937a4e`、`0d12400`、`711acad`；M5 `5b6d690`；M6 `47e12c6`；M7 `b918e53`（M7.2 由阶段收口提交承载）；M8 `2debcf2`
+- **提交清单**：M1 `35c03b2`、`b418af7`；M2 `b18323e`、`e6dda59`；M3 `044ed57`、`33cc218`；M4 `5937a4e`、`0d12400`、`711acad`；M5 `5b6d690`；M6 `47e12c6`；M7 `b918e53`、`8b24d7a`（M7.2 为阶段收口提交）；M8 `2debcf2`
 - **质量门**：`lint`（0 error / 27 既有 warning）/ `lint:css` / `lint:md:check` / `typecheck` / `test`（218 文件 / 1565 用例）/ `test:coverage`（Statements 78.84% / Branch 65.89% / Functions 72.56% / Lines 79.04%）/ `i18n:check`（29 用例）/ `ai:check` / `planning:check` / `quality:file-size` / `lint:duplicate`（3.77%）/ `migration:check-imports` / `migration:check-budget`（入口 CSS 405,196 B / +1.37%）/ `build`（56.9 MB / 13.6 MB gzip）/ `docs:build` / `test:visual`（173 用例 / 165 张自基线）/ `security:alerts`（1 个已豁免 high）全绿
 - **Review Gate**：M1.1 R1 Reject → R2 Reject → R3 Pass → R4 Reject → R5 Pass；M1.2 R1 Pass → R2 Pass；M2.1 R1 Reject → R2 Pass；M2.2 R1 Reject → R2 Reject → R3 Pass；M3.1 R1 Pass；M3.2 R1 Pass → R2 Pass；M4.1 R1 Pass；M4.2 R1 Pass；M4.3 R1 Pass；M5.1 R1 Reject → R2 Pass；M5.2 R1 Reject → R2 Pass；M6.1 R1 Reject → R2 Pass；M6.2 R1 Reject → R2 Pass；M7.1 R1 Reject → R2 Pass；M7.2 R1 Reject → R2 Pass；M8.1 R1 Reject → R2 Reject → R3 Pass
 - **未覆盖边界**：窄屏基线按 D44 只采 12 张（390 浅色 / 768 暗色，每视口不重复双主题），完整 24 矩阵未采；`/sso-login` 暗色主题缺失，暗色基线呈现浅色内容 + 暗色页脚，已登记 backlog §3.4；移动端安全页卡片仅有 zh-CN 元素基线；M3.2 的 360 用例以几何断言与组件截断契约覆盖长文案，未做注入超长文案；验证码自定义端点（change-email / 自定义 send-otp）服务端仍未校验 `x-captcha-response`，配置部分缺失的服务端注册缺口见 backlog §3.1；本地门禁通过，推送与 CI 由维护者执行。
@@ -23,7 +23,7 @@ _目标：把 i18n 从「5 语可用」推进到「未启用语言也有门禁�
 | M4 前端健壮性与样式门禁 | 3/3 | 已闭环 | `5937a4e`、`0d12400`、`711acad` | R1 Pass（标准审计：W01 lint:css 覆盖与 W02 安全设置失败用例已补，W03 按条目拆分提交，W04 视觉 154 张通过） | 3 → 3 commits |
 | M5 Admin 日志页 1440 布局 | 2/2 | 已闭环 | `5b6d690` | R2 Pass（R1 Reject：769–1240 窄桌面筛选控件被裁切 → 筛选行换行修复 + 1024 裁切守卫） | 2 → 1 commit |
 | M6 移动端安全页会话表 | 2/2 | 已闭环 | `47e12c6` | R2 Pass（R1 Reject：暗色边框误用浅色 token → 改用 `$dark-border-color` 并重采基线） | 2 → 1 commit |
-| M7 文档与阶段收口 | 2/2 | 已闭环 | `b918e53`（M7.2 由阶段收口提交承载） | R2 Pass（M7.1 R1 Reject → R2 Pass；M7.2 R1 Reject → R2 Pass） | 2 → 1 commit |
+| M7 文档与阶段收口 | 2/2 | 已闭环 | `b918e53`、`8b24d7a` | R2 Pass（M7.1 R1 Reject → R2 Pass；M7.2 R1 Reject → R2 Pass） | 2 → 1 commit |
 | M8 验证码可选配置修复（插队） | 1/1 | 已闭环 | `2debcf2` | R3 Pass（R1 Reject：浏览器侧启用判定恒 false → 改用运行时配置；R2 Reject：换邮箱缺两态浏览器验证 → 已补） | 1 → 1 commit |
 
 - **执行顺序**：M1 → M2 → M3 → M4 → M5 → M6 → M8 → M7（M8 为 2026-11-25 用户授权插入的功能回归热修，优先于收口；M3 按 D44 采 12 张口径）。
