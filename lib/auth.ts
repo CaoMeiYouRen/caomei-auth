@@ -428,8 +428,8 @@ function createAuthInstance() {
             trustedDevicePlugin(),
             genericOAuth({ config: GENERIC_OAUTH_CONFIG }),
             oauthProvider({
-                loginPage: '/login', // 登录页面的路径
-                consentPage: '/oauth/consent', // 同意页面的路径
+                loginPage: '/api/oauth-entry/login', // 按语言 cookie 补前缀后跳转
+                consentPage: '/api/oauth-entry/consent', // 同上
                 // 动态客户端注册（RFC 7591）仅限管理员，但上游 `/oauth2/register` 只校验登录态，
                 // 因此直接关闭该端点；应用统一由管理后台 `/api/admin/oauth/applications` 创建。
                 // 关闭后 `registration_endpoint` 不再出现在 Discovery 元数据中。

@@ -450,8 +450,11 @@ test.describe('OAuth 入口语言', () => {
                 expect(response.status(), `${locale} ${entry} 未返回重定向`).toBe(302)
                 const location = response.headers().location
                 expect(location, `${locale} ${entry} 缺少 Location`).toBeTruthy()
-                const expectedPrefix = locale === 'zh-CN' ? `/${entry === 'login' ? 'login' : 'oauth/consent'}` : `/${locale}/${entry === 'login' ? 'login' : 'oauth/consent'}`
-                expect(location!.startsWith(expectedPrefix), `${locale} ${entry} 前缀错误：${location}`).toBe(true)
+                const target = entry === 'login' ? '/login' : '/oauth/consent'
+                const expectedPath = locale === 'zh-CN' ? target : `/${locale}${target}`
+                /* 只看站内路径名，防止前缀同源硬编码；同时排除指回入口自身的重定向循环 */
+                expect(new URL(location!, 'http://localhost').pathname, `${locale} ${entry} 路径错误：${location}`).toBe(expectedPath)
+                expect(location, `${locale} ${entry} 指回入口自身`).not.toContain('/api/oauth-entry/')
                 expect(location).toContain('client_id=visual-client')
                 expect(location).toContain('state=visual')
                 expect(location).toContain('redirect_uri=')
