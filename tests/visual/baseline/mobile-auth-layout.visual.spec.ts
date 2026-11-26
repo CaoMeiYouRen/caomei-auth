@@ -1,4 +1,4 @@
-import { expect, test, type Locator } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
 import { applyTheme, expectNoHorizontalOverflow, waitForVisualStable } from '../helpers/visual'
 
 /**
@@ -100,6 +100,130 @@ function intersectionArea(a: NonNullable<Awaited<ReturnType<Locator['boundingBox
     const height = Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y)
     return width > 0 && height > 0 ? width * height : 0
 }
+
+/** 固定悬浮控件：主题切换恒在；反馈按钮仅在配置 feedbackUrl 的部署渲染 */
+const FLOATING_CONTROLS = ['.theme-toggle', '.feedback-button'] as const
+
+/** 反馈按钮未配置时的文档盒：右锚 16px、宽度上限 48px（实际宽约 46px） */
+const FEEDBACK_RIGHT_INSET = 16
+const FEEDBACK_MAX_WIDTH = 48
+
+/** 认证页在 ≤768 下必须不被悬浮控件遮挡的可交互元素 */
+const OVERLAY_GUARDS = [
+    {
+        path: '/login',
+        name: '登录页',
+        selector: '.auth-card .social-btn, .auth-card .agreement-link, .auth-card .toggle-link, .auth-card button.btn-primary',
+        /* 内容右缘锚点：卡片的 padding 盒 */
+        contentBox: '.auth-card',
+        cardBox: null,
+    },
+    {
+        path: '/register',
+        name: '注册页',
+        selector: '.auth-card #agreement, .auth-card .agreement-link, .auth-card button.btn-primary',
+        contentBox: '.auth-card',
+        cardBox: null,
+    },
+    {
+        path: '/sso-login',
+        name: 'SSO 页',
+        selector: '.sso-button, .sso-login .login-link, .provider-card',
+        contentBox: '.sso-login',
+        /* 廊道收窄后内层卡片需仍在父容器内 */
+        cardBox: { container: '.available-providers', item: '.provider-card' },
+    },
+] as const
+
+async function expectNoOverlapWithFloating(page: Page, selector: string, context: string) {
+    const controls = page.locator(selector)
+    const total = await controls.count()
+    expect(total, `${context}：未找到待保护控件`).toBeGreaterThan(0)
+    for (let index = 0; index < total; index += 1) {
+        const control = controls.nth(index)
+        if (!(await control.isVisible())) {
+            continue
+        }
+        const controlBox = await control.boundingBox()
+        if (!controlBox) {
+            continue
+        }
+        for (const floatingSelector of FLOATING_CONTROLS) {
+            const floating = page.locator(floatingSelector).first()
+            if ((await floating.count()) === 0 || !(await floating.isVisible())) {
+                continue
+            }
+            const floatingBox = await floating.boundingBox()
+            expect(floatingBox, `${context}：${floatingSelector} 缺少边界框`).not.toBeNull()
+            expect(
+                intersectionArea(controlBox, floatingBox!),
+                `${context}：第 ${index + 1} 个控件与 ${floatingSelector} 重叠`,
+            ).toBe(0)
+        }
+    }
+}
+
+/**
+ * 右侧安全廊道：内容右缘必须早于固定按钮左缘。
+ * 反馈按钮未配置时按文档盒（right 16 + 宽 48 上限）计算，保证该分支不依赖渲染配置。
+ */
+async function expectContentCorridor(page: Page, contentBox: string, context: string) {
+    const corridor = await page.evaluate((selector) => {
+        const element = document.querySelector<HTMLElement>(selector)
+        if (!element) {
+            return null
+        }
+        const style = getComputedStyle(element)
+        const right = element.getBoundingClientRect().right - Number.parseFloat(style.paddingRight)
+        return { right, viewportWidth: window.innerWidth }
+    }, contentBox)
+    expect(corridor, `${context}：${contentBox} 缺少边界框`).not.toBeNull()
+
+    const themeBox = await page.locator('.theme-toggle').first().boundingBox()
+    expect(themeBox, `${context}：.theme-toggle 缺少边界框`).not.toBeNull()
+    /* 主题切换与反馈按钮同锚 right: 16px；反馈按钮宽约 46px，按 48px 上限推导 */
+    const feedbackLeft = corridor!.viewportWidth - FEEDBACK_RIGHT_INSET - FEEDBACK_MAX_WIDTH
+    expect(corridor!.right, `${context}：内容右缘越入固定按钮廊道（主题切换）`).toBeLessThanOrEqual(themeBox!.x - 8)
+    expect(corridor!.right, `${context}：内容右缘越入固定按钮廊道（反馈按钮）`).toBeLessThanOrEqual(feedbackLeft - 8)
+}
+
+test.describe('认证页悬浮控件遮挡', () => {
+    for (const viewport of VIEWPORTS) {
+        test.describe(`视口 ${viewport.name}`, () => {
+            test.use({ viewport: { width: viewport.width, height: viewport.height }, colorScheme: 'light' })
+
+            for (const locale of LOCALES) {
+                for (const guard of OVERLAY_GUARDS) {
+                    test(`${locale} ${guard.name} 任意滚动位置均不被遮挡`, async ({ page }) => {
+                        await applyTheme(page, 'light')
+                        await page.goto(localizedPath(locale, guard.path), { waitUntil: 'domcontentloaded' })
+                        await expect(page.locator('html')).toHaveAttribute('lang', locale)
+                        await waitForVisualStable(page)
+                        await expectNoHorizontalOverflow(page, `${locale} ${guard.name} 在 ${viewport.name} 下出现横向溢出`)
+                        /* 主题切换是廊道契约的基准，缺失时断言必须失败而不是静默跳过 */
+                        await expect(page.locator('.theme-toggle')).toHaveCount(1)
+
+                        /* 右侧廊道与滚动位置无关（固定按钮占固定 x 带）；首屏取样即覆盖全部滚动位置 */
+                        await expectContentCorridor(page, guard.contentBox, `${locale} ${guard.name}（首屏）`)
+                        await expectNoOverlapWithFloating(page, guard.selector, `${locale} ${guard.name}（首屏）`)
+
+                        if (guard.cardBox) {
+                            const container = page.locator(guard.cardBox.container).first()
+                            if (await container.isVisible()) {
+                                const items = container.locator(guard.cardBox.item)
+                                const total = await items.count()
+                                expect(total, `${locale} ${guard.name}：无卡片可断言`).toBeGreaterThan(0)
+                                for (let index = 0; index < total; index += 1) {
+                                    await expectInside(container, items.nth(index), `${locale} ${guard.name} 第 ${index + 1} 张卡片越出容器`)
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    }
+})
 
 test.describe('SSO 首屏顶部安全区', () => {
     for (const viewport of VIEWPORTS) {
