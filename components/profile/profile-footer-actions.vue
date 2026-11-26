@@ -38,6 +38,11 @@ const emit = defineEmits<{
     display: flex;
     align-items: center;
     gap: 1.5rem;
+
+    /* en-US / ja-JP 的两个按钮 390 下合并宽 300–311px，超过卡片内容宽；窄屏允许换行 */
+    @media (width <= 768px) {
+        flex-wrap: wrap;
+    }
 }
 
 .btn-link {

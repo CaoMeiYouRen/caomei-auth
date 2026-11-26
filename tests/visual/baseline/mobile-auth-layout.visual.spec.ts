@@ -1,4 +1,6 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
+import { useAdminSession } from '../helpers/admin-session'
+import { ensureVisualUserSession } from '../helpers/session'
 import { applyTheme, expectNoHorizontalOverflow, waitForVisualStable } from '../helpers/visual'
 
 /**
@@ -329,6 +331,62 @@ test.describe('登录方式 Tab 窄屏完整可见', () => {
 
                     await expectInside(page.locator('.auth-card'), group, `${locale} Tab 组越出登录卡片`)
                 })
+            }
+        })
+    }
+})
+
+test.describe('个人中心操作行窄屏不溢出', () => {
+    for (const viewport of VIEWPORTS) {
+        test.describe(`视口 ${viewport.name}`, () => {
+            test.use({ viewport: { width: viewport.width, height: viewport.height }, colorScheme: 'light' })
+
+            for (const locale of LOCALES) {
+                test(`${locale} 操作按钮换行且不越出卡片`, async ({ page }) => {
+                    await ensureVisualUserSession(page)
+                    await applyTheme(page, 'light')
+                    await page.goto(localizedPath(locale, '/profile'), { waitUntil: 'domcontentloaded' })
+                    const card = page.locator('.profile-card').first()
+                    await expect(card).toBeVisible()
+                    await expect(page.locator('html')).toHaveAttribute('lang', locale)
+                    await waitForVisualStable(page)
+
+                    await expectNoHorizontalOverflow(page, `${locale} 个人中心在 ${viewport.name} 下出现横向溢出`)
+
+                    const actions = card.locator('.profile-actions').first()
+                    await expect(actions).toBeVisible()
+                    const buttons = actions.locator('.caomei-button')
+                    const total = await buttons.count()
+                    expect(total, `${locale} 个人中心操作按钮缺失`).toBeGreaterThanOrEqual(2)
+                    for (let index = 0; index < total; index += 1) {
+                        await expectInside(actions, buttons.nth(index), `${locale} 第 ${index + 1} 个操作按钮越出操作行`)
+                        await expectInside(card, buttons.nth(index), `${locale} 第 ${index + 1} 个操作按钮越出卡片`)
+                    }
+                    await expectInside(card, actions, `${locale} 操作行越出卡片`)
+                })
+            }
+        })
+    }
+})
+
+test.describe('Admin 移动端侧栏默认收起', () => {
+    const ADMIN_VIEWPORTS = [...VIEWPORTS, { name: '1440', width: 1440, height: 900 }] as const
+
+    for (const viewport of ADMIN_VIEWPORTS) {
+        test(`视口 ${viewport.name}`, async ({ page }) => {
+            await useAdminSession(page)
+            await page.setViewportSize({ width: viewport.width, height: viewport.height })
+            await applyTheme(page, 'light')
+            await page.goto('/admin/users', { waitUntil: 'domcontentloaded' })
+            const sidebar = page.locator('.admin-sidebar').first()
+            await expect(sidebar).toBeVisible()
+            await waitForVisualStable(page)
+
+            const collapsed = await sidebar.evaluate((element) => element.classList.contains('collapsed'))
+            if (viewport.width <= 768) {
+                expect(collapsed, `${viewport.name} 下侧栏未默认收起`).toBe(true)
+            } else {
+                expect(collapsed, `${viewport.name} 桌面侧栏被意外收起`).toBe(false)
             }
         })
     }
