@@ -11,7 +11,7 @@
                 </p>
                 <div class="login-btn mb-4">
                     <div class="card flex justify-center">
-                        <CaomeiButtonGroup :group-label="t('auth.login.methodLabel')">
+                        <CaomeiButtonGroup class="login-methods" :group-label="t('auth.login.methodLabel')">
                             <BaseTooltip v-if="usernameEnabled" :content="t('auth.login.methodUsernameTip')">
                                 <CaomeiButton
                                     :variant="activeTab === 'username' ? 'primary' : 'secondary'"
@@ -335,14 +335,36 @@ const {
     white-space: normal;
 }
 
-// 添加媒体查询优化小屏幕显示
-@media (width <= 375px) {
+/*
+ * 窄屏登录方式 Tab：caomei-ui 1.4.0 在 ≤1024 把 ButtonGroup 收敛为组内横向滚动，
+ * 手机号 Tab 需要滑动才能被发现（390 下 en-US / zh-TW / ja-JP / ko-KR 溢出 19–125px）。
+ * 768 断点下卡片容器（288px）比 390（294px）更窄，同属窄屏，故一并改 3 列自适应。
+ * 桌面（>768）保持组内自然宽度不变；769–1024 的残余横向滚动已登记 docs/plan/backlog.md §3.5。
+ */
+@media (width <= 768px) {
+    .login-btn .login-methods {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+    }
+
     .login-btn :deep(.caomei-button) {
-        padding: 0.5rem 0.75rem;
+        width: 100%;
+        height: auto;
+        min-height: var(--caomei-control-height-md);
+        padding-block: 0.5rem;
+        padding-inline: 0.5rem;
         font-size: 0.875rem;
+        line-height: 1.2;
+    }
+
+    /* 3 列窄单元格里 "Username" 这类无空格单词只能断行，否则会被 ellipsis 截断 */
+    .login-btn :deep(.caomei-button__content) {
+        overflow-wrap: anywhere;
     }
 }
 
+// 添加媒体查询优化小屏幕显示
 @media (width <= 320px) {
     .login-btn :deep(.caomei-button) {
         padding: 0.5rem;
