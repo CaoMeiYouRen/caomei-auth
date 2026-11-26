@@ -2,6 +2,11 @@ import { rateLimit } from '@/server/utils/rate-limit'
 import { normalizeAuthPath } from '@/utils/shared/auth-paths'
 
 export default defineEventHandler(async (event) => {
+    /* 视觉夹具库一次跑 300+ 请求（多语言 × 多视口），会撞 60/分钟限流并让页面缺数据；
+     * 固定渲染环境（容器内、仅 CI / 本地视觉任务）跳过限流，生产不受影响。 */
+    if (process.env.VISUAL_HARNESS === '1' && process.env.DATABASE_PATH?.includes('.visual')) {
+        return
+    }
     // 限制 API 请求频率（使用归一化路径，避免点段路径绕过分支判断）
     const path = normalizeAuthPath(event.path)
     if (path.startsWith('/api')) {

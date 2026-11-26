@@ -6,8 +6,7 @@ import { visualAuthSecret, visualBaseURL } from './config'
  * 管理员视觉会话。
  *
  * 为什么不在每个用例里调用登录接口：
- * 1. `/sign-in/*` 有 3 次/分钟限流，Admin 矩阵用例数远超上限；
- * 2. 每次登录都会新增 `session` 行，导致登录日志页的总数与首行随用例顺序变化。
+ * 每次登录都会新增 `session` 行，导致登录日志页的总数与首行随用例顺序变化。
  *
  * 因此由 `scripts/testing/visual-fixtures.mjs` 预置一条固定 token 的会话行，
  * 这里按 better-auth 的 HMAC-SHA256 规则签名后写入 cookie；全程不产生新会话。

@@ -330,8 +330,9 @@ const {
     }
 }
 
-/* 长语言（ja / ko）下标签组不能被 1.4.0 的 nowrap 内容撑出卡片，恢复可换行的收缩语义 */
-.login-btn :deep(.caomei-button__content) {
+/* 长语言（ja / ko）下标签组与社交按钮不能被 1.4.0 的 nowrap 内容截断，恢复可换行语义 */
+.login-btn :deep(.caomei-button__content),
+.social-login :deep(.caomei-button__content) {
     white-space: normal;
 }
 
