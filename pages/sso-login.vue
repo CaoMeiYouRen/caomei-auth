@@ -389,6 +389,9 @@ const {
 @media (width <= 768px) {
     .sso-login {
         padding: 1rem;
+
+        /* 右上角语言切换器 top 12 + 高 36 = 48px（3rem），标题再留 16px 净空 */
+        padding-top: 4rem;
     }
 
     .sso-header {

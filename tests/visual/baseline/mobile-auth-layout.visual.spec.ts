@@ -94,6 +94,44 @@ test.describe('验证码行窄屏不溢出', () => {
     }
 })
 
+/** 两个矩形相交面积（px²），任一维度不相交即为 0 */
+function intersectionArea(a: NonNullable<Awaited<ReturnType<Locator['boundingBox']>>>, b: NonNullable<Awaited<ReturnType<Locator['boundingBox']>>>): number {
+    const width = Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x)
+    const height = Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y)
+    return width > 0 && height > 0 ? width * height : 0
+}
+
+test.describe('SSO 首屏顶部安全区', () => {
+    for (const viewport of VIEWPORTS) {
+        test.describe(`视口 ${viewport.name}`, () => {
+            test.use({ viewport: { width: viewport.width, height: viewport.height }, colorScheme: 'light' })
+
+            for (const locale of LOCALES) {
+                test(`${locale} 标题与语言切换器不重叠`, async ({ page }) => {
+                    await applyTheme(page, 'light')
+                    await page.goto(localizedPath(locale, '/sso-login'), { waitUntil: 'domcontentloaded' })
+                    const title = page.locator('.sso-title').first()
+                    const switcher = page.locator('.language-switcher__trigger').first()
+                    await expect(title).toBeVisible()
+                    await expect(switcher).toBeVisible()
+                    await expect(page.locator('html')).toHaveAttribute('lang', locale)
+                    await waitForVisualStable(page)
+
+                    await expectNoHorizontalOverflow(page, `${locale} SSO 页在 ${viewport.name} 下出现横向溢出`)
+
+                    const titleBox = await title.boundingBox()
+                    const switcherBox = await switcher.boundingBox()
+                    expect(titleBox, `${locale} SSO 标题缺少边界框`).not.toBeNull()
+                    expect(switcherBox, `${locale} 语言切换器缺少边界框`).not.toBeNull()
+                    /* 面积对齐验收口径；垂直关系锁设计意图。块级盒口径只在标题横向铺满容器的 ≤768 适用，桌面需改文字墨迹矩形 */
+                    expect(intersectionArea(titleBox!, switcherBox!), `${locale} SSO 标题与语言切换器重叠`).toBe(0)
+                    expect(titleBox!.y, `${locale} SSO 标题未让出顶部安全区`).toBeGreaterThanOrEqual(switcherBox!.y + switcherBox!.height)
+                })
+            }
+        })
+    }
+})
+
 test.describe('2FA 一次性验证码行窄屏不溢出', () => {
     test.use({ viewport: { width: 360, height: 640 }, colorScheme: 'light' })
 
