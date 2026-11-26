@@ -325,6 +325,11 @@ const {
     background-color: $background-light;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgb(0 0 0 / 0.05);
+
+    /* 右下角固定悬浮按钮横跨整个视口高度，只留底部空白挡不住首屏；内容右侧收 4rem 安全廊道 */
+    @media (width <= 768px) {
+        padding-right: 4rem;
+    }
 }
 
 .auth-title {

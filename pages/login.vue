@@ -430,6 +430,17 @@ const {
     box-shadow: 0 10px 25px rgb(0 0 0 / 0.05);
 }
 
+/*
+ * 右下角固定主题切换（right 16 + 44）与反馈按钮（right 16 + 约 46）横跨整个视口高度，
+ * 只留底部空白挡不住首屏；改为内容右侧安全廊道：≤768 内容右缘再收 4rem，
+ * 任何滚动位置都不与固定按钮相交，按钮锚点不变。
+ */
+@media (width <= 768px) {
+    .auth-card {
+        padding-right: 4rem;
+    }
+}
+
 .auth-title {
     margin-bottom: 1rem;
     color: $secondary;

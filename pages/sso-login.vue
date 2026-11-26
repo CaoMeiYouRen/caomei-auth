@@ -392,6 +392,9 @@ const {
 
         /* 右上角语言切换器 top 12 + 高 36 = 48px（3rem），标题再留 16px 净空 */
         padding-top: 4rem;
+
+        /* 右下角固定悬浮按钮横跨整个视口高度，内容右侧收 5rem 安全廊道（任意滚动位置不相交） */
+        padding-right: 5rem;
     }
 
     .sso-header {
@@ -414,7 +417,18 @@ const {
     }
 
     .providers-grid {
-        grid-template-columns: 1fr;
+        /* min-content 轨道会让长域名 / issuer 撑破 5rem 廊道后的窄列，显式允许收缩 */
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sso-method,
+    .provider-card {
+        min-width: 0;
+    }
+
+    .provider-domain,
+    .provider-issuer {
+        overflow-wrap: anywhere;
     }
 }
 </style>
