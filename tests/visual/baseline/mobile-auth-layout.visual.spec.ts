@@ -49,6 +49,90 @@ async function expectContentNotClipped(button: Locator, message: string) {
     expect(clipped!.vertical, `${message}：按钮文案被纵向截断`).toBeLessThanOrEqual(1)
 }
 
+test.describe('验证码行窄屏不溢出', () => {
+    for (const viewport of VIEWPORTS) {
+        test.describe(`视口 ${viewport.name}`, () => {
+            test.use({ viewport: { width: viewport.width, height: viewport.height }, colorScheme: 'light' })
+
+            for (const locale of LOCALES) {
+                test(`${locale} 输入可收缩且按钮不压缩`, async ({ page }) => {
+                    await applyTheme(page, 'light')
+                    await page.goto(localizedPath(locale, '/forgot-password'), { waitUntil: 'domcontentloaded' })
+                    const card = page.locator('.auth-card').first()
+                    await expect(card).toBeVisible()
+                    await expect(page.locator('html')).toHaveAttribute('lang', locale)
+                    await waitForVisualStable(page)
+
+                    await expectNoHorizontalOverflow(page, `${locale} 找回密码页在 ${viewport.name} 下出现横向溢出`)
+
+                    const row = card.locator('.code-row').first()
+                    const input = row.locator('.caomei-input').first()
+                    const button = row.locator('.caomei-button').first()
+                    await expect(row).toBeVisible()
+                    await expect(input).toBeVisible()
+                    await expect(button).toBeVisible()
+
+                    /* 契约：输入承担收缩（flex: 1 1 0 + min-width: 0），按钮不参与压缩 */
+                    const inputStyle = await input.evaluate((element) => {
+                        const style = getComputedStyle(element)
+                        return { grow: style.flexGrow, shrink: style.flexShrink, basis: style.flexBasis, minWidth: style.minWidth }
+                    })
+                    expect(inputStyle.grow, `${locale} 输入未参与扩展`).toBe('1')
+                    expect(inputStyle.shrink, `${locale} 输入未参与收缩`).toBe('1')
+                    expect(Number.parseFloat(inputStyle.basis), `${locale} 输入 flex-basis 不为 0`).toBe(0)
+                    expect(inputStyle.minWidth, `${locale} 输入未解除 min-width: auto`).toBe('0px')
+
+                    const buttonShrink = await button.evaluate((element) => getComputedStyle(element).flexShrink)
+                    expect(buttonShrink, `${locale} 按钮被压缩`).toBe('0')
+
+                    await expectInside(row, input, `${locale} 输入越出验证码行`)
+                    await expectInside(row, button, `${locale} 按钮越出验证码行`)
+                    await expectInside(card, row, `${locale} 验证码行越出卡片`)
+                })
+            }
+        })
+    }
+})
+
+test.describe('2FA 一次性验证码行窄屏不溢出', () => {
+    test.use({ viewport: { width: 360, height: 640 }, colorScheme: 'light' })
+
+    for (const locale of LOCALES) {
+        test(`${locale} 自建 code-row 同样由全局收缩契约覆盖`, async ({ page }) => {
+            await applyTheme(page, 'light')
+            await page.goto(localizedPath(locale, '/login?twoFactor=1&channel=magic-link'), { waitUntil: 'domcontentloaded' })
+            const dialog = page.getByRole('dialog')
+            await expect(dialog).toBeVisible()
+            await dialog.getByRole('tab').nth(1).click()
+            await waitForVisualStable(page)
+
+            await expectNoHorizontalOverflow(page, `${locale} 2FA 弹窗在 360 下出现横向溢出`)
+
+            const row = dialog.locator('.code-row').first()
+            const input = row.locator('.caomei-input').first()
+            const button = row.locator('.caomei-button').first()
+            await expect(row).toBeVisible()
+            await expect(button).toBeVisible()
+
+            /* two-factor-dialog 自建 code-row，不经 BaseInputV2，只能由全局 .code-row 契约兜住 */
+            const inputStyle = await input.evaluate((element) => {
+                const style = getComputedStyle(element)
+                return { basis: style.flexBasis, minWidth: style.minWidth }
+            })
+            expect(Number.parseFloat(inputStyle.basis), `${locale} 2FA 输入 flex-basis 不为 0`).toBe(0)
+            expect(inputStyle.minWidth, `${locale} 2FA 输入未解除 min-width: auto`).toBe('0px')
+
+            const boxes = await Promise.all([input.boundingBox(), button.boundingBox()])
+            expect(boxes[0], `${locale} 2FA 输入缺少边界框`).not.toBeNull()
+            expect(boxes[1], `${locale} 2FA 按钮缺少边界框`).not.toBeNull()
+            expect(Math.abs(boxes[0]!.y - boxes[1]!.y), `${locale} 2FA 验证码行发生非预期换行`).toBeLessThanOrEqual(1)
+            await expectInside(row, input, `${locale} 2FA 输入越出验证码行`)
+            await expectInside(row, button, `${locale} 2FA 按钮越出验证码行`)
+            await expectInside(dialog, row, `${locale} 2FA 验证码行越出弹窗`)
+        })
+    }
+})
+
 test.describe('登录方式 Tab 窄屏完整可见', () => {
     for (const viewport of VIEWPORTS) {
         test.describe(`视口 ${viewport.name}`, () => {

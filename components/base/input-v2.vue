@@ -69,7 +69,9 @@ defineEmits<{
     align-items: flex-start;
 
     :deep(.caomei-input) {
-        flex: 1;
+        /* 360 下输入框的默认 min-width: auto 会被占位文案撑开，把按钮挤出卡片 */
+        flex: 1 1 0;
+        min-width: 0;
     }
 }
 </style>

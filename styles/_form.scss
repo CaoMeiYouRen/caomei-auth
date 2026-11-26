@@ -86,6 +86,18 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
+
+    /* 空间不足时换行兜底；正常情况下由输入收缩承载，按钮保持完整宽度 */
+    flex-wrap: wrap;
+
+    > .caomei-input {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    > .caomei-button {
+        flex: none;
+    }
 }
 
 .code-btn {
