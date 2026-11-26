@@ -5,7 +5,7 @@
 > **归档模型（2026-11-20 起）**：阶段 1–9 详情保留在本文件；自阶段 10 起，已收口阶段详情按 [规划规范](../standards/planning.md) §8 迁入 `docs/plan/archive/roadmap-phases-*.md`，本文件只保留里程碑概览与当前阶段。
 
 
-> **当前状态**：**阶段 15「认证移动端可用性」已于 2026-11-26 登记并确认开工（进行中）**（范围见 [阶段 15 范围登记](../design/governance/2026-11-26-phase15-registration.md)，条目见 [todo.md](./todo.md)）。阶段 14「国际化门禁与前端健壮性」已于 2026-11-26 收口（里程碑见 [roadmap-phases-14](./archive/roadmap-phases-14.md)，阶段正文见 [todo-archive-phases-14](./archive/todo-archive-phases-14.md)，收口记录见 [阶段 14 收口记录](../design/governance/2026-11-26-phase14-closure.md)）。阶段 13「可观测性规模化与运维闭环」已于 2026-11-23 收口（里程碑见 [roadmap-phases-13](./archive/roadmap-phases-13.md)，阶段正文见 [todo-archive-phases-13](./archive/todo-archive-phases-13.md)）。阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（里程碑见 [roadmap-phases-12](./archive/roadmap-phases-12.md)，阶段正文见 [todo-archive-phases-12](./archive/todo-archive-phases-12.md)）。阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（里程碑见 [roadmap-phases-11](./archive/roadmap-phases-11.md)，阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)）。阶段 10「用户侧替代证明」已于 2026-11-21 收口（里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。
+> **当前状态**：**当前无进行中阶段。** 阶段 15「认证移动端可用性」已于 2026-11-27 收口（里程碑见 [roadmap-phases-15](./archive/roadmap-phases-15.md)，阶段正文见 [todo-archive-phases-15](./archive/todo-archive-phases-15.md)，收口记录见 [阶段 15 收口记录](../design/governance/2026-11-27-phase15-closure.md)）。下一阶段须经用户授权后登记。阶段 14「国际化门禁与前端健壮性」已于 2026-11-26 收口（里程碑见 [roadmap-phases-14](./archive/roadmap-phases-14.md)，阶段正文见 [todo-archive-phases-14](./archive/todo-archive-phases-14.md)，收口记录见 [阶段 14 收口记录](../design/governance/2026-11-26-phase14-closure.md)）。阶段 13「可观测性规模化与运维闭环」已于 2026-11-23 收口（里程碑见 [roadmap-phases-13](./archive/roadmap-phases-13.md)，阶段正文见 [todo-archive-phases-13](./archive/todo-archive-phases-13.md)）。阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（里程碑见 [roadmap-phases-12](./archive/roadmap-phases-12.md)，阶段正文见 [todo-archive-phases-12](./archive/todo-archive-phases-12.md)）。阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（里程碑见 [roadmap-phases-11](./archive/roadmap-phases-11.md)，阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)）。阶段 10「用户侧替代证明」已于 2026-11-21 收口（里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。
 
 ---
 
@@ -186,17 +186,9 @@ _目标：把 i18n 从「5 语可用」推进到「未启用语言也有门禁�
 
 > 8 大条目 / 16 小条目全部交付；里程碑与未覆盖边界见 [roadmap-phases-14](./archive/roadmap-phases-14.md)，阶段正文见 [todo-archive-phases-14](./archive/todo-archive-phases-14.md)，范围与决策 D33–D44 见 [阶段 14 范围登记](../design/governance/2026-11-24-phase14-registration.md)，收口记录见 [2026-11-26-phase14-closure](../design/governance/2026-11-26-phase14-closure.md)。
 
-## 阶段 15: 认证移动端可用性（2026-11-26 登记并开工）
+## 阶段 15: 认证移动端可用性（2026-11-27 收口）
 
-_目标：让 5 语言认证首屏在 390 / 360 下可用，消除固定悬浮控件遮挡，收敛个人中心与 Admin 移动端基础体验，并补齐 OAuth 入口语言与跨语言卡片基线。_
-
-- **M1 窄屏首屏可用性**：登录页 Tab 自适应、验证码行换行、SSO 顶部安全区。
-- **M2 悬浮控件与遮挡**：认证页安全区、遮挡相交断言。
-- **M3 个人中心与 Admin 基础**：操作行换行、侧栏默认收起、输入字号 ≥16px（不做表格卡片化）。
-- **M4 语言与跨语言基线**：OAuth 入口按 cookie 补前缀、会话卡片跨语言基线。
-- **M5 视觉矩阵与阶段收口**：5 语言 390 / 360 轻量矩阵、文档与归档。
-
-> 5 大条目 / 12 小条目；范围、决策 D45–D51 与不做边界见 [阶段 15 范围登记](../design/governance/2026-11-26-phase15-registration.md)，条目明细见 [todo.md](./todo.md)。
+> 5 大条目 / 12 小条目全部交付；里程碑与未覆盖边界见 [roadmap-phases-15](./archive/roadmap-phases-15.md)，阶段正文见 [todo-archive-phases-15](./archive/todo-archive-phases-15.md)，范围与决策 D45–D51 见 [阶段 15 范围登记](../design/governance/2026-11-26-phase15-registration.md)，收口记录见 [2026-11-27-phase15-closure](../design/governance/2026-11-27-phase15-closure.md)。
 
 ## 后续方向（未授权）
 
@@ -286,7 +278,7 @@ _目标：让 5 语言认证首屏在 390 / 360 下可用，消除固定悬浮�
 阶段 14（2026-11-26 收口）：国际化门禁与前端健壮性
         │  i18n 门禁 / 产物过滤 → 台账与链接 → 窄屏视觉 → 前端健壮性 → 两处布局 → 验证码可选 → 收口
         ▼
-阶段 15（2026-11-26 登记并开工）：认证移动端可用性
+阶段 15（2026-11-27 收口）：认证移动端可用性
         │  窄屏首屏 → 悬浮遮挡 → 个人中心 / Admin 基础 → OAuth 语言 → 视觉矩阵与收口
         ▼
 后续方向（未授权）：审计检索 / 安全增强 / 开发者生态 / 企业级
