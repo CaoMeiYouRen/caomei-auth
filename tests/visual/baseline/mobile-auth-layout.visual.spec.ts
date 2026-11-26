@@ -382,11 +382,79 @@ test.describe('Admin 移动端侧栏默认收起', () => {
             await expect(sidebar).toBeVisible()
             await waitForVisualStable(page)
 
-            const collapsed = await sidebar.evaluate((element) => element.classList.contains('collapsed'))
             if (viewport.width <= 768) {
-                expect(collapsed, `${viewport.name} 下侧栏未默认收起`).toBe(true)
+                await expect(sidebar).toHaveClass(/collapsed/u)
             } else {
-                expect(collapsed, `${viewport.name} 桌面侧栏被意外收起`).toBe(false)
+                await expect(sidebar).not.toHaveClass(/collapsed/u)
+            }
+        })
+    }
+})
+
+test.describe('Admin 移动端输入字号与表格滚动', () => {
+    const ADMIN_VIEWPORTS = [...VIEWPORTS, { name: '1440', width: 1440, height: 900 }] as const
+
+    for (const viewport of ADMIN_VIEWPORTS) {
+        test(`视口 ${viewport.name}`, async ({ page }) => {
+            await useAdminSession(page)
+            await page.setViewportSize({ width: viewport.width, height: viewport.height })
+            await applyTheme(page, 'light')
+            await page.goto('/admin/users', { waitUntil: 'domcontentloaded' })
+            await expect(page.locator('.caomei-data-table')).toBeVisible()
+            await waitForVisualStable(page)
+
+            const searchInput = page.locator('.users-filters .caomei-input__control').first()
+            await expect(searchInput).toBeVisible()
+            const fontSize = await searchInput.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize))
+            if (viewport.width <= 768) {
+                expect(fontSize, `${viewport.name} 下搜索输入字号小于 16px`).toBeGreaterThanOrEqual(16)
+            } else {
+                expect(fontSize, `${viewport.name} 桌面输入字号应为 14px`).toBeCloseTo(14, 1)
+            }
+
+            /* 筛选 Select 走 --caomei-field-font-size token，需单独断言 */
+            const filterSelect = page.locator('.users-filters .caomei-select').first()
+            await expect(filterSelect).toBeVisible()
+            const selectFontSize = await filterSelect.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize))
+            if (viewport.width <= 768) {
+                expect(selectFontSize, `${viewport.name} 下筛选控件字号小于 16px`).toBeGreaterThanOrEqual(16)
+            } else {
+                expect(selectFontSize, `${viewport.name} 桌面筛选字号应为 14px`).toBeCloseTo(14, 1)
+            }
+
+            /* 移动端表格保持容器内横向滚动，且不撑出页面 */
+            const table = await page.locator('.caomei-data-table').first().evaluate((element) => ({
+                overflowX: getComputedStyle(element).overflowX,
+                scrollable: element.scrollWidth - element.clientWidth,
+            }))
+            expect(table.overflowX, `${viewport.name} 表格容器未启用横向滚动`).toBe('auto')
+            if (viewport.width <= 768) {
+                expect(table.scrollable, `${viewport.name} 表格未出现横向滚动区`).toBeGreaterThan(0)
+            }
+            await expectNoHorizontalOverflow(page, `${viewport.name} Admin 用户页出现页面级横向溢出`)
+        })
+    }
+})
+
+test.describe('OAuth 入口语言', () => {
+    test.use({ viewport: { width: 390, height: 844 }, colorScheme: 'light' })
+
+    for (const locale of LOCALES) {
+        test(`${locale} 入口按 cookie 补语言前缀并保留 query`, async ({ page }) => {
+            const query = 'client_id=visual-client&redirect_uri=http%3A%2F%2F127.0.0.1%3A3100%2Fcallback&response_type=code&state=visual'
+            for (const entry of ['login', 'consent'] as const) {
+                const response = await page.request.get(`/api/oauth-entry/${entry}?${query}`, {
+                    headers: { cookie: `i18n_locale=${locale}` },
+                    maxRedirects: 0,
+                })
+                expect(response.status(), `${locale} ${entry} 未返回重定向`).toBe(302)
+                const location = response.headers().location
+                expect(location, `${locale} ${entry} 缺少 Location`).toBeTruthy()
+                const expectedPrefix = locale === 'zh-CN' ? `/${entry === 'login' ? 'login' : 'oauth/consent'}` : `/${locale}/${entry === 'login' ? 'login' : 'oauth/consent'}`
+                expect(location!.startsWith(expectedPrefix), `${locale} ${entry} 前缀错误：${location}`).toBe(true)
+                expect(location).toContain('client_id=visual-client')
+                expect(location).toContain('state=visual')
+                expect(location).toContain('redirect_uri=')
             }
         })
     }

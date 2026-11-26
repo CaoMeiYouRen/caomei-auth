@@ -475,6 +475,17 @@ const toggleSidebar = () => {
     .admin-main {
         margin-left: 0;
     }
+
+    /* iOS 聚焦 <16px 输入会整页放大；桌面保持 14px */
+    .admin-main :deep(.caomei-field) {
+        --caomei-field-font-size: 16px;
+    }
+
+    .admin-main :deep(input),
+    .admin-main :deep(select),
+    .admin-main :deep(textarea) {
+        font-size: 16px;
+    }
 }
 
 // 应用后台布局暗色模式支持
