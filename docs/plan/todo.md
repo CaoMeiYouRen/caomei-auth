@@ -15,7 +15,7 @@ _目标：让 5 语言认证首屏在 390 / 360 下可用，消除固定悬浮�
 | M1 窄屏首屏可用性 | 3/3 | 已闭环 | — | R1 Pass（M1.1 R2；M1.2 R1；M1.3 R1） | 3 → 3 commits |
 | M2 悬浮控件与遮挡 | 2/2 | 已闭环 | — | R2 Pass（M2.1 / M2.2） | 2 → 2 commits |
 | M3 个人中心与 Admin 基础 | 3/3 | 已闭环 | — | R1 Pass（M3.1 / M3.2 / M3.3） | 3 → 3 commits |
-| M4 语言与跨语言基线 | 2/2 | 已闭环 | — | R1 Pass（M4.1 deep；M4.2 pending） | 2 → 2 commits |
+| M4 语言与跨语言基线 | 2/2 | 已闭环 | — | R1 Pass（M4.1 deep）；M4.2 R1 Reject → R2 Pass | 2 → 2 commits |
 | M5 视觉矩阵与阶段收口 | 1/2 | 进行中 | — | — | 2 → — |
 
 - **执行顺序**：M1 → M2 → M3 → M4 → M5。
@@ -128,9 +128,9 @@ _目标：让 5 语言认证首屏在 390 / 360 下可用，消除固定悬浮�
 
 #### M4.2 会话卡片跨语言基线
 
-- **目标**: 390 下 en-US / ja-JP / ko-KR 会话卡片元素基线。
+- **目标**: 390 下 en-US / ja-JP / ko-KR / zh-TW 会话卡片元素基线。
 - **验收标准**: 至少 2 张跨语言元素基线入库且全量视觉通过；无横向溢出。
-- **交付物**: `security-session-cards` 补 ja-JP / ko-KR 390 元素基线 2 张，断言 6 字段与无横向溢出。
+- **交付物**: `security-session-cards` 补 en-US / ja-JP / ko-KR / zh-TW 390 元素基线 4 张（zh-CN 既有 2 张重命名为带 locale），按语言断言 6 个字段名，掩码 token / IP / 时间。
 - **依赖**: M3。
 
 ### M5 视觉矩阵与阶段收口
@@ -147,7 +147,7 @@ _目标：让 5 语言认证首屏在 390 / 360 下可用，消除固定悬浮�
 
 - **目标**: 5 语言 × 390 / 360 × 关键认证页的轻量视觉矩阵。
 - **验收标准**: 新增 ≤20 张基线并全量视觉通过；覆盖登录 Tab、code-row、SSO 首屏与遮挡断言。
-- **交付物**: `mobile-auth-matrix.visual.spec.ts`：5 语言 × 360 × login / register / forgot-password / sso-login 共 20 张整页基线。
+- **交付物**: `mobile-auth-matrix.visual.spec.ts`：5 语言 × 360 × login / register / forgot-password / sso-login 共 20 张整页基线（掩码 + ui-ready noindex）；视觉环境跳过 API 限流。
 - **依赖**: M1–M4。
 
 #### M5.2 文档与阶段收口
