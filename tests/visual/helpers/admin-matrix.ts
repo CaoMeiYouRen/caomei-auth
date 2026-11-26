@@ -315,7 +315,8 @@ async function open(page: Page, route: AdminRoute, theme: VisualTheme): Promise<
     /* 先等网络空闲（完成 hydration），再断言主题；Admin 页面在负载下可能超过默认 5s */
     await waitForVisualStable(page)
     if (route.readyText) {
-        await expect(page.getByText(route.readyText).first()).toBeVisible()
+        /* 移动端侧栏默认收起，导航文案只保留在 DOM（v-show）；就绪判定用 attached，可见性由截图负责 */
+        await expect(page.getByText(route.readyText).first()).toBeAttached()
     }
     if (theme === 'dark') {
         await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 15000 })

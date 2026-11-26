@@ -168,6 +168,13 @@ useNoIndex()
 // 侧边栏收缩状态管理
 const isCollapsed = ref(false)
 
+// 移动端首次进入默认收起，避免整屏导航挤掉首屏内容；桌面与用户手动展开状态不受影响
+onMounted(() => {
+    if (window.matchMedia('(width <= 768px)').matches) {
+        isCollapsed.value = true
+    }
+})
+
 // Demo模式横幅管理
 const { showBanner, closeBanner } = useDemoBanner()
 
