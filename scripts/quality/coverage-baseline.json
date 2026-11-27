@@ -1,0 +1,11 @@
+{
+    "version": 1,
+    "description": "覆盖率非回归基线（阶段 18 D66）：全局四项指标不得低于本文件记录值（容差 0.05）。更新需单独提交并说明原因。",
+    "updatedAt": "2026-11-28",
+    "global": {
+        "statements": 79.02,
+        "branches": 66.16,
+        "functions": 72.78,
+        "lines": 79.23
+    }
+}
