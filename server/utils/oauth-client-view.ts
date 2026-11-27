@@ -40,6 +40,8 @@ export function toAdminOAuthClientView(client: OAuthClient) {
         softwareStatement: client.softwareStatement,
         type: client.applicationType,
         disabled: client.disabled,
+        /* PKCE 策略（阶段 19 D69）：管理端需要看到并编辑 */
+        requirePkce: client.requirePKCE ?? false,
         createdAt: client.createdAt,
         updatedAt: client.updatedAt,
     }
@@ -69,6 +71,7 @@ export function applyOAuthClientInput(client: OAuthClient, input: {
     softwareStatement?: string
     type?: string
     disabled?: boolean
+    requirePkce?: boolean
 }) {
     if (input.name !== undefined) {
         client.name = input.name
@@ -123,6 +126,10 @@ export function applyOAuthClientInput(client: OAuthClient, input: {
     }
     if (input.softwareStatement !== undefined) {
         client.softwareStatement = input.softwareStatement
+    }
+    if (input.requirePkce !== undefined) {
+        /* 只为显式传值更新：存量客户端不回填（D70） */
+        client.requirePKCE = input.requirePkce
     }
     if (input.type !== undefined) {
         client.applicationType = input.type

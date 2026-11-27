@@ -54,6 +54,7 @@ export default defineEventHandler(async (event) => {
             redirectURLs,
             type,
             disabled,
+            require_pkce,
         } = validatedData
 
         // 使用新字段或向后兼容的旧字段
@@ -106,9 +107,9 @@ export default defineEventHandler(async (event) => {
         application.softwareVersion = software_version || ''
         application.softwareStatement = software_statement || ''
         application.applicationType = type
-        // better-auth 1.7 的 PKCE 默认值变为「必需」（`requirePKCE ?? true`）。
-        // 项目在 1.6 明确使用 `requirePKCE: false`，这里保持客户端可用性不因升级而突变。
-        application.requirePKCE = false
+        // PKCE（阶段 19 D69）：新建缺省开启，与 better-auth 1.7 的安全默认一致；
+        // 管理员显式关闭时按 false 落库（公开客户端与 offline_access 仍由上游强制 PKCE）。
+        application.requirePKCE = require_pkce ?? true
         application.disabled = disabled
         application.userId = auth.data?.userId || ''
 

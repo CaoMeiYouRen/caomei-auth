@@ -151,6 +151,27 @@ describe('server/api/admin/oauth/applications/[id].put', () => {
         expect(mockSave).toHaveBeenCalled()
     })
 
+    /* 阶段 19 M1.3 / D70：只在显式传值时更新 PKCE，存量值保持不变 */
+    it('updates requirePKCE only when provided', async () => {
+        const { readBody } = await import('h3')
+        const mockApp = {
+            id: 'app-123',
+            name: 'Legacy App',
+            requirePKCE: false,
+        }
+        mockFindOne.mockResolvedValue(mockApp)
+        mockSave.mockResolvedValue(mockApp)
+
+        vi.mocked(readBody).mockResolvedValue({ client_name: 'Legacy App' })
+        await updateHandler(event)
+        expect(mockApp.requirePKCE).toBe(false)
+
+        vi.mocked(readBody).mockResolvedValue({ client_name: 'Legacy App', require_pkce: true })
+        const result = await updateHandler(event) as any
+        expect(mockApp.requirePKCE).toBe(true)
+        expect(result.data.requirePkce).toBe(true)
+    })
+
     it('should handle database errors', async () => {
         const { readBody } = await import('h3')
         vi.mocked(readBody).mockResolvedValue({ disabled: true })

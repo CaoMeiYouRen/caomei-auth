@@ -53,6 +53,8 @@ export interface AdminOAuthApplicationRow {
     softwareStatement?: string | null
     type?: string | null
     disabled?: boolean | null
+    /** PKCE 策略（阶段 19 D69）：新建默认 true，存量客户端可能为 false */
+    requirePkce?: boolean | null
     createdAt: string | Date
     updatedAt?: string | Date | null
 }
