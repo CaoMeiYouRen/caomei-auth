@@ -42,6 +42,9 @@ jobs:
       - run: pnpm run test
       - run: pnpm run test:coverage
 
+      # 覆盖率模块下限与全局非回归门禁（阶段 18 D66）
+      - run: pnpm run coverage:check
+
       # 上传代码覆盖率报告到 Codecov
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v7
