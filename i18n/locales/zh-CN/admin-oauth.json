@@ -77,7 +77,9 @@
                     "implicit": "隐式模式 (不支持)",
                     "password": "密码模式 (不支持)",
                     "clientCredentials": "客户端模式 (不支持)"
-                }
+                },
+                "requirePkce": "要求 PKCE 校验",
+                "requirePkceHint": "开启后授权码流程必须携带 code_challenge。新建应用默认开启；公开客户端与申请 offline_access 的请求由上游强制开启。关闭仅用于兼容旧接入方，会降低安全性。"
             },
             "secret": {
                 "title": "应用创建成功",

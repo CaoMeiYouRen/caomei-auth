@@ -77,7 +77,9 @@
                     "implicit": "インプリシットフロー（非対応）",
                     "password": "パスワードフロー（非対応）",
                     "clientCredentials": "クライアントクレデンシャルフロー（非対応）"
-                }
+                },
+                "requirePkce": "PKCE を必須にする",
+                "requirePkceHint": "有効にすると認可コードフローで code_challenge の送信が必須になります。新規アプリは既定で有効、公開クライアントと offline_access 要求は上流が常に強制します。無効化は既存連携との互換目的に限られ、安全性が下がります。"
             },
             "secret": {
                 "title": "アプリを作成しました",

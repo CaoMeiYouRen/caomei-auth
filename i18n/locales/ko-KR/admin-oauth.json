@@ -77,7 +77,9 @@
                     "implicit": "암시적 흐름(미지원)",
                     "password": "비밀번호 흐름(미지원)",
                     "clientCredentials": "클라이언트 자격 증명 흐름(미지원)"
-                }
+                },
+                "requirePkce": "PKCE 필수 사용",
+                "requirePkceHint": "사용하면 인가 코드 흐름에서 code_challenge를 반드시 전송해야 합니다. 새 애플리케이션은 기본으로 켜져 있으며, 공개 클라이언트와 offline_access 요청은 업스트림에서 항상 강제됩니다. 기존 연동 호환 목적으로만 끄세요. 보안 수준이 낮아집니다."
             },
             "secret": {
                 "title": "앱을 생성했습니다",

@@ -118,6 +118,19 @@
                 </template>
             </CaomeiFormItem>
 
+            <CaomeiFormItem
+                id="require_pkce-field"
+                :hint="t('admin.oauth.create.requirePkceHint')"
+            >
+                <template #default>
+                    <CaomeiCheckbox
+                        id="require_pkce"
+                        v-model="formData.require_pkce"
+                        :text="t('admin.oauth.create.requirePkce')"
+                    />
+                </template>
+            </CaomeiFormItem>
+
             <BaseInputV2
                 id="tos_uri"
                 v-model="formData.tos_uri"
@@ -213,6 +226,8 @@ const formData = ref({
     software_id: '',
     software_version: '',
     disabled: false,
+    /* 阶段 19 D69：新建默认开启 PKCE，与后端缺省值一致 */
+    require_pkce: true,
 })
 
 // 监听 application 变化，初始化表单
@@ -238,6 +253,8 @@ watch(() => props.application, (app) => {
             software_id: app.softwareId || '',
             software_version: app.softwareVersion || '',
             disabled: app.disabled || false,
+            /* 存量客户端可能是 false，编辑时按实际值回显 */
+            require_pkce: app.requirePkce ?? true,
         }
         redirectUrlsInput.value = formData.value.redirect_uris.join(',')
         contactsInput.value = formData.value.contacts.join(',')
@@ -270,6 +287,7 @@ function resetForm() {
         software_id: '',
         software_version: '',
         disabled: false,
+        require_pkce: true,
     }
     redirectUrlsInput.value = ''
     contactsInput.value = ''
@@ -339,6 +357,7 @@ async function submitApplication() {
             software_id: formData.value.software_id,
             software_version: formData.value.software_version,
             disabled: formData.value.disabled,
+            require_pkce: formData.value.require_pkce,
         }
 
         const url = isEditing.value
