@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it } from 'vitest'
-import { createMemoryDatabase, createTestAuth, type CapturedCodes, generateTotp, pathFromUrl, setupTwoFactorUser, TestClient } from './helpers/two-factor-coverage'
+import { createMemoryDatabase, createTestAuth, expireVerifications, type CapturedCodes, generateTotp, pathFromUrl, setupTwoFactorUser, TestClient } from './helpers/two-factor-coverage'
 import loggerMock from '@/tests/mocks/logger'
 
 describe('two-factor coverage factors and abuse controls', () => {
@@ -55,7 +55,8 @@ describe('two-factor coverage factors and abuse controls', () => {
         await expiredClient.request('/two-factor/enable', { body: { password: 'passw0rd123', method: 'otp' } })
         await expiredClient.request('/sign-out')
         await expiredClient.request('/sign-in/magic-link', { body: { email: 'expired-link@example.com' } })
-        await new Promise((resolve) => setTimeout(resolve, 2200))
+        /* 直接把校验记录置为过期，替代真实等待（D64） */
+        expireVerifications(expiredDatabase)
 
         const expired = await expiredClient.get(pathFromUrl(expiredCaptured.magicLinkUrl!))
         expect(expiredDatabase.session).toHaveLength(0)
@@ -124,7 +125,8 @@ describe('two-factor coverage factors and abuse controls', () => {
         await expiringClient.request('/two-factor/send-otp')
         await expiringClient.request('/two-factor/verify-otp', { body: { code: expiringCaptured.twoFactorCode, trustDevice: true } })
         await expiringClient.request('/sign-out')
-        await new Promise((resolve) => setTimeout(resolve, 2200))
+        /* 可信设备的存在性与过期都读 verification.expiresAt：置为过期即可（D64） */
+        expireVerifications(expiringDatabase)
 
         await expiringClient.request('/email-otp/send-verification-otp', { body: { email: 'twofa@example.com', type: 'sign-in' } })
         const challenged = await expiringClient.request('/sign-in/email-otp', { body: { email: 'twofa@example.com', otp: expiringCaptured.emailCode } })
