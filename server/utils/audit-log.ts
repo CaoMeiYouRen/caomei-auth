@@ -1,4 +1,5 @@
 import type { H3Event } from 'h3'
+import { resolveClientIp } from './client-ip'
 import logger from './logger'
 import { maskEmail, maskPhone } from './privacy'
 
@@ -149,9 +150,8 @@ export function requestAuditMeta(request?: RequestLike | null): { ip: string | n
     if (!headers || typeof headers.get !== 'function') {
         return { ip: null, userAgent: null }
     }
-    const forwarded = headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     return {
-        ip: forwarded || headers.get('x-real-ip') || null,
+        ip: resolveClientIp(headers.get('x-forwarded-for'), headers.get('x-real-ip')),
         userAgent: headers.get('user-agent') || null,
     }
 }
@@ -163,12 +163,11 @@ export function eventAuditMeta(event: H3Event): {
     actorId: string | null
 } {
     const headers = event.node?.req?.headers
-    const forwarded = typeof headers?.['x-forwarded-for'] === 'string'
-        ? headers['x-forwarded-for'].split(',')[0]?.trim()
-        : undefined
+    const forwarded = typeof headers?.['x-forwarded-for'] === 'string' ? headers['x-forwarded-for'] : undefined
+    const realIp = typeof headers?.['x-real-ip'] === 'string' ? headers['x-real-ip'] : undefined
     const userAgent = typeof headers?.['user-agent'] === 'string' ? headers['user-agent'] : null
     return {
-        ip: forwarded || (typeof headers?.['x-real-ip'] === 'string' ? headers['x-real-ip'] : null),
+        ip: resolveClientIp(forwarded, realIp),
         userAgent,
         actorId: (event.context?.authUserId as string | undefined) ?? null,
     }

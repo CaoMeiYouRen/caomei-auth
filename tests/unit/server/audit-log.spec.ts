@@ -81,4 +81,28 @@ describe('server/utils/audit-log', () => {
             actorId: 'actor-1',
         })
     })
+
+    /* 阶段 17 M3.2：审计与登录事件共用同一归一化口径 */
+    it('normalizes forwarded and real ip values before use', () => {
+        const ported = new Request('https://example.com', {
+            headers: { 'x-forwarded-for': '203.0.113.10:8080', 'user-agent': 'vitest' },
+        })
+        expect(requestAuditMeta(ported).ip).toBe('203.0.113.10')
+
+        const bracketed = new Request('https://example.com', {
+            headers: { 'x-forwarded-for': '[2001:db8::1]:443' },
+        })
+        expect(requestAuditMeta(bracketed).ip).toBe('2001:db8::1')
+
+        const invalid = new Request('https://example.com', {
+            headers: { 'x-forwarded-for': 'unknown', 'x-real-ip': 'also-invalid' },
+        })
+        expect(requestAuditMeta(invalid).ip).toBeNull()
+
+        const event = {
+            node: { req: { headers: { 'x-real-ip': '198.51.100.7:9000' } } },
+            context: {},
+        }
+        expect(eventAuditMeta(event as never).ip).toBe('198.51.100.7')
+    })
 })

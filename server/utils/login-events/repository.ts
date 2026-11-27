@@ -1,4 +1,5 @@
 import { Between, In, LessThan, LessThanOrEqual, MoreThanOrEqual, type FindOptionsWhere, type Repository } from 'typeorm'
+import { normalizeClientIp } from '@/server/utils/client-ip'
 import { LoginEvent } from '@/server/entities/login-event'
 import { dataSource } from '@/server/database'
 import { getLoginEventBucketExpression, isLoginEventBucketLabel } from '@/server/utils/login-events/dialect'
@@ -179,7 +180,9 @@ export async function recordLoginEvent(
         result: input.result,
         channel,
         userId: input.userId ?? null,
-        ip: input.ip?.trim() || null,
+        /* 写入契约（阶段 17 D62）：无论调用方给什么，落库前统一校验为合法 IP 或 null，
+         * 避免带端口 / 超长值在 MySQL / PostgreSQL 被整行拒绝、在 SQLite 却照存 */
+        ip: normalizeClientIp(input.ip),
         userAgent: input.userAgent?.trim() || null,
         metadata: sanitizeLoginEventMetadata(input.metadata),
     })
