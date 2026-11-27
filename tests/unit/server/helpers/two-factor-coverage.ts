@@ -26,6 +26,26 @@ export function createMemoryDatabase() {
     }
 }
 
+/**
+ * 把内存库里所有 `verification` 记录置为已过期（阶段 18 D64）。
+ *
+ * 为什么不用真实等待：better-auth 1.7.20 的魔法链接与可信设备都以
+ * `verification.expiresAt` 判过期（`readSignInTwoFactorState` / 魔法链接校验），
+ * 所以直接把记录改成过去时间就能在真实代码路径上确定过期；`sleep 2200ms`
+ * 在高负载下会抖动（2026-11-24/25 共 5 次偶发）。
+ *
+ * 只影响传入库，不改生产逻辑与 TTL 语义。
+ */
+export function expireVerifications(
+    database: ReturnType<typeof createMemoryDatabase>,
+    secondsAgo = 60,
+): void {
+    const past = new Date(Date.now() - secondsAgo * 1000)
+    for (const row of database.verification) {
+        row.expiresAt = past
+    }
+}
+
 export function createTestAuth(
     captured: CapturedCodes,
     database: ReturnType<typeof createMemoryDatabase>,

@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import type { Component } from 'vue'
+import { nextTick, type Component } from 'vue'
 import { describe, expect, it } from 'vitest'
 import { CaomeiDataTable, type DataTableColumn } from 'caomei-ui'
 
@@ -87,9 +87,16 @@ describe('CaomeiDataTable spike', () => {
         expect(rowCheckboxes).toHaveLength(rows.length)
 
         await rowCheckboxes[1]!.trigger('click')
+        /* 组件在内部状态更新后才 emit；显式等一个 tick，避免微任务顺序抖动（阶段 18 D65） */
+        await nextTick()
 
         const selection = wrapper.emitted('update:selection')?.at(-1)?.[0] as Row[]
         expect(selection.map((row) => row.id)).toEqual(['u1', 'u2'])
+
+        /* 再多等一个 tick 不应产生重复 emit（证明补 tick 后不再依赖后续微任务） */
+        const emitCount = wrapper.emitted('update:selection')?.length ?? 0
+        await nextTick()
+        expect(wrapper.emitted('update:selection')?.length).toBe(emitCount)
     })
 
     it('全选（受控）回传全部行对象', async () => {
@@ -116,6 +123,7 @@ describe('CaomeiDataTable spike', () => {
         /* 默认 showEdges=false：只有上一页 / 页码 / 下一页；无「首页 / 末页」 */
         expect(labels).toEqual(['上一页', '第 1 页', '第 2 页', '第 3 页', '下一页'])
         await wrapper.findAll('.caomei-paginator button').at(-1)!.trigger('click')
+        await nextTick()
 
         expect(wrapper.emitted('update:page')?.at(-1)).toEqual([2])
         const pageEvent = wrapper.emitted('page')?.at(-1)?.[0] as {
