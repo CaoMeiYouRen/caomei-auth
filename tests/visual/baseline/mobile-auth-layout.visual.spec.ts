@@ -9,6 +9,8 @@ import { applyTheme, expectNoHorizontalOverflow, waitForVisualStable } from '../
  * 与像素基线的分工：这里只断言可回归的几何关系（是否溢出、控件是否完整可见、是否互相遮挡），
  * 不产出截图；跨语言像素矩阵由后续轻量矩阵承担，避免同一缺陷维护两份像素基线。
  * 768×1024 只在几何断言内出现（该断点卡片容器比 390 更窄），不新增像素基线。
+ * 阶段 16 D52：769 / 800 / 1024 进入登录 Tab 与悬浮遮挡两组几何用例（平板 / 横屏带），
+ * 其余移动端几何用例仍只跑 ≤768，避免与阶段范围无关的用例膨胀。
  */
 
 /** 5 个启用语言；zh-CN 是默认语言，不带前缀 */
@@ -19,6 +21,16 @@ const VIEWPORTS = [
     { name: '360', width: 360, height: 640 },
     { name: '768', width: 768, height: 1024 },
 ] as const
+
+/** 平板 / 横屏带：只用于登录 Tab 与右侧廊道两组断言（阶段 16 M1） */
+const TABLET_VIEWPORTS = [
+    { name: '769', width: 769, height: 640 },
+    { name: '800', width: 800, height: 600 },
+    { name: '1024', width: 1024, height: 768 },
+] as const
+
+/** 断点几何矩阵：移动端三档 + 平板三档 */
+const BREAKPOINT_VIEWPORTS = [...VIEWPORTS, ...TABLET_VIEWPORTS] as const
 
 function localizedPath(locale: (typeof LOCALES)[number], path: string): string {
     return locale === 'zh-CN' ? path : `/${locale}${path}`
@@ -110,7 +122,7 @@ const FLOATING_CONTROLS = ['.theme-toggle', '.feedback-button'] as const
 const FEEDBACK_RIGHT_INSET = 16
 const FEEDBACK_MAX_WIDTH = 48
 
-/** 认证页在 ≤768 下必须不被悬浮控件遮挡的可交互元素 */
+/** 认证页在 ≤1024 下必须不被悬浮控件遮挡的可交互元素 */
 const OVERLAY_GUARDS = [
     {
         path: '/login',
@@ -190,7 +202,7 @@ async function expectContentCorridor(page: Page, contentBox: string, context: st
 }
 
 test.describe('认证页悬浮控件遮挡', () => {
-    for (const viewport of VIEWPORTS) {
+    for (const viewport of BREAKPOINT_VIEWPORTS) {
         test.describe(`视口 ${viewport.name}`, () => {
             test.use({ viewport: { width: viewport.width, height: viewport.height }, colorScheme: 'light' })
 
@@ -298,7 +310,7 @@ test.describe('2FA 一次性验证码行窄屏不溢出', () => {
 })
 
 test.describe('登录方式 Tab 窄屏完整可见', () => {
-    for (const viewport of VIEWPORTS) {
+    for (const viewport of BREAKPOINT_VIEWPORTS) {
         test.describe(`视口 ${viewport.name}`, () => {
             test.use({ viewport: { width: viewport.width, height: viewport.height }, colorScheme: 'light' })
 
@@ -382,13 +394,85 @@ test.describe('Admin 移动端侧栏默认收起', () => {
             await expect(sidebar).toBeVisible()
             await waitForVisualStable(page)
 
+            /* 阶段 16 D56：移动端收起由 CSS 媒体查询表达（`mobile-expanded` 才展开），
+             * 不再靠 hydration 之后的 `collapsed` 类切换 */
             if (viewport.width <= 768) {
-                await expect(sidebar).toHaveClass(/collapsed/u)
+                await expect(sidebar).not.toHaveClass(/mobile-expanded/u)
+                await expect(sidebar.locator('.nav-label').first()).toBeHidden()
+                await expect(sidebar.locator('.sidebar-header')).toHaveCSS('flex-direction', 'column')
             } else {
                 await expect(sidebar).not.toHaveClass(/collapsed/u)
+                await expect(sidebar.locator('.nav-label').first()).toBeVisible()
             }
         })
     }
+})
+
+test.describe('Admin 导航可访问名称', () => {
+    const ADMIN_VIEWPORTS = [
+        { name: '390', width: 390, height: 844 },
+        { name: '1440', width: 1440, height: 900 },
+    ] as const
+
+    for (const viewport of ADMIN_VIEWPORTS) {
+        test(`视口 ${viewport.name} 全部导航链接带 aria-label`, async ({ page }) => {
+            await useAdminSession(page)
+            await page.setViewportSize({ width: viewport.width, height: viewport.height })
+            await applyTheme(page, 'light')
+            await page.goto('/admin/users', { waitUntil: 'domcontentloaded' })
+            const sidebar = page.locator('.admin-sidebar').first()
+            await expect(sidebar).toBeVisible()
+            await waitForVisualStable(page)
+
+            const links = sidebar.locator('.nav-item')
+            /* 收起态 `v-show` 隐藏文案后链接必须仍有可访问名称（D55）；常驻 aria-label 不依赖状态 */
+            const labels = await links.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('aria-label')))
+            expect(labels.length, `${viewport.name} 导航链接数量异常`).toBe(9)
+            for (const [index, label] of labels.entries()) {
+                expect(label?.trim(), `${viewport.name} 第 ${index + 1} 个导航链接缺少 aria-label`).toBeTruthy()
+            }
+
+            const collapseButton = sidebar.locator('.collapse-btn')
+            await expect(collapseButton).toHaveAttribute('aria-label', /.+/u)
+            await expect(collapseButton).toHaveAttribute('aria-expanded', viewport.width <= 768 ? 'false' : 'true')
+        })
+    }
+})
+
+test.describe('Admin 移动端首帧即收起（CSS-first）', () => {
+    test.use({ viewport: { width: 390, height: 844 }, colorScheme: 'light' })
+
+    test('首帧类名与终态一致且可手动展开 / 收起', async ({ page }) => {
+        await useAdminSession(page)
+        /* 在解析完成、hydration 之前记下侧栏类名：恢复「onMounted 收起」会让两值分叉 */
+        await page.addInitScript(() => {
+            document.addEventListener('DOMContentLoaded', () => {
+                const sidebar = document.querySelector('.admin-sidebar')
+                Reflect.set(window, '__firstFrameSidebarClass', sidebar?.className ?? '')
+            })
+        })
+        await applyTheme(page, 'light')
+        await page.goto('/admin/users', { waitUntil: 'domcontentloaded' })
+        const sidebar = page.locator('.admin-sidebar').first()
+        await expect(sidebar).toBeVisible()
+        await waitForVisualStable(page)
+
+        const firstFrameClass = await page.evaluate(() => String(Reflect.get(window, '__firstFrameSidebarClass') ?? ''))
+        const finalClass = await sidebar.getAttribute('class')
+        expect(firstFrameClass, '首帧缺少侧栏节点').not.toBe('')
+        expect(firstFrameClass, '首帧侧栏已带展开态，说明收起依赖 hydration').not.toContain('mobile-expanded')
+        expect(firstFrameClass, '首帧与终态侧栏类名不一致（存在展开→收起跳变）').toBe(finalClass ?? '')
+
+        const label = sidebar.locator('.nav-label').first()
+        await expect(label).toBeHidden()
+
+        await sidebar.locator('.collapse-btn').click()
+        await expect(sidebar).toHaveClass(/mobile-expanded/u)
+        await expect(label).toBeVisible()
+
+        await sidebar.locator('.collapse-btn').click()
+        await expect(label).toBeHidden()
+    })
 })
 
 test.describe('Admin 移动端输入字号与表格滚动', () => {
