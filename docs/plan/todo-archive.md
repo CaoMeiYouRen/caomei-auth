@@ -8,6 +8,7 @@
 
 | 阶段 | 主题 | 归档文件 | 归档日期 |
 | :--- | :--- | :--- | :--- |
+| 19 | OAuth 客户端 PKCE 可配置化 | [todo-archive-phases-19.md](./archive/todo-archive-phases-19.md) | 2026-11-28 |
 | 18 | 测试稳定性与质量门禁夯实 | [todo-archive-phases-18.md](./archive/todo-archive-phases-18.md) | 2026-11-28 |
 | 17 | 认证配置与服务端校验正确性 | [todo-archive-phases-17.md](./archive/todo-archive-phases-17.md) | 2026-11-28 |
 | 16 | 平板收尾与 Admin 移动端可访问性 | [todo-archive-phases-16.md](./archive/todo-archive-phases-16.md) | 2026-11-28 |
