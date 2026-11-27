@@ -442,4 +442,8 @@ const {
         padding-right: 5rem;
     }
 }
+
+/* 阶段 16 D54：接入既有暗色 token，消除「内容浅色 + 页脚暗色」的割裂 */
+@include sso-login-dark-theme;
+
 </style>

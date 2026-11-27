@@ -329,8 +329,7 @@
 }
 
 // 后台管理布局暗色模式混合宏
-@mixin admin-layout-dark-theme {
-    @include dark-mode {
+@mixin admin-layout-dark-theme {    @include dark-mode {
         .admin-layout {
             background: #{$dark-background} !important;
         }
@@ -409,6 +408,64 @@
         }
 
         .agreement-link {
+            color: #{$primary-light} !important;
+
+            &:hover {
+                color: #{$primary} !important;
+            }
+        }
+    }
+}
+
+/**
+ * SSO 登录页暗色模式混合宏（阶段 16 D54）。
+ *
+ * 页面在阶段 14 迁移时保留了硬编码浅色（`#f8fafc` / `#e2e8f0` / `white`），
+ * 暗色下会呈现「内容浅色 + 页脚暗色」的割裂。这里只做 token 映射，不改视觉版式：
+ * 页面底色、方法卡、提供方卡、普通登录入口与文字色统一走既有 `$dark-*` token。
+ */
+@mixin sso-login-dark-theme {
+    @include dark-mode {
+        .sso-login {
+            background: linear-gradient(135deg, #{$dark-background} 0%, #{$dark-background-light} 100%) !important;
+        }
+
+        .sso-method,
+        .available-providers,
+        .regular-login {
+            background: #{$dark-background-light} !important;
+            box-shadow: 0 2px 8px rgb(0 0 0 / 0.35) !important;
+        }
+
+        .sso-subtitle,
+        .sso-method .text-muted,
+        .regular-login .text-muted {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        .sso-method .form-group label {
+            color: #{$dark-secondary} !important;
+        }
+
+        .provider-card {
+            background: #{$dark-background} !important;
+            border-color: #{$dark-border-color} !important;
+
+            &:hover {
+                border-color: #{$primary} !important;
+            }
+        }
+
+        .provider-name {
+            color: #{$dark-secondary} !important;
+        }
+
+        .provider-domain,
+        .provider-issuer {
+            color: #{$dark-secondary-light} !important;
+        }
+
+        .regular-login .login-link {
             color: #{$primary-light} !important;
 
             &:hover {
