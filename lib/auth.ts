@@ -8,7 +8,6 @@ import {
     openAPI,
     phoneNumber as $phoneNumber,
     admin,
-    captcha,
     genericOAuth,
     twoFactor,
     jwt,
@@ -61,8 +60,7 @@ import { getTempEmail, getTempName } from '@/server/utils/auth-generators'
 import { emailService } from '@/server/utils/email/service'
 import { getUserLocale } from '@/server/utils/locale'
 import { isValidTimeZone } from '@/utils/shared/timezone'
-import { getCaptchaConfig } from '@/server/utils/captcha-config'
-import { isCaptchaEnabled } from '@/utils/web/captcha'
+import { resolveCaptchaPlugins } from '@/server/utils/captcha-config'
 import { AUTH_DISABLED_PATHS } from '@/utils/shared/auth-disabled-paths'
 import {
     auditEmailChangeRequested,
@@ -560,8 +558,8 @@ function createAuthInstance() {
                     }
                 },
             }),
-            // 动态验证码配置，根据环境变量启用相应的验证码提供商
-            ...(isCaptchaEnabled() ? [captcha(getCaptchaConfig()!)] : []),
+            // 动态验证码配置：仅当服务端配置可用时挂载（阶段 17 D59，实现见 captcha-config）
+            ...resolveCaptchaPlugins(),
         ], // 动态插件配置
         ...secondaryStorage ? { secondaryStorage } : {},
     })
