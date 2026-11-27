@@ -8,6 +8,7 @@
 
 | 阶段 | 主题 | 归档文件 | 归档日期 |
 | :--- | :--- | :--- | :--- |
+| 16 | 平板收尾与 Admin 移动端可访问性 | [todo-archive-phases-16.md](./archive/todo-archive-phases-16.md) | 2026-11-28 |
 | 15 | 认证移动端可用性 | [todo-archive-phases-15.md](./archive/todo-archive-phases-15.md) | 2026-11-27 |
 | 14 | 国际化门禁与前端健壮性 | [todo-archive-phases-14.md](./archive/todo-archive-phases-14.md) | 2026-11-26 |
 | 13 | 可观测性规模化与运维闭环 | [todo-archive-phases-13.md](./archive/todo-archive-phases-13.md) | 2026-11-23 |

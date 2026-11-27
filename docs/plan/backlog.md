@@ -109,7 +109,7 @@
 - **Admin 页面深度覆盖与 pages 分母口径**：当前页面测试只覆盖首页 / 登录页 / 静态页（pages 77.46% 仅统计测试导入的 5 个文件）；补 Admin 页 smoke 测试会加载大量低覆盖模板，把全局从 78.3% 拉到 73%（低于阶段 6 基线），故未纳入阶段 7。处理方向：为 Admin 页按交互深度补测（表格选择 / 筛选 / 对话框流程），达标后再纳入覆盖率分母，并同步评估 `coverage.include`。
 - **覆盖率模块下限自动化校验**（重要 2 / 紧急 2 · 延后）：`pages` ≥ 40% / `plugins` ≥ 40% 与全局非回归基线目前只写规范，CI 不阻断；Vitest 4 移除 `coverage.all` 后报告只统计被测试导入的文件，数字回落无人发现。评估用 `coverage.thresholds`（glob）或脚本读取 `coverage-final.json` 做门禁。
 - **stylelint 18 规则补位**：`stylelint-config-cmyr@1.1.0` 为兼容 SCSS 变量关闭了 `value-no-invalid`（实测现有样式 21 条误报），取值拼写错误暂时不再被拦截；待上游支持 SCSS 变量值后恢复。同配置的 `stylelint-config-recommended-scss@17.0.1` peer 仍为 `stylelint ^17`，需上游升 `^18` 才与 stylelint 18 正式对齐。
-- **视觉平板矩阵扩展**：阶段 7 只覆盖 login / register / profile / admin-users / admin-logs 的 768×1024；`/security`、`/change-password` 等核心认证页与横向溢出断言的全矩阵化待评估 CI 时长后补。
+- **视觉平板矩阵扩展**：阶段 7 只覆盖 login / register / profile / admin-users / admin-logs 的 768×1024；`/security`、`/change-password` 等核心认证页与横向溢出断言的全矩阵化待评估 CI 时长后补。2026-11-28 阶段 16 已补 1024×768 的 login / register / security / admin-users 四张浅色基线（D53），其余页面与双主题仍待评估。
 - **视觉基线对「低于阈值的纯色漂移」无感**：`visualExpect` 的 `threshold: 0.2` 允许单像素 YIQ delta ≤ 1,408.6，`#18181b` → `#1e1e1e` 的 delta 只有 16.6，逐像素判等，`maxDiffPixels: 200` 永不触发。P5-1（f91e6e4）换语言切换器 token 后，暗色基线直到 M4-2 因文案位移被迫重采才暴露。处理方向：为关键 token / 组件计算样式补断言（如 `--admin-surface`、`.language-switcher__trigger` 背景色），或在 token / 主题变更时按「全量暗色基线重采」写入门禁清单；`test:visual:update` 改为 `--update-snapshots=all` 并在报告中打印构建产物 SHA / 提交号，避免增量重采留下混合代基线。
 - **视觉预算分级与允许清单**：评估 Admin 数据页（DataTable 密度 / 选择列 / 空态）的 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单；P4-0 暂用统一阈值，避免在迁移期引入双重标准。
 - **Admin 对话框视觉矩阵未覆盖内部滚动区**：视觉层只截整页首屏，SSO 创建对话框（900px 宽、内部滚动）的 OIDC / SAML / 属性映射配置段落在首屏之外，M7 迁移后自基线无像素变化，只能靠定向 Playwright 验收。处理方向：在矩阵中为长表单补充「滚动到指定分段后再截图」的交互态，或明确接受并写入口径。
@@ -149,7 +149,7 @@
 
 ### 3.5 移动端与认证可用性
 
-> 2026-11-25 移动端审计（390×844 / 360×640，5 语言 × 19 页）登记；完整证据、复测现状与排期建议见 [移动端认证审计](../design/governance/2026-11-25-mobile-auth-audit.md)。769–1024 平板断点与 Admin 移动端导航已于 2026-11-27 上收阶段 16；下列条目为剩余候选。
+> 2026-11-25 移动端审计（390×844 / 360×640，5 语言 × 19 页）登记；完整证据、复测现状与排期建议见 [移动端认证审计](../design/governance/2026-11-25-mobile-auth-audit.md)。769–1024 平板断点、1024 横向基线、SSO 暗色与 Admin 移动端导航可访问性已于 2026-11-28 由阶段 16 交付（见 [阶段 16 收口记录](../design/governance/2026-11-27-phase16-closure.md)）；下列条目为剩余候选。
 - **OAuth web 客户端 http 回环回调**（重要 2 / 紧急 1 · 延后）（P3）：better-auth 1.7.20 不允许 web 类型客户端使用 http 回环回调，本地联调直接 `invalid_request`；native + PKCE 与生产 https 不受影响。处理方向：文档写明本地联调用 native + PKCE，评估开发环境 `allowInsecureRedirectUri`。
 
 ---
