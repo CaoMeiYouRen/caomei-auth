@@ -4,6 +4,7 @@ import { consumeLatestTwoFactorDelivery } from '@/server/utils/recovery-channels
 import { createLocalizedError } from '@/server/utils/i18n'
 import logger from '@/server/utils/logger'
 import { rateLimit } from '@/server/utils/rate-limit'
+import { requireCaptcha } from '@/server/utils/captcha-guard'
 
 /**
  * 两步验证验证码发送（阶段 9 M6）。
@@ -17,6 +18,8 @@ import { rateLimit } from '@/server/utils/rate-limit'
 export default defineEventHandler(async (event) => {
     /* 与上游 `/two-factor/*` 一致的 3 次/分钟；包装端点不再经过 better-auth 限流 */
     await rateLimit(event, { window: 60, max: 3 })
+    /* 验证码服务端校验（阶段 17 D60）：校验失败时不调用上游、不产生投递记录 */
+    await requireCaptcha(event)
     await auth.api.sendTwoFactorOTP({
         headers: event.headers,
     })

@@ -119,7 +119,10 @@
             "passwordTooWeak": "密码长度需为 6–64 位"
         },
         "security": {
-            "trustedDeviceNotFound": "可信设备不存在或已被吊销"
+            "trustedDeviceNotFound": "可信设备不存在或已被吊销",
+            "captchaRequired": "请先完成验证码校验",
+            "captchaInvalid": "验证码校验未通过，请重试",
+            "captchaUnavailable": "验证码服务暂不可用，请稍后重试"
         }
     }
 }
