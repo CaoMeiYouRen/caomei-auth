@@ -21,6 +21,7 @@
     "security:alerts": "node scripts/security/check-alerts.mjs",
     "quality:file-size": "node scripts/quality/check-file-size.mjs",
     "coverage:check": "node scripts/quality/check-coverage.mjs",
+    "docs:anchors": "node scripts/quality/check-doc-anchors.mjs",
     "quality:file-size:update": "node scripts/quality/check-file-size.mjs --update",
     "setup:ai": "node scripts/setup-ai.mjs",
     "setup:switch-models": "node scripts/setup/switch-models.mjs",

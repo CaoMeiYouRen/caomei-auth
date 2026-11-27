@@ -34,6 +34,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: pnpm run quality:file-size${BASE_SHA:+ --compare-ref=$BASE_SHA}
       - run: pnpm run lint:md:check
+      - run: pnpm run docs:anchors
       - run: pnpm run migration:check-imports
       - run: pnpm run i18n:check
       - run: pnpm run typecheck

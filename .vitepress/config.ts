@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { githubSlugify } from '../scripts/quality/doc-slug.mjs'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -14,6 +15,10 @@ export default defineConfig({
     // Markdown 配置
     markdown: {
         lineNumbers: true,
+        /* 锚点与 GitHub 同口径（阶段 18 D67）：不补 `_` 前缀，仓库内交叉引用在站点同样可用 */
+        anchor: {
+            slugify: githubSlugify,
+        },
         config: (md) => {
             // 修复不支持的语言标识符
             const fence = md.renderer.rules.fence!
