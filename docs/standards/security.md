@@ -96,8 +96,9 @@
 -   **CSRF 防护**: 确保 API 使用 cookie 认证时带 SameSite 属性；敏感写操作按 better-auth 约定处理。
 -   **CORS 配置**: 禁止在生产环境放开 `Access-Control-Allow-Origin: *`；按 OAuth 应用配置白名单。
 -   **验证码与风控**: 登录、注册、验证码发送等接口接入 `server/utils/captcha-config.ts` / `rate-limit.ts` 能力，防止暴力破解与滥用。
-    -   未配置 CAPTCHA（provider 或 site key 缺失）时不挂载 better-auth captcha 插件，前端按运行时配置（`useRuntimeConfig().public`）跳过 token 解析；配置部分缺失（有 provider、缺 secret）时的注册条件与服务端可用性不一致属已知缺口，见 [backlog §3.1](../plan/backlog.md#31-安全与合规)。
-    -   `/api/security/change-email` 与 `/api/security/two-factor/send-otp` 为自定义包装端点，不在插件 endpoints 内，目前 `x-captcha-response` 只有前端门禁；服务端校验补齐与上述缺口同批评估。
+    -   插件挂载只由服务端配置决定（阶段 17 D59）：`getCaptchaConfig()` 返回 `null`（provider 缺失、secret 缺失或不支持的 provider）时不挂载 better-auth captcha 插件，请求不会 500，等同于「未启用」。
+    -   provider、secret 与公开 site key 必须成对配置：有 secret 缺 site key 时服务端仍要求 token 而前端不渲染验证码（用户侧一律被拒），有 site key 缺 secret 时前端渲染但服务端视为未启用；两种不一致都会在启动求值时 warn 一次并点名缺失项。前端判定（`utils/web/captcha.ts`，只看 provider + site key）保持同步契约，未改为异步配置接口（见[阶段 17 登记 §7](../design/governance/2026-11-28-phase17-registration.md#7-不做什么)）。
+    -   `/api/security/change-email` 与 `/api/security/two-factor/send-otp` 为自定义包装端点，不在插件 endpoints 内，`x-captcha-response` 由 `server/utils/captcha-guard.ts` 服务端校验（阶段 17 D60 / D61）：未启用验证码时直接放行；启用时缺 token → `400 CAPTCHA_REQUIRED`、provider 判定失败 → `400 CAPTCHA_INVALID`、provider 不可达 / 超时 / 非 2xx → `503 CAPTCHA_UNAVAILABLE`（fail closed，不静默放行）。校验被拒时端点不触达数据库或上游发送，错误消息走 `errors.security.captchaRequired` / `captchaInvalid` / `captchaUnavailable`（5 语言 + 中文兜底）。
 
 ## 4. 日志与监控 (Logging & Monitoring)
 
