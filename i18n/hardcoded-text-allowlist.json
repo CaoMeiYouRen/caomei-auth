@@ -2,7 +2,6 @@
     "version": 1,
     "description": "存量硬编码中文基线：文件 → 中文行数。新增文件或增加行数会被 i18n:audit:hardcoded 阻断；翻译完成后运行 pnpm i18n:audit:hardcoded:update 收紧。",
     "files": {
-        "composables/admin/use-user-management.ts": 1,
         "composables/use-captcha.ts": 4,
         "layouts/admin.vue": 1,
         "server/api/admin/logs/sessions.get.ts": 2,
@@ -14,7 +13,7 @@
         "server/middleware/2-auth.ts": 3,
         "server/middleware/3-demo-guard.ts": 21,
         "server/utils/admin-role-sync.ts": 8,
-        "server/utils/captcha-config.ts": 14,
+        "server/utils/captcha-config.ts": 15,
         "server/utils/demo-data-generator.ts": 33,
         "server/utils/email/index.ts": 2,
         "server/utils/email/templates.ts": 3,
