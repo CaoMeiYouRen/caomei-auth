@@ -69,6 +69,42 @@ describe('登录事件仓储', () => {
         expect(page.items[0]?.id).toBe(event.id)
     })
 
+    it('写入前归一化来源 IP：带端口剥离、非法与超长回落 null（varchar(45) 契约）', async () => {
+        const withPort = await recordLoginEvent({
+            type: 'sign_in_success',
+            result: 'success',
+            channel: 'email',
+            ip: '203.0.113.10:8080',
+        }, { repository })
+        expect(withPort.ip).toBe('203.0.113.10')
+
+        const invalid = await recordLoginEvent({
+            type: 'sign_in_success',
+            result: 'success',
+            channel: 'email',
+            ip: 'not-an-ip',
+        }, { repository })
+        expect(invalid.ip).toBeNull()
+
+        const tooLong = await recordLoginEvent({
+            type: 'sign_in_success',
+            result: 'success',
+            channel: 'email',
+            ip: 'x'.repeat(60),
+        }, { repository })
+        expect(tooLong.ip).toBeNull()
+
+        /* 39 字符的完整 IPv6 文本是合法值，必须原样保留（不能被 45 上限误杀） */
+        const fullIpv6 = '2001:0db8:85a3:0000:0000:8a2e:0370:7334'
+        const ipv6Event = await recordLoginEvent({
+            type: 'sign_in_success',
+            result: 'success',
+            channel: 'email',
+            ip: fullIpv6,
+        }, { repository })
+        expect(ipv6Event.ip).toBe(fullIpv6)
+    })
+
     it('未知通道回落 unknown', async () => {
         const event = await recordLoginEvent({
             type: 'sign_in_success',
