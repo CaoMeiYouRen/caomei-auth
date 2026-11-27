@@ -79,4 +79,6 @@
 -   **Admin 首帧与可访问性（阶段 16 D55–D57）**：侧栏收起改为 CSS-first——≤768 由媒体查询渲染收起外观，`mobile-expanded` 才展开，SSR 首帧即收起；`mobile-auth-layout` 用 `DOMContentLoaded` 取样记录首帧类名并与终态比对，恢复 `onMounted` 收起会直接变红。导航链接常驻 `aria-label`（实际 9 个 `nav-item`），折叠按钮断言 `aria-label` / `aria-expanded`。admin 移动端参考态 12 张（6 路由 × 2 主题）为**永久已知漂移**：参考态采自 P4 迁移前、侧栏当时展开，`admin-matrix` 在 parity 层跳过移动端视口，只由自基线保护；`admin-matrix` 的就绪文案判定收敛到 `.admin-main`，首页 / 错误页 / 我的应用不走 admin 布局时退回整页匹配。
 -   **视觉环境限流**：`VISUAL_HARNESS=1` 时跳过 API 频率限制，避免多语言矩阵撞 60 次/分钟导致页面缺数据；仅容器内视觉任务使用。
 -   **升级联动**：升级 `@playwright/test` 必须同批重采自基线并说明差异。
+-   **时序型用例口径（阶段 18 D64 / D65）**：不得用 `sleep` 等真实等待制造 TTL 过期或等待 emit —— better-auth 的魔法链接与可信设备都以 `verification.expiresAt` 判过期，测试直接把内存库记录改成过去时间即可（`expireVerifications`）；组件断言在 `trigger` 后显式 `await nextTick()` 再读 `emitted`，并断言「多等一个 tick 不产生重复 emit」。调大超时或重试不解决问题，视为未修复。
+-   **覆盖率门禁（阶段 18 D66）**：`pnpm coverage:check` 读 `coverage/coverage-final.json`，按目录前缀判定 `pages ≥ 40%` / `plugins ≥ 40%`，并把全局 Statements / Branch / Functions / Lines 与 `scripts/quality/coverage-baseline.json` 比较（容差 0.05，只要求不降低）；报告缺失按未通过处理。基线调整需单独提交并说明原因，CI 在 `test:coverage` 之后执行该门禁。
 -   详见 [视觉参考态基座](../design/governance/2026-11-08-visual-baseline-harness.md)。
