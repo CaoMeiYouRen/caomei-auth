@@ -63,8 +63,14 @@
 | `redirect_uri`          | string | 是   | 重定向 URI，必须与注册时的 URI 匹配 |
 | `scope`                 | string | 否   | 请求的权限范围，多个用空格分隔      |
 | `state`                 | string | 推荐 | 状态参数，用于防止 CSRF 攻击        |
-| `code_challenge`        | string | 否   | PKCE 挑战码（当前版本不支持）       |
-| `code_challenge_method` | string | 否   | PKCE 挑战方法（当前版本不支持）     |
+| `code_challenge`        | string | 视客户端 | PKCE 挑战码（客户端开启 `requirePKCE` 时必需） |
+| `code_challenge_method` | string | 视客户端 | PKCE 挑战方法，`S256`（与上一行同开同关） |
+
+##### PKCE 支持情况
+
+- 管理端创建 / 编辑应用时可勾选「要求 PKCE」：新建机密客户端默认开启（与 better-auth 1.7 的安全默认一致），管理员可显式关闭以兼容旧接入方；公开客户端（`token_endpoint_auth_method: none`）与申请 `offline_access` 的请求由上游无条件强制 PKCE，不受该开关影响。
+- 存量客户端不回溯改写：库里已有的 `requirePKCE` 值保持不变，只有在编辑时显式提交才会改变。
+- 提供方未要求 PKCE 时仍可携带 `code_challenge`（`S256`），由上游按标准校验。
 
 ##### 示例请求
 

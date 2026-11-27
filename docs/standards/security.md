@@ -42,6 +42,7 @@
 -   **历史配置排查**: 升级或收紧 SSO 配置后，管理员必须调用 `GET /api/admin/sso/audit`（只读，不返回 `clientSecret`、`oidcConfig` 等敏感字段）核查 `suspiciousProviders` / `suspiciousAccounts`，确认后清理历史遗留的提供商与账号链接；仅关闭注册端点不会撤销已经建立的链接。清理顺序：先用 `DELETE /api/admin/sso/providers/{id}` 删除可疑 `sso_provider` 记录，再删除 `account` 表中对应 `providerId` 的链接——管理端删除接口只删除 provider，不会级联删除 account，残留链接在重建同名 `providerId` 后会重新生效。
 -   **`trustEmailVerified` 使用前提**: 仅当用户无法自助注册 SSO 提供商（上述管理端点全部关闭）时才可开启；若重新开放注册，必须同时改为 `false`，或启用 `domainVerification` 并在 `SSOProvider` 实体中持久化 `domainVerified`（当前实体尚未包含该字段，启用前需先补列）。
 -   **OAuth 客户端仅限管理端维护**: `@better-auth/oauth-provider` 的 `/oauth2/register` 通过 `allowDynamicClientRegistration: false` 关闭（返回 `403 access_denied`）；`/oauth2/create-client`、`/oauth2/get-client`、`/oauth2/get-clients`、`/oauth2/update-client`、`/oauth2/delete-client`、`/oauth2/client/rotate-secret` 通过 `AUTH_DISABLED_PATHS`（`utils/shared/auth-disabled-paths.ts`）关闭（返回 404）。这些端点都不校验管理员身份：`create-client` 任意会话可调用，其余仅按 `userId` 做归属校验。`lib/auth.ts` 同时配置管理员 `clientPrivileges` 作为纵深防御。应用统一通过 `/api/admin/oauth/applications` 创建（GHSA-2r7m-492j-p8xm）。
+-   **PKCE 默认开启（阶段 19 D69 / D70）**: 管理端创建 / 编辑应用时可设置 `requirePKCE`，新建机密客户端缺省为 `true`（与上游 1.7 的 `requirePKCE ?? true` 一致）；公开客户端（`token_endpoint_auth_method: none`）与申请 `offline_access` 的请求由上游无条件强制 PKCE，不受该开关影响。存量客户端不回溯改写，`PUT` 只在显式传值时更新该字段；关闭 PKCE 仅用于兼容旧接入方，需在接入说明中标注风险。字段经 `oauthApplicationSchema.require_pkce`（`utils/shared/schemas.ts`）校验，视图由 `toAdminOAuthClientView` 返回 `requirePkce`。
 
 ### 1.2 路径鉴权与归一化 (Path-based Authorization)
 
