@@ -77,7 +77,9 @@
                     "implicit": "隱式模式 (不支援)",
                     "password": "密碼模式 (不支援)",
                     "clientCredentials": "用戶端模式 (不支援)"
-                }
+                },
+                "requirePkce": "要求 PKCE 驗證",
+                "requirePkceHint": "開啟後授權碼流程必須攜帶 code_challenge。新建應用預設開啟；公開用戶端與申請 offline_access 的請求由上游強制開啟。關閉僅用於相容舊接入方，會降低安全性。"
             },
             "secret": {
                 "title": "應用建立成功",
