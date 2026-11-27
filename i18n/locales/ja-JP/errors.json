@@ -119,7 +119,10 @@
             "passwordTooWeak": "パスワードは 6〜64 文字で入力してください。"
         },
         "security": {
-            "trustedDeviceNotFound": "信頼済みデバイスが見つからないか、既に失効しています"
+            "trustedDeviceNotFound": "信頼済みデバイスが見つからないか、既に失効しています",
+            "captchaRequired": "認証コードの確認を完了してください",
+            "captchaInvalid": "認証コードの確認に失敗しました。もう一度お試しください",
+            "captchaUnavailable": "認証コードサービスが一時的に利用できません。しばらくしてからお試しください"
         }
     }
 }

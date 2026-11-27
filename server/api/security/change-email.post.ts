@@ -1,6 +1,7 @@
 import { createError, defineEventHandler, readBody } from 'h3'
 import { z } from 'zod'
 import { rateLimit } from '@/server/utils/rate-limit'
+import { requireCaptcha } from '@/server/utils/captcha-guard'
 import { auth } from '@/lib/auth'
 import { dataSource } from '@/server/database'
 import { User } from '@/server/entities/user'
@@ -22,6 +23,9 @@ const changeEmailBodySchema = z.object({
 export default defineEventHandler(async (event) => {
     await rateLimit(event, { window: 60, max: 3 })
     const { userId } = await getUserSession(event)
+    /* 验证码服务端校验（阶段 17 D60）：该端点不在 captcha 插件 endpoints 内，
+     * 前端传的 x-captcha-response 需要在这里自行校验；未启用验证码时直接放行 */
+    await requireCaptcha(event)
     const body = await readBody(event)
     const result = changeEmailBodySchema.safeParse(body)
     if (!result.success) {

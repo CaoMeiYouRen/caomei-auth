@@ -119,7 +119,10 @@
             "passwordTooWeak": "Use a password between 6 and 64 characters."
         },
         "security": {
-            "trustedDeviceNotFound": "Trusted device not found or already revoked"
+            "trustedDeviceNotFound": "Trusted device not found or already revoked",
+            "captchaRequired": "Please complete the captcha verification",
+            "captchaInvalid": "Captcha verification failed, please try again",
+            "captchaUnavailable": "The captcha service is temporarily unavailable, please try again later"
         }
     }
 }

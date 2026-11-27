@@ -119,7 +119,10 @@
             "passwordTooWeak": "비밀번호는 6~64자로 입력해 주세요."
         },
         "security": {
-            "trustedDeviceNotFound": "신뢰할 수 있는 기기가 없거나 이미 해지되었습니다"
+            "trustedDeviceNotFound": "신뢰할 수 있는 기기가 없거나 이미 해지되었습니다",
+            "captchaRequired": "보안 문자 인증을 먼저 완료해 주세요",
+            "captchaInvalid": "보안 문자 인증에 실패했습니다. 다시 시도해 주세요",
+            "captchaUnavailable": "보안 문자 서비스를 일시적으로 사용할 수 없습니다. 잠시 후 다시 시도해 주세요"
         }
     }
 }
