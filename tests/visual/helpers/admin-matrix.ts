@@ -315,8 +315,12 @@ async function open(page: Page, route: AdminRoute, theme: VisualTheme): Promise<
     /* 先等网络空闲（完成 hydration），再断言主题；Admin 页面在负载下可能超过默认 5s */
     await waitForVisualStable(page)
     if (route.readyText) {
-        /* 移动端侧栏默认收起，导航文案只保留在 DOM（v-show）；就绪判定用 attached，可见性由截图负责 */
-        await expect(page.getByText(route.readyText).first()).toBeAttached()
+        /* 移动端侧栏默认收起（CSS 隐藏文案），就绪判定收敛到主内容区：
+         * 不按全局文本匹配，避免命中隐藏的侧栏导航标签；
+         * 首页 / 错误页 / 我的应用不走 admin 布局，退回整页匹配 */
+        const main = page.locator('.admin-main')
+        const scope = (await main.count()) > 0 ? main : page
+        await expect(scope.getByText(route.readyText).first()).toBeAttached()
     }
     if (theme === 'dark') {
         await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 15000 })
@@ -339,6 +343,11 @@ async function shot(page: Page, name: string, target?: Locator): Promise<void> {
 function defineDefaultStates(): void {
     for (const theme of THEMES) {
         for (const viewport of VIEWPORTS) {
+            /* 阶段 16 D57：参考态移动端为永久已知漂移（参考态采自迁移前，侧栏当时展开；
+             * 迁移后 ≤768 默认收起）。12 张（6 路由 × 2 主题）不参与 parity，只维护自基线。 */
+            if (isReferenceLayer() && viewport.name === 'mobile') {
+                continue
+            }
             test.describe(`${theme} / ${viewport.name}`, () => {
                 test.use({ colorScheme: theme, viewport: { width: viewport.width, height: viewport.height } })
 

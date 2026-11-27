@@ -3,7 +3,7 @@
     <div class="admin-layout">
         <div
             class="admin-sidebar"
-            :class="{'collapsed': isCollapsed}"
+            :class="{'collapsed': isCollapsed, 'mobile-expanded': mobileExpanded}"
         >
             <div class="sidebar-header">
                 <img
@@ -11,135 +11,135 @@
                     alt="Logo"
                     class="logo"
                 >
-                <h2
-                    v-show="!isCollapsed"
-                    class="app-name"
-                >
+                <h2 class="app-name">
                     草梅 Auth
                 </h2>
-                <BaseTooltip :content="isCollapsed ? t('app.admin.nav.expand') : t('app.admin.nav.collapse')">
+                <BaseTooltip :content="navCollapsed ? t('app.admin.nav.expand') : t('app.admin.nav.collapse')">
                     <button
                         class="collapse-btn"
+                        :aria-label="navCollapsed ? t('app.admin.nav.expand') : t('app.admin.nav.collapse')"
+                        :aria-expanded="!navCollapsed"
                         @click="toggleSidebar"
                     >
-                        <i
-                            class="mdi"
-                            :class="isCollapsed ? 'mdi-menu' : 'mdi-menu-open'"
-                        />
+                        <i class="collapse-icon collapse-icon--collapsed mdi mdi-menu" />
+                        <i class="collapse-icon collapse-icon--expanded mdi mdi-menu-open" />
                     </button>
                 </BaseTooltip>
             </div>
 
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <h3
-                        v-show="!isCollapsed"
-                        class="nav-title"
-                    >
+                    <h3 class="nav-title">
                         {{ t('app.admin.nav.title') }}
                     </h3>
-                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.users') : ''">
+                    <BaseTooltip side="right" :content="navCollapsed ? t('app.admin.nav.users') : ''">
                         <NuxtLink
                             to="/admin/users"
                             class="nav-item"
                             active-class="active"
+                            :aria-label="t('app.admin.nav.users')"
                         >
                             <i class="mdi mdi-account-multiple" />
-                            <span v-show="!isCollapsed">{{ t('app.admin.nav.users') }}</span>
+                            <span class="nav-label">{{ t('app.admin.nav.users') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.applications') : ''">
+                    <BaseTooltip side="right" :content="navCollapsed ? t('app.admin.nav.applications') : ''">
                         <NuxtLink
                             to="/admin/oauth/applications"
                             class="nav-item"
                             active-class="active"
+                            :aria-label="t('app.admin.nav.applications')"
                         >
                             <i class="mdi mdi-application" />
-                            <span v-show="!isCollapsed">{{ t('app.admin.nav.applications') }}</span>
+                            <span class="nav-label">{{ t('app.admin.nav.applications') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.sso') : ''">
+                    <BaseTooltip side="right" :content="navCollapsed ? t('app.admin.nav.sso') : ''">
                         <NuxtLink
                             to="/admin/sso/providers"
                             class="nav-item"
                             active-class="active"
+                            :aria-label="t('app.admin.nav.sso')"
                         >
                             <i class="mdi mdi-account-network" />
-                            <span v-show="!isCollapsed">{{ t('app.admin.nav.sso') }}</span>
+                            <span class="nav-label">{{ t('app.admin.nav.sso') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.registration') : ''">
+                    <BaseTooltip side="right" :content="navCollapsed ? t('app.admin.nav.registration') : ''">
                         <NuxtLink
                             to="/admin/registration"
                             class="nav-item"
                             active-class="active"
+                            :aria-label="t('app.admin.nav.registration')"
                         >
                             <i class="mdi mdi-shield-lock" />
-                            <span v-show="!isCollapsed">{{ t('app.admin.nav.registration') }}</span>
+                            <span class="nav-label">{{ t('app.admin.nav.registration') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.logs') : ''">
+                    <BaseTooltip side="right" :content="navCollapsed ? t('app.admin.nav.logs') : ''">
                         <NuxtLink
                             to="/admin/logs"
                             class="nav-item"
                             active-class="active"
+                            :aria-label="t('app.admin.nav.logs')"
                         >
                             <i class="mdi mdi-chart-line" />
-                            <span v-show="!isCollapsed">{{ t('app.admin.nav.logs') }}</span>
+                            <span class="nav-label">{{ t('app.admin.nav.logs') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
                 </div>
 
                 <div class="nav-section">
-                    <h3
-                        v-show="!isCollapsed"
-                        class="nav-title"
-                    >
+                    <h3 class="nav-title">
                         {{ t('app.admin.nav.quickAccess') }}
                     </h3>
-                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.profile') : ''">
+                    <BaseTooltip side="right" :content="navCollapsed ? t('app.admin.nav.profile') : ''">
                         <NuxtLink
                             to="/profile"
                             class="nav-item"
+                            :aria-label="t('app.admin.nav.profile')"
                         >
                             <i class="mdi mdi-account-circle" />
-                            <span v-show="!isCollapsed">{{ t('app.admin.nav.profile') }}</span>
+                            <span class="nav-label">{{ t('app.admin.nav.profile') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.myApps') : ''">
+                    <BaseTooltip side="right" :content="navCollapsed ? t('app.admin.nav.myApps') : ''">
                         <NuxtLink
                             to="/oauth/clients"
                             class="nav-item"
+                            :aria-label="t('app.admin.nav.myApps')"
                         >
                             <i class="mdi mdi-key-variant" />
-                            <span v-show="!isCollapsed">{{ t('app.admin.nav.myApps') }}</span>
+                            <span class="nav-label">{{ t('app.admin.nav.myApps') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.docs') : ''">
+                    <BaseTooltip side="right" :content="navCollapsed ? t('app.admin.nav.docs') : ''">
                         <NuxtLink
                             to="https://auth-docs.cmyr.dev/"
                             external
                             target="_blank"
                             class="nav-item"
+                            :aria-label="t('app.admin.nav.docs')"
                         >
                             <i class="mdi mdi-book-open-variant" />
-                            <span v-show="!isCollapsed">{{ t('app.admin.nav.docs') }}</span>
-                            <i v-show="!isCollapsed" class="external-icon mdi mdi-open-in-new" />
+                            <span class="nav-label">{{ t('app.admin.nav.docs') }}</span>
+                            <i class="external-icon mdi mdi-open-in-new" />
                         </NuxtLink>
                     </BaseTooltip>
-                    <BaseTooltip side="right" :content="isCollapsed ? t('app.admin.nav.home') : ''">
+                    <BaseTooltip side="right" :content="navCollapsed ? t('app.admin.nav.home') : ''">
                         <NuxtLink
                             to="/"
                             class="nav-item"
+                            :aria-label="t('app.admin.nav.home')"
                         >
                             <i class="mdi mdi-home" />
-                            <span v-show="!isCollapsed">{{ t('app.admin.nav.home') }}</span>
+                            <span class="nav-label">{{ t('app.admin.nav.home') }}</span>
                         </NuxtLink>
                     </BaseTooltip>
                 </div>
             </nav>
             <div class="sidebar-footer">
-                <BaseLanguageSwitcher :compact="isCollapsed" />
+                <BaseLanguageSwitcher :compact="navCollapsed" />
             </div>
         </div>
 
@@ -166,13 +166,22 @@ const { t } = useI18n()
 useNoIndex()
 
 // 侧边栏收缩状态管理
+/* 桌面：手动收起（`collapsed` 类）；移动端：CSS-first 默认收起，`mobile-expanded` 表示手动展开。
+ * 显示状态不依赖 JS 初始化——SSR 首帧就按媒体查询渲染为收起态，hydration 不再跳变（阶段 16 D56）。 */
 const isCollapsed = ref(false)
+const mobileExpanded = ref(false)
 
-// 移动端首次进入默认收起，避免整屏导航挤掉首屏内容；桌面与用户手动展开状态不受影响
+/* 仅用于点击分流与 tooltip / aria 文案，不参与任何显示控制，因此不会造成首帧跳变 */
+const isNarrow = ref(false)
+
+const navCollapsed = computed(() => (isNarrow.value ? !mobileExpanded.value : isCollapsed.value))
+
 onMounted(() => {
-    if (window.matchMedia('(width <= 768px)').matches) {
-        isCollapsed.value = true
-    }
+    const query = window.matchMedia('(width <= 768px)')
+    isNarrow.value = query.matches
+    query.addEventListener('change', (event) => {
+        isNarrow.value = event.matches
+    })
 })
 
 // Demo模式横幅管理
@@ -180,12 +189,82 @@ const { showBanner, closeBanner } = useDemoBanner()
 
 // 切换侧边栏状态
 const toggleSidebar = () => {
+    if (isNarrow.value) {
+        mobileExpanded.value = !mobileExpanded.value
+        /* 从「桌面已收起」缩到移动端后手动展开，必须先解掉桌面收起态，否则标签仍被隐藏 */
+        if (mobileExpanded.value) {
+            isCollapsed.value = false
+        }
+        return
+    }
     isCollapsed.value = !isCollapsed.value
 }
 
 </script>
 
 <style lang="scss" scoped>
+
+/**
+ * 收起态外观（桌面手动收起与移动端 CSS-first 默认收起共用）。
+ *
+ * 只控制「显示」，不含定位 / 宽度：移动端侧栏是全宽横条，桌面收起是 80px 竖栏。
+ * 标签用 CSS 隐藏而不是 `v-show`，这样 SSR 首帧就能按媒体查询决定外观。
+ */
+@mixin sidebar-collapsed-appearance {
+    .sidebar-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+
+        .logo {
+            width: 32px;
+            height: 32px;
+        }
+
+        .app-name {
+            display: none;
+        }
+
+        .collapse-btn {
+            margin-left: 0;
+            padding: 6px;
+        }
+    }
+
+    .nav-title {
+        display: none;
+    }
+
+    .nav-item {
+        justify-content: center;
+        margin: 0 0.25rem;
+        padding: 0.75rem 1rem;
+
+        i {
+            margin: 0;
+        }
+
+        .nav-label,
+        .external-icon {
+            display: none;
+        }
+    }
+
+    .sidebar-footer {
+        justify-content: center;
+        padding: 0.75rem 0.5rem;
+    }
+
+    .collapse-btn {
+        .collapse-icon--collapsed {
+            display: inline-block;
+        }
+
+        .collapse-icon--expanded {
+            display: none;
+        }
+    }
+}
 
 .admin-layout {
     display: flex;
@@ -210,37 +289,18 @@ const toggleSidebar = () => {
     &.collapsed {
         width: 80px;
 
-        .sidebar-header {
-            flex-direction: column;
-            gap: 0.5rem;
-            padding: 1rem;
-
-            .logo {
-                width: 32px;
-                height: 32px;
-            }
-
-            .collapse-btn {
-                margin-left: 0;
-                padding: 6px;
-            }
-        }
-
-        .nav-item {
-            justify-content: center;
-            margin: 0 0.25rem;
-            padding: 0.75rem 1rem;
-
-            i {
-                margin: 0;
-            }
-        }
+        @include sidebar-collapsed-appearance;
     }
 
     @media (width <= 768px) {
         position: relative;
         width: 100%;
         height: auto;
+
+        /* CSS-first：默认就是收起态，只有显式 `mobile-expanded` 才展开 */
+        &:not(.mobile-expanded) {
+            @include sidebar-collapsed-appearance;
+        }
 
         &.collapsed {
             width: 100%;
@@ -279,10 +339,7 @@ const toggleSidebar = () => {
     }
 }
 
-.admin-sidebar.collapsed .sidebar-footer {
-    justify-content: center;
-    padding: 0.75rem 0.5rem;
-}
+/* 收起态侧栏页脚对齐由 `.sidebar-collapsed-appearance` 统一提供 */
 
 .sidebar-header {
     position: relative;
@@ -329,6 +386,11 @@ const toggleSidebar = () => {
 
         i {
             font-size: 1.2rem;
+        }
+
+        /* 收起态图标由 `.sidebar-collapsed-appearance` 翻转，默认显示「收起」图标 */
+        .collapse-icon--collapsed {
+            display: none;
         }
     }
 }
@@ -414,7 +476,7 @@ const toggleSidebar = () => {
         font-size: 1.25rem;
     }
 
-    span {
+    .nav-label {
         flex: 1;
         overflow: hidden;
         white-space: nowrap;
