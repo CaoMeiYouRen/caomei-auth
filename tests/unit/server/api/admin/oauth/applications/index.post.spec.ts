@@ -92,6 +92,36 @@ describe('server/api/admin/oauth/applications/index.post', () => {
         expect(mockSave).toHaveBeenCalled()
     })
 
+    /* 阶段 19 M1.2 / D69：新建默认开启 PKCE，显式 false 才关闭 */
+    it('creates with PKCE enabled by default', async () => {
+        const { readBody } = await import('h3')
+        vi.mocked(readBody).mockResolvedValue({
+            client_name: 'PKCE Default App',
+            redirect_uris: ['https://example.com/callback'],
+        })
+        mockSave.mockResolvedValue({ id: 'app-123' })
+
+        await indexHandler(event)
+
+        const saved = mockSave.mock.calls[0]![0] as { requirePKCE?: boolean }
+        expect(saved.requirePKCE).toBe(true)
+    })
+
+    it('honours explicit require_pkce=false', async () => {
+        const { readBody } = await import('h3')
+        vi.mocked(readBody).mockResolvedValue({
+            client_name: 'PKCE Off App',
+            redirect_uris: ['https://example.com/callback'],
+            require_pkce: false,
+        })
+        mockSave.mockResolvedValue({ id: 'app-123' })
+
+        await indexHandler(event)
+
+        const saved = mockSave.mock.calls[0]![0] as { requirePKCE?: boolean }
+        expect(saved.requirePKCE).toBe(false)
+    })
+
     it('should handle validation errors', async () => {
         const invalidBody = {
             // Missing required fields

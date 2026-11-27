@@ -76,6 +76,7 @@ export default defineEventHandler(async (event) => {
             softwareId: validatedData.software_id,
             softwareVersion: validatedData.software_version,
             disabled: validatedData.disabled,
+            requirePkce: validatedData.require_pkce,
         })
 
         await repo.save(application)

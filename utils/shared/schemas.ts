@@ -175,6 +175,8 @@ export const oauthApplicationBaseSchema = z.object({
     type: z.string().default('web'),
     disabled: z.boolean().default(false),
     description: z.string().optional(),
+    /* PKCE 策略（阶段 19 D69）：创建时缺省按 true 落库，显式 false 才关闭 */
+    require_pkce: z.boolean().optional(),
 })
 
 // OAuth Application Schema (Create)
