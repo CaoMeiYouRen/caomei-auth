@@ -11,8 +11,6 @@
 
 | 候选 | 重要 | 紧急 | 建议 | 可复算依据 |
 | :--- | :-: | :-: | :--- | :--- |
-| [验证码服务端校验与插件注册条件](#31-安全与合规) | 4 | 4 | 首排 | 自定义端点无 `x-captcha-response` 校验；provider + siteKey 缺 secret 时 500 |
-| [登录事件 IP 写入契约](#33-基础设施) | 4 | 3 | 排期 | 三方言对超长 / 带端口 IP 行为分叉，触发条件已登记 |
 | [上游未修复依赖 `braces`](#31-安全与合规) | 3 | 2 | 延后 | 仅构建链、上游无补丁；发版后升级 |
 | [PKCE 策略可配置化](#31-安全与合规) | 3 | 2 | 延后 | 上游 1.7 默认收紧，管理端未暴露 `requirePKCE` |
 | [时序型测试抖动](#32-质量与测试) | 3 | 3 | 延后 | 2026-11-24/25 共 5 次偶发，单文件复跑通过 |
@@ -22,6 +20,8 @@
 | [i18n 10 语内容扩展](#32-质量与测试) | 2 | 1 | 延后 | 5 语已启用，其余 `enabled=false` |
 | [Admin 数据表移动端卡片化](#34-ui-与主题) | 2 | 1 | 延后 | 阶段 15 只做基础可用（D49） |
 | [OAuth web 客户端 http 回环](#35-移动端与认证可用性) | 2 | 1 | 延后 | 仅本地联调，native + PKCE 可用 |
+
+> 2026-11-28：原「验证码服务端校验与插件注册条件」（4/4 · 首排）与「登录事件 IP 写入契约」（4/3 · 排期）两条 4 分候选已按双轴优先级上收**阶段 17**（见 [阶段 17 范围登记](../design/governance/2026-11-28-phase17-registration.md)），不再作为候选保留；同分数下阶段 17 只取这两条，其余延后项维持原序。
 
 ---
 
@@ -89,8 +89,8 @@
 
 - **上游未修复依赖告警跟进**（重要 3 / 紧急 2 · 延后）：`braces`（GHSA-vfj7-8cjw-p6xm，需 ≥3.0.4，lock 仍为 3.0.3）暂无已发布补丁版本，仅存在于构建 / 开发工具链；待上游发版后升级并复查 `pnpm audit`。`node-forge` 已升至 1.4.3（满足 GHSA-86w9-cpqp-85rv 的 ≥1.4.1），从本条移除。
 - **OAuth 客户端 PKCE 策略可配置化**（重要 3 / 紧急 2 · 延后）：管理端创建客户端时固定写入 `requirePKCE = false`（`server/api/admin/oauth/applications/index.post.ts`），创建 / 更新 Schema、管理端视图与表单均未暴露该字段，管理员无法为新客户端开启 PKCE；上游 1.7 的安全默认已改为「必需」（`requirePKCE ?? true`），本项与 [1.7 升级记录](../design/governance/better-auth-1.7-upgrade.md) 中的兼容取舍同源。公开客户端（`token_endpoint_auth_method: none`）与申请 `offline_access` 的请求由上游无条件强制 PKCE，因此现状只影响机密客户端；`docs/api/oauth.md` 仍写「当前版本不支持 PKCE」，与现行为不一致。处理方向：Schema 增加可选 `require_pkce`（新建默认 `true`）、管理端开关与 i18n、创建 / 更新端点与视图透传、补契约测试，并更正 API 文档；不回溯改写存量客户端，保持既有接入方行为不变。依据 RFC 9700 / RFC 7636 对全客户端启用 PKCE 的建议。
+- **已上收阶段 17**：验证码插件注册条件、自定义端点服务端验证码校验与登录事件 IP 写入契约于 2026-11-28 立项，口径见 [阶段 17 范围登记](../design/governance/2026-11-28-phase17-registration.md)。
 - **迁入来源**：既有 backlog「上游未修复依赖告警跟进」与原 `todo.md`「低优先级 · 安全审计工具集成」（安全审计已由 `.github/workflows/security-auto-fix.yml` 每日巡检 + Dependabot 落地，不再作为候选）；PKCE 策略项来自 2026-11-23 维护者评审（按安全加固登记）。
-- **验证码服务端注册条件与配置可用性不一致**（重要 4 / 紧急 4 · 首排）（2026-11-25，M8.1 复审 RG-W6）：`lib/auth.ts` 以 `isCaptchaEnabled()`（provider + siteKey）决定是否挂载 captcha 插件，但 `getCaptchaConfig()` 缺 secret 时返回 `null`，插件以非空断言注册后在请求期读取 `options.endpoints` 报 `Cannot read properties of null`，表现为 500 而非「未启用」；同时 `/api/security/change-email`、`/api/security/two-factor/send-otp` 是自定义包装端点，不在插件 endpoints 内，服务端不校验 `x-captcha-response`，验证码只有前端门禁。处理方向：按 `getCaptchaConfig() !== null` 注册插件，补齐自定义端点的服务端校验或明确「仅前端」口径，并补部分配置与端点覆盖测试。
 
 ### 3.2 质量与测试
 
@@ -132,7 +132,6 @@
 ### 3.3 基础设施
 
 
-- **登录事件 IP 写入侧长度契约**（重要 4 / 紧急 3 · 排期）（2026-11-23 登记，阶段 13 M1.1 Review Gate W-1）：`login_event.ip` 已改 `varchar(45)`，但写入路径仍直接取 `x-forwarded-for` 首段 / `x-real-ip` 原值，无 `net.isIP` 校验与长度归一化。超长或带端口 / 方括号 / zone index 的取值在 MySQL 严格模式与 PostgreSQL 下会整行拒绝（事件被丢弃且仅 warn），SQLite 则照存，形成三方言行为分叉；客户端自造长头还可能让自身事件不被记录。**触发条件**：出现以下任一项即必须处理——① 生产采集到 `CHAR_LENGTH(ip) > 45` 的写入失败告警；② 部署确认未强制覆盖 `X-Forwarded-For`；③ 阶段 13 收口前仍未处理，则在 M5 收口记录中确认延期理由。处理方向：在持久化入口做 `[...]` / 端口剥离 + `net.isIP` 校验 + 非法值回落 `null`，并补三方言写入断言。
 - **注册规则多实例缓存**：规则缓存为进程内 30 秒 TTL，多实例部署时最坏 30 秒内仍按旧规则；如需强一致，引入 Redis 共享缓存并在管理端变更时发布失效。
 
 - **Dependency Cruiser 依赖图**：配置 `depcruise` 验证 `utils/shared` / `server/utils` / `utils/web` 分层约束。
