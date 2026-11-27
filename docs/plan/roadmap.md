@@ -5,7 +5,7 @@
 > **归档模型（2026-11-20 起）**：阶段 1–9 详情保留在本文件；自阶段 10 起，已收口阶段详情按 [规划规范](../standards/planning.md) §8 迁入 `docs/plan/archive/roadmap-phases-*.md`，本文件只保留里程碑概览与当前阶段。
 
 
-> **当前状态**：**当前无进行中阶段。** 阶段 15「认证移动端可用性」已于 2026-11-27 收口（里程碑见 [roadmap-phases-15](./archive/roadmap-phases-15.md)，阶段正文见 [todo-archive-phases-15](./archive/todo-archive-phases-15.md)，收口记录见 [阶段 15 收口记录](../design/governance/2026-11-27-phase15-closure.md)）。下一阶段须经用户授权后登记。阶段 14「国际化门禁与前端健壮性」已于 2026-11-26 收口（里程碑见 [roadmap-phases-14](./archive/roadmap-phases-14.md)，阶段正文见 [todo-archive-phases-14](./archive/todo-archive-phases-14.md)，收口记录见 [阶段 14 收口记录](../design/governance/2026-11-26-phase14-closure.md)）。阶段 13「可观测性规模化与运维闭环」已于 2026-11-23 收口（里程碑见 [roadmap-phases-13](./archive/roadmap-phases-13.md)，阶段正文见 [todo-archive-phases-13](./archive/todo-archive-phases-13.md)）。阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（里程碑见 [roadmap-phases-12](./archive/roadmap-phases-12.md)，阶段正文见 [todo-archive-phases-12](./archive/todo-archive-phases-12.md)）。阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（里程碑见 [roadmap-phases-11](./archive/roadmap-phases-11.md)，阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)）。阶段 10「用户侧替代证明」已于 2026-11-21 收口（里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。
+> **当前状态**：**阶段 16「平板收尾与 Admin 移动端可访问性」2026-11-27 登记（待开工）**（范围见 [阶段 16 范围登记](../design/governance/2026-11-27-phase16-registration.md)，条目见 [todo.md](./todo.md)）。 阶段 15「认证移动端可用性」已于 2026-11-27 收口（里程碑见 [roadmap-phases-15](./archive/roadmap-phases-15.md)，阶段正文见 [todo-archive-phases-15](./archive/todo-archive-phases-15.md)，收口记录见 [阶段 15 收口记录](../design/governance/2026-11-27-phase15-closure.md)）。下一阶段须经用户授权后登记。阶段 14「国际化门禁与前端健壮性」已于 2026-11-26 收口（里程碑见 [roadmap-phases-14](./archive/roadmap-phases-14.md)，阶段正文见 [todo-archive-phases-14](./archive/todo-archive-phases-14.md)，收口记录见 [阶段 14 收口记录](../design/governance/2026-11-26-phase14-closure.md)）。阶段 13「可观测性规模化与运维闭环」已于 2026-11-23 收口（里程碑见 [roadmap-phases-13](./archive/roadmap-phases-13.md)，阶段正文见 [todo-archive-phases-13](./archive/todo-archive-phases-13.md)）。阶段 12「安全可观测性与会话治理」已于 2026-11-23 收口（里程碑见 [roadmap-phases-12](./archive/roadmap-phases-12.md)，阶段正文见 [todo-archive-phases-12](./archive/todo-archive-phases-12.md)）。阶段 11「2FA 覆盖收紧与登录通道闭环」已于 2026-11-21 收口（里程碑见 [roadmap-phases-11](./archive/roadmap-phases-11.md)，阶段正文见 [todo-archive-phases-11](./archive/todo-archive-phases-11.md)）。阶段 10「用户侧替代证明」已于 2026-11-21 收口（里程碑见 [roadmap-phases-10](./archive/roadmap-phases-10.md)）。阶段 9「账号找回与 2FA 边界治理」已于 2026-11-20 收口（M1–M13 全部交付），记录见 [阶段 9 收口记录](../design/governance/2026-11-20-phase9-closure.md)；后续候选见 [backlog §2.12](./backlog.md)。
 
 ---
 
@@ -190,6 +190,18 @@ _目标：把 i18n 从「5 语可用」推进到「未启用语言也有门禁�
 
 > 5 大条目 / 12 小条目全部交付；里程碑与未覆盖边界见 [roadmap-phases-15](./archive/roadmap-phases-15.md)，阶段正文见 [todo-archive-phases-15](./archive/todo-archive-phases-15.md)，范围与决策 D45–D51 见 [阶段 15 范围登记](../design/governance/2026-11-26-phase15-registration.md)，收口记录见 [2026-11-27-phase15-closure](../design/governance/2026-11-27-phase15-closure.md)。
 
+## 阶段 16: 平板收尾与 Admin 移动端可访问性（2026-11-27 登记，待开工）
+
+_目标：把 ≤768 的平板修复扩到 ≤1024，补 1024 横向基线，接入 SSO 暗色，并收敛 Admin 移动端导航的可访问性与首帧体验。_
+
+- **M1 平板断点收尾**：登录 Tab 3 列与右侧廊道扩到 ≤1024，769 / 800 / 1024 断言。
+- **M2 1024 横向视觉矩阵**：login / register / security / admin-users 4 张浅色基线。
+- **M3 SSO 暗色主题**：接入既有暗色 token，390 / 768 暗色基线与断言。
+- **M4 Admin 导航可访问性与首帧**：aria-label、CSS-first 首帧、参考态漂移登记与就绪判定。
+- **M5 文档与阶段收口**：口径同步与归档。
+
+> 5 大条目 / 10 小条目；范围、决策 D52–D58 与不做边界见 [阶段 16 范围登记](../design/governance/2026-11-27-phase16-registration.md)，条目明细见 [todo.md](./todo.md)。
+
 ## 后续方向（未授权）
 
 以下方向不属于当前阶段，作为中长期方向保留；候选详情与触发条件见 [backlog.md](./backlog.md)。未授权方向不构成启动授权。
@@ -279,6 +291,7 @@ _目标：把 i18n 从「5 语可用」推进到「未启用语言也有门禁�
         │  i18n 门禁 / 产物过滤 → 台账与链接 → 窄屏视觉 → 前端健壮性 → 两处布局 → 验证码可选 → 收口
         ▼
 阶段 15（2026-11-27 收口）：认证移动端可用性
+阶段 16（2026-11-27 登记，待开工）：平板收尾与 Admin 移动端可访问性
         │  窄屏首屏 → 悬浮遮挡 → 个人中心 / Admin 基础 → OAuth 语言 → 视觉矩阵与收口
         ▼
 后续方向（未授权）：审计检索 / 安全增强 / 开发者生态 / 企业级

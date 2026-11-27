@@ -17,14 +17,11 @@
 | [PKCE 策略可配置化](#31-安全与合规) | 3 | 2 | 延后 | 上游 1.7 默认收紧，管理端未暴露 `requirePKCE` |
 | [时序型测试抖动](#32-质量与测试) | 3 | 3 | 延后 | 2026-11-24/25 共 5 次偶发，单文件复跑通过 |
 | [剩余站内字面路径 localePath 收敛](#32-质量与测试) | 3 | 2 | 延后 | 2026-11-25 扫描 18 文件 / 44 处 |
-| [视觉矩阵补 1024 横向宽度](#32-质量与测试) | 2 | 1 | 延后 | 无回归保护，需评估 CI 时长 |
 | [覆盖率模块下限自动化校验](#32-质量与测试) | 2 | 2 | 延后 | 规范有阈值、CI 不阻断 |
 | [文档站锚点与 GitHub slug 不一致](#32-质量与测试) | 2 | 2 | 延后 | 30+ 交叉引用在站点落空，`ignoreDeadLinks` 掩盖 |
 | [i18n 10 语内容扩展](#32-质量与测试) | 2 | 1 | 延后 | 5 语已启用，其余 `enabled=false` |
-| [`/sso-login` 暗色主题缺失](#34-ui-与主题) | 3 | 2 | 延后 | 硬编码浅色，暗色基线呈现浅色内容 |
 | [Admin 数据表移动端卡片化](#34-ui-与主题) | 2 | 1 | 延后 | 阶段 15 只做基础可用（D49） |
 | [OAuth web 客户端 http 回环](#35-移动端与认证可用性) | 2 | 1 | 延后 | 仅本地联调，native + PKCE 可用 |
-| [769–1024 登录 Tab 横向滚动](#35-移动端与认证可用性) | 2 | 1 | 延后 | 1024 下 ja-JP Tab 需 419px，卡片内容宽 304–386px |
 
 ---
 
@@ -113,7 +110,6 @@
 - **覆盖率模块下限自动化校验**（重要 2 / 紧急 2 · 延后）：`pages` ≥ 40% / `plugins` ≥ 40% 与全局非回归基线目前只写规范，CI 不阻断；Vitest 4 移除 `coverage.all` 后报告只统计被测试导入的文件，数字回落无人发现。评估用 `coverage.thresholds`（glob）或脚本读取 `coverage-final.json` 做门禁。
 - **stylelint 18 规则补位**：`stylelint-config-cmyr@1.1.0` 为兼容 SCSS 变量关闭了 `value-no-invalid`（实测现有样式 21 条误报），取值拼写错误暂时不再被拦截；待上游支持 SCSS 变量值后恢复。同配置的 `stylelint-config-recommended-scss@17.0.1` peer 仍为 `stylelint ^17`，需上游升 `^18` 才与 stylelint 18 正式对齐。
 - **视觉平板矩阵扩展**：阶段 7 只覆盖 login / register / profile / admin-users / admin-logs 的 768×1024；`/security`、`/change-password` 等核心认证页与横向溢出断言的全矩阵化待评估 CI 时长后补。
-- **视觉矩阵补 1024 横向宽度**（重要 2 / 紧急 1 · 延后）：阶段 7 只新增 768×1024 平板基线；1024 横向（小桌面 / 横屏平板）无回归保护，待评估 CI 时长后补。
 - **视觉基线对「低于阈值的纯色漂移」无感**：`visualExpect` 的 `threshold: 0.2` 允许单像素 YIQ delta ≤ 1,408.6，`#18181b` → `#1e1e1e` 的 delta 只有 16.6，逐像素判等，`maxDiffPixels: 200` 永不触发。P5-1（f91e6e4）换语言切换器 token 后，暗色基线直到 M4-2 因文案位移被迫重采才暴露。处理方向：为关键 token / 组件计算样式补断言（如 `--admin-surface`、`.language-switcher__trigger` 背景色），或在 token / 主题变更时按「全量暗色基线重采」写入门禁清单；`test:visual:update` 改为 `--update-snapshots=all` 并在报告中打印构建产物 SHA / 提交号，避免增量重采留下混合代基线。
 - **视觉预算分级与允许清单**：评估 Admin 数据页（DataTable 密度 / 选择列 / 空态）的 `reader` / `admin` 分档与「区域 + 像素 + 归因 + owner」允许清单；P4-0 暂用统一阈值，避免在迁移期引入双重标准。
 - **Admin 对话框视觉矩阵未覆盖内部滚动区**：视觉层只截整页首屏，SSO 创建对话框（900px 宽、内部滚动）的 OIDC / SAML / 属性映射配置段落在首屏之外，M7 迁移后自基线无像素变化，只能靠定向 Playwright 验收。处理方向：在矩阵中为长表单补充「滚动到指定分段后再截图」的交互态，或明确接受并写入口径。
@@ -148,16 +144,13 @@
 - **caomei-ui 1.4.0 按钮根节点 scoped id 缺口**：`CaomeiButton` 在未启用内建提示时也会把根节点包到 `CaomeiPassthrough` 组件，父组件 scoped 类无法落到内层 `<button>`，导致 `theme-toggle` / `.btn` / `.social-btn` 等根类样式失效。2026-11-22 升级已用 wrapper + `:deep()` 与局部 `!important` 规避（见 [升级记录](../design/governance/2026-11-22-caomei-ui-1.4.0-upgrade.md)）。处理方向：向上游提报最小复现；上游恢复「未启用提示时根节点即 button」后删除项目侧规避，并复核 `styles/_form.scss` 的 `!important` 与登录页 `white-space` 覆盖是否仍需要。
 - **社交按钮覆盖与库 token 同值**：`.caomei-button.social-btn` 的 `background-color` / `border-radius` / `font-size` 与 1.4.0 默认 token 恰好等值，视觉零差异无法证明覆盖生效；下次 caomei-ui 升级前改用库文档化钩子，或补计算样式断言。
 - **认证页死规则清理**：`login` / `register` / `forgot-password` / `change-password` 中与全局 `.btn` / `.btn-primary` 完全等值的 scoped 规则在 1.4.0 后已不可命中 CaomeiButton 根节点（`switch-btn` 的 `width: 100%` 由 `block` 兜底），随下一次触及这些文件的提交删除。
-- **`/sso-login` 暗色主题缺失**（重要 3 / 紧急 2 · 延后）（2026-11-26，阶段 14 M3 基线复核）：页面使用硬编码浅色（`#f8fafc` / `#e2e8f0`）且 `styles/_dark-mode.scss` 无 `.sso-` 覆盖，暗色模式下仅页脚与全局控件变暗，内容区仍为浅色；`*-sso-login-dark-tablet` 基线因此呈现浅色内容 + 暗色页脚。处理方向：接入既有暗色 token，重采该基线并补暗色断言。
 - **Admin 数据表移动端卡片化**（重要 2 / 紧急 1 · 延后）（2026-11-26 阶段 15 D49 延后）：当前移动端只保证侧栏收起、输入字号 ≥16px 与表格横向滚动；卡片化需要新的行 / 列映射、选择态与视觉矩阵，待评估后另立条目。
 - **Demo 模式语言切换偏移验证**：`data-preset` / GitHub 角标与右上角语言切换共存时的偏移仅在 `NUXT_PUBLIC_DEMO_MODE=true` 下可见，需在 Demo 构建中补一次视觉确认。
 
 ### 3.5 移动端与认证可用性
 
-> 2026-11-25 移动端审计（390×844 / 360×640，5 语言 × 19 页）登记；完整证据、复测现状与排期建议见 [移动端认证审计](../design/governance/2026-11-25-mobile-auth-audit.md)。下列条目均为复测后仍存在、尚未进入阶段的候选。
-- **Admin 移动端导航可访问性与首帧**（重要 2 / 紧急 1 · 延后）：阶段 15 M3.2 后侧栏在移动端默认收起，但收起态 10 个导航链接只有 tooltip、没有 `aria-label`；SSR 首帧仍是展开态，hydration 后收起有一次可见跳变；`admin-matrix` 就绪文案改为 attached 后对内容区空白的敏感度下降；参考态层 admin 移动端基线属永久已知漂移。处理方向：补 `aria-label`、CSS-first 或预置脚本消除首帧跳变、就绪文案收敛到主内容区、登记 parity 豁免。
+> 2026-11-25 移动端审计（390×844 / 360×640，5 语言 × 19 页）登记；完整证据、复测现状与排期建议见 [移动端认证审计](../design/governance/2026-11-25-mobile-auth-audit.md)。769–1024 平板断点与 Admin 移动端导航已于 2026-11-27 上收阶段 16；下列条目为剩余候选。
 - **OAuth web 客户端 http 回环回调**（重要 2 / 紧急 1 · 延后）（P3）：better-auth 1.7.20 不允许 web 类型客户端使用 http 回环回调，本地联调直接 `invalid_request`；native + PKCE 与生产 https 不受影响。处理方向：文档写明本地联调用 native + PKCE，评估开发环境 `allowInsecureRedirectUri`。
-- **769–1024 平板带登录 Tab 仍依赖横向滚动**（重要 2 / 紧急 1 · 延后）：阶段 15 M1.1 只把 3 列自适应做到 ≤768；该带卡片内容宽 304–386px，而 ja-JP Tab 需 419px，手机号 Tab 仍需组内滑动才能发现（1025 起为库默认行为，且卡片内容宽 386px 时 ja-JP 亦可能越出卡片）。处理方向：评估把登录 Tab 的换行 / 3 列规则扩到 ≤1024，并补 1024 横向视觉基线（与「视觉矩阵补 1024 横向宽度」合并评估）。同一区间的右侧安全廊道只在 ≤768 生效，769–900 仍有悬浮按钮压住内容右缘（实测最大 471px²，769×640 登录页），随本条一并处理。
 
 ---
 
