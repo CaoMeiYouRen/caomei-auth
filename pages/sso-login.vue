@@ -431,4 +431,15 @@ const {
         overflow-wrap: anywhere;
     }
 }
+
+/*
+ * 阶段 16 D52：平板 / 横屏带（769–1024）同样收 5rem 右侧安全廊道，
+ * 否则 1024 下内容右缘 992px 会与固定按钮左缘 964px 相交。
+ * 只收廊道，不改 769–1024 的排版（桌面式双列卡片保持原样）。
+ */
+@media (width >= 769px) and (width <= 1024px) {
+    .sso-login {
+        padding-right: 5rem;
+    }
+}
 </style>

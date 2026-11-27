@@ -340,9 +340,11 @@ const {
  * 窄屏登录方式 Tab：caomei-ui 1.4.0 在 ≤1024 把 ButtonGroup 收敛为组内横向滚动，
  * 手机号 Tab 需要滑动才能被发现（390 下 en-US / zh-TW / ja-JP / ko-KR 溢出 19–125px）。
  * 768 断点下卡片容器（288px）比 390（294px）更窄，同属窄屏，故一并改 3 列自适应。
- * 桌面（>768）保持组内自然宽度不变；769–1024 的残余横向滚动已登记 docs/plan/backlog.md §3.5。
+ * 阶段 16 D52：与 caomei-ui ButtonGroup 的 ≤1024 收敛档对齐，769–1024 平板 / 横屏带
+ * 同样改 3 列（卡片内容宽 304–386px，ja-JP 自然宽度需 419px，只能靠网格换行而非滚动收下）。
+ * 桌面（>1024）保持组内自然宽度不变。
  */
-@media (width <= 768px) {
+@media (width <= 1024px) {
     .login-btn .login-methods {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -433,10 +435,11 @@ const {
 
 /*
  * 右下角固定主题切换（right 16 + 44）与反馈按钮（right 16 + 约 46）横跨整个视口高度，
- * 只留底部空白挡不住首屏；改为内容右侧安全廊道：≤768 内容右缘再收 4rem，
- * 任何滚动位置都不与固定按钮相交，按钮锚点不变。
+ * 只留底部空白挡不住首屏；改为内容右侧安全廊道：≤1024 内容右缘再收 4rem，
+ * 任何滚动位置都不与固定按钮相交，按钮锚点不变。阶段 16 D52 把廊道从 ≤768 扩到 ≤1024：
+ * 769–1024 下卡片右缘 721–993px 与固定按钮左缘 709–964px 相交。
  */
-@media (width <= 768px) {
+@media (width <= 1024px) {
     .auth-card {
         padding-right: 4rem;
     }
