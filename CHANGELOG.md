@@ -1,5 +1,61 @@
 # caomei-auth
 
+# [1.19.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.18.0...v1.19.0) (2026-11-28)
+
+
+### ⚡ 性能优化
+
+* **admin:** 登录事件每日趋势改为数据库侧 UTC 聚合 ([62aa4ef](https://github.com/CaoMeiYouRen/caomei-auth/commit/62aa4ef))
+* **admin:** 登录事件热力图改为数据库侧类型 × 桶聚合 ([dd7ab6c](https://github.com/CaoMeiYouRen/caomei-auth/commit/dd7ab6c))
+
+
+### ✨ 新功能
+
+* **admin:** 支持用户可信设备与会话治理 ([8e1e0dd](https://github.com/CaoMeiYouRen/caomei-auth/commit/8e1e0dd))
+* **admin:** 新增登录事件查询 API ([53d32b2](https://github.com/CaoMeiYouRen/caomei-auth/commit/53d32b2))
+* **admin:** 新增登录事件热力图组件 ([7582887](https://github.com/CaoMeiYouRen/caomei-auth/commit/7582887))
+* **admin:** 新增登录事件热力图聚合接口 ([4bcc0f5](https://github.com/CaoMeiYouRen/caomei-auth/commit/4bcc0f5))
+* **admin:** 新增登录事件视图与用户直达 ([6dbb318](https://github.com/CaoMeiYouRen/caomei-auth/commit/6dbb318))
+* **admin:** 新增登录事件统计 API ([2cf1606](https://github.com/CaoMeiYouRen/caomei-auth/commit/2cf1606))
+* **admin:** 移动端侧栏默认收起 ([e0c63cf](https://github.com/CaoMeiYouRen/caomei-auth/commit/e0c63cf))
+* **auth:** 为无密码登录通道接入 2FA 挑战 ([f746fda](https://github.com/CaoMeiYouRen/caomei-auth/commit/f746fda))
+* **auth:** 接入登录事件写入与 Demo 数据 ([8150c84](https://github.com/CaoMeiYouRen/caomei-auth/commit/8150c84))
+* **auth:** 改密码与登出校验失败响应 ([5937a4e](https://github.com/CaoMeiYouRen/caomei-auth/commit/5937a4e))
+* **auth:** 新增登录事件保留期与惰性清理 ([f03edb4](https://github.com/CaoMeiYouRen/caomei-auth/commit/f03edb4))
+* **auth:** 新增登录事件实体与仓储基座 ([a2a1d84](https://github.com/CaoMeiYouRen/caomei-auth/commit/a2a1d84))
+* **auth:** 采集 2FA 可信设备 ([da88703](https://github.com/CaoMeiYouRen/caomei-auth/commit/da88703))
+* **auth:** 锁定登录事件契约矩阵 ([a8117e8](https://github.com/CaoMeiYouRen/caomei-auth/commit/a8117e8))
+* **db:** 登录事件 IP 列改 varchar(45) 并补复合索引 ([7264e25](https://github.com/CaoMeiYouRen/caomei-auth/commit/7264e25))
+* **i18n:** 未启用语言目录纳入同构门禁 ([35c03b2](https://github.com/CaoMeiYouRen/caomei-auth/commit/35c03b2))
+* **i18n:** 登录页与页脚站内链接保持当前语言 ([e6dda59](https://github.com/CaoMeiYouRen/caomei-auth/commit/e6dda59))
+* **i18n:** 译文台账接入门禁 ([b18323e](https://github.com/CaoMeiYouRen/caomei-auth/commit/b18323e))
+* **i18n:** 语言包产物按启用语言过滤 ([b418af7](https://github.com/CaoMeiYouRen/caomei-auth/commit/b418af7))
+* **maintenance:** 登录事件清理脚本支持三方言 ([398d45e](https://github.com/CaoMeiYouRen/caomei-auth/commit/398d45e))
+* **oauth:** 授权入口按语言 cookie 补前缀 ([288bb3c](https://github.com/CaoMeiYouRen/caomei-auth/commit/288bb3c))
+* **security:** 新增加可信设备列表与吊销 ([ab71c81](https://github.com/CaoMeiYouRen/caomei-auth/commit/ab71c81))
+* **security:** 移动端会话表改为卡片式 ([47e12c6](https://github.com/CaoMeiYouRen/caomei-auth/commit/47e12c6))
+
+
+### 🐛 Bug 修复
+
+* **admin:** 收敛日志页 1440 横向溢出 ([5b6d690](https://github.com/CaoMeiYouRen/caomei-auth/commit/5b6d690))
+* **admin:** 移动端表单控件字号提升到 16px ([c795f39](https://github.com/CaoMeiYouRen/caomei-auth/commit/c795f39))
+* **auth:** SSO 移动端顶部让出语言切换器安全区 ([ea014c6](https://github.com/CaoMeiYouRen/caomei-auth/commit/ea014c6))
+* **auth:** 登录方式 Tab 窄屏改三列自适应 ([7494ed1](https://github.com/CaoMeiYouRen/caomei-auth/commit/7494ed1))
+* **auth:** 补齐批量撤销会话审计动作 ([1d34506](https://github.com/CaoMeiYouRen/caomei-auth/commit/1d34506))
+* **auth:** 认证页改右侧安全廊道避开悬浮按钮 ([ea4a738](https://github.com/CaoMeiYouRen/caomei-auth/commit/ea4a738))
+* **auth:** 验证码未启用时不再拦截注册与换邮箱 ([2debcf2](https://github.com/CaoMeiYouRen/caomei-auth/commit/2debcf2))
+* **auth:** 验证码行窄屏收缩输入而非溢出 ([9d2acd7](https://github.com/CaoMeiYouRen/caomei-auth/commit/9d2acd7))
+* **profile:** 个人中心操作行窄屏换行 ([4af44da](https://github.com/CaoMeiYouRen/caomei-auth/commit/4af44da))
+* **visual:** 1440 热力图基线改为可视框 + 断言口径 ([9928c29](https://github.com/CaoMeiYouRen/caomei-auth/commit/9928c29))
+* **visual:** 1440 热力图改用视口截图并保留类型轴 ([7fdfaa2](https://github.com/CaoMeiYouRen/caomei-auth/commit/7fdfaa2))
+* **visual:** 可信设备基线改为对话框局部截图并绑定过期行 ([b893123](https://github.com/CaoMeiYouRen/caomei-auth/commit/b893123))
+
+
+### 📦 代码重构
+
+* **admin:** 用户列表收紧具体行类型 ([0d12400](https://github.com/CaoMeiYouRen/caomei-auth/commit/0d12400))
+
 # [1.18.0](https://github.com/CaoMeiYouRen/caomei-auth/compare/v1.17.0...v1.18.0) (2026-11-21)
 
 
