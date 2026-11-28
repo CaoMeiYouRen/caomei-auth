@@ -143,7 +143,7 @@
 ### 3.5 移动端与认证可用性
 
 > 2026-11-25 移动端审计（390×844 / 360×640，5 语言 × 19 页）登记；完整证据、复测现状与排期建议见 [移动端认证审计](../design/governance/2026-11-25-mobile-auth-audit.md)。769–1024 平板断点、1024 横向基线、SSO 暗色与 Admin 移动端导航可访问性已于 2026-11-28 由阶段 16 交付（见 [阶段 16 收口记录](../design/governance/2026-11-27-phase16-closure.md)）；下列条目为剩余候选。
-- **OAuth web 客户端 http 回环回调**（重要 2 / 紧急 1 · 延后）（P3）：better-auth 1.7.20 不允许 web 类型客户端使用 http 回环回调，本地联调直接 `invalid_request`；native + PKCE 与生产 https 不受影响。处理方向：文档写明本地联调用 native + PKCE，评估开发环境 `allowInsecureRedirectUri`。
+- **OAuth web 客户端 http 回环回调**（重要 2 / 紧急 1 · 部分交付 2026-11-28）：better-auth 1.7.20 不允许 web 类型客户端使用 http 回环回调，本地联调直接 `invalid_request`；native + PKCE 与生产 https 不受影响。**文档侧已交付**：`docs/api/oauth.md` 增「本地联调（http 回环回调）」小节，写明 native + PKCE 与非回环 https 两条可行路径。**待定项**：是否在开发环境启用 `allowInsecureRedirectUri` 属部署安全取舍，需维护者评估后再决定，本条目暂不关闭。
 
 ---
 
