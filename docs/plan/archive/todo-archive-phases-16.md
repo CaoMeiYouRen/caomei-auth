@@ -4,7 +4,7 @@
 
 - **阶段**：阶段 16「平板收尾与 Admin 移动端可访问性」/ 2026-11-27 登记 → 2026-11-28 收口
 - **大条目**：M1 平板断点收尾（已闭环） / M2 1024 横向视觉矩阵（已闭环） / M3 SSO 暗色主题（已闭环） / M4 Admin 导航可访问性与首帧（已闭环） / M5 文档与阶段收口（已闭环）
-- **提交清单**：M1 `7594a02`；M2 `d8116b0`；M3 `be24b90`；M4 `bc4c7f4`；M5 收口提交（本归档与文档同步）
+- **提交清单**：M1 `1e52a30`；M2 `0268104`；M3 `f072e4e`；M4 `2ecc214`；M5 收口提交（本归档与文档同步）
 - **质量门**：`lint`（0 error / 27 既有 warning）/ `lint:css` / `typecheck` / `test`（1572 用例）/ `test:coverage`（Statements 78.87% / Branch 65.88% / Functions 72.68% / Lines 79.07%）/ `i18n:check`（29 用例）/ `planning:check` / `ai:check` / `quality:file-size` / `lint:duplicate`（3.75%）/ `migration:check-imports` / `migration:check-budget`（入口 CSS +1.46%）/ `build` / `docs:build` / `test:visual`（389 用例 / 195 张自基线）全绿
 - **Review Gate**：M1.1–M1.3 R1 Pass；M2.1 R1 Reject → R2 Pass（1024 admin 行随机漂移，改 `?userId=` 深链固定夹具行）；M3.1 / M3.2 R1 Pass；M4.1 / M4.2 / M4.3 R1 Pass（parity 就绪守卫对首页 / 错误页 / 我的应用回退整页）；M5.1 R1 Pass
 - **未覆盖边界**：只在 Chromium + Playwright 固定容器内验证，真机 iOS Safari / Android 未实测；admin 移动端参考态 12 张为永久已知漂移（D57），只由自基线保护；`localized-narrow` 768 暗色基线随 SSO 暗色同批更新（ja-JP / ko-KR）；入口 CSS 体积 +1.46% 由既有阶段基线承担，本阶段未新增体积预算
@@ -17,10 +17,10 @@ _目标：把 ≤768 的平板修复扩到 ≤1024，补 1024 横向基线，接
 
 | 大条目 | 小条目 | 状态 | 提交 | 审计 | 容量（计划→实际） |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| M1 平板断点收尾 | 3/3 | 已闭环 | `7594a02` | R1 Pass（M1.1–M1.3） | 3 → 1 commit（断言与 M4 同文件同批） |
-| M2 1024 横向视觉矩阵 | 1/1 | 已闭环 | `d8116b0` | R1 Reject → R2 Pass | 1 → 1 commit |
-| M3 SSO 暗色主题 | 2/2 | 已闭环 | `be24b90` | R1 Pass（M3.1 / M3.2） | 2 → 1 commit |
-| M4 Admin 导航可访问性与首帧 | 3/3 | 已闭环 | `bc4c7f4` | R1 Pass（M4.1–M4.3） | 3 → 1 commit |
+| M1 平板断点收尾 | 3/3 | 已闭环 | `1e52a30` | R1 Pass（M1.1–M1.3） | 3 → 1 commit（断言与 M4 同文件同批） |
+| M2 1024 横向视觉矩阵 | 1/1 | 已闭环 | `0268104` | R1 Reject → R2 Pass | 1 → 1 commit |
+| M3 SSO 暗色主题 | 2/2 | 已闭环 | `f072e4e` | R1 Pass（M3.1 / M3.2） | 2 → 1 commit |
+| M4 Admin 导航可访问性与首帧 | 3/3 | 已闭环 | `2ecc214` | R1 Pass（M4.1–M4.3） | 3 → 1 commit |
 | M5 文档与阶段收口 | 1/1 | 已闭环 | 收口提交 | R1 Pass（M5.1） | 1 → 1 commit |
 
 - **执行顺序**：M1 → M2 → M3 → M4 → M5。

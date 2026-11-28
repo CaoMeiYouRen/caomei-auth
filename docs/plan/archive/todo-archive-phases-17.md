@@ -4,7 +4,7 @@
 
 - **阶段**：阶段 17「认证配置与服务端校验正确性」/ 2026-11-28 登记并开工 → 2026-11-28 收口
 - **大条目**：M1 验证码插件注册与配置口径（已闭环） / M2 自定义端点服务端验证码校验（已闭环） / M3 登录事件来源 IP 契约（已闭环） / M4 文档与阶段收口（已闭环）
-- **提交清单**：M1 `d27bba2`；M2 `8b1e3c7`；M3 `a6dde2d`；M4.1 `74a7d5b`；M4.2 收口提交（本归档与文档同步）
+- **提交清单**：M1 `bcb9a2e`；M2 `b640605`；M3 `6a5fe2b`；M4.1 `3a1bd08`；M4.2 收口提交（本归档与文档同步）
 - **质量门**：`lint`（0 error / 27 既有 warning）/ `lint:css` / `typecheck` / `test`（1620 用例）/ `test:coverage`（Statements 79.02% / Branch 66.16% / Functions 72.78% / Lines 79.23%）/ `i18n:check` / `planning:check` / `ai:check` / `quality:file-size` / `lint:duplicate`（3.71%）/ `migration:check-imports` / `build` / `docs:build` / `test:visual`（389 用例，无 UI 变更，用于确认零回归）全绿
 - **Review Gate**：M1.1 / M1.2 R1 Pass；M2.1 / M2.2 / M2.3 R1 Pass；M3.1 / M3.2 / M3.3 R1 Pass；M4.1 / M4.2 R1 Pass（本地自审，证据为提交 diff 与门禁输出）
 - **未覆盖边界**：前端验证码判定仍按 provider + site key 同步判断，与服务端判定的差异只靠启动告警收敛（前端异步配置接口未做，D63）；provider 连通性只在单测中以 mock fetch 覆盖，未做真实 provider 端到端联调；IP 归一化不做可信代理白名单（任一调用方传入的 XFF 首段都会被采信）；Redis 限流存储与 PKCE 可配置化仍在 backlog
@@ -17,10 +17,10 @@ _目标：让验证码插件按「配置可用」挂载、让自定义包装端�
 
 | 大条目 | 小条目 | 状态 | 提交 | 审计 | 容量（计划→实际） |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| M1 验证码插件注册与配置口径 | 2/2 | 已闭环 | `d27bba2` | R1 Pass（M1.1 / M1.2） | 2 → 1 commit |
-| M2 自定义端点服务端验证码校验 | 3/3 | 已闭环 | `8b1e3c7` | R1 Pass（M2.1–M2.3） | 3 → 1 commit |
-| M3 登录事件来源 IP 契约 | 3/3 | 已闭环 | `a6dde2d` | R1 Pass（M3.1–M3.3） | 3 → 1 commit |
-| M4 文档与阶段收口 | 2/2 | 已闭环 | `74a7d5b`、收口提交 | R1 Pass（M4.1 / M4.2） | 2 → 2 commits |
+| M1 验证码插件注册与配置口径 | 2/2 | 已闭环 | `bcb9a2e` | R1 Pass（M1.1 / M1.2） | 2 → 1 commit |
+| M2 自定义端点服务端验证码校验 | 3/3 | 已闭环 | `b640605` | R1 Pass（M2.1–M2.3） | 3 → 1 commit |
+| M3 登录事件来源 IP 契约 | 3/3 | 已闭环 | `6a5fe2b` | R1 Pass（M3.1–M3.3） | 3 → 1 commit |
+| M4 文档与阶段收口 | 2/2 | 已闭环 | `3a1bd08`、收口提交 | R1 Pass（M4.1 / M4.2） | 2 → 2 commits |
 
 - **执行顺序**：M1 → M2 → M3 → M4。
 - **不做范围**：不做前端验证码判定重构、不接 Redis 限流存储、不做 PKCE 可配置化、不升级 `braces`、不做管理端数据表卡片化（详见 [登记记录 §7](../design/governance/2026-11-28-phase17-registration.md#7-不做什么)）。

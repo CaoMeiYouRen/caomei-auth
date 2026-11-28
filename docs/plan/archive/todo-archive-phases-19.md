@@ -4,7 +4,7 @@
 
 - **阶段**：阶段 19「OAuth 客户端 PKCE 可配置化」/ 2026-11-28 登记并开工 → 2026-11-28 收口
 - **大条目**：M1 契约与端点（已闭环） / M2 管理端表单（已闭环） / M3 文档与口径（已闭环） / M4 阶段收口（已闭环）
-- **提交清单**：M1 `ae6c136`；M2 `172d366`、`5a9929e`；M3 `4a66a10`；M4 收口提交
+- **提交清单**：M1 `618bb7e`；M2 `4e84fee`、`30fdb7c`；M3 `1d07cc3`；M4 收口提交
 - **质量门**：`lint`（0 error / 27 既有 warning）/ `lint:css` / `typecheck` / `test:coverage`（224 文件 / 1636 用例，Statements 79.03% / Branch 66.29% / Functions 72.78% / Lines 79.23%）/ `coverage:check` / `docs:anchors`（169 文件）/ `planning:check` / `ai:check` / `quality:file-size` / `lint:duplicate`（3.69%）/ `migration:check-imports` / `build` / `docs:build` / `test:visual`（389 用例）全绿
 - **Review Gate**：M1.1 / M1.2 / M1.3 / M1.4 R1 Pass；M2.1 / M2.2 / M2.3 R1 Pass；M3.1 / M3.2 R1 Pass；M4.1 R1 Pass（本地自审，证据为提交 diff 与门禁输出）
 - **未覆盖边界**：未做真实 OAuth 客户端端到端联调（PKCE 校验由 better-auth 负责，仅在单测层面断言端点契约）；存量客户端的 `requirePKCE=false` 保持原值，未评估逐个迁移；管理端只暴露创建 / 编辑对话框，列表不展示 PKCE 状态；localePath 收敛与 `braces` 升级仍延后
@@ -17,9 +17,9 @@ _目标：把 `requirePKCE` 从硬编码改为可配置，新建机密客户端�
 
 | 大条目 | 小条目 | 状态 | 提交 | 审计 | 容量（计划→实际） |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| M1 契约与端点 | 4/4 | 已闭环 | `ae6c136` | R1 Pass（M1.1–M1.4） | 4 → 1 commit |
-| M2 管理端表单 | 3/3 | 已闭环 | `172d366`、`5a9929e` | R1 Pass（M2.1–M2.3） | 3 → 2 commits |
-| M3 文档与口径 | 2/2 | 已闭环 | `4a66a10` | R1 Pass（M3.1 / M3.2） | 2 → 1 commit |
+| M1 契约与端点 | 4/4 | 已闭环 | `618bb7e` | R1 Pass（M1.1–M1.4） | 4 → 1 commit |
+| M2 管理端表单 | 3/3 | 已闭环 | `4e84fee`、`30fdb7c` | R1 Pass（M2.1–M2.3） | 3 → 2 commits |
+| M3 文档与口径 | 2/2 | 已闭环 | `1d07cc3` | R1 Pass（M3.1 / M3.2） | 2 → 1 commit |
 | M4 阶段收口 | 1/1 | 已闭环 | 收口提交 | R1 Pass（M4.1） | 1 → 1 commit |
 
 - **执行顺序**：M1 → M2 → M3 → M4。

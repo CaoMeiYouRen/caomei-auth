@@ -4,7 +4,7 @@
 
 - **阶段**：阶段 18「测试稳定性与质量门禁夯实」/ 2026-11-28 登记并开工 → 2026-11-28 收口
 - **大条目**：M1 时序型测试抖动治理（已闭环） / M2 覆盖率模块下限门禁（已闭环） / M3 文档站锚点一致性（已闭环） / M4 文档与阶段收口（已闭环）
-- **提交清单**：M1 `7fe9782`；M2 `3f64093`；M3 `c8bfef9`；M4.1 `47d090a`；M4.2 收口提交（本归档与文档同步）
+- **提交清单**：M1 `ce027f8`；M2 `d3250f5`；M3 `9f87d95`；M4.1 `dbb87f8`；M4.2 收口提交（本归档与文档同步）
 - **质量门**：`lint`（0 error / 27 既有 warning）/ `typecheck` / `test:coverage`（224 文件 / 1633 用例，Statements 79.02% / Branch 66.14% / Functions 72.78% / Lines 79.23%）/ `coverage:check` / `docs:anchors`（165 文件零失效）/ `lint:md` / `planning:check` / `ai:check` / `quality:file-size` / `lint:duplicate`（3.70%）/ `migration:check-imports` / `build` / `docs:build` / `test:visual`（389 用例）全绿
 - **Review Gate**：M1.1 / M1.2 / M1.3 R1 Pass；M2.1 / M2.2 R1 Pass；M3.1 / M3.2 / M3.3 R1 Pass；M4.1 / M4.2 R1 Pass（本地自审，证据为提交 diff 与门禁输出）
 - **未覆盖边界**：抖动只在当前容器与 5 轮定向运行内验证，未复现原始高负载条件；覆盖率门禁只读 v8 `coverage-final.json`，未接 Codecov API；锚点校验不覆盖文件级死链与站点内部自动生成的路由链接（`ignoreDeadLinks` 仍为 true）
@@ -17,10 +17,10 @@ _目标：消除已观测的测试抖动，把覆盖率模块下限与文档锚�
 
 | 大条目 | 小条目 | 状态 | 提交 | 审计 | 容量（计划→实际） |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| M1 时序型测试抖动治理 | 3/3 | 已闭环 | `7fe9782` | R1 Pass（M1.1–M1.3） | 3 → 1 commit |
-| M2 覆盖率模块下限门禁 | 2/2 | 已闭环 | `3f64093` | R1 Pass（M2.1 / M2.2） | 2 → 1 commit |
-| M3 文档站锚点一致性 | 3/3 | 已闭环 | `c8bfef9` | R1 Pass（M3.1–M3.3） | 3 → 1 commit |
-| M4 文档与阶段收口 | 2/2 | 已闭环 | `47d090a`、收口提交 | R1 Pass（M4.1 / M4.2） | 2 → 2 commits |
+| M1 时序型测试抖动治理 | 3/3 | 已闭环 | `ce027f8` | R1 Pass（M1.1–M1.3） | 3 → 1 commit |
+| M2 覆盖率模块下限门禁 | 2/2 | 已闭环 | `d3250f5` | R1 Pass（M2.1 / M2.2） | 2 → 1 commit |
+| M3 文档站锚点一致性 | 3/3 | 已闭环 | `9f87d95` | R1 Pass（M3.1–M3.3） | 3 → 1 commit |
+| M4 文档与阶段收口 | 2/2 | 已闭环 | `dbb87f8`、收口提交 | R1 Pass（M4.1 / M4.2） | 2 → 2 commits |
 
 - **执行顺序**：M1 → M2 → M3 → M4。
 - **不做范围**：不改生产逻辑、不做 localePath 收敛与 PKCE、不放宽既有质量门、不把 `ignoreDeadLinks` 改为 false（详见 [登记记录 §7](../design/governance/2026-11-28-phase18-registration.md#7-不做什么)）。

@@ -6,9 +6,9 @@
 
 | 大条目 | 交付 | 提交 |
 | :--- | :--- | :--- |
-| M1 契约与端点 | `oauthApplicationSchema` 接受 `require_pkce`；创建端点 `require_pkce ?? true`（原为硬编码 false）；`PUT` 与 `applyOAuthClientInput` 只改显式传值；`toAdminOAuthClientView` 返回 `requirePkce`；`types/admin.ts` 同步；建 / 改端点各补默认值与透传断言 | `ae6c136` |
-| M2 管理端表单 | 对话框新增「要求 PKCE 校验」复选框与说明（默认勾选、按存量回显、随提交体发送）；2 键 × 5 语言；创建对话框基线重采（仅 1 张变化） | `172d366`、`5a9929e` |
-| M3 文档与口径 | `docs/api/oauth.md` 授权参数改为「客户端开启 requirePKCE 时必需」并补支持情况小节；安全规范补「PKCE 默认开启」条目（D69 / D70） | `4a66a10` |
+| M1 契约与端点 | `oauthApplicationSchema` 接受 `require_pkce`；创建端点 `require_pkce ?? true`（原为硬编码 false）；`PUT` 与 `applyOAuthClientInput` 只改显式传值；`toAdminOAuthClientView` 返回 `requirePkce`；`types/admin.ts` 同步；建 / 改端点各补默认值与透传断言 | `618bb7e` |
+| M2 管理端表单 | 对话框新增「要求 PKCE 校验」复选框与说明（默认勾选、按存量回显、随提交体发送）；2 键 × 5 语言；创建对话框基线重采（仅 1 张变化） | `4e84fee`、`30fdb7c` |
+| M3 文档与口径 | `docs/api/oauth.md` 授权参数改为「客户端开启 requirePKCE 时必需」并补支持情况小节；安全规范补「PKCE 默认开启」条目（D69 / D70） | `1d07cc3` |
 | M4 阶段收口 | 归档分片、索引、roadmap 指针、收口记录 | 收口提交 |
 
 ## 2. 终态指标

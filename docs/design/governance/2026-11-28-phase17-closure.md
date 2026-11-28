@@ -6,10 +6,10 @@
 
 | 大条目 | 交付 | 提交 |
 | :--- | :--- | :--- |
-| M1 验证码插件注册与配置口径 | 挂载改由 `getCaptchaConfig() !== null` 决定（缺 secret 不再以 `captcha(null!)` 挂载）；配置矩阵单测（provider / secret / site key 四组合）；配置不一致告警去重并点名缺失项 | `d27bba2` |
-| M2 自定义端点服务端验证码校验 | `verifyCaptchaToken`（三家 siteverify + recaptcha 分阈值 + 超时 / 网络异常归一，全部可注入 fetch）与 `requireCaptcha` 门禁；`change-email`、`two-factor/send-otp` 接入，缺 token → 400 `CAPTCHA_REQUIRED`、失败 → 400 `CAPTCHA_INVALID`、不可用 → 503 `CAPTCHA_UNAVAILABLE`；3 个 `errors.security.*` 键（5 语言 + 中文兜底） | `8b1e3c7` |
-| M3 登录事件来源 IP 契约 | `normalizeClientIp` / `resolveClientIp`（XFF 首段、`[IPv6]`、端口、`%zone`、`net.isIP`、45 上限回落 `null`）；`requestAuditMeta` / `eventAuditMeta` 与登录事件仓储共用口径，仓储写入再兜一层 | `a6dde2d` |
-| M4.1 文档同步 | 安全规范 5.2 改为现行口径（挂载条件、成对配置、三种错误码与 fail closed）；`.env.example` 说明 site key 在启用时必填与两类部分配置后果 | `74a7d5b` |
+| M1 验证码插件注册与配置口径 | 挂载改由 `getCaptchaConfig() !== null` 决定（缺 secret 不再以 `captcha(null!)` 挂载）；配置矩阵单测（provider / secret / site key 四组合）；配置不一致告警去重并点名缺失项 | `bcb9a2e` |
+| M2 自定义端点服务端验证码校验 | `verifyCaptchaToken`（三家 siteverify + recaptcha 分阈值 + 超时 / 网络异常归一，全部可注入 fetch）与 `requireCaptcha` 门禁；`change-email`、`two-factor/send-otp` 接入，缺 token → 400 `CAPTCHA_REQUIRED`、失败 → 400 `CAPTCHA_INVALID`、不可用 → 503 `CAPTCHA_UNAVAILABLE`；3 个 `errors.security.*` 键（5 语言 + 中文兜底） | `b640605` |
+| M3 登录事件来源 IP 契约 | `normalizeClientIp` / `resolveClientIp`（XFF 首段、`[IPv6]`、端口、`%zone`、`net.isIP`、45 上限回落 `null`）；`requestAuditMeta` / `eventAuditMeta` 与登录事件仓储共用口径，仓储写入再兜一层 | `6a5fe2b` |
+| M4.1 文档同步 | 安全规范 5.2 改为现行口径（挂载条件、成对配置、三种错误码与 fail closed）；`.env.example` 说明 site key 在启用时必填与两类部分配置后果 | `3a1bd08` |
 | M4.2 阶段收口 | 归档分片、索引、roadmap 指针、收口记录 | 收口提交 |
 
 ## 2. 终态指标

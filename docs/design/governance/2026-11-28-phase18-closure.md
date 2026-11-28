@@ -6,10 +6,10 @@
 
 | 大条目 | 交付 | 提交 |
 | :--- | :--- | :--- |
-| M1 时序型测试抖动治理 | `expireVerifications` helper（把 `verification.expiresAt` 置为过去）替代两处 `sleep 2200ms`；DataTable 受控选择 / 分页补 `nextTick` 与「无重复 emit」断言；定向用例连续 5 轮全绿 | `7fe9782` |
-| M2 覆盖率模块下限门禁 | `check-coverage.mjs`（模块语句覆盖率按目录前缀聚合、行覆盖按 `statementMap` 起始行聚合、全局四项与基线比较）、`coverage-baseline.json`、`pnpm coverage:check`、`test.yml` 接入、6 例单测 | `3f64093` |
-| M3 文档站锚点一致性 | `doc-slug.mjs`（GitHub 口径 slugify）+ `.vitepress/config.ts` 接入；`check-doc-anchors.mjs`（165 文件扫描、内联与引用式链接、重复标题后缀）；`pnpm docs:anchors` + CI；修正 11 处失效引用（10 处由 slug 修正恢复、1 处陈旧引用改指 backlog §4.1 现标题）；7 例单测 | `c8bfef9` |
-| M4.1 规范同步 | 测试规范补「时序型用例口径」「覆盖率门禁」；文档规范补「锚点口径」 | `47d090a` |
+| M1 时序型测试抖动治理 | `expireVerifications` helper（把 `verification.expiresAt` 置为过去）替代两处 `sleep 2200ms`；DataTable 受控选择 / 分页补 `nextTick` 与「无重复 emit」断言；定向用例连续 5 轮全绿 | `ce027f8` |
+| M2 覆盖率模块下限门禁 | `check-coverage.mjs`（模块语句覆盖率按目录前缀聚合、行覆盖按 `statementMap` 起始行聚合、全局四项与基线比较）、`coverage-baseline.json`、`pnpm coverage:check`、`test.yml` 接入、6 例单测 | `d3250f5` |
+| M3 文档站锚点一致性 | `doc-slug.mjs`（GitHub 口径 slugify）+ `.vitepress/config.ts` 接入；`check-doc-anchors.mjs`（165 文件扫描、内联与引用式链接、重复标题后缀）；`pnpm docs:anchors` + CI；修正 11 处失效引用（10 处由 slug 修正恢复、1 处陈旧引用改指 backlog §4.1 现标题）；7 例单测 | `9f87d95` |
+| M4.1 规范同步 | 测试规范补「时序型用例口径」「覆盖率门禁」；文档规范补「锚点口径」 | `dbb87f8` |
 | M4.2 阶段收口 | 归档分片、索引、roadmap 指针、收口记录 | 收口提交 |
 
 ## 2. 终态指标

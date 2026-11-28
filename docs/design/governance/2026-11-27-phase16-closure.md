@@ -6,10 +6,10 @@
 
 | 大条目 | 交付 | 提交 |
 | :--- | :--- | :--- |
-| M1 平板断点收尾 | 登录 Tab 的 3 列自适应与登录 / 注册 / SSO 右侧安全廊道（4–5rem）统一扩到 ≤1024；769 / 800 / 1024 × 5 语言几何断言（Tab 完整可见、组内不可滚动、与固定按钮相交 0、无横向溢出） | `7594a02`（断言随 M4 提交） |
-| M2 1024 横向视觉矩阵 | `tablet-landscape-1024.visual.spec.ts` 4 张 1024×768 浅色整页基线；admin-users 用 `?userId=visual-user-03` 深链固定夹具行 | `d8116b0` |
-| M3 SSO 暗色主题 | `sso-login-dark-theme` mixin 接入既有 `$dark-*` token；`sso-dark.visual.spec.ts` 390 / 768 暗色基线 + 计算样式断言；auth 与 localized-narrow 的 4 张 SSO 暗色基线重采 | `be24b90` |
-| M4 Admin 导航可访问性与首帧 | 9 个导航链接常驻 `aria-label`、折叠按钮 `aria-label` / `aria-expanded`；≤768 收起改 CSS-first（`mobile-expanded` 才展开，`onMounted` 不再写显示状态）；parity 移动端 12 张永久漂移豁免；`admin-matrix` 就绪判定收敛到 `.admin-main` | `bc4c7f4` |
+| M1 平板断点收尾 | 登录 Tab 的 3 列自适应与登录 / 注册 / SSO 右侧安全廊道（4–5rem）统一扩到 ≤1024；769 / 800 / 1024 × 5 语言几何断言（Tab 完整可见、组内不可滚动、与固定按钮相交 0、无横向溢出） | `1e52a30`（断言随 M4 提交） |
+| M2 1024 横向视觉矩阵 | `tablet-landscape-1024.visual.spec.ts` 4 张 1024×768 浅色整页基线；admin-users 用 `?userId=visual-user-03` 深链固定夹具行 | `0268104` |
+| M3 SSO 暗色主题 | `sso-login-dark-theme` mixin 接入既有 `$dark-*` token；`sso-dark.visual.spec.ts` 390 / 768 暗色基线 + 计算样式断言；auth 与 localized-narrow 的 4 张 SSO 暗色基线重采 | `f072e4e` |
+| M4 Admin 导航可访问性与首帧 | 9 个导航链接常驻 `aria-label`、折叠按钮 `aria-label` / `aria-expanded`；≤768 收起改 CSS-first（`mobile-expanded` 才展开，`onMounted` 不再写显示状态）；parity 移动端 12 张永久漂移豁免；`admin-matrix` 就绪判定收敛到 `.admin-main` | `2ecc214` |
 | M5 文档与阶段收口 | 口径同步（测试规范）、归档分片、索引与 roadmap、收口记录 | 收口提交 |
 
 ## 2. 终态指标
